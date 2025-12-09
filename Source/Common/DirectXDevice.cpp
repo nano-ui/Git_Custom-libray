@@ -64,8 +64,10 @@ void DirectXDevice::CreateRenderTargetAndDepthStencil()
 {
 	HRESULT hr{ S_OK };
 
+	//--------------------------------------
 	//レンダーターゲットビュー (RTV) の作成
-	
+	//--------------------------------------
+
 	//バックバッファのテクスチャオブジェクトのアクセス権限を取得
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> back_buffer;
 
@@ -82,7 +84,9 @@ void DirectXDevice::CreateRenderTargetAndDepthStencil()
 	);
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
+	//--------------------------------------
 	//深度ステンシルビュー (DSV) の作成
+	//--------------------------------------
 
 	//深度ステンシルバッファ用の2Dテクスチャを作成するための設定
 
