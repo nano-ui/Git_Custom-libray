@@ -49,7 +49,7 @@ bool DirectXDevice::Initialize()
 		&swap_chain_desc,					//スワップチェーン設定
 		swap_chain_.GetAddressOf(),			//[出力] スワップチェーン
 		device_.GetAddressOf(),				//[出力] デバイス
-		NULL,								//
+		NULL,								//[出力] 機能レベル
 		immediate_context_.GetAddressOf()	//[出力] 即時コンテキスト
 	);
 
@@ -104,8 +104,8 @@ void DirectXDevice::CreateRenderTargetAndDepthStencil()
 
 	//バインドフラグ: 深度ステンシルバッファとして使用
 	texture2d_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;	//このテクスチャを「深度ステンシルバッファ」として使うことを指定
-	texture2d_desc.CPUAccessFlags = 0;
-	texture2d_desc.MiscFlags = 0;
+	texture2d_desc.CPUAccessFlags = 0;						//このテクスチャは主にGPUだけが使用し、CPUは読み書きしない
+	texture2d_desc.MiscFlags = 0;							//このテクスチャには特別な用途はなく、標準的なテクスチャとして使用
 
 	//深度ステンシルバッファ (テクスチャ) の作成
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> depth_stencil_buffer;//深度ステンシルバッファ本体を格納
