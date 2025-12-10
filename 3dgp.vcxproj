@@ -222,6 +222,7 @@
     <ClCompile Include="Source\Graphics\framebuffer.cpp" />
     <ClCompile Include="Source\Graphics\fullscreen_quad.cpp" />
     <ClCompile Include="Source\Graphics\PipelineStates.cpp" />
+    <ClCompile Include="Source\Graphics\PostProcessConstantBuffers.cpp" />
     <ClCompile Include="Source\Graphics\SceneConstantBuffers.cpp" />
     <ClCompile Include="Source\Graphics\shader.cpp" />
     <ClCompile Include="Source\ObjectsRender\AssetManager.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="Source\Graphics\framebuffer.h" />
     <ClInclude Include="Source\Graphics\fullscreen_quad.h" />
     <ClInclude Include="Source\Graphics\PipelineStates.h" />
+    <ClInclude Include="Source\Graphics\PostProcessConstantBuffers.h" />
     <ClInclude Include="Source\Graphics\SceneConstantBuffers.h" />
     <ClInclude Include="Source\Graphics\shader.h" />
     <ClInclude Include="Source\ObjectsRender\AssetManager.h" />

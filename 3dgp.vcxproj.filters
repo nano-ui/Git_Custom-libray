@@ -44,6 +44,51 @@
     <Filter Include="Source\ObjectRender">
       <UniqueIdentifier>{012fe70d-7b34-462a-bcfd-b354527e0a9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\DirectXDivice">
+      <UniqueIdentifier>{42ac1c21-0304-42cb-87c1-ae2de61d962b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\FrameBuffer">
+      <UniqueIdentifier>{f53cb431-a922-480b-806a-de49ec44c474}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\FrameWork">
+      <UniqueIdentifier>{8dfb05e0-54a8-45c4-ad62-b53268d3b51f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\FullscreenQuad">
+      <UniqueIdentifier>{956ef2c1-8c74-4bb5-a001-0fb16428ae27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\PipelineStates">
+      <UniqueIdentifier>{33b83963-513b-41cf-9e97-ab9670987a2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\PostProcessConstantBuffers">
+      <UniqueIdentifier>{773fd80b-f3b6-43b3-b2c3-584974185d31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\SceneConstantBuffer">
+      <UniqueIdentifier>{5915b83b-281d-42b5-ab6e-a6891f26b47d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Shader">
+      <UniqueIdentifier>{eafa76a5-30c4-4df1-8921-299442ba031e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\AssetManager">
+      <UniqueIdentifier>{b619075d-3927-4b4a-98f4-6cecafe1b8ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GeometricPrimitive">
+      <UniqueIdentifier>{39479b18-2d48-4b49-a73f-bb8e97382f25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\SkinnedMesh">
+      <UniqueIdentifier>{22a17abc-366f-45db-8379-1bf3eaf612a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\Sprite">
+      <UniqueIdentifier>{e3397693-60a3-4352-a295-df00f5b0df08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\SpriteBatch">
+      <UniqueIdentifier>{de396ab0-f763-408d-8209-24074b8db1b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\StaticMesh">
+      <UniqueIdentifier>{a8a024c4-47bd-4d1d-8426-73f71e29afc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\Texture">
+      <UniqueIdentifier>{cb22bcc2-bff3-45f9-b8c3-9ea3eff64f0b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -67,47 +112,50 @@
     <ClCompile Include="Source\Common\main.cpp">
       <Filter>Source\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\framebuffer.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\fullscreen_quad.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\shader.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\PipelineStates.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Common\DirectXDevice.cpp">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Source\Graphics\DirectXDivice</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\framebuffer.cpp">
+      <Filter>Source\Graphics\FrameBuffer</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\framework.cpp">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Source\Graphics\FrameWork</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ObjectsRender\AssetManager.cpp">
-      <Filter>Source\ObjectRender</Filter>
+    <ClCompile Include="Source\Graphics\fullscreen_quad.cpp">
+      <Filter>Source\Graphics\FullscreenQuad</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ObjectsRender\geometric_primitive.cpp">
-      <Filter>Source\ObjectRender</Filter>
+    <ClCompile Include="Source\Graphics\PipelineStates.cpp">
+      <Filter>Source\Graphics\PipelineStates</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ObjectsRender\skinned_mesh.cpp">
-      <Filter>Source\ObjectRender</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ObjectsRender\sprite.cpp">
-      <Filter>Source\ObjectRender</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ObjectsRender\sprite_batch.cpp">
-      <Filter>Source\ObjectRender</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ObjectsRender\static_mesh.cpp">
-      <Filter>Source\ObjectRender</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ObjectsRender\texture.cpp">
-      <Filter>Source\ObjectRender</Filter>
+    <ClCompile Include="Source\Graphics\PostProcessConstantBuffers.cpp">
+      <Filter>Source\Graphics\PostProcessConstantBuffers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\SceneConstantBuffers.cpp">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Source\Graphics\SceneConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\shader.cpp">
+      <Filter>Source\Graphics\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\AssetManager.cpp">
+      <Filter>Source\ObjectRender\AssetManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\geometric_primitive.cpp">
+      <Filter>Source\ObjectRender\GeometricPrimitive</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\skinned_mesh.cpp">
+      <Filter>Source\ObjectRender\SkinnedMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\sprite.cpp">
+      <Filter>Source\ObjectRender\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\sprite_batch.cpp">
+      <Filter>Source\ObjectRender\SpriteBatch</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\static_mesh.cpp">
+      <Filter>Source\ObjectRender\StaticMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\texture.cpp">
+      <Filter>Source\ObjectRender\Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -141,47 +189,50 @@
     <ClInclude Include="Source\Common\misc.h">
       <Filter>Source\Common</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Common\DirectXDevice.h">
+      <Filter>Source\Graphics\DirectXDivice</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Graphics\framebuffer.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\fullscreen_quad.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\shader.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\PipelineStates.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Source\Graphics\FrameBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\framework.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Source\Graphics\FrameWork</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\DirectXDevice.h">
-      <Filter>Source\Graphics</Filter>
+    <ClInclude Include="Source\Graphics\fullscreen_quad.h">
+      <Filter>Source\Graphics\FullscreenQuad</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ObjectsRender\AssetManager.h">
-      <Filter>Source\ObjectRender</Filter>
+    <ClInclude Include="Source\Graphics\PipelineStates.h">
+      <Filter>Source\Graphics\PipelineStates</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ObjectsRender\geometric_primitive.h">
-      <Filter>Source\ObjectRender</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ObjectsRender\skinned_mesh.h">
-      <Filter>Source\ObjectRender</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ObjectsRender\sprite.h">
-      <Filter>Source\ObjectRender</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ObjectsRender\sprite_batch.h">
-      <Filter>Source\ObjectRender</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ObjectsRender\static_mesh.h">
-      <Filter>Source\ObjectRender</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ObjectsRender\texture.h">
-      <Filter>Source\ObjectRender</Filter>
+    <ClInclude Include="Source\Graphics\PostProcessConstantBuffers.h">
+      <Filter>Source\Graphics\PostProcessConstantBuffers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\SceneConstantBuffers.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Source\Graphics\SceneConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\shader.h">
+      <Filter>Source\Graphics\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\AssetManager.h">
+      <Filter>Source\ObjectRender\AssetManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\geometric_primitive.h">
+      <Filter>Source\ObjectRender\GeometricPrimitive</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\skinned_mesh.h">
+      <Filter>Source\ObjectRender\SkinnedMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\sprite.h">
+      <Filter>Source\ObjectRender\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\sprite_batch.h">
+      <Filter>Source\ObjectRender\SpriteBatch</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\static_mesh.h">
+      <Filter>Source\ObjectRender\StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\texture.h">
+      <Filter>Source\ObjectRender\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

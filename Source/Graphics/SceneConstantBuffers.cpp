@@ -1,6 +1,5 @@
 #include "SceneConstantBuffers.h"
 #include "misc.h"
-#include <DirectXMath.h>
 
 SceneConstantBuffers::SceneConstantBuffers(ID3D11Device* device)
 	:device_ptr_(device)
