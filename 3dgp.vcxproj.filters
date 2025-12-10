@@ -14,9 +14,6 @@
     <Filter Include="Source">
       <UniqueIdentifier>{18aa0d0f-98dc-497a-a53d-60189ec1d6e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Objects">
-      <UniqueIdentifier>{bb89d2c0-71cf-47e4-ba51-10cfe17f33ad}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Graphics">
       <UniqueIdentifier>{f67090ca-959a-4bf8-9062-bdcbfde48c41}</UniqueIdentifier>
     </Filter>
@@ -44,6 +41,9 @@
     <Filter Include="Shaders\static_mesh">
       <UniqueIdentifier>{bb7a2708-8768-4056-a538-ccf6926b000b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ObjectRender">
+      <UniqueIdentifier>{012fe70d-7b34-462a-bcfd-b354527e0a9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -64,9 +64,6 @@
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\framework.cpp">
-      <Filter>Source\Common</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Common\main.cpp">
       <Filter>Source\Common</Filter>
     </ClCompile>
@@ -79,38 +76,38 @@
     <ClCompile Include="Source\Graphics\shader.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\sprite.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\sprite_batch.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ObjectsRender\geometric_primitive.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ObjectsRender\skinned_mesh.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ObjectsRender\static_mesh.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ObjectsRender\texture.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\DirectXDevice.cpp">
-      <Filter>Source\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\ConstantBuffers.cpp">
-      <Filter>Source\Common</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\PipelineStates.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Renderer.cpp">
+    <ClCompile Include="Source\Common\DirectXDevice.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\framework.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\AssetManager.cpp">
-      <Filter>Source\Objects</Filter>
+      <Filter>Source\ObjectRender</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\geometric_primitive.cpp">
+      <Filter>Source\ObjectRender</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\skinned_mesh.cpp">
+      <Filter>Source\ObjectRender</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\sprite.cpp">
+      <Filter>Source\ObjectRender</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\sprite_batch.cpp">
+      <Filter>Source\ObjectRender</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\static_mesh.cpp">
+      <Filter>Source\ObjectRender</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\texture.cpp">
+      <Filter>Source\ObjectRender</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\SceneConstantBuffers.cpp">
+      <Filter>Source\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -138,9 +135,6 @@
     <ClInclude Include="imgui\imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\framework.h">
-      <Filter>Source\Common</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\high_resolution_timer.h">
       <Filter>Source\Common</Filter>
     </ClInclude>
@@ -156,38 +150,38 @@
     <ClInclude Include="Source\Graphics\shader.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\sprite.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\sprite_batch.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ObjectsRender\geometric_primitive.h">
-      <Filter>Source\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ObjectsRender\skinned_mesh.h">
-      <Filter>Source\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ObjectsRender\static_mesh.h">
-      <Filter>Source\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ObjectsRender\texture.h">
-      <Filter>Source\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\DirectXDevice.h">
-      <Filter>Source\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\ConstantBuffers.h">
-      <Filter>Source\Common</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphics\PipelineStates.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Renderer.h">
+    <ClInclude Include="Source\Common\framework.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DirectXDevice.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\AssetManager.h">
-      <Filter>Source\Objects</Filter>
+      <Filter>Source\ObjectRender</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\geometric_primitive.h">
+      <Filter>Source\ObjectRender</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\skinned_mesh.h">
+      <Filter>Source\ObjectRender</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\sprite.h">
+      <Filter>Source\ObjectRender</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\sprite_batch.h">
+      <Filter>Source\ObjectRender</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\static_mesh.h">
+      <Filter>Source\ObjectRender</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\texture.h">
+      <Filter>Source\ObjectRender</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\SceneConstantBuffers.h">
+      <Filter>Source\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

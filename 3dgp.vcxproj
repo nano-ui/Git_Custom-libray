@@ -216,20 +216,19 @@
     <ClCompile Include="imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui\imgui_ja_gryph_ranges.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Source\Common\ConstantBuffers.cpp" />
     <ClCompile Include="Source\Common\DirectXDevice.cpp" />
     <ClCompile Include="Source\Common\framework.cpp" />
     <ClCompile Include="Source\Common\main.cpp" />
     <ClCompile Include="Source\Graphics\framebuffer.cpp" />
     <ClCompile Include="Source\Graphics\fullscreen_quad.cpp" />
     <ClCompile Include="Source\Graphics\PipelineStates.cpp" />
-    <ClCompile Include="Source\Graphics\Renderer.cpp" />
+    <ClCompile Include="Source\Graphics\SceneConstantBuffers.cpp" />
     <ClCompile Include="Source\Graphics\shader.cpp" />
-    <ClCompile Include="Source\Graphics\sprite.cpp" />
-    <ClCompile Include="Source\Graphics\sprite_batch.cpp" />
     <ClCompile Include="Source\ObjectsRender\AssetManager.cpp" />
     <ClCompile Include="Source\ObjectsRender\geometric_primitive.cpp" />
     <ClCompile Include="Source\ObjectsRender\skinned_mesh.cpp" />
+    <ClCompile Include="Source\ObjectsRender\sprite.cpp" />
+    <ClCompile Include="Source\ObjectsRender\sprite_batch.cpp" />
     <ClCompile Include="Source\ObjectsRender\static_mesh.cpp" />
     <ClCompile Include="Source\ObjectsRender\texture.cpp" />
   </ItemGroup>
@@ -242,7 +241,6 @@
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
-    <ClInclude Include="Source\Common\ConstantBuffers.h" />
     <ClInclude Include="Source\Common\DirectXDevice.h" />
     <ClInclude Include="Source\Common\framework.h" />
     <ClInclude Include="Source\Common\high_resolution_timer.h" />
@@ -250,13 +248,13 @@
     <ClInclude Include="Source\Graphics\framebuffer.h" />
     <ClInclude Include="Source\Graphics\fullscreen_quad.h" />
     <ClInclude Include="Source\Graphics\PipelineStates.h" />
-    <ClInclude Include="Source\Graphics\Renderer.h" />
+    <ClInclude Include="Source\Graphics\SceneConstantBuffers.h" />
     <ClInclude Include="Source\Graphics\shader.h" />
-    <ClInclude Include="Source\Graphics\sprite.h" />
-    <ClInclude Include="Source\Graphics\sprite_batch.h" />
     <ClInclude Include="Source\ObjectsRender\AssetManager.h" />
     <ClInclude Include="Source\ObjectsRender\geometric_primitive.h" />
     <ClInclude Include="Source\ObjectsRender\skinned_mesh.h" />
+    <ClInclude Include="Source\ObjectsRender\sprite.h" />
+    <ClInclude Include="Source\ObjectsRender\sprite_batch.h" />
     <ClInclude Include="Source\ObjectsRender\static_mesh.h" />
     <ClInclude Include="Source\ObjectsRender\texture.h" />
   </ItemGroup>
