@@ -32,7 +32,7 @@ public:
 	//全てのアセット（メッシュ、フレームバッファ、シェーダーなど）の読み込みと作成を実行
 	void Initializa();
 
-	//FBXファイルを読み込み、アニメーションの有無に応じて適切なメッシュとして登録し、参照情報を返す
+	//FBXファイルを読み込み、アニメーションの有無に応じて適切なメッシュに登録し、参照情報を返す
 	MeshReference LoadModelAsset(const wchar_t* fbx_filename);
 
 private:

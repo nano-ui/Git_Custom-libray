@@ -92,6 +92,9 @@
     <Filter Include="Source\ObjectRender\Model">
       <UniqueIdentifier>{1563c0d9-8878-4481-bd39-2d9641d69e3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ObjectRender\ModelRenderer">
+      <UniqueIdentifier>{446d5407-dc6c-44df-8a63-d62a32914675}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -162,6 +165,9 @@
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\Model.cpp">
       <Filter>Source\ObjectRender\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\ModelRenderer.cpp">
+      <Filter>Source\ObjectRender\ModelRenderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +251,9 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\fbx_utility.h">
       <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\ModelRenderer.h">
+      <Filter>Source\ObjectRender\ModelRenderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -228,6 +228,7 @@
     <ClCompile Include="Source\ObjectsRender\AssetManager.cpp" />
     <ClCompile Include="Source\ObjectsRender\geometric_primitive.cpp" />
     <ClCompile Include="Source\ObjectsRender\Model.cpp" />
+    <ClCompile Include="Source\ObjectsRender\ModelRenderer.cpp" />
     <ClCompile Include="Source\ObjectsRender\skinned_mesh.cpp" />
     <ClCompile Include="Source\ObjectsRender\sprite.cpp" />
     <ClCompile Include="Source\ObjectsRender\sprite_batch.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="Source\ObjectsRender\AssetManager.h" />
     <ClInclude Include="Source\ObjectsRender\geometric_primitive.h" />
     <ClInclude Include="Source\ObjectsRender\Model.h" />
+    <ClInclude Include="Source\ObjectsRender\ModelRenderer.h" />
     <ClInclude Include="Source\ObjectsRender\skinned_mesh.h" />
     <ClInclude Include="Source\ObjectsRender\sprite.h" />
     <ClInclude Include="Source\ObjectsRender\sprite_batch.h" />
