@@ -50,9 +50,6 @@
     <Filter Include="Source\Graphics\FrameBuffer">
       <UniqueIdentifier>{f53cb431-a922-480b-806a-de49ec44c474}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Graphics\FrameWork">
-      <UniqueIdentifier>{8dfb05e0-54a8-45c4-ad62-b53268d3b51f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Graphics\FullscreenQuad">
       <UniqueIdentifier>{956ef2c1-8c74-4bb5-a001-0fb16428ae27}</UniqueIdentifier>
     </Filter>
@@ -89,6 +86,12 @@
     <Filter Include="Source\ObjectRender\Texture">
       <UniqueIdentifier>{cb22bcc2-bff3-45f9-b8c3-9ea3eff64f0b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\Framework">
+      <UniqueIdentifier>{8dfb05e0-54a8-45c4-ad62-b53268d3b51f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\Model">
+      <UniqueIdentifier>{1563c0d9-8878-4481-bd39-2d9641d69e3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -119,7 +122,7 @@
       <Filter>Source\Graphics\FrameBuffer</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\framework.cpp">
-      <Filter>Source\Graphics\FrameWork</Filter>
+      <Filter>Source\Graphics\Framework</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\fullscreen_quad.cpp">
       <Filter>Source\Graphics\FullscreenQuad</Filter>
@@ -156,6 +159,9 @@
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\texture.cpp">
       <Filter>Source\ObjectRender\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\Model.cpp">
+      <Filter>Source\ObjectRender\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -196,7 +202,7 @@
       <Filter>Source\Graphics\FrameBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\framework.h">
-      <Filter>Source\Graphics\FrameWork</Filter>
+      <Filter>Source\Graphics\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\fullscreen_quad.h">
       <Filter>Source\Graphics\FullscreenQuad</Filter>
@@ -233,6 +239,12 @@
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\texture.h">
       <Filter>Source\ObjectRender\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\Model.h">
+      <Filter>Source\ObjectRender\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\fbx_utility.h">
+      <Filter>Source\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

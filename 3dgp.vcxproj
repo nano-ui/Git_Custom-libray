@@ -227,6 +227,7 @@
     <ClCompile Include="Source\Graphics\shader.cpp" />
     <ClCompile Include="Source\ObjectsRender\AssetManager.cpp" />
     <ClCompile Include="Source\ObjectsRender\geometric_primitive.cpp" />
+    <ClCompile Include="Source\ObjectsRender\Model.cpp" />
     <ClCompile Include="Source\ObjectsRender\skinned_mesh.cpp" />
     <ClCompile Include="Source\ObjectsRender\sprite.cpp" />
     <ClCompile Include="Source\ObjectsRender\sprite_batch.cpp" />
@@ -246,6 +247,7 @@
     <ClInclude Include="Source\Common\framework.h" />
     <ClInclude Include="Source\Common\high_resolution_timer.h" />
     <ClInclude Include="Source\Common\misc.h" />
+    <ClInclude Include="Source\Graphics\fbx_utility.h" />
     <ClInclude Include="Source\Graphics\framebuffer.h" />
     <ClInclude Include="Source\Graphics\fullscreen_quad.h" />
     <ClInclude Include="Source\Graphics\PipelineStates.h" />
@@ -254,6 +256,7 @@
     <ClInclude Include="Source\Graphics\shader.h" />
     <ClInclude Include="Source\ObjectsRender\AssetManager.h" />
     <ClInclude Include="Source\ObjectsRender\geometric_primitive.h" />
+    <ClInclude Include="Source\ObjectsRender\Model.h" />
     <ClInclude Include="Source\ObjectsRender\skinned_mesh.h" />
     <ClInclude Include="Source\ObjectsRender\sprite.h" />
     <ClInclude Include="Source\ObjectsRender\sprite_batch.h" />
