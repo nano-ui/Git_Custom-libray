@@ -35,6 +35,15 @@ public:
 	//FBXファイルを読み込み、アニメーションの有無に応じて適切なメッシュに登録し、参照情報を返す
 	MeshReference LoadModelAsset(const wchar_t* fbx_filename);
 
+	//指定されたインデックスの静的メッシュを取得
+	static_mesh* GetStaticMesh(size_t index) { return static_meshes_[index].get(); }
+
+	//指定されたインデックスのスキニングメッシュを取得
+	skinned_mesh* GetSkinnedMesh(size_t index) { return skinned_meshs_[index].get(); }
+
+	//指定されたインデックスのフレームバッファを取得
+	framebuffer* GetFramebuffer(size_t index) { return framebuffers_[index].get(); }
+
 private:
 	//静的メッシュとスキニングメッシュのデータをファイルから読み込み、GPUリソースを作成
 	void LoadMeshes();

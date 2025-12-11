@@ -10,6 +10,14 @@
 #include "misc.h"
 #include "high_resolution_timer.h"
 
+#include "DirectXDevice.h"
+#include "PipelineStates.h"
+//#include "AssetManager.h"
+//#include "Model.h"
+//#include "ModelRenderer.h"
+//#include "SceneConstantBuffers.h"
+//#include "PostProcessConstantBuffers.h"
+
 #ifdef USE_IMGUI
 #include "imgui.h"
 #include "imgui_internal.h"
@@ -66,7 +74,7 @@ public:
 		ImGui::CreateContext();
 		ImGui::GetIO().Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\consola.ttf", 14.0f, nullptr, glyphRangesJapanese);
 		ImGui_ImplWin32_Init(hwnd);
-		ImGui_ImplDX11_Init(device.Get(), immediate_context.Get());
+		ImGui_ImplDX11_Init(directX_device->GetDevice().Get(), directX_device->GetImmediateContext().Get());
 		ImGui::StyleColorsDark();
 #endif
 
@@ -94,10 +102,10 @@ public:
 
 #if 1
 		BOOL fullscreen = 0;
-		swap_chain->GetFullscreenState(&fullscreen, 0);
+		directX_device->GetSwapChain()->GetFullscreenState(&fullscreen, 0);
 		if (fullscreen)
 		{
-			swap_chain->SetFullscreenState(FALSE, 0);
+			directX_device->GetSwapChain()->SetFullscreenState(FALSE, 0);
 		}
 #endif
 
@@ -195,20 +203,14 @@ private:
 		float scaleRange = 10.0f
 	);
 
-	//ID3D11Device* device;
-	//ID3D11DeviceContext* immediate_context;
-	//IDXGISwapChain* swap_chain;
-	//ID3D11RenderTargetView* render_target_view;
-	//ID3D11DepthStencilView* depth_stencil_view;
-	//ID3D11SamplerState* sampler_state[3];
-	//ID3D11DepthStencilState* depth_stencil_state[4];
-	//ID3D11BlendState* blend_states[4];
+	//Microsoft::WRL::ComPtr<ID3D11Device> device;
+	//Microsoft::WRL::ComPtr<ID3D11DeviceContext> immediate_context;
+	//Microsoft::WRL::ComPtr<IDXGISwapChain> swap_chain;
+	//Microsoft::WRL::ComPtr<ID3D11RenderTargetView> render_target_view;
+	//Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depth_stencil_view;
 
-	Microsoft::WRL::ComPtr<ID3D11Device> device;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext> immediate_context;
-	Microsoft::WRL::ComPtr<IDXGISwapChain> swap_chain;
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> render_target_view;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depth_stencil_view;
+	std::unique_ptr<DirectXDevice> directX_device;
+
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler_state[3];
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depth_stencil_state[4];
 	Microsoft::WRL::ComPtr<ID3D11BlendState> blend_states[4];
