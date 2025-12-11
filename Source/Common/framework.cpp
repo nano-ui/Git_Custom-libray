@@ -22,8 +22,6 @@ bool framework::initialize()
 	//レンダーターゲット
 	directX_device->CreateRenderTargetAndDepthStencil();
 
-	//①デバイス・デバイスコンテキスト・スワップチェーンの作成
-
 	HRESULT hr{ S_OK };
 
 	//④ビューピートの設定
