@@ -33,81 +33,8 @@ bool framework::initialize()
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 
-	//サンプラーステイトオブジェクト生成
-	D3D11_SAMPLER_DESC sampler_desc;
-	sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-	sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampler_desc.MipLODBias = 0;
-	sampler_desc.MaxAnisotropy = 16;
-	sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	sampler_desc.BorderColor[0] = 0;
-	sampler_desc.BorderColor[1] = 0;
-	sampler_desc.BorderColor[2] = 0;
-	sampler_desc.BorderColor[3] = 0;
-	sampler_desc.MinLOD = 0;
-	sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
-	hr = directX_device->GetDevice()->CreateSamplerState(&sampler_desc, &sampler_state[0]);
-	 _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-	 sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	 hr = directX_device->GetDevice()->CreateSamplerState(&sampler_desc, &sampler_state[1]);
-	 _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-	 sampler_desc.Filter = D3D11_FILTER_ANISOTROPIC;
-	 hr = directX_device->GetDevice()->CreateSamplerState(&sampler_desc, &sampler_state[2]);
-	 _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-	 //ステンシルステートオブジェクト生成
-	 D3D11_DEPTH_STENCIL_DESC depth_stencil_desc{};
-
-	 //地面やモデルなど、手前にあるものが奥を隠す
-	 depth_stencil_desc.DepthEnable = TRUE;//深度テストON
-	 depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;//深度書き込みON
-	 depth_stencil_desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;//カメラに近いピクセルのみ描画
-	 hr = directX_device->GetDevice()->CreateDepthStencilState(
-		 &depth_stencil_desc, &depth_stencil_state[0]);
-	 _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-	 //半透明オブジェクトやポストエフェクトに使う設定
-	 depth_stencil_desc.DepthEnable = TRUE;//深度テストON
-	 depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;//深度書き込みOFF
-	 depth_stencil_desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;//カメラに近いピクセルのみ描画
-	 hr = directX_device->GetDevice()->CreateDepthStencilState(
-		 &depth_stencil_desc, &depth_stencil_state[1]);
-	 _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-	 //深度テストを無効にした特殊用途
-	 depth_stencil_desc.DepthEnable = FALSE;//深度テストOFF
-	 depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;//深度書き込みON
-	 depth_stencil_desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;//カメラに近いピクセルのみ描画
-	 hr = directX_device->GetDevice()->CreateDepthStencilState(
-		 &depth_stencil_desc, &depth_stencil_state[2]);
-	 _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-	 //完全に深度を無効化した状態
-	 depth_stencil_desc.DepthEnable = FALSE;//深度テストOFF
-	 depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;//深度書き込みOFF
-	 depth_stencil_desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;//カメラに近いピクセルのみ描画
-	 hr = directX_device->GetDevice()->CreateDepthStencilState(
-		 &depth_stencil_desc, &depth_stencil_state[3]);
-	 _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-	 //ブレンディングステートオブジェクト作成
-	 D3D11_BLEND_DESC blend_desc{};
-	 blend_desc.AlphaToCoverageEnable = FALSE;
-	 blend_desc.IndependentBlendEnable = FALSE;
-	 blend_desc.RenderTarget[0].BlendEnable = TRUE;
-	 blend_desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	 blend_desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	 blend_desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	 blend_desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	 blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	 blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	 blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	 hr = directX_device->GetDevice()->CreateBlendState(&blend_desc, &blend_states[0]);
-	 _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	pipeline_states = std::make_unique<PipelineStates>(directX_device->GetDevice().Get());
+	pipeline_states->Initialize();
 
 	 //シーン定数バッファオブジェクトを生成
 	 D3D11_BUFFER_DESC buffer_desc{};
@@ -157,46 +84,6 @@ bool framework::initialize()
 	 initData.pSysMem = &bloomParams;
 
 	 directX_device->GetDevice()->CreateBuffer(&desc, &initData, &bloomParamBuffer);
-
-	 //ラスタライザステートオブジェクト作成
-	 D3D11_RASTERIZER_DESC rasterizer_desc{};
-
-	 //ポリゴンの内部を塗りつぶして描画する
-	 rasterizer_desc.FillMode = D3D11_FILL_SOLID;
-	 //カメラから見て背面を向いているポリゴンを描画しない
-	 rasterizer_desc.CullMode = D3D11_CULL_BACK;
-	 //時計回りに定義された頂点を持つポリゴンを前面として扱う
-	 rasterizer_desc.FrontCounterClockwise = TRUE;
-	 //描画するポリゴンの深度値にバイアスを加えない
-	 rasterizer_desc.DepthBias = 0;
-	 //深度バイアスのクランプ(Z値の上限・下限)を適用しない
-	 rasterizer_desc.DepthBiasClamp = 0;
-	 //カメラから見た傾斜に基づいて深度オフセットを適用しない
-	 rasterizer_desc.SlopeScaledDepthBias = 0;
-	 //カメラより手前のオブジェクトとカメラから一定距離離れているオブジェクトを描画しない
-	 rasterizer_desc.DepthClipEnable = TRUE;
-	 //描画するピクセルが、シザー短形によって制限されないようにする
-	 rasterizer_desc.ScissorEnable = FALSE;
-	 //マルチサンプリング(ジャギー)を無効にする
-	 rasterizer_desc.MultisampleEnable = FALSE;
-	 //ラインのアンチエイジングを無効にする
-	 rasterizer_desc.AntialiasedLineEnable = FALSE;
-
-	 hr = directX_device->GetDevice()->CreateRasterizerState(
-		 &rasterizer_desc,
-		 reasterizer_states[0].GetAddressOf()
-	 );
-	 _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-	 //ポリゴンの辺のみを描画する
-	 rasterizer_desc.FillMode = D3D11_FILL_WIREFRAME;
-
-	 hr = directX_device->GetDevice()->CreateRasterizerState(
-		 &rasterizer_desc,
-		 reasterizer_states[1].GetAddressOf()
-	 );
-	 _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
 
 	 //上記までがDirectX11の初期設定処理
 
@@ -318,7 +205,7 @@ void framework::render(
 
 	// ここからオブジェクトの描画
 
-	directX_device->GetImmediateContext()->RSSetState(reasterizer_states[0].Get());
+	directX_device->GetImmediateContext()->RSSetState(pipeline_states->GetRasterizerState(0).Get());
 
 	// ここが毎フレームの描画の準備なのでこれより上に書いても意味が無い
 
@@ -339,16 +226,17 @@ void framework::render(
 		directX_device->GetDepthStencilView().Get());
 
 	// これがシェーダーに利用されるであろう設定
-	directX_device->GetImmediateContext()->PSSetSamplers(0, 1, sampler_state[0].GetAddressOf());
-	directX_device->GetImmediateContext()->PSSetSamplers(1, 1, sampler_state[1].GetAddressOf());
-	directX_device->GetImmediateContext()->PSSetSamplers(2, 1, sampler_state[2].GetAddressOf());
+	directX_device->GetImmediateContext()->PSSetSamplers(0, 1, pipeline_states->GetSamplerState(0).GetAddressOf());
+	directX_device->GetImmediateContext()->PSSetSamplers(1, 1, pipeline_states->GetSamplerState(1).GetAddressOf());
+	directX_device->GetImmediateContext()->PSSetSamplers(2, 1, pipeline_states->GetSamplerState(2).GetAddressOf());
 	
 	// ここが毎オブジェクトごとの都度の設定
 	directX_device->GetImmediateContext()->OMSetDepthStencilState(
-		depth_stencil_state[3].Get(), 1);
+		pipeline_states->GetDepthStenceilState(3).Get(),
+		1);
 	
 	directX_device->GetImmediateContext()->OMSetBlendState(
-		blend_states[0].Get(),
+		pipeline_states->GetBlendState(0).Get(),
 		nullptr,
 		0xFFFFFFFF);
 
@@ -376,30 +264,7 @@ void framework::render(
 	data.camera_position.w = 0;
 
 #if true
-	//sprites[0]->render(
-	//	immediate_context.Get(),
-	//	position.x,
-	//	size.x,
-	//	position.y,
-	//	size.y,
-	//	render_color.x,
-	//	render_color.y,
-	//	render_color.z,
-	//	render_color.w,
-	//	angle
-	//);
 
-	//sprites[1]->render(
-	//	immediate_context.Get(),
-	//	700,
-	//	200,
-	//	200,
-	//	200,
-	//	1, 1, 1, 1,
-	//	45,
-	//	0, 0, 140, 240
-	//);
-	
 #endif
 
 	float x{ 0 };
@@ -421,20 +286,6 @@ void framework::render(
 	}
 #else
 
-	//sprute_batches[0]->begin(immediate_context.Get());
-	//for (size_t i = 0; i < 1092; i++)
-	//{
-	//	sprute_batches[0]->render(immediate_context.Get(),
-	//		x, static_cast<float>(static_cast<int>(y) % 720), 64, 64,
-	//		1, 1, 1, 1, 0, 140 * 0, 240 * 0, 140, 240);
-	//	x += 32;
-	//	if (x > 1280 - 64)
-	//	{
-	//		x = 0;
-	//		y += 24;
-	//	}
-	//}
-	//sprute_batches[0]->end(immediate_context.Get());
 #endif
 
 	framebuffers[0]->clear(directX_device->GetImmediateContext().Get());
@@ -442,10 +293,11 @@ void framework::render(
 
 	// 深度テスト OFF
 	directX_device->GetImmediateContext()->OMSetDepthStencilState(
-		depth_stencil_state[3].Get(), 1);
+		pipeline_states->GetDepthStenceilState(0).Get(),
+		1);
 
-	// 面カリングなし（全部描画）
-	directX_device->GetImmediateContext()->RSSetState(reasterizer_states[2].Get());
+	// 裏面カリングなし（全部描画）
+	directX_device->GetImmediateContext()->RSSetState(pipeline_states->GetRasterizerState(2).Get());
 
 	//背景描画
 	sprute_batches[0]->begin(directX_device->GetImmediateContext().Get());
@@ -459,10 +311,11 @@ void framework::render(
 	//	1, 1, 1, 1);
 
 	directX_device->GetImmediateContext()->OMSetDepthStencilState(
-		depth_stencil_state[0].Get(), 1);
+		pipeline_states->GetDepthStenceilState(0).Get(),
+		1);
 
 
-	directX_device->GetImmediateContext()->RSSetState(reasterizer_states[0].Get());
+	directX_device->GetImmediateContext()->RSSetState(pipeline_states->GetRasterizerState(0).Get());
 
 	/*FBX SDKが読み込むモデルのZ軸がDirectXのY軸に対応し、
 	Y軸がDirectXの-Z軸に対応するなど、
@@ -492,10 +345,10 @@ void framework::render(
 
 	// 深度テスト ON
 	directX_device->GetImmediateContext()->OMSetDepthStencilState(
-		depth_stencil_state[0].Get(), 1);
+		pipeline_states->GetDepthStenceilState(1).Get(), 1);
 
 	// 面カリングあり
-	directX_device->GetImmediateContext()->RSSetState(reasterizer_states[0].Get());
+	directX_device->GetImmediateContext()->RSSetState(pipeline_states->GetRasterizerState(0).Get());
 
 	// geometric_primitives[0] の 位置と回転と拡大を計算
 	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(
@@ -559,31 +412,17 @@ void framework::render(
 	//現在のボーン姿勢を使ってスキンメッシュを描画
 	skinned_meshes[0]->render
 	(directX_device->GetImmediateContext().Get(), world, material_color, &keyframe);
-		
 
-	//geometric_primitives[0]->render(
-	//	immediate_context.Get(),
-	//	world,
-	//	{ 0.5f,0.8f,0.2f,1.0f }
-	//);
-
-	//static_meshes[0]->render(
-	//	immediate_context.Get(),
-	//	world,
-	//	{ 1.0f,1.0f,1.0f,1.0f });
-
-
-
-	directX_device->GetImmediateContext()->RSSetState(reasterizer_states[1].Get());
+	directX_device->GetImmediateContext()->RSSetState(pipeline_states->GetRasterizerState(0).Get());
 
 
 
 	S = { DirectX::XMMatrixScaling(
-		w_cube.position.x,w_cube.position.y,w_cube.position.z) };
+		w_cube.scale.x,w_cube.scale.y,w_cube.scale.z) };
 	R = { DirectX::XMMatrixRotationRollPitchYaw(
 		w_cube.rotation.x,w_cube.rotation.y,w_cube.rotation.z) };
 	T = { DirectX::XMMatrixTranslation(
-		w_cube.scale.x,w_cube.scale.y,w_cube.scale.z) };
+		w_cube.position.x,w_cube.position.y,w_cube.position.z) };
 
 	DirectX::XMFLOAT4X4 W_world;
 	/*オブジェクトの最終的なワールド変換行列を計算し、保存する*/
@@ -597,10 +436,10 @@ void framework::render(
 
 	// 深度テスト OFF
 	directX_device->GetImmediateContext()->OMSetDepthStencilState(
-		depth_stencil_state[3].Get(), 1);
+		pipeline_states->GetDepthStenceilState(0).Get(), 1);
 
 	// 面カリングなし（全部描画）
-	directX_device->GetImmediateContext()->RSSetState(reasterizer_states[2].Get());
+	directX_device->GetImmediateContext()->RSSetState(pipeline_states->GetRasterizerState(2).Get());
 
 
 #if 1

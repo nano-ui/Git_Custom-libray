@@ -210,11 +210,8 @@ private:
 	//Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depth_stencil_view;
 
 	std::unique_ptr<DirectXDevice> directX_device;
+	std::unique_ptr<PipelineStates> pipeline_states;
 
-	Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler_state[3];
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depth_stencil_state[4];
-	Microsoft::WRL::ComPtr<ID3D11BlendState> blend_states[4];
-	Microsoft::WRL::ComPtr<ID3D11RasterizerState> reasterizer_states[3];
 	Microsoft::WRL::ComPtr<ID3D11Buffer>constnt_buffer[8];
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders[8];
 

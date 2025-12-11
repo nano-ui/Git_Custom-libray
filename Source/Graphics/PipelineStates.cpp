@@ -18,7 +18,7 @@ void PipelineStates::Initialize()
 
 	//リピート(INDEX : 0)
 	D3D11_SAMPLER_DESC sampler_desc_repeat{};									//設定構造体を初期化
-	sampler_desc_repeat.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;	//テクセル（テクスチャのピクセル）を補間する方法（ここでは線形補間）を設定
+	sampler_desc_repeat.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;;				//テクセル（テクスチャのピクセル）を補間する方法（ここでは線形補間）を設定
 	sampler_desc_repeat.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;					//U座標（横方向）が範囲外の場合、テクスチャを繰り返し
 	sampler_desc_repeat.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;					//V座標（縦方向）が範囲外の場合、テクスチャを繰り返し
 	sampler_desc_repeat.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;					//W座標（奥行きや、テクスチャ配列のインデックス）が範囲外の場合、テクスチャを繰り返し
@@ -95,9 +95,9 @@ void PipelineStates::Initialize()
 	);
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-	//深度書き込み無効、深度テストは等しい場合のみパス　(INDEX　: 3)
+	//深度書き込み行こうか、深度テストは等しい場合のみパス　(INDEX　: 3)
 	D3D11_DEPTH_STENCIL_DESC depth_stencile_desc_equal{};
-	depth_stencile_desc_equal.DepthEnable = TRUE;								//深度テストを無効化
+	depth_stencile_desc_equal.DepthEnable = TRUE;								//深度テストを有効化
 	depth_stencile_desc_equal.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;		//深度書き込みを無効化
 	depth_stencile_desc_equal.DepthFunc = D3D11_COMPARISON_EQUAL;				//深度値が等しい場合のみパス
 
@@ -168,6 +168,7 @@ void PipelineStates::Initialize()
 	D3D11_RASTERIZER_DESC rasterizer_desc_default{};
 	rasterizer_desc_default.FillMode = D3D11_FILL_SOLID;	//ポリゴンをソリッドで（中を塗りつぶして）描画
 	rasterizer_desc_default.CullMode = D3D11_CULL_BACK;		//裏面カリング有効化（裏側のポリゴンを描画しない）
+	rasterizer_desc_default.FrontCounterClockwise = TRUE;
 	rasterizer_desc_default.DepthClipEnable = TRUE;			//深度クリッピングを有効化
 	
 	//ラスタライザステートオブジェクトを作成
