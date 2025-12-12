@@ -216,10 +216,10 @@
     <ClCompile Include="imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui\imgui_ja_gryph_ranges.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Source\Common\DirectXDevice.cpp" />
-    <ClCompile Include="Source\Common\framework.cpp" />
     <ClCompile Include="Source\Common\main.cpp" />
+    <ClCompile Include="Source\Graphics\DirectXDevice.cpp" />
     <ClCompile Include="Source\Graphics\framebuffer.cpp" />
+    <ClCompile Include="Source\Graphics\framework.cpp" />
     <ClCompile Include="Source\Graphics\fullscreen_quad.cpp" />
     <ClCompile Include="Source\Graphics\PipelineStates.cpp" />
     <ClCompile Include="Source\Graphics\PostProcessConstantBuffers.cpp" />
@@ -244,12 +244,12 @@
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
-    <ClInclude Include="Source\Common\DirectXDevice.h" />
-    <ClInclude Include="Source\Common\framework.h" />
     <ClInclude Include="Source\Common\high_resolution_timer.h" />
     <ClInclude Include="Source\Common\misc.h" />
+    <ClInclude Include="Source\Graphics\DirectXDevice.h" />
     <ClInclude Include="Source\Graphics\fbx_utility.h" />
     <ClInclude Include="Source\Graphics\framebuffer.h" />
+    <ClInclude Include="Source\Graphics\framework.h" />
     <ClInclude Include="Source\Graphics\fullscreen_quad.h" />
     <ClInclude Include="Source\Graphics\PipelineStates.h" />
     <ClInclude Include="Source\Graphics\PostProcessConstantBuffers.h" />

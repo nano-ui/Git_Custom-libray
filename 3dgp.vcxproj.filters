@@ -118,14 +118,8 @@
     <ClCompile Include="Source\Common\main.cpp">
       <Filter>Source\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\DirectXDevice.cpp">
-      <Filter>Source\Graphics\DirectXDivice</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\framebuffer.cpp">
       <Filter>Source\Graphics\FrameBuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\framework.cpp">
-      <Filter>Source\Graphics\Framework</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\fullscreen_quad.cpp">
       <Filter>Source\Graphics\FullscreenQuad</Filter>
@@ -169,6 +163,12 @@
     <ClCompile Include="Source\ObjectsRender\ModelRenderer.cpp">
       <Filter>Source\ObjectRender\ModelRenderer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\framework.cpp">
+      <Filter>Source\Graphics\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\DirectXDevice.cpp">
+      <Filter>Source\Graphics\DirectXDivice</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -201,14 +201,8 @@
     <ClInclude Include="Source\Common\misc.h">
       <Filter>Source\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\DirectXDevice.h">
-      <Filter>Source\Graphics\DirectXDivice</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphics\framebuffer.h">
       <Filter>Source\Graphics\FrameBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\framework.h">
-      <Filter>Source\Graphics\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\fullscreen_quad.h">
       <Filter>Source\Graphics\FullscreenQuad</Filter>
@@ -254,6 +248,12 @@
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\ModelRenderer.h">
       <Filter>Source\ObjectRender\ModelRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\framework.h">
+      <Filter>Source\Graphics\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\DirectXDevice.h">
+      <Filter>Source\Graphics\DirectXDivice</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
