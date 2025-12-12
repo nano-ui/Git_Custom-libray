@@ -169,6 +169,9 @@
     <ClCompile Include="Source\Graphics\DirectXDevice.cpp">
       <Filter>Source\Graphics\DirectXDivice</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\Graphics.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -254,6 +257,9 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\DirectXDevice.h">
       <Filter>Source\Graphics\DirectXDivice</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Graphics.h">
+      <Filter>Source\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

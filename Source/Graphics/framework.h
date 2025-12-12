@@ -10,8 +10,8 @@
 #include "misc.h"
 #include "high_resolution_timer.h"
 
-#include "DirectXDevice.h"
-#include "PipelineStates.h"
+#include "Graphics.h"
+
 //#include "AssetManager.h"
 //#include "Model.h"
 //#include "ModelRenderer.h"
@@ -74,7 +74,7 @@ public:
 		ImGui::CreateContext();
 		ImGui::GetIO().Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\consola.ttf", 14.0f, nullptr, glyphRangesJapanese);
 		ImGui_ImplWin32_Init(hwnd);
-		ImGui_ImplDX11_Init(directX_device->GetDevice().Get(), directX_device->GetImmediateContext().Get());
+		ImGui_ImplDX11_Init(Graphics::Instance().GetDevice(), Graphics::Instance().GetContext());
 		ImGui::StyleColorsDark();
 #endif
 
@@ -95,17 +95,15 @@ public:
 		}
 
 #ifdef USE_IMGUI
-		ImGui_ImplDX11_Shutdown();
-		ImGui_ImplWin32_Shutdown();
-		ImGui::DestroyContext();
+		ImGui_ImplDX11_Init(Graphics::Instance().GetDevice(), Graphics::Instance().GetContext());
 #endif
 
 #if 1
 		BOOL fullscreen = 0;
-		directX_device->GetSwapChain()->GetFullscreenState(&fullscreen, 0);
+		Graphics::Instance().GetDirectXDevice()->GetSwapChain()->GetFullscreenState(&fullscreen, 0);
 		if (fullscreen)
 		{
-			directX_device->GetSwapChain()->SetFullscreenState(FALSE, 0);
+			Graphics::Instance().GetDirectXDevice()->GetSwapChain()->SetFullscreenState(FALSE, 0);
 		}
 #endif
 
@@ -202,16 +200,6 @@ private:
 		float posRange = 1000.0f,
 		float scaleRange = 10.0f
 	);
-
-	//Microsoft::WRL::ComPtr<ID3D11Device> device;
-	//Microsoft::WRL::ComPtr<ID3D11DeviceContext> immediate_context;
-	//Microsoft::WRL::ComPtr<IDXGISwapChain> swap_chain;
-	//Microsoft::WRL::ComPtr<ID3D11RenderTargetView> render_target_view;
-	//Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depth_stencil_view;
-
-	std::unique_ptr<DirectXDevice> directX_device;
-	std::unique_ptr<PipelineStates> pipeline_states;
-
 	Microsoft::WRL::ComPtr<ID3D11Buffer>constnt_buffer[8];
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders[8];
 

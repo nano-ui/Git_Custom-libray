@@ -69,5 +69,5 @@ void Graphics::BeginFrame(float r, float g, float b, float a)
 void Graphics::EndFrame()
 {
     //‚’¼“¯Šú‘Ò‹@
-    directx_device->GetSwapChain()->Present(1, 0);
+    directx_device->GetSwapChain()->Present(0, 0);
 }

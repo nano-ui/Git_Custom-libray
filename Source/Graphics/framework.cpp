@@ -8,34 +8,20 @@ framework::framework(HWND hwnd) : hwnd(hwnd)
 	cube.scale = { 0.4f,0.4f,0.4f };
 	w_cube.position = { 3,0,0 };
 	camera.position = { 0.0f,0.0f,10.0f };
-
-	directX_device = std::make_unique<DirectXDevice>(hwnd);
 }
 
 bool framework::initialize()
 {
 	//デバイス・コンテキスト・スワップチェーンを初期化
-	if (!directX_device->Initialize())
+	if (!Graphics::Instance().Initialize(hwnd))
 	{
 		return false;
 	}
 
-	//レンダーターゲット
-	directX_device->CreateRenderTargetAndDepthStencil();
+	auto device = Graphics::Instance().GetDevice();
+	auto context = Graphics::Instance().GetContext();
 
 	HRESULT hr{ S_OK };
-
-	//④ビューピートの設定
-	D3D11_VIEWPORT viewport{};
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	viewport.Width = static_cast<float>(SCREEN_WIDTH);
-	viewport.Height = static_cast<float>(SCREEN_HEIGHT);
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-
-	pipeline_states = std::make_unique<PipelineStates>(directX_device->GetDevice().Get());
-	pipeline_states->Initialize();
 
 	 //シーン定数バッファオブジェクトを生成
 	 D3D11_BUFFER_DESC buffer_desc{};
@@ -45,7 +31,7 @@ bool framework::initialize()
 	 buffer_desc.CPUAccessFlags = 0;
 	 buffer_desc.MiscFlags = 0;
 	 buffer_desc.StructureByteStride = 0;
-	 hr = directX_device->GetDevice()->CreateBuffer(
+	 hr = device->CreateBuffer(
 		 &buffer_desc,
 		 nullptr,
 		 constnt_buffer[0].GetAddressOf());
@@ -58,22 +44,22 @@ bool framework::initialize()
 	 cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	 cbd.ByteWidth = sizeof(ThresholdBuffer);
 
-	 directX_device->GetDevice()->CreateBuffer(&cbd, nullptr, &thresholdBuffer);
+	 device->CreateBuffer(&cbd, nullptr, &thresholdBuffer);
 
-	 create_ps_from_cso(directX_device->GetDevice().Get(), "luminance_extraction_ps.cso", pixel_shaders[0].GetAddressOf());
+	 create_ps_from_cso(device, "luminance_extraction_ps.cso", pixel_shaders[0].GetAddressOf());
 
 	 geometric_primitives[0] = 
-		 std::make_unique<geometric_primitive>(directX_device->GetDevice().Get());
+		 std::make_unique<geometric_primitive>(device);
 
 	 geometric_primitives[1] =
-		 std::make_unique<geometric_primitive>(directX_device->GetDevice().Get());
+		 std::make_unique<geometric_primitive>(device);
 
-	 framebuffers[1] = std::make_unique<framebuffer>(directX_device->GetDevice().Get(), 1280 / 2, 720 / 2);
+	 framebuffers[1] = std::make_unique<framebuffer>(device, 1280 / 2, 720 / 2);
 
-	 framebuffers[2] = std::make_unique<framebuffer>(directX_device->GetDevice().Get(), 1280 / 2, 720 / 2);
+	 framebuffers[2] = std::make_unique<framebuffer>(device, 1280 / 2, 720 / 2);
 
-	 create_ps_from_cso(directX_device->GetDevice().Get(), "blur_ps.cso", pixel_shaders[1].GetAddressOf());
-	 create_ps_from_cso(directX_device->GetDevice().Get(), "blur_ps.cso", pixel_shaders[2].GetAddressOf());
+	 create_ps_from_cso(device, "blur_ps.cso", pixel_shaders[1].GetAddressOf());
+	 create_ps_from_cso(device, "blur_ps.cso", pixel_shaders[2].GetAddressOf());
 
 	 D3D11_BUFFER_DESC desc = {};
 	 desc.Usage = D3D11_USAGE_DEFAULT;
@@ -84,37 +70,33 @@ bool framework::initialize()
 	 D3D11_SUBRESOURCE_DATA initData = {};
 	 initData.pSysMem = &bloomParams;
 
-	 directX_device->GetDevice()->CreateBuffer(&desc, &initData, &bloomParamBuffer);
+	 device->CreateBuffer(&desc, &initData, &bloomParamBuffer);
 
 	 //上記までがDirectX11の初期設定処理
 
 	 //下記からはゲームで必要なオブジェクトの初期化
 
-
-	//描画する場所を設定
-	 directX_device->GetImmediateContext()->RSSetViewports(1, &viewport);
-
 	sprites[0] = std::make_unique<sprite>
-		(directX_device->GetDevice().Get(), L"./resources/cyberpunk.jpg");
+		(device, L"./resources/cyberpunk.jpg");
 	sprites[1] = std::make_unique<sprite>
-		(directX_device->GetDevice().Get(), L"./resources/player-sprites.png");
+		(device, L"./resources/player-sprites.png");
 	sprites[2] = std::make_unique<sprite>
-		(directX_device->GetDevice().Get(), L"./resources/fonts/font0.png");
+		(device, L"./resources/fonts/font0.png");
 	//sprute_batches[0] = std::make_unique<sprite_batch>
 	//	(device.Get(), L"./resources/player-sprites.png", 2048);
 	sprute_batches[0] = std::make_unique<sprite_batch>
-		(directX_device->GetDevice().Get(), L"./resources/screenshot.jpg", 1);
+		(device, L"./resources/screenshot.jpg", 1);
 	static_meshes[0] = std::make_unique<static_mesh>
-		(directX_device->GetDevice().Get(), L"./resources/Rock/Rock.obj");
+		(device, L"./resources/Rock/Rock.obj");
 
 	skinned_meshes[0] = std::make_unique<skinned_mesh>
-		(directX_device->GetDevice().Get(), "./resources/nico.fbx", true);
+		(device, "./resources/nico.fbx", true);
 	//skinned_meshes[0] = make_unique<skinned_mesh>(device.Get(), "./resources/AimTest/MNK_Mesh.fbx");
 	//skinned_meshes[0]->append_animations("./resources/AimTest/Aim_Space.fbx", 0);
 
-	framebuffers[0] = std::make_unique<framebuffer>(directX_device->GetDevice().Get(), 1280, 720);
+	framebuffers[0] = std::make_unique<framebuffer>(device, 1280, 720);
 
-	bit_block_transfer = std::make_unique<fullscreen_quad>(directX_device->GetDevice().Get());
+	bit_block_transfer = std::make_unique<fullscreen_quad>(device);
 
 	return true;
 }
@@ -182,69 +164,37 @@ void framework::render(
 {
 	HRESULT hr{ S_OK };
 
-	//GPU が同じテクスチャを「描画先」としても「読み取り元」としても使わないように、一旦すべてのバインドを解除
-	ID3D11RenderTargetView* null_render_target_views[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT]{};
-	directX_device->GetImmediateContext()->OMSetRenderTargets(_countof(null_render_target_views), null_render_target_views, 0);//現在の「描画ターゲット」を全部解除して、何にも描かない状態に戻す
+	auto context = Graphics::Instance().GetContext();
+	auto states = Graphics::Instance().GetPipelineStates();
+
+	Graphics::Instance().BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);
+
 	ID3D11ShaderResourceView* null_shader_resource_views[D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT]{};
-	directX_device->GetImmediateContext()->VSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);//頂点シェーダーで使っていた読み取り用テクスチャを全部解除
-	directX_device->GetImmediateContext()->PSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);//ピクセルシェーダーで使っていた読み取り用テクスチャを全部解除
+	context->VSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);//頂点シェーダーで使っていた読み取り用テクスチャを全部解除
+	context->PSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);//ピクセルシェーダーで使っていた読み取り用テクスチャを全部解除
 
 	//定数バッファ更新
-	directX_device->GetImmediateContext()->UpdateSubresource(
-		constnt_buffer[0].Get(),
-		0, 0,
-		&data,
-		0, 0);
-	directX_device->GetImmediateContext()->VSSetConstantBuffers(
-		1, 1, constnt_buffer[0].GetAddressOf()
-	);
+	context->UpdateSubresource(constnt_buffer[0].Get(), 0, 0, &data, 0, 0);
+	context->VSSetConstantBuffers(1, 1, constnt_buffer[0].GetAddressOf());
 
-	directX_device->GetImmediateContext()->PSSetConstantBuffers(
-		1, 1,
-		constnt_buffer[0].GetAddressOf()
-	);
+	context->PSSetConstantBuffers(1, 1, constnt_buffer[0].GetAddressOf());
 
 	// ここからオブジェクトの描画
 
-	directX_device->GetImmediateContext()->RSSetState(pipeline_states->GetRasterizerState(0).Get());
-
-	// ここが毎フレームの描画の準備なのでこれより上に書いても意味が無い
-
-	//レンダーターゲットと深度クリア
-	FLOAT color[]{ 0.2f,0.2f,0.2f,1.0f };
-	directX_device->GetImmediateContext()->ClearRenderTargetView(
-		directX_device->GetRenderTargetView().Get(), color);
-
-	directX_device->GetImmediateContext()->ClearDepthStencilView(
-		directX_device->GetDepthStencilView().Get(),
-		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-		1.0f,
-		0);
-
-	directX_device->GetImmediateContext()->OMSetRenderTargets(
-		1,
-		directX_device->GetRenderTargetView().GetAddressOf(),
-		directX_device->GetDepthStencilView().Get());
-
 	// これがシェーダーに利用されるであろう設定
-	directX_device->GetImmediateContext()->PSSetSamplers(0, 1, pipeline_states->GetSamplerState(0).GetAddressOf());
-	directX_device->GetImmediateContext()->PSSetSamplers(1, 1, pipeline_states->GetSamplerState(1).GetAddressOf());
-	directX_device->GetImmediateContext()->PSSetSamplers(2, 1, pipeline_states->GetSamplerState(2).GetAddressOf());
+	context->PSSetSamplers(0, 1, states->GetSamplerState(0).GetAddressOf());
+	context->PSSetSamplers(1, 1, states->GetSamplerState(1).GetAddressOf());
+	context->PSSetSamplers(2, 1, states->GetSamplerState(2).GetAddressOf());
 	
 	// ここが毎オブジェクトごとの都度の設定
-	directX_device->GetImmediateContext()->OMSetDepthStencilState(
-		pipeline_states->GetDepthStenceilState(3).Get(),
-		1);
+	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
 	
-	directX_device->GetImmediateContext()->OMSetBlendState(
-		pipeline_states->GetBlendState(0).Get(),
-		nullptr,
-		0xFFFFFFFF);
+	context->OMSetBlendState(states->GetBlendState(0).Get(), nullptr, 0xFFFFFFFF);
 
 	//ビュー・プロジェクション行列作成
 	D3D11_VIEWPORT viewport;
 	UINT num_viewports{ 1 };
-	directX_device->GetImmediateContext()->RSGetViewports(&num_viewports, &viewport);
+	context->RSGetViewports(&num_viewports, &viewport);
 
 	// カメラの設定
 	DirectX::XMVECTOR eye{ DirectX::XMVectorSet(
@@ -289,34 +239,23 @@ void framework::render(
 
 #endif
 
-	framebuffers[0]->clear(directX_device->GetImmediateContext().Get());
-	framebuffers[0]->activate(directX_device->GetImmediateContext().Get());
+	framebuffers[0]->clear(context);
+	framebuffers[0]->activate(context);
 
 	// 深度テスト OFF
-	directX_device->GetImmediateContext()->OMSetDepthStencilState(
-		pipeline_states->GetDepthStenceilState(0).Get(),
-		1);
+	context->OMSetDepthStencilState(states->GetDepthStenceilState(0).Get(), 1);
 
 	// 裏面カリングなし（全部描画）
-	directX_device->GetImmediateContext()->RSSetState(pipeline_states->GetRasterizerState(2).Get());
+	context->RSSetState(states->GetRasterizerState(2).Get());
 
 	//背景描画
-	sprute_batches[0]->begin(directX_device->GetImmediateContext().Get());
-	sprute_batches[0]->render(directX_device->GetImmediateContext().Get(),0, 0, 1280, 720);
-	sprute_batches[0]->end(directX_device->GetImmediateContext().Get());
+	sprute_batches[0]->begin(context);
+	sprute_batches[0]->render(context,0, 0, 1280, 720);
+	sprute_batches[0]->end(context);
 
-	//sprites[2]->textout(
-	//	immediate_context.Get(),
-	//	"ECC TEST",
-	//	100, 100, 32, 32,
-	//	1, 1, 1, 1);
+	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
 
-	directX_device->GetImmediateContext()->OMSetDepthStencilState(
-		pipeline_states->GetDepthStenceilState(0).Get(),
-		1);
-
-
-	directX_device->GetImmediateContext()->RSSetState(pipeline_states->GetRasterizerState(0).Get());
+	context->RSSetState(states->GetRasterizerState(0).Get());
 
 	/*FBX SDKが読み込むモデルのZ軸がDirectXのY軸に対応し、
 	Y軸がDirectXの-Z軸に対応するなど、
@@ -345,11 +284,10 @@ void framework::render(
 	};
 
 	// 深度テスト ON
-	directX_device->GetImmediateContext()->OMSetDepthStencilState(
-		pipeline_states->GetDepthStenceilState(1).Get(), 1);
+	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
 
 	// 面カリングあり
-	directX_device->GetImmediateContext()->RSSetState(pipeline_states->GetRasterizerState(0).Get());
+	context->RSSetState(states->GetRasterizerState(0).Get());
 
 	// geometric_primitives[0] の 位置と回転と拡大を計算
 	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(
@@ -412,9 +350,9 @@ void framework::render(
 
 	//現在のボーン姿勢を使ってスキンメッシュを描画
 	skinned_meshes[0]->render
-	(directX_device->GetImmediateContext().Get(), world, material_color, &keyframe);
+	(context, world, material_color, &keyframe);
 
-	directX_device->GetImmediateContext()->RSSetState(pipeline_states->GetRasterizerState(0).Get());
+	context->RSSetState(states->GetRasterizerState(0).Get());
 
 
 
@@ -429,46 +367,42 @@ void framework::render(
 	/*オブジェクトの最終的なワールド変換行列を計算し、保存する*/
 	DirectX::XMStoreFloat4x4(&W_world, C* S* R* T);
 	geometric_primitives[1]->render(
-		directX_device->GetImmediateContext().Get(),
+		context,
 		W_world,
 		{ 0.5f,0.8f,0.2f,1.0f }
 	);
 	//immediate_context->RSSetState(reasterizer_states[0].Get());
 
 	// 深度テスト OFF
-	directX_device->GetImmediateContext()->OMSetDepthStencilState(
-		pipeline_states->GetDepthStenceilState(0).Get(), 1);
+	context->OMSetDepthStencilState(states->GetDepthStenceilState(0).Get(), 1);
 
 	// 面カリングなし（全部描画）
-	directX_device->GetImmediateContext()->RSSetState(pipeline_states->GetRasterizerState(2).Get());
+	context->RSSetState(states->GetRasterizerState(2).Get());
 
 
 #if 1
-	framebuffers[0]->deactivate(directX_device->GetImmediateContext().Get());
+	framebuffers[0]->deactivate(context);
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	directX_device->GetImmediateContext()->Map(thresholdBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	context->Map(thresholdBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	memcpy(mappedResource.pData, &tb, sizeof(tb));
-	directX_device->GetImmediateContext()->Unmap(thresholdBuffer.Get(), 0);
+	context->Unmap(thresholdBuffer.Get(), 0);
 
 	// ピクセルシェーダーへセット
-	directX_device->GetImmediateContext()->PSSetConstantBuffers(0, 1, thresholdBuffer.GetAddressOf());
+	context->PSSetConstantBuffers(0, 1, thresholdBuffer.GetAddressOf());
 
-	directX_device->GetImmediateContext()->UpdateSubresource(
-		bloomParamBuffer.Get(), 0, nullptr, &bloomParams, 0, 0);
-	directX_device->GetImmediateContext()->PSSetConstantBuffers(1, 1, bloomParamBuffer.GetAddressOf());
-
+	context->UpdateSubresource(bloomParamBuffer.Get(), 0, nullptr, &bloomParams, 0, 0);
+	context->PSSetConstantBuffers(1, 1, bloomParamBuffer.GetAddressOf());
 
 
-	framebuffers[1]->clear(directX_device->GetImmediateContext().Get());
 
-	framebuffers[1]->activate(directX_device->GetImmediateContext().Get());
+	framebuffers[1]->clear(context);
 
-	bit_block_transfer->blit(directX_device->GetImmediateContext().Get(),
-		framebuffers[0]->shader_resource_views[0].GetAddressOf(),
-		0, 1, pixel_shaders[0].Get());
+	framebuffers[1]->activate(context);
 
-	framebuffers[1]->deactivate(directX_device->GetImmediateContext().Get());
+	bit_block_transfer->blit(context, framebuffers[0]->shader_resource_views[0].GetAddressOf(), 0, 1, pixel_shaders[0].Get());
+
+	framebuffers[1]->deactivate(context);
 
 #if 0
 	bit_block_transfer->blit(immediate_context.Get(),
@@ -480,11 +414,7 @@ void framework::render(
 	 framebuffers[1]->shader_resource_views[0].Get() };
 
 
-	bit_block_transfer->blit(
-		directX_device->GetImmediateContext().Get(),
-		shader_resource_view,
-		0, 2,
-		pixel_shaders[1].Get());
+	bit_block_transfer->blit(context, shader_resource_view, 0, 2, pixel_shaders[1].Get());
 
 
 #endif
@@ -502,7 +432,7 @@ void framework::render(
 
 	// これが描画の最終チェックでこれより下に書いても意味がない
 	//FrontバッファとBackバッファ切り替え
-	directX_device->GetSwapChain()->Present(sync_interval, 0);
+	Graphics::Instance().EndFrame();
 }
 
 void framework::render(
@@ -515,28 +445,32 @@ void framework::render(
 
 bool framework::uninitialize()
 {
-	//device->Release();
-	//immediate_context->Release();
-	//swap_chain->Release();
-	//render_target_view->Release();
-	//depth_stencil_view->Release();
+	//ImGuiの終了
+#ifdef USE_IMGUI
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+#endif // USE_OMGUI
 
-	//for (int i = 0; i < 3; i++)
-	//{
-	//	sampler_state[i]->Release();
-	//}
+	//ゲームリソースの開放
+	for (auto& sprite : sprites) sprite.reset();
+	for (auto& batch : sprute_batches) batch.reset();
+	for (auto& mesh : static_meshes) mesh.reset();
+	for (auto& mesh : skinned_meshes)mesh.reset();
+	for (auto& fb : framebuffers)fb.reset();
 
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	depth_stencil_state[i]->Release();
-	//}
+	for (auto& prim : geometric_primitives)prim.reset();
 
-	//for (int i = 0; i < 1; i++)
-	//{
-	//	blend_states[i]->Release();
-	//}
+	if (bit_block_transfer)bit_block_transfer.reset();
 
-	//for (sprite* p : sprites)delete p;
+	//COMポインタも明示的に開放
+	for (auto& cb : constnt_buffer) cb.Reset();
+	for (auto& ps : pixel_shaders)ps.Reset();
+	thresholdBuffer.Reset();
+	bloomParamBuffer.Reset();
+	blurDirectionBuffer.Reset();
+
+	Graphics::Instance().Finalize();
 
 	return true;
 }
