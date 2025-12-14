@@ -1,6 +1,5 @@
 ﻿#include "framework.h"
 #include "Graphics.h"
-#include <d3d.h>
 
 framework::framework(HWND hwnd) : hwnd(hwnd)
 {

@@ -95,7 +95,7 @@ public:
 		}
 
 #ifdef USE_IMGUI
-		ImGui_ImplDX11_Init(Graphics::Instance().GetDevice(), Graphics::Instance().GetContext());
+		//ImGui_ImplDX11_Init(Graphics::Instance().GetDevice(), Graphics::Instance().GetContext());
 #endif
 
 #if 1

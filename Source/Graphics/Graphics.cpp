@@ -30,6 +30,17 @@ bool Graphics::Initialize(HWND window_handle)
 //明示的にスマートポインタを解放したい場合
 void Graphics::Finalize()
 {
+    if (directx_device)
+    {
+        auto context = directx_device->GetImmediateContext();
+        if (context)
+        {
+            context->ClearState();  //全ての設定をリセット
+            context->Flush();       //コマンドを強制実行して完了させる
+        }
+    }
+
+    //スマートポインタの開放
     pipline_states.reset();
     directx_device.reset();
 }

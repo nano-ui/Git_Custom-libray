@@ -1,5 +1,4 @@
 #include "DirectXDevice.h"
-#include <d3d.h>
 #include "misc.h"
 
 ////ウィンドウハンドルを受け取り、メンバ変数に保持
@@ -35,6 +34,7 @@ bool DirectXDevice::Initialize()
 	swap_chain_desc.SampleDesc.Count = 1;							//マルチサンプリングの数を 1（MSAAなし）に設定
 	swap_chain_desc.SampleDesc.Quality = 0;							//アンチエイリアシング（MSAA）の品質レベルを設定
 	swap_chain_desc.Windowed = !FULLSCREEN;							//ウィンドウモードを設定
+	swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;		//コピー処理をなくして、効率よく画面を表示させる
 	swap_chain_desc.Flags = 0;										//スワップチェーンの動作に関する特別なオプション（フラグ）を何も設定しない
 
 	//デバイス、コンテキスト、スワップチェーンの作成
