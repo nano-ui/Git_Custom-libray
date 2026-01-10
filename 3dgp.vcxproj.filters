@@ -95,6 +95,9 @@
     <Filter Include="Source\ObjectRender\ModelRenderer">
       <UniqueIdentifier>{446d5407-dc6c-44df-8a63-d62a32914675}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Scene">
+      <UniqueIdentifier>{eeba2563-d716-45cb-b8b8-6ea187fa0afc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -171,6 +174,9 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\Graphics.cpp">
       <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\MainScene.cpp">
+      <Filter>Source\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -260,6 +266,12 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\Graphics.h">
       <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\Scene.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\MainScene.h">
+      <Filter>Source\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

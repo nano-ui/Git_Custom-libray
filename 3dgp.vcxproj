@@ -235,6 +235,7 @@
     <ClCompile Include="Source\ObjectsRender\sprite_batch.cpp" />
     <ClCompile Include="Source\ObjectsRender\static_mesh.cpp" />
     <ClCompile Include="Source\ObjectsRender\texture.cpp" />
+    <ClCompile Include="Source\Scene\MainScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h" />
@@ -266,6 +267,8 @@
     <ClInclude Include="Source\ObjectsRender\sprite_batch.h" />
     <ClInclude Include="Source\ObjectsRender\static_mesh.h" />
     <ClInclude Include="Source\ObjectsRender\texture.h" />
+    <ClInclude Include="Source\Scene\MainScene.h" />
+    <ClInclude Include="Source\Scene\Scene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Compiled\blur_ps.cod" />
