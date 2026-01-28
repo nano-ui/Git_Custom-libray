@@ -4,9 +4,8 @@
 #include <map>
 #include <filesystem>
 #include <string>
-
-#include "shader.h"
-#include "texture.h"
+#include "../Graphics/shader.h"
+#include "../ObjectsRender/texture.h"
 #include "../Serialization/SkinnedMeshSerializer.h"
 
 namespace {

@@ -98,6 +98,12 @@
     <Filter Include="Source\Scene">
       <UniqueIdentifier>{eeba2563-d716-45cb-b8b8-6ea187fa0afc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ObjectRender\SkinnedMeshComponents">
+      <UniqueIdentifier>{70cb8607-fd6d-4507-95da-332c06c9f6ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Serializer">
+      <UniqueIdentifier>{65cdd1d2-62fe-45b6-94fb-165d67cccc30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -177,6 +183,12 @@
     </ClCompile>
     <ClCompile Include="Source\Scene\MainScene.cpp">
       <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\SkinnedMeshComponents.cpp">
+      <Filter>Source\ObjectRender\SkinnedMeshComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp">
+      <Filter>Source\Serializer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -272,6 +284,12 @@
     </ClInclude>
     <ClInclude Include="Source\Scene\MainScene.h">
       <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\SkinnedMeshComponents.h">
+      <Filter>Source\ObjectRender\SkinnedMeshComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h">
+      <Filter>Source\Serializer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

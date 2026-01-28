@@ -1,5 +1,6 @@
 #include "SkinnedMeshSerializer.h"
-#include "SkinnedMeshComponents.h"
+
+#include "../ObjectsRender/SkinnedMeshComponents.h"
 
 #include <fstream>
 #include <cereal/archives/binary.hpp>
