@@ -106,6 +106,19 @@ void framework::calculate_frame_stats()
 {
 	if (++frames_per_second, (tictoc.time_stamp() - count_by_seconds) >= 1.0f)
 	{
+		//FPSとフレーム時間を計算
+		float fps = static_cast<float>(frames_per_second);
+		float mspf = 1000.0f / fps;
+
+		//表示する文字列を作成
+		std::wostringstream outs;
+		outs.precision(6);
+		outs << L"Game Framework" << L" : FPS : " << fps << L" / " << L"Frame Time : " << mspf << L" (ms)";
+
+		//ウィンドウのタイトルを変更
+		SetWindowText(hwnd, outs.str().c_str());
+
+		//カウンタをリセット
 		frames_per_second = 0;
 		count_by_seconds += 1.0f;
 	}

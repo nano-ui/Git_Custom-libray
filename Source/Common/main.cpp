@@ -39,7 +39,7 @@ int WINAPI WinMain(_In_ HINSTANCE instance, _In_opt_  HINSTANCE prev_instance, _
 	HWND hwnd = CreateWindowExW(
 		0,
 		L"GameWindow",
-		L"Game Framework",
+		L"",
 		WS_OVERLAPPEDWINDOW ^ WS_MAXIMIZEBOX ^ WS_THICKFRAME | WS_VISIBLE,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,

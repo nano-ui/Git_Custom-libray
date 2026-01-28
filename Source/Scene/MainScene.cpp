@@ -1,7 +1,7 @@
-#include "MainScene.h"
+#include "../Scene/MainScene.h"
 #include "../Graphics/Graphics.h"
 #include <imgui.h>
-#include "misc.h"
+#include "../Common/misc.h"
 #include "../Graphics/shader.h"
 
 #include "imgui.h"
@@ -18,6 +18,7 @@ MainScene::MainScene()
 	cube.scale = { 0.4f,0.4f,0.4f };
 	w_cube.position = { 3,0,0 };
 	camera.position = { 0.0f,0.0f,10.0f };
+	tb.brightness_threshold = 1.0f;
 }
 
 //デストラクタ
