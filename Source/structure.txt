@@ -1,0 +1,82 @@
+[Project Structure] 
+ 
+Folder PATH listing for volume Windows
+Volume serial number is 0255-C8DA
+C:.
+„    structure.txt
+„    _dump_structure.bat
+„    
+„¥„Ÿ„Ÿ„ŸCamera
+„¥„Ÿ„Ÿ„ŸCollision
+„¥„Ÿ„Ÿ„ŸCommon
+„        high_resolution_timer.h
+„        main.cpp
+„        misc.h
+„        
+„¥„Ÿ„Ÿ„ŸFbxModel
+„        FbxSkinnedMesh.cpp
+„        FbxSkinnedMesh.h
+„        
+„¥„Ÿ„Ÿ„ŸGameObjects
+„    „¥„Ÿ„Ÿ„ŸCharacters
+„    „¤„Ÿ„Ÿ„ŸObjects
+„¥„Ÿ„Ÿ„ŸGraphics
+„        DirectXDevice.cpp
+„        DirectXDevice.h
+„        fbx_utility.h
+„        framebuffer.cpp
+„        framebuffer.h
+„        framework.cpp
+„        framework.h
+„        fullscreen_quad.cpp
+„        fullscreen_quad.h
+„        Graphics.cpp
+„        Graphics.h
+„        PipelineStates.cpp
+„        PipelineStates.h
+„        PostProcessConstantBuffers.cpp
+„        PostProcessConstantBuffers.h
+„        Renderer.cpp
+„        Renderer.h
+„        SceneConstantBuffers.cpp
+„        SceneConstantBuffers.h
+„        shader.cpp
+„        shader.h
+„        sprite.cpp
+„        sprite.h
+„        sprite_batch.cpp
+„        sprite_batch.h
+„        
+„¥„Ÿ„Ÿ„ŸObjectsRender
+„        AssetManager.cpp
+„        AssetManager.h
+„        geometric_primitive.cpp
+„        geometric_primitive.h
+„        Model.cpp
+„        Model.h
+„        ModelRenderer.cpp
+„        ModelRenderer.h
+„        SkinnedMeshComponents.cpp
+„        SkinnedMeshComponents.h
+„        skinned_mesh.cpp
+„        skinned_mesh.h
+„        sprite.cpp
+„        sprite.h
+„        sprite_batch.cpp
+„        sprite_batch.h
+„        static_mesh.cpp
+„        static_mesh.h
+„        texture.cpp
+„        texture.h
+„        
+„¥„Ÿ„Ÿ„ŸScene
+„        MainScene.cpp
+„        MainScene.h
+„        Scene.cpp
+„        Scene.h
+„        
+„¥„Ÿ„Ÿ„ŸSerialization
+„        SkinnedMeshSerializer.cpp
+„        SkinnedMeshSerializer.h
+„        
+„¤„Ÿ„Ÿ„ŸUniqueSystem
