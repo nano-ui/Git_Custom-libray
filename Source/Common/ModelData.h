@@ -56,6 +56,13 @@ struct BoneData
 	DirectX::XMFLOAT4X4 offset_transform;	//逆バインドポーズ行列
 };
 
+//内部計算用のヘルパー構造体（頂点ごとのボーン影響情報）
+struct BoneInfluence
+{
+	uint32_t bone_index;
+	float weight;
+};
+
 //アニメーションの1フレームにおけるボーンの状態
 struct AnimationKeyframeNode
 {
