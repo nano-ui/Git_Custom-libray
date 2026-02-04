@@ -1,6 +1,6 @@
 #include "SkinnedMeshSerializer.h"
 
-#include "../ObjectsRender/SkinnedMeshComponents.h"
+#include "../FbxModel/FbxSkinnedResource.h"
 
 #include <fstream>
 #include <cereal/archives/binary.hpp>
@@ -64,8 +64,10 @@ void serialize(Archive& archive, MaterialData& m)
 }
 
 //ファイルから読み込み
-bool SkinnedMeshSerializer::Load(const std::string& filename, SkinnedMeshResource& resource)
+bool SkinnedMeshSerializer::Load(const std::string& filename, std::shared_ptr<FbxSkinnedResource> resource)
 {
+    if (!resource)return false;
+
     try
     {
         std::ifstream ifs(filename, std::ios::binary);
@@ -73,7 +75,7 @@ bool SkinnedMeshSerializer::Load(const std::string& filename, SkinnedMeshResourc
 
         cereal::BinaryInputArchive archive(ifs);
 
-        archive(resource.meshes, resource.bones, resource.animations, resource.materials);
+        archive(resource->meshes, resource->bones, resource->animations, resource->materials);
 
         return true;
     }
@@ -85,7 +87,7 @@ bool SkinnedMeshSerializer::Load(const std::string& filename, SkinnedMeshResourc
 }
 
 //ファイルへ保存
-bool SkinnedMeshSerializer::Save(const std::string& filename, SkinnedMeshResource& resource)
+bool SkinnedMeshSerializer::Save(const std::string& filename, std::shared_ptr<FbxSkinnedResource>& resource)
 {
     try
     {
@@ -94,7 +96,7 @@ bool SkinnedMeshSerializer::Save(const std::string& filename, SkinnedMeshResourc
 
         cereal::BinaryOutputArchive archive(ofs);
 
-        archive(resource.meshes, resource.bones, resource.animations, resource.materials);
+        archive(resource->meshes, resource->bones, resource->animations, resource->materials);
 
         return true;
     }

@@ -6,8 +6,11 @@
 #include "../FbxModel/FbxSkinnedMesh.h"
 
 #include "../FbxModel/FbxSkinnedResource.h"
+#include "../Serialization/SkinnedMeshSerializer.h"
+#include "../ObjectsRender/texture.h"
 
 #include <fbxsdk.h>
+#include <filesystem>
 
 //=========================================================
 // 指定したファイルからデータを読み込み、リソースに構築
@@ -18,6 +21,59 @@ bool FbxLoader::Load(
 	std::shared_ptr<FbxSkinnedResource> out_resource)
 {
 	if (!out_resource) return false;
+
+	//キャッシュの確認
+	std::string cache_filename = filename + ".bin";
+	bool use_cache = false;
+
+	namespace fs = std::filesystem;
+	std::error_code ec;
+
+	//キャッシュファイルが存在し、かつFBXファイルより新しいか確認
+	if (fs::exists(cache_filename, ec) && fs::exists(filename, ec))
+	{
+		auto fbx_time = fs::last_write_time(filename, ec);
+		auto bin_time = fs::last_write_time(cache_filename, ec);
+
+		//キャッシュのほうが新しい
+		if (bin_time > fbx_time)
+		{
+			//キャッシュから読み込み
+			if (SkinnedMeshSerializer::Load(cache_filename,out_resource))
+			{
+				//バッファの再生成
+				for (auto& mesh : out_resource->meshes)
+				{
+					FbxSkinnedMesh::CreateComBuffers(out_resource->GetDevice(), mesh);
+				}
+
+				//テクスチャの再ロード
+				for (auto& pair : out_resource->materials)
+				{
+					MaterialData& mat = pair.second;
+					for (int i = 0; i < 2; i++)
+					{
+						if (mat.texture_filenames[i].empty())continue;
+
+						fs::path fbx_path(filename);
+						fs::path tex_path = fbx_path.parent_path() / mat.texture_filenames[i];
+
+						//テクスチャ情報を格納
+						D3D11_TEXTURE2D_DESC desc{};
+
+						load_texture_from_file(
+							device,
+							tex_path.wstring().c_str(),
+							mat.shader_resource_views[i].GetAddressOf(),
+							&desc
+						);
+					}
+				}
+				return true;
+			}
+		}
+	}
+
 
 	//------------------------------
 	//FBX　SDKのマネージャー初期化
@@ -88,6 +144,11 @@ bool FbxLoader::Load(
 	out_resource->bones = std::move(bones);
 	out_resource->animations = std::move(animations);
 	out_resource->materials = std::move(materials);
+
+	//-----------------------
+	//キャッシュを保存
+	//-----------------------
+	SkinnedMeshSerializer::Save(cache_filename, out_resource);
 
 	//---------
 	//後始末

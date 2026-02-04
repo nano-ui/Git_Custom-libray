@@ -41,31 +41,7 @@ namespace {
 //ファイル名を指定してモデルの読み込みを開始
 SkinnedMeshResource::SkinnedMeshResource(ID3D11Device* device, const std::string& filename)
 {
-	//---------------------------
-	//キャッシュファイル名の作成
-	//---------------------------
-	std::filesystem::path cereal_filename(filename);
-	cereal_filename.replace_extension("cereal");
-
-	bool is_cached = false;
-
-	//キャッシュが存在するか確認
-	if (std::filesystem::exists(cereal_filename))
-	{
-		if (SkinnedMeshSerializer::Load(cereal_filename.string(), *this))
-		{
-			is_cached = true;
-		}
-	}
-
-	//キャッシュがない、またはロード失敗ならFBXを読み込む
-	if (!is_cached)
-	{
-		LoadFbx(device, filename);
-
-		//次回のためにキャッシュとして保存
-		SkinnedMeshSerializer::Save(cereal_filename.string(), *this);
-	}
+	LoadFbx(device, filename);
 
 	//GPUバッファの生成
 	for (auto& mesh : meshes)

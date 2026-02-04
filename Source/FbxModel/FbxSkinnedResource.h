@@ -11,11 +11,14 @@
 
 //前方宣言
 class FbxLoader;
+class SkinnedMeshSerializer;
 
 class FbxSkinnedResource :public std::enable_shared_from_this<FbxSkinnedResource>
 {
+public:
 	//FbxLoaderがprivateメンバにデータを書き込めるように許可する
 	friend class FbxLoader;
+	friend class SkinnedMeshSerializer;
 
 public:
 	//コンストラクタ
