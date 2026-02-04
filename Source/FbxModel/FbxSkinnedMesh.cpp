@@ -23,41 +23,59 @@ namespace {
 //========================
 //メッシュデータの抽出
 //========================
-void FbxAnimation::Feach(
+void FbxSkinnedMesh::Fetch(
 	ID3D11Device* device,
 	fbxsdk::FbxScene* scene,
 	const std::vector<BoneData>& bones,
 	std::vector<MeshData>& out_meshes)
 {
-	//-------------------------------------
-	//シーンからMesh属性を持つノードを収集
-	//-------------------------------------
+	//出力用マップをクリア
+	out_meshes.clear();
+
+	//シーン内のジオメトリ(形状データ)数を取得
 	int geometry_count = scene->GetGeometryCount();
+
+	//全ジオメトリについてループ
 	for (int i = 0; i < geometry_count; i++)
 	{
+		//ジオメトリを取得
 		FbxGeometry* geometry = scene->GetGeometry(i);
+
+		//メッシュ属性でなければスキップ
 		if (geometry->GetAttributeType() != FbxNodeAttribute::eMesh)continue;
 
+		//FbxMesh型にキャスト
 		FbxMesh* fbx_mesh = static_cast<FbxMesh*>(geometry);
+
+		//紐づいているノードを取得
 		FbxNode* node = fbx_mesh->GetNode();
 
+		//メッシュデータ構造体を作成
 		MeshData mesh_data;
+
+		//ノードの名前とユニークIDをメッシュデータに保存
 		mesh_data.name = node->GetName();
 		mesh_data.unique_id = node->GetUniqueID();
+
+		//初期のグローバル変換行列を取得
 		mesh_data.default_global_transform = ToXMFloat4x4(node->EvaluateGlobalTransform());
 
-		//---------
-		//頂点情報
-		//---------
+		//--------------------
+		//ウェイト情報の取得
+		//--------------------
 		std::vector<BoneInfluencePerControlPoint> influences;
 		FetchBoneInfuences(fbx_mesh, bones, influences);
 
+		//ウェイト情報が空でなければスキンメッシュとみなす
 		bool has_skin = fbx_mesh->GetDeformerCount(FbxDeformer::eSkin) > 0;
 
+		//スキンがない場合、親ボーン(自分自身)を探す
 		int self_bone_index = -1;
 		if (!has_skin)
 		{
 			std::string node_name = node->GetName();
+
+			//ボーンリストから自分の名前を探す
 			for (size_t b = 0; b < bones.size(); b++)
 			{
 				if (bones[b].name == node_name)
@@ -67,14 +85,6 @@ void FbxAnimation::Feach(
 				}
 			}
 		}
-		std::vector<MeshVertex> vertices;
-		std::vector<uint32_t> indices;
-
-		//-----------------
-		//ポリゴン数ループ
-		//-----------------
-		int polygon_count = fbx_mesh->GetPolygonCount();
-		FbxVector4* control_points = fbx_mesh->GetControlPoints();
 
 		//---------------------------------
 		//マテリアルごとのサブセットを準備
@@ -82,13 +92,12 @@ void FbxAnimation::Feach(
 		int material_count = node->GetMaterialCount();
 		if (material_count > 0)
 		{
+			//マテリアル数分サブセットを確保
 			mesh_data.subsets.resize(material_count);
 
 			mesh_data.subsets.reserve(material_count > 0 ? material_count : 1);
 
-			//-------------------
 			//サブセットの初期化
-			//-------------------
 			for (int m = 0; m < material_count; m++)
 			{
 				FbxSurfaceMaterial* mat = node->GetMaterial(m);
@@ -105,25 +114,35 @@ void FbxAnimation::Feach(
 		}
 		else
 		{
+			//マテリアルがない場合はダミーを一つ作る
 			mesh_data.subsets.resize(1);
 			mesh_data.subsets[0].material_name = "Dammy";
 		}
 
-		//-----------------
-		//メモリの事前確保
-		//-----------------
+		//-------------------------
+		//ポリゴンの解析と頂点生成
+		//-------------------------
+
+		//接線データが無ければ生成する
+		if (fbx_mesh->GetElementTangentCount() <= 0)
+		{
+			fbx_mesh->GenerateTangentsData(0, false);
+		}
+
+		int polygon_count = fbx_mesh->GetPolygonCount();
+		FbxVector4* control_points = fbx_mesh->GetControlPoints();
+
+		//メモリ予約(ポリゴン数*3頂点)
 		mesh_data.vertices.reserve(polygon_count * 3);
 		mesh_data.indices.reserve(polygon_count * 3);
-		std::unordered_map<int, std::vector<uint32_t>> unique_vertices;//重複チェック用のマップ
 
-		//-------------------
-		//ポリゴンごとの処理
-		//-------------------
+		//重複チェック用のマップ
+		std::unordered_map<int, std::vector<uint32_t>> unique_vertices;
+
+		//全ポリゴンについてループ
 		for (int p = 0; p < polygon_count; p++)
 		{
-			//---------------------------------------
-			//ポリゴンのマテリアルインデックスを取得
-			//---------------------------------------
+			//現在のポリゴンのマテリアルインデックスを取得
 			int material_index = 0;
 			if (material_count > 0)
 			{
@@ -134,96 +153,105 @@ void FbxAnimation::Feach(
 				}
 			}
 
-			//--------------------
-			//三角形の3頂点を処理
-			//--------------------
+			//三角形の3頂点について処理
 			for (int v = 0; v < 3; v++)
 			{
-				//-----------------------------------
-				//コントロールポイントのインデックス
-				//-----------------------------------
+				//コントロールポイントのインデックスを取得
 				int ctrl_point_index = fbx_mesh->GetPolygonVertex(p, v);
 
 				MeshVertex vertex;
 
-				//---------
-				//座標取得
-				//---------
+				//位置情報を取得して変換
 				vertex.position = ToXMFloat3(control_points[ctrl_point_index]);
 
-				//---------
-				//法線取得
-				//---------
+				//法線ベクトルを取得して変換
 				FbxVector4 normal;
 				fbx_mesh->GetPolygonVertexNormal(p, v, normal);
 				vertex.normal = ToXMFloat3(normal);
 
-				if (!has_skin && self_bone_index != -1)
-				{
-					//座標変換
-					DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&vertex.position);
-					DirectX::XMMATRIX M = DirectX::XMLoadFloat4x4(&mesh_data.default_global_transform);
-					DirectX::XMStoreFloat3(&vertex.position, DirectX::XMVector3TransformCoord(P, M));
-
-					//法線変換
-					DirectX::XMVECTOR N = DirectX::XMLoadFloat3(&vertex.normal);
-					DirectX::XMStoreFloat3(&vertex.normal, DirectX::XMVector3TransformNormal(N, M));
-				}
-
-
-				//-----------------------------
-				//接線データが無ければ生成する
-				//-----------------------------
-				if (fbx_mesh->GetElementTangentCount() == 0)
-				{
-					fbx_mesh->GenerateTangentsData(0, false);
-				}
-
-				//-----------------
-				//接線データの取得
-				//-----------------
-				if (fbx_mesh->GetElementTangentCount() > 0)
-				{
-					const FbxGeometryElementTangent* tangent = fbx_mesh->GetElementTangent(0);
-					int tangent_index = 0;
-					if (tangent->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
-					{
-						tangent_index = fbx_mesh->GetTextureUVIndex(p, v);
-					}
-					else if (tangent->GetMappingMode() == FbxGeometryElement::eByControlPoint)
-					{
-						tangent_index = ctrl_point_index;
-					}
-					int vertix_id_in_polygon = p * 3 + v;
-
-					vertex.tangent.x = static_cast<float>(tangent->GetDirectArray().GetAt(vertix_id_in_polygon)[0]);
-					vertex.tangent.y = static_cast<float>(tangent->GetDirectArray().GetAt(vertix_id_in_polygon)[1]);
-					vertex.tangent.z = static_cast<float>(tangent->GetDirectArray().GetAt(vertix_id_in_polygon)[2]);
-					vertex.tangent.w = static_cast<float>(tangent->GetDirectArray().GetAt(vertix_id_in_polygon)[3]);
-				}
-
-
-				//-------
-				//UV取得
-				//-------
+				//UV座標の取得
 				FbxStringList uv_names;
 				fbx_mesh->GetUVSetNames(uv_names);
 				if (uv_names.GetCount() > 0)
 				{
 					FbxVector2 uv;
 					bool unmapped;
+
+					//最初のUVセットから取得
 					fbx_mesh->GetPolygonVertexUV(p, v, uv_names[0], uv, unmapped);
+
+					//V座標を反転してDirectX刑に合わせる
 					vertex.texcoord.x = static_cast<float>(uv[0]);
 					vertex.texcoord.y = 1.0f - static_cast<float>(uv[1]);
 				}
 
+				//-------------------
+				//接線データの取得
+				//-------------------
+				//メッシュに接線データが含まれているかを確認
+				if (fbx_mesh->GetElementTangentCount() > 0)
+				{
+					//最初の接線データレイヤー（レイヤー0）へのポインタを取得
+					const FbxGeometryElementTangent* tangent = fbx_mesh->GetElementTangent(0);
+
+					//最終的にデータを取得するための配列インデックスを格納
+					int tangent_index = 0;
+
+					//ポリゴンごとの頂点通し番号
+					int vertex_count = p * 3 + v;
+
+					//マッピングモード（データがどのように割り当てられているか）の判定
+					if (tangent->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+					{
+						//リファレンスモード（データの格納方法）の判定
+						if (tangent->GetReferenceMode() == FbxGeometryElement::eDirect)
+						{
+							//頂点の通し番号をそのままデータ配列のインデックスとして使用
+							tangent_index = vertex_count;
+						}
+						//eIndexToDirect: インデックス配列を経由してデータにアクセスする
+						else if (tangent->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
+						{
+							//インデックス配列から、実際のデータ位置を取得
+							tangent_index = tangent->GetIndexArray().GetAt(vertex_count);
+						}
+					}
+					//ByControlPoint: 制御点（共有頂点）ごとに接線を持つ（滑らかな曲面などで使われる）
+					else if (tangent->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+					{
+						//eDirect: 制御点のインデックス順にデータが並んでいる
+						if (tangent->GetReferenceMode() == FbxGeometryElement::eDirect)
+						{
+							//コントロールポイントのインデックスをそのまま使用
+							tangent_index = ctrl_point_index;
+						}
+						//eIndexToDirect: インデックス配列を経由する
+						else if (tangent->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
+						{
+							//インデックス配列から取得
+							tangent_index = tangent->GetIndexArray().GetAt(ctrl_point_index);
+						}
+					}
+
+					//確定したインデックスを使って、接線データ配列からベクトル(x,y,z,w)を取得
+					FbxVector4 t = tangent->GetDirectArray().GetAt(tangent_index);
+
+					//取得した接線データを、DirectX用の頂点構造体にキャストして代入
+					vertex.tangent.x = static_cast<float>(t[0]);
+					vertex.tangent.y = static_cast<float>(t[1]);
+					vertex.tangent.z = static_cast<float>(t[2]);
+					vertex.tangent.w = static_cast<float>(t[3]);
+				}
+
 				//---------------------
-				//ボーンウェイトの適用
+				//ウェイト情報の適用
 				//---------------------
 				if (has_skin && ctrl_point_index < influences.size())
 				{
-					// 通常のスキニング処理
+					//抽出済みのウェイト情報を適用
 					const auto& influence_list = influences[ctrl_point_index];
+
+					//最大4ボーンまで
 					for (size_t k = 0; k < influence_list.size() && k < 4; k++)
 					{
 						vertex.bone_indices[k] = influence_list[k].bone_index;
@@ -232,13 +260,13 @@ void FbxAnimation::Feach(
 				}
 				else if (self_bone_index != -1)
 				{
-					// スキニング情報がない場合、特定した親ボーンに100%追従させる
+					// スキニング情報がない場合、自分自身のボーンに100%追従させる
 					vertex.bone_indices[0] = self_bone_index;
 					vertex.bone_weights[0] = 1.0f;
 				}
 
 				//-------------------
-				//頂点の重複チェック
+				//頂点の登録
 				//-------------------
 				uint32_t index = 0;
 				bool found = false;
@@ -312,9 +340,8 @@ void FbxAnimation::Feach(
 				}
 			}
 		}
-		//---------------------------
+
 		//サブセットの開始位置を計算
-		//---------------------------
 		uint32_t offset = 0;
 		for (auto& subset : mesh_data.subsets)
 		{
@@ -322,8 +349,10 @@ void FbxAnimation::Feach(
 			offset += subset.index_count;
 		}
 
+		//GPUバッファの作成
 		CreateComBuffers(device, mesh_data);
-
+		
+		//完成したメッシュデータをリストに追加
 		out_meshes.push_back(std::move(mesh_data));
 	}
 }
@@ -331,47 +360,35 @@ void FbxAnimation::Feach(
 //===================
 //ウェイト情報の保持
 //===================
-void FbxAnimation::FetchBoneInfuences(
+void FbxSkinnedMesh::FetchBoneInfuences(
 	const fbxsdk::FbxMesh* fbx_mesh,
 	const std::vector<BoneData>& bones,
 	std::vector<BoneInfluencePerControlPoint>& influences)
 {
-	//-------------------------------------------------------
-	//コントロールポイント(頂点座標の数)に合わせてサイズ確保
-	//-------------------------------------------------------
+	//コントロールポイント数(頂点座標の数)に合わせてサイズ確保
 	int control_points_count = fbx_mesh->GetControlPointsCount();
 	influences.resize(control_points_count);
 
-	//-----------------------------------------------------
 	//スキンデフォーマ(メッシュを変形させる情報)の数を取得
-	//-----------------------------------------------------
 	int skin_count = fbx_mesh->GetDeformerCount(FbxDeformer::eSkin);
 
 	for (int i = 0; i < skin_count; i++)
 	{
-		//-------------
 		//スキンを取得
-		//-------------
 		FbxSkin* skin = static_cast<FbxSkin*>(fbx_mesh->GetDeformer(i, FbxDeformer::eSkin));
 
-		//-----------------------------------------
 		//クラスタ(ボーンごとの影響情報)の数を取得
-		//-----------------------------------------
 		int cluster_count = skin->GetClusterCount();
 
 		for (int j = 0; j < cluster_count; j++)
 		{
 			FbxCluster* cluster = skin->GetCluster(j);
 
-			//-------------------------------------------
 			//クラスタに関連付けられたボーンノードを取得
-			//-------------------------------------------
 			FbxNode* link_node = cluster->GetLink();
 			if (!link_node) continue;
 
-			//-------------------------------------------------------
-			//ボーンリストから、このノードに対応すインデックスを検索
-			//-------------------------------------------------------
+			//ボーンリストから、現在のノードに対応すインデックスを検索
 			int bone_index = -1;
 			std::string bone_name = link_node->GetName();
 
@@ -383,30 +400,26 @@ void FbxAnimation::FetchBoneInfuences(
 					break;
 				}
 			}
-			//---------------------------------
+
 			//ボーンが見つからなけらばスキップ
-			//---------------------------------
 			if (bone_index == -1) continue;
 
-			//-----------------------------------------------------
 			//ボーンの影響を受ける頂点インデックスとウェイトを取得
-			//-----------------------------------------------------
 			int index_count = cluster->GetControlPointIndicesCount();
 			int* indices = cluster->GetControlPointIndices();
 			double* weights = cluster->GetControlPointWeights();
 
+			//各頂点にウェイト情報を追加
 			for (int k = 0; k < index_count; k++)
 			{
 				int control_point_index = indices[k];
 				float weight = static_cast<float>(weights[k]);
 
-				//---------------
-				//影響情報を追加
-				//---------------
 				BoneInfluence influence;
 				influence.bone_index = static_cast<uint32_t>(bone_index);
 				influence.weight = weight;
 
+				//該当するコントロールポインタのリストに追加
 				influences[control_point_index].push_back(influence);
 			}
 		}
@@ -416,7 +429,7 @@ void FbxAnimation::FetchBoneInfuences(
 //=================
 //GPUバッファ作成
 //=================
-void FbxAnimation::CreateComBuffers(
+void FbxSkinnedMesh::CreateComBuffers(
 	ID3D11Device* device,
 	MeshData& mesh)
 {
@@ -426,18 +439,29 @@ void FbxAnimation::CreateComBuffers(
 	//-------------------
 	//頂点バッファの作成
 	//-------------------
+	//サイズ計算
 	buffer_desc.ByteWidth = static_cast<UINT>(sizeof(MeshVertex) * mesh.vertices.size());
 	buffer_desc.Usage = D3D11_USAGE_DEFAULT;
 	buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+	//データポインタ設定
 	subresource_data.pSysMem = mesh.vertices.data();
+
+	//バッファの作成
 	device->CreateBuffer(&buffer_desc, &subresource_data, mesh.vertex_buffer.ReleaseAndGetAddressOf());
 
 	//---------------------------
 	//インデックスバッファの作成
 	//---------------------------
+	//サイズ計算
 	buffer_desc.ByteWidth = static_cast<UINT>(sizeof(uint32_t) * mesh.indices.size());
 	buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+	buffer_desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+	//データポインタ設定
 	subresource_data.pSysMem = mesh.indices.data();
+
+	//バッファの作成
 	device->CreateBuffer(&buffer_desc, &subresource_data, mesh.index_buffer.ReleaseAndGetAddressOf());
 
 }

@@ -25,41 +25,52 @@ namespace {
 void FbxAnimation::Fetch(
 	fbxsdk::FbxScene* scene,
 	const std::vector<BoneData>& bones,
-	std::unordered_map<std::string, AnimationClip>& out_animatins, 
+	std::unordered_map<std::string, AnimationClip>& out_animations,
 	float sampling_rate)
 {
-	//-------------------------------------------
-	//アニメーションスタック(クリップ)の数を取得
-	//-------------------------------------------
-	out_animatins.clear();
+	//出力用マップをクリア
+	out_animations.clear();
+
+	//シーンに含まれるアニメーションスタックの数を取得
 	int stack_count = scene->GetSrcObjectCount<FbxAnimStack>();
+
+	//全スタックについてループ
 	for (int i = 0; i < stack_count; i++)
 	{
+		//アニメーションスタックを取得
 		FbxAnimStack* stack = scene->GetSrcObject<FbxAnimStack>(i);
+
+		//現在のスタックをシーンに適用
 		scene->SetCurrentAnimationStack(stack);
+
+		//クリップデータを作成
 		AnimationClip clip;
+
+		//スタック名をクリップ名にする
 		clip.name = stack->GetName();
 
-		//-------------------------------
-		//アニメーションの時間範囲を取得
-		//-------------------------------
+		//アニメーションの時間範囲(開始・終了)を取得
 		FbxTakeInfo* take_info = scene->GetTakeInfo(clip.name.c_str());
-		FbxTime start = take_info->mLocalTimeSpan.GetStart();
-		FbxTime end = take_info->mLocalTimeSpan.GetStop();
 
-		//-------------------------
-		//サンプリングレートの設定
-		//-------------------------
-		FbxTime duration = end - start;
+		//情報があれば取得、無ければ0とする
+		FbxTime start = take_info ? take_info->mLocalTimeSpan.GetStart() : FbxTime(0);
+		FbxTime end = take_info ? take_info->mLocalTimeSpan.GetStop() : FbxTime(0);
+
+		//サンプリングレートを決定(指定が無ければ24fps)
+		float rate = sampling_rate > 0 ? sampling_rate : 24.0f;
+		clip.sampling_rate = rate;
+
+		//1フレーム当たりの時間を計算
 		FbxTime step;
-		float valid_sampling_rate = sampling_rate > 0 ? sampling_rate : 24.0f;
 		FbxTime one_second;
-		one_second.SetTime(0, 0, 1, 0, 0, scene->GetGlobalSettings().GetTimeMode());
-		step = one_second / static_cast<double>(valid_sampling_rate);
 
-		//------------------------------------------------
-		//ボーン名とFBXノードの対応を事前にキャッシュする
-		//------------------------------------------------
+		//1秒を表すFbxTimeを設定
+		one_second.SetTime(0, 0, 1, 0, 0, scene->GetGlobalSettings().GetTimeMode());
+
+		//1秒をレートで割ってステップ時間を算出
+		step = one_second / static_cast<double>(rate);
+
+		//ボーン名からノードを検索するためのキャッシュを作成
 		std::unordered_map<std::string, FbxNode*> node_cache;
 		int node_count = scene->GetSrcObjectCount<FbxNode>();
 		for (int i = 0; i < node_count; i++)
@@ -68,39 +79,40 @@ void FbxAnimation::Fetch(
 			node_cache[node->GetName()] = node;
 		}
 
-		//-------------------
-		//フレームごとの処理(簡易実装)
-		//-------------------
+		//開始時間から終了時間までステップごとにループ
 		for (FbxTime t = start; t < end; t += step)
 		{
+			//全ボーンの姿勢リストを作成
 			std::vector<AnimationKeyframeNode> keyframe_nodes;
+
+			//ボーンの数に合わせてリサイズ
 			keyframe_nodes.resize(bones.size());
 
+			//全ボーンについて処理
 			for (size_t b = 0; b < bones.size(); b++)
 			{
-				//---------------------------
-				//キャッシュからノードを取得
-				//---------------------------
-
-				//アニメーションが存在するかを確認
+				//ボーン名に対応するFBXノードをキャッシュから探す
 				auto it = node_cache.find(bones[b].name);
 				if (it != node_cache.end())
 				{
 					FbxNode* node = it->second;
 
-					//---------------------
-					//グローバル行列の取得
-					//---------------------
+					//時間におけるグローバル行列を計算
 					FbxAMatrix global_transform = node->EvaluateGlobalTransform(t);
-					keyframe_nodes[b].global_transform = ToXMFloat4x4(global_transform);
 
+					//行列、スケール、回転、位置を抽出して変換
+					keyframe_nodes[b].global_transform = ToXMFloat4x4(global_transform);
 					keyframe_nodes[b].scaling = ToXMFloat3(global_transform.GetS());
 					keyframe_nodes[b].rotation = ToXMFloat4(global_transform.GetQ());
 					keyframe_nodes[b].translation = ToXMFloat3(global_transform.GetT());
 				}
 			}
+
+			//1フレーム分のデータをシーケンスに追加
 			clip.sequence.push_back(std::move(keyframe_nodes));
 		}
-		out_animatins[clip.name] = std::move(clip);
+
+		//解析したクリップをマップに登録
+		out_animations[clip.name] = std::move(clip);
 	}
 }

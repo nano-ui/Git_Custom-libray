@@ -114,7 +114,7 @@ void PipelineStates::Initialize()
 	//ブレンドの無効 (INDEX : 0)
 	D3D11_BLEND_DESC blend_desc_disabled{};
 	blend_desc_disabled.RenderTarget[0].BlendEnable = FALSE;	//ブレンド無効
-	blend_desc_disabled.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	blend_desc_disabled.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;//レンダリングターゲット（描画先のバッファ）に対して、RGBAの全チャンネルを書き込むことを許可する
 
 	//ブレンドステートオブジェクトを作成
 	hr = device_ptr_->CreateBlendState(

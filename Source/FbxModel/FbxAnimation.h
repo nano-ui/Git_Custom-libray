@@ -15,5 +15,5 @@ class FbxAnimation
 {
 public:
 	//キーフレームアニメーションを解析
-	static void Fetch(fbxsdk::FbxScene* scene, const std::vector<BoneData>& bones, std::unordered_map<std::string, AnimationClip>& out_animatins, float sampling_rate = 0.0f);
+	static void Fetch(fbxsdk::FbxScene* scene, const std::vector<BoneData>& bones, std::unordered_map<std::string, AnimationClip>& out_animations, float sampling_rate = 0.0f);
 };

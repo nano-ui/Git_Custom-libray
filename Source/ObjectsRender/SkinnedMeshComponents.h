@@ -122,14 +122,22 @@ public:
 	//メッシュデータを取得
 	const std::vector<MeshData>& GetMeshes()const { return meshes; }
 
+	std::vector<MeshData>& SetMeshes(std::vector<MeshData> mesh_data) { meshes = mesh_data; }
+
 	//ボーンデータを取得
 	const std::vector<BoneData>& GetBones()const { return bones; }
+
+	std::vector<BoneData>& SetBones(std::vector<BoneData> bone_data) { bones = bone_data; }
 
 	//アニメーションデータの取得
 	const std::unordered_map<std::string, AnimationClip>& GetAnimations()const { return animations; }
 
+	std::unordered_map<std::string, AnimationClip>& SetAnimation(std::unordered_map<std::string, AnimationClip> animation) { animations = animation; }
+	
 	//マテリアルデータの取得
 	const MaterialData* GetMaterial(uint64_t unique_id)const;
+
+	std::unordered_map<uint64_t, MaterialData> SetMaterial(std::unordered_map<uint64_t, MaterialData> material) { materials = material; }
 
 	//頂点シェーダーを取得
 	ID3D11VertexShader* GetVertexShader()const { return vertex_shader.Get(); }

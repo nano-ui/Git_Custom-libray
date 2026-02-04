@@ -98,11 +98,35 @@
     <Filter Include="Source\Scene">
       <UniqueIdentifier>{eeba2563-d716-45cb-b8b8-6ea187fa0afc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ObjectRender\SkinnedMeshComponents">
-      <UniqueIdentifier>{70cb8607-fd6d-4507-95da-332c06c9f6ee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Serializer">
       <UniqueIdentifier>{65cdd1d2-62fe-45b6-94fb-165d67cccc30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\FbxModel">
+      <UniqueIdentifier>{492d0e90-1c5d-4e0e-ab16-dd3f6ddd86a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\FbxModel\FbxAnimation">
+      <UniqueIdentifier>{62d950db-5ac0-463f-8e08-b54bbe242f64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\FbxModel\FbxBone">
+      <UniqueIdentifier>{50613803-caf7-4a72-a0be-c6d91dd08a40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\FbxModel\FbxLoader">
+      <UniqueIdentifier>{fbe65991-3d7e-4bff-9901-e7169bfd4ad5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\FbxModel\FbxMaterial">
+      <UniqueIdentifier>{6a89ca5a-2f9a-4b05-9d3e-a53992d217d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\FbxModel\FbxSkinnedMesh">
+      <UniqueIdentifier>{9d32767d-b0a8-4581-bfa1-936612a593ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\FbxModel\SkinnedMeshComponents">
+      <UniqueIdentifier>{70cb8607-fd6d-4507-95da-332c06c9f6ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\FbxModel\FbxResource">
+      <UniqueIdentifier>{f178e398-7994-48a2-9d33-2a4bfc566ebf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\FbxModel\FbxSkinnedModel">
+      <UniqueIdentifier>{cd223bbf-8258-4143-8796-765924e2d2b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -185,10 +209,31 @@
       <Filter>Source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\SkinnedMeshComponents.cpp">
-      <Filter>Source\ObjectRender\SkinnedMeshComponents</Filter>
+      <Filter>Source\ObjectRender\FbxModel\SkinnedMeshComponents</Filter>
     </ClCompile>
     <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp">
       <Filter>Source\Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FbxModel\FbxBone.cpp">
+      <Filter>Source\ObjectRender\FbxModel\FbxBone</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FbxModel\FbxAnimation.cpp">
+      <Filter>Source\ObjectRender\FbxModel\FbxAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FbxModel\FbxLoader.cpp">
+      <Filter>Source\ObjectRender\FbxModel\FbxLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FbxModel\FbxSkinnedMesh.cpp">
+      <Filter>Source\ObjectRender\FbxModel\FbxSkinnedMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FbxModel\FbxMaterial.cpp">
+      <Filter>Source\ObjectRender\FbxModel\FbxMaterial</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FbxModel\FbxSkinnedResource.cpp">
+      <Filter>Source\ObjectRender\FbxModel\FbxResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FbxModel\FbxSkinnedModel.cpp">
+      <Filter>Source\ObjectRender\FbxModel\FbxSkinnedModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -286,10 +331,34 @@
       <Filter>Source\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\SkinnedMeshComponents.h">
-      <Filter>Source\ObjectRender\SkinnedMeshComponents</Filter>
+      <Filter>Source\ObjectRender\FbxModel\SkinnedMeshComponents</Filter>
     </ClInclude>
     <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h">
       <Filter>Source\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FbxModel\FbxBone.h">
+      <Filter>Source\ObjectRender\FbxModel\FbxBone</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FbxModel\FbxAnimation.h">
+      <Filter>Source\ObjectRender\FbxModel\FbxAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FbxModel\FbxLoader.h">
+      <Filter>Source\ObjectRender\FbxModel\FbxLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FbxModel\FbxSkinnedMesh.h">
+      <Filter>Source\ObjectRender\FbxModel\FbxSkinnedMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FbxModel\FbxMaterial.h">
+      <Filter>Source\ObjectRender\FbxModel\FbxMaterial</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\ModelData.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FbxModel\FbxSkinnedResource.h">
+      <Filter>Source\ObjectRender\FbxModel\FbxResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FbxModel\FbxSkinnedModel.h">
+      <Filter>Source\ObjectRender\FbxModel\FbxSkinnedModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

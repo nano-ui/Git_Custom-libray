@@ -10,11 +10,11 @@ namespace fbxsdk
 	class FbxMesh;
 }
 
-class FbxAnimation
+class FbxSkinnedMesh
 {
 public:
 	//メッシュデータの抽出
-	static void Feach(ID3D11Device* device, fbxsdk::FbxScene* scene, const std::vector<BoneData>& bones, std::vector<MeshData>& out_meshes);
+	static void Fetch(ID3D11Device* device, fbxsdk::FbxScene* scene, const std::vector<BoneData>& bones, std::vector<MeshData>& out_meshes);
 
 private:
 	//制御点ごとのボーン影響度

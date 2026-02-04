@@ -7,7 +7,7 @@
 #include "../ObjectsRender/texture.h"
 
 //====================================
-//マテリアル情報とテクスチャ読み込み
+//マテリアル情報とテクスチャの抽出
 //=====================================
 void FbxMaterial::Fetch(
 	ID3D11Device* device,
@@ -15,22 +15,32 @@ void FbxMaterial::Fetch(
 	const std::string& fbx_filename,
 	std::unordered_map<uint64_t, MaterialData>& out_materials)
 {
+	//出力用マップをクリア
 	out_materials.clear();
+
+	//シーン内のマテリアル数を取得
 	int material_count = scene->GetMaterialCount();
+
+	//全マテリアルについてループ
 	for (int i = 0; i < material_count; i++)
 	{
+		//マテリアルオブジェクトを取得
 		FbxSurfaceMaterial* fbx_material = scene->GetMaterial(i);
+
+		//データ格納用構造体を作成
 		MaterialData material_data;
+
+		//名前とユニークIDを保存
 		material_data.name = fbx_material->GetName();
 		material_data.unique_id = fbx_material->GetUniqueID();
 
-		//----------------------------------------------------------------
-		//拡散反射光（Diffuse）プロパティの取得
-		//LambertやPhongなどのシェーディングモデルに関わらず色情報を取得
-		//----------------------------------------------------------------
+		//拡散反射色プロパティを検索
 		FbxProperty prop = fbx_material->FindProperty(FbxSurfaceMaterial::sDiffuse);
+
+		//プロパティが見つかった場合
 		if (prop.IsValid())
 		{
+			//色情報を取得して保存
 			FbxDouble3 color = prop.Get<FbxDouble3>();
 			material_data.color = DirectX::XMFLOAT4(
 				static_cast<float>(color[0]),
@@ -39,49 +49,44 @@ void FbxMaterial::Fetch(
 				1.0f
 			);
 
-			//-----------------
-			//テクスチャの取得
-			//-----------------
+			//テクスチャが接続されているか確認
 			int texture_count = prop.GetSrcObjectCount<FbxFileTexture>();
 			if (texture_count > 0)
 			{
+				//最初のテクスチャオブジェクトを取得
 				FbxFileTexture* texture = prop.GetSrcObject<FbxFileTexture>(0);
+
 				if (texture)
 				{
-					//---------------------------
-					//テクスチャファイル名を保存
-					//---------------------------
 					material_data.texture_filenames[0] = texture->GetRelativeFileName();
 				}
 			}
 		}
 
-		//-----------------
-		//法線マップの取得
-		//-----------------
+		//法線マッププロパティを取得
 		prop = fbx_material->FindProperty(FbxSurfaceMaterial::sNormalMap);
-		if (prop.IsValid())
+
+		//テクスチャの数を取得
+		int texture_count = prop.GetSrcObjectCount<FbxFileTexture>();
+
+		//プロパティがあり、テクスチャが接続されている場合
+		if (prop.IsValid() && texture_count > 0)
 		{
-			int texture_count = prop.GetSrcObjectCount<FbxFileTexture>();
-			if (texture_count > 0)
+			FbxFileTexture* texture = prop.GetSrcObject<FbxFileTexture>();
+			if (texture)
 			{
-				FbxFileTexture* texture = prop.GetSrcObject<FbxFileTexture>();
-				if (texture)
-				{
-					material_data.texture_filenames[1] = texture->GetRelativeFileName();
-				}
+				//相対パスを取得して保存(インデックス1はNormal用)
+				material_data.texture_filenames[1] = texture->GetRelativeFileName();
 			}
 		}
 
-		//---------------------
 		//テクスチャの読み込み
-		//---------------------
 		for (size_t tex_idx = 0; tex_idx < 2; tex_idx++)
 		{
 			//ファイル名が取得できている場合
 			if (material_data.texture_filenames[tex_idx].length() > 0)
 			{
-				//FBXファイルのパスを基準に、テクスチャの相対パスを解決
+				//FBXのディレクトリと結合してフルパスを作成
 				std::filesystem::path fbx_path(fbx_filename);
 				std::filesystem::path tex_path = fbx_path.parent_path() / material_data.texture_filenames[tex_idx];
 
@@ -107,10 +112,7 @@ void FbxMaterial::Fetch(
 			}
 		}
 
-
-		//-------------------------
 		//解析したマテリアルを登録
-		//-------------------------
 		out_materials[material_data.unique_id] = std::move(material_data);
 	}
 }
