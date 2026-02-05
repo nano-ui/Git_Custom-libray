@@ -110,7 +110,7 @@ bool FbxLoader::Load(
 	//座標系と形状の変換
 	//----------------------
 	//DirectXの座標系に変換
-	FbxAxisSystem::DirectX.ConvertScene(scene);
+	//FbxAxisSystem::DirectX.ConvertScene(scene);
 
 	//ポリゴンを三角形に変換
 	FbxGeometryConverter converter(manager);

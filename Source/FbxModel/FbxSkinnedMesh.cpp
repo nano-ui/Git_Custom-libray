@@ -18,6 +18,16 @@ namespace {
 	DirectX::XMFLOAT3 ToXMFloat3(const FbxDouble3& src) {
 		return DirectX::XMFLOAT3((float)src[0], (float)src[1], (float)src[2]);
 	}
+	DirectX::XMFLOAT3 TransformVector(const FbxDouble3& src, const FbxAMatrix& matrix) {
+		FbxVector4 vec(src[0], src[1], src[2], 0.0); // w=0 for vector
+		vec = matrix.MultT(vec);
+		return DirectX::XMFLOAT3((float)vec[0], (float)vec[1], (float)vec[2]);
+	}
+	DirectX::XMFLOAT3 TransformPoint(const FbxDouble3& src, const FbxAMatrix& matrix) {
+		FbxVector4 pos(src[0], src[1], src[2], 1.0); // w=1 for position
+		pos = matrix.MultT(pos);
+		return DirectX::XMFLOAT3((float)pos[0], (float)pos[1], (float)pos[2]);
+	}
 }
 
 //========================
@@ -70,19 +80,49 @@ void FbxSkinnedMesh::Fetch(
 		bool has_skin = fbx_mesh->GetDeformerCount(FbxDeformer::eSkin) > 0;
 
 		//スキンがない場合、親ボーン(自分自身)を探す
-		int self_bone_index = -1;
+		int target_bone_index = -1;
+
+		//頂点に焼きこむ変換行列
+		FbxAMatrix bake_transform;
+
+		//単位行列で初期化
+		bake_transform.SetIdentity();
+
 		if (!has_skin)
 		{
-			std::string node_name = node->GetName();
+			//探索用の現在のノード
+			FbxNode* current_node = node;
 
-			//ボーンリストから自分の名前を探す
-			for (size_t b = 0; b < bones.size(); b++)
+			//親を辿りながらボーンリストに存在するノードを探す
+			while (current_node != nullptr)
 			{
-				if (bones[b].name == node_name)
+				std::string node_name = node->GetName();
+
+				//ボーンリストから自分の名前を探す
+				for (size_t b = 0; b < bones.size(); b++)
 				{
-					self_bone_index = static_cast<int>(b);
-					break;
+					if (bones[b].name == node_name)
+					{
+						target_bone_index = static_cast<int>(b);
+						break;
+					}
 				}
+
+				//見つかったらループ終了
+				if (target_bone_index != -1) break;
+
+				//見つからなければ親へ移動
+				current_node = current_node->GetParent();
+			}
+
+			//親ボーンが見つかった場合、相対行列を計算する
+			if (target_bone_index != -1)
+			{
+				FbxAMatrix mesh_global = node->EvaluateGlobalTransform();
+				FbxAMatrix bone_global = current_node->EvaluateGlobalTransform(); // 見つかった親ボーンの行列
+
+				//逆行列を掛けることで「ボーンから見たメッシュの位置」にする
+				bake_transform = mesh_global * bone_global.Inverse();
 			}
 		}
 
@@ -236,11 +276,24 @@ void FbxSkinnedMesh::Fetch(
 					//確定したインデックスを使って、接線データ配列からベクトル(x,y,z,w)を取得
 					FbxVector4 t = tangent->GetDirectArray().GetAt(tangent_index);
 
-					//取得した接線データを、DirectX用の頂点構造体にキャストして代入
-					vertex.tangent.x = static_cast<float>(t[0]);
-					vertex.tangent.y = static_cast<float>(t[1]);
-					vertex.tangent.z = static_cast<float>(t[2]);
-					vertex.tangent.w = static_cast<float>(t[3]);
+					if (!has_skin && target_bone_index != -1)
+					{
+						FbxVector4 t_vec(t[0], t[1], t[2], 0.0);
+						t_vec = bake_transform.MultT(t_vec);
+
+						//取得した接線データを、DirectX用の頂点構造体にキャストして代入
+						vertex.tangent.x = static_cast<float>(t_vec[0]);
+						vertex.tangent.y = static_cast<float>(t_vec[1]);
+						vertex.tangent.z = static_cast<float>(t_vec[2]);
+						vertex.tangent.w = static_cast<float>(t_vec[3]);
+					}
+					else
+					{
+						vertex.tangent.x = static_cast<float>(t[0]);
+						vertex.tangent.y = static_cast<float>(t[1]);
+						vertex.tangent.z = static_cast<float>(t[2]);
+						vertex.tangent.w = static_cast<float>(t[3]);
+					}
 				}
 
 				//---------------------
@@ -258,10 +311,10 @@ void FbxSkinnedMesh::Fetch(
 						vertex.bone_weights[k] = influence_list[k].weight;
 					}
 				}
-				else if (self_bone_index != -1)
+				else if (target_bone_index != -1)
 				{
 					// スキニング情報がない場合、自分自身のボーンに100%追従させる
-					vertex.bone_indices[0] = self_bone_index;
+					vertex.bone_indices[0] = target_bone_index;
 					vertex.bone_weights[0] = 1.0f;
 				}
 

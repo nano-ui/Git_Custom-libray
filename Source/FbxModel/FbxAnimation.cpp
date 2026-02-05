@@ -6,11 +6,18 @@
 // 変換ヘルパー
 //==============
 namespace {
-    DirectX::XMFLOAT4X4 ToXMFloat4x4(const FbxAMatrix& src) {
-        DirectX::XMFLOAT4X4 dest;
-        for (int r = 0; r < 4; r++) for (int c = 0; c < 4; c++) dest.m[r][c] = (float)src.Get(r, c);
-        return dest;
-    }
+	DirectX::XMFLOAT4X4 ToXMFloat4x4(const FbxAMatrix& src) {
+		DirectX::XMFLOAT4X4 dest;
+		for (int r = 0; r < 4; r++)
+		{
+			for (int c = 0; c < 4; c++)
+			{
+				dest.m[r][c] = (float)src.Get(r, c);
+			}
+		}
+
+		return dest;
+	}
     DirectX::XMFLOAT3 ToXMFloat3(const FbxDouble3& src) {
         return DirectX::XMFLOAT3((float)src[0], (float)src[1], (float)src[2]);
     }
@@ -99,12 +106,22 @@ void FbxAnimation::Fetch(
 
 					//時間におけるグローバル行列を計算
 					FbxAMatrix global_transform = node->EvaluateGlobalTransform(t);
+					FbxAMatrix local = global_transform;
+
+					if (bones[b].parent_index >= 0)
+					{
+						FbxNode* parent_node = node_cache[bones[bones[b].parent_index].name];
+						FbxAMatrix parent_global = parent_node->EvaluateGlobalTransform(t);
+
+						local = parent_global.Inverse() * global_transform;
+
+					}
 
 					//行列、スケール、回転、位置を抽出して変換
-					keyframe_nodes[b].global_transform = ToXMFloat4x4(global_transform);
-					keyframe_nodes[b].scaling = ToXMFloat3(global_transform.GetS());
-					keyframe_nodes[b].rotation = ToXMFloat4(global_transform.GetQ());
-					keyframe_nodes[b].translation = ToXMFloat3(global_transform.GetT());
+					keyframe_nodes[b].global_transform = ToXMFloat4x4(local);
+					keyframe_nodes[b].scaling = ToXMFloat3(local.GetS());
+					keyframe_nodes[b].rotation = ToXMFloat4(local.GetQ());
+					keyframe_nodes[b].translation = ToXMFloat3(local.GetT());
 				}
 			}
 

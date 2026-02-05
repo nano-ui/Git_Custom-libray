@@ -54,6 +54,8 @@ struct BoneData
 	std::string name;						//ボーンの名前
 	int64_t parent_index{ -1 };				//親のボーン番号
 	DirectX::XMFLOAT4X4 offset_transform;	//逆バインドポーズ行列
+	uint64_t unique_id = 0;					//FBXの固有ID
+	int node_index = -1;					//シーンノード配列内のインデックス
 };
 
 //内部計算用のヘルパー構造体（頂点ごとのボーン影響情報）
@@ -88,4 +90,58 @@ struct MaterialData
 	DirectX::XMFLOAT4 color{ 1.0f,1.0f,1.0f,1.0f };								//基本色
 	std::string texture_filenames[2];											//テクスチャのファイル名
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_views[2];	//GPUでテクスチャを読むためのビュー
+};
+
+struct skeleton
+{
+	struct bone
+	{
+
+		//FBXなどから読み取った一意なID
+		uint64_t unique_id{ 0 };
+
+		//ボーンの名前
+		std::string name;
+
+		//親ボーンのインデックス
+		int64_t parent_index{ -1 };
+
+		//FBXのノード順などに対応するインデックス
+		int64_t node_index{ 0 };
+
+		//バインドポーズの逆変換行列
+		DirectX::XMFLOAT4X4 offset_transform{ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
+
+		template<class T>
+		void serialize(T& archive)
+		{
+			archive(unique_id, name, parent_index, node_index, offset_transform);
+		}
+
+		//親を持たないか
+		bool is_orphan() const { return parent_index < 0; };
+	};
+	//全てのボーンのリスト
+	std::vector<bone> bones;
+
+	template<class T>
+	void serialize(T& archive)
+	{
+		archive(bones);
+	}
+
+	//特定のunique_idを持つボーンのインデックスを検索
+	int64_t indexof(uint64_t unique_id) const
+	{
+		int64_t index{ 0 };
+		for (const bone& bone : bones)
+		{
+			if (bone.unique_id == unique_id)
+			{
+				return index;
+			}
+			index++;
+		}
+		return -1;
+	}
 };
