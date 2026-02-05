@@ -6,6 +6,7 @@
 #include "../Graphics/shader.h"
 #include "../Common/misc.h"
 #include "../Graphics/shader.h"
+#include "../Graphics/Graphics.h"
 
 namespace
 {
@@ -101,6 +102,8 @@ void FbxSkinnedModel::AnimationUpdate(float delta_time)
 	if (bone_transforms.size() != bones.size())
 	{
 		bone_transforms.resize(bones.size());
+		global_transforms.resize(bones.size());
+
 		for (auto& m : bone_transforms)
 		{
 			DirectX::XMStoreFloat4x4(&m, DirectX::XMMatrixIdentity());
@@ -212,6 +215,22 @@ void FbxSkinnedModel::Render(
 	//------------------
 	context->VSSetShader(vertex_shader.Get(), nullptr, 0);
 	context->PSSetShader(pixel_shader.Get(), nullptr, 0);
+
+	// Graphicsクラスからパイプラインステートを取得
+	PipelineStates* pipeline_states = Graphics::Instance().GetPipelineStates();
+
+	// 深度ステンシルステートの設定
+	// Index 1: 深度テスト有効、深度書き込み有効 (通常描画用)
+	context->OMSetDepthStencilState(pipeline_states->GetDepthStenceilState(1).Get(), 0);
+
+	// ブレンドステートの設定
+	// Index 0: ブレンド無効 (不透明描画用)
+	float blend_factor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	context->OMSetBlendState(pipeline_states->GetBlendState(0).Get(), blend_factor, 0xFFFFFFFF);
+
+	//カリングなし
+	context->RSSetState(pipeline_states->GetRasterizerState(2).Get());
+
 	context->VSSetConstantBuffers(0, 1, constant_buffer.GetAddressOf());
 	context->PSSetConstantBuffers(0, 1, constant_buffer.GetAddressOf());
 	context->IASetInputLayout(input_layout.Get());

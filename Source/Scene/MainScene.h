@@ -18,6 +18,8 @@
 #include "../Graphics/PostProcessConstantBuffers.h"
 #include "../Common/high_resolution_timer.h"
 
+#include "../FbxModel/FbxSkinnedModel.h"
+#include "../FbxModel/FbxSkinnedResource.h"
 
 class MainScene :public Scene
 {
@@ -42,6 +44,10 @@ public:
 
 	//•`‰æˆ—
 	void Render(float elapsed_time) override;
+
+private:
+	std::shared_ptr<FbxSkinnedResource> resource;
+	std::unique_ptr<FbxSkinnedModel> fbx_skinned_model;
 
 private:
 	struct Transform

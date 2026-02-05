@@ -101,8 +101,17 @@ void MainScene::Initialize()
 	static_meshes[0] = std::make_unique<static_mesh>
 		(device, L"./resources/Rock/Rock.obj");
 
-	skinned_meshes[0] = std::make_unique<skinned_mesh>
-		(device, "./resources/nico.fbx", true);
+	//skinned_meshes[0] = std::make_unique<skinned_mesh>
+	//	(device, "./resources/nico.fbx", true);
+
+	resource = std::make_shared<FbxSkinnedResource>(device);
+
+	resource->Load("./resources/nico.fbx");
+
+	fbx_skinned_model = std::make_unique<FbxSkinnedModel>(resource);
+
+	fbx_skinned_model->PlayAnimation("NIC_Idle");
+
 	//skinned_meshes[0] = make_unique<skinned_mesh>(device.Get(), "./resources/AimTest/MNK_Mesh.fbx");
 	//skinned_meshes[0]->append_animations("./resources/AimTest/Aim_Space.fbx", 0);
 
@@ -193,6 +202,11 @@ void MainScene::Update(float elapsed_time)
 
 	//ImGui::End();
 #endif
+
+	if (fbx_skinned_model)
+	{
+		fbx_skinned_model->AnimationUpdate(elapsed_time);
+	}
 }
 
 //描画処理
@@ -342,24 +356,24 @@ void MainScene::Render(float elapsed_time)
 	static float animation_tick{ 0 };	//累積再生時間
 
 	//最初のスキンメッシュの最初のアニメーションクリップを取得
-	skinned_mesh::animation& animation{ skinned_meshes[0]->animation_clips.at(clip_index) };
+	//skinned_mesh::animation& animation{ skinned_meshes[0]->animation_clips.at(clip_index) };
 
 	//経過時間とサンプリングレートから 現在表示すべきフレーム番号を計算
-	frame_index = static_cast<int>(animation_tick * animation.sampling_rate);
+	//frame_index = static_cast<int>(animation_tick * animation.sampling_rate);
 
 	//アニメーションが終了したら最初にループ（ループ再生）
-	if (frame_index > animation.sequence.size() - 1)
-	{
-		frame_index = 0;
-		animation_tick = 0;
-	}
-	else
-	{
-		//アニメーションを進める（1フレームあたりの経過時間を足す）
-		animation_tick += elapsed_time;
-	}
-	//現在のフレーム（ボーン姿勢データ）を取得
-	skinned_mesh::animation::keyframe& keyframe{ animation.sequence.at(frame_index) };
+	//if (frame_index > animation.sequence.size() - 1)
+	//{
+	//	frame_index = 0;
+	//	animation_tick = 0;
+	//}
+	//else
+	//{
+	//	//アニメーションを進める（1フレームあたりの経過時間を足す）
+	//	animation_tick += elapsed_time;
+	//}
+	////現在のフレーム（ボーン姿勢データ）を取得
+	//skinned_mesh::animation::keyframe& keyframe{ animation.sequence.at(frame_index) };
 #else
 	skinned_mesh::animation::keyframe keyframe;
 	const skinned_mesh::animation::keyframe* keyframes[2]{
@@ -385,8 +399,8 @@ void MainScene::Render(float elapsed_time)
 #endif
 
 	//現在のボーン姿勢を使ってスキンメッシュを描画
-	skinned_meshes[0]->render
-	(context, world, material_color, &keyframe);
+	//skinned_meshes[0]->render
+	//(context, world, material_color, &keyframe);
 
 	context->RSSetState(states->GetRasterizerState(0).Get());
 
@@ -408,6 +422,27 @@ void MainScene::Render(float elapsed_time)
 		{ 0.5f,0.8f,0.2f,1.0f }
 	);
 	//immediate_context->RSSetState(reasterizer_states[0].Get());
+
+	if (fbx_skinned_model)
+	{
+		float scale = 0.05f;
+		cube.scale.x = cube.scale.y = cube.scale.z = 0.01;
+		DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(
+			cube.scale.x,cube.scale.y,cube.scale.z) };
+
+		DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(
+			cube.rotation.x,cube.rotation.y,cube.rotation.z) };
+
+		DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(
+			cube.position.x,cube.position.y,cube.position.z) };
+
+		DirectX::XMFLOAT4X4 world;
+		DirectX::XMStoreFloat4x4(&world, S* R* T);
+
+		DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+		fbx_skinned_model->Render(context, world, color);
+	}
 
 	// 深度テスト OFF
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(0).Get(), 1);

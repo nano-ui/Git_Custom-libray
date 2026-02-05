@@ -168,7 +168,7 @@ void PipelineStates::Initialize()
 	D3D11_RASTERIZER_DESC rasterizer_desc_default{};
 	rasterizer_desc_default.FillMode = D3D11_FILL_SOLID;	//ポリゴンをソリッドで（中を塗りつぶして）描画
 	rasterizer_desc_default.CullMode = D3D11_CULL_BACK;		//裏面カリング有効化（裏側のポリゴンを描画しない）
-	rasterizer_desc_default.FrontCounterClockwise = TRUE;
+	rasterizer_desc_default.FrontCounterClockwise = FALSE;
 	rasterizer_desc_default.DepthClipEnable = TRUE;			//深度クリッピングを有効化
 	
 	//ラスタライザステートオブジェクトを作成

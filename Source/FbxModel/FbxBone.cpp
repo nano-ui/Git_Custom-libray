@@ -2,6 +2,7 @@
 
 #include <fbxsdk.h>
 #include <unordered_map>
+#include <queue>
 
 //=====================
 // 行列変換ヘルパー
@@ -17,6 +18,33 @@ namespace
                 dest.m[r][c] = static_cast<float>(src.Get(r, c));
         return dest;
     }
+
+    //スキン情報を持つメッシュノードを再帰的に検索
+    FbxMesh* FindSkinnedMesh(FbxNode* node)
+    {
+        if (!node) return nullptr;
+
+        FbxNodeAttribute* attr = node->GetNodeAttribute();
+        if (attr && attr->GetAttributeType() == FbxNodeAttribute::eMesh)
+        {
+            FbxMesh* mesh = node->GetMesh();
+
+            //スキンでフォーマを持っているか確認
+            if (mesh && mesh->GetDeformerCount(FbxDeformer::eSkin) > 0)
+            {
+                return mesh;
+            }
+        }
+
+        //子ノードを検索
+        for (int i = 0; i < node->GetChildCount(); i++)
+        {
+            FbxMesh* result = FindSkinnedMesh(node->GetChild(i));
+            if (result)return result;
+        }
+        return nullptr;
+    }
+
 }
 
 //============================
@@ -27,77 +55,33 @@ void FbxBone::Fetch(fbxsdk::FbxScene* scene, std::vector<BoneData>& out_bones)
     //出力用配列をクリアして初期化
     out_bones.clear();
 
-    //シーン内の全ノード数を取得
-    int node_count = scene->GetSrcObjectCount<FbxNode>();
+    //スキンメッシュを持つメッシュを検索
+    FbxNode* root_node = scene->GetRootNode();
+    FbxMesh* target_mesh = FindSkinnedMesh(root_node);
 
-    //ボーン名からインデックスを逆引きするためのマップ
-    std::unordered_map<std::string, int64_t> bone_name_to_index;
-
-    //---------------------------------------------
-    //ノードリストからボーンとして扱えるものを抽出
-    //---------------------------------------------
-    for (int i = 0; i < node_count; i++)
+    if (!target_mesh)
     {
-        //1番目のノードを取得
-        FbxNode* node = scene->GetSrcObject<FbxNode>(i);
-
-        //ノードの属性を取得
-        FbxNodeAttribute* attribute = node->GetNodeAttribute();
-
-        //属性が存在し、かつボーンとして扱うべきタイプか判定
-        if (attribute &&
-            (attribute->GetAttributeType() == FbxNodeAttribute::eSkeleton ||
-                attribute->GetAttributeType() == FbxNodeAttribute::eNull ||
-                attribute->GetAttributeType() == FbxNodeAttribute::eMesh))
-        {
-            //ボーンデータを作成
-            BoneData bone;
-
-            //ノード名をボーン名として保存
-            bone.name = node->GetName();
-
-            //親インデックスは後で解放するため、一旦-1に設定
-            bone.parent_index = -1;
-
-            //グローバル変換行列を取得
-            FbxAMatrix global = node->EvaluateGlobalTransform();
-
-            //逆行列を計算してオフセット行列とする
-            bone.offset_transform = ToXMFloat4x4(global.Inverse());
-
-            //リストに追加
-            out_bones.push_back(std::move(bone));
-
-            //名前と「追加した場所のインデックス」をマップに記録
-            bone_name_to_index[node->GetName()] = out_bones.size() - 1;
-        }
+        return;
     }
 
-    //-------------------------------
-    //親子関係（インデックス）の解決
-    //-------------------------------
-    //登録された全ボーンについてループ
-    for (auto& bone : out_bones)
+    //スキンデフォーマーを取得
+    FbxSkin* skin = static_cast<FbxSkin*>(target_mesh->GetDeformer(0, FbxDeformer::eSkin));
+
+    if (!skin)
     {
-        // ボーン名を使ってFBXのノードオブジェクトを再検索
-        FbxNode* node = scene->FindNodeByName(bone.name.c_str());
-
-        //ノードが見つからなけらばスキップ
-        if (!node) continue;
-
-        //現在のノードの親ノードを取得
-        FbxNode* parent = node->GetParent();
-
-        //親が存在し、かつその親も「ボーンリスト」に含まれているか確認
-        if (parent && bone_name_to_index.count(parent->GetName()) > 0)
-        {
-            //マップを使って親のインデックスを取得して設定
-            bone.parent_index = bone_name_to_index[parent->GetName()];
-        }
-        else
-        {
-            //親がいない、または親がボーンとして管理されていない場合はルート扱い
-            bone.parent_index = -1;
-        }
+        return;
     }
+
+    //クラスター(ボーン)の数だけループ
+    int cluster_count = skin->GetClusterCount();
+    out_bones.resize(cluster_count);
+
+    //名前検索用マップ
+    std::unordered_map<std::string, int> bone_name_to_index;
+
+    for (int i = 0; i < cluster_count; i++)
+    {
+        FbxCluster* cluster = skin->GetCluster(i);
+    }
+
 }
