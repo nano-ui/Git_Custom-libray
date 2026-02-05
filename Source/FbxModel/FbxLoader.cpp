@@ -130,7 +130,7 @@ bool FbxLoader::Load(
 
 	//メッシュの抽出
 	std::vector<MeshData> meshes;
-	FbxSkinnedMesh::Fetch(device, scene, bones, meshes);
+	FbxSkinnedMesh::Fetch(device,scene,filename,bones,meshes,materials);
 
 	//アニメーションの抽出
 	std::unordered_map<std::string, AnimationClip> animations;

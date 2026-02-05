@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <map>
 #include "FbxSkinnedMesh.h"
+#include "../FbxModel/FbxMaterial.h"
 
 //==============
 //変換ヘルパー
@@ -36,11 +37,16 @@ namespace {
 void FbxSkinnedMesh::Fetch(
 	ID3D11Device* device,
 	fbxsdk::FbxScene* scene,
+	const std::string& fbx_filename,
 	const std::vector<BoneData>& bones,
-	std::vector<MeshData>& out_meshes)
+	std::vector<MeshData>& out_meshes,
+	std::unordered_map<uint64_t, MaterialData>& out_materials)
 {
 	//出力用マップをクリア
 	out_meshes.clear();
+	
+	//マテリアルとテクスチャの一括読み込み
+	FbxMaterial::Fetch(device, scene, fbx_filename, out_materials);
 
 	//シーン内のジオメトリ(形状データ)数を取得
 	int geometry_count = scene->GetGeometryCount();
@@ -121,8 +127,11 @@ void FbxSkinnedMesh::Fetch(
 				FbxAMatrix mesh_global = node->EvaluateGlobalTransform();
 				FbxAMatrix bone_global = current_node->EvaluateGlobalTransform(); // 見つかった親ボーンの行列
 
+				//逆行列が存在しない（スケール0など）場合の対策を入れる
+				FbxAMatrix bone_inverse = bone_global.Inverse();
+
 				//逆行列を掛けることで「ボーンから見たメッシュの位置」にする
-				bake_transform = mesh_global * bone_global.Inverse();
+				bake_transform = mesh_global * bone_inverse;
 			}
 		}
 
@@ -189,7 +198,16 @@ void FbxSkinnedMesh::Fetch(
 				FbxLayerElementMaterial* element_mat = fbx_mesh->GetElementMaterial();
 				if (element_mat)
 				{
-					material_index = element_mat->GetIndexArray().GetAt(p);
+					if (element_mat->GetMappingMode() == FbxGeometryElement::eAllSame)
+					{
+						//全て同じなら0番目を見る
+						material_index = element_mat->GetIndexArray().GetAt(0);
+					}
+					else
+					{
+						//ポリゴンごとにならp番目を見る
+						material_index = element_mat->GetIndexArray().GetAt(p);
+					}
 				}
 			}
 
@@ -202,12 +220,29 @@ void FbxSkinnedMesh::Fetch(
 				MeshVertex vertex;
 
 				//位置情報を取得して変換
-				vertex.position = ToXMFloat3(control_points[ctrl_point_index]);
+				if (!has_skin && target_bone_index != -1)
+				{
+					FbxVector4 pos = control_points[ctrl_point_index];
+					vertex.position = TransformPoint(pos, bake_transform);
+				}
+				else
+				{
+					vertex.position = ToXMFloat3(control_points[ctrl_point_index]);
+				}
 
 				//法線ベクトルを取得して変換
 				FbxVector4 normal;
 				fbx_mesh->GetPolygonVertexNormal(p, v, normal);
-				vertex.normal = ToXMFloat3(normal);
+
+				//非スキンかつ親ボーン追従ならベイク行列を適用
+				if (!has_skin && target_bone_index != -1)
+				{
+					vertex.normal = TransformVector(normal, bake_transform);
+				}
+				else
+				{
+					vertex.normal = ToXMFloat3(normal);
+				}
 
 				//UV座標の取得
 				FbxStringList uv_names;
@@ -301,15 +336,35 @@ void FbxSkinnedMesh::Fetch(
 				//---------------------
 				if (has_skin && ctrl_point_index < influences.size())
 				{
-					//抽出済みのウェイト情報を適用
-					const auto& influence_list = influences[ctrl_point_index];
+					//コピーを作成してソート可能にする
+					auto influence_list = influences[ctrl_point_index];
 
-					//最大4ボーンまで
-					for (size_t k = 0; k < influence_list.size() && k < 4; k++)
+					//影響度の大きい順にソート
+					std::sort(influence_list.begin(), influence_list.end(),
+						[](const BoneInfluence& a, const BoneInfluence& b) {
+							return a.weight > b.weight;
+						});
+
+					//最大4つまで採用し、合計値を計算
+					float total_weight = 0.0f;
+					int count = (std::min)((int)influence_list.size(), 4);
+
+					for (int k = 0; k < count; k++)
 					{
 						vertex.bone_indices[k] = influence_list[k].bone_index;
 						vertex.bone_weights[k] = influence_list[k].weight;
+						total_weight += influence_list[k].weight;
 					}
+
+					//正規化
+					if (total_weight > 0.0f)
+					{
+						for (int k = 0; k < 4; k++)
+						{
+							vertex.bone_weights[k] /= total_weight;
+						}
+					}
+
 				}
 				else if (target_bone_index != -1)
 				{

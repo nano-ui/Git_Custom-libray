@@ -106,11 +106,11 @@ void MainScene::Initialize()
 
 	resource = std::make_shared<FbxSkinnedResource>(device);
 
-	resource->Load("./resources/nico.fbx");
+	resource->Load("./resources/plantune.fbx");
 
 	fbx_skinned_model = std::make_unique<FbxSkinnedModel>(resource);
 
-	fbx_skinned_model->PlayAnimation("NIC_Idle");
+	fbx_skinned_model->PlayAnimation("PLT_Idle");
 
 	//skinned_meshes[0] = make_unique<skinned_mesh>(device.Get(), "./resources/AimTest/MNK_Mesh.fbx");
 	//skinned_meshes[0]->append_animations("./resources/AimTest/Aim_Space.fbx", 0);
