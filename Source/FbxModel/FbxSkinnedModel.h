@@ -37,6 +37,7 @@ public:
 
 private:
     std::shared_ptr<FbxSkinnedResource> resource;
+    std::vector<DirectX::XMFLOAT4X4> node_global_transforms;//計算された全ノードのグローバル行列
 
     //アニメーション制御
     std::string current_clip_name;  //現在のアニメーション名

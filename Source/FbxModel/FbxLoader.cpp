@@ -11,6 +11,20 @@
 
 #include <fbxsdk.h>
 #include <filesystem>
+#include <functional>
+
+namespace
+{
+	// ヘルパー: FbxAMatrix -> XMFLOAT4X4
+	XMFLOAT4X4 ToXMFloat4x4(const FbxAMatrix& src)
+	{
+		XMFLOAT4X4 dest;
+		for (int r = 0; r < 4; ++r)
+			for (int c = 0; c < 4; ++c)
+				dest.m[r][c] = static_cast<float>(src.Get(r, c));
+		return dest;
+	}
+}
 
 //=========================================================
 // 指定したファイルからデータを読み込み、リソースに構築
@@ -120,6 +134,9 @@ bool FbxLoader::Load(
 	//各パーツのデータを抽出
 	//--------------------------
 	 
+	//ノード階層の抽出
+	FetchNodes(scene, out_resource->nodes);
+
 	//マテリアルの抽出
 	std::unordered_map<uint64_t, MaterialData> materials;
 	FbxMaterial::Fetch(device, scene, filename, materials);
@@ -157,4 +174,49 @@ bool FbxLoader::Load(
 	manager->Destroy();
 
 	return true;
+}
+
+void FbxLoader::FetchNodes(
+	FbxScene* fbx_scene,
+	std::vector<NodeData>& out_nodes)
+{
+	out_nodes.clear();
+
+	//再帰的にノードを走査するラムダ式
+	std::function<void(FbxNode*, int64_t)> traverse =
+		[&](FbxNode* fbx_node, int64_t parent_index)
+		{
+			//ノードデータの作成
+			NodeData node;
+			node.name = fbx_node->GetName();
+			node.unique_id = fbx_node->GetUniqueID();
+			node.parent_index = parent_index;
+
+			//初期姿勢（ローカル変換）を取得
+			node.local_transform = ToXMFloat4x4(fbx_node->EvaluateLocalTransform());
+
+			//配列に追加し、自身のインデックスを記録
+			int64_t current_index = static_cast<int64_t>(out_nodes.size());
+			out_nodes.push_back(node);
+
+			//子ノードを再帰処理
+			int child_count = fbx_node->GetChildCount();
+			for (int i = 0; i < child_count; i++)
+			{
+				traverse(fbx_node->GetChild(i), current_index);
+			}
+		};
+
+	//ルートノードから探索開始
+	FbxNode* root = fbx_scene->GetRootNode();
+	if (root)
+	{
+		// ルート自体を含めるか、ルートの子から始めるかは設計によりますが、
+		// skinned_meshに合わせてルートの子から走査します
+		int child_count = root->GetChildCount();
+		for (int i = 0; i < child_count; i++)
+		{
+			traverse(root->GetChild(i), -1);
+		}
+	}
 }

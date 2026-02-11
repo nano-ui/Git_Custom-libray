@@ -15,5 +15,10 @@ public:
 		const std::string& filename,
 		std::shared_ptr<FbxSkinnedResource> out_resource
 	);
+
+	void FetchNodes(
+		FbxScene* fbx_scene,
+		std::vector<NodeData>& out_nodes
+	);
 };
 

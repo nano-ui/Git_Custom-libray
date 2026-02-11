@@ -95,93 +95,114 @@ void FbxSkinnedModel::AnimationUpdate(float delta_time)
 {
 	if (!resource)return;
 
+	//ノードリストへの参照
+	const auto& nodes = resource->nodes;
 	const auto& animations = resource->GetAnimations();
 	const auto& bones = resource->GetBones();
 
-	//ボーン行列配列のサイズ確保
+	//行列配列のサイズ確保
+	if (node_global_transforms.size() != nodes.size())
+	{
+		node_global_transforms.resize(nodes.size());
+	}
+
+	//ボーン用行列（スキニング用）のサイズ確保
 	if (bone_transforms.size() != bones.size())
 	{
 		bone_transforms.resize(bones.size());
-		global_transforms.resize(bones.size());
-
-		for (auto& m : bone_transforms)
-		{
-			DirectX::XMStoreFloat4x4(&m, DirectX::XMMatrixIdentity());
-		}
 	}
 
-	//指定したアニメーションがあるか検索
+	//-----------------------------------
+	//アニメーション時間の進行
+	//-----------------------------------
+
 	auto it = animations.find(current_clip_name);
-	if (it == animations.end())
+	bool has_animation = (it != animations.end());
+	const AnimationClip* clip = nullptr;
+
+	//キーフレーム計算用変数
+	size_t frame_curr = 0;
+	size_t frame_next = 0;
+	float t = 0.0f;
+
+	if (has_animation)
 	{
-		//アニメーションが無い場合は更新しない
-		return;
-	}
+		clip = &it->second;
 
-	const AnimationClip& clip = it->second;
+		//時間を進める
+		current_time += delta_time * clip->sampling_rate;
+		float duration = static_cast<float>(clip->sequence.size() - 1);
 
-	//時間を進める
-	current_time += delta_time * clip.sampling_rate;
+		//ループ処理
+		if (is_loop) current_time = fmod(current_time, duration);
+		else         current_time = (std::min)(current_time, duration);
 
-	//総フレーム数
-	float duration = static_cast<float>(clip.sequence.size() - 1);
-
-	//ループ制御
-	if (is_loop)
-	{
-		current_time = fmod(current_time, duration);
-	}
-	else
-	{
-		current_time = (std::min)(current_time, duration);
-	}
-
-	//現在と次のキーフレーム番号を計算
-	size_t frame_curr = static_cast<size_t>(current_time);
-	size_t frame_next = static_cast<size_t>(current_time);
-
-	//次のフレームが範囲外ならループ、または停止
-	if (frame_next >= clip.sequence.size())
-	{
-		frame_next = is_loop ? 0 : clip.sequence.size() - 1;
-	}
-
-	//補完係数
-	float t = current_time - static_cast<float>(frame_curr);
-
-	const auto& nodes_curr = clip.sequence[frame_curr];
-	const auto& nodes_next = clip.sequence[frame_next];
-
-	//ボーン行列の計算ループ
-	for (size_t i = 0; i < bones.size(); i++)
-	{
-		//ヘルパー関数を使ってローカル行列を計算
-		DirectX::XMMATRIX local = ComputeInterpolatedLocalMatrix(nodes_curr[i], nodes_next[i], t);
-
-		//親子関係を解決してグローバル行列にする
-		int64_t parent_index = bones[i].parent_index;
-		DirectX::XMMATRIX global;
-
-		if (parent_index >= 0)
+		//フレーム番号の算出
+		frame_curr = static_cast<size_t>(current_time);
+		frame_next = frame_curr + 1;
+		if (frame_next >= clip->sequence.size())
 		{
-			//親のグローバル行列を取得して掛ける
-			DirectX::XMMATRIX parent_global = DirectX::XMLoadFloat4x4(&global_transforms[parent_index]);
-			global = local * parent_global;
+			frame_next = is_loop ? 0 : clip->sequence.size() - 1;
+		}
+
+		//補完係数
+		t = current_time - static_cast<float>(frame_curr);
+	}
+
+	//-------------------------------
+	//ノード階層の更新
+	//-------------------------------
+
+	for (size_t i = 0; i < nodes.size(); i++)
+	{
+		const auto& node = nodes[i];
+		DirectX::XMMATRIX local_matrix;
+
+		if (has_animation)
+		{
+			//アニメーションがある場合：キーフレームから補間してローカル行列を作る
+			const auto& node_anim_curr = clip->sequence[frame_curr].nodes[i];
+			const auto& node_anim_next = clip->sequence[frame_next].nodes[i];
+
+			local_matrix = ComputeInterpolatedLocalMatrix(node_anim_curr, node_anim_next, t);
 		}
 		else
 		{
-			//親がいなければローカルがそのままグローバル
-			global = local;
+			//アニメーションがない場合：初期姿勢（Bind Pose）を使用
+			local_matrix = XMLoadFloat4x4(&node.local_transform);
 		}
 
-		//次の子ボーン計算のために純粋なグローバル行列を保存
-		DirectX::XMStoreFloat4x4(&global_transforms[i], global);
+		//親の行列を適用
+		DirectX::XMMATRIX global_matrix = local_matrix;
+		if (node.parent_index >= 0)
+		{
+			//親は必ず自分より前のインデックスにいるので、計算済みの行列を取得できる
+			DirectX::XMMATRIX parent_global = DirectX::XMLoadFloat4x4(&node_global_transforms[node.parent_index]);
+			global_matrix = global_matrix * parent_global;
+		}
 
-		//「逆バインドポーズ行列（Offset）」を掛けて「スキニング行列」を完成させる
-		DirectX::XMMATRIX offset = DirectX::XMLoadFloat4x4(&bones[i].offset_transform);
+		//計算結果を保存
+		DirectX::XMStoreFloat4x4(&node_global_transforms[i], global_matrix);
+	}
 
-		//頂点を「ボーン空間」に戻してから(Offset)、現在の姿勢(Global)へ動かす
-		DirectX::XMStoreFloat4x4(&bone_transforms[i], offset * global);
+	//----------------------
+	//ボーン行列の更新
+	//----------------------
+
+	//計算済みのノード行列を使って、スキニングに必要な行列を作成
+	for (size_t i = 0; i < bones.size(); i++)
+	{
+		//ボーンが参照しているノードのインデックスを取得
+		int64_t node_index = bones[i].node_index;
+
+		if (node_index >= 0 && node_index < node_global_transforms.size())
+		{
+			DirectX::XMMATRIX global = XMLoadFloat4x4(&node_global_transforms[node_index]);
+			DirectX::XMMATRIX offset = XMLoadFloat4x4(&bones[i].offset_transform);
+
+			//スキニング行列 = Offset * Global
+			XMStoreFloat4x4(&bone_transforms[i], offset * global);
+		}
 	}
 }
 
@@ -195,11 +216,13 @@ void FbxSkinnedModel::Render(
 {
 	if (!resource)return;
 
-	//----------------------
-	//定数バッファの更新
-	//----------------------
+	//基本となるワールド行列
+	DirectX::XMMATRIX base_world = DirectX::XMLoadFloat4x4(&world);
+
+	// -------------------------------------------------
+	// 定数バッファデータの準備
+	// -------------------------------------------------
 	Constants data;
-	data.world = world;
 	data.material_color = color;
 
 	//計算済みのボーン行列をコピー
@@ -208,27 +231,17 @@ void FbxSkinnedModel::Render(
 	{
 		data.bone_transforms[i] = bone_transforms[i];
 	}
-	context->UpdateSubresource(constant_buffer.Get(), 0, nullptr, &data, 0, 0);
 
-	//------------------
-	//パイプライン設定
-	//------------------
+	// ------------------
+	// パイプライン設定
+	// ------------------
 	context->VSSetShader(vertex_shader.Get(), nullptr, 0);
 	context->PSSetShader(pixel_shader.Get(), nullptr, 0);
 
-	// Graphicsクラスからパイプラインステートを取得
 	PipelineStates* pipeline_states = Graphics::Instance().GetPipelineStates();
-
-	// 深度ステンシルステートの設定
-	// Index 1: 深度テスト有効、深度書き込み有効 (通常描画用)
 	context->OMSetDepthStencilState(pipeline_states->GetDepthStenceilState(1).Get(), 0);
-
-	// ブレンドステートの設定
-	// Index 0: ブレンド無効 (不透明描画用)
 	float blend_factor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	context->OMSetBlendState(pipeline_states->GetBlendState(0).Get(), blend_factor, 0xFFFFFFFF);
-
-	//カリングなし
 	context->RSSetState(pipeline_states->GetRasterizerState(2).Get());
 
 	context->VSSetConstantBuffers(0, 1, constant_buffer.GetAddressOf());
@@ -236,14 +249,28 @@ void FbxSkinnedModel::Render(
 	context->IASetInputLayout(input_layout.Get());
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	//----------------------
-	//メッシュごとの描画
-	//----------------------
+	// ----------------------
+	// メッシュごとの描画
+	// ----------------------
 	const auto& meshes = resource->GetMeshes();
 	const auto& materials = resource->GetMaterials();
 
 	for (const auto& mesh : meshes)
 	{
+		//メッシュごとの行列計算
+		DirectX::XMMATRIX mesh_local_transform = DirectX::XMMatrixIdentity();
+
+		if (mesh.node_index >= 0 && mesh.node_index < node_global_transforms.size())
+		{
+			mesh_local_transform = DirectX::XMLoadFloat4x4(&node_global_transforms[mesh.node_index]);
+		}
+
+		//最終的なワールド行列 = メッシュのノード行列 × モデル全体の行列
+		DirectX::XMStoreFloat4x4(&data.world, mesh_local_transform * base_world);
+
+		//定数バッファの更新
+		context->UpdateSubresource(constant_buffer.Get(), 0, nullptr, &data, 0, 0);
+
 		//頂点バッファとインデックスバッファのセット
 		UINT stride = sizeof(MeshVertex);
 		UINT offset = 0;
@@ -259,10 +286,10 @@ void FbxSkinnedModel::Render(
 			{
 				const auto& mat = it->second;
 
-				//テクスチャ害列を作成
+				//テクスチャ配列を作成
 				ID3D11ShaderResourceView* srvs[] = {
-									mat.shader_resource_views[0].Get(), // Diffuse
-									mat.shader_resource_views[1].Get()  // Normal
+					mat.shader_resource_views[0].Get(),
+					mat.shader_resource_views[1].Get() 
 				};
 
 				//シェーダーリソースとしてセット
