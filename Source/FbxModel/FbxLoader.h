@@ -3,9 +3,13 @@
 #include <string>
 #include <memory>
 #include <d3d11.h>
+#include "../FbxModel/FbxSkinnedResource.h"
 
 //ëOï˚êÈåæ
 class FbxSkinnedResource;
+
+namespace fbxsdk { class FbxScene; }
+using FbxScene = fbxsdk::FbxScene;
 
 class FbxLoader
 {
@@ -16,7 +20,7 @@ public:
 		std::shared_ptr<FbxSkinnedResource> out_resource
 	);
 
-	void FetchNodes(
+	static void FetchNodes(
 		FbxScene* fbx_scene,
 		std::vector<NodeData>& out_nodes
 	);

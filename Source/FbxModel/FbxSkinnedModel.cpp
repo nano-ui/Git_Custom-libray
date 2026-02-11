@@ -161,8 +161,8 @@ void FbxSkinnedModel::AnimationUpdate(float delta_time)
 		if (has_animation)
 		{
 			//アニメーションがある場合：キーフレームから補間してローカル行列を作る
-			const auto& node_anim_curr = clip->sequence[frame_curr].nodes[i];
-			const auto& node_anim_next = clip->sequence[frame_next].nodes[i];
+			const auto& node_anim_curr = clip->sequence[frame_curr][i];
+			const auto& node_anim_next = clip->sequence[frame_next][i];
 
 			local_matrix = ComputeInterpolatedLocalMatrix(node_anim_curr, node_anim_next, t);
 		}

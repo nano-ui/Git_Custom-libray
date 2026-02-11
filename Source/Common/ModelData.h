@@ -31,7 +31,7 @@ struct MeshData
 {
 	uint64_t unique_id{ 0 };							//メッシュの固有ID
 	std::string name;									//メッシュの名前
-	int64_t node_index{ 0 };							//シーン内のどのノード(ボーン)に紐づいているか
+	int64_t node_index{ -1 };							//シーン内のどのノード(ボーン)に紐づいているか
 	DirectX::XMFLOAT4X4 default_global_transform;		//初期の配置行列
 	std::vector<MeshSubset> subsets;					//マテリアル分けされたサブセットのリスト
 

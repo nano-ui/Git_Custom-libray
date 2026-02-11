@@ -137,6 +137,12 @@ bool FbxLoader::Load(
 	//ノード階層の抽出
 	FetchNodes(scene, out_resource->nodes);
 
+	//メッシュとノードの紐づけ
+	for (auto& mesh : out_resource->meshes)
+	{
+		mesh.node_index = out_resource->IndexOf(mesh.unique_id);
+	}
+
 	//マテリアルの抽出
 	std::unordered_map<uint64_t, MaterialData> materials;
 	FbxMaterial::Fetch(device, scene, filename, materials);
