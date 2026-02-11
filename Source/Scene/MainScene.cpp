@@ -104,6 +104,7 @@ void MainScene::Initialize()
 	//skinned_meshes[0] = std::make_unique<skinned_mesh>
 	//	(device, "./resources/nico.fbx", true);
 
+	//a
 	resource = std::make_shared<FbxSkinnedResource>(device);
 
 	resource->Load("./resources/plantune.fbx");
