@@ -21,43 +21,44 @@ namespace
         return dest;
     }
 
+    //クラスターから初期姿勢の逆行列（Inverse Bind Pose）を計算
+    DirectX::XMFLOAT4X4 CalculateOffsetMatrix(FbxCluster* cluster)
+    {
+        if (!cluster)
+        {
+            //クラスターがない場合は単位行列を返す
+            DirectX::XMFLOAT4X4 identity;
+            DirectX::XMStoreFloat4x4(&identity, DirectX::XMMatrixIdentity());
+            return identity;
+        }
+
+        FbxAMatrix transform_matrix;
+        FbxAMatrix transform_link_matrix;
+        FbxAMatrix global_bindpose_inverse_matrix;
+
+        //モデル（メッシュ）の変換行列
+        cluster->GetTransformMatrix(transform_matrix);
+        //ボーンの変換行列
+        cluster->GetTransformLinkMatrix(transform_link_matrix);
+
+        //逆行列の計算: InverseBindPose = TransformLink^{-1} * Transform
+        global_bindpose_inverse_matrix = transform_link_matrix.Inverse() * transform_matrix;
+
+        return ToXMFloat4x4(global_bindpose_inverse_matrix);
+    }
+
     //再帰的にノードを探索し、階層順にリストに追加
     void TraverseHierachy(
         FbxNode* node,
         int parent_index,
         std::vector<BoneData>& out_bones,
-        FbxSkin* skin,
-        const std::set<FbxNode*>& valid_bones
+        const std::unordered_map<FbxNode*, FbxCluster*>& bone_cluster_map
     )
     {
-        bool is_valid = false;
-        if (valid_bones.count(node) > 0)
-        {
-            is_valid = true;
-        }
-        else
-        {
-            //ノードの属性を取得
-            FbxNodeAttribute* attr = node->GetNodeAttribute();
-            if (attr)
-            {
-                auto type = attr->GetAttributeType();
+        //このノードが「有効なボーン（スキニングに使われている）」かどうか判定
+        bool is_valid_bone = (bone_cluster_map.find(node) != bone_cluster_map.end());
 
-                //骨、または階層構造用のヌルノードであれば、階層をつなぐために登録
-                if (type == FbxNodeAttribute::eSkeleton || type == FbxNodeAttribute::eNull)
-                {
-                    is_valid = true;
-                }
-                else if (parent_index != -1)
-                {
-                    is_valid = true;
-                }
-            }
-        }
-
-        int current_index = -1;
-
-        if (is_valid)
+        if (is_valid_bone)
         {
             BoneData bone;
             bone.name = node->GetName();
@@ -65,59 +66,21 @@ namespace
             bone.unique_id = node->GetUniqueID();
             bone.node_index = -1;
 
-            //オフセット行列の計算
-            FbxAMatrix offset_matrix;
-            offset_matrix.SetIdentity();
-
-            if (skin)
-            {
-                int cluster_count = skin->GetClusterCount();
-                for (int i = 0; i < cluster_count; i++)
-                {
-                    FbxCluster* cluster = skin->GetCluster(i);
-                    if (cluster->GetLink() == node)
-                    {
-                        FbxAMatrix reference_global, cluster_global;
-                        cluster->GetTransformMatrix(reference_global);
-                        cluster->GetTransformLinkMatrix(cluster_global);
-
-                        FbxNode* mesh_node = skin->GetGeometry()->GetNode();
-                        FbxAMatrix geometry_transform;
-                        if (mesh_node)
-                        {
-                            const FbxVector4 T = mesh_node->GetGeometricTranslation(FbxNode::eSourcePivot);
-                            const FbxVector4 R = mesh_node->GetGeometricRotation(FbxNode::eSourcePivot);
-                            const FbxVector4 S = mesh_node->GetGeometricScaling(FbxNode::eSourcePivot);
-                            geometry_transform.SetT(T);
-                            geometry_transform.SetR(R);
-                            geometry_transform.SetS(S);
-                        }
-                        else
-                        {
-                            geometry_transform.SetIdentity();
-                        }
-
-                        reference_global = reference_global * geometry_transform;
-                        FbxAMatrix offset = cluster_global.Inverse() * reference_global;
-                        bone.offset_transform = ToXMFloat4x4(offset);
-
-                        break;
-                    }
-                }
-            }
+            //マップから対応するクラスターを取得して、オフセット行列を計算
+            FbxCluster* cluster = bone_cluster_map.at(node);
+            bone.offset_transform = CalculateOffsetMatrix(cluster);
 
             //リストに追加
             out_bones.push_back(bone);
-            current_index = static_cast<int>(out_bones.size() - 1);
+
+            //親インデックスを更新（今追加したボーンが、次の子の親になる）
+            parent_index = static_cast<int>(out_bones.size() - 1);
         }
 
-        //子ノードを再帰検索
-        int next_parent_index = (current_index != -1) ? current_index : parent_index;
-
-        //全ての子ノードを走査
+        //子ノードを再帰的に処理
         for (int i = 0; i < node->GetChildCount(); i++)
         {
-            TraverseHierachy(node->GetChild(i), next_parent_index, out_bones, skin, valid_bones);
+            TraverseHierachy(node->GetChild(i), parent_index, out_bones, bone_cluster_map);
         }
     }
 
@@ -131,40 +94,46 @@ void FbxBone::Fetch(fbxsdk::FbxScene* scene, std::vector<BoneData>& out_bones)
     //出力用配列をクリアして初期化
     out_bones.clear();
 
+    //ボーンのノード, Value: そのボーンを管理しているクラスター
+    std::unordered_map<FbxNode*, FbxCluster*> bone_cluster_map;
+
     //スキンメッシュを持つメッシュを検索
-    FbxNode* root_node = scene->GetRootNode();
-    FbxSkin* skin = nullptr;
+    std::set<FbxNode*> valid_bones;
 
     int geometry_count = scene->GetGeometryCount();
     for (int i = 0; i < geometry_count; i++)
     {
         FbxGeometry* geo = scene->GetGeometry(i);
-        if (geo->GetAttributeType() == FbxNodeAttribute::eMesh)
+        if (geo->GetAttributeType() == FbxNodeAttribute::eMesh)continue;
+
+        FbxMesh* mesh = static_cast<FbxMesh*>(geo);
+
+		int skin_count = mesh->GetDeformerCount(FbxDeformer::eSkin);
+        for (int j = 0; j < skin_count; j++)
         {
-            FbxMesh* mesh = static_cast<FbxMesh*>(geo);
             if (mesh->GetDeformerCount(FbxDeformer::eSkin) > 0)
             {
-                skin = static_cast<FbxSkin*>(mesh->GetDeformer(0, FbxDeformer::eSkin));
-                break;
+                FbxSkin* skin = static_cast<FbxSkin*>(mesh->GetDeformer(0, FbxDeformer::eSkin));
+                if (!skin)continue;
+                int cluster_count = skin->GetClusterCount();
+                for (int k = 0; i < cluster_count; k++)
+                {
+                    FbxCluster* cluster = skin->GetCluster(k);
+                    if (cluster) continue;
+                    FbxNode* bone_node = cluster->GetLink();
+                    if (bone_node)
+                    {
+                        bone_cluster_map[bone_node] = cluster;
+                    }
+                }
             }
         }
     }
 
-    //有効なボーン(クラスター)の集合を作成
-    std::set<FbxNode*> valid_bones;
-    if (skin)
+	FbxNode* root_node = scene->GetRootNode();
+    if (root_node)
     {
-        int cluster_count = skin->GetClusterCount();
-        for (int i = 0; i < cluster_count; i++)
-        {
-            FbxNode* link = skin->GetCluster(i)->GetLink();
-            if (link)
-            {
-                valid_bones.insert(link);
-            }
-        }
+        //ルートから再帰的に探索してリストを作成
+        TraverseHierachy(root_node, -1, out_bones, bone_cluster_map);
     }
-
-    //ルートから再帰的に探索してリストを作成
-    TraverseHierachy(root_node, -1, out_bones, skin, valid_bones);
 }
