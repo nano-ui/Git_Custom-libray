@@ -253,20 +253,41 @@ void FbxSkinnedModel::Render(
 		//サブセット(マテリアル)ごとの描画
 		for (const auto& subset : mesh.subsets)
 		{
-			//マテリアルIDからテクスチャを検索して適用
+			//描画に使用するマテリアルへのポインタ
+			const MaterialData* use_material = nullptr;
+
+			//マテリアルIDから検索
 			auto it = materials.find(subset.material_unique_id);
 			if (it != materials.end())
 			{
-				const auto& mat = it->second;
+				use_material = &it->second;
+			}
+			else
+			{
+				//見つからない場合はデフォルトマテリアルを使用
+				if (!materials.empty())
+				{
+					use_material = &materials.begin()->second;
+				}
+			}
 
-				//テクスチャ害列を作成
+			//マテリアル（またはダミー）が確定した場合
+			if (use_material)
+			{
+				//テクスチャ配列を作成
 				ID3D11ShaderResourceView* srvs[] = {
-									mat.shader_resource_views[0].Get(), // Diffuse
-									mat.shader_resource_views[1].Get()  // Normal
+					use_material->shader_resource_views[0].Get(),	//デフォルト
+					use_material->shader_resource_views[1].Get()	//ノーマル
 				};
 
 				//シェーダーリソースとしてセット
 				context->PSSetShaderResources(0, 2, srvs);
+			}
+			else
+			{
+				//マテリアルが1つも読み込まれていない場合の保険
+				ID3D11ShaderResourceView* null_srvs[] = { nullptr, nullptr };
+				context->PSSetShaderResources(0, 2, null_srvs);
 			}
 
 			//インデックス描画
