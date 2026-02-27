@@ -53,20 +53,43 @@ bool FbxLoader::Load(
 					MaterialData& mat = pair.second;
 					for (int i = 0; i < 2; i++)
 					{
-						if (mat.texture_filenames[i].empty())continue;
+						if (mat.texture_filenames[i].empty())
+						{
+							//ダミーテクスチャ作成
+							uint32_t dummy_cilor = (i == 1) ? 0xffff7f7f : 0xffffffff;
+							make_dummy_texture(
+								device,
+								mat.shader_resource_views[i].GetAddressOf(),
+								dummy_cilor, 16
+							);
+							continue;
+						}
 
+						//テクスチャをロード
 						fs::path fbx_path(filename);
 						fs::path tex_path = fbx_path.parent_path() / mat.texture_filenames[i];
 
-						//テクスチャ情報を格納
-						D3D11_TEXTURE2D_DESC desc{};
-
-						load_texture_from_file(
-							device,
-							tex_path.wstring().c_str(),
-							mat.shader_resource_views[i].GetAddressOf(),
-							&desc
-						);
+						if (fs::exists(tex_path, ec))
+						{
+							//テクスチャ情報を格納
+							D3D11_TEXTURE2D_DESC desc{};
+							load_texture_from_file(
+								device,
+								tex_path.wstring().c_str(),
+								mat.shader_resource_views[i].GetAddressOf(),
+								&desc
+							);
+						}
+						else
+						{
+							//ダミーテクスチャ
+							uint32_t dummy_color = (i == 1) ? 0xFFFF7F7F : 0xFFFFFFFF;
+							make_dummy_texture(
+								device,
+								mat.shader_resource_views[i].GetAddressOf(),
+								dummy_color, 16
+							);
+						}
 					}
 				}
 				return true;

@@ -34,6 +34,12 @@ void FbxMaterial::Fetch(
 		material_data.name = fbx_material->GetName();
 		material_data.unique_id = fbx_material->GetUniqueID();
 
+		//既に登録済みかチェック
+		if (out_materials.find(material_data.unique_id) != out_materials.end())
+		{
+			continue;
+		}
+
 		//拡散反射色プロパティを検索
 		FbxProperty prop = fbx_material->FindProperty(FbxSurfaceMaterial::sDiffuse);
 
