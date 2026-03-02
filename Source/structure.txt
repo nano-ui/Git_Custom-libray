@@ -33,6 +33,13 @@ C:.
 „¥„Ÿ„Ÿ„ŸGameObjects
 „    „¥„Ÿ„Ÿ„ŸCharacters
 „    „¤„Ÿ„Ÿ„ŸObjects
+„¥„Ÿ„Ÿ„ŸGlthModel
+„    „¥„Ÿ„Ÿ„ŸGlthSkinnedModel
+„    „¤„Ÿ„Ÿ„ŸGlthStaticModel
+„            GlthStaticModel.cpp
+„            GlthStaticModel.h
+„            GlthStaticModelData.h
+„            
 „¥„Ÿ„Ÿ„ŸGraphics
 „        DirectXDevice.cpp
 „        DirectXDevice.h

@@ -9,25 +9,29 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 
-
-
-//コンストラクタ
+// コンストラクタ
 MainScene::MainScene()
 {
-	cube.position = { 0.0f,-1.5f,0.0f };
-	cube.scale = { 0.4f,0.4f,0.4f };
-	w_cube.position = { 3,0,0 };
-	camera.position = { 0.0f,0.0f,10.0f };
+	cube.position = { 0.0f, -1.5f, 0.0f };
+	cube.scale = { 0.4f, 0.4f, 0.4f };
+	w_cube.position = { 3, 0, 0 };
+	camera.position = { 0.0f, 0.0f, 10.0f };
 	tb.brightness_threshold = 1.0f;
+
+	// GLTFモデルの初期値
+	gltf_position = { 0.0f, 0.0f, 0.0f };
+	gltf_scale = { 0.05f, 0.05f, 0.05f };
+	gltf_rotation = { 0.0f, 0.0f, 0.0f };
+	DirectX::XMStoreFloat4x4(&gltf_model_transform, DirectX::XMMatrixIdentity());
 }
 
-//デストラクタ
+// デストラクタ
 MainScene::~MainScene()
 {
 	Finalize();
 }
 
-//初期化
+// 初期化処理
 void MainScene::Initialize()
 {
 	auto device = Graphics::Instance().GetDevice();
@@ -35,7 +39,7 @@ void MainScene::Initialize()
 
 	HRESULT hr{ S_OK };
 
-	//シーン定数バッファオブジェクトを生成
+	// シーン定数バッファオブジェクトを生成
 	D3D11_BUFFER_DESC buffer_desc{};
 	buffer_desc.ByteWidth = sizeof(scene_constants);
 	buffer_desc.Usage = D3D11_USAGE_DEFAULT;
@@ -49,7 +53,7 @@ void MainScene::Initialize()
 		constnt_buffer[0].GetAddressOf());
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-	//定数バッファ作成
+	// 定数バッファ作成
 	D3D11_BUFFER_DESC cbd = {};
 	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cbd.Usage = D3D11_USAGE_DYNAMIC;
@@ -84,9 +88,9 @@ void MainScene::Initialize()
 
 	device->CreateBuffer(&desc, &initData, &bloomParamBuffer);
 
-	//上記までがDirectX11の初期設定処理
+	// ここまでDirectX11の設定
 
-	//下記からはゲームで必要なオブジェクトの初期化
+	// ゲーム実行に必要なオブジェクトの初期化
 
 	sprites[0] = std::make_unique<sprite>
 		(device, L"./resources/cyberpunk.jpg");
@@ -94,58 +98,158 @@ void MainScene::Initialize()
 		(device, L"./resources/player-sprites.png");
 	sprites[2] = std::make_unique<sprite>
 		(device, L"./resources/fonts/font0.png");
-	//sprute_batches[0] = std::make_unique<sprite_batch>
-	//	(device.Get(), L"./resources/player-sprites.png", 2048);
+
 	sprute_batches[0] = std::make_unique<sprite_batch>
 		(device, L"./resources/screenshot.jpg", 1);
 	static_meshes[0] = std::make_unique<static_mesh>
 		(device, L"./resources/Rock/Rock.obj");
 
-	//skinned_meshes[0] = std::make_unique<skinned_mesh>
-	//	(device, "./resources/nico.fbx", true);
-
-	//a
 	resource = std::make_shared<FbxSkinnedResource>(device);
-
-	resource->Load("./resources/nico.fbx");
-
-	fbx_skinned_model = std::make_unique<FbxSkinnedModel>(resource);
-
-	fbx_skinned_model->PlayAnimation("NIC_Idle");
-
-	//skinned_meshes[0] = make_unique<skinned_mesh>(device.Get(), "./resources/AimTest/MNK_Mesh.fbx");
-	//skinned_meshes[0]->append_animations("./resources/AimTest/Aim_Space.fbx", 0);
 
 	framebuffers[0] = std::make_unique<framebuffer>(device, 1280, 720);
 
 	bit_block_transfer = std::make_unique<fullscreen_quad>(device);
+
+	// GLTFモデルの初期化
+	InitializeGltfModel();
+	InitializeGltfShaders();
+
+	OutputDebugStringA("MainScene::Initialize() completed\n");
 }
 
-//終了処理
+// GLTFモデルの初期化
+void MainScene::InitializeGltfModel()
+{
+	auto device = Graphics::Instance().GetDevice();
+
+	if (!device)
+	{
+		OutputDebugStringA("ERROR: Device is not initialized\n");
+		return;
+	}
+
+	// GLTFモデルを読み込む
+	// パスはプロジェクトディレクトリの"Assets/Models/"に配置されていると想定
+	const char* model_paths[] = {
+		"resources/RPG-Character.glb",
+	};
+
+	for (const char* path : model_paths)
+	{
+		gltf_model = GlthStaticModel::LoadModel(device, path);
+		if (gltf_model && !gltf_model->meshes.empty())
+		{
+			OutputDebugStringA("GLTF model loaded successfully from: ");
+			OutputDebugStringA(path);
+			OutputDebugStringA("\nMesh count: ");
+			OutputDebugStringA(std::to_string(gltf_model->meshes.size()).c_str());
+			OutputDebugStringA("\n");
+			enable_gltf_rendering = true;
+			return;
+		}
+	}
+
+	OutputDebugStringA("WARNING: Failed to load GLTF model from all paths\n");
+	enable_gltf_rendering = false;
+}
+
+//GLTFシェーダー初期化
+void MainScene::InitializeGltfShaders()
+{
+	auto device = Graphics::Instance().GetDevice();
+
+	HRESULT hr = S_OK;
+
+	// 頂点シェーダー用の入力レイアウト定義
+	D3D11_INPUT_ELEMENT_DESC input_element_descs[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+	// 頂点シェーダー読み込み
+	hr = create_vs_from_cso(
+		device,
+		"static_mesh_vs.cso",
+		gltf_vertex_shader.GetAddressOf(),
+		gltf_input_layout.GetAddressOf(),
+		input_element_descs,
+		_countof(input_element_descs)
+	);
+	if (FAILED(hr))
+	{
+		OutputDebugStringA("ERROR: Failed to load GLTF vertex shader\n");
+		return;
+	}
+
+	// ピクセルシェーダー読み込み
+	hr = create_ps_from_cso(
+		device,
+		"static_mesh_ps.cso",
+		gltf_pixel_shader.GetAddressOf()
+	);
+	if (FAILED(hr))
+	{
+		OutputDebugStringA("ERROR: Failed to load GLTF pixel shader\n");
+		return;
+	}
+
+	// 定数バッファ作成
+	D3D11_BUFFER_DESC cb_desc = {};
+	cb_desc.ByteWidth = sizeof(GLTF_OBJECT_CONSTANT);
+	cb_desc.Usage = D3D11_USAGE_DEFAULT;
+	cb_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cb_desc.CPUAccessFlags = 0;
+
+	hr = device->CreateBuffer(&cb_desc, nullptr, gltf_object_constant_buffer.GetAddressOf());
+	if (FAILED(hr))
+	{
+		OutputDebugStringA("ERROR: Failed to create GLTF constant buffer\n");
+		return;
+	}
+
+	OutputDebugStringA("GLTF shaders initialized successfully\n");
+}
+
+// 終了処理
 void MainScene::Finalize()
 {
-	//ゲームリソースの開放
+	// ゲーム内リソースの解放
 	for (auto& sprite : sprites) sprite.reset();
 	for (auto& batch : sprute_batches) batch.reset();
 	for (auto& mesh : static_meshes) mesh.reset();
-	for (auto& mesh : skinned_meshes)mesh.reset();
-	for (auto& fb : framebuffers)fb.reset();
+	for (auto& mesh : skinned_meshes) mesh.reset();
+	for (auto& fb : framebuffers) fb.reset();
 
-	for (auto& prim : geometric_primitives)prim.reset();
+	for (auto& prim : geometric_primitives) prim.reset();
 
-	if (bit_block_transfer)bit_block_transfer.reset();
+	if (bit_block_transfer) bit_block_transfer.reset();
 
-	//COMポインタも明示的に開放
+	// GLTFシェーダーをクリア
+	if (gltf_vertex_shader) gltf_vertex_shader.Reset();
+	if (gltf_pixel_shader) gltf_pixel_shader.Reset();
+	if (gltf_input_layout) gltf_input_layout.Reset();
+	if (gltf_object_constant_buffer) gltf_object_constant_buffer.Reset();
+
+	// GLTFモデル解放
+	if (gltf_model)
+	{
+		gltf_model.reset();
+	}
+
+	// COMポインタを明示的に解放
 	for (auto& cb : constnt_buffer) cb.Reset();
-	for (auto& ps : pixel_shaders)ps.Reset();
+	for (auto& ps : pixel_shaders) ps.Reset();
 	thresholdBuffer.Reset();
 	bloomParamBuffer.Reset();
 	blurDirectionBuffer.Reset();
 
 	Graphics::Instance().Finalize();
+
+	OutputDebugStringA("MainScene::Finalize() completed\n");
 }
 
-//更新処理
+// 更新処理
 void MainScene::Update(float elapsed_time)
 {
 #ifdef USE_IMGUI
@@ -155,20 +259,11 @@ void MainScene::Update(float elapsed_time)
 #endif
 
 #ifdef USE_IMGUI
-	//ImGui::Begin("ImGUI");
-
-	//editInformation("skinned_meshs", cube);
-	//editInformation("geometric_primitives", w_cube);
-	//editInformation("camera", camera);
-
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_None))
 	{
-		//位置
 		ImGui::SliderFloat2("Position", &position.x, 0, 1280);
 		ImGui::SliderFloat2("Size", &size.x, 0, 720);
-		//色
 		ImGui::SliderFloat4("Color", &render_color.x, 0, 1);
-		//角度
 		ImGui::SliderFloat("Angle", &angle, 0, 360);
 	}
 
@@ -176,7 +271,7 @@ void MainScene::Update(float elapsed_time)
 	{
 		ImGui::SliderFloat3("CubeScale", &cube.scale.x, 0, 10);
 		ImGui::SliderFloat3("CubeRotation", &cube.rotation.x, 0, DirectX::XM_PI);
-		ImGui::SliderFloat3("CubePosion", &cube.position.x, -10, 10);
+		ImGui::SliderFloat3("CubePosition", &cube.position.x, -10, 10);
 		ImGui::SliderFloat("Head", &Long, 0, 300);
 		ImGui::SliderFloat("HeadRotation", &Rotation, 0, XM_PI);
 		ImGui::SliderFloat("Supp", &supplementation, 0.0f, 1.0f);
@@ -189,28 +284,52 @@ void MainScene::Update(float elapsed_time)
 	{
 		ImGui::SliderFloat3("W_CubeScale", &W_Cubuposcale.x, 0, 10);
 		ImGui::SliderFloat3("W_CubeRotation", &W_Cuburotation.x, 0, 0.01745f * 360);
-		ImGui::SliderFloat3("W_CubePosion", &W_Cubuposition.x, 10, 10);
+		ImGui::SliderFloat3("W_CubePosition", &W_Cubuposition.x, -10, 10);
 	}
+
 	if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_None))
 	{
 		ImGui::SliderFloat3("Camera", &camera.position.x, -100, 100);
 	}
-	if (ImGui::CollapsingHeader("light", ImGuiTreeNodeFlags_None))
+
+	if (ImGui::CollapsingHeader("Light", ImGuiTreeNodeFlags_None))
 	{
 		ImGui::SliderFloat4("light_direction", &data.light_direction.x, -1, 1);
 	}
 
+	// GLTFモデルのパラメータUI
+	if (ImGui::CollapsingHeader("GLTF Model", ImGuiTreeNodeFlags_None))
+	{
+		ImGui::Checkbox("Enable GLTF Rendering", &enable_gltf_rendering);
+		ImGui::SliderFloat3("GLTF Position", &gltf_position.x, -10, 10);
+		ImGui::SliderFloat3("GLTF Scale", &gltf_scale.x, 0.001f, 5.0f);
+		ImGui::SliderFloat3("GLTF Rotation", &gltf_rotation.x, 0, DirectX::XM_2PI);
+		ImGui::SliderFloat("GLTF Rotation Speed", &gltf_rotation_speed, 0.0f, 5.0f);
 
-	//ImGui::End();
+		if (gltf_model)
+		{
+			ImGui::Text("Loaded GLTF Model");
+			ImGui::Text("Mesh Count: %zu", gltf_model->meshes.size());
+		}
+		else
+		{
+			ImGui::TextColored(ImVec4(1, 0, 0, 1), "No GLTF Model Loaded");
+		}
+	}
 #endif
 
-	if (fbx_skinned_model)
+	// GLTFモデルの回転更新
+	if (enable_gltf_rendering && gltf_model)
 	{
-		fbx_skinned_model->AnimationUpdate(elapsed_time);
+		gltf_rotation_y += DirectX::XM_PI * elapsed_time * gltf_rotation_speed;
+		if (gltf_rotation_y > DirectX::XM_2PI)
+		{
+			gltf_rotation_y -= DirectX::XM_2PI;
+		}
 	}
 }
 
-//描画処理
+// 描画処理
 void MainScene::Render(float elapsed_time)
 {
 	HRESULT hr{ S_OK };
@@ -221,42 +340,38 @@ void MainScene::Render(float elapsed_time)
 	Graphics::Instance().BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);
 
 	ID3D11ShaderResourceView* null_shader_resource_views[D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT]{};
-	context->VSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);//頂点シェーダーで使っていた読み取り用テクスチャを全部解除
-	context->PSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);//ピクセルシェーダーで使っていた読み取り用テクスチャを全部解除
+	context->VSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);
+	context->PSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);
 
-	//定数バッファ更新
+	// 定数バッファ更新
 	context->UpdateSubresource(constnt_buffer[0].Get(), 0, 0, &data, 0, 0);
 	context->VSSetConstantBuffers(1, 1, constnt_buffer[0].GetAddressOf());
-
 	context->PSSetConstantBuffers(1, 1, constnt_buffer[0].GetAddressOf());
 
-	// ここからオブジェクトの描画
-
-	// これがシェーダーに利用されるであろう設定
+	// サンプラー設定
 	context->PSSetSamplers(0, 1, states->GetSamplerState(0).GetAddressOf());
 	context->PSSetSamplers(1, 1, states->GetSamplerState(1).GetAddressOf());
 	context->PSSetSamplers(2, 1, states->GetSamplerState(2).GetAddressOf());
 
-	// ここが毎オブジェクトごとの都度の設定
+	// ビューポート設定
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
-
 	context->OMSetBlendState(states->GetBlendState(0).Get(), nullptr, 0xFFFFFFFF);
 
-	//ビュー・プロジェクション行列作成
+	// ビュー・プロジェクション行列作成
 	D3D11_VIEWPORT viewport;
 	UINT num_viewports{ 1 };
 	context->RSGetViewports(&num_viewports, &viewport);
 
 	// カメラの設定
 	DirectX::XMVECTOR eye{ DirectX::XMVectorSet(
-		camera.position.x,camera.position.y,camera.position.z,1) };//カメラの位置
-	DirectX::XMVECTOR focus{ DirectX::XMVectorSet(0.0f,0.0f,0.0f,1.0f) };//見ている方向
-	DirectX::XMVECTOR up{ DirectX::XMVectorSet(0.0f,1.0f,0.0f,0.0f) };//上方向（回転の基準）
-	DirectX::XMMATRIX V{ DirectX::XMMatrixLookAtLH(eye,focus,up) };//ビュー行列を作成
-	float aspect_ratio{ viewport.Width / viewport.Height };//アスペクト比（画面の横÷縦）
+		camera.position.x, camera.position.y, camera.position.z, 1) };
+	DirectX::XMVECTOR focus{ DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f) };
+	DirectX::XMVECTOR up{ DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) };
+	DirectX::XMMATRIX V{ DirectX::XMMatrixLookAtLH(eye, focus, up) };
+	float aspect_ratio{ viewport.Width / viewport.Height };
 	DirectX::XMMATRIX P{ DirectX::XMMatrixPerspectiveFovLH(
 		DirectX::XMConvertToRadians(30),
-		aspect_ratio,0.1f,100.0f
+		aspect_ratio, 0.1f, 100.0f
 	) };
 	DirectX::XMStoreFloat4x4(&data.view_projection, V * P);
 	data.light_direction = { 0, 0, -1, 0 };
@@ -265,53 +380,26 @@ void MainScene::Render(float elapsed_time)
 	data.camera_position.z = camera.position.z;
 	data.camera_position.w = 0;
 
-#if true
-
-#endif
-
 	float x{ 0 };
 	float y{ 0 };
-
-
-#if 0
-	for (size_t i = 0; i < 1092; i++)
-	{
-		sprites[1]->render(immediate_context,
-			x, static_cast<float>(static_cast<int>(y) % 720), 64, 64,
-			1, 1, 1, 1, 0, 140 * 0, 240 * 0, 140, 240);
-		x += 32;
-		if (x > 1280 - 64)
-		{
-			x = 0;
-			y += 24;
-		}
-	}
-#else
-
-#endif
 
 	framebuffers[0]->clear(context);
 	framebuffers[0]->activate(context);
 
 	// 深度テスト OFF
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(0).Get(), 1);
-
-	// 裏面カリングなし（全部描画）
 	context->RSSetState(states->GetRasterizerState(2).Get());
 
-	//背景描画
+	// 背景描画
 	sprute_batches[0]->begin(context);
 	sprute_batches[0]->render(context, 0, 0, 1280, 720);
 	sprute_batches[0]->end(context);
 
+	// 深度テスト ON
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
-
 	context->RSSetState(states->GetRasterizerState(0).Get());
 
-	/*FBX SDKが読み込むモデルのZ軸がDirectXのY軸に対応し、
-	Y軸がDirectXの-Z軸に対応するなど、
-	軸の入れ替えと反転を行うための変換行列*/
-	const DirectX::XMFLOAT4X4  coordinate_system_transforms[]
+	const DirectX::XMFLOAT4X4 coordinate_system_transforms[]
 	{
 		{ -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
 		{ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
@@ -319,140 +407,56 @@ void MainScene::Render(float elapsed_time)
 		{ 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1 },
 	};
 
-	/* To change the units from centimeters to meters,
-	set 'scale_factor' to 0.01.*/
-	/*モデル全体のスケール（拡大・縮小）を調整するための係数*/
 	const float scale_factor = 0.05f;
 
 	DirectX::XMMATRIX C
 	{
-		/*coordinate_system_transforms配列から、
-		インデックス2番目の座標変換行列をDirectXMathのXMMATRIX形式にロード*/
 		DirectX::XMLoadFloat4x4(&coordinate_system_transforms[0])
 		*
-		/*scale_factorを使って、すべての軸方向に均一なスケール変換行列を作成*/
-		DirectX::XMMatrixScaling(scale_factor,scale_factor,scale_factor)
+		DirectX::XMMatrixScaling(scale_factor, scale_factor, scale_factor)
 	};
 
 	// 深度テスト ON
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
-
-	// 面カリングあり
 	context->RSSetState(states->GetRasterizerState(0).Get());
 
-	// geometric_primitives[0] の 位置と回転と拡大を計算
+	// geometric_primitives[0] の位置と回転と拡大縮小を計算
 	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(
-		cube.scale.x,cube.scale.y,cube.scale.z) };
+		cube.scale.x, cube.scale.y, cube.scale.z) };
 	DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(
-		cube.rotation.x,cube.rotation.y,cube.rotation.z) };
+		cube.rotation.x, cube.rotation.y, cube.rotation.z) };
 	DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(
-		cube.position.x,cube.position.y,cube.position.z) };
-	// で描画
+		cube.position.x, cube.position.y, cube.position.z) };
+
 	DirectX::XMFLOAT4X4 world;
-	/*オブジェクトの最終的なワールド変換行列を計算し、保存する*/
 	DirectX::XMStoreFloat4x4(&world, C * S * R * T);
-#if 1
-	int clip_index{ 0 };	//何番目のアニメーションクリップを使うか
-	int frame_index{ 0 };	//現在再生中のフレーム番号
-	static float animation_tick{ 0 };	//累積再生時間
 
-	//最初のスキンメッシュの最初のアニメーションクリップを取得
-	//skinned_mesh::animation& animation{ skinned_meshes[0]->animation_clips.at(clip_index) };
-
-	//経過時間とサンプリングレートから 現在表示すべきフレーム番号を計算
-	//frame_index = static_cast<int>(animation_tick * animation.sampling_rate);
-
-	//アニメーションが終了したら最初にループ（ループ再生）
-	//if (frame_index > animation.sequence.size() - 1)
-	//{
-	//	frame_index = 0;
-	//	animation_tick = 0;
-	//}
-	//else
-	//{
-	//	//アニメーションを進める（1フレームあたりの経過時間を足す）
-	//	animation_tick += elapsed_time;
-	//}
-	////現在のフレーム（ボーン姿勢データ）を取得
-	//skinned_mesh::animation::keyframe& keyframe{ animation.sequence.at(frame_index) };
-#else
-	skinned_mesh::animation::keyframe keyframe;
-	const skinned_mesh::animation::keyframe* keyframes[2]{
-		&skinned_meshes[0]->animation_clips.at(0).sequence.at(40),
-		&skinned_meshes[0]->animation_clips.at(0).sequence.at(80)
-	};
-	skinned_meshes[0]->blend_animations(keyframes, supplementation, keyframe);
-	skinned_meshes[0]->update_animation(keyframe);
-
-#endif
-
-
-#if 0
-	//回転を直接指定(ImGuiにする)
-	XMStoreFloat4(&keyframe.nodes.at(30).rotation,
-		DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1, 0, 0, 0), Rotation));
-
-	//平行移動（X方向）を上書き(ImGuiにする)
-	keyframe.nodes.at(30).translation.x = Long;
-
-	//姿勢を再計算
-	skinned_meshes[0]->update_animation(keyframe);
-#endif
-
-	//現在のボーン姿勢を使ってスキンメッシュを描画
-	//skinned_meshes[0]->render
-	//(context, world, material_color, &keyframe);
-
-	context->RSSetState(states->GetRasterizerState(0).Get());
-
-
-
+	// W_Cube描画
 	S = { DirectX::XMMatrixScaling(
-		w_cube.scale.x,w_cube.scale.y,w_cube.scale.z) };
+		w_cube.scale.x, w_cube.scale.y, w_cube.scale.z) };
 	R = { DirectX::XMMatrixRotationRollPitchYaw(
-		w_cube.rotation.x,w_cube.rotation.y,w_cube.rotation.z) };
+		w_cube.rotation.x, w_cube.rotation.y, w_cube.rotation.z) };
 	T = { DirectX::XMMatrixTranslation(
-		w_cube.position.x,w_cube.position.y,w_cube.position.z) };
+		w_cube.position.x, w_cube.position.y, w_cube.position.z) };
 
 	DirectX::XMFLOAT4X4 W_world;
-	/*オブジェクトの最終的なワールド変換行列を計算し、保存する*/
 	DirectX::XMStoreFloat4x4(&W_world, C * S * R * T);
 	geometric_primitives[1]->render(
 		context,
 		W_world,
-		{ 0.5f,0.8f,0.2f,1.0f }
+		{ 0.5f, 0.8f, 0.2f, 1.0f }
 	);
-	//immediate_context->RSSetState(reasterizer_states[0].Get());
 
-	if (fbx_skinned_model)
+	// GLTFモデル描画
+	if (enable_gltf_rendering && gltf_model)
 	{
-		float scale = 0.05f;
-		cube.scale.x = cube.scale.y = cube.scale.z = 0.01;
-		DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(
-			cube.scale.x,cube.scale.y,cube.scale.z) };
-
-		DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(
-			cube.rotation.x,cube.rotation.y,cube.rotation.z) };
-
-		DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(
-			cube.position.x,cube.position.y,cube.position.z) };
-
-		DirectX::XMFLOAT4X4 world;
-		DirectX::XMStoreFloat4x4(&world, S* R* T);
-
-		DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-		fbx_skinned_model->Render(context, world, color);
+		DrawGltfModel(context);
 	}
 
 	// 深度テスト OFF
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(0).Get(), 1);
-
-	// 面カリングなし（全部描画）
 	context->RSSetState(states->GetRasterizerState(2).Get());
 
-
-#if 1
 	framebuffers[0]->deactivate(context);
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -460,50 +464,87 @@ void MainScene::Render(float elapsed_time)
 	memcpy(mappedResource.pData, &tb, sizeof(tb));
 	context->Unmap(thresholdBuffer.Get(), 0);
 
-	// ピクセルシェーダーへセット
 	context->PSSetConstantBuffers(0, 1, thresholdBuffer.GetAddressOf());
 
 	context->UpdateSubresource(bloomParamBuffer.Get(), 0, nullptr, &bloomParams, 0, 0);
 	context->PSSetConstantBuffers(1, 1, bloomParamBuffer.GetAddressOf());
 
-
-
 	framebuffers[1]->clear(context);
-
 	framebuffers[1]->activate(context);
 
 	bit_block_transfer->blit(context, framebuffers[0]->shader_resource_views[0].GetAddressOf(), 0, 1, pixel_shaders[0].Get());
 
 	framebuffers[1]->deactivate(context);
 
-#if 0
-	bit_block_transfer->blit(immediate_context.Get(),
-		framebuffers[1]->shader_resource_views[0].GetAddressOf(), 0, 1);
-#endif
-
 	ID3D11ShaderResourceView* shader_resource_view[2]
 	{ framebuffers[0]->shader_resource_views[0].Get(),
 	 framebuffers[1]->shader_resource_views[0].Get() };
 
-
 	bit_block_transfer->blit(context, shader_resource_view, 0, 2, pixel_shaders[1].Get());
 
-
-#endif
-
-	// ここまでがオブジェクトの描画
-
-	// ここが デバッグ用の表示である IMGUI の描画
+	// ImGUI描画
 #ifdef USE_IMGUI
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-#endif	// USE_IMGUI
+#endif
 
-
-	UINT sync_interval{ 0 };
-
-	// これが描画の最終チェックでこれより下に書いても意味がない
-	//FrontバッファとBackバッファ切り替え
 	Graphics::Instance().EndFrame();
+}
 
+// GLTFモデル描画ヘルパー関数
+void MainScene::DrawGltfModel(ID3D11DeviceContext* context)
+{
+	if (!context || !gltf_model || gltf_model->meshes.empty())
+	{
+		return;
+	}
+
+	auto states = Graphics::Instance().GetPipelineStates();
+
+	// GLTF モデルの変換行列を計算
+	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(
+		gltf_scale.x, gltf_scale.y, gltf_scale.z) };
+
+	DirectX::XMMATRIX R_auto{ DirectX::XMMatrixRotationY(gltf_rotation_y) };
+	DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(
+		gltf_rotation.x, gltf_rotation.y, gltf_rotation.z) };
+
+	DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(
+		gltf_position.x, gltf_position.y, gltf_position.z) };
+
+	DirectX::XMMATRIX world_transform = S * R * R_auto * T;
+	DirectX::XMStoreFloat4x4(&gltf_model_transform, world_transform);
+
+	// GLTF用定数バッファを更新
+	GLTF_OBJECT_CONSTANT gltf_constants;
+	gltf_constants.world = gltf_model_transform;
+	gltf_constants.material_color = gltf_material_color;
+	context->UpdateSubresource(gltf_object_constant_buffer.Get(), 0, 0, &gltf_constants, 0, 0);
+
+	// シェーダーを設定
+	context->VSSetShader(gltf_vertex_shader.Get(), nullptr, 0);
+	context->PSSetShader(gltf_pixel_shader.Get(), nullptr, 0);
+	context->IASetInputLayout(gltf_input_layout.Get());
+
+	// 定数バッファを設定
+	context->VSSetConstantBuffers(0, 1, gltf_object_constant_buffer.GetAddressOf());
+	context->VSSetConstantBuffers(1, 1, constnt_buffer[0].GetAddressOf());
+	context->PSSetConstantBuffers(1, 1, constnt_buffer[0].GetAddressOf());
+
+	// サンプラー状態を設定
+	context->PSSetSamplers(0, 1, states->GetSamplerState(0).GetAddressOf());
+	context->PSSetSamplers(1, 1, states->GetSamplerState(1).GetAddressOf());
+	context->PSSetSamplers(2, 1, states->GetSamplerState(2).GetAddressOf());
+
+	// パイプラインステート設定
+	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
+	context->RSSetState(states->GetRasterizerState(0).Get());
+
+	// 各メッシュを描画
+	for (const auto& mesh : gltf_model->meshes)
+	{
+		GlthStaticModel::DrawMesh(context, mesh);
+	}
+
+	OutputDebugStringA("GLTF model rendered\n");
 }

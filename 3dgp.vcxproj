@@ -121,7 +121,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;USE_IMGUI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\DirectXTK-main\DirectXTK-main\Inc;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\cereal-master\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\DirectXTK-main\DirectXTK-main\Inc;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\cereal-master\include;.\External\tinygltf;.\External\cereal-master;.\External\DirectXTK-main;.\External\imgui;.\External\json-develop;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -224,6 +224,7 @@
     <ClCompile Include="Source\FbxModel\FbxSkinnedModel.cpp" />
     <ClCompile Include="Source\FbxModel\FbxSkinnedMesh.cpp" />
     <ClCompile Include="Source\FbxModel\FbxSkinnedResource.cpp" />
+    <ClCompile Include="Source\GlthModel\GlthStaticModel\GlthStaticModel.cpp" />
     <ClCompile Include="Source\Graphics\DirectXDevice.cpp" />
     <ClCompile Include="Source\Graphics\framebuffer.cpp" />
     <ClCompile Include="Source\Graphics\framework.cpp" />
@@ -265,6 +266,8 @@
     <ClInclude Include="Source\FbxModel\FbxSkinnedModel.h" />
     <ClInclude Include="Source\FbxModel\FbxSkinnedMesh.h" />
     <ClInclude Include="Source\FbxModel\FbxSkinnedResource.h" />
+    <ClInclude Include="Source\GlthModel\GlthStaticModel\GlthStaticModel.h" />
+    <ClInclude Include="Source\GlthModel\GlthStaticModel\GlthStaticModelData.h" />
     <ClInclude Include="Source\Graphics\DirectXDevice.h" />
     <ClInclude Include="Source\Graphics\fbx_utility.h" />
     <ClInclude Include="Source\Graphics\framebuffer.h" />

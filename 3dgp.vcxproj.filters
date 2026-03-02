@@ -128,6 +128,15 @@
     <Filter Include="Source\ObjectRender\FbxModel\FbxSkinnedModel">
       <UniqueIdentifier>{cd223bbf-8258-4143-8796-765924e2d2b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ObjectRender\GlthModel">
+      <UniqueIdentifier>{0d2c1708-0064-4386-9e11-ee4c7af2c2aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GlthModel\GlthStaticModel">
+      <UniqueIdentifier>{8b043b0a-21d4-4ca5-991f-5a6cb2944b92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GlthModel\GlthSkinnedModel">
+      <UniqueIdentifier>{9d9ed371-33fe-4e28-903f-a1b3075abeab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -234,6 +243,9 @@
     </ClCompile>
     <ClCompile Include="Source\FbxModel\FbxSkinnedModel.cpp">
       <Filter>Source\ObjectRender\FbxModel\FbxSkinnedModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GlthModel\GlthStaticModel\GlthStaticModel.cpp">
+      <Filter>Source\ObjectRender\GlthModel\GlthStaticModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -359,6 +371,12 @@
     </ClInclude>
     <ClInclude Include="Source\FbxModel\FbxSkinnedModel.h">
       <Filter>Source\ObjectRender\FbxModel\FbxSkinnedModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GlthModel\GlthStaticModel\GlthStaticModel.h">
+      <Filter>Source\ObjectRender\GlthModel\GlthStaticModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GlthModel\GlthStaticModel\GlthStaticModelData.h">
+      <Filter>Source\ObjectRender\GlthModel\GlthStaticModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
