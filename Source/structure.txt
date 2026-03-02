@@ -12,10 +12,23 @@ C:.
 „        high_resolution_timer.h
 „        main.cpp
 „        misc.h
+„        ModelData.h
 „        
 „¥„Ÿ„Ÿ„ŸFbxModel
+„        FbxAnimation.cpp
+„        FbxAnimation.h
+„        FbxBone.cpp
+„        FbxBone.h
+„        FbxLoader.cpp
+„        FbxLoader.h
+„        FbxMaterial.cpp
+„        FbxMaterial.h
 „        FbxSkinnedMesh.cpp
 „        FbxSkinnedMesh.h
+„        FbxSkinnedModel.cpp
+„        FbxSkinnedModel.h
+„        FbxSkinnedResource.cpp
+„        FbxSkinnedResource.h
 „        
 „¥„Ÿ„Ÿ„ŸGameObjects
 „    „¥„Ÿ„Ÿ„ŸCharacters
