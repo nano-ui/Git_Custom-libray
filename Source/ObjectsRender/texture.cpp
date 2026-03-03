@@ -6,38 +6,49 @@
 
 
 HRESULT load_texture_from_file(
-    ID3D11Device* device,
-    const wchar_t* filenama,
-    ID3D11ShaderResourceView** shader_resource_view,
-    D3D11_TEXTURE2D_DESC* texture2d_desc)
+	ID3D11Device* device,
+	const wchar_t* filenama,
+	ID3D11ShaderResourceView** shader_resource_view,
+	D3D11_TEXTURE2D_DESC* texture2d_desc)
 {
-    HRESULT hr{ S_OK };
-    ComPtr<ID3D11Resource> resource;
+	HRESULT hr{ S_OK };
+	ComPtr<ID3D11Resource> resource;
 
 	std::filesystem::path dds_filename(filenama);
 	dds_filename.replace_extension("dds");
-    auto it = resources.find((filenama));
-    if (it != resources.end())
-    {
-        *shader_resource_view = it->second.Get();
-        (*shader_resource_view)->AddRef();
-        (*shader_resource_view)->GetResource(resource.GetAddressOf());
-    }
-    else
-    {
-		/*テクスチャファイルを読み込んで DirectX で使える形に変換し、
+	auto it = resources.find((filenama));
+	if (it != resources.end())
+	{
+		*shader_resource_view = it->second.Get();
+		(*shader_resource_view)->AddRef();
+		(*shader_resource_view)->GetResource(resource.GetAddressOf());
+	}
+	else
+	{
+		/*テクスチャファイルを読み込んで DirectX で使う形に変換して、
 		キャッシュに登録する処理*/
 
-		/*指定したファイルパス（dds_filename）が存在するかをチェック*/
+		/*指定したファイルパス(dds_filename)が存在するかをチェック*/
 		if (std::filesystem::exists(dds_filename.c_str()))
 		{
-			/*画像ファイルを GPU が使える Direct3D のテクスチャリソース に変換*/
+			/*画像ファイルを GPU で使える Direct3D のテクスチャリソース に変換*/
 			hr = CreateDDSTextureFromFile(
 				device,
 				dds_filename.c_str(),
 				resource.GetAddressOf(),
 				shader_resource_view);
-			_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+			//エラーチェックを追加
+			if (FAILED(hr))
+			{
+				OutputDebugStringA("WARNING: Failed to load DDS texture, trying WIC format\n");
+				// DDS読み込み失敗時はWICで試す
+				hr = CreateWICTextureFromFile(
+					device,
+					filenama,
+					resource.GetAddressOf(),
+					shader_resource_view);
+			}
 		}
 		else
 		{
@@ -46,22 +57,67 @@ HRESULT load_texture_from_file(
 				filenama,
 				resource.GetAddressOf(),
 				shader_resource_view);
-			_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		}
-        resources.insert(make_pair(filenama, *shader_resource_view));
-    }
 
-    ComPtr<ID3D11Texture2D>texture2d;
-    hr = resource.Get()->QueryInterface<ID3D11Texture2D>(texture2d.GetAddressOf());
-    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-    texture2d->GetDesc(texture2d_desc);
+		//リソース取得に失敗した場合の処理を追加
+		if (SUCCEEDED(hr) && resource == nullptr)
+		{
+			if (*shader_resource_view != nullptr)
+			{
+				(*shader_resource_view)->GetResource(resource.GetAddressOf());
+			}
+		}
 
-    return hr;
+		if (FAILED(hr))
+		{
+			OutputDebugStringA("ERROR: Failed to load texture from file\n");
+			return hr;
+		}
+
+		//キャッシュに登録（成功した場合のみ）
+		if (*shader_resource_view != nullptr)
+		{
+			resources.insert(make_pair(filenama, *shader_resource_view));
+		}
+	}
+
+	//resourceが有効か確認してからQueryInterface
+	if (resource == nullptr)
+	{
+		if (*shader_resource_view != nullptr)
+		{
+			(*shader_resource_view)->GetResource(resource.GetAddressOf());
+		}
+	}
+
+	if (resource != nullptr)
+	{
+		ComPtr<ID3D11Texture2D> texture2d;
+		hr = resource.Get()->QueryInterface<ID3D11Texture2D>(texture2d.GetAddressOf());
+
+		if (SUCCEEDED(hr) && texture2d != nullptr)
+		{
+			texture2d->GetDesc(texture2d_desc);
+		}
+		else
+		{
+			OutputDebugStringA("WARNING: Failed to query Texture2D interface\n");
+			// デフォルト値を設定
+			if (texture2d_desc != nullptr)
+			{
+				ZeroMemory(texture2d_desc, sizeof(D3D11_TEXTURE2D_DESC));
+				texture2d_desc->Width = 1;
+				texture2d_desc->Height = 1;
+			}
+		}
+	}
+
+	return hr;
 }
 
 void release_all_textures()
 {
-    resources.clear();
+	resources.clear();
 }
 
 HRESULT make_dummy_texture(

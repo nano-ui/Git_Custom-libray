@@ -374,7 +374,7 @@ void MainScene::Render(float elapsed_time)
 		aspect_ratio, 0.1f, 100.0f
 	) };
 	DirectX::XMStoreFloat4x4(&data.view_projection, V * P);
-	data.light_direction = { 0, 0, -1, 0 };
+	data.light_direction = { 0.5f, -0.8f, 0.3f, 0.0f };
 	data.camera_position.x = camera.position.x;
 	data.camera_position.y = camera.position.y;
 	data.camera_position.z = camera.position.z;
@@ -501,7 +501,7 @@ void MainScene::DrawGltfModel(ID3D11DeviceContext* context)
 
 	auto states = Graphics::Instance().GetPipelineStates();
 
-	// GLTF モデルの変換行列を計算
+	// GLTFモデルの変換行列を計算
 	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(
 		gltf_scale.x, gltf_scale.y, gltf_scale.z) };
 
@@ -520,6 +520,9 @@ void MainScene::DrawGltfModel(ID3D11DeviceContext* context)
 	gltf_constants.world = gltf_model_transform;
 	gltf_constants.material_color = gltf_material_color;
 	context->UpdateSubresource(gltf_object_constant_buffer.Get(), 0, 0, &gltf_constants, 0, 0);
+
+	// シーン定数バッファを更新（重要：光の設定）
+	context->UpdateSubresource(constnt_buffer[0].Get(), 0, 0, &data, 0, 0);
 
 	// シェーダーを設定
 	context->VSSetShader(gltf_vertex_shader.Get(), nullptr, 0);
@@ -540,10 +543,20 @@ void MainScene::DrawGltfModel(ID3D11DeviceContext* context)
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
 	context->RSSetState(states->GetRasterizerState(0).Get());
 
-	// 各メッシュを描画
+	// 各メッシュを描画（マテリアルを渡す）
 	for (const auto& mesh : gltf_model->meshes)
 	{
-		GlthStaticModel::DrawMesh(context, mesh);
+		//マテリアルが存在することを確認
+		if (mesh.material != nullptr)
+		{
+			GlthStaticModel::DrawMesh(context, mesh, mesh.material);
+		}
+		else
+		{
+			// マテリアルがない場合でも描画（ダミーテクスチャで）
+			OutputDebugStringA("WARNING: Mesh has no material, rendering with nullptr\n");
+			GlthStaticModel::DrawMesh(context, mesh, nullptr);
+		}
 	}
 
 	OutputDebugStringA("GLTF model rendered\n");

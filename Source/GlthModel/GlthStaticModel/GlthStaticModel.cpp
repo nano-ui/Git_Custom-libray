@@ -4,6 +4,7 @@
 #define STBI_MSC_SECURE_CRT
 
 #include "GlthStaticModel.h"
+#include "../ObjectsRender/texture.h"
 
 #include <filesystem>
 #include <fstream>
@@ -33,6 +34,9 @@ std::shared_ptr<GltfModel> GlthStaticModel::LoadModel(
 	// モデルデータ作成
 	auto model = std::make_shared<GltfModel>();
 	DirectX::XMStoreFloat4x4(&model->transform, DirectX::XMMatrixIdentity());
+
+	//マテリアルデータ抽出
+	ExtractMaterialData(device, gltf_model, filepath.parent_path().string(), model);
 
 	// メッシュデータ抽出
 	ExtractMeshData(device, gltf_model, model);
@@ -183,6 +187,62 @@ void GlthStaticModel::ExtractTexCoordData(
 	}
 }
 
+std::string GlthStaticModel::ExtractTextureFromGltf(
+	const tinygltf::Model& glth_model,
+	int texture_index,
+	const std::string& model_path)
+{
+	if (texture_index < 0 || texture_index >= glth_model.textures.size())
+	{
+		return "";
+	}
+
+	const tinygltf::Texture& gltf_texture = glth_model.textures[texture_index];
+	if (gltf_texture.source < 0 || gltf_texture.source >= glth_model.images.size())
+	{
+		return "";
+	}
+
+	const tinygltf::Image& gltf_image = glth_model.images[gltf_texture.source];
+
+	//画像データが存在しない場合はスキップ
+	if (gltf_image.image.size() == 0)
+	{
+		return "";
+	}
+
+	//テンポラリテクスチャのパスを生成
+	std::string temp_texture_path = model_path + "/temp_texture_" + std::to_string(texture_index);
+
+	//MIME typeから拡張子を決定
+	std::string extension = ".png";
+	if (gltf_image.mimeType == "image/jpeg")
+	{
+		extension = ".jpg";
+	}
+	else if (gltf_image.mimeType == "image/png")
+	{
+		extension = ".png";
+	}
+
+	temp_texture_path += extension;
+
+	//テクスチャをファイルに保存
+	std::filesystem::path tex_path(temp_texture_path);
+	if (!std::filesystem::exists(tex_path))
+	{
+		std::ofstream file(temp_texture_path, std::ios::binary);
+		if (file.is_open())
+		{
+			file.write(reinterpret_cast<const char*>(gltf_image.image.data()),
+				gltf_image.image.size());
+			file.close();
+		}
+	}
+
+	return temp_texture_path;
+}
+
 // メッシュデータ抽出
 void GlthStaticModel::ExtractMeshData(
 	ID3D11Device* device,
@@ -243,6 +303,25 @@ void GlthStaticModel::ExtractMeshData(
 				ExtractTexCoordData(gltf_model, primitive, mesh.vertices);
 			}
 
+			//マテリアルインデックスを設定
+			mesh.materialIndex = primitive.material;
+			if (mesh.materialIndex >= 0 && mesh.materialIndex < model->materials.size())
+			{
+				mesh.material = &model->materials[mesh.materialIndex];
+				OutputDebugStringA("Material assigned to mesh: ");
+				OutputDebugStringA(std::to_string(mesh.materialIndex).c_str());
+				OutputDebugStringA("\n");
+			}
+			else
+			{
+				// マテリアルがない場合の処理
+				OutputDebugStringA("WARNING: Material index out of range or invalid\n");
+				if (model->materials.size() > 0)
+				{
+					mesh.material = &model->materials[0];
+				}
+			}
+
 			// バッファ作成
 			if (!mesh.vertices.empty())
 			{
@@ -276,11 +355,25 @@ void GlthStaticModel::ExtractMeshData(
 }
 
 // メッシュ描画
-void GlthStaticModel::DrawMesh(ID3D11DeviceContext* context, const GlthMesh& mesh)
+void GlthStaticModel::DrawMesh(
+	ID3D11DeviceContext* context,
+	const GlthMesh& mesh,
+	const GlthMaterial* material)
 {
 	if (!context || !mesh.vertex_buffer || !mesh.index_buffer)
 	{
 		return;
+	}
+
+	// マテリアルのテクスチャを設定（texture.cppで読み込んだテクスチャ）
+	if (material && material->base_color_texture)
+	{
+		context->PSSetShaderResources(0, 1, material->base_color_texture.GetAddressOf());
+	}
+
+	if (material && material->normal_texture)
+	{
+		context->PSSetShaderResources(1, 1, material->normal_texture.GetAddressOf());
 	}
 
 	// 頂点バッファ設定
@@ -350,4 +443,147 @@ Microsoft::WRL::ComPtr<ID3D11Buffer> GlthStaticModel::CreateIndexBuffer(
 	}
 
 	return buffer;
+}
+
+//テクスチャを抽出してファイルに保存
+void GlthStaticModel::ExtractMaterialData(
+	ID3D11Device* device,
+	const tinygltf::Model& gltf_model,
+	const std::string& model_path,
+	std::shared_ptr<GltfModel> model)
+{
+	if (gltf_model.materials.size() == 0)
+	{
+		OutputDebugStringA("WARNING: No materials found in GLTF model\n");
+		return;
+	}
+
+	for (const auto& gltf_material : gltf_model.materials)
+	{
+		GlthMaterial material;
+		material.name = gltf_material.name;
+
+		// PBRメタリックラフネスの取得
+		const auto& pbr = gltf_material.pbrMetallicRoughness;
+		material.base_color.x = static_cast<float>(pbr.baseColorFactor[0]);
+		material.base_color.y = static_cast<float>(pbr.baseColorFactor[1]);
+		material.base_color.z = static_cast<float>(pbr.baseColorFactor[2]);
+		material.base_color.w = static_cast<float>(pbr.baseColorFactor[3]);
+
+		material.metalness = static_cast<float>(pbr.metallicFactor);
+		material.roughness = static_cast<float>(pbr.roughnessFactor);
+
+		// ==================== テクスチャ読み込み ====================
+
+		// ベースカラーテクスチャの読み込み
+		if (pbr.baseColorTexture.index >= 0)
+		{
+			std::string texturePath = ExtractTextureFromGltf(gltf_model, pbr.baseColorTexture.index, model_path);
+
+			if (!texturePath.empty())
+			{
+				// マルチバイト文字列をワイド文字列に変換
+				int size_needed = MultiByteToWideChar(CP_UTF8, 0, texturePath.c_str(), (int)texturePath.length(), NULL, 0);
+				std::wstring wTexturePath(size_needed, 0);
+				MultiByteToWideChar(CP_UTF8, 0, texturePath.c_str(), (int)texturePath.length(), &wTexturePath[0], size_needed);
+
+				D3D11_TEXTURE2D_DESC textureDesc = {};
+				HRESULT hr = load_texture_from_file(
+					device,
+					wTexturePath.c_str(),
+					material.base_color_texture.GetAddressOf(),
+					&textureDesc
+				);
+
+				if (FAILED(hr))
+				{
+					OutputDebugStringA("WARNING: Failed to load base color texture\n");
+					make_dummy_texture(device, material.base_color_texture.GetAddressOf(), 0xFFFFFFFF, 4);
+				}
+			}
+			else
+			{
+				// ダミーテクスチャ（白）を作成
+				make_dummy_texture(device, material.base_color_texture.GetAddressOf(), 0xFFFFFFFF, 4);
+			}
+		}
+		else
+		{
+			// テクスチャがない場合はダミーテクスチャ（白）を作成
+			make_dummy_texture(device, material.base_color_texture.GetAddressOf(), 0xFFFFFFFF, 4);
+		}
+
+		// 法線テクスチャの読み込み
+		if (gltf_material.normalTexture.index >= 0)
+		{
+			std::string texturePath = ExtractTextureFromGltf(gltf_model, gltf_material.normalTexture.index, model_path);
+
+			if (!texturePath.empty())
+			{
+				int size_needed = MultiByteToWideChar(CP_UTF8, 0, texturePath.c_str(), (int)texturePath.length(), NULL, 0);
+				std::wstring wTexturePath(size_needed, 0);
+				MultiByteToWideChar(CP_UTF8, 0, texturePath.c_str(), (int)texturePath.length(), &wTexturePath[0], size_needed);
+
+				D3D11_TEXTURE2D_DESC textureDesc = {};
+				HRESULT hr = load_texture_from_file(
+					device,
+					wTexturePath.c_str(),
+					material.normal_texture.GetAddressOf(),
+					&textureDesc
+				);
+
+				if (FAILED(hr))
+				{
+					OutputDebugStringA("WARNING: Failed to load normal texture\n");
+					make_dummy_texture(device, material.normal_texture.GetAddressOf(), 0xFFFF7F7F, 4);
+				}
+			}
+			else
+			{
+				// ダミーテクスチャ（法線マップデフォルト）を作成
+				make_dummy_texture(device, material.normal_texture.GetAddressOf(), 0xFFFF7F7F, 4);
+			}
+		}
+		else
+		{
+			make_dummy_texture(device, material.normal_texture.GetAddressOf(), 0xFFFF7F7F, 4);
+		}
+
+		// メタリックラフネステクスチャの読み込み
+		if (pbr.metallicRoughnessTexture.index >= 0)
+		{
+			std::string texturePath = ExtractTextureFromGltf(gltf_model, pbr.metallicRoughnessTexture.index, model_path);
+
+			if (!texturePath.empty())
+			{
+				int size_needed = MultiByteToWideChar(CP_UTF8, 0, texturePath.c_str(), (int)texturePath.length(), NULL, 0);
+				std::wstring wTexturePath(size_needed, 0);
+				MultiByteToWideChar(CP_UTF8, 0, texturePath.c_str(), (int)texturePath.length(), &wTexturePath[0], size_needed);
+
+				D3D11_TEXTURE2D_DESC textureDesc = {};
+				HRESULT hr = load_texture_from_file(
+					device,
+					wTexturePath.c_str(),
+					material.metallic_roughness_texture.GetAddressOf(),
+					&textureDesc
+				);
+
+				if (FAILED(hr))
+				{
+					OutputDebugStringA("WARNING: Failed to load metallic roughness texture\n");
+					make_dummy_texture(device, material.metallic_roughness_texture.GetAddressOf(), 0xFFFFFFFF, 4);
+				}
+			}
+			else
+			{
+				make_dummy_texture(device, material.metallic_roughness_texture.GetAddressOf(), 0xFFFFFFFF, 4);
+			}
+		}
+		else
+		{
+			make_dummy_texture(device, material.metallic_roughness_texture.GetAddressOf(), 0xFFFFFFFF, 4);
+		}
+
+		model->materials.push_back(material);
+	}
 }

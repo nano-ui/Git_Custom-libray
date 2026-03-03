@@ -25,7 +25,8 @@ public:
 	// メッシュ描画
 	static void DrawMesh(
 		ID3D11DeviceContext* context,
-		const GlthMesh& mesh
+		const GlthMesh& mesh,
+		const GlthMaterial* material = nullptr
 	);
 
 private:
@@ -37,6 +38,12 @@ private:
 	static void ExtractMeshData(
 		ID3D11Device* device,
 		const tinygltf::Model& gltf_model,
+		std::shared_ptr<GltfModel> model);
+
+	static void ExtractMaterialData(
+		ID3D11Device* device,
+		const tinygltf::Model& gltf_model,
+		const std::string& model_path,
 		std::shared_ptr<GltfModel> model);
 
 	static Microsoft::WRL::ComPtr<ID3D11Buffer> CreateVertexBuffer(
@@ -64,4 +71,11 @@ private:
 		const tinygltf::Model& model,
 		const tinygltf::Primitive& primitive,
 		std::vector<GlthVertex>& vertices);
+
+	//テクスチャ抽出ヘルパー
+	static std::string ExtractTextureFromGltf(
+		const tinygltf::Model& glth_model,
+		int texture_index,
+		const std::string& model_path
+	);
 };
