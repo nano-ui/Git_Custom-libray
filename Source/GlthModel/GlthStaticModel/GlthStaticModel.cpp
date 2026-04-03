@@ -34,6 +34,9 @@ std::shared_ptr<GltfModel> GlthStaticModel::LoadModel(
 	auto model = std::make_shared<GltfModel>();
 	DirectX::XMStoreFloat4x4(&model->transform, DirectX::XMMatrixIdentity());
 
+	//マテリアルデータ抽出
+	ExtractMaterialData(device, gltf_model, model);
+
 	// メッシュデータ抽出
 	ExtractMeshData(device, gltf_model, model);
 
@@ -302,18 +305,119 @@ void GlthStaticModel::ExtractMeshData(
 				}
 			}
 
-			mesh.material_index = -1;
+			mesh.material_index = primitive.material;
 			model->meshes.push_back(mesh);
 		}
 	}
 }
 
+//マテリアルデータ抽出
+void GlthStaticModel::ExtractMaterialData(
+	ID3D11Device* device,
+	const tinygltf::Model& gltf_model,
+	std::shared_ptr<GltfModel> model)
+{
+	for (const auto& gltf_mat : gltf_model.materials)
+	{
+		auto material = std::make_shared<GltfStaticMaterial>();
+		material->SetMaterialName(gltf_mat.name);
+
+		//シェーダーの初期化
+		material->InitializeShader(device, L"gltf_static_mesh_vsr.cso", L"gltf_static_mesh_ps.cso");
+
+		//パラメータ設定
+		GltfStaticMaterialData material_data = {};
+
+		//ベースカラー
+		auto& pbr = gltf_mat.pbrMetallicRoughness;
+		material_data.color = DirectX::XMFLOAT4(
+			static_cast<float>(pbr.baseColorFactor[0]),
+			static_cast<float>(pbr.baseColorFactor[1]),
+			static_cast<float>(pbr.baseColorFactor[2]),
+			static_cast<float>(pbr.baseColorFactor[3])
+		);
+
+		//メタリック・ラフネス
+		material_data.metallic = static_cast<float>(pbr.metallicFactor);
+		material_data.roughness = static_cast<float>(pbr.roughnessFactor);
+
+		//放射色
+		material_data.emissive = DirectX::XMFLOAT3(
+			static_cast<float>(gltf_mat.emissiveFactor[0]),
+			static_cast<float>(gltf_mat.emissiveFactor[1]),
+			static_cast<float>(gltf_mat.emissiveFactor[2])
+		);
+		material_data.normal_scale = static_cast<float>(gltf_mat.normalTexture.scale);
+		material_data.occlusion_strength = static_cast<float>(gltf_mat.occlusionTexture.strength);
+
+		material->SetMaterialData(material_data);
+
+		//テクスチャの読み込み
+		GltfStaticMaterialTextures mat_tex;
+
+		//ベースカラーテクスチャ
+		if (pbr.baseColorTexture.index >= 0)
+		{
+			int img_idx = gltf_model.textures[pbr.baseColorTexture.index].source;
+			mat_tex.color_texture = CreateShaderResourceViewFromGltfImage(device, gltf_model.images[img_idx]);
+		}
+
+		//法線テクスチャ
+		if (gltf_mat.normalTexture.index >= 0) {
+			int img_idx = gltf_model.textures[gltf_mat.normalTexture.index].source;
+			mat_tex.normal_texture = CreateShaderResourceViewFromGltfImage(device, gltf_model.images[img_idx]);
+		}
+
+		material->SetTextures(mat_tex);
+		model->materials.push_back(material);
+	}
+}
+
+//GLTFのImageデータからSRVを作成
+Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GlthStaticModel::CreateShaderResourceViewFromGltfImage(
+	ID3D11Device* device, 
+	const tinygltf::Image& gltf_image)
+{
+	D3D11_TEXTURE2D_DESC desc = {};
+	desc.Width = gltf_image.width;
+	desc.Height = gltf_image.height;
+	desc.MipLevels = 1;
+	desc.ArraySize = 1;
+	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // 基本的にRGBA
+	desc.SampleDesc.Count = 1;
+	desc.Usage = D3D11_USAGE_IMMUTABLE;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+	D3D11_SUBRESOURCE_DATA init_data = {};
+	init_data.pSysMem = gltf_image.image.data();
+	init_data.SysMemPitch = gltf_image.width * 4;
+
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
+	device->CreateTexture2D(&desc, &init_data, texture.GetAddressOf());
+
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
+	device->CreateShaderResourceView(texture.Get(), nullptr, srv.GetAddressOf());
+
+	return srv;
+}
+
 // メッシュ描画
-void GlthStaticModel::DrawMesh(ID3D11DeviceContext* context, const GlthMesh& mesh)
+void GlthStaticModel::DrawMesh(
+	ID3D11DeviceContext* context,
+	const GlthMesh& mesh,
+	const std::vector<std::shared_ptr<GltfStaticMaterial>>& materials,
+	Microsoft::WRL::ComPtr<ID3D11Buffer> material_cb)
 {
 	if (!context || !mesh.vertex_buffer || !mesh.index_buffer)
 	{
 		return;
+	}
+
+	//マテリアルの適用
+	if (mesh.material_index >= 0 && mesh.material_index < static_cast<int>(materials.size()))
+	{
+		//シェーダー、定数バッファ(b0)、テクスチャを一括適用 [cite: 3, 8]
+		materials[mesh.material_index]->ApplyToShader(context, material_cb, 0);
 	}
 
 	// 頂点バッファ設定

@@ -35,6 +35,9 @@ public:
 	GltfStaticMaterial();
 	~GltfStaticMaterial() = default;
 
+	//シェーダーの初期化
+	bool InitializeShader(ID3D11Device* device, const std::wstring& vertex_shader_path, const std::wstring& pixel_shader_path);
+
 	//マテリアルの設定・取得
 	void SetMaterialData(const GltfStaticMaterialData& material_data_in);
 	const GltfStaticMaterialData& GetMaterialData() const;
@@ -53,13 +56,16 @@ public:
 	//マテリアルをシェーダーに適用
 	void ApplyToShader(
 		ID3D11DeviceContext* context,
-		Microsoft::WRL::ComPtr<ID3D11Buffer> constnt_buffer,
+		Microsoft::WRL::ComPtr<ID3D11Buffer> constant_buffer,
 		unsigned int slot
 	);
 
 private:
-	std::string material_name;					//マテリアル名
-	GltfStaticMaterialData material_data;		//マテリアルのパラメータ
-	GltfStaticMaterialTextures textures;		//マテリアルのテクスチャ参照
+	std::string					material_name;	//マテリアル名
+	GltfStaticMaterialData		material_data;	//マテリアルのパラメータ
+	GltfStaticMaterialTextures	textures;		//マテリアルのテクスチャ参照
+	Microsoft::WRL::ComPtr<ID3D11VertexShader>	vertex_shader;   // 頂点シェーダー
+	Microsoft::WRL::ComPtr<ID3D11PixelShader>	pixel_shader;     // ピクセルシェーダー
+	Microsoft::WRL::ComPtr<ID3D11InputLayout>	input_layout;     // 入力レイアウト
 };
 

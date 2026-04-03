@@ -1,5 +1,7 @@
 #include "GltfStaticMaterial.h"
 #include <cstring>
+#include <fstream>
+#include <vector>
 
 //コンストラクタ
 GltfStaticMaterial::GltfStaticMaterial()
@@ -13,6 +15,40 @@ GltfStaticMaterial::GltfStaticMaterial()
 	material_data.occlusion_strength = 1.0f;
 	material_data.padding[0] = 0;
 	material_data.padding[1] = 0;
+}
+
+//シェーダーの初期化
+bool GltfStaticMaterial::InitializeShader(
+	ID3D11Device* device,
+	const std::wstring& vertex_shader_path,
+	const std::wstring& pixel_shader_path)
+{
+	//頂点シェーダー読み込み
+	std::ifstream vs_file(vertex_shader_path,std::ios::binary);
+	if (!vs_file.is_open()) return false;
+	std::vector<char> vs_data((std::istreambuf_iterator<char>(vs_file)), std::istreambuf_iterator<char>());
+
+	HRESULT hr = device->CreateVertexShader(vs_data.data(), vs_data.size(), nullptr, vertex_shader.GetAddressOf());
+	if (FAILED(hr)) return false;
+
+	//入力レイアウトの作成
+	D3D11_INPUT_ELEMENT_DESC input_desc[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TANGENT",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+	hr = device->CreateInputLayout(input_desc, ARRAYSIZE(input_desc), vs_data.data(), vs_data.size(), input_layout.GetAddressOf());
+	if (FAILED(hr)) return false;
+
+	//ピクセルシェーダー読み込み
+	std::ifstream ps_file(pixel_shader_path, std::ios::binary);
+	if (!ps_file.is_open()) return false;
+	std::vector<char> ps_data((std::istreambuf_iterator<char>(ps_file)), std::istreambuf_iterator<char>());
+
+	hr = device->CreatePixelShader(ps_data.data(), ps_data.size(), nullptr, pixel_shader.GetAddressOf());
+	return SUCCEEDED(hr);
 }
 
 //マテリアルデータの設定
@@ -82,48 +118,35 @@ Microsoft::WRL::ComPtr<ID3D11Buffer> GltfStaticMaterial::CreateConstantBuffer(ID
 //マテリアルをシェーダーに適用
 void GltfStaticMaterial::ApplyToShader(
 	ID3D11DeviceContext* context,
-	Microsoft::WRL::ComPtr<ID3D11Buffer> constnt_buffer,
+	Microsoft::WRL::ComPtr<ID3D11Buffer> constant_buffer,
 	unsigned int slot)
 {
-	if (!context || !constnt_buffer)
-	{
-		return;
-	}
+	if (!context || !constant_buffer) return;
 
-	//コンスタントバッファにマテリアルデータを更新
+	//シェーダーと入力レイアウトのセット
+	if (vertex_shader) context->VSSetShader(vertex_shader.Get(), nullptr, 0);
+	if (pixel_shader)  context->PSSetShader(pixel_shader.Get(), nullptr, 0);
+	if (input_layout)  context->IASetInputLayout(input_layout.Get());
+
+	//コンスタントバッファの更新
 	D3D11_MAPPED_SUBRESOURCE mapped_resource;
-	HRESULT hr = context->Map(constnt_buffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
-
-	if (FAILED(hr))
+	HRESULT hr = context->Map(constant_buffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
+	if (SUCCEEDED(hr))
 	{
-		return;
+		std::memcpy(mapped_resource.pData, &material_data, sizeof(GltfStaticMaterialData));
+		context->Unmap(constant_buffer.Get(), 0);
 	}
 
-	std::memcpy(mapped_resource.pData, &material_data, sizeof(GltfStaticMaterialData));
-	context->Unmap(constnt_buffer.Get(), 0);
-
-	//コンスタントバッファをピクセルシェーダーにセット
-	context->PSSetConstantBuffers(slot, 1, constnt_buffer.GetAddressOf());
+	//各種スロットへのセット
+	context->PSSetConstantBuffers(slot, 1, constant_buffer.GetAddressOf());
 
 	//テクスチャをピクセルシェーダーにセット
-	if (textures.color_texture)
-	{
-		context->PSSetShaderResources(slot, 1, textures.color_texture.GetAddressOf());
-	}
-	if (textures.normal_texture)
-	{
-		context->PSSetShaderResources(slot + 1, 1, textures.normal_texture.GetAddressOf());
-	}
-	if (textures.metallic_roughness_texture)
-	{
-		context->PSSetShaderResources(slot + 2, 1, textures.metallic_roughness_texture.GetAddressOf());
-	}
-	if (textures.occlusion_texture)
-	{
-		context->PSSetShaderResources(slot + 3, 1, textures.occlusion_texture.GetAddressOf());
-	}
-	if (textures.emissive_texture)
-	{
-		context->PSSetShaderResources(slot + 4, 1, textures.emissive_texture.GetAddressOf());
-	}	
+	ID3D11ShaderResourceView* srvs[] = {
+		textures.color_texture.Get(),
+		textures.normal_texture.Get(),
+		textures.metallic_roughness_texture.Get(),
+		textures.occlusion_texture.Get(),
+		textures.emissive_texture.Get()
+	};
+	context->PSSetShaderResources(0, 5, srvs);
 }

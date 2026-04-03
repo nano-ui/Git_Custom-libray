@@ -54,6 +54,8 @@ private:
 
 	// GLTFモデル用定数バッファ
 	Microsoft::WRL::ComPtr<ID3D11Buffer> gltf_object_constant_buffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> gltf_material_constant_buffer;
+
 
 	struct GLTF_OBJECT_CONSTANT
 	{
