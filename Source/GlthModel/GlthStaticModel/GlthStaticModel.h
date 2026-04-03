@@ -9,6 +9,7 @@
 #include <tiny_gltf.h>
 
 #include "GlthStaticModelData.h"
+#include "GltfStaticMaterial.h"
 
 class GlthStaticModel
 {
@@ -16,20 +17,27 @@ public:
 	GlthStaticModel() = default;
 	~GlthStaticModel() = default;
 
-	// GLTF ƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	// GLTF ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	static std::shared_ptr<GltfModel> LoadModel(
 		ID3D11Device* device,
 		const std::string& filename
 	);
 
-	// ƒƒbƒVƒ…•`‰æ
+	// ãƒ¡ãƒƒã‚·ãƒ¥æç”» (é ‚ç‚¹/ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š + DrawIndexed)
 	static void DrawMesh(
 		ID3D11DeviceContext* context,
 		const GlthMesh& mesh
 	);
 
+	// ãƒ¢ãƒ‡ãƒ«å…¨ä½“ã‚’ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’é©ç”¨ã—ã¦æç”»
+	static void Render(
+		ID3D11DeviceContext* context,
+		const GltfModel& model,
+		const DirectX::XMFLOAT4X4& world
+	);
+
 private:
-	// “à•”ƒwƒ‹ƒp[ŠÖ”
+	// å†…éƒ¨å‡¦ç†ç”¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿é–¢æ•°
 	static bool LoadGltfFile(
 		const std::string& filepath,
 		tinygltf::Model& out_model);
@@ -38,6 +46,19 @@ private:
 		ID3D11Device* device,
 		const tinygltf::Model& gltf_model,
 		std::shared_ptr<GltfModel> model);
+
+	static void ExtractMaterialData(
+		ID3D11Device* device,
+		const tinygltf::Model& gltf_model,
+		const std::string& base_path,
+		std::shared_ptr<GltfModel> model);
+
+	static bool LoadTextureFromGltf(
+		ID3D11Device* device,
+		const tinygltf::Model& gltf_model,
+		int texture_index,
+		const std::string& base_path,
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& out_srv);
 
 	static Microsoft::WRL::ComPtr<ID3D11Buffer> CreateVertexBuffer(
 		ID3D11Device* device,
@@ -49,7 +70,7 @@ private:
 		const void* data,
 		size_t size);
 
-	// ’¸“_ƒf[ƒ^’Šoƒwƒ‹ƒp[
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æŠ½å‡ºç”¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 	static void ExtractPositionData(
 		const tinygltf::Model& model,
 		const tinygltf::Primitive& primitive,
