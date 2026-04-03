@@ -9,6 +9,7 @@
 #include <tiny_gltf.h>
 
 #include "GlthStaticModelData.h"
+#include "GltfStaticMaterial.h"
 
 class GlthStaticModel
 {
@@ -25,7 +26,9 @@ public:
 	// ÉÅÉbÉVÉÖï`âÊ
 	static void DrawMesh(
 		ID3D11DeviceContext* context,
-		const GlthMesh& mesh
+		const GlthMesh& mesh,
+		const std::vector<std::shared_ptr<GltfStaticMaterial>>& materials,
+		Microsoft::WRL::ComPtr<ID3D11Buffer> material_cb
 	);
 
 private:
@@ -38,6 +41,15 @@ private:
 		ID3D11Device* device,
 		const tinygltf::Model& gltf_model,
 		std::shared_ptr<GltfModel> model);
+
+	static void ExtractMaterialData(
+		ID3D11Device* device,
+		const tinygltf::Model& gltf_model,
+		std::shared_ptr<GltfModel> model);
+
+	static Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> CreateShaderResourceViewFromGltfImage(
+		ID3D11Device* device,
+		const tinygltf::Image& gltf_image);
 
 	static Microsoft::WRL::ComPtr<ID3D11Buffer> CreateVertexBuffer(
 		ID3D11Device* device,
@@ -64,4 +76,10 @@ private:
 		const tinygltf::Model& model,
 		const tinygltf::Primitive& primitive,
 		std::vector<GlthVertex>& vertices);
+
+	static void ExtractTangentData(
+		const tinygltf::Model& model,
+		const tinygltf::Primitive& primitive,
+		std::vector<GlthVertex>& vertices
+	);
 };

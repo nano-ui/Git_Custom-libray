@@ -165,12 +165,13 @@ void MainScene::InitializeGltfShaders()
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TANGENT",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	// 頂点シェーダー読み込み
 	hr = create_vs_from_cso(
 		device,
-		"static_mesh_vs.cso",
+		"gltf_static_mesh_vsr.cso",
 		gltf_vertex_shader.GetAddressOf(),
 		gltf_input_layout.GetAddressOf(),
 		input_element_descs,
@@ -185,7 +186,7 @@ void MainScene::InitializeGltfShaders()
 	// ピクセルシェーダー読み込み
 	hr = create_ps_from_cso(
 		device,
-		"static_mesh_ps.cso",
+		"gltf_static_mesh_ps.cso",
 		gltf_pixel_shader.GetAddressOf()
 	);
 	if (FAILED(hr))
@@ -202,6 +203,16 @@ void MainScene::InitializeGltfShaders()
 	cb_desc.CPUAccessFlags = 0;
 
 	hr = device->CreateBuffer(&cb_desc, nullptr, gltf_object_constant_buffer.GetAddressOf());
+	if (FAILED(hr)) return;
+
+	//マテリアル定数バッファ作成
+	D3D11_BUFFER_DESC mat_cb_desc = {};
+	mat_cb_desc.ByteWidth = (sizeof(GltfStaticMaterialData) + 15) & ~15;
+	mat_cb_desc.Usage = D3D11_USAGE_DYNAMIC; // マテリアルごとに更新するためDYNAMIC
+	mat_cb_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	mat_cb_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	hr = device->CreateBuffer(&mat_cb_desc, nullptr, gltf_material_constant_buffer.GetAddressOf());
 	if (FAILED(hr))
 	{
 		OutputDebugStringA("ERROR: Failed to create GLTF constant buffer\n");
@@ -230,6 +241,7 @@ void MainScene::Finalize()
 	if (gltf_pixel_shader) gltf_pixel_shader.Reset();
 	if (gltf_input_layout) gltf_input_layout.Reset();
 	if (gltf_object_constant_buffer) gltf_object_constant_buffer.Reset();
+	if (gltf_material_constant_buffer) gltf_material_constant_buffer.Reset();
 
 	// GLTFモデル解放
 	if (gltf_model)
@@ -494,6 +506,9 @@ void MainScene::Render(float elapsed_time)
 // GLTFモデル描画ヘルパー関数
 void MainScene::DrawGltfModel(ID3D11DeviceContext* context)
 {
+	auto device = Graphics::Instance().GetDevice();
+	HRESULT hr = S_OK;
+
 	if (!context || !gltf_model || gltf_model->meshes.empty())
 	{
 		return;
@@ -501,50 +516,43 @@ void MainScene::DrawGltfModel(ID3D11DeviceContext* context)
 
 	auto states = Graphics::Instance().GetPipelineStates();
 
-	// GLTF モデルの変換行列を計算
-	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(
-		gltf_scale.x, gltf_scale.y, gltf_scale.z) };
+	//変換行列の計算
+	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(gltf_scale.x, gltf_scale.y, gltf_scale.z) };
+	//DirectX::XMMATRIX R_auto{ DirectX::XMMatrixRotationY(gltf_rotation_y) };
+	DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(gltf_rotation.x, gltf_rotation.y, gltf_rotation.z) };
+	DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(gltf_position.x, gltf_position.y, gltf_position.z) };
 
-	DirectX::XMMATRIX R_auto{ DirectX::XMMatrixRotationY(gltf_rotation_y) };
-	DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(
-		gltf_rotation.x, gltf_rotation.y, gltf_rotation.z) };
-
-	DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(
-		gltf_position.x, gltf_position.y, gltf_position.z) };
-
-	DirectX::XMMATRIX world_transform = S * R * R_auto * T;
+	DirectX::XMMATRIX world_transform = S * R * T;
 	DirectX::XMStoreFloat4x4(&gltf_model_transform, world_transform);
 
-	// GLTF用定数バッファを更新
+	//オブジェクト定数バッファ (b1) の更新とセット
 	GLTF_OBJECT_CONSTANT gltf_constants;
 	gltf_constants.world = gltf_model_transform;
 	gltf_constants.material_color = gltf_material_color;
 	context->UpdateSubresource(gltf_object_constant_buffer.Get(), 0, 0, &gltf_constants, 0, 0);
 
-	// シェーダーを設定
-	context->VSSetShader(gltf_vertex_shader.Get(), nullptr, 0);
-	context->PSSetShader(gltf_pixel_shader.Get(), nullptr, 0);
-	context->IASetInputLayout(gltf_input_layout.Get());
+	// register(b1) にオブジェクト情報をセット 
+	context->VSSetConstantBuffers(1, 1, gltf_object_constant_buffer.GetAddressOf());
 
-	// 定数バッファを設定
-	context->VSSetConstantBuffers(0, 1, gltf_object_constant_buffer.GetAddressOf());
-	context->VSSetConstantBuffers(1, 1, constnt_buffer[0].GetAddressOf());
-	context->PSSetConstantBuffers(1, 1, constnt_buffer[0].GetAddressOf());
+	//シーン定数バッファ (b2) のセット
+	context->VSSetConstantBuffers(2, 1, constnt_buffer[0].GetAddressOf());
+	context->PSSetConstantBuffers(2, 1, constnt_buffer[0].GetAddressOf());
 
-	// サンプラー状態を設定
+	//サンプラーとパイプラインステートの設定
 	context->PSSetSamplers(0, 1, states->GetSamplerState(0).GetAddressOf());
 	context->PSSetSamplers(1, 1, states->GetSamplerState(1).GetAddressOf());
 	context->PSSetSamplers(2, 1, states->GetSamplerState(2).GetAddressOf());
 
-	// パイプラインステート設定
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
 	context->RSSetState(states->GetRasterizerState(0).Get());
 
-	// 各メッシュを描画
+	//各メッシュを描画
 	for (const auto& mesh : gltf_model->meshes)
 	{
-		GlthStaticModel::DrawMesh(context, mesh);
+		GlthStaticModel::DrawMesh(
+			context,
+			mesh,
+			gltf_model->materials,
+			gltf_material_constant_buffer);
 	}
-
-	OutputDebugStringA("GLTF model rendered\n");
 }
