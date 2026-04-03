@@ -64,4 +64,10 @@ private:
 		const tinygltf::Model& model,
 		const tinygltf::Primitive& primitive,
 		std::vector<GlthVertex>& vertices);
+
+	static void ExtractTangentData(
+		const tinygltf::Model& model,
+		const tinygltf::Primitive& primitive,
+		std::vector<GlthVertex>& vertices
+	);
 };

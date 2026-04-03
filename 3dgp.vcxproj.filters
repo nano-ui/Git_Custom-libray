@@ -137,6 +137,12 @@
     <Filter Include="Source\ObjectRender\GlthModel\GlthSkinnedModel">
       <UniqueIdentifier>{9d9ed371-33fe-4e28-903f-a1b3075abeab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\gltf_static_mesh">
+      <UniqueIdentifier>{4137d628-1181-408f-867e-2b19ca5940fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GlthModel\GlthStaticModel\GltfStaticMaterial">
+      <UniqueIdentifier>{0be97940-dc28-4733-a119-e1a7db5e16c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -246,6 +252,9 @@
     </ClCompile>
     <ClCompile Include="Source\GlthModel\GlthStaticModel\GlthStaticModel.cpp">
       <Filter>Source\ObjectRender\GlthModel\GlthStaticModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GlthModel\GlthStaticModel\GltfStaticMaterial.cpp">
+      <Filter>Source\ObjectRender\GlthModel\GlthStaticModel\GltfStaticMaterial</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -378,6 +387,9 @@
     <ClInclude Include="Source\GlthModel\GlthStaticModel\GlthStaticModelData.h">
       <Filter>Source\ObjectRender\GlthModel\GlthStaticModel</Filter>
     </ClInclude>
+    <ClInclude Include="Source\GlthModel\GlthStaticModel\GltfStaticMaterial.h">
+      <Filter>Source\ObjectRender\GlthModel\GlthStaticModel\GltfStaticMaterial</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Compiled\blur_ps.cod">
@@ -467,6 +479,9 @@
     <None Include="Shaders\Compiled\static_mesh_vs.cso">
       <Filter>Shaders\static_mesh</Filter>
     </None>
+    <None Include="Shaders\SoureCode\gltf_static_mesh.hlsli">
+      <Filter>Shaders\gltf_static_mesh</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\SoureCode\blur_ps.hlsl">
@@ -504,6 +519,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\static_mesh_vs.hlsl">
       <Filter>Shaders\static_mesh</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\gltf_static_mesh_vsr.hlsl">
+      <Filter>Shaders\gltf_static_mesh</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\gltf_static_mesh_ps.hlsl">
+      <Filter>Shaders\gltf_static_mesh</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

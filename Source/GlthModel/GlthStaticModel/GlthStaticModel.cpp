@@ -183,6 +183,37 @@ void GlthStaticModel::ExtractTexCoordData(
 	}
 }
 
+//タンジェントデータ抽出
+void GlthStaticModel::ExtractTangentData(
+	const tinygltf::Model& model,
+	const tinygltf::Primitive& primitive,
+	std::vector<GlthVertex>& vertices)
+{
+	auto tangent_it = primitive.attributes.find("TANGENT");
+	if (tangent_it == primitive.attributes.end())
+	{
+		//TANGENT がない場合はデフォルト値を設定
+		for (auto& vertex : vertices)
+		{
+			vertex.tangent = { 1.0f, 0.0f, 0.0f, 1.0f };
+		}
+		return;
+	}
+
+	const tinygltf::Accessor& tangent_accessor = model.accessors[tangent_it->second];
+	const tinygltf::BufferView& tangent_buffer_view = model.bufferViews[tangent_accessor.bufferView];
+	const tinygltf::Buffer& tangent_buffer = model.buffers[tangent_buffer_view.buffer];
+	const float* tangent_data = reinterpret_cast<const float*>(tangent_buffer.data.data() + tangent_buffer_view.byteOffset + tangent_accessor.byteOffset);
+
+	for (size_t i = 0; i < tangent_accessor.count; i++)
+	{
+		vertices[i].tangent.x = tangent_data[i * 4];
+		vertices[i].tangent.y = tangent_data[i * 4 + 1];
+		vertices[i].tangent.z = tangent_data[i * 4 + 2];
+		vertices[i].tangent.w = tangent_data[i * 4 + 3];
+	}
+}
+
 // メッシュデータ抽出
 void GlthStaticModel::ExtractMeshData(
 	ID3D11Device* device,
@@ -241,6 +272,7 @@ void GlthStaticModel::ExtractMeshData(
 				ExtractPositionData(gltf_model, primitive, mesh.vertices);
 				ExtractNormalData(gltf_model, primitive, mesh.vertices);
 				ExtractTexCoordData(gltf_model, primitive, mesh.vertices);
+				ExtractTangentData(gltf_model, primitive, mesh.vertices);
 			}
 
 			// バッファ作成
@@ -270,6 +302,7 @@ void GlthStaticModel::ExtractMeshData(
 				}
 			}
 
+			mesh.material_index = -1;
 			model->meshes.push_back(mesh);
 		}
 	}
