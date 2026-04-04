@@ -1,0 +1,22 @@
+[Project Structure] 
+ 
+Folder PATH listing for volume Windows
+Volume serial number is 0255-C8DA
+C:.
+    GltfAnimation.cpp
+    GltfAnimation.h
+    GltfBone.cpp
+    GltfBone.h
+    GltfDynamicMaterial.cpp
+    GltfDynamicMaterial.h
+    GltfDynamicMesh.cpp
+    GltfDynamicMesh.h
+    GltfDynamicModel.cpp
+    GltfDynamicModel.h
+    GltfDynamicModelResource.cpp
+    GltfDynamicModelResource.h
+    structure.txt
+    _dump_structure.bat
+    
+No subfolders exist 
+

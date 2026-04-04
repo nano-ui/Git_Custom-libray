@@ -224,6 +224,12 @@
     <ClCompile Include="Source\FbxModel\FbxSkinnedModel.cpp" />
     <ClCompile Include="Source\FbxModel\FbxSkinnedMesh.cpp" />
     <ClCompile Include="Source\FbxModel\FbxSkinnedResource.cpp" />
+    <ClCompile Include="Source\GlthModel\GlthDynamicModel\GltfAnimation.cpp" />
+    <ClCompile Include="Source\GlthModel\GlthDynamicModel\GltfBone.cpp" />
+    <ClCompile Include="Source\GlthModel\GlthDynamicModel\GltfDynamicMaterial.cpp" />
+    <ClCompile Include="Source\GlthModel\GlthDynamicModel\GltfDynamicMesh.cpp" />
+    <ClCompile Include="Source\GlthModel\GlthDynamicModel\GltfDynamicModel.cpp" />
+    <ClCompile Include="Source\GlthModel\GlthDynamicModel\GltfDynamicModelResource.cpp" />
     <ClCompile Include="Source\GlthModel\GlthStaticModel\GltfStaticMaterial.cpp" />
     <ClCompile Include="Source\GlthModel\GlthStaticModel\GlthStaticModel.cpp" />
     <ClCompile Include="Source\Graphics\DirectXDevice.cpp" />
@@ -267,6 +273,12 @@
     <ClInclude Include="Source\FbxModel\FbxSkinnedModel.h" />
     <ClInclude Include="Source\FbxModel\FbxSkinnedMesh.h" />
     <ClInclude Include="Source\FbxModel\FbxSkinnedResource.h" />
+    <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfAnimation.h" />
+    <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfBone.h" />
+    <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicMaterial.h" />
+    <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicMesh.h" />
+    <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicModel.h" />
+    <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicModelResource.h" />
     <ClInclude Include="Source\GlthModel\GlthStaticModel\GltfStaticMaterial.h" />
     <ClInclude Include="Source\GlthModel\GlthStaticModel\GlthStaticModel.h" />
     <ClInclude Include="Source\GlthModel\GlthStaticModel\GlthStaticModelData.h" />

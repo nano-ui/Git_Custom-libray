@@ -68,9 +68,6 @@
     <Filter Include="Source\ObjectRender\AssetManager">
       <UniqueIdentifier>{b619075d-3927-4b4a-98f4-6cecafe1b8ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ObjectRender\GeometricPrimitive">
-      <UniqueIdentifier>{39479b18-2d48-4b49-a73f-bb8e97382f25}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\ObjectRender\SkinnedMesh">
       <UniqueIdentifier>{22a17abc-366f-45db-8379-1bf3eaf612a8}</UniqueIdentifier>
     </Filter>
@@ -134,14 +131,32 @@
     <Filter Include="Source\ObjectRender\GlthModel\GlthStaticModel">
       <UniqueIdentifier>{8b043b0a-21d4-4ca5-991f-5a6cb2944b92}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ObjectRender\GlthModel\GlthSkinnedModel">
-      <UniqueIdentifier>{9d9ed371-33fe-4e28-903f-a1b3075abeab}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\gltf_static_mesh">
       <UniqueIdentifier>{4137d628-1181-408f-867e-2b19ca5940fa}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\ObjectRender\GlthModel\GlthStaticModel\GltfStaticMaterial">
       <UniqueIdentifier>{0be97940-dc28-4733-a119-e1a7db5e16c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GlthModel\GlthDynamicModel">
+      <UniqueIdentifier>{9d9ed371-33fe-4e28-903f-a1b3075abeab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GlthModel\GlthDynamicModel\GltfDynamicMaterial">
+      <UniqueIdentifier>{b26a9039-5b3c-4a38-85f6-28c79a9402be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GlthModel\GlthDynamicModel\GltfDynamicMesh">
+      <UniqueIdentifier>{5aa499ba-2dbe-4837-a3ea-9b63e11bf3de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GlthModel\GlthDynamicModel\GltfDynamicModelResources">
+      <UniqueIdentifier>{eef55000-cf96-48f3-8016-e051a385e67b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GlthModel\GlthDynamicModel\GltfBone">
+      <UniqueIdentifier>{700cee5c-cdc9-4c10-b7f5-bbe38ed2294e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GlthModel\GlthDynamicModel\GltfAnimation">
+      <UniqueIdentifier>{49d990c3-a4ec-489c-a724-96fc9d73a05b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GeometricPrimitive">
+      <UniqueIdentifier>{39479b18-2d48-4b49-a73f-bb8e97382f25}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -255,6 +270,24 @@
     </ClCompile>
     <ClCompile Include="Source\GlthModel\GlthStaticModel\GltfStaticMaterial.cpp">
       <Filter>Source\ObjectRender\GlthModel\GlthStaticModel\GltfStaticMaterial</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GlthModel\GlthDynamicModel\GltfDynamicMaterial.cpp">
+      <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel\GltfDynamicMaterial</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GlthModel\GlthDynamicModel\GltfDynamicMesh.cpp">
+      <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel\GltfDynamicMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GlthModel\GlthDynamicModel\GltfDynamicModelResource.cpp">
+      <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel\GltfDynamicModelResources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GlthModel\GlthDynamicModel\GltfDynamicModel.cpp">
+      <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GlthModel\GlthDynamicModel\GltfBone.cpp">
+      <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel\GltfBone</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GlthModel\GlthDynamicModel\GltfAnimation.cpp">
+      <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel\GltfAnimation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -389,6 +422,24 @@
     </ClInclude>
     <ClInclude Include="Source\GlthModel\GlthStaticModel\GltfStaticMaterial.h">
       <Filter>Source\ObjectRender\GlthModel\GlthStaticModel\GltfStaticMaterial</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicMaterial.h">
+      <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel\GltfDynamicMaterial</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicMesh.h">
+      <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel\GltfDynamicMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicModelResource.h">
+      <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel\GltfDynamicModelResources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicModel.h">
+      <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfBone.h">
+      <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel\GltfBone</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfAnimation.h">
+      <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel\GltfAnimation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
