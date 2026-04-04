@@ -441,6 +441,9 @@
     <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfAnimation.h">
       <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel\GltfAnimation</Filter>
     </ClInclude>
+    <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicModelData.h">
+      <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Compiled\blur_ps.cod">

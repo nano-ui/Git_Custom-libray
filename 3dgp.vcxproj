@@ -278,6 +278,7 @@
     <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicMaterial.h" />
     <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicMesh.h" />
     <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicModel.h" />
+    <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicModelData.h" />
     <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicModelResource.h" />
     <ClInclude Include="Source\GlthModel\GlthStaticModel\GltfStaticMaterial.h" />
     <ClInclude Include="Source\GlthModel\GlthStaticModel\GlthStaticModel.h" />
