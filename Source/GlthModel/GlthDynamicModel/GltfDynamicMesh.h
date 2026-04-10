@@ -4,9 +4,9 @@
 #include <vector>
 #include <memory>
 #include <DirectXMath.h>
-#include "tiny_gltf.h"
 
-#include "GltfDynamicMaterial.h"
+namespace tinygltf { class Model; struct Primitive; }
+class GltfDynamicMaterial;
 
 class GltfDynamicMesh
 {
@@ -41,6 +41,12 @@ public:
 	std::shared_ptr<GltfDynamicMaterial> GetMaterial() const { return material; }
 
 private:
+	//GPUリソースの作成
+	void CreateBuffers(
+		ID3D11Device* device,
+		const std::vector<Vertex>& vertices,
+		const std::vector<uint32_t>& indices);
+
 	//アクセッサからポインタを取得
 	template<typename T>
 	const T* GetElementPointer(const tinygltf::Model& model, int accessor_index);
