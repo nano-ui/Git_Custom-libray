@@ -37,7 +37,10 @@ public:
 	//メッシュ描画
 	void Render(ID3D11DeviceContext* dc);
 
+	//マテリアルの設定
 	void SetMaterial(std::shared_ptr<GltfDynamicMaterial> mat) { material = mat; }
+
+	//マテリアルの取得
 	std::shared_ptr<GltfDynamicMaterial> GetMaterial() const { return material; }
 
 private:
