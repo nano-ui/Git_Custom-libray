@@ -11,18 +11,25 @@
 template<typename T>
 const T* GetElementPointer(const tinygltf::Model& model, int accessor_index) 
 {
-	//インデックスが不正な場合はnullptrを返す
-	if (accessor_index < 0 || accessor_index >= static_cast<int>(model.accessors.size())) return nullptr;    const auto& accessor = model.accessors[accessor_index]; //
-	
+	// インデックスが不正な場合はnullptrを返す
+	if (accessor_index < 0 || accessor_index >= static_cast<int>(model.accessors.size()))
+	{
+		return nullptr;
+	}
+
+	// アクセッサを取得
 	const auto& accessor = model.accessors[accessor_index];
 
-	//bufferViewのインデックスチェック
-	if (accessor.bufferView < 0 || accessor.bufferView >= static_cast<int>(model.bufferViews.size())) return nullptr;
+	// bufferViewのインデックスチェック
+	if (accessor.bufferView < 0 || accessor.bufferView >= static_cast<int>(model.bufferViews.size()))
+	{
+		return nullptr;
+	}
 
 	const auto& buffer_view = model.bufferViews[accessor.bufferView];
 	const auto& buffer = model.buffers[buffer_view.buffer];
 
-	//データのアドレスを計算して返す
+	// データのアドレスを計算して返す
 	return reinterpret_cast<const T*>(&buffer.data[buffer_view.byteOffset + accessor.byteOffset]);
 }
 
@@ -109,28 +116,41 @@ GltfDynamicModelResource::GltfDynamicModelResource(ID3D11Device* device, const c
 				vertex.position = { position_ptr[i * 3], position_ptr[i * 3 + 1], position_ptr[i * 3 + 2] };	//座標データのコピー
 				vertex.normal = { normal_ptr[i * 3], normal_ptr[i * 3 + 1], normal_ptr[i * 3 + 2] };			//法線データのコピー
 				vertex.texcoord = { uv_ptr[i * 2], uv_ptr[i * 2 + 1] };											//UVデータのコピー
-				if (has_skinning && weight_ptr)
+				
+				//-------------------------------------
+				//アニメーション用データの取得処理
+				//-------------------------------------
+				if (has_skinning)
 				{
-					vertex.bone_weights = { weight_ptr[i * 4], weight_ptr[i * 4 + 1], weight_ptr[i * 4 + 2], weight_ptr[i * 4 + 3] };	//重みデータのコピー
+					const float* weight_ptr = GetElementPointer<float>(model, primitive.attributes.at("WEIGHTS_0"));
+					int joints_accessor_idx = primitive.attributes.at("JOINTS_0");
+					int joints_type = model.accessors[joints_accessor_idx].componentType;
+
+					//JOINTSの型に応じた取得処理
+					if (joints_type == 5121)
+					{ // TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE
+						const uint8_t* p = GetElementPointer<uint8_t>(model, joints_accessor_idx);
+						for (int j = 0; j < 4; ++j)
+						{
+							vertex.bone_indices[j] = p[i * 4 + j];
+						}
+					}
+					else if (joints_type == 5123)
+					{ // 5123: TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT
+						const uint16_t* p = GetElementPointer<uint16_t>(model, joints_accessor_idx);
+						for (int j = 0; j < 4; ++j)
+						{
+							vertex.bone_indices[j] = p[i * 4 + j];
+						}
+					}
+					else
+					{
+						continue; // JOINTS_0の型が不明な場合はスキップ
+					}
+
 				}
 
-				//JOINTSの型に応じた取得処理
-				if (joints_type == 5121)
-				{ // TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE
-					const uint8_t* p = GetElementPointer<uint8_t>(model, joints_accessor_idx);
-					for (int j = 0; j < 4; ++j) vertex.bone_indices[j] = p[i * 4 + j];
-				}
-				else if(joints_type == 5123) 
-				{ // 5123: TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT
-					const uint16_t* p = GetElementPointer<uint16_t>(model, joints_accessor_idx);
-					for (int j = 0; j < 4; ++j) vertex.bone_indices[j] = p[i * 4 + j];
-				}
-				else
-				{
-					continue; // JOINTS_0の型が不明な場合はスキップ
-				}
-
-				vertices.push_back(vertex);                    //配列に追加
+				vertices.push_back(vertex);                    //リストに追加
 			}
 			//インデックスデータの取得
 			if (primitive.indices >= 0) 
