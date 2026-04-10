@@ -1,6 +1,15 @@
 #include "GltfDynamicMesh.h"
 
 //=================================================
+//アクセッサからポインタを取得
+//=================================================
+template<typename T>
+inline const T* GltfDynamicMesh::GetElementPointer(const tinygltf::Model& model, int accessor_index)
+{
+	return nullptr;
+}
+
+//=================================================
 //コンストラクタ
 //=================================================
 GltfDynamicMesh::GltfDynamicMesh(
@@ -30,6 +39,16 @@ GltfDynamicMesh::GltfDynamicMesh(
 	D3D11_SUBRESOURCE_DATA index_data = {};
 	index_data.pSysMem = indices.data();
 	device->CreateBuffer(&index_buffer_desc, &index_data, index_buffer.GetAddressOf());
+}
+
+//=================================================
+//GLTFデータからメッシュを初期化
+//=================================================
+void GltfDynamicMesh::Initialize(
+	ID3D11Device* device,
+	const tinygltf::Model& model,
+	const tinygltf::Primitive& primitive)
+{
 }
 
 //=================================================

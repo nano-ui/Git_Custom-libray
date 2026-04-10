@@ -37,7 +37,7 @@ private:
 	std::string bone_name;					//ボーンの名前
 	int parent_index;						//親ボーンのインデックス（-1ならルート）
 
-	DirectX::XMFLOAT4X4 local_matrix;				//親ボーンからの相対的な位置・回転・スケール
-	DirectX::XMFLOAT4X4 global_matrix;				//モデルの原点からの最終的な位置・回転・スケール
-	DirectX::XMFLOAT4X4 offset_matrix;				//メッシュをボーンの座標系へ変換するための逆行列
+	DirectX::XMFLOAT4X4 local_matrix;		//親ボーンからの相対的な位置・回転・スケール
+	DirectX::XMFLOAT4X4 global_matrix;		//モデルの原点からの最終的な位置・回転・スケール
+	DirectX::XMFLOAT4X4 offset_matrix;		//メッシュをボーンの座標系へ変換するための逆行列
 };

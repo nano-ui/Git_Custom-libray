@@ -9,6 +9,17 @@ GltfDynamicMaterial::GltfDynamicMaterial()
 }
 
 //=================================================================
+//GLTFデータからマテリアルを初期化
+//=================================================================
+void GltfDynamicMaterial::Initialize(
+	ID3D11Device* device,
+	const tinygltf::Model& model,
+	const tinygltf::Material& gltf_mat,
+	const std::string& directory)
+{
+}
+
+//=================================================================
 //シェーダーへのバインド
 //=================================================================
 void GltfDynamicMaterial::Bind(ID3D11DeviceContext* dc)

@@ -4,6 +4,8 @@
 #include <vector>
 #include <memory>
 #include <DirectXMath.h>
+#include "tiny_gltf.h"
+
 #include "GltfDynamicMaterial.h"
 
 class GltfDynamicMesh
@@ -26,6 +28,12 @@ public:
 		const std::vector<uint32_t>& indices
 	);
 
+	//GLTFデータからメッシュを初期化
+	void Initialize(
+		ID3D11Device* device,
+		const tinygltf::Model& model,
+		const tinygltf::Primitive& primitive);
+
 	//メッシュ描画
 	void Render(ID3D11DeviceContext* dc);
 
@@ -33,8 +41,13 @@ public:
 	std::shared_ptr<GltfDynamicMaterial> GetMaterial() const { return material; }
 
 private:
+	//アクセッサからポインタを取得
+	template<typename T>
+	const T* GetElementPointer(const tinygltf::Model& model, int accessor_index);
+
+private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertex_buffer;	//頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D11Buffer> index_buffer;	//インデックスバッファ
-	uint32_t index_count;	//インデックスの数
-	std::shared_ptr<GltfDynamicMaterial> material;	//マテリアル
+	uint32_t index_count;								//インデックスの数
+	std::shared_ptr<GltfDynamicMaterial> material;		//マテリアル
 };
