@@ -3,10 +3,15 @@
 #include <string>
 #include <DirectXMath.h>
 
+namespace tinygltf { struct Node; }
+
 class GltfBone
 {
 public:
 	GltfBone();
+
+	//ボーン情報を初期化
+	void Initalize(const tinygltf::Node& node, int parent_index);
 
 	//ボーン名の設定
 	void SetBoneName(const std::string& name) { bone_name = name; }
