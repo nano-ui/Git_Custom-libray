@@ -35,6 +35,17 @@ VS_OUT main(VS_IN input)
         blended_tangent += weight * mul(input.tangent.xyz, (float3x3) bone_transformes[bone_index]);
     }
     
+    //--------------------
+    //座標変換
+    //--------------------
+    
+    //ワールド空間での位置を計算
+    float4 world_pos = mul(blended_position, world_matrix);
+    //ピクセルシェーダー用に変換後のワールド座標を保存
+    output.world_pos = world_pos.xyz;
+    //スクリーン座標に変換
+    output.position = mul(world_pos, view_projection);
+    
     //-------------------
     //法線・接線変換
     //-------------------
