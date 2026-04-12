@@ -3,7 +3,8 @@
 #include <wrl.h>
 #include <DirectXMath.h>
 #include <string>
-#include "tiny_gltf.h"
+
+namespace tinygltf { class Model; struct Material; }
 
 class GltfDynamicMaterial
 {

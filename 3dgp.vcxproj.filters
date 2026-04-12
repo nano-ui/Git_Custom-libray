@@ -140,9 +140,6 @@
     <Filter Include="Source\ObjectRender\GlthModel\GlthDynamicModel">
       <UniqueIdentifier>{9d9ed371-33fe-4e28-903f-a1b3075abeab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ObjectRender\GlthModel\GlthDynamicModel\GltfDynamicMaterial">
-      <UniqueIdentifier>{b26a9039-5b3c-4a38-85f6-28c79a9402be}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\ObjectRender\GlthModel\GlthDynamicModel\GltfDynamicMesh">
       <UniqueIdentifier>{5aa499ba-2dbe-4837-a3ea-9b63e11bf3de}</UniqueIdentifier>
     </Filter>
@@ -157,6 +154,12 @@
     </Filter>
     <Filter Include="Source\ObjectRender\GeometricPrimitive">
       <UniqueIdentifier>{39479b18-2d48-4b49-a73f-bb8e97382f25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GlthModel\GlthDynamicModel\GltfDynamicMaterial">
+      <UniqueIdentifier>{b26a9039-5b3c-4a38-85f6-28c79a9402be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\gltf_dynamic_model">
+      <UniqueIdentifier>{29d2fa34-3ff8-45c7-abc9-817f1fda1ced}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -536,6 +539,9 @@
     <None Include="Shaders\SoureCode\gltf_static_mesh.hlsli">
       <Filter>Shaders\gltf_static_mesh</Filter>
     </None>
+    <None Include="Shaders\SoureCode\gltf_dynamic_model.hlsli">
+      <Filter>Shaders\gltf_dynamic_model</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\SoureCode\blur_ps.hlsl">
@@ -579,6 +585,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\gltf_static_mesh_ps.hlsl">
       <Filter>Shaders\gltf_static_mesh</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\gltf_dynamic_model_vs.hlsl">
+      <Filter>Shaders\gltf_dynamic_model</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\gltf_dynamic_model_ps.hlsl">
+      <Filter>Shaders\gltf_dynamic_model</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
