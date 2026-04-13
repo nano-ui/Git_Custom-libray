@@ -33,7 +33,7 @@ HRESULT GltfDynamicModelShader::Initialize(ID3D11Device* device)
 	//頂点シェーダーと入力レイアウトを作成
 	HRESULT hr = create_vs_from_cso(
 		device,
-		"gltf_dynamic_model_vsr.cso",
+		"gltf_dynamic_model_vs.cso",
 		vertex_shader.GetAddressOf(),
 		input_layout.GetAddressOf(),
 		layout_desc,

@@ -3,6 +3,8 @@
 
 #include "tiny_gltf.h"
 
+#include <filesystem>
+
 //=================================================================
 //コンストラクタ
 //=================================================================
@@ -38,53 +40,38 @@ void GltfDynamicMaterial::Initialize(
 	//テクスチャの取得と読み込み
 	//------------------------------------------------
 
-	//作業用の構造体
-	D3D11_TEXTURE2D_DESC texture_desc{};
-	//基本テクスチャ
-	int base_color_texture_index = gltf_mat.pbrMetallicRoughness.baseColorTexture.index;
-	//テクスチャが指定されている場合
-	if (base_color_texture_index >= 0)
+	auto load_tex = [&](int tex_index, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& target_srv, uint32_t dummy_color)
 	{
-		//テクスチャのインデックスを取得
-		int image_index = model.textures[base_color_texture_index].source;
-		//テクスチャのファイルパスを取得
-		std::string image_path = directory + model.images[image_index].uri;
-		//ワイド文字に変換
-		std::wstring w_image_path(image_path.begin(), image_path.end());
-		//キャッシュ機能付きでロード
-		load_texture_from_file(device, w_image_path.c_str(), base_map.GetAddressOf(), &texture_desc);
-	}
-	//テクスチャがない場合
-	else
-	{
-		//白色のダミーテクスチャを作成
-		make_dummy_texture(device, base_map.GetAddressOf(), 0xFFFFFFFF, 16);
-	}
+		//指定がある場合
+		if (tex_index >= 0)
+		{
+			int image_index = model.textures[tex_index].source;	//画像番号を取得
+			const auto& image = model.images[image_index];	//画像データ参照
 
-	//------------------------------------------------
-	//法線マップ
-	//------------------------------------------------
+			//外部ファイル形式の場合
+			if (!image.uri.empty())
+			{
+				std::filesystem::path full_path = std::filesystem::path(directory) / image.uri;
+				D3D11_TEXTURE2D_DESC desc = {};	//ダミー用
+				load_texture_from_file(device, full_path.wstring().c_str(), target_srv.GetAddressOf(), &desc);
+			}
+			//埋め込み形式の場合
+			else if (!image.image.empty())
+			{
+				std::wstring cache_name = L"Embedded_" + std::to_wstring(image_index);
+				LoadTextureFromMemory(device, image.image.data(), image.image.size(), target_srv.GetAddressOf(), cache_name);
+			}
+			else
+			{
+				//指定がない場合
+				make_dummy_texture(device, target_srv.GetAddressOf(), dummy_color, 16);
+			}
+		}
+	};
 
-	//法線マップのインデックスを取得
-	int normal_texture_index = gltf_mat.normalTexture.index;
-	//指定されている場合
-	if (normal_texture_index >= 0)
-	{
-		//法線マップのインデックスを取得
-		int image_index = model.textures[normal_texture_index].source;
-		//法線マップのファイルパスを取得
-		std::string image_path = directory + model.images[image_index].uri;
-		//ワイド文字に変換
-		std::wstring w_image_path(image_path.begin(), image_path.end());
-		//キャッシュ機能付きでロード
-		load_texture_from_file(device, w_image_path.c_str(), normal_map.GetAddressOf(), &texture_desc);
-	}
-	//指定されていない場合
-	else
-	{
-		//法線マップのダミーテクスチャを作成
-		make_dummy_texture(device, normal_map.GetAddressOf(), 0xFF8080FF, 16);
-	}
+	//各マップに対して実行
+	load_tex(gltf_mat.pbrMetallicRoughness.baseColorTexture.index, base_map, 0xFFFFFFFF);
+	load_tex(gltf_mat.normalTexture.index, normal_map, 0xFF8080FF);
 }
 
 //====================

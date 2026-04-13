@@ -109,7 +109,7 @@ GltfDynamicModelResource::GltfDynamicModelResource(ID3D11Device* device, const c
 	//----------------------------------------------
 
 	//メモリ領域の確保
-	bones.reserve(model.nodes.size());
+	bones.resize(model.nodes.size());
 	//ノードの数だけループ
 	for (size_t i = 0; i < model.nodes.size(); i++)
 	{
@@ -156,7 +156,7 @@ GltfDynamicModelResource::GltfDynamicModelResource(ID3D11Device* device, const c
 	//----------------------------------------------
 
 	//メモリ領域の確保
-	animations.reserve(model.animations.size());
+	animations.resize(model.animations.size());
 
 	//全てのアニメーションデータを解析
 	for (size_t i = 0; i < model.animations.size(); i++)

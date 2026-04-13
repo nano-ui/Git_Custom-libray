@@ -167,6 +167,7 @@ void GltfDynamicModel::Draw(ID3D11DeviceContext* dc)
 	//シェーダーの設定
 	//----------------------
 	dc->VSSetConstantBuffers(0, 1, object_cb.GetAddressOf());
+	dc->PSSetConstantBuffers(0, 1, object_cb.GetAddressOf());
 
 	//--------------------
 	//メッシュの描画

@@ -167,6 +167,9 @@
     <Filter Include="Source\Shaders\GltfDynamicModelShader">
       <UniqueIdentifier>{76007e10-ad4e-47fe-a965-7e74617b7a3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Shaders\ShaderManeger">
+      <UniqueIdentifier>{2ee297e6-2ec6-4eaf-b3f0-af384db897ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -300,6 +303,9 @@
     </ClCompile>
     <ClCompile Include="Source\Shaders\GltfDynamicModelShader.cpp">
       <Filter>Source\Shaders\GltfDynamicModelShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shaders\ShaderManager.cpp">
+      <Filter>Source\Shaders\ShaderManeger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -458,6 +464,9 @@
     </ClInclude>
     <ClInclude Include="Source\Shaders\GltfDynamicModelShader.h">
       <Filter>Source\Shaders\GltfDynamicModelShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shaders\ShaderManager.h">
+      <Filter>Source\Shaders\ShaderManeger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

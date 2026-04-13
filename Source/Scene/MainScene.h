@@ -23,6 +23,10 @@
 
 // GLTFモデルローダーのインクルード
 #include "../GlthModel/GlthStaticModel/GlthStaticModel.h"
+#include "../GlthModel/GlthDynamicModel/GltfDynamicModelResource.h"
+#include "../GlthModel/GlthDynamicModel/GltfDynamicModel.h"
+#include "../Shaders/ShaderManager.h"
+#include "../Shaders/GltfDynamicModelShader.h"
 
 class MainScene : public Scene
 {
@@ -38,6 +42,10 @@ public:
 	void Render(float elapsed_time) override;
 
 private:
+
+	std::shared_ptr<GltfDynamicModelResource> gltf_resource;
+	std::unique_ptr<GltfDynamicModel> gltf_dynamic_model;
+
 	std::shared_ptr<FbxSkinnedResource> resource;
 	std::unique_ptr<FbxSkinnedModel> fbx_skinned_model;
 

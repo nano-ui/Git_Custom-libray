@@ -19,6 +19,10 @@ public:
 	//シェーダーのバインド
 	void Bind(ID3D11DeviceContext* dc);
 
+	ID3D11VertexShader* GetVertexShader() const { return vertex_shader.Get(); }
+	ID3D11PixelShader* GetPixelShader() const { return pixel_shader.Get(); }
+	ID3D11InputLayout* GetInputLayout() const { return input_layout.Get(); }
+
 private:
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertex_shader;   // 頂点シェーダー
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shader;     // ピクセルシェーダー

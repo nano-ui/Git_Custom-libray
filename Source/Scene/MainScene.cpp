@@ -17,10 +17,11 @@ MainScene::MainScene()
 	w_cube.position = { 3, 0, 0 };
 	camera.position = { 0.0f, 0.0f, 10.0f };
 	tb.brightness_threshold = 1.0f;
+	data.light_direction = { 0, 0, -1, 0 };
 
 	// GLTFモデルの初期値
 	gltf_position = { 0.0f, 0.0f, 0.0f };
-	gltf_scale = { 0.05f, 0.05f, 0.05f };
+	gltf_scale = { 1.0f, 1.0f, 1.0f };
 	gltf_rotation = { 0.0f, 0.0f, 0.0f };
 	DirectX::XMStoreFloat4x4(&gltf_model_transform, DirectX::XMMatrixIdentity());
 }
@@ -91,6 +92,22 @@ void MainScene::Initialize()
 	// ここまでDirectX11の設定
 
 	// ゲーム実行に必要なオブジェクトの初期化
+
+	ShaderManager::GetInstance().Initialize(device);
+
+	gltf_resource = std::make_shared<GltfDynamicModelResource>(device, "resources/RPG-Character.glb");
+	gltf_dynamic_model = std::make_unique<GltfDynamicModel>(device, gltf_resource);
+
+	auto dynamic_shader = ShaderManager::GetInstance().GetGltfDynamicModelShader();
+
+	if (dynamic_shader && gltf_dynamic_model)
+	{
+		gltf_dynamic_model->SetModelShader(
+			dynamic_shader->GetVertexShader(),
+			dynamic_shader->GetPixelShader(),
+			dynamic_shader->GetInputLayout()
+		);
+	}
 
 	sprites[0] = std::make_unique<sprite>
 		(device, L"./resources/cyberpunk.jpg");
@@ -330,15 +347,19 @@ void MainScene::Update(float elapsed_time)
 	}
 #endif
 
-	// GLTFモデルの回転更新
-	if (enable_gltf_rendering && gltf_model)
+	if (gltf_dynamic_model)
 	{
-		gltf_rotation_y += DirectX::XM_PI * elapsed_time * gltf_rotation_speed;
-		if (gltf_rotation_y > DirectX::XM_2PI)
-		{
-			gltf_rotation_y -= DirectX::XM_2PI;
-		}
+		gltf_dynamic_model->Update(elapsed_time);
 	}
+
+	DirectX::XMFLOAT4X4 transform;
+
+	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(gltf_scale.x, gltf_scale.y, gltf_scale.z);
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(gltf_rotation.x, gltf_rotation.y, gltf_rotation.z);
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(gltf_position.x, gltf_position.y, gltf_position.z);
+	DirectX::XMStoreFloat4x4(&transform, S * R * T);
+
+	gltf_dynamic_model->SetWorldMaterix(transform);
 }
 
 // 描画処理
@@ -386,7 +407,6 @@ void MainScene::Render(float elapsed_time)
 		aspect_ratio, 0.1f, 100.0f
 	) };
 	DirectX::XMStoreFloat4x4(&data.view_projection, V * P);
-	data.light_direction = { 0, 0, -1, 0 };
 	data.camera_position.x = camera.position.x;
 	data.camera_position.y = camera.position.y;
 	data.camera_position.z = camera.position.z;
@@ -462,7 +482,24 @@ void MainScene::Render(float elapsed_time)
 	// GLTFモデル描画
 	if (enable_gltf_rendering && gltf_model)
 	{
-		DrawGltfModel(context);
+		//DrawGltfModel(context);
+	}
+
+	SceneConstantBuffer scene_data;
+	scene_data.view_projection = data.view_projection;
+	scene_data.light_direction = data.light_direction;
+	scene_data.camera_position = data.camera_position;
+
+	auto dynamic_shader = ShaderManager::GetInstance().GetGltfDynamicModelShader();
+	if (dynamic_shader)
+	{
+		dynamic_shader->UpdateSceneBuffer(context, scene_data);
+		dynamic_shader->Bind(context);
+	}
+
+	if (gltf_dynamic_model)
+	{
+		gltf_dynamic_model->Draw(context);
 	}
 
 	// 深度テスト OFF

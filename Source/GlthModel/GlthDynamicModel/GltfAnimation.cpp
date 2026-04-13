@@ -109,6 +109,15 @@ void GltfAnimation::Update(float absolute_time, std::vector<GltfBone>& bones)con
 		//対象ボーンが無ければスキップ
 		if (channel.target_bone_index < 0) continue;
 
+		//--------------------------------------
+		//キーフレームが1つしかない場合の処理
+		//--------------------------------------
+
+		if (channel.keyframes.size() == 1)
+		{
+			continue;
+		}
+
 		//---------------------------
 		//現在の時間に該当するキーフレームを探す
 		//---------------------------
@@ -122,7 +131,19 @@ void GltfAnimation::Update(float absolute_time, std::vector<GltfBone>& bones)con
 		//次のインデックス
 		next_index = std::distance(channel.keyframes.begin(), it);
 
-		if (next_index == 0) next_index = 1;//最小インデックスを保証
+		//--------------------------
+		//インデックスの範囲制限
+		//--------------------------
+
+		if (next_index == 0)
+		{
+			next_index = 1;//最小インデックスを保証
+		}
+		else if (next_index >= channel.keyframes.size())
+		{
+			next_index = channel.keyframes.size() - 1;
+		}
+
 		size_t prev_index = next_index - 1;	//1つ前を現在のフレームにする
 
 		//---------------------------

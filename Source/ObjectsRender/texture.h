@@ -28,3 +28,11 @@ HRESULT make_dummy_texture(
 	UINT dimension
 );
 
+//メモリ上のデータからテクスチャをロード
+HRESULT LoadTextureFromMemory(
+	ID3D11Device* device,
+	const uint8_t* data,
+	size_t size,
+	ID3D11ShaderResourceView** shader_resource_view,
+	const std::wstring& cache_key);
+

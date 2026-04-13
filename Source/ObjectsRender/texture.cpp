@@ -112,3 +112,39 @@ HRESULT make_dummy_texture(
 
 	return hr;
 }
+
+//========================================
+//メモリ上のデータからテクスチャをロード
+//========================================
+HRESULT LoadTextureFromMemory(
+	ID3D11Device* device,
+	const uint8_t* data,
+	size_t size, 
+	ID3D11ShaderResourceView** shader_resource_view, 
+	const std::wstring& cache_key)
+{
+	//---------------------
+	//キャッシュの確認
+	//---------------------
+
+	auto it = resources.find(cache_key);	//登録済みの名前を探す
+	//既にある場合
+	if (it != resources.end())
+	{
+		*shader_resource_view = it->second.Get();	//ポインタをコピー
+		(*shader_resource_view)->AddRef();	//参照カウンタを増やす
+		return S_OK;
+	}
+
+	//------------------
+	//テクスチャの生成
+	//------------------
+
+	HRESULT hr = CreateWICTextureFromMemory(device, data, size, nullptr, shader_resource_view);
+	if (SUCCEEDED(hr))
+	{
+		//成功時
+		resources.insert(std::make_pair(cache_key, *shader_resource_view));
+	}
+	return hr;
+}
