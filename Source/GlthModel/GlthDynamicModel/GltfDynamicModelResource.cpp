@@ -155,7 +155,7 @@ GltfDynamicModelResource::GltfDynamicModelResource(ID3D11Device* device, const c
 	//アニメーションの読み込み
 	//----------------------------------------------
 
-	//メモリ確保
+	//メモリ領域の確保
 	animations.reserve(model.animations.size());
 
 	//全てのアニメーションデータを解析

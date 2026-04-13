@@ -45,6 +45,8 @@ public:
 	//アニメーションの更新
 	void Update(float delta_time, std::vector<GltfBone>& bones);
 
+	const std::string& GetAnimationName() const { return animation_name; }
+
 private:
 	std::string animation_name;		//アニメーション名
 	std::vector<Channel> channels;	//全ボーンの変化チャンネルリスト
