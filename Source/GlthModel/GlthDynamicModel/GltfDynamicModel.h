@@ -18,6 +18,9 @@ public:
 	//描画処理
 	void Draw(ID3D11DeviceContext* dc);
 
+	//モデルにシェーダーを設定
+	void SetModelShader(ID3D11VertexShader* vs, ID3D11PixelShader* ps, ID3D11InputLayout* layout);
+
 	void SetWorldMaterix(const DirectX::XMFLOAT4X4& world) { wordl_matrix = world; }
 
 	bool SetAnimationLoop(bool loop) { return is_loop = loop; }

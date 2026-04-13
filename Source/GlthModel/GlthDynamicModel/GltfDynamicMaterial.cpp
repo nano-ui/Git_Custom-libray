@@ -87,11 +87,31 @@ void GltfDynamicMaterial::Initialize(
 	}
 }
 
+//====================
+//シェーダーを設定
+//====================
+void GltfDynamicMaterial::SetShader(ID3D11VertexShader* vs, ID3D11PixelShader* ps, ID3D11InputLayout* layout)
+{
+	//------------------------------
+	//シェーダーオブジェクトの保持
+	//------------------------------
+	vertex_shader = vs;
+	pixel_shader = ps;
+	input_layout = layout;
+}
+
 //=================================================================
 //シェーダーへのバインド
 //=================================================================
 void GltfDynamicMaterial::Bind(ID3D11DeviceContext* dc)
 {
+	//------------------------
+	//シェーダー自体のセット
+	//------------------------
+	dc->VSSetShader(vertex_shader.Get(), nullptr, 0);
+	dc->PSSetShader(pixel_shader.Get(), nullptr, 0);
+	dc->IASetInputLayout(input_layout.Get());
+
 	//シェーダーリソースをピクセルシェーダーにセット
 	ID3D11ShaderResourceView* srvs[] = {
 		base_map.Get(),
