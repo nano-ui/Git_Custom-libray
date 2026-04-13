@@ -253,6 +253,7 @@
     <ClCompile Include="Source\ObjectsRender\texture.cpp" />
     <ClCompile Include="Source\Scene\MainScene.cpp" />
     <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp" />
+    <ClCompile Include="Source\Shaders\GltfDynamicModelShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h" />
@@ -306,6 +307,7 @@
     <ClInclude Include="Source\Scene\MainScene.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h" />
+    <ClInclude Include="Source\Shaders\GltfDynamicModelShader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Compiled\blur_ps.cod" />

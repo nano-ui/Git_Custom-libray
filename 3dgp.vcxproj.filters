@@ -161,6 +161,12 @@
     <Filter Include="Shaders\gltf_dynamic_model">
       <UniqueIdentifier>{29d2fa34-3ff8-45c7-abc9-817f1fda1ced}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Shaders">
+      <UniqueIdentifier>{93e45afb-657c-4de1-b927-c86c7953aa73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shaders\GltfDynamicModelShader">
+      <UniqueIdentifier>{76007e10-ad4e-47fe-a965-7e74617b7a3a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -291,6 +297,9 @@
     </ClCompile>
     <ClCompile Include="Source\GlthModel\GlthDynamicModel\GltfAnimation.cpp">
       <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel\GltfAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shaders\GltfDynamicModelShader.cpp">
+      <Filter>Source\Shaders\GltfDynamicModelShader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -446,6 +455,9 @@
     </ClInclude>
     <ClInclude Include="Source\GlthModel\GlthDynamicModel\GltfDynamicModelData.h">
       <Filter>Source\ObjectRender\GlthModel\GlthDynamicModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shaders\GltfDynamicModelShader.h">
+      <Filter>Source\Shaders\GltfDynamicModelShader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

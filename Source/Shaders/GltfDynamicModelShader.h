@@ -8,6 +8,16 @@
 class GltfDynamicModelShader
 {
 public:
+	GltfDynamicModelShader();
+
+	//初期化
+	HRESULT Initialize(ID3D11Device* device);
+
+	//シーン定数バッファ更新
+	void UpdateSceneBuffer(ID3D11DeviceContext* dc, const SceneConstantBuffer& scene_data);
+
+	//シェーダーのバインド
+	void Bind(ID3D11DeviceContext* dc);
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertex_shader;   // 頂点シェーダー
