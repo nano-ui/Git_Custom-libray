@@ -62,6 +62,7 @@ void GltfBone::Initalize(const tinygltf::Node& node, int parent_idx)
 				static_cast<float>(node.scale[2])
 			);
 		}
+
 		//回転の適用
 		if (node.rotation.size() == 4)
 		{
@@ -75,6 +76,7 @@ void GltfBone::Initalize(const tinygltf::Node& node, int parent_idx)
 						static_cast<float>(node.rotation[3])));
 			}
 		}
+
 		//移動の適用
 		if (node.translation.size() == 3)
 		{

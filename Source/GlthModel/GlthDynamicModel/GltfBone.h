@@ -3,7 +3,7 @@
 #include <string>
 #include <DirectXMath.h>
 
-namespace tinygltf { struct Node; }
+namespace tinygltf { class Node; }
 
 class GltfBone
 {
