@@ -14,6 +14,15 @@ GltfDynamicModel::GltfDynamicModel(ID3D11Device* device, std::shared_ptr<GltfDyn
 	//ワールド行列を単位行列で初期化
 	DirectX::XMStoreFloat4x4(&wordl_matrix, DirectX::XMMatrixIdentity());
 
+	//----------------------
+	//再生時間の初期化
+	//----------------------
+
+	animation_time = 0.0f;
+	is_loop = false;
+	is_finished = false;
+	current_animation_index = 0;
+
 	//---------------------------
 	//定数バッファの作成
 	//---------------------------
@@ -32,16 +41,52 @@ GltfDynamicModel::GltfDynamicModel(ID3D11Device* device, std::shared_ptr<GltfDyn
 //=================================================
 void GltfDynamicModel::Update(float delta_time)
 {
-	//-------------------------
-	//アニメーションの適用
-	//-------------------------
+	//----------------------
+	//共有リソースの取得
+	//----------------------
 
 	const auto& animations = resource->GetAnimation();	//アニメーションリスト取得
+
+	//-----------------------------
+	//再生時間の更新とループ判定
+	//-----------------------------
+
 	//インデックスが有効な場合のみ更新
 	if (current_animation_index >= 0 && current_animation_index < static_cast<int>(animations.size()))
 	{
+		const auto& anim_data = animations[current_animation_index];	//共有データ参照
+		float max_len = anim_data.GetMaxDuration();		//アニメーションの長さを取得
+
+		//停止状態でなければ更新
+		if (!is_finished && !is_loop)
+		{
+			//個別のタイマーを進める
+			animation_time += delta_time;
+
+			//終端に達した場合
+			if (animation_time >= max_len)
+			{
+				if (is_loop)
+				{
+					//ループさせる
+					animation_time = fmod(animation_time, max_len);
+					is_finished = false;
+				}
+				else
+				{
+					//停止
+					animation_time = max_len;
+					is_finished = true;
+				}
+			}
+		}
+
+		//-------------------------
+		//アニメーションの適用
+		//-------------------------
+
 		//指定されたアニメーションをボーンでローカル行列を更新
-		const_cast<GltfAnimation&>(animations[current_animation_index]).Update(delta_time, bones);
+		anim_data.Update(animation_time, bones);
 	}
 
 	//-------------------------
@@ -71,7 +116,7 @@ void GltfDynamicModel::Update(float delta_time)
 //===============================================
 //アニメーション切り替え処理
 //===============================================
-void GltfDynamicModel::ChangeAnimation(const std::string& name)
+void GltfDynamicModel::ChangeAnimation(const std::string& name, bool loop)
 {
 	//-----------------------------------------------
 	//共有リソースからアニメーションリストを取得
@@ -82,13 +127,20 @@ void GltfDynamicModel::ChangeAnimation(const std::string& name)
 	//----------------------------
 	//名前が一致するものを検索
 	//----------------------------
-	
+
 	//全体をループ
 	for (int i = 0; i < static_cast<int>(animations.size()); i++)
 	{
 		if (animations[i].GetAnimationName() == name)
 		{
-			current_animation_index = i;
+			//違うモーションの時のみリセット
+			if (current_animation_index != i)
+			{
+				current_animation_index = i;	//インデックスの更新
+				animation_time = 0.0f;			//時間のリセット
+				is_finished = false;			//終了状態を解除
+				is_loop = loop;					//ループするか否か
+			}
 			return;
 		}
 	}

@@ -43,13 +43,14 @@ public:
 		const tinygltf::Animation& anim);
 
 	//アニメーションの更新
-	void Update(float delta_time, std::vector<GltfBone>& bones);
+	void Update(float absolute_time, std::vector<GltfBone>& bones)const;
 
 	const std::string& GetAnimationName() const { return animation_name; }
+
+	const float& GetMaxDuration()const { return max_duration; }
 
 private:
 	std::string animation_name;		//アニメーション名
 	std::vector<Channel> channels;	//全ボーンの変化チャンネルリスト
-	float current_time;				//現在の再生時間
 	float max_duration;				//アニメーションの最大長(秒)
 };

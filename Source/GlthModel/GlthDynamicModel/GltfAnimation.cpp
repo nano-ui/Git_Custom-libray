@@ -9,7 +9,6 @@
 //=========================================
 GltfAnimation::GltfAnimation()
 {
-	current_time = 0.0f;
 	max_duration = 0.0f;
 }
 
@@ -98,18 +97,8 @@ void GltfAnimation::Initialize(const tinygltf::Model& model, const tinygltf::Ani
 //=========================================
 //アニメーションの更新
 //=========================================
-void GltfAnimation::Update(float delta_time, std::vector<GltfBone>& bones)
+void GltfAnimation::Update(float absolute_time, std::vector<GltfBone>& bones)const
 {
-	//---------------------------
-	//時間の更新
-	//---------------------------
-
-	current_time += delta_time;	//経過時間を加算
-	if (current_time > max_duration)
-	{
-		current_time = fmod(current_time, max_duration);
-	}
-
 	//---------------------------
 	//全チャンネルの変化をボーンに適用
 	//---------------------------
@@ -127,7 +116,7 @@ void GltfAnimation::Update(float delta_time, std::vector<GltfBone>& bones)
 		size_t next_index = 0;//次のキーフレームのインデックス
 
 		//キーフレームを二分探索で検索
-		auto it = std::upper_bound(channel.keyframes.begin(), channel.keyframes.end(), current_time,
+		auto it = std::upper_bound(channel.keyframes.begin(), channel.keyframes.end(), absolute_time,
 			[](float t, const Keyframe& k) { return t < k.time; });
 
 		//次のインデックス
@@ -142,7 +131,7 @@ void GltfAnimation::Update(float delta_time, std::vector<GltfBone>& bones)
 
 		float prev_time = channel.keyframes[prev_index].time;	//前の時間
 		float next_time = channel.keyframes[next_index].time;	//次の時間
-		float time = (prev_time == next_time) ? 0.0f : (current_time - prev_time) / (next_time - prev_time);//0.0～1.0の割合を計算
+		float time = (prev_time == next_time) ? 0.0f : (absolute_time - prev_time) / (next_time - prev_time);//0.0～1.0の割合を計算
 
 		//---------------------------
 		//値の補完と反映
@@ -176,7 +165,7 @@ void GltfAnimation::Update(float delta_time, std::vector<GltfBone>& bones)
 		//---------------------------
 		//行列の再合成と適用
 		//---------------------------
-		
+
 		DirectX::XMMATRIX new_local = DirectX::XMMatrixAffineTransformation(v_scl, DirectX::XMQuaternionIdentity(), v_rot, v_pos);//合成
 		DirectX::XMFLOAT4X4 stored_matrix;	//保存用
 		DirectX::XMStoreFloat4x4(&stored_matrix, new_local);//XMFLOAT4X4に変換
