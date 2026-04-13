@@ -150,4 +150,18 @@ GltfDynamicModelResource::GltfDynamicModelResource(ID3D11Device* device, const c
 			}
 		}
 	}
+
+	//----------------------------------------------
+	//アニメーションの読み込み
+	//----------------------------------------------
+
+	//メモリ確保
+	animations.reserve(model.animations.size());
+
+	//全てのアニメーションデータを解析
+	for (size_t i = 0; i < model.animations.size(); i++)
+	{
+		//アニメーションの初期化
+		animations[i].Initialize(model, model.animations[i]);
+	}
 }
