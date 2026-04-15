@@ -41,6 +41,11 @@ GltfDynamicModel::GltfDynamicModel(ID3D11Device* device, std::shared_ptr<GltfDyn
 //=================================================
 void GltfDynamicModel::Update(float delta_time)
 {
+	for (auto& bone : bones)
+	{
+		bone.SetLocalMatrix(bone.GetIntialLocalMatrix());
+	}
+
 	//----------------------
 	//共有リソースの取得
 	//----------------------
@@ -58,7 +63,7 @@ void GltfDynamicModel::Update(float delta_time)
 		float max_len = anim_data.GetMaxDuration();		//アニメーションの長さを取得
 
 		//停止状態でなければ更新
-		if (!is_finished && !is_loop)
+		if (!is_finished)
 		{
 			//個別のタイマーを進める
 			animation_time += delta_time;
@@ -93,23 +98,17 @@ void GltfDynamicModel::Update(float delta_time)
 	//階層構造の計算
 	//-------------------------
 
-	//全ボーンをループ
-	for (auto& bone : bones)
+	DirectX::XMMATRIX root_fix = DirectX::XMMatrixIdentity();
+
+	//ルートボーン（親がいない骨）から順番に計算を開始
+	for (int i = 0; i < static_cast<int>(bones.size()); i++)
 	{
-		//ローカル行列を取得
-		DirectX::XMMATRIX global_matrix = DirectX::XMLoadFloat4x4(&bone.GetLocalMatrix());
-
-		int parent_index = bone.GetParentIndex();//親のインデックスを取得
-		//親が存在する場合
-		if (parent_index != -1)
+		//：親がいないボーン（ルート）のみを起点として計算を開始
+		if (bones[i].GetParentIndex() == -1)
 		{
-			//親のグローバル行列をかけて自分のグローバル座標を計算
-			global_matrix *= DirectX::XMLoadFloat4x4(&bones[parent_index].GetGlobalMatrix());
+			//ルートボーンとして、単位行列を親の行列として渡して開始
+			UpdateArmature(i, root_fix);
 		}
-
-		DirectX::XMFLOAT4X4 result;	//結果を格納
-		DirectX::XMStoreFloat4x4(&result, global_matrix);
-		bone.SetGlobalMatrix(result);
 	}
 }
 
@@ -149,6 +148,38 @@ void GltfDynamicModel::ChangeAnimation(const std::string& name, bool loop)
 	//見つからなかった場合のエラー対策
 	//------------------------------------
 	current_animation_index = -1;
+}
+
+//=====================
+//再帰的に骨格を更新
+//=====================
+void GltfDynamicModel::UpdateArmature(int bone_index, const DirectX::XMMATRIX& parent_matrix)
+{
+	//-----------------------
+	//ワールド行列を確定
+	//-----------------------
+
+	auto& bone = bones[bone_index];	//処理対象のボーンを参照
+	DirectX::XMMATRIX local = DirectX::XMLoadFloat4x4(&bone.GetLocalMatrix());	//自身のローカルポーズ取得
+	DirectX::XMMATRIX global = local * parent_matrix;	//自身の行列　= ローカル行列 * 親のグローバル行列
+
+	DirectX::XMFLOAT4X4 stored_matrix;	//結果保存変数
+	DirectX::XMStoreFloat4x4(&stored_matrix, global);	//計算結果を格納
+	bone.SetGlobalMatrix(stored_matrix);	//グローバル行列を保存
+
+	//------------------------------------------------------
+	//自分を親に持っている「子供たち」を順番に計算させる
+	//------------------------------------------------------
+
+	//全リストから探す
+	for (int i = 0; i < static_cast<int>(bones.size()); i++)
+	{
+		//自身の番号を親に持つボーンの確認
+		if (bones[i].GetParentIndex() == bone_index)
+		{
+			UpdateArmature(i, global);
+		}
+	}
 }
 
 //=================================
@@ -222,8 +253,14 @@ void GltfDynamicModel::UpdateConstantBuffer(ID3D11DeviceContext* dc, const Direc
 	{
 		//書き込み先のアドレスを取得
 		ObjectConstantBuffer* cb_data = static_cast<ObjectConstantBuffer*>(mapped_res.pData);
-		//ワールド行列のコピー
-		cb_data->world = wordl_matrix;
+
+		//---------------------
+		//行列の転置とコピー
+		//---------------------
+		
+		//ワールド行列を転置してコピー
+		DirectX::XMStoreFloat4x4(&cb_data->world, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&wordl_matrix)));
+
 		//マテリアル色の設定
 		cb_data->material_color = color;
 
@@ -231,12 +268,16 @@ void GltfDynamicModel::UpdateConstantBuffer(ID3D11DeviceContext* dc, const Direc
 		//スキニング用行列の計算
 		//--------------------------
 
-		for (size_t i = 0; i < bones.size() && i < 256; i++)
+		const std::vector<int>& joints = resource->GetJoints();
+		for (size_t i = 0; i < joints.size() && i < 256; i++)
 		{
-			DirectX::XMMATRIX skin_matrix = DirectX::XMLoadFloat4x4(&bones[i].GetOffsetMatrix()) * DirectX::XMLoadFloat4x4(&bones[i].GetGlobalMatrix());
+			int node_index = joints[i];
+
+			DirectX::XMMATRIX offset = DirectX::XMLoadFloat4x4(&bones[node_index].GetOffsetMatrix());
+			DirectX::XMMATRIX global = DirectX::XMLoadFloat4x4(&bones[node_index].GetGlobalMatrix());
 
 			//定数バッファの配列に保存
-			DirectX::XMStoreFloat4x4(&cb_data->bone_transformes[i], skin_matrix);
+			DirectX::XMStoreFloat4x4(&cb_data->bone_transformes[i], DirectX::XMMatrixTranspose(offset * global));
 		}
 		//ロックを解除してGPUへ反映
 		dc->Unmap(object_cb.Get(), 0);

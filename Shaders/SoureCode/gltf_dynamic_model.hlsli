@@ -6,15 +6,15 @@
 //オブジェクト用定数バッファ
 cbuffer ObjectConstantBuffer : register(b0)
 {
-    float4x4 world_matrix;          //ワールド変換行列
+    row_major float4x4 world_matrix;          //ワールド変換行列
     float4 material_color;          //マテリアルカラー
-    float4x4 bone_transformes[256]; //各ボーンの変形行列配列
+    row_major float4x4 bone_transformes[256]; //各ボーンの変形行列配列
 }
 
 //シーン定数バッファ
 cbuffer SceneConstantBuffer : register(b1)
 {
-    float4x4 view_projection;        //ビュー・プロジェクション行列
+    row_major float4x4 view_projection;        //ビュー・プロジェクション行列
     float4 light_direction;          //ライトの方向
     float3 camera_position;          //カメラの位置
 }

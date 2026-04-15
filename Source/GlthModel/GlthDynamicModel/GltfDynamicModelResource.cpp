@@ -108,24 +108,7 @@ GltfDynamicModelResource::GltfDynamicModelResource(ID3D11Device* device, const c
 	//ボーンの読み込み
 	//----------------------------------------------
 
-	//メモリ領域の確保
-	bones.resize(model.nodes.size());
-	//ノードの数だけループ
-	for (size_t i = 0; i < model.nodes.size(); i++)
-	{
-		bones[i].Initalize(model.nodes[i], -1); //ノードの情報を元に初期化
-	}
-
-	//ボーンの親子関係構築
-	for (size_t i = 0; i < model.nodes.size(); i++)
-	{
-		//現在のノードが持つ子の番号をチェック
-		for (int child_index : model.nodes[i].children)
-		{
-			//子から親へインデックスでリンクを張る
-			bones[child_index].SetParentIndex(static_cast<int>(i));
-		}
-	}
+	LoadBones(model);
 
 	//----------------------------------------------
 	//スキンのロード
@@ -144,11 +127,26 @@ GltfDynamicModelResource::GltfDynamicModelResource(ID3D11Device* device, const c
 			for (size_t i = 0; i < skin.joints.size(); i++)
 			{
 				int bone_index = skin.joints[i];
-				DirectX::XMFLOAT4X4 ibm;
-				memcpy(&ibm, &ibm_ptr[i * 16], sizeof(DirectX::XMFLOAT4X4));
+				DirectX::XMFLOAT4X4 ibm(
+					ibm_ptr[i * 16 + 0], ibm_ptr[i * 16 + 4], ibm_ptr[i * 16 + 8], ibm_ptr[i * 16 + 12],
+					ibm_ptr[i * 16 + 1], ibm_ptr[i * 16 + 5], ibm_ptr[i * 16 + 9], ibm_ptr[i * 16 + 13],
+					ibm_ptr[i * 16 + 2], ibm_ptr[i * 16 + 6], ibm_ptr[i * 16 + 10], ibm_ptr[i * 16 + 14],
+					ibm_ptr[i * 16 + 3], ibm_ptr[i * 16 + 7], ibm_ptr[i * 16 + 11], ibm_ptr[i * 16 + 15]
+				);
+
+				//左手座標系への変換
+				// == 左手座標系への変換 (ConvertMatrixAxisSystem) ==
+				ibm._12 = -ibm._12;
+				ibm._13 = -ibm._13;
+				ibm._14 = -ibm._14;
+				ibm._21 = -ibm._21;
+				ibm._31 = -ibm._31;
+				ibm._41 = -ibm._41;
+
 				bones[bone_index].SetOffsetMatrix(ibm);
 			}
 		}
+		joints = skin.joints;
 	}
 
 	//----------------------------------------------
@@ -163,5 +161,41 @@ GltfDynamicModelResource::GltfDynamicModelResource(ID3D11Device* device, const c
 	{
 		//アニメーションの初期化
 		animations[i].Initialize(model, model.animations[i]);
+	}
+}
+
+//============================
+//ボーン構造の読み込み処理
+//============================
+void GltfDynamicModelResource::LoadBones(const tinygltf::Model& model)
+{
+	//------------------------
+	//全てのボーンを実体化
+	//------------------------
+
+	bones.resize(model.nodes.size());	//全ノード分のメモリ領域の確保
+	//全ノードをループ
+	for (size_t i = 0; i < model.nodes.size(); i++)
+	{
+		//親無しとして初期化
+		bones[i].Initalize(model.nodes[i], -1);
+	}
+
+	//----------------------------------------
+	//親子関係をインデックスでリンク
+	//----------------------------------------
+
+	//再度全ノードをループ
+	for (int i = 0; i < static_cast<int>(model.nodes.size()); i++)
+	{
+		//親を持っている子の番号リストを確認
+		for (int child_index : model.nodes[i].children)
+		{
+			//番号が正常範囲内かチェック
+			if (child_index >= 0 && child_index < bones.size())
+			{
+				bones[child_index].SetParentIndex(i);
+			}
+		}
 	}
 }

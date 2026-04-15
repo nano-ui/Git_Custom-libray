@@ -15,6 +15,9 @@ public:
 	//アニメーション切り替え処理
 	void ChangeAnimation(const std::string& name, bool loop);
 
+	//再帰的に骨格を更新
+	void UpdateArmature(int bone_index, const DirectX::XMMATRIX& parent_matrix);
+
 	//描画処理
 	void Draw(ID3D11DeviceContext* dc);
 

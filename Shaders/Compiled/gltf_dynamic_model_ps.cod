@@ -7,16 +7,16 @@
 // cbuffer ObjectConstantBuffer
 // {
 //
-//   float4x4 world_matrix;             // Offset:    0 Size:    64 [unused]
+//   row_major float4x4 world_matrix;   // Offset:    0 Size:    64 [unused]
 //   float4 material_color;             // Offset:   64 Size:    16
-//   float4x4 bone_transformes[256];    // Offset:   80 Size: 16384 [unused]
+//   row_major float4x4 bone_transformes[256];// Offset:   80 Size: 16384 [unused]
 //
 // }
 //
 // cbuffer SceneConstantBuffer
 // {
 //
-//   float4x4 view_projection;          // Offset:    0 Size:    64 [unused]
+//   row_major float4x4 view_projection;// Offset:    0 Size:    64 [unused]
 //   float4 light_direction;            // Offset:   64 Size:    16
 //   float3 camera_position;            // Offset:   80 Size:    12 [unused]
 //

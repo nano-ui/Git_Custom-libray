@@ -38,6 +38,9 @@ public:
 	//オフセット行列の取得
 	const DirectX::XMFLOAT4X4& GetOffsetMatrix() const { return offset_matrix; }
 
+	//初期姿勢を取得
+	const DirectX::XMFLOAT4X4& GetIntialLocalMatrix()const { return initial_local_matrix; }
+
 private:
 	std::string bone_name;					//ボーンの名前
 	int parent_index;						//親ボーンのインデックス（-1ならルート）
@@ -45,4 +48,5 @@ private:
 	DirectX::XMFLOAT4X4 local_matrix;		//親ボーンからの相対的な位置・回転・スケール
 	DirectX::XMFLOAT4X4 global_matrix;		//モデルの原点からの最終的な位置・回転・スケール
 	DirectX::XMFLOAT4X4 offset_matrix;		//メッシュをボーンの座標系へ変換するための逆行列
+	DirectX::XMFLOAT4X4 initial_local_matrix;	//初期姿勢を保存
 };

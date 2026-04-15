@@ -83,7 +83,8 @@ void GltfDynamicMesh::Initialize(
 	//UVデータのポインタ取得
 	const float* uv_ptr = (it_uv != primitive.attributes.end()) ? GetElementPointer<float>(model, it_uv->second) : nullptr;
 	//重みデータのポインタ取得
-	const float* weight_ptr = has_skin ? GetElementPointer<float>(model, it_weight->second) : nullptr;
+	const uint8_t* weight_ptr = has_skin ? GetElementPointer<uint8_t>(model, it_weight->second) : nullptr;
+	int weight_type = has_skin ? model.accessors[it_weight->second].componentType : -1;
 	// 1バイト型ボーン番号
 	const uint8_t* joint_ptr_u8 = (has_skin && model.accessors[it_joint->second].componentType == 5121) ? GetElementPointer<uint8_t>(model, it_joint->second) : nullptr;	
 	// 2バイト型ボーン番号
@@ -104,13 +105,15 @@ void GltfDynamicMesh::Initialize(
 		//頂点構造体を初期化
 		Vertex vertex = {};
 
+		vertex.tangent = { 1.0f,0.0f,0.0f,1.0f };
+
 		//座標データのコピー
-		vertex.position = { position_ptr[i * 3], position_ptr[i * 3 + 1], position_ptr[i * 3 + 2] };
+		vertex.position = { -position_ptr[i * 3], position_ptr[i * 3 + 1], position_ptr[i * 3 + 2] };
 
 		//法線データがある場合はコピー
 		if (normal_ptr)
 		{
-			vertex.normal = { normal_ptr[i * 3], normal_ptr[i * 3 + 1], normal_ptr[i * 3 + 2] };
+			vertex.normal = { -normal_ptr[i * 3], normal_ptr[i * 3 + 1], normal_ptr[i * 3 + 2] };
 		}
 
 		//UVデータがある場合はコピー
@@ -122,33 +125,30 @@ void GltfDynamicMesh::Initialize(
 		//スキニングデータがある場合はコピー
 		if (has_skin && weight_ptr)
 		{
-			//重みデータをコピー
-			vertex.bone_weights = { weight_ptr[i * 4], weight_ptr[i * 4 + 1], weight_ptr[i * 4 + 2], weight_ptr[i * 4 + 3] };
-			//ボーン番号のアクセッサ情報を取得
-			int joints_accessor_index = it_joint->second;
-			//データ型（byteかshortか）を取得
-			int joints_type = model.accessors[joints_accessor_index].componentType;
+			if (weight_type == TINYGLTF_COMPONENT_TYPE_FLOAT) // 5126
+			{
+				const float* w = reinterpret_cast<const float*>(weight_ptr);
+				vertex.bone_weights = { w[i * 4], w[i * 4 + 1], w[i * 4 + 2], w[i * 4 + 3] };
+			}
+			else if (weight_type == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE) // 5121
+			{
+				const uint8_t* w = reinterpret_cast<const uint8_t*>(weight_ptr);
+				vertex.bone_weights = { w[i * 4] / 255.0f, w[i * 4 + 1] / 255.0f, w[i * 4 + 2] / 255.0f, w[i * 4 + 3] / 255.0f };
+			}
+			else if (weight_type == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) // 5123
+			{
+				const uint16_t* w = reinterpret_cast<const uint16_t*>(weight_ptr);
+				vertex.bone_weights = { w[i * 4] / 65535.0f, w[i * 4 + 1] / 65535.0f, w[i * 4 + 2] / 65535.0f, w[i * 4 + 3] / 65535.0f };
+			}
 
-			//1バイト(unsigned byte)の場合
+			// ボーン番号の処理（変更なし）
 			if (joint_ptr_u8)
 			{
-				for (int j = 0; j < 4; ++j)
-				{
-					vertex.bone_indices[j] = joint_ptr_u8[i * 4 + j];
-				}
+				for (int j = 0; j < 4; ++j) vertex.bone_indices[j] = joint_ptr_u8[i * 4 + j];
 			}
-			//2バイト(unsigned short)の場合
 			else if (joint_ptr_u16)
 			{
-				for (int j = 0; j < 4; ++j)
-				{
-					vertex.bone_indices[j] = joint_ptr_u16[i * 4 + j];
-				}
-			}
-			else
-			{
-				//JOINTS_0の型が不明な場合はスキップ
-				continue;
+				for (int j = 0; j < 4; ++j) vertex.bone_indices[j] = joint_ptr_u16[i * 4 + j];
 			}
 		}
 		//配列に追加
@@ -185,6 +185,13 @@ void GltfDynamicMesh::Initialize(
 			{
 				indices.push_back(index_ptr[i]);
 			}
+		}
+
+		for (size_t i = 0; i < indices.size(); i += 3)
+		{
+			uint32_t temp = indices[i + 1];
+			indices[i + 1] = indices[i + 2];
+			indices[i + 2] = temp;
 		}
 	}
 

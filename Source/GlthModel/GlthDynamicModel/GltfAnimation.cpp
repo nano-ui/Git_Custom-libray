@@ -80,13 +80,19 @@ void GltfAnimation::Initialize(const tinygltf::Model& model, const tinygltf::Ani
 			//回転の場合
 			if (channel.target_type == TargetType::Rotation)
 			{
-				kf.value = { val_ptr[i * 4], val_ptr[i * 4 + 1], val_ptr[i * 4 + 2], val_ptr[i * 4 + 3] };
+				kf.value = { -val_ptr[i * 4], val_ptr[i * 4 + 1], val_ptr[i * 4 + 2], -val_ptr[i * 4 + 3] };
 			}
-			//位置・スケールの場合
-			else
+			//位置の場合
+			else if(channel.target_type == TargetType::Translation)
 			{
-				kf.value = { val_ptr[i * 3], val_ptr[i * 3 + 1], val_ptr[i * 3 + 2], 0.0f };
+				kf.value = { -val_ptr[i * 3], val_ptr[i * 3 + 1], val_ptr[i * 3 + 2], 0.0f };
 			}
+			//スケールの場合
+			else if (channel.target_type == TargetType::Scale)
+			{
+				kf.value = { val_ptr[i * 3],val_ptr[i * 3 + 1],val_ptr[i * 3 + 2],0.0f };
+			}
+
 			channel.keyframes.push_back(kf);//リストに追加
 		}
 		//チャンネル登録
