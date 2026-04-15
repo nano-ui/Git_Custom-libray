@@ -21,6 +21,8 @@
 #include "../FbxModel/FbxSkinnedModel.h"
 #include "../FbxModel/FbxSkinnedResource.h"
 
+#include "../GltfModel/GltfMpdel.h"
+
 class MainScene :public Scene
 {
 public:
@@ -48,6 +50,8 @@ public:
 private:
 	std::shared_ptr<FbxSkinnedResource> resource;
 	std::unique_ptr<FbxSkinnedModel> fbx_skinned_model;
+
+	std::unique_ptr<GltfMpdel> gltf_models[8];
 
 private:
 	struct Transform

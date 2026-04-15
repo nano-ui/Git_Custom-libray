@@ -128,6 +128,9 @@
     <Filter Include="Source\ObjectRender\FbxModel\FbxSkinnedModel">
       <UniqueIdentifier>{cd223bbf-8258-4143-8796-765924e2d2b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ObjectRender\GltfModel">
+      <UniqueIdentifier>{afc37076-22ce-4558-8131-a38e2f5653b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -234,6 +237,9 @@
     </ClCompile>
     <ClCompile Include="External\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GltfModel\GltfMpdel.cpp">
+      <Filter>Source\ObjectRender\GltfModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -359,6 +365,9 @@
     </ClInclude>
     <ClInclude Include="External\imgui\imstb_truetype.h">
       <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GltfModel\GltfMpdel.h">
+      <Filter>Source\ObjectRender\GltfModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

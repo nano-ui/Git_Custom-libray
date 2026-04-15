@@ -113,6 +113,9 @@ void MainScene::Initialize()
 
 	fbx_skinned_model->PlayAnimation("NIC_Idle");
 
+	gltf_models[0] = std::make_unique<GltfMpdel>(device,
+		"./glTF-Sample-Models-main/2.0/2CylinderEngine/glTF/2CylinderEngine.gltf");
+
 	//skinned_meshes[0] = make_unique<skinned_mesh>(device.Get(), "./resources/AimTest/MNK_Mesh.fbx");
 	//skinned_meshes[0]->append_animations("./resources/AimTest/Aim_Space.fbx", 0);
 
