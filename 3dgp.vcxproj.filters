@@ -238,7 +238,7 @@
     <ClCompile Include="External\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GltfModel\GltfMpdel.cpp">
+    <ClCompile Include="Source\GltfModel\GltfModel.cpp">
       <Filter>Source\ObjectRender\GltfModel</Filter>
     </ClCompile>
   </ItemGroup>
@@ -366,7 +366,7 @@
     <ClInclude Include="External\imgui\imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GltfModel\GltfMpdel.h">
+    <ClInclude Include="Source\GltfModel\GltfModel.h">
       <Filter>Source\ObjectRender\GltfModel</Filter>
     </ClInclude>
   </ItemGroup>
