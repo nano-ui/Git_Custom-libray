@@ -1,0 +1,2260 @@
+[Project Structure] 
+ 
+Folder PATH listing for volume Windows
+Volume serial number is 0255-C8DA
+C:.
+│   .gitignore
+│   3dgp.sln
+│   3dgp.vcxproj
+│   3dgp.vcxproj.filters
+│   3dgp.vcxproj.user
+│   Blend mode formulas.docx
+│   DirectXTK-main.zip
+│   imgui.ini
+│   Mtl Specification.txt
+│   Obj Specification.txt
+│   structure.txt
+│   _dump_structure.bat
+│   
+├───3dgp
+│   └───x64
+│       ├───Debug
+│       │   │   3dgp.Build.CppClean.log
+│       │   │   3dgp.exe.recipe
+│       │   │   3dgp.log
+│       │   │   3dgp.vcxproj.FileListAbsolute.txt
+│       │   │   AssetManager.obj
+│       │   │   DirectXDevice.obj
+│       │   │   FbxAnimation.obj
+│       │   │   FbxBone.obj
+│       │   │   FbxLoader.obj
+│       │   │   FbxMaterial.obj
+│       │   │   FbxSkinnedMesh.obj
+│       │   │   FbxSkinnedModel.obj
+│       │   │   FbxSkinnedResource.obj
+│       │   │   framebuffer.obj
+│       │   │   framework.obj
+│       │   │   fullscreen_quad.obj
+│       │   │   geometric_primitive.obj
+│       │   │   GltfAnimation.obj
+│       │   │   GltfBone.obj
+│       │   │   GltfDynamicMaterial.obj
+│       │   │   GltfDynamicMesh.obj
+│       │   │   GltfDynamicModel.obj
+│       │   │   GltfDynamicModelResource.obj
+│       │   │   GltfDynamicModelShader.obj
+│       │   │   GltfStaticMaterial.obj
+│       │   │   GlthStaticModel.obj
+│       │   │   Graphics.obj
+│       │   │   imgui.obj
+│       │   │   imgui_draw.obj
+│       │   │   imgui_impl_dx11.obj
+│       │   │   imgui_impl_win32.obj
+│       │   │   imgui_ja_gryph_ranges.obj
+│       │   │   imgui_widgets.obj
+│       │   │   main.obj
+│       │   │   MainScene.obj
+│       │   │   Model.obj
+│       │   │   ModelRenderer.obj
+│       │   │   PipelineStates.obj
+│       │   │   PostProcessConstantBuffers.obj
+│       │   │   SceneConstantBuffers.obj
+│       │   │   shader.obj
+│       │   │   ShaderManager.obj
+│       │   │   SkinnedMeshComponent.obj
+│       │   │   SkinnedMeshComponents.obj
+│       │   │   SkinnedMeshConmponents.obj
+│       │   │   SkinnedMeshConponents.obj
+│       │   │   SkinnedMeshSerializer.obj
+│       │   │   skinned_mesh.obj
+│       │   │   sprite.obj
+│       │   │   sprite_batch.obj
+│       │   │   static_mesh.obj
+│       │   │   texture.obj
+│       │   │   vc143.idb
+│       │   │   vc143.pdb
+│       │   │   
+│       │   └───3dgp.tlog
+│       │           3dgp.lastbuildstate
+│       │           CL.command.1.tlog
+│       │           Cl.items.tlog
+│       │           CL.read.1.tlog
+│       │           CL.write.1.tlog
+│       │           fxc.command.1.tlog
+│       │           fxc.read.1.tlog
+│       │           fxc.write.1.tlog
+│       │           link.command.1.tlog
+│       │           link.read.1.tlog
+│       │           link.secondary.1.tlog
+│       │           link.write.1.tlog
+│       │           unsuccessfulbuild
+│       │           
+│       └───Release
+│           │   3dgp.log
+│           │   framework.obj
+│           │   geometric_primitive.obj
+│           │   imgui.obj
+│           │   imgui_draw.obj
+│           │   imgui_impl_dx11.obj
+│           │   imgui_impl_win32.obj
+│           │   imgui_ja_gryph_ranges.obj
+│           │   imgui_widgets.obj
+│           │   main.obj
+│           │   shader.obj
+│           │   sprite.obj
+│           │   texture.obj
+│           │   vc143.pdb
+│           │   
+│           └───3dgp.tlog
+│                   3dgp.lastbuildstate
+│                   CL.command.1.tlog
+│                   CL.read.1.tlog
+│                   CL.write.1.tlog
+│                   fxc.command.1.tlog
+│                   fxc.read.1.tlog
+│                   fxc.write.1.tlog
+│                   unsuccessfulbuild
+│                   
+├───Data
+│   ├───Audio
+│   ├───Effect
+│   ├───Font
+│   ├───Json
+│   ├───Model
+│   └───Sprite
+├───DirectXTK-main
+│   └───DirectXTK-main
+│       └───Bin
+│           └───Desktop_2019
+│               └───x64
+│                   └───Debug
+│                           DirectXTK_Desktop_2019.log
+│                           
+├───External
+│   ├───cereal-master
+│   │   │   .gitignore
+│   │   │   .travis.yml
+│   │   │   appveyor.yml
+│   │   │   cereal.pc.in
+│   │   │   CMakeLists.txt
+│   │   │   Config.cmake.in
+│   │   │   LICENSE
+│   │   │   README.md
+│   │   │   
+│   │   ├───.github
+│   │   │   └───workflows
+│   │   │           ci-macos.yml
+│   │   │           ci.yml
+│   │   │           
+│   │   ├───doc
+│   │   │       CMakeLists.txt
+│   │   │       doxygen.in
+│   │   │       DoxygenLayout.xml
+│   │   │       footer.html
+│   │   │       mainpage.dox
+│   │   │       
+│   │   ├───include
+│   │   │   └───cereal
+│   │   │       │   access.hpp
+│   │   │       │   cereal.hpp
+│   │   │       │   macros.hpp
+│   │   │       │   specialize.hpp
+│   │   │       │   version.hpp
+│   │   │       │   
+│   │   │       ├───archives
+│   │   │       │       adapters.hpp
+│   │   │       │       binary.hpp
+│   │   │       │       json.hpp
+│   │   │       │       portable_binary.hpp
+│   │   │       │       xml.hpp
+│   │   │       │       
+│   │   │       ├───details
+│   │   │       │       helpers.hpp
+│   │   │       │       polymorphic_impl.hpp
+│   │   │       │       polymorphic_impl_fwd.hpp
+│   │   │       │       static_object.hpp
+│   │   │       │       traits.hpp
+│   │   │       │       util.hpp
+│   │   │       │       
+│   │   │       ├───external
+│   │   │       │   │   base64.hpp
+│   │   │       │   │   LICENSE
+│   │   │       │   │   
+│   │   │       │   ├───rapidjson
+│   │   │       │   │   │   allocators.h
+│   │   │       │   │   │   cursorstreamwrapper.h
+│   │   │       │   │   │   document.h
+│   │   │       │   │   │   encodedstream.h
+│   │   │       │   │   │   encodings.h
+│   │   │       │   │   │   filereadstream.h
+│   │   │       │   │   │   filewritestream.h
+│   │   │       │   │   │   fwd.h
+│   │   │       │   │   │   istreamwrapper.h
+│   │   │       │   │   │   LICENSE
+│   │   │       │   │   │   memorybuffer.h
+│   │   │       │   │   │   memorystream.h
+│   │   │       │   │   │   ostreamwrapper.h
+│   │   │       │   │   │   pointer.h
+│   │   │       │   │   │   prettywriter.h
+│   │   │       │   │   │   rapidjson.h
+│   │   │       │   │   │   reader.h
+│   │   │       │   │   │   schema.h
+│   │   │       │   │   │   stream.h
+│   │   │       │   │   │   stringbuffer.h
+│   │   │       │   │   │   writer.h
+│   │   │       │   │   │   
+│   │   │       │   │   ├───error
+│   │   │       │   │   │       en.h
+│   │   │       │   │   │       error.h
+│   │   │       │   │   │       
+│   │   │       │   │   ├───internal
+│   │   │       │   │   │       biginteger.h
+│   │   │       │   │   │       diyfp.h
+│   │   │       │   │   │       dtoa.h
+│   │   │       │   │   │       ieee754.h
+│   │   │       │   │   │       itoa.h
+│   │   │       │   │   │       meta.h
+│   │   │       │   │   │       pow10.h
+│   │   │       │   │   │       regex.h
+│   │   │       │   │   │       stack.h
+│   │   │       │   │   │       strfunc.h
+│   │   │       │   │   │       strtod.h
+│   │   │       │   │   │       swap.h
+│   │   │       │   │   │       
+│   │   │       │   │   └───msinttypes
+│   │   │       │   │           inttypes.h
+│   │   │       │   │           LICENSE
+│   │   │       │   │           stdint.h
+│   │   │       │   │           
+│   │   │       │   └───rapidxml
+│   │   │       │           license.txt
+│   │   │       │           manual.html
+│   │   │       │           rapidxml.hpp
+│   │   │       │           rapidxml_iterators.hpp
+│   │   │       │           rapidxml_print.hpp
+│   │   │       │           rapidxml_utils.hpp
+│   │   │       │           
+│   │   │       └───types
+│   │   │           │   array.hpp
+│   │   │           │   atomic.hpp
+│   │   │           │   base_class.hpp
+│   │   │           │   bitset.hpp
+│   │   │           │   boost_variant.hpp
+│   │   │           │   chrono.hpp
+│   │   │           │   common.hpp
+│   │   │           │   complex.hpp
+│   │   │           │   deque.hpp
+│   │   │           │   forward_list.hpp
+│   │   │           │   functional.hpp
+│   │   │           │   list.hpp
+│   │   │           │   map.hpp
+│   │   │           │   memory.hpp
+│   │   │           │   optional.hpp
+│   │   │           │   polymorphic.hpp
+│   │   │           │   queue.hpp
+│   │   │           │   set.hpp
+│   │   │           │   stack.hpp
+│   │   │           │   string.hpp
+│   │   │           │   tuple.hpp
+│   │   │           │   unordered_map.hpp
+│   │   │           │   unordered_set.hpp
+│   │   │           │   utility.hpp
+│   │   │           │   valarray.hpp
+│   │   │           │   variant.hpp
+│   │   │           │   vector.hpp
+│   │   │           │   
+│   │   │           └───concepts
+│   │   │                   pair_associative_container.hpp
+│   │   │                   
+│   │   ├───sandbox
+│   │   │   │   CMakeLists.txt
+│   │   │   │   performance.cpp
+│   │   │   │   sandbox.cpp
+│   │   │   │   sandbox_json.cpp
+│   │   │   │   sandbox_rtti.cpp
+│   │   │   │   sandbox_vs.cpp
+│   │   │   │   
+│   │   │   └───sandbox_shared_lib
+│   │   │           base.cpp
+│   │   │           base.hpp
+│   │   │           CMakeLists.txt
+│   │   │           derived.cpp
+│   │   │           derived.hpp
+│   │   │           
+│   │   ├───scripts
+│   │   │       add_rapidjson_prefix.sh
+│   │   │       appveyor.bat
+│   │   │       renameincludes.sh
+│   │   │       updatecoverage.sh
+│   │   │       updatedoc.in
+│   │   │       
+│   │   └───unittests
+│   │       │   array.cpp
+│   │       │   array.hpp
+│   │       │   atomic.cpp
+│   │       │   atomic.hpp
+│   │       │   basic_string.cpp
+│   │       │   basic_string.hpp
+│   │       │   bitset.cpp
+│   │       │   bitset.hpp
+│   │       │   chrono.cpp
+│   │       │   chrono.hpp
+│   │       │   cmake-config-module.cmake
+│   │       │   CMakeLists.txt
+│   │       │   common.hpp
+│   │       │   complex.cpp
+│   │       │   complex.hpp
+│   │       │   defer.cpp
+│   │       │   defer.hpp
+│   │       │   deque.cpp
+│   │       │   deque.hpp
+│   │       │   doctest.h
+│   │       │   forward_list.cpp
+│   │       │   forward_list.hpp
+│   │       │   list.cpp
+│   │       │   list.hpp
+│   │       │   load_construct.cpp
+│   │       │   load_construct.hpp
+│   │       │   map.cpp
+│   │       │   map.hpp
+│   │       │   memory.cpp
+│   │       │   memory.hpp
+│   │       │   memory_cycles.cpp
+│   │       │   memory_cycles.hpp
+│   │       │   multimap.cpp
+│   │       │   multimap.hpp
+│   │       │   multiset.cpp
+│   │       │   multiset.hpp
+│   │       │   pair.cpp
+│   │       │   pair.hpp
+│   │       │   pod.cpp
+│   │       │   pod.hpp
+│   │       │   polymorphic.cpp
+│   │       │   polymorphic.hpp
+│   │       │   portability_test.cpp
+│   │       │   portable_binary_archive.cpp
+│   │       │   portable_binary_archive.hpp
+│   │       │   priority_queue.cpp
+│   │       │   priority_queue.hpp
+│   │       │   queue.cpp
+│   │       │   queue.hpp
+│   │       │   run_portability_test.cmake
+│   │       │   run_valgrind.sh
+│   │       │   set.cpp
+│   │       │   set.hpp
+│   │       │   stack.cpp
+│   │       │   stack.hpp
+│   │       │   structs.cpp
+│   │       │   structs.hpp
+│   │       │   structs_minimal.cpp
+│   │       │   structs_minimal.hpp
+│   │       │   structs_specialized.cpp
+│   │       │   structs_specialized.hpp
+│   │       │   tuple.cpp
+│   │       │   tuple.hpp
+│   │       │   unordered_loads.cpp
+│   │       │   unordered_loads.hpp
+│   │       │   unordered_map.cpp
+│   │       │   unordered_map.hpp
+│   │       │   unordered_multimap.cpp
+│   │       │   unordered_multimap.hpp
+│   │       │   unordered_multiset.cpp
+│   │       │   unordered_multiset.hpp
+│   │       │   unordered_set.cpp
+│   │       │   unordered_set.hpp
+│   │       │   user_data_adapters.cpp
+│   │       │   user_data_adapters.hpp
+│   │       │   valarray.cpp
+│   │       │   valarray.hpp
+│   │       │   vector.cpp
+│   │       │   vector.hpp
+│   │       │   versioning.cpp
+│   │       │   versioning.hpp
+│   │       │   
+│   │       ├───boost
+│   │       │       boost_variant.cpp
+│   │       │       boost_variant.hpp
+│   │       │       CMakeLists.txt
+│   │       │       
+│   │       └───cpp17
+│   │               CMakeLists.txt
+│   │               optional.cpp
+│   │               optional.hpp
+│   │               variant.cpp
+│   │               variant.hpp
+│   │               
+│   ├───DirectXTK-main
+│   │   └───DirectXTK-main
+│   │       │   .editorconfig
+│   │       │   .gitattributes
+│   │       │   .gitignore
+│   │       │   .onefuzz
+│   │       │   CHANGELOG.md
+│   │       │   CMakeLists.txt
+│   │       │   CMakePresets.json
+│   │       │   CODE_OF_CONDUCT.md
+│   │       │   DirectXTK_Desktop_2019.sln
+│   │       │   DirectXTK_Desktop_2019.vcxproj
+│   │       │   DirectXTK_Desktop_2019.vcxproj.filters
+│   │       │   DirectXTK_Desktop_2019.vcxproj.user
+│   │       │   DirectXTK_Desktop_2019_Win10.sln
+│   │       │   DirectXTK_Desktop_2019_Win10.vcxproj.filters
+│   │       │   DirectXTK_Desktop_2022.sln
+│   │       │   DirectXTK_Desktop_2022.vcxproj
+│   │       │   DirectXTK_Desktop_2022.vcxproj.filters
+│   │       │   DirectXTK_Desktop_2022_Win10.sln
+│   │       │   DirectXTK_Desktop_2022_Win10.vcxproj
+│   │       │   DirectXTK_Desktop_2022_Win10.vcxproj.filters
+│   │       │   DirectXTK_GDK_2019.sln
+│   │       │   DirectXTK_GDK_2019.vcxproj
+│   │       │   DirectXTK_GDK_2019.vcxproj.filters
+│   │       │   DirectXTK_GDK_2022.sln
+│   │       │   DirectXTK_GDK_2022.vcxproj.filters
+│   │       │   DirectXTK_Windows10_2022.sln
+│   │       │   DirectXTK_Windows10_2022.vcxproj
+│   │       │   DirectXTK_Windows10_2022.vcxproj.filters
+│   │       │   LICENSE
+│   │       │   README.md
+│   │       │   SECURITY.md
+│   │       │   
+│   │       ├───.azuredevops
+│   │       │   ├───pipelines
+│   │       │   │       DirectXTK-GitHub-CMake-Dev17.yml
+│   │       │   │       DirectXTK-GitHub-CMake.yml
+│   │       │   │       DirectXTK-GitHub-Dev17.yml
+│   │       │   │       DirectXTK-GitHub-GDK-Dev17.yml
+│   │       │   │       DirectXTK-GitHub-GDK.yml
+│   │       │   │       DirectXTK-GitHub-MinGW.yml
+│   │       │   │       DirectXTK-GitHub-SDK-prerelease.yml
+│   │       │   │       DirectXTK-GitHub-SDK-release.yml
+│   │       │   │       DirectXTK-GitHub-Test-Dev17.yml
+│   │       │   │       DirectXTK-GitHub-Test.yml
+│   │       │   │       DirectXTK-GitHub-WSL-11.yml
+│   │       │   │       DirectXTK-GitHub-WSL-13.yml
+│   │       │   │       DirectXTK-GitHub.yml
+│   │       │   │       DirectXTK-OneFuzz-Coverage.yml
+│   │       │   │       DirectXTK-OneFuzz.yml
+│   │       │   │       DirectXTK-SDL.yml
+│   │       │   │       
+│   │       │   └───policies
+│   │       │           approvercountpolicy.yml
+│   │       │           
+│   │       ├───.github
+│   │       │   │   dependabot.yml
+│   │       │   │   
+│   │       │   └───workflows
+│   │       │           codeql.yml
+│   │       │           main.yml
+│   │       │           msbuild.yml
+│   │       │           msvc.yml
+│   │       │           test.yml
+│   │       │           uwp.yml
+│   │       │           vcpkg.yml
+│   │       │           win10.yml
+│   │       │           
+│   │       ├───.nuget
+│   │       │       directxtk_desktop_2019.nuspec
+│   │       │       directxtk_desktop_2019.targets
+│   │       │       directxtk_desktop_win10.nuspec
+│   │       │       directxtk_desktop_win10.targets
+│   │       │       directxtk_uwp.nuspec
+│   │       │       directxtk_uwp.targets
+│   │       │       icon.jpg
+│   │       │       
+│   │       ├───Audio
+│   │       │       AudioEngine.cpp
+│   │       │       DynamicSoundEffectInstance.cpp
+│   │       │       SoundCommon.cpp
+│   │       │       SoundCommon.h
+│   │       │       SoundEffect.cpp
+│   │       │       SoundEffectInstance.cpp
+│   │       │       SoundStreamInstance.cpp
+│   │       │       WaveBank.cpp
+│   │       │       WaveBankReader.cpp
+│   │       │       WaveBankReader.h
+│   │       │       WAVFileReader.cpp
+│   │       │       WAVFileReader.h
+│   │       │       
+│   │       ├───Bin
+│   │       │   └───Desktop_2019
+│   │       │       └───x64
+│   │       │           ├───Debug
+│   │       │           │   │   AlphaTestEffect.obj
+│   │       │           │   │   AudioEngine.obj
+│   │       │           │   │   BasicEffect.obj
+│   │       │           │   │   BasicPostProcess.obj
+│   │       │           │   │   BinaryReader.obj
+│   │       │           │   │   BufferHelpers.obj
+│   │       │           │   │   CommonStates.obj
+│   │       │           │   │   DDSTextureLoader.obj
+│   │       │           │   │   DebugEffect.obj
+│   │       │           │   │   DGSLEffect.obj
+│   │       │           │   │   DGSLEffectFactory.obj
+│   │       │           │   │   DirectXHelpers.obj
+│   │       │           │   │   DirectXTK.Build.CppClean.log
+│   │       │           │   │   DirectXTK.lib
+│   │       │           │   │   DirectXTK.lib.recipe
+│   │       │           │   │   DirectXTK.pch
+│   │       │           │   │   DirectXTK.pdb
+│   │       │           │   │   DirectXTK_Desktop_2019.log
+│   │       │           │   │   DirectXTK_Desktop_2019.vcxproj.FileListAbsolute.txt
+│   │       │           │   │   DualPostProcess.obj
+│   │       │           │   │   DualTextureEffect.obj
+│   │       │           │   │   DynamicSoundEffectInstance.obj
+│   │       │           │   │   EffectCommon.obj
+│   │       │           │   │   EffectFactory.obj
+│   │       │           │   │   EnvironmentMapEffect.obj
+│   │       │           │   │   GamePad.obj
+│   │       │           │   │   GeometricPrimitive.obj
+│   │       │           │   │   Geometry.obj
+│   │       │           │   │   GraphicsMemory.obj
+│   │       │           │   │   Keyboard.obj
+│   │       │           │   │   Model.obj
+│   │       │           │   │   ModelLoadCMO.obj
+│   │       │           │   │   ModelLoadSDKMESH.obj
+│   │       │           │   │   ModelLoadVBO.obj
+│   │       │           │   │   Mouse.obj
+│   │       │           │   │   NormalMapEffect.obj
+│   │       │           │   │   PBREffect.obj
+│   │       │           │   │   PBREffectFactory.obj
+│   │       │           │   │   pch.obj
+│   │       │           │   │   PrimitiveBatch.obj
+│   │       │           │   │   ScreenGrab.obj
+│   │       │           │   │   SimpleMath.obj
+│   │       │           │   │   SkinnedEffect.obj
+│   │       │           │   │   SoundCommon.obj
+│   │       │           │   │   SoundEffect.obj
+│   │       │           │   │   SoundEffectInstance.obj
+│   │       │           │   │   SoundStreamInstance.obj
+│   │       │           │   │   SpriteBatch.obj
+│   │       │           │   │   SpriteFont.obj
+│   │       │           │   │   ToneMapPostProcess.obj
+│   │       │           │   │   VertexTypes.obj
+│   │       │           │   │   WaveBank.obj
+│   │       │           │   │   WaveBankReader.obj
+│   │       │           │   │   WAVFileReader.obj
+│   │       │           │   │   WICTextureLoader.obj
+│   │       │           │   │   
+│   │       │           │   └───DirectXT.E0B52AE7.tlog
+│   │       │           │           CL.command.1.tlog
+│   │       │           │           Cl.items.tlog
+│   │       │           │           CL.read.1.tlog
+│   │       │           │           CL.write.1.tlog
+│   │       │           │           DirectXTK_Desktop_2019.lastbuildstate
+│   │       │           │           Lib-link.read.1.tlog
+│   │       │           │           Lib-link.write.1.tlog
+│   │       │           │           Lib.command.1.tlog
+│   │       │           │           
+│   │       │           └───Release
+│   │       │               │   AlphaTestEffect.obj
+│   │       │               │   AudioEngine.obj
+│   │       │               │   BasicEffect.obj
+│   │       │               │   BasicPostProcess.obj
+│   │       │               │   BinaryReader.obj
+│   │       │               │   BufferHelpers.obj
+│   │       │               │   CommonStates.obj
+│   │       │               │   DDSTextureLoader.obj
+│   │       │               │   DebugEffect.obj
+│   │       │               │   DGSLEffect.obj
+│   │       │               │   DGSLEffectFactory.obj
+│   │       │               │   DirectXHelpers.obj
+│   │       │               │   DirectXTK.lib
+│   │       │               │   DirectXTK.lib.recipe
+│   │       │               │   DirectXTK.pch
+│   │       │               │   DirectXTK.pdb
+│   │       │               │   DirectXTK_Desktop_2019.log
+│   │       │               │   DirectXTK_Desktop_2019.vcxproj.FileListAbsolute.txt
+│   │       │               │   DualPostProcess.obj
+│   │       │               │   DualTextureEffect.obj
+│   │       │               │   DynamicSoundEffectInstance.obj
+│   │       │               │   EffectCommon.obj
+│   │       │               │   EffectFactory.obj
+│   │       │               │   EnvironmentMapEffect.obj
+│   │       │               │   GamePad.obj
+│   │       │               │   GeometricPrimitive.obj
+│   │       │               │   Geometry.obj
+│   │       │               │   GraphicsMemory.obj
+│   │       │               │   Keyboard.obj
+│   │       │               │   Model.obj
+│   │       │               │   ModelLoadCMO.obj
+│   │       │               │   ModelLoadSDKMESH.obj
+│   │       │               │   ModelLoadVBO.obj
+│   │       │               │   Mouse.obj
+│   │       │               │   NormalMapEffect.obj
+│   │       │               │   PBREffect.obj
+│   │       │               │   PBREffectFactory.obj
+│   │       │               │   pch.obj
+│   │       │               │   PrimitiveBatch.obj
+│   │       │               │   ScreenGrab.obj
+│   │       │               │   SimpleMath.obj
+│   │       │               │   SkinnedEffect.obj
+│   │       │               │   SoundCommon.obj
+│   │       │               │   SoundEffect.obj
+│   │       │               │   SoundEffectInstance.obj
+│   │       │               │   SoundStreamInstance.obj
+│   │       │               │   SpriteBatch.obj
+│   │       │               │   SpriteFont.obj
+│   │       │               │   ToneMapPostProcess.obj
+│   │       │               │   VertexTypes.obj
+│   │       │               │   WaveBank.obj
+│   │       │               │   WaveBankReader.obj
+│   │       │               │   WAVFileReader.obj
+│   │       │               │   WICTextureLoader.obj
+│   │       │               │   
+│   │       │               └───DirectXT.E0B52AE7.tlog
+│   │       │                       CL.command.1.tlog
+│   │       │                       Cl.items.tlog
+│   │       │                       CL.read.1.tlog
+│   │       │                       CL.write.1.tlog
+│   │       │                       DirectXTK_Desktop_2019.lastbuildstate
+│   │       │                       Lib-link.read.1.tlog
+│   │       │                       Lib-link.write.1.tlog
+│   │       │                       Lib.command.1.tlog
+│   │       │                       
+│   │       ├───build
+│   │       │       CompilerAndLinker.cmake
+│   │       │       CopyASan.targets
+│   │       │       Directory.Build.props
+│   │       │       DirectXTK-config.cmake.in
+│   │       │       DirectXTK.pc.in
+│   │       │       DirectXTK.rc.in
+│   │       │       JoinPaths.cmake
+│   │       │       onefuzz-setup.ps1
+│   │       │       OneFuzzConfig.json
+│   │       │       preparerelease.ps1
+│   │       │       SetupBWOI.cmd
+│   │       │       SetupBWOI.targets
+│   │       │       vcpkg.json
+│   │       │       versioninfo.ps1
+│   │       │       
+│   │       ├───Inc
+│   │       │       Audio.h
+│   │       │       BufferHelpers.h
+│   │       │       CommonStates.h
+│   │       │       DDSTextureLoader.h
+│   │       │       DirectXHelpers.h
+│   │       │       Effects.h
+│   │       │       GamePad.h
+│   │       │       GeometricPrimitive.h
+│   │       │       GraphicsMemory.h
+│   │       │       Keyboard.h
+│   │       │       Model.h
+│   │       │       Mouse.h
+│   │       │       PostProcess.h
+│   │       │       PrimitiveBatch.h
+│   │       │       ScreenGrab.h
+│   │       │       SimpleMath.h
+│   │       │       SimpleMath.inl
+│   │       │       SpriteBatch.h
+│   │       │       SpriteFont.h
+│   │       │       VertexTypes.h
+│   │       │       WICTextureLoader.h
+│   │       │       XboxDDSTextureLoader.h
+│   │       │       
+│   │       ├───MakeSpriteFont
+│   │       │   │   app.config
+│   │       │   │   BitmapImporter.cs
+│   │       │   │   BitmapUtils.cs
+│   │       │   │   CharacterRegion.cs
+│   │       │   │   CommandLineOptions.cs
+│   │       │   │   CommandLineParser.cs
+│   │       │   │   Glyph.cs
+│   │       │   │   GlyphCropper.cs
+│   │       │   │   GlyphPacker.cs
+│   │       │   │   IFontImporter.cs
+│   │       │   │   MakeSpriteFont.csproj
+│   │       │   │   Program.cs
+│   │       │   │   SpriteFontWriter.cs
+│   │       │   │   TrueTypeImporter.cs
+│   │       │   │   
+│   │       │   ├───bin
+│   │       │   │   └───Debug
+│   │       │   ├───obj
+│   │       │   │   └───Debug
+│   │       │   │       │   .NETFramework,Version=v4.7.2.AssemblyAttributes.cs
+│   │       │   │       │   DesignTimeResolveAssemblyReferencesInput.cache
+│   │       │   │       │   MakeSpriteFont.csproj.AssemblyReference.cache
+│   │       │   │       │   
+│   │       │   │       └───TempPE
+│   │       │   └───Properties
+│   │       │           AssemblyInfo.cs
+│   │       │           
+│   │       ├───Src
+│   │       │   │   AlignedNew.h
+│   │       │   │   AlphaTestEffect.cpp
+│   │       │   │   BasicEffect.cpp
+│   │       │   │   BasicPostProcess.cpp
+│   │       │   │   Bezier.h
+│   │       │   │   BinaryReader.cpp
+│   │       │   │   BinaryReader.h
+│   │       │   │   BufferHelpers.cpp
+│   │       │   │   CMO.h
+│   │       │   │   CommonStates.cpp
+│   │       │   │   DDS.h
+│   │       │   │   DDSTextureLoader.cpp
+│   │       │   │   DebugEffect.cpp
+│   │       │   │   DemandCreate.h
+│   │       │   │   DGSLEffect.cpp
+│   │       │   │   DGSLEffectFactory.cpp
+│   │       │   │   DirectXHelpers.cpp
+│   │       │   │   DualPostProcess.cpp
+│   │       │   │   DualTextureEffect.cpp
+│   │       │   │   EffectCommon.cpp
+│   │       │   │   EffectCommon.h
+│   │       │   │   EffectFactory.cpp
+│   │       │   │   EnvironmentMapEffect.cpp
+│   │       │   │   GamePad.cpp
+│   │       │   │   GeometricPrimitive.cpp
+│   │       │   │   Geometry.cpp
+│   │       │   │   Geometry.h
+│   │       │   │   GraphicsMemory.cpp
+│   │       │   │   Keyboard.cpp
+│   │       │   │   LoaderHelpers.h
+│   │       │   │   Model.cpp
+│   │       │   │   ModelLoadCMO.cpp
+│   │       │   │   ModelLoadSDKMESH.cpp
+│   │       │   │   ModelLoadVBO.cpp
+│   │       │   │   Mouse.cpp
+│   │       │   │   NormalMapEffect.cpp
+│   │       │   │   PBREffect.cpp
+│   │       │   │   PBREffectFactory.cpp
+│   │       │   │   pch.cpp
+│   │       │   │   pch.h
+│   │       │   │   PlatformHelpers.h
+│   │       │   │   PrimitiveBatch.cpp
+│   │       │   │   ScreenGrab.cpp
+│   │       │   │   SDKMesh.h
+│   │       │   │   SharedResourcePool.h
+│   │       │   │   SimpleMath.cpp
+│   │       │   │   SkinnedEffect.cpp
+│   │       │   │   SpriteBatch.cpp
+│   │       │   │   SpriteFont.cpp
+│   │       │   │   TeapotData.inc
+│   │       │   │   ToneMapPostProcess.cpp
+│   │       │   │   vbo.h
+│   │       │   │   VertexTypes.cpp
+│   │       │   │   WICTextureLoader.cpp
+│   │       │   │   XboxDDSTextureLoader.cpp
+│   │       │   │   
+│   │       │   └───Shaders
+│   │       │       │   AlphaTestEffect.fx
+│   │       │       │   BasicEffect.fx
+│   │       │       │   Common.fxh
+│   │       │       │   CompileShaders.cmd
+│   │       │       │   DebugEffect.fx
+│   │       │       │   DGSLEffect.fx
+│   │       │       │   DGSLLambert.hlsl
+│   │       │       │   DGSLPhong.hlsl
+│   │       │       │   DGSLUnlit.hlsl
+│   │       │       │   DualTextureEffect.fx
+│   │       │       │   EnvironmentMapEffect.fx
+│   │       │       │   Lighting.fxh
+│   │       │       │   NormalMapEffect.fx
+│   │       │       │   PBRCommon.fxh
+│   │       │       │   PBREffect.fx
+│   │       │       │   PixelPacking_Velocity.hlsli
+│   │       │       │   PostProcess.fx
+│   │       │       │   SkinnedEffect.fx
+│   │       │       │   Skinning.fxh
+│   │       │       │   SpriteEffect.fx
+│   │       │       │   Structures.fxh
+│   │       │       │   ToneMap.fx
+│   │       │       │   Utilities.fxh
+│   │       │       │   
+│   │       │       └───Compiled
+│   │       │               AlphaTestEffect_PSAlphaTestEqNe.inc
+│   │       │               AlphaTestEffect_PSAlphaTestEqNe.pdb
+│   │       │               AlphaTestEffect_PSAlphaTestEqNeNoFog.inc
+│   │       │               AlphaTestEffect_PSAlphaTestEqNeNoFog.pdb
+│   │       │               AlphaTestEffect_PSAlphaTestLtGt.inc
+│   │       │               AlphaTestEffect_PSAlphaTestLtGt.pdb
+│   │       │               AlphaTestEffect_PSAlphaTestLtGtNoFog.inc
+│   │       │               AlphaTestEffect_PSAlphaTestLtGtNoFog.pdb
+│   │       │               AlphaTestEffect_VSAlphaTest.inc
+│   │       │               AlphaTestEffect_VSAlphaTest.pdb
+│   │       │               AlphaTestEffect_VSAlphaTestNoFog.inc
+│   │       │               AlphaTestEffect_VSAlphaTestNoFog.pdb
+│   │       │               AlphaTestEffect_VSAlphaTestVc.inc
+│   │       │               AlphaTestEffect_VSAlphaTestVc.pdb
+│   │       │               AlphaTestEffect_VSAlphaTestVcNoFog.inc
+│   │       │               AlphaTestEffect_VSAlphaTestVcNoFog.pdb
+│   │       │               BasicEffect_PSBasic.inc
+│   │       │               BasicEffect_PSBasic.pdb
+│   │       │               BasicEffect_PSBasicNoFog.inc
+│   │       │               BasicEffect_PSBasicNoFog.pdb
+│   │       │               BasicEffect_PSBasicPixelLighting.inc
+│   │       │               BasicEffect_PSBasicPixelLighting.pdb
+│   │       │               BasicEffect_PSBasicPixelLightingTx.inc
+│   │       │               BasicEffect_PSBasicPixelLightingTx.pdb
+│   │       │               BasicEffect_PSBasicTx.inc
+│   │       │               BasicEffect_PSBasicTx.pdb
+│   │       │               BasicEffect_PSBasicTxNoFog.inc
+│   │       │               BasicEffect_PSBasicTxNoFog.pdb
+│   │       │               BasicEffect_PSBasicVertexLighting.inc
+│   │       │               BasicEffect_PSBasicVertexLighting.pdb
+│   │       │               BasicEffect_PSBasicVertexLightingNoFog.inc
+│   │       │               BasicEffect_PSBasicVertexLightingNoFog.pdb
+│   │       │               BasicEffect_PSBasicVertexLightingTx.inc
+│   │       │               BasicEffect_PSBasicVertexLightingTx.pdb
+│   │       │               BasicEffect_PSBasicVertexLightingTxNoFog.inc
+│   │       │               BasicEffect_PSBasicVertexLightingTxNoFog.pdb
+│   │       │               BasicEffect_VSBasic.inc
+│   │       │               BasicEffect_VSBasic.pdb
+│   │       │               BasicEffect_VSBasicNoFog.inc
+│   │       │               BasicEffect_VSBasicNoFog.pdb
+│   │       │               BasicEffect_VSBasicOneLight.inc
+│   │       │               BasicEffect_VSBasicOneLight.pdb
+│   │       │               BasicEffect_VSBasicOneLightBn.inc
+│   │       │               BasicEffect_VSBasicOneLightBn.pdb
+│   │       │               BasicEffect_VSBasicOneLightTx.inc
+│   │       │               BasicEffect_VSBasicOneLightTx.pdb
+│   │       │               BasicEffect_VSBasicOneLightTxBn.inc
+│   │       │               BasicEffect_VSBasicOneLightTxBn.pdb
+│   │       │               BasicEffect_VSBasicOneLightTxVc.inc
+│   │       │               BasicEffect_VSBasicOneLightTxVc.pdb
+│   │       │               BasicEffect_VSBasicOneLightTxVcBn.inc
+│   │       │               BasicEffect_VSBasicOneLightTxVcBn.pdb
+│   │       │               BasicEffect_VSBasicOneLightVc.inc
+│   │       │               BasicEffect_VSBasicOneLightVc.pdb
+│   │       │               BasicEffect_VSBasicOneLightVcBn.inc
+│   │       │               BasicEffect_VSBasicOneLightVcBn.pdb
+│   │       │               BasicEffect_VSBasicPixelLighting.inc
+│   │       │               BasicEffect_VSBasicPixelLighting.pdb
+│   │       │               BasicEffect_VSBasicPixelLightingBn.inc
+│   │       │               BasicEffect_VSBasicPixelLightingBn.pdb
+│   │       │               BasicEffect_VSBasicPixelLightingTx.inc
+│   │       │               BasicEffect_VSBasicPixelLightingTx.pdb
+│   │       │               BasicEffect_VSBasicPixelLightingTxBn.inc
+│   │       │               BasicEffect_VSBasicPixelLightingTxBn.pdb
+│   │       │               BasicEffect_VSBasicPixelLightingTxVc.inc
+│   │       │               BasicEffect_VSBasicPixelLightingTxVc.pdb
+│   │       │               BasicEffect_VSBasicPixelLightingTxVcBn.inc
+│   │       │               BasicEffect_VSBasicPixelLightingTxVcBn.pdb
+│   │       │               BasicEffect_VSBasicPixelLightingVc.inc
+│   │       │               BasicEffect_VSBasicPixelLightingVc.pdb
+│   │       │               BasicEffect_VSBasicPixelLightingVcBn.inc
+│   │       │               BasicEffect_VSBasicPixelLightingVcBn.pdb
+│   │       │               BasicEffect_VSBasicTx.inc
+│   │       │               BasicEffect_VSBasicTx.pdb
+│   │       │               BasicEffect_VSBasicTxNoFog.inc
+│   │       │               BasicEffect_VSBasicTxNoFog.pdb
+│   │       │               BasicEffect_VSBasicTxVc.inc
+│   │       │               BasicEffect_VSBasicTxVc.pdb
+│   │       │               BasicEffect_VSBasicTxVcNoFog.inc
+│   │       │               BasicEffect_VSBasicTxVcNoFog.pdb
+│   │       │               BasicEffect_VSBasicVc.inc
+│   │       │               BasicEffect_VSBasicVc.pdb
+│   │       │               BasicEffect_VSBasicVcNoFog.inc
+│   │       │               BasicEffect_VSBasicVcNoFog.pdb
+│   │       │               BasicEffect_VSBasicVertexLighting.inc
+│   │       │               BasicEffect_VSBasicVertexLighting.pdb
+│   │       │               BasicEffect_VSBasicVertexLightingBn.inc
+│   │       │               BasicEffect_VSBasicVertexLightingBn.pdb
+│   │       │               BasicEffect_VSBasicVertexLightingTx.inc
+│   │       │               BasicEffect_VSBasicVertexLightingTx.pdb
+│   │       │               BasicEffect_VSBasicVertexLightingTxBn.inc
+│   │       │               BasicEffect_VSBasicVertexLightingTxBn.pdb
+│   │       │               BasicEffect_VSBasicVertexLightingTxVc.inc
+│   │       │               BasicEffect_VSBasicVertexLightingTxVc.pdb
+│   │       │               BasicEffect_VSBasicVertexLightingTxVcBn.inc
+│   │       │               BasicEffect_VSBasicVertexLightingTxVcBn.pdb
+│   │       │               BasicEffect_VSBasicVertexLightingVc.inc
+│   │       │               BasicEffect_VSBasicVertexLightingVc.pdb
+│   │       │               BasicEffect_VSBasicVertexLightingVcBn.inc
+│   │       │               BasicEffect_VSBasicVertexLightingVcBn.pdb
+│   │       │               DebugEffect_PSHemiAmbient.inc
+│   │       │               DebugEffect_PSHemiAmbient.pdb
+│   │       │               DebugEffect_PSRGBBiTangents.inc
+│   │       │               DebugEffect_PSRGBBiTangents.pdb
+│   │       │               DebugEffect_PSRGBNormals.inc
+│   │       │               DebugEffect_PSRGBNormals.pdb
+│   │       │               DebugEffect_PSRGBTangents.inc
+│   │       │               DebugEffect_PSRGBTangents.pdb
+│   │       │               DebugEffect_VSDebug.inc
+│   │       │               DebugEffect_VSDebug.pdb
+│   │       │               DebugEffect_VSDebugBn.inc
+│   │       │               DebugEffect_VSDebugBn.pdb
+│   │       │               DebugEffect_VSDebugBnInst.inc
+│   │       │               DebugEffect_VSDebugBnInst.pdb
+│   │       │               DebugEffect_VSDebugInst.inc
+│   │       │               DebugEffect_VSDebugInst.pdb
+│   │       │               DebugEffect_VSDebugVc.inc
+│   │       │               DebugEffect_VSDebugVc.pdb
+│   │       │               DebugEffect_VSDebugVcBn.inc
+│   │       │               DebugEffect_VSDebugVcBn.pdb
+│   │       │               DebugEffect_VSDebugVcBnInst.inc
+│   │       │               DebugEffect_VSDebugVcBnInst.pdb
+│   │       │               DebugEffect_VSDebugVcInst.inc
+│   │       │               DebugEffect_VSDebugVcInst.pdb
+│   │       │               DGSLEffect_main.inc
+│   │       │               DGSLEffect_main.pdb
+│   │       │               DGSLEffect_main1Bones.inc
+│   │       │               DGSLEffect_main1Bones.pdb
+│   │       │               DGSLEffect_main1BonesVc.inc
+│   │       │               DGSLEffect_main1BonesVc.pdb
+│   │       │               DGSLEffect_main2Bones.inc
+│   │       │               DGSLEffect_main2Bones.pdb
+│   │       │               DGSLEffect_main2BonesVc.inc
+│   │       │               DGSLEffect_main2BonesVc.pdb
+│   │       │               DGSLEffect_main4Bones.inc
+│   │       │               DGSLEffect_main4Bones.pdb
+│   │       │               DGSLEffect_main4BonesVc.inc
+│   │       │               DGSLEffect_main4BonesVc.pdb
+│   │       │               DGSLEffect_mainVc.inc
+│   │       │               DGSLEffect_mainVc.pdb
+│   │       │               DGSLLambert_main.inc
+│   │       │               DGSLLambert_main.pdb
+│   │       │               DGSLLambert_mainTk.inc
+│   │       │               DGSLLambert_mainTk.pdb
+│   │       │               DGSLLambert_mainTx.inc
+│   │       │               DGSLLambert_mainTx.pdb
+│   │       │               DGSLLambert_mainTxTk.inc
+│   │       │               DGSLLambert_mainTxTk.pdb
+│   │       │               DGSLPhong_main.inc
+│   │       │               DGSLPhong_main.pdb
+│   │       │               DGSLPhong_mainTk.inc
+│   │       │               DGSLPhong_mainTk.pdb
+│   │       │               DGSLPhong_mainTx.inc
+│   │       │               DGSLPhong_mainTx.pdb
+│   │       │               DGSLPhong_mainTxTk.inc
+│   │       │               DGSLPhong_mainTxTk.pdb
+│   │       │               DGSLUnlit_main.inc
+│   │       │               DGSLUnlit_main.pdb
+│   │       │               DGSLUnlit_mainTk.inc
+│   │       │               DGSLUnlit_mainTk.pdb
+│   │       │               DGSLUnlit_mainTx.inc
+│   │       │               DGSLUnlit_mainTx.pdb
+│   │       │               DGSLUnlit_mainTxTk.inc
+│   │       │               DGSLUnlit_mainTxTk.pdb
+│   │       │               DualTextureEffect_PSDualTexture.inc
+│   │       │               DualTextureEffect_PSDualTexture.pdb
+│   │       │               DualTextureEffect_PSDualTextureNoFog.inc
+│   │       │               DualTextureEffect_PSDualTextureNoFog.pdb
+│   │       │               DualTextureEffect_VSDualTexture.inc
+│   │       │               DualTextureEffect_VSDualTexture.pdb
+│   │       │               DualTextureEffect_VSDualTextureNoFog.inc
+│   │       │               DualTextureEffect_VSDualTextureNoFog.pdb
+│   │       │               DualTextureEffect_VSDualTextureVc.inc
+│   │       │               DualTextureEffect_VSDualTextureVc.pdb
+│   │       │               DualTextureEffect_VSDualTextureVcNoFog.inc
+│   │       │               DualTextureEffect_VSDualTextureVcNoFog.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMap.inc
+│   │       │               EnvironmentMapEffect_PSEnvMap.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLighting.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLighting.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingFresnel.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingFresnel.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingFresnelNoFog.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingFresnelNoFog.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingNoFog.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingNoFog.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapNoFog.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapNoFog.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapPixelLighting.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapPixelLighting.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapPixelLightingFresnel.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapPixelLightingFresnel.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapPixelLightingFresnelNoFog.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapPixelLightingFresnelNoFog.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapPixelLightingNoFog.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapPixelLightingNoFog.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapSpecular.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapSpecular.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapSpecularNoFog.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapSpecularNoFog.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapSpherePixelLighting.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapSpherePixelLighting.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapSpherePixelLightingFresnel.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapSpherePixelLightingFresnel.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapSpherePixelLightingFresnelNoFog.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapSpherePixelLightingFresnelNoFog.pdb
+│   │       │               EnvironmentMapEffect_PSEnvMapSpherePixelLightingNoFog.inc
+│   │       │               EnvironmentMapEffect_PSEnvMapSpherePixelLightingNoFog.pdb
+│   │       │               EnvironmentMapEffect_VSEnvMap.inc
+│   │       │               EnvironmentMapEffect_VSEnvMap.pdb
+│   │       │               EnvironmentMapEffect_VSEnvMapBn.inc
+│   │       │               EnvironmentMapEffect_VSEnvMapBn.pdb
+│   │       │               EnvironmentMapEffect_VSEnvMapFresnel.inc
+│   │       │               EnvironmentMapEffect_VSEnvMapFresnel.pdb
+│   │       │               EnvironmentMapEffect_VSEnvMapFresnelBn.inc
+│   │       │               EnvironmentMapEffect_VSEnvMapFresnelBn.pdb
+│   │       │               EnvironmentMapEffect_VSEnvMapOneLight.inc
+│   │       │               EnvironmentMapEffect_VSEnvMapOneLight.pdb
+│   │       │               EnvironmentMapEffect_VSEnvMapOneLightBn.inc
+│   │       │               EnvironmentMapEffect_VSEnvMapOneLightBn.pdb
+│   │       │               EnvironmentMapEffect_VSEnvMapOneLightFresnel.inc
+│   │       │               EnvironmentMapEffect_VSEnvMapOneLightFresnel.pdb
+│   │       │               EnvironmentMapEffect_VSEnvMapOneLightFresnelBn.inc
+│   │       │               EnvironmentMapEffect_VSEnvMapOneLightFresnelBn.pdb
+│   │       │               EnvironmentMapEffect_VSEnvMapPixelLighting.inc
+│   │       │               EnvironmentMapEffect_VSEnvMapPixelLighting.pdb
+│   │       │               EnvironmentMapEffect_VSEnvMapPixelLightingBn.inc
+│   │       │               EnvironmentMapEffect_VSEnvMapPixelLightingBn.pdb
+│   │       │               EnvironmentMapEffect_VSEnvMapPixelLightingBnSM4.inc
+│   │       │               EnvironmentMapEffect_VSEnvMapPixelLightingBnSM4.pdb
+│   │       │               EnvironmentMapEffect_VSEnvMapPixelLightingSM4.inc
+│   │       │               EnvironmentMapEffect_VSEnvMapPixelLightingSM4.pdb
+│   │       │               NormalMapEffect_PSNormalPixelLightingTx.inc
+│   │       │               NormalMapEffect_PSNormalPixelLightingTx.pdb
+│   │       │               NormalMapEffect_PSNormalPixelLightingTxNoFog.inc
+│   │       │               NormalMapEffect_PSNormalPixelLightingTxNoFog.pdb
+│   │       │               NormalMapEffect_PSNormalPixelLightingTxNoFogSpec.inc
+│   │       │               NormalMapEffect_PSNormalPixelLightingTxNoFogSpec.pdb
+│   │       │               NormalMapEffect_PSNormalPixelLightingTxNoSpec.inc
+│   │       │               NormalMapEffect_PSNormalPixelLightingTxNoSpec.pdb
+│   │       │               NormalMapEffect_VSNormalPixelLightingTx.inc
+│   │       │               NormalMapEffect_VSNormalPixelLightingTx.pdb
+│   │       │               NormalMapEffect_VSNormalPixelLightingTxBn.inc
+│   │       │               NormalMapEffect_VSNormalPixelLightingTxBn.pdb
+│   │       │               NormalMapEffect_VSNormalPixelLightingTxBnInst.inc
+│   │       │               NormalMapEffect_VSNormalPixelLightingTxBnInst.pdb
+│   │       │               NormalMapEffect_VSNormalPixelLightingTxInst.inc
+│   │       │               NormalMapEffect_VSNormalPixelLightingTxInst.pdb
+│   │       │               NormalMapEffect_VSNormalPixelLightingTxVc.inc
+│   │       │               NormalMapEffect_VSNormalPixelLightingTxVc.pdb
+│   │       │               NormalMapEffect_VSNormalPixelLightingTxVcBn.inc
+│   │       │               NormalMapEffect_VSNormalPixelLightingTxVcBn.pdb
+│   │       │               NormalMapEffect_VSNormalPixelLightingTxVcBnInst.inc
+│   │       │               NormalMapEffect_VSNormalPixelLightingTxVcBnInst.pdb
+│   │       │               NormalMapEffect_VSNormalPixelLightingTxVcInst.inc
+│   │       │               NormalMapEffect_VSNormalPixelLightingTxVcInst.pdb
+│   │       │               NormalMapEffect_VSSkinnedPixelLightingTx.inc
+│   │       │               NormalMapEffect_VSSkinnedPixelLightingTx.pdb
+│   │       │               NormalMapEffect_VSSkinnedPixelLightingTxBn.inc
+│   │       │               NormalMapEffect_VSSkinnedPixelLightingTxBn.pdb
+│   │       │               PBREffect_PSConstant.inc
+│   │       │               PBREffect_PSConstant.pdb
+│   │       │               PBREffect_PSTextured.inc
+│   │       │               PBREffect_PSTextured.pdb
+│   │       │               PBREffect_PSTexturedEmissive.inc
+│   │       │               PBREffect_PSTexturedEmissive.pdb
+│   │       │               PBREffect_PSTexturedEmissiveVelocity.inc
+│   │       │               PBREffect_PSTexturedEmissiveVelocity.pdb
+│   │       │               PBREffect_PSTexturedVelocity.inc
+│   │       │               PBREffect_PSTexturedVelocity.pdb
+│   │       │               PBREffect_VSConstant.inc
+│   │       │               PBREffect_VSConstant.pdb
+│   │       │               PBREffect_VSConstantBn.inc
+│   │       │               PBREffect_VSConstantBn.pdb
+│   │       │               PBREffect_VSConstantBnInst.inc
+│   │       │               PBREffect_VSConstantBnInst.pdb
+│   │       │               PBREffect_VSConstantInst.inc
+│   │       │               PBREffect_VSConstantInst.pdb
+│   │       │               PBREffect_VSConstantVelocity.inc
+│   │       │               PBREffect_VSConstantVelocity.pdb
+│   │       │               PBREffect_VSConstantVelocityBn.inc
+│   │       │               PBREffect_VSConstantVelocityBn.pdb
+│   │       │               PBREffect_VSSkinned.inc
+│   │       │               PBREffect_VSSkinned.pdb
+│   │       │               PBREffect_VSSkinnedBn.inc
+│   │       │               PBREffect_VSSkinnedBn.pdb
+│   │       │               PostProcess_PSBloomBlur.inc
+│   │       │               PostProcess_PSBloomBlur.pdb
+│   │       │               PostProcess_PSBloomCombine.inc
+│   │       │               PostProcess_PSBloomCombine.pdb
+│   │       │               PostProcess_PSBloomExtract.inc
+│   │       │               PostProcess_PSBloomExtract.pdb
+│   │       │               PostProcess_PSCopy.inc
+│   │       │               PostProcess_PSCopy.pdb
+│   │       │               PostProcess_PSDownScale2x2.inc
+│   │       │               PostProcess_PSDownScale2x2.pdb
+│   │       │               PostProcess_PSDownScale4x4.inc
+│   │       │               PostProcess_PSDownScale4x4.pdb
+│   │       │               PostProcess_PSGaussianBlur5x5.inc
+│   │       │               PostProcess_PSGaussianBlur5x5.pdb
+│   │       │               PostProcess_PSMerge.inc
+│   │       │               PostProcess_PSMerge.pdb
+│   │       │               PostProcess_PSMonochrome.inc
+│   │       │               PostProcess_PSMonochrome.pdb
+│   │       │               PostProcess_PSSepia.inc
+│   │       │               PostProcess_PSSepia.pdb
+│   │       │               PostProcess_VSQuad.inc
+│   │       │               PostProcess_VSQuad.pdb
+│   │       │               SkinnedEffect_PSSkinnedPixelLighting.inc
+│   │       │               SkinnedEffect_PSSkinnedPixelLighting.pdb
+│   │       │               SkinnedEffect_PSSkinnedVertexLighting.inc
+│   │       │               SkinnedEffect_PSSkinnedVertexLighting.pdb
+│   │       │               SkinnedEffect_PSSkinnedVertexLightingNoFog.inc
+│   │       │               SkinnedEffect_PSSkinnedVertexLightingNoFog.pdb
+│   │       │               SkinnedEffect_VSSkinnedOneLightFourBones.inc
+│   │       │               SkinnedEffect_VSSkinnedOneLightFourBones.pdb
+│   │       │               SkinnedEffect_VSSkinnedOneLightFourBonesBn.inc
+│   │       │               SkinnedEffect_VSSkinnedOneLightFourBonesBn.pdb
+│   │       │               SkinnedEffect_VSSkinnedOneLightOneBone.inc
+│   │       │               SkinnedEffect_VSSkinnedOneLightOneBone.pdb
+│   │       │               SkinnedEffect_VSSkinnedOneLightOneBoneBn.inc
+│   │       │               SkinnedEffect_VSSkinnedOneLightOneBoneBn.pdb
+│   │       │               SkinnedEffect_VSSkinnedOneLightTwoBones.inc
+│   │       │               SkinnedEffect_VSSkinnedOneLightTwoBones.pdb
+│   │       │               SkinnedEffect_VSSkinnedOneLightTwoBonesBn.inc
+│   │       │               SkinnedEffect_VSSkinnedOneLightTwoBonesBn.pdb
+│   │       │               SkinnedEffect_VSSkinnedPixelLightingFourBones.inc
+│   │       │               SkinnedEffect_VSSkinnedPixelLightingFourBones.pdb
+│   │       │               SkinnedEffect_VSSkinnedPixelLightingFourBonesBn.inc
+│   │       │               SkinnedEffect_VSSkinnedPixelLightingFourBonesBn.pdb
+│   │       │               SkinnedEffect_VSSkinnedPixelLightingOneBone.inc
+│   │       │               SkinnedEffect_VSSkinnedPixelLightingOneBone.pdb
+│   │       │               SkinnedEffect_VSSkinnedPixelLightingOneBoneBn.inc
+│   │       │               SkinnedEffect_VSSkinnedPixelLightingOneBoneBn.pdb
+│   │       │               SkinnedEffect_VSSkinnedPixelLightingTwoBones.inc
+│   │       │               SkinnedEffect_VSSkinnedPixelLightingTwoBones.pdb
+│   │       │               SkinnedEffect_VSSkinnedPixelLightingTwoBonesBn.inc
+│   │       │               SkinnedEffect_VSSkinnedPixelLightingTwoBonesBn.pdb
+│   │       │               SkinnedEffect_VSSkinnedVertexLightingFourBones.inc
+│   │       │               SkinnedEffect_VSSkinnedVertexLightingFourBones.pdb
+│   │       │               SkinnedEffect_VSSkinnedVertexLightingFourBonesBn.inc
+│   │       │               SkinnedEffect_VSSkinnedVertexLightingFourBonesBn.pdb
+│   │       │               SkinnedEffect_VSSkinnedVertexLightingOneBone.inc
+│   │       │               SkinnedEffect_VSSkinnedVertexLightingOneBone.pdb
+│   │       │               SkinnedEffect_VSSkinnedVertexLightingOneBoneBn.inc
+│   │       │               SkinnedEffect_VSSkinnedVertexLightingOneBoneBn.pdb
+│   │       │               SkinnedEffect_VSSkinnedVertexLightingTwoBones.inc
+│   │       │               SkinnedEffect_VSSkinnedVertexLightingTwoBones.pdb
+│   │       │               SkinnedEffect_VSSkinnedVertexLightingTwoBonesBn.inc
+│   │       │               SkinnedEffect_VSSkinnedVertexLightingTwoBonesBn.pdb
+│   │       │               SpriteEffect_SpritePixelShader.inc
+│   │       │               SpriteEffect_SpritePixelShader.pdb
+│   │       │               SpriteEffect_SpriteVertexShader.inc
+│   │       │               SpriteEffect_SpriteVertexShader.pdb
+│   │       │               ToneMap_PSACESFilmic.inc
+│   │       │               ToneMap_PSACESFilmic.pdb
+│   │       │               ToneMap_PSACESFilmic_SRGB.inc
+│   │       │               ToneMap_PSACESFilmic_SRGB.pdb
+│   │       │               ToneMap_PSCopy.inc
+│   │       │               ToneMap_PSCopy.pdb
+│   │       │               ToneMap_PSHDR10.inc
+│   │       │               ToneMap_PSHDR10.pdb
+│   │       │               ToneMap_PSReinhard.inc
+│   │       │               ToneMap_PSReinhard.pdb
+│   │       │               ToneMap_PSReinhard_SRGB.inc
+│   │       │               ToneMap_PSReinhard_SRGB.pdb
+│   │       │               ToneMap_PSSaturate.inc
+│   │       │               ToneMap_PSSaturate.pdb
+│   │       │               ToneMap_PSSaturate_SRGB.inc
+│   │       │               ToneMap_PSSaturate_SRGB.pdb
+│   │       │               ToneMap_PS_SRGB.inc
+│   │       │               ToneMap_PS_SRGB.pdb
+│   │       │               ToneMap_VSQuad.inc
+│   │       │               ToneMap_VSQuad.pdb
+│   │       │               
+│   │       └───XWBTool
+│   │               CmdLineHelpers.h
+│   │               directx.ico
+│   │               settings.manifest
+│   │               xwbtool.cpp
+│   │               xwbtool.rc
+│   │               xwbtool_Desktop_2019.vcxproj
+│   │               xwbtool_Desktop_2019.vcxproj.filters
+│   │               XWBTool_Desktop_2019.vcxproj.user
+│   │               xwbtool_Desktop_2022.vcxproj
+│   │               xwbtool_Desktop_2022.vcxproj.filters
+│   │               
+│   ├───imgui
+│   │       imconfig.h
+│   │       imgui.cpp
+│   │       imgui.h
+│   │       imgui_draw.cpp
+│   │       imgui_impl_dx11.cpp
+│   │       imgui_impl_dx11.h
+│   │       imgui_impl_win32.cpp
+│   │       imgui_impl_win32.h
+│   │       imgui_internal.h
+│   │       imgui_ja_gryph_ranges.cpp
+│   │       imgui_widgets.cpp
+│   │       imstb_rectpack.h
+│   │       imstb_textedit.h
+│   │       imstb_truetype.h
+│   │       
+│   └───json-develop
+│       └───json-develop
+│           ├───.github
+│           │   ├───external_ci
+│           │   ├───ISSUE_TEMPLATE
+│           │   └───workflows
+│           ├───.reuse
+│           │   └───templates
+│           ├───cmake
+│           │   ├───requirements
+│           │   └───scripts
+│           ├───docs
+│           │   ├───docset
+│           │   └───mkdocs
+│           │       ├───docs
+│           │       │   ├───api
+│           │       │   │   ├───adl_serializer
+│           │       │   │   ├───basic_json
+│           │       │   │   ├───byte_container_with_subtype
+│           │       │   │   ├───json_pointer
+│           │       │   │   ├───json_sax
+│           │       │   │   └───macros
+│           │       │   ├───community
+│           │       │   ├───css
+│           │       │   ├───examples
+│           │       │   ├───features
+│           │       │   │   ├───binary_formats
+│           │       │   │   ├───element_access
+│           │       │   │   ├───parsing
+│           │       │   │   └───types
+│           │       │   ├───home
+│           │       │   ├───images
+│           │       │   │   └───package_managers
+│           │       │   └───integration
+│           │       │       ├───bazel
+│           │       │       ├───cget
+│           │       │       ├───conan
+│           │       │       ├───conda
+│           │       │       ├───cpm
+│           │       │       ├───homebrew
+│           │       │       ├───hunter
+│           │       │       ├───macports
+│           │       │       ├───meson
+│           │       │       ├───nuget
+│           │       │       ├───spack
+│           │       │       ├───vcpkg
+│           │       │       └───xmake
+│           │       ├───includes
+│           │       └───scripts
+│           ├───include
+│           │   └───nlohmann
+│           │       ├───detail
+│           │       │   ├───conversions
+│           │       │   ├───input
+│           │       │   ├───iterators
+│           │       │   ├───meta
+│           │       │   │   └───call_std
+│           │       │   └───output
+│           │       └───thirdparty
+│           │           └───hedley
+│           ├───LICENSES
+│           ├───single_include
+│           │   └───nlohmann
+│           ├───src
+│           │   └───modules
+│           ├───tests
+│           │   ├───abi
+│           │   │   ├───config
+│           │   │   ├───diag
+│           │   │   ├───include
+│           │   │   │   └───nlohmann
+│           │   │   └───inline_ns
+│           │   ├───benchmarks
+│           │   │   └───src
+│           │   ├───cmake_add_subdirectory
+│           │   │   └───project
+│           │   ├───cmake_fetch_content
+│           │   │   └───project
+│           │   ├───cmake_fetch_content2
+│           │   │   └───project
+│           │   ├───cmake_import
+│           │   │   └───project
+│           │   ├───cmake_import_minver
+│           │   │   └───project
+│           │   ├───cmake_target_include_directories
+│           │   │   └───project
+│           │   ├───cuda_example
+│           │   ├───module_cpp20
+│           │   ├───reports
+│           │   │   ├───2016-08-29-fuzz
+│           │   │   ├───2016-09-09-nativejson_benchmark
+│           │   │   └───2016-10-02-fuzz
+│           │   ├───src
+│           │   └───thirdparty
+│           │       ├───doctest
+│           │       ├───fifo_map
+│           │       ├───Fuzzer
+│           │       │   ├───afl
+│           │       │   ├───standalone
+│           │       │   └───test
+│           │       │       ├───no-coverage
+│           │       │       ├───ubsan
+│           │       │       ├───uninstrumented
+│           │       │       └───unit
+│           │       └───imapdl
+│           └───tools
+│               ├───amalgamate
+│               ├───astyle
+│               ├───gdb_pretty_printer
+│               ├───generate_natvis
+│               ├───macro_builder
+│               └───serve_header
+├───glTF-Sample-Models-main
+│   ├───1.0
+│   │   ├───2CylinderEngine
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───Avocado
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───BarramundiFish
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───Box
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───BoxAnimated
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───BoxSemantics
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───BoxTextured
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───BoxWithoutIndices
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───BrainStem
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───Buggy
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───CesiumMan
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───CesiumMilkTruck
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───Duck
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───GearboxAssy
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───Monster
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───ReciprocatingSaw
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───RiggedFigure
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───RiggedSimple
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   ├───SmilingFace
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───VC
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-MaterialsCommon
+│   │   │   └───screenshot
+│   │   └───WalkingLady
+│   │       ├───glTF
+│   │       ├───glTF-Binary
+│   │       ├───glTF-Embedded
+│   │       ├───glTF-MaterialsCommon
+│   │       └───screenshot
+│   ├───2.0
+│   │   ├───2CylinderEngine
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───ABeautifulGame
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───AlphaBlendModeTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───AnimatedCube
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───AnimatedMorphCube
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Quantized
+│   │   │   └───screenshot
+│   │   ├───AnimatedMorphSphere
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───AnimatedTriangle
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───AntiqueCamera
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───AttenuationTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───Avocado
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   ├───glTF-Quantized
+│   │   │   └───screenshot
+│   │   ├───BarramundiFish
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   └───screenshot
+│   │   ├───BoomBox
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   └───screenshot
+│   │   ├───BoomBoxWithAxes
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───Box
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───Box With Spaces
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───BoxAnimated
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───BoxInterleaved
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───BoxTextured
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───BoxTexturedNonPowerOfTwo
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───BoxVertexColors
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───BrainStem
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-Meshopt
+│   │   │   └───screenshot
+│   │   ├───Buggy
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───Cameras
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───CarbonFibre
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───CesiumMan
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───CesiumMilkTruck
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───ClearCoatCarPaint
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───ClearcoatRing
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───ClearcoatSphere
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───ClearCoatTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───ClearcoatWicker
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───Corset
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   └───screenshot
+│   │   ├───Cube
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───DamagedHelmet
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───DirectionalLight
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───DragonAttenuation
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Meshopt
+│   │   │   └───screenshot
+│   │   ├───Duck
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   ├───glTF-Embedded
+│   │   │   ├───glTF-Quantized
+│   │   │   └───screenshot
+│   │   ├───EmissiveStrengthTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───EnvironmentTest
+│   │   │   ├───glTF
+│   │   │   │   └───EnvironmentTest_images
+│   │   │   ├───glTF-IBL
+│   │   │   │   └───EnvironmentTest_images
+│   │   │   └───screenshot
+│   │   ├───FlightHelmet
+│   │   │   ├───glTF
+│   │   │   ├───glTF-KTX-BasisU
+│   │   │   └───screenshot
+│   │   ├───Fox
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───GearboxAssy
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───GlamVelvetSofa
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───InterpolationTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───IridescenceDielectricSpheres
+│   │   │   ├───glTF
+│   │   │   │   └───textures
+│   │   │   └───screenshot
+│   │   ├───IridescenceLamp
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───IridescenceMetallicSpheres
+│   │   │   ├───glTF
+│   │   │   │   └───textures
+│   │   │   └───screenshot
+│   │   ├───IridescenceSuzanne
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───IridescentDishWithOlives
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───Lantern
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   ├───glTF-Quantized
+│   │   │   └───screenshot
+│   │   ├───LightsPunctualLamp
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───MaterialsVariantsShoe
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───MeshPrimitiveModes
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───MetalRoughSpheres
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───MetalRoughSpheresNoTextures
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───MorphPrimitivesTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   └───screenshot
+│   │   ├───MorphStressTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───MosquitoInAmber
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───MultipleScenes
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───MultiUVTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───NegativeScaleTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───NormalTangentMirrorTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───NormalTangentTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───OrientationTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───PrimitiveModeNormalsTest
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───ReciprocatingSaw
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───RecursiveSkeletons
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───RiggedFigure
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───RiggedSimple
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───SciFiHelmet
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───SheenChair
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───SheenCloth
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───SheenDamask
+│   │   │   ├───glTF
+│   │   │   ├───screenshot
+│   │   │   └───screenshots
+│   │   ├───SheenHighHeel
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───SimpleInstancing
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───SimpleMeshes
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───SimpleMorph
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───SimpleSkin
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───SimpleSparseAccessor
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───SpecGlossVsMetalRough
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───SpecularTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───Sponza
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───StainedGlassLamp
+│   │   │   ├───glTF
+│   │   │   ├───glTF-JPG-PNG
+│   │   │   ├───glTF-KTX-BasisU
+│   │   │   └───screenshot
+│   │   ├───Suzanne
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───SuzanneMorphSparse
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───TextureCoordinateTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───TextureEncodingTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───TextureLinearInterpolationTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───TextureSettingsTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───TextureTransformMultiTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───TextureTransformTest
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───ToyCar
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───TransmissionRoughnessTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───TransmissionSuzanne
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───TransmissionTest
+│   │   │   ├───glTF
+│   │   │   │   └───TransmissionTest_images
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───Triangle
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───TriangleWithoutIndices
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───TwoSidedPlane
+│   │   │   ├───glTF
+│   │   │   └───screenshot
+│   │   ├───Unicode??Test
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───UnlitTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   └───screenshot
+│   │   ├───VC
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───VertexColorTest
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Embedded
+│   │   │   └───screenshot
+│   │   ├───WaterBottle
+│   │   │   ├───glTF
+│   │   │   ├───glTF-Binary
+│   │   │   ├───glTF-Draco
+│   │   │   └───screenshot
+│   │   └───XmpMetadataRoundedCube
+│   │       ├───glTF
+│   │       │   └───MODEL_ROUNDED_CUBE_PART_1
+│   │       ├───glTF-Binary
+│   │       └───screenshot
+│   └───sourceModels
+│       ├───2CylinderEngine
+│       ├───AlphaBlendModeTest
+│       ├───AnimatedMorphCube
+│       ├───AttenuationTest
+│       ├───Avocado
+│       ├───BarramundiFish
+│       ├───BoomBox
+│       ├───Box
+│       ├───BoxAnimated
+│       ├───BoxSemantics
+│       ├───BoxTextured
+│       ├───BoxVertexColors
+│       ├───BoxWithoutIndices
+│       ├───BrainStem
+│       ├───Buggy
+│       ├───CesiumMan
+│       ├───CesiumMilkTruck
+│       ├───ClearCoatTest
+│       ├───Corset
+│       ├───DamagedHelmet
+│       ├───DragonAttenuation
+│       ├───Duck
+│       ├───EmissiveStrengthTest
+│       ├───FlightHelmet
+│       │   └───MayaProject
+│       │       ├───scenes
+│       │       └───textures
+│       ├───GearboxAssy
+│       ├───Lantern
+│       ├───MetalRoughSpheres
+│       ├───Monster
+│       ├───MorphStressTest
+│       │   └───Textures
+│       ├───MultiUVTest
+│       ├───NegativeScaleTest
+│       ├───NormalTangentMirrorTest
+│       ├───NormalTangentTest
+│       ├───OrientationTest
+│       ├───ReciprocatingSaw
+│       ├───RiggedFigure
+│       ├───RiggedSimple
+│       ├───SmilingFace
+│       ├───SpecularTest
+│       ├───StainedGlassLamp
+│       │   └───screenshot
+│       ├───TextureCoordinateTest
+│       ├───TextureSettingsTest
+│       ├───TextureTransformMultiTest
+│       ├───ToyCar
+│       ├───TransmissionRoughnessTest
+│       ├───TransmissionSuzanne
+│       ├───VC
+│       ├───VertexColorTest
+│       ├───WalkingLady
+│       └───WaterBottle
+├───ModelEditor
+│   │   imgui.ini
+│   │   ModelEditor.ini
+│   │   ModelEditor_2025.12.01.exe
+│   │   モデルエディタ簡易説明書.pdf
+│   │   更新履歴.txt
+│   │   
+│   └───Data
+│       ├───Font
+│       │       ArialUni.ttf
+│       │       
+│       ├───Model
+│       │   └───ybot
+│       │           ybot.glb
+│       │           ybot.mdproj
+│       │           
+│       ├───Shader
+│       │       BasicPS.cso
+│       │       BasicVS.cso
+│       │       BloomPS.cso
+│       │       FullScreenQuadVS.cso
+│       │       LambertPS.cso
+│       │       LambertVS.cso
+│       │       LuminanceExtractionPS.cso
+│       │       NormalsGS.cso
+│       │       NormalsPS.cso
+│       │       NormalsVS.cso
+│       │       PhongPS.cso
+│       │       PhongVS.cso
+│       │       PrimitiveRendererPS.cso
+│       │       PrimitiveRendererVS.cso
+│       │       ShapeRendererPS.cso
+│       │       ShapeRendererVS.cso
+│       │       SkyBoxRendererPS.cso
+│       │       SkyBoxRendererVS.cso
+│       │       SpritePS.cso
+│       │       SpriteVS.cso
+│       │       StandardPS.cso
+│       │       StandardVS.cso
+│       │       WireframeGS.cso
+│       │       WireframePS.cso
+│       │       WireframeVS.cso
+│       │       
+│       └───SkyBox
+│           ├───BlueSky
+│           │       diffuse_iem.dds
+│           │       lut_ggx.dds
+│           │       skybox.dds
+│           │       specular_pmrem.dds
+│           │       
+│           └───RainSky
+│                   diffuse_iem.dds
+│                   lut_ggx.dds
+│                   skybox.dds
+│                   specular_pmrem.dds
+│                   
+├───resources
+│   │   black-metal-texture.jpg
+│   │   cube.000.fbx
+│   │   cube.001.0.fbx
+│   │   cube.001.1.fbx
+│   │   cube.001.2.fbx
+│   │   cube.002.0.fbx
+│   │   cube.002.1.fbx
+│   │   cube.003.0.fbx
+│   │   cube.003.1.fbx
+│   │   cube.004.0.png
+│   │   cube.004.1.png
+│   │   cube.004.2.png
+│   │   cube.004.fbx
+│   │   cube.006.fbx
+│   │   cube.obj
+│   │   cyberpunk.jpg
+│   │   envmap_miramar.dds
+│   │   latha.fbx
+│   │   nico.cerreal
+│   │   nico.fbx
+│   │   nico.fbx.bin
+│   │   plantune.fbx
+│   │   plantune.fbx.bin
+│   │   player-sprites.png
+│   │   screenshot.jpg
+│   │   texconv.bat
+│   │   texconv.exe
+│   │   torus.obj
+│   │   ue.png
+│   │   vice.png
+│   │   
+│   ├───AimTest
+│   │       AimTest.fbx
+│   │       Aim_Space.fbx
+│   │       Idle_Rifle.fbx
+│   │       MNK_Mesh.fbx
+│   │       
+│   ├───Bison
+│   │       Bison.mtl
+│   │       Bison.obj
+│   │       Bison.png
+│   │       
+│   ├───cube.001.1.fbm
+│   │       ue.png
+│   │       
+│   ├───cube.002.0.fbm
+│   │       2k.png
+│   │       acclaim.png
+│   │       atari.png
+│   │       dice.png
+│   │       nintendo.png
+│   │       
+│   ├───cube.002.1.fbm
+│   │       2k.png
+│   │       acclaim.png
+│   │       atari.png
+│   │       dice.png
+│   │       nintendo.png
+│   │       
+│   ├───cube.003.0.fbm
+│   │       2k.png
+│   │       acclaim.png
+│   │       atari.png
+│   │       dice.png
+│   │       nintendo.png
+│   │       
+│   ├───Cup
+│   │       cup.jpg
+│   │       cup.mtl
+│   │       cup.obj
+│   │       
+│   ├───danbo_fbx
+│   │   │   danbo_atk.fbx
+│   │   │   danbo_face_c.png
+│   │   │   danbo_fly.fbx
+│   │   │   danbo_taiki.fbx
+│   │   │   danbo_taiki_idou.fbx
+│   │   │   
+│   │   └───danbo_atk.fbm
+│   │           danbo_face_c.png
+│   │           
+│   ├───Drone166
+│   │       Chrome3.jpg
+│   │       Drone166.1.fbx
+│   │       Tinfoil.jpg
+│   │       
+│   ├───F-14A_Tomcat
+│   │       Eject_Seat.png
+│   │       F-14A_Tomcat.mtl
+│   │       F-14A_Tomcat.obj
+│   │       F-14A_Tomcat_N.png
+│   │       F-14A_Tomcat_P01.png
+│   │       Glass_Cockpit.png
+│   │       Pilot_usa.png
+│   │       
+│   ├───fonts
+│   │       font0.png
+│   │       font1.png
+│   │       font2.png
+│   │       font3.png
+│   │       font4.png
+│   │       font5.png
+│   │       font6.png
+│   │       
+│   ├───Mr.Incredible
+│   │       Hair.png
+│   │       Mr.Incredible.blend
+│   │       Mr.Incredible.mtl
+│   │       Mr.Incredible.obj
+│   │       Mr.Incredible.png
+│   │       
+│   ├───nico.fbm
+│   │       Nico_chara_a_2.DDS
+│   │       Nico_chara_a_2.png
+│   │       Nico_chara_c_2.DDS
+│   │       Nico_chara_c_2.png
+│   │       Nico_chara_n.DDS
+│   │       Nico_chara_n.png
+│   │       Nico_chara_s_2.png
+│   │       Nico_eye_a.png
+│   │       Nico_eye_c.png
+│   │       Nico_magicwand_a.png
+│   │       Nico_magicwand_c.png
+│   │       Nico_magicwand_n.png
+│   │       Nico_magicwand_s.png
+│   │       texconv.bat
+│   │       texconv.exe
+│   │       
+│   ├───plantune.fbm
+│   │       PLT_A.png
+│   │       PLT_C.png
+│   │       PLT_N.png
+│   │       PLT_S.png
+│   │       
+│   ├───Rock
+│   │       Rock-Texture-Surface.jpg
+│   │       Rock-Texture-Surface_n.png
+│   │       Rock.mtl
+│   │       Rock.obj
+│   │       
+│   └───temp_textures
+├───Shaders
+│   ├───Compiled
+│   │       blur_ps.cod
+│   │       blur_ps.cso
+│   │       fullscreen_quad_ps.cod
+│   │       fullscreen_quad_ps.cso
+│   │       fullscreen_quad_vs.cod
+│   │       fullscreen_quad_vs.cso
+│   │       geometric_primitive_ps.cod
+│   │       geometric_primitive_ps.cso
+│   │       geometric_primitive_vs.cod
+│   │       geometric_primitive_vs.cso
+│   │       luminance_extraction_ps.cod
+│   │       luminance_extraction_ps.cso
+│   │       skinned_mesh_ps.cod
+│   │       skinned_mesh_ps.cso
+│   │       skinned_mesh_vs.cod
+│   │       skinned_mesh_vs.cso
+│   │       sprite_ps.cod
+│   │       sprite_ps.cso
+│   │       sprite_vs.cod
+│   │       sprite_vs.cso
+│   │       static_mesh_ps.cod
+│   │       static_mesh_ps.cso
+│   │       static_mesh_vs.cod
+│   │       static_mesh_vs.cso
+│   │       
+│   └───SoureCode
+│           blur_ps.hlsl
+│           fullscreen_quad.hlsli
+│           fullscreen_quad_ps.hlsl
+│           fullscreen_quad_vs.hlsl
+│           geometric_primitive.hlsli
+│           geometric_primitive_ps.hlsl
+│           geometric_primitive_vs.hlsl
+│           luminance_extraction_ps.hlsl
+│           skinned_mesh.hlsli
+│           skinned_mesh_ps.hlsl
+│           skinned_mesh_vs.hlsl
+│           sprite.hlsli
+│           sprite_ps.hlsl
+│           sprite_vs.hlsl
+│           static_mesh.hlsli
+│           static_mesh_ps.hlsl
+│           static_mesh_vs.hlsl
+│           
+├───Source
+│   │   structure.txt
+│   │   _dump_structure.bat
+│   │   
+│   ├───Camera
+│   ├───Collision
+│   ├───Common
+│   │       high_resolution_timer.h
+│   │       main.cpp
+│   │       misc.h
+│   │       ModelData.h
+│   │       
+│   ├───FbxModel
+│   │       FbxAnimation.cpp
+│   │       FbxAnimation.h
+│   │       FbxBone.cpp
+│   │       FbxBone.h
+│   │       FbxLoader.cpp
+│   │       FbxLoader.h
+│   │       FbxMaterial.cpp
+│   │       FbxMaterial.h
+│   │       FbxSkinnedMesh.cpp
+│   │       FbxSkinnedMesh.h
+│   │       FbxSkinnedModel.cpp
+│   │       FbxSkinnedModel.h
+│   │       FbxSkinnedResource.cpp
+│   │       FbxSkinnedResource.h
+│   │       
+│   ├───GameObjects
+│   │   ├───Characters
+│   │   └───Objects
+│   ├───Graphics
+│   │       DirectXDevice.cpp
+│   │       DirectXDevice.h
+│   │       fbx_utility.h
+│   │       framebuffer.cpp
+│   │       framebuffer.h
+│   │       framework.cpp
+│   │       framework.h
+│   │       fullscreen_quad.cpp
+│   │       fullscreen_quad.h
+│   │       Graphics.cpp
+│   │       Graphics.h
+│   │       PipelineStates.cpp
+│   │       PipelineStates.h
+│   │       PostProcessConstantBuffers.cpp
+│   │       PostProcessConstantBuffers.h
+│   │       Renderer.cpp
+│   │       Renderer.h
+│   │       SceneConstantBuffers.cpp
+│   │       SceneConstantBuffers.h
+│   │       shader.cpp
+│   │       shader.h
+│   │       sprite.cpp
+│   │       sprite.h
+│   │       sprite_batch.cpp
+│   │       sprite_batch.h
+│   │       
+│   ├───ObjectsRender
+│   │       AssetManager.cpp
+│   │       AssetManager.h
+│   │       geometric_primitive.cpp
+│   │       geometric_primitive.h
+│   │       Model.cpp
+│   │       Model.h
+│   │       ModelRenderer.cpp
+│   │       ModelRenderer.h
+│   │       SkinnedMeshComponents.cpp
+│   │       SkinnedMeshComponents.h
+│   │       skinned_mesh.cpp
+│   │       skinned_mesh.h
+│   │       sprite.cpp
+│   │       sprite.h
+│   │       sprite_batch.cpp
+│   │       sprite_batch.h
+│   │       static_mesh.cpp
+│   │       static_mesh.h
+│   │       texture.cpp
+│   │       texture.h
+│   │       
+│   ├───Scene
+│   │       MainScene.cpp
+│   │       MainScene.h
+│   │       Scene.cpp
+│   │       Scene.h
+│   │       
+│   ├───Serialization
+│   │       SkinnedMeshSerializer.cpp
+│   │       SkinnedMeshSerializer.h
+│   │       
+│   └───UniqueSystem
+└───x64
+    ├───Debug
+    │       3dgp.exp
+    │       3dgp.lib
+    │       3dgp.pdb
+    │       
+    └───Release
