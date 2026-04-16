@@ -10,7 +10,7 @@
 bool null_load_image_data(tinygltf::Image*, const int, std::string*, std::string*,
 	int, int, const unsigned char*, int, void*)
 {
-	//常に成功を返した画像処理をバイパスする
+	//常に成功を返して画像処理をバイパスする
 	return true;
 }
 
@@ -100,6 +100,7 @@ GltfModel::GltfModel(ID3D11Device* device, const std::string& filename)
 	//------------------
 	FetchMeshes(device, gltf_model);	//メッシュデータの抽出とバッファの生成
 	FetchNodes(gltf_model);				//ノード情報の抽出と階層行列の計算
+	FetchMaterials(device, gltf_model);	//マテリアルデータの抽出
 }
 
 //=============
@@ -112,6 +113,7 @@ void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XM
 	//----------------------------------------
 	//シェーダーとパイプラインステートの設定
 	//----------------------------------------
+	immediate_context->PSSetShaderResources(0, 1, material_resource_view.GetAddressOf());
 	immediate_context->VSSetShader(vertex_shader.Get(), nullptr, 0);	//頂点シェーダーをバインド
 	immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);		//ピクセルシェーダーをバインド
 	immediate_context->IASetInputLayout(input_layout.Get());			//入力レイアウトをバインド
@@ -137,7 +139,7 @@ void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XM
 					primitive.has("TANGENT") ?
 					buffers.at(primitive.vertex_buffer_views.at("TANGENT").buffer).Get() : NULL,
 					primitive.has("TEXCOORD_0") ?
-					buffers.at(primitive.vertex_buffer_views.at("TEXCOORD_O").buffer).Get() : NULL,
+					buffers.at(primitive.vertex_buffer_views.at("TEXCOORD_0").buffer).Get() : NULL,
 					primitive.has("JOINTS_0") ?
 					buffers.at(primitive.vertex_buffer_views.at("JOINTS_0").buffer).Get() : NULL,
 					primitive.has("WEIGHTS_0") ?
@@ -278,6 +280,81 @@ void GltfModel::FetchNodes(const tinygltf::Model& gltf_model)
 		}
 	}
 	CumulateTransforms(nodes);	//全ノードの抽出完了後、階層行列を再帰的に計算
+}
+
+//===================================================
+//tinygltfのモデルからマテリアルデータを抽出
+//===================================================
+void GltfModel::FetchMaterials(ID3D11Device* device, const tinygltf::Model& gltf_model)
+{
+	//---------------------------------------
+	//gltfモデル内の全マテリアルを走査
+	//---------------------------------------
+	for (std::vector<tinygltf::Material>::const_reference gltf_material : gltf_model.materials)
+	{
+		std::vector<material>::reference material = materials.emplace_back();	//マテリアル領域を追加
+
+		material.name = gltf_material.name;	//マテリアル名を設定
+		material.data.emissive_factor[0] = static_cast<float>(gltf_material.emissiveFactor.at(0));	//自己発光R成分を設定
+		material.data.emissive_factor[1] = static_cast<float>(gltf_material.emissiveFactor.at(1));	//自己発光G成分を設定
+		material.data.emissive_factor[2] = static_cast<float>(gltf_material.emissiveFactor.at(2));	//自己発光B成分を設定
+
+		material.data.alpha_mode = gltf_material.alphaMode == "OPAQUE" ? 0 : gltf_material.alphaMode == "MASK" ? 1 : gltf_material.alphaMode == "BLEND" ? 2 : 0;
+		material.data.alpha_cutoff = static_cast<float>(gltf_material.alphaCutoff);
+		material.data.double_sided = gltf_material.doubleSided ? 1 : 0;
+
+		material.data.pbr_metallic_roughness.basecolor_factor[0] = static_cast<float>(gltf_material.pbrMetallicRoughness.baseColorFactor.at(0));	//ベースカラーのRを設定
+		material.data.pbr_metallic_roughness.basecolor_factor[1] = static_cast<float>(gltf_material.pbrMetallicRoughness.baseColorFactor.at(1));	//ベースカラーのGを設定
+		material.data.pbr_metallic_roughness.basecolor_factor[2] = static_cast<float>(gltf_material.pbrMetallicRoughness.baseColorFactor.at(2));	//ベースカラーのBを設定
+		material.data.pbr_metallic_roughness.basecolor_factor[3] = static_cast<float>(gltf_material.pbrMetallicRoughness.baseColorFactor.at(3));	//ベースカラーのAを設定
+		material.data.pbr_metallic_roughness.basecolor_texture.index = gltf_material.pbrMetallicRoughness.baseColorTexture.index;	//ベースカラーテクスチャの参照番号を設定
+		material.data.pbr_metallic_roughness.basecolor_texture.texcoord = gltf_material.pbrMetallicRoughness.baseColorTexture.texCoord;	//ベースカラー用UV番号を設定
+		material.data.pbr_metallic_roughness.metallic_factor = static_cast<float>(gltf_material.pbrMetallicRoughness.metallicFactor);	//金属感係数を設定
+		material.data.pbr_metallic_roughness.roughness_factor = static_cast<float>(gltf_material.pbrMetallicRoughness.roughnessFactor);	//粗さ係数を設定
+		material.data.pbr_metallic_roughness.metallic_roughness_texture.index = gltf_material.pbrMetallicRoughness.metallicRoughnessTexture.index;	//金属・粗さテクスチャの番号を設定
+		material.data.pbr_metallic_roughness.metallic_roughness_texture.texcoord = gltf_material.pbrMetallicRoughness.metallicRoughnessTexture.texCoord;	//金属・粗さ用UV番号を設定
+
+		material.data.normal_texture.index = gltf_material.normalTexture.index;	//法線マップの番号を設定
+		material.data.normal_texture.texcoord = gltf_material.normalTexture.texCoord;	//法線マップのUV番号を設定
+		material.data.normal_texture.scale = static_cast<float>(gltf_material.normalTexture.scale);	//法線の凹凸スケールを設定
+
+		material.data.occlusion_texture.index = gltf_material.occlusionTexture.index;	//遮蔽マップの番号を設定
+		material.data.occlusion_texture.texcoord = gltf_material.occlusionTexture.texCoord;	//遮蔽マップ用UV番号を設定
+		material.data.occlusion_texture.strength = static_cast<float>(gltf_material.occlusionTexture.strength);	//遮蔽の強度を設定
+
+		material.data.emissive_texture.index = gltf_material.emissiveTexture.index;			//発光テクスチャの番号を設定
+		material.data.emissive_texture.texcoord = gltf_material.emissiveTexture.texCoord;	//発光テクスチャ用のUV番号を設定
+	}
+
+	//---------------------------------
+	//GPU転送用の構造化バッファの生成
+	//---------------------------------
+	std::vector<material::cbuffer> material_data;	//シェーダーに送るデータのみを格納する配列
+	for (std::vector<material>::const_reference material : materials)	//解析済みの全マテリアルを走査
+	{
+		material_data.emplace_back(material.data);	//データ構造体のみを抽出してリストに追加
+	}
+
+	HRESULT hr;	//DirectXの関数実行結果を格納する変数
+	Microsoft::WRL::ComPtr<ID3D11Buffer> material_buffer;	//バッファ本体を保存
+	D3D11_BUFFER_DESC buffer_desc = {};		//バッファの特性を定義する設定構造体
+	buffer_desc.ByteWidth = static_cast<UINT>(sizeof(material::cbuffer) * material_data.size());	//マテリアルの合計バイトサイズを指定
+	buffer_desc.StructureByteStride = sizeof(material::cbuffer);	//1要素(マテリアル1つ分)のサイズを指定
+	buffer_desc.Usage = D3D11_USAGE_DEFAULT;	//GPUによる読み書き可能に設定
+	buffer_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;	//シェーダーからリソースとしてアクセス可能に設定
+	buffer_desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;	//配列形式でアクセスする「構造化バッファ」作成
+
+	D3D11_SUBRESOURCE_DATA subresource_data = {};	//作成と同時に書き込む初期データを定義
+	subresource_data.pSysMem = material_data.data();	//CPU側のメモリにあるマテリアル配列の先頭アドレスを指定
+	hr = device->CreateBuffer(&buffer_desc, &subresource_data, material_buffer.GetAddressOf());	//バッファ作成
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));	//バッファが作成されたかチェック
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC shader_resource_view_desc = {};	//シェーダーからバッファを見るための窓口(ビュー)の設定
+	shader_resource_view_desc.Format = DXGI_FORMAT_UNKNOWN;	//構造化バッファの場合はフォーマットをUNKONWNに設定
+	shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;	//ビューの対象が通常のバッファであることを指定
+	shader_resource_view_desc.Buffer.NumElements = static_cast<UINT>(material_data.size());	//配列の要素数(マテリアル数)を指定
+	hr = device->CreateShaderResourceView(material_buffer.Get(), &shader_resource_view_desc, material_resource_view.GetAddressOf());	//シェーダーリソースビューを作成
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));	//シェーダーリソースビューが作成されたかチェック
 }
 
 //======================================================

@@ -1,4 +1,4 @@
-#include "glth_model.hlsli"
+#include "gltf_model.hlsli"
 
 VS_OUT main( VS_IN vin)
 {
@@ -20,7 +20,7 @@ VS_OUT main( VS_IN vin)
     float sigma = vin.tangent.w;    //従法線の向きを保存
     vin.tangent.w = 0; //w成分を0にして変換の影響をなくす
     vout.w_tangent = normalize(mul(vin.tangent, world));    //接線をワールド空間へ変換し、正規化
-    vout.w_tangent = sigma; //保存した従法線の向きを適用
+    vout.w_tangent.w = sigma; //保存した従法線の向きを適用
     
     vout.texcoord = vin.texcoord;   //テクスチャ座標をピクセルシェーダーに渡す
     

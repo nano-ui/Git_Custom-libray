@@ -27,7 +27,7 @@ cbuffer PRIMITIVE_CONSTANT_BUFFER : register(b0)
     int pad;                    //定数バッファのアライメント調整用パディング
 };
 
-cbuffer SCENE_CONSTNAT_BUFFER : register(b1)
+cbuffer SCENE_CONSTNANT_BUFFER : register(b1)
 {
     row_major float4x4 view_projection; //ビュー行列とプロジェクション行列を合成した行列
     float4 light_direction;             //平行香華の方向ベクトル

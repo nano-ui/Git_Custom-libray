@@ -461,7 +461,7 @@
     <None Include="Shaders\Compiled\static_mesh_vs.cso">
       <Filter>Shaders\static_mesh</Filter>
     </None>
-    <None Include="Shaders\SoureCode\glth_model.hlsli">
+    <None Include="Shaders\SoureCode\gltf_model.hlsli">
       <Filter>Shaders\gltf_model</Filter>
     </None>
   </ItemGroup>

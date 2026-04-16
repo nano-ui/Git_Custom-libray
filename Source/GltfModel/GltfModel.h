@@ -87,6 +87,60 @@ public:
 	};
 
 public:
+	//テクスチャの基本情報を保持する構造体
+	struct texture_info
+	{
+		int index = -1;		//テクスチャ番号
+		int texcoord = 0;	//UV座標の設定
+	};
+
+	//法線マップの情報を保持する構造体
+	struct normal_texture_info
+	{
+		int index = -1;		//法線テクスチャの番号
+		int texcoord = 0;	//UV座標の設定
+		float scale = 1;	//法線の強度を調整するスケール値
+	};
+	
+	//オクルージョンマップの情報を保持する構造体
+	struct occlusiton_texture_info
+	{
+		int index = -1;		//オクルージョンテクスチャの番号
+		int texcoord = 0;	//UV座標の設定
+		float strength = 1;	//遮蔽の強さ
+	};
+
+	//PBR(物理ベースレンダリング)の金属・粗さ情報を保持する構造体
+	struct pbr_metallic_roughness
+	{
+		float basecolor_factor[4] = { 1.0f,1.0f,1.0f,1.0f };	//基本色
+		texture_info basecolor_texture;						//基礎テクスチャ情報
+		float metallic_factor = 1;							//金属の強さ
+		float roughness_factor = 1;							//表面の粗さ
+		texture_info metallic_roughness_texture;			//金属感・粗さマップの情報
+	};
+
+public:
+
+	//最終的なマテリアルデータを管理する構造体
+	struct material
+	{
+		std::string name;	//マテリアル名
+		struct cbuffer
+		{
+			float emissive_factor[3] = { 0.0f,0.0f,0.0f };	//自己発光の強度
+			int alpha_mode = 0;								//アルファ値の描画モード
+			float alpha_cutoff = 0.5f;						//アルファマスクの閾値
+			int double_sided = 0;							//画面描画を行うかどうかのフラグ
+			pbr_metallic_roughness pbr_metallic_roughness;	//PBRパラメータ構造体
+			normal_texture_info normal_texture;				//法線マップ構造体
+			occlusiton_texture_info occlusion_texture;		//オクルージョンマップ構造体
+			texture_info emissive_texture;					//基本マップ構造体
+		};
+		cbuffer data;	//CPU転送用の実データ
+	};
+
+public:
 	//デバイスとファイルを受け取ってモデルを初期化
 	GltfModel(ID3D11Device* device, const std::string& filename);
 
@@ -105,18 +159,23 @@ public:
 	//tinygltfのモデルからノード情報を抽出
 	void FetchNodes(const tinygltf::Model& gltf_model);
 
+	//tinygltfnoのモデルからマテリアルデータを抽出
+	void FetchMaterials(ID3D11Device* device, const tinygltf::Model& gltf_model);
+
 public:
 	std::string filename;	//ファイルの名前
 
 	std::vector<scene> scenes;	//解析された全シーンのリスト
 	std::vector<node> nodes;	//解析された全ノードのリスト
 	std::vector<mesh> meshes;	//解析された全メッシュのリスト
+	std::vector<material> materials;	//解析された全マテリアルのリスト
+
 	std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> buffers;	//生成された全GPUバッファのリスト
 	Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_cbuffer;		//プリミティブの情報を送るための定数バッファ
-
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertex_shader;	//頂点シェーダーオブジェクト
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shader;		//ピクセルシェーダーオブジェクト
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> input_layout;		//シェーダーへの入力データ形式を定義するレイアウト
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> material_resource_view;
 
 	int default_scene = 0;	//デフォルトで使用されるシーンのインデックス
 };
