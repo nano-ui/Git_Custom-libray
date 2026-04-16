@@ -103,7 +103,7 @@ public:
 	};
 	
 	//オクルージョンマップの情報を保持する構造体
-	struct occlusiton_texture_info
+	struct occlusion_texture_info
 	{
 		int index = -1;		//オクルージョンテクスチャの番号
 		int texcoord = 0;	//UV座標の設定
@@ -134,10 +134,33 @@ public:
 			int double_sided = 0;							//画面描画を行うかどうかのフラグ
 			pbr_metallic_roughness pbr_metallic_roughness;	//PBRパラメータ構造体
 			normal_texture_info normal_texture;				//法線マップ構造体
-			occlusiton_texture_info occlusion_texture;		//オクルージョンマップ構造体
+			occlusion_texture_info occlusion_texture;		//オクルージョンマップ構造体
 			texture_info emissive_texture;					//基本マップ構造体
 		};
 		cbuffer data;	//CPU転送用の実データ
+	};
+
+public:
+	//テクスチャ情報を管理する構造体
+	struct texture
+	{
+		std::string name;	//テクスチャ名
+		int source = -1;	//imageのインデックス
+	};
+
+	//画像リソースの情報を保持する構造体
+	struct image
+	{	
+		std::string name;		//画像名
+		int width = -1;			//横幅
+		int height = -1;		//立幅
+		int component = -1;		//コンポーネント数
+		int bits = -1;			//ビット数
+		int pixel_type = -1;	//ピクセルタイプ
+		int buffer_view;		//バッファビューインデックス
+		std::string mime_type;	//MIMEタイプ
+		std::string uri;		//UPIパス
+		bool as_is = false;		//生データフラグ
 	};
 
 public:
@@ -162,6 +185,9 @@ public:
 	//tinygltfnoのモデルからマテリアルデータを抽出
 	void FetchMaterials(ID3D11Device* device, const tinygltf::Model& gltf_model);
 
+	//テクスチャ情報を抽出
+	void FetchTextures(ID3D11Device* device, const tinygltf::Model& gltf_model);
+
 public:
 	std::string filename;	//ファイルの名前
 
@@ -169,13 +195,17 @@ public:
 	std::vector<node> nodes;	//解析された全ノードのリスト
 	std::vector<mesh> meshes;	//解析された全メッシュのリスト
 	std::vector<material> materials;	//解析された全マテリアルのリスト
+	std::vector<texture> textures;		//解析された全テクスチャのリスト
+	std::vector<image> images;			//解析された全画像のリスト
 
 	std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> buffers;	//生成された全GPUバッファのリスト
+	std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> texture_resource_views;	//全テクスチャビューのリスト
+
 	Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_cbuffer;		//プリミティブの情報を送るための定数バッファ
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertex_shader;	//頂点シェーダーオブジェクト
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shader;		//ピクセルシェーダーオブジェクト
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> input_layout;		//シェーダーへの入力データ形式を定義するレイアウト
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> material_resource_view;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> material_resource_view;	//全マテリアル情報を格納したSRV
 
 	int default_scene = 0;	//デフォルトで使用されるシーンのインデックス
 };

@@ -28,3 +28,10 @@ HRESULT make_dummy_texture(
 	UINT dimension
 );
 
+HRESULT load_texture_from_memory(
+	ID3D11Device* device,
+	const void* data,
+	size_t size,
+	ID3D11ShaderResourceView** shader_resource_view
+);
+

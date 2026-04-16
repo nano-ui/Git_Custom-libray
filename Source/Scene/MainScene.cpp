@@ -114,7 +114,7 @@ void MainScene::Initialize()
 	fbx_skinned_model->PlayAnimation("NIC_Idle");
 
 	gltf_models[0] = std::make_unique<GltfModel>(device,
-		"./glTF-Sample-Models-main/2.0/2CylinderEngine/glTF/2CylinderEngine.gltf");
+		"./glTF-Sample-Models-main/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb");
 
 	//skinned_meshes[0] = make_unique<skinned_mesh>(device.Get(), "./resources/AimTest/MNK_Mesh.fbx");
 	//skinned_meshes[0]->append_animations("./resources/AimTest/Aim_Space.fbx", 0);
@@ -178,7 +178,7 @@ void MainScene::Update(float elapsed_time)
 	if (ImGui::CollapsingHeader("Cube", ImGuiTreeNodeFlags_None))
 	{
 		ImGui::SliderFloat3("CubeScale", &cube.scale.x, 0, 10);
-		ImGui::SliderFloat3("CubeRotation", &cube.rotation.x, 0, DirectX::XM_PI);
+		ImGui::SliderFloat3("CubeRotation", &cube.rotation.x, -DirectX::XM_PI, DirectX::XM_PI);
 		ImGui::SliderFloat3("CubePosion", &cube.position.x, -10, 10);
 		ImGui::SliderFloat("Head", &Long, 0, 300);
 		ImGui::SliderFloat("HeadRotation", &Rotation, 0, XM_PI);
@@ -216,23 +216,48 @@ void MainScene::Update(float elapsed_time)
 //描画処理
 void MainScene::Render(float elapsed_time)
 {
-	HRESULT hr{ S_OK };
+	HRESULT hr{ S_OK };	//HRESULT型の変数をS_OKで初期化
 
-	auto context = Graphics::Instance().GetContext();
-	auto states = Graphics::Instance().GetPipelineStates();
+	auto context = Graphics::Instance().GetContext();	//デバイスコンテキストを取得
+	auto states = Graphics::Instance().GetPipelineStates();	//パイプラインステートを取得
 
-	Graphics::Instance().BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);
+	Graphics::Instance().BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);	//背景色を指定してフレーム描画を開始
 
-	ID3D11ShaderResourceView* null_shader_resource_views[D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT]{};
-	context->VSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);//頂点シェーダーで使っていた読み取り用テクスチャを全部解除
-	context->PSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);//ピクセルシェーダーで使っていた読み取り用テクスチャを全部解除
+	ID3D11ShaderResourceView* null_shader_resource_views[D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT]{};	//空のSRV配列を用意
+	context->VSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);	//頂点シェーダーのテクスチャを全て解除
+	context->PSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);	//ピクセルシェーダーのテクスチャを全て解除
 
-	//定数バッファ更新
-	context->UpdateSubresource(constnt_buffer[0].Get(), 0, 0, &data, 0, 0);
-	context->VSSetConstantBuffers(1, 1, constnt_buffer[0].GetAddressOf());
+	//--------------------------------------------------
+	//カメラとライトの行列計算とデータ設定（先に実行する）
+	//--------------------------------------------------
+	D3D11_VIEWPORT viewport;	//ビューポート構造体を宣言
+	UINT num_viewports{ 1 };	//ビューポートの数を1に設定
+	context->RSGetViewports(&num_viewports, &viewport);	//現在のビューポート情報を取得
 
-	context->PSSetConstantBuffers(1, 1, constnt_buffer[0].GetAddressOf());
+	DirectX::XMVECTOR eye{ DirectX::XMVectorSet(camera.position.x,camera.position.y,camera.position.z,1) };	//カメラの位置ベクトルを作成
+	DirectX::XMVECTOR focus{ DirectX::XMVectorSet(0.0f,0.0f,0.0f,1.0f) };	//注視点（原点）のベクトルを作成
+	DirectX::XMVECTOR up{ DirectX::XMVectorSet(0.0f,1.0f,0.0f,0.0f) };	//上方向のベクトルを作成
+	DirectX::XMMATRIX V{ DirectX::XMMatrixLookAtLH(eye,focus,up) };	//ビュー行列を作成
 
+	float aspect_ratio{ viewport.Width / viewport.Height };	//画面のアスペクト比を計算
+	DirectX::XMMATRIX P{ DirectX::XMMatrixPerspectiveFovLH(	//プロジェクション行列を作成
+		DirectX::XMConvertToRadians(30),	//視野角を30度に設定
+		aspect_ratio,0.1f,100.0f) };	//アスペクト比、ニアクリップ、ファークリップを設定
+
+	DirectX::XMStoreFloat4x4(&data.view_projection, V * P);	//ビュー行列とプロジェクション行列を合成して保存
+	data.light_direction = { 0.0f, 0.0f, -1.0f, 0.0f };	//平行光源の向きを設定
+	data.camera_position.x = camera.position.x;	//カメラのX座標を保存
+	data.camera_position.y = camera.position.y;	//カメラのY座標を保存
+	data.camera_position.z = camera.position.z;	//カメラのZ座標を保存
+	data.camera_position.w = 1.0f;	//位置情報として扱うためW成分を1に設定
+
+	//--------------------------------------------------
+	//定数バッファの更新（データをセットした後にGPUへ送る）
+	//--------------------------------------------------
+	context->UpdateSubresource(constnt_buffer[0].Get(), 0, 0, &data, 0, 0);	//正しいデータで定数バッファを更新
+	context->VSSetConstantBuffers(1, 1, constnt_buffer[0].GetAddressOf());	//頂点シェーダーのb1スロットに定数バッファを設定
+	context->PSSetConstantBuffers(1, 1, constnt_buffer[0].GetAddressOf());	//ピクセルシェーダーのb1スロットに定数バッファを設定
+	
 	// ここからオブジェクトの描画
 
 	// これがシェーダーに利用されるであろう設定
@@ -244,29 +269,6 @@ void MainScene::Render(float elapsed_time)
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
 
 	context->OMSetBlendState(states->GetBlendState(0).Get(), nullptr, 0xFFFFFFFF);
-
-	//ビュー・プロジェクション行列作成
-	D3D11_VIEWPORT viewport;
-	UINT num_viewports{ 1 };
-	context->RSGetViewports(&num_viewports, &viewport);
-
-	// カメラの設定
-	DirectX::XMVECTOR eye{ DirectX::XMVectorSet(
-		camera.position.x,camera.position.y,camera.position.z,1) };//カメラの位置
-	DirectX::XMVECTOR focus{ DirectX::XMVectorSet(0.0f,0.0f,0.0f,1.0f) };//見ている方向
-	DirectX::XMVECTOR up{ DirectX::XMVectorSet(0.0f,1.0f,0.0f,0.0f) };//上方向（回転の基準）
-	DirectX::XMMATRIX V{ DirectX::XMMatrixLookAtLH(eye,focus,up) };//ビュー行列を作成
-	float aspect_ratio{ viewport.Width / viewport.Height };//アスペクト比（画面の横÷縦）
-	DirectX::XMMATRIX P{ DirectX::XMMatrixPerspectiveFovLH(
-		DirectX::XMConvertToRadians(30),
-		aspect_ratio,0.1f,100.0f
-	) };
-	DirectX::XMStoreFloat4x4(&data.view_projection, V * P);
-	data.light_direction = { 0, 0, -1, 0 };
-	data.camera_position.x = camera.position.x;
-	data.camera_position.y = camera.position.y;
-	data.camera_position.z = camera.position.z;
-	data.camera_position.w = 0;
 
 #if true
 
@@ -427,26 +429,29 @@ void MainScene::Render(float elapsed_time)
 	);
 	//immediate_context->RSSetState(reasterizer_states[0].Get());
 
-	if (fbx_skinned_model)
+	if (fbx_skinned_model)	//モデルが存在するかチェック
 	{
-		float scale = 0.05f;
-		cube.scale.x = cube.scale.y = cube.scale.z = 0.01;
-		DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(
+		//--------------------------------------------------
+		//GLTFモデルのワールド行列を作成して描画する
+		//--------------------------------------------------
+		float scale = 0.05f;	//未使用のスケール変数を宣言
+		cube.scale.x = cube.scale.y = cube.scale.z = 1.0f;	//【修正】極小にならないようスケールを1.0に設定
+
+		DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(	//スケール行列を作成
 			cube.scale.x,cube.scale.y,cube.scale.z) };
 
-		DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(
+		DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(	//回転行列を作成
 			cube.rotation.x,cube.rotation.y,cube.rotation.z) };
 
-		DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(
+		DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(	//平行移動行列を作成
 			cube.position.x,cube.position.y,cube.position.z) };
 
-		DirectX::XMFLOAT4X4 world;
-		DirectX::XMStoreFloat4x4(&world, S* R* T);
+		DirectX::XMFLOAT4X4 world;	//ワールド行列を格納する変数を宣言
+		DirectX::XMStoreFloat4x4(&world, S * R * T);	//各行列を掛け合わせてワールド行列として保存
 
-		DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };	//カラーを初期化(現在GLTFでは未使用)
 
-		//fbx_skinned_model->Render(context, world, color);
-		gltf_models[0]->Render(context, world);
+		gltf_models[0]->Render(context, world);	//GLTFモデルの描画を実行
 	}
 
 	// 深度テスト OFF

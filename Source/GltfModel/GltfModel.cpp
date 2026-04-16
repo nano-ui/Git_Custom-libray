@@ -3,6 +3,7 @@
 #include "tinygltf-release/tiny_gltf.h"
 #include "misc.h"
 #include "../Graphics/shader.h"
+#include "../ObjectsRender/texture.h"
 
 //==============================================
 //画像読み込みをスキップするためのダミー関数
@@ -17,7 +18,7 @@ bool null_load_image_data(tinygltf::Image*, const int, std::string*, std::string
 //==================================================
 //デバイスとファイルを受け取ってモデルを初期化
 //==================================================
-GltfModel::GltfModel(ID3D11Device* device, const std::string& filename)
+GltfModel::GltfModel(ID3D11Device* device, const std::string& filename) :filename(filename)
 {
 	//------------------------------
 	//シェーダーオブジェクトの生成
@@ -31,9 +32,9 @@ GltfModel::GltfModel(ID3D11Device* device, const std::string& filename)
 		{ "JOINTS"	,0,DXGI_FORMAT_R16G16B16A16_UINT	,4,0,D3D11_INPUT_PER_VERTEX_DATA,0 },	//ボーンインデックスの定義
 		{ "WEIGHTS"	,0,DXGI_FORMAT_R32G32B32A32_FLOAT	,5,0,D3D11_INPUT_PER_VERTEX_DATA,0 }	//スキンウェイトの定義
 	};
-	
+
 	create_vs_from_cso(		//csoファイルから頂点シェーダーと入力レイアウトを作成
-		device, 
+		device,
 		"gltf_model_vs.cso",
 		vertex_shader.ReleaseAndGetAddressOf(),
 		input_layout.ReleaseAndGetAddressOf(),
@@ -101,6 +102,7 @@ GltfModel::GltfModel(ID3D11Device* device, const std::string& filename)
 	FetchMeshes(device, gltf_model);	//メッシュデータの抽出とバッファの生成
 	FetchNodes(gltf_model);				//ノード情報の抽出と階層行列の計算
 	FetchMaterials(device, gltf_model);	//マテリアルデータの抽出
+	FetchTextures(device, gltf_model);	//テクスチャ情報の抽出
 }
 
 //=============
@@ -188,6 +190,24 @@ void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XM
 				immediate_context->UpdateSubresource(primitive_cbuffer.Get(), 0, 0, &primitive_data, 0, 0);	//定数バッファの中身をGPUに更新
 				immediate_context->VSSetConstantBuffers(0, 1, primitive_cbuffer.GetAddressOf());	//頂点シェーダーにプリミティブ定数バッファを設定
 				immediate_context->PSSetConstantBuffers(0, 1, primitive_cbuffer.GetAddressOf());	//ピクセルシェーダーにプリミティブ定数バッファを設定
+
+				const material& material = materials.at(primitive.material);	//マテリアル参照取得
+				const int texture_indices[]	//テクスチャインデックスを配列化
+				{
+					material.data.pbr_metallic_roughness.basecolor_texture.index,
+					material.data.pbr_metallic_roughness.metallic_roughness_texture.index,
+					material.data.normal_texture.index,
+					material.data.emissive_texture.index,
+					material.data.occlusion_texture.index,
+				};
+				ID3D11ShaderResourceView* null_shader_resource_view = {};	//無効テクスチャ用の空ポインタ
+				std::vector<ID3D11ShaderResourceView*> shader_resource_views(_countof(texture_indices));
+				for (int texture_index = 0; texture_index < shader_resource_views.size(); texture_index++)
+				{
+					//有効なインデックスならリソースを取得、無効なら空をセット
+					shader_resource_views.at(texture_index) = texture_indices[texture_index] > -1 ? texture_resource_views.at(textures.at(texture_indices[texture_index]).source).Get() : null_shader_resource_view;
+				}
+				immediate_context->PSSetShaderResources(1, static_cast<UINT>(shader_resource_views.size()), shader_resource_views.data());	//ピクセルシェーダーにリソース一括設定
 
 				//--------------
 				//描画命令
@@ -355,6 +375,62 @@ void GltfModel::FetchMaterials(ID3D11Device* device, const tinygltf::Model& gltf
 	shader_resource_view_desc.Buffer.NumElements = static_cast<UINT>(material_data.size());	//配列の要素数(マテリアル数)を指定
 	hr = device->CreateShaderResourceView(material_buffer.Get(), &shader_resource_view_desc, material_resource_view.GetAddressOf());	//シェーダーリソースビューを作成
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));	//シェーダーリソースビューが作成されたかチェック
+}
+
+//=======================
+//テクスチャ情報を抽出
+//=======================
+void GltfModel::FetchTextures(ID3D11Device* device, const tinygltf::Model& gltf_model)
+{
+	HRESULT hr = S_OK;
+
+	for (const tinygltf::Texture& gltf_texture : gltf_model.textures)
+	{
+		texture& texture = textures.emplace_back();
+		texture.name = gltf_texture.name;
+		texture.source = gltf_texture.source;
+	}
+
+	for (const tinygltf::Image& gltf_image : gltf_model.images)
+	{
+		image& image = images.emplace_back();
+		image.name = gltf_image.name;
+		image.width = gltf_image.width;
+		image.height = gltf_image.height;
+		image.component = gltf_image.component;
+		image.bits = gltf_image.bits;
+		image.pixel_type = gltf_image.pixel_type;
+		image.buffer_view = gltf_image.bufferView;
+		image.mime_type = gltf_image.mimeType;
+		image.uri = gltf_image.uri;
+		image.as_is = gltf_image.as_is;
+
+		if (gltf_image.bufferView > -1)
+		{
+			const tinygltf::BufferView& buffer_view = gltf_model.bufferViews.at(gltf_image.bufferView);
+			const tinygltf::Buffer& buffer = gltf_model.buffers.at(buffer_view.buffer);
+			const ::byte* data = buffer.data.data() + buffer_view.byteOffset;
+
+			ID3D11ShaderResourceView* texture_resource_view = {};
+			hr = load_texture_from_memory(device, data, buffer_view.byteLength, &texture_resource_view);
+			if (hr == S_OK)
+			{
+				texture_resource_views.emplace_back().Attach(texture_resource_view);
+			}
+		}
+		else
+		{
+			const std::filesystem::path path = filename;
+			ID3D11ShaderResourceView* shader_resource_view = {};
+			D3D11_TEXTURE2D_DESC texture2d_desc;
+			std::wstring filename = path.parent_path().concat(L"/").wstring() + std::wstring(gltf_image.uri.begin(),gltf_image.uri.end());
+			hr = load_texture_from_file(device, filename.c_str(), &shader_resource_view, &texture2d_desc);
+			if (hr == S_OK)
+			{
+				texture_resource_views.emplace_back().Attach(shader_resource_view);
+			}
+		}
+	}
 }
 
 //======================================================
