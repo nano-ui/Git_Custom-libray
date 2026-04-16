@@ -52,6 +52,17 @@ public:
 	};
 
 public:
+	//プリミティブ描画用の定数バッファ構造体
+	struct primitive_constants
+	{
+		DirectX::XMFLOAT4X4 world;	//ワールド変換行列
+		int material = -1;			//マテリアルのインデックス
+		int has_tangent = 0;		//接線情報の有無を判定するフラグ
+		int skin = -1;				//スキン情報のインデックス
+		int pad;					//アライメント調整用のパラメータ
+	};
+
+public:
 	//ポリゴンメッシュの集合を表す構造体
 	struct mesh
 	{
@@ -79,6 +90,9 @@ public:
 	//デバイスとファイルを受け取ってモデルを初期化
 	GltfModel(ID3D11Device* device, const std::string& filename);
 
+	//モデル描画
+	void Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world);
+
 	//親子関係をたどって各ノードのグローバル行列を計算
 	void CumulateTransforms(std::vector<node>& nodes);
 
@@ -98,6 +112,11 @@ public:
 	std::vector<node> nodes;	//解析された全ノードのリスト
 	std::vector<mesh> meshes;	//解析された全メッシュのリスト
 	std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> buffers;	//生成された全GPUバッファのリスト
+	Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_cbuffer;		//プリミティブの情報を送るための定数バッファ
+
+	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertex_shader;	//頂点シェーダーオブジェクト
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shader;		//ピクセルシェーダーオブジェクト
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> input_layout;		//シェーダーへの入力データ形式を定義するレイアウト
 
 	int default_scene = 0;	//デフォルトで使用されるシーンのインデックス
 };

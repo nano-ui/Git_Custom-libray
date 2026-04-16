@@ -445,7 +445,8 @@ void MainScene::Render(float elapsed_time)
 
 		DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-		fbx_skinned_model->Render(context, world, color);
+		//fbx_skinned_model->Render(context, world, color);
+		gltf_models[0]->Render(context, world);
 	}
 
 	// 深度テスト OFF

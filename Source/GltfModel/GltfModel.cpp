@@ -2,6 +2,7 @@
 #define TINYGLTF_IMPLEMENTATION
 #include "tinygltf-release/tiny_gltf.h"
 #include "misc.h"
+#include "../Graphics/shader.h"
 
 //==============================================
 //画像読み込みをスキップするためのダミー関数
@@ -18,6 +19,42 @@ bool null_load_image_data(tinygltf::Image*, const int, std::string*, std::string
 //==================================================
 GltfModel::GltfModel(ID3D11Device* device, const std::string& filename)
 {
+	//------------------------------
+	//シェーダーオブジェクトの生成
+	//------------------------------
+	D3D11_INPUT_ELEMENT_DESC input_element_desc[]
+	{
+		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT		,0,0,D3D11_INPUT_PER_VERTEX_DATA, 0},	//頂点座標の定義
+		{ "NORMAL"	,0,DXGI_FORMAT_R32G32B32_FLOAT		,1,0,D3D11_INPUT_PER_VERTEX_DATA,0 },	//法線ベクトルの定義
+		{ "TANGENT"	,0,DXGI_FORMAT_R32G32B32A32_FLOAT	,2,0,D3D11_INPUT_PER_VERTEX_DATA,0 },	//接線ベクトルの定義
+		{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT			,3,0,D3D11_INPUT_PER_VERTEX_DATA,0 },	//テクスチャ座標の定義
+		{ "JOINTS"	,0,DXGI_FORMAT_R16G16B16A16_UINT	,4,0,D3D11_INPUT_PER_VERTEX_DATA,0 },	//ボーンインデックスの定義
+		{ "WEIGHTS"	,0,DXGI_FORMAT_R32G32B32A32_FLOAT	,5,0,D3D11_INPUT_PER_VERTEX_DATA,0 }	//スキンウェイトの定義
+	};
+	
+	create_vs_from_cso(		//csoファイルから頂点シェーダーと入力レイアウトを作成
+		device, 
+		"gltf_model_vs.cso",
+		vertex_shader.ReleaseAndGetAddressOf(),
+		input_layout.ReleaseAndGetAddressOf(),
+		input_element_desc,
+		_countof(input_element_desc)
+	);
+
+	create_ps_from_cso(		//csoファイルからピクセルシェーダーを作成
+		device,
+		"gltf_model_ps.cso",
+		pixel_shader.ReleaseAndGetAddressOf()
+	);
+
+	D3D11_BUFFER_DESC buffer_desc = {};	//プリミティブ定数バッファの設定
+	buffer_desc.ByteWidth = sizeof(primitive_constants);	//構造体のサイズを設定
+	buffer_desc.Usage = D3D11_USAGE_DEFAULT;				//デフォルトの使用法を設定
+	buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;		//定数バッファとしてバインド
+	HRESULT hr;
+	hr = device->CreateBuffer(&buffer_desc, nullptr, primitive_cbuffer.ReleaseAndGetAddressOf());	//定数バッファの作成
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));	//作成できたかチェック
+
 	//-----------------------
 	//tinygltfのロード設定
 	//-----------------------
@@ -63,6 +100,123 @@ GltfModel::GltfModel(ID3D11Device* device, const std::string& filename)
 	//------------------
 	FetchMeshes(device, gltf_model);	//メッシュデータの抽出とバッファの生成
 	FetchNodes(gltf_model);				//ノード情報の抽出と階層行列の計算
+}
+
+//=============
+//モデル描画
+//=============
+void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world)
+{
+	using namespace DirectX;
+
+	//----------------------------------------
+	//シェーダーとパイプラインステートの設定
+	//----------------------------------------
+	immediate_context->VSSetShader(vertex_shader.Get(), nullptr, 0);	//頂点シェーダーをバインド
+	immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);		//ピクセルシェーダーをバインド
+	immediate_context->IASetInputLayout(input_layout.Get());			//入力レイアウトをバインド
+	immediate_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	//トポロジーを三角形リストに設定
+
+	//-----------------------------------
+	//ノード階層を再帰的に走査して描画
+	//-----------------------------------
+	std::function<void(int)> traverse{ [&](int node_index)->void {
+		const node& node = nodes.at(node_index);	//ノード情報を取得
+		if (node.mesh > -1)	//メッシュが存在するかチェック
+		{
+			const mesh& mesh = meshes.at(node.mesh);	//描画対象のメッシュを取得
+			for (std::vector<mesh::primitive>::const_reference primitive : mesh.primitives)	//メッシュ内の全プリミティブをループ
+			{
+				//属性ごとにバッファを取り出し配列に格納
+				ID3D11Buffer* vertex_buffers[]
+				{
+					primitive.has("POSITION") ?
+					buffers.at(primitive.vertex_buffer_views.at("POSITION").buffer).Get() : NULL,
+					primitive.has("NORMAL") ?
+					buffers.at(primitive.vertex_buffer_views.at("NORMAL").buffer).Get() : NULL,
+					primitive.has("TANGENT") ?
+					buffers.at(primitive.vertex_buffer_views.at("TANGENT").buffer).Get() : NULL,
+					primitive.has("TEXCOORD_0") ?
+					buffers.at(primitive.vertex_buffer_views.at("TEXCOORD_O").buffer).Get() : NULL,
+					primitive.has("JOINTS_0") ?
+					buffers.at(primitive.vertex_buffer_views.at("JOINTS_0").buffer).Get() : NULL,
+					primitive.has("WEIGHTS_0") ?
+					buffers.at(primitive.vertex_buffer_views.at("WEIGHTS_0").buffer).Get() : NULL,
+				};
+				//各バッファのストライド（1要素のサイズ）を取得し配列に格納
+				UINT strides[]
+				{
+					primitive.has("POSITION") ?
+					static_cast<UINT>(primitive.vertex_buffer_views.at("POSITION").stride_in_bytes) : 0,
+					primitive.has("NORMAL") ?
+					static_cast<UINT>(primitive.vertex_buffer_views.at("NORMAL").stride_in_bytes) : 0,
+					primitive.has("TANGENT") ?
+					static_cast<UINT>(primitive.vertex_buffer_views.at("TANGENT").stride_in_bytes) : 0,
+					primitive.has("TEXCOORD_0") ?
+					static_cast<UINT>(primitive.vertex_buffer_views.at("TEXCOORD_0").stride_in_bytes) : 0,
+					primitive.has("JOINTS_0") ?
+					static_cast<UINT>(primitive.vertex_buffer_views.at("JOINTS_0").stride_in_bytes) : 0,
+					primitive.has("WEIGHTS_0") ?
+					static_cast<UINT>(primitive.vertex_buffer_views.at("WEIGHTS_0").stride_in_bytes) : 0,
+				};
+				//各バッファの開始位置を取得し配列に格納
+				UINT offsets[]
+				{
+					primitive.has("POSITION") ?
+					static_cast<UINT>(primitive.vertex_buffer_views.at("POSITION").byte_offset) : 0,
+					primitive.has("NORMAL") ?
+					static_cast<UINT>(primitive.vertex_buffer_views.at("NORMAL").byte_offset) : 0,
+					primitive.has("TANGENT") ?
+					static_cast<UINT>(primitive.vertex_buffer_views.at("TANGENT").byte_offset) : 0,
+					primitive.has("TEXCOORD_0") ?
+					static_cast<UINT>(primitive.vertex_buffer_views.at("TEXCOORD_0").byte_offset) : 0,
+					primitive.has("JOINTS_0") ?
+					static_cast<UINT>(primitive.vertex_buffer_views.at("JOINTS_0").byte_offset) : 0,
+					primitive.has("WEIGHTS_0") ?
+					static_cast<UINT>(primitive.vertex_buffer_views.at("WEIGHTS_0").byte_offset) : 0,
+				};
+				immediate_context->IASetVertexBuffers(0, _countof(vertex_buffers), vertex_buffers, strides, offsets);	//頂点バッファをスロットにセット
+
+
+				primitive_constants primitive_data = {};	//プリミティブ単位の定数データを設定
+				primitive_data.material = primitive.material;	//マテリアルIDを設定
+				primitive_data.has_tangent = primitive.has("TANGENT");	//接線の有無を設定
+				primitive_data.skin = node.skin;	//スキン情報を設定
+				XMStoreFloat4x4(&primitive_data.world, XMLoadFloat4x4(&node.global_transform) * XMLoadFloat4x4(&world));	//ローカルのグローバル変換に行列を掛け合わせてワールド行列を算出
+				immediate_context->UpdateSubresource(primitive_cbuffer.Get(), 0, 0, &primitive_data, 0, 0);	//定数バッファの中身をGPUに更新
+				immediate_context->VSSetConstantBuffers(0, 1, primitive_cbuffer.GetAddressOf());	//頂点シェーダーにプリミティブ定数バッファを設定
+				immediate_context->PSSetConstantBuffers(0, 1, primitive_cbuffer.GetAddressOf());	//ピクセルシェーダーにプリミティブ定数バッファを設定
+
+				//--------------
+				//描画命令
+				///-------------
+				if (primitive.index_buffer_view.buffer > -1)	//インデックスバッファの有無をチェック
+				{
+					//インデックスバッファをバインド
+					immediate_context->IASetIndexBuffer(buffers.at(primitive.index_buffer_view.buffer).Get(),
+						primitive.index_buffer_view.format, static_cast<UINT>(primitive.index_buffer_view.byte_offset));
+					immediate_context->DrawIndexed(static_cast<UINT>(primitive.index_buffer_view.count), 0, 0);	//素引き付き描画を実行
+				}
+				else
+				{
+					immediate_context->Draw(static_cast<UINT>(primitive.vertex_buffer_views.at("POSITION").count), 0);	//頂点数に元図いて直接描画を実行
+				}
+			}
+		}
+		//子ノードに対しても同じ処理を再帰的に実行
+		for (std::vector<int>::value_type child_index : node.children)
+		{
+			traverse(child_index);
+		}
+	} };
+
+	//------------------------------------
+	//ルートノードからトラバースを開始
+	//------------------------------------
+	for (std::vector<int>::value_type node_index : scenes.at(default_scene).nodes)
+	{
+		traverse(node_index);
+	}
 }
 
 //=========================================
@@ -138,7 +292,7 @@ void GltfModel::CumulateTransforms(std::vector<node>& nodes)
 	{
 		node& node = nodes.at(node_index);	//対象のノードを参照
 		XMMATRIX S = XMMatrixScaling(node.scale.x, node.scale.y, node.scale.z);	//スケール行列を作成
-		XMMATRIX R = XMMatrixRotationQuaternion(XMVectorSet(node.rotation.x, node.rotation.y, node.rotation.z, node.rotation.z));	//回転行列を作成
+		XMMATRIX R = XMMatrixRotationQuaternion(XMVectorSet(node.rotation.x, node.rotation.y, node.rotation.z, node.rotation.w));	//回転行列を作成
 		XMMATRIX T = XMMatrixTranslation(node.translation.x, node.translation.y, node.translation.z);	//移動行列を作成
 		XMStoreFloat4x4(&node.global_transform, S * R * T * XMLoadFloat4x4(&parent_global_transforms.top()));	//親の行列を掛けてグローバル行れを設定
 		

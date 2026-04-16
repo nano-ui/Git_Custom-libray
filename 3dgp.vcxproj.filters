@@ -131,6 +131,9 @@
     <Filter Include="Source\ObjectRender\GltfModel">
       <UniqueIdentifier>{afc37076-22ce-4558-8131-a38e2f5653b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\gltf_model">
+      <UniqueIdentifier>{61fcf465-3a9b-4632-86ec-1354de3c8eee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -458,6 +461,9 @@
     <None Include="Shaders\Compiled\static_mesh_vs.cso">
       <Filter>Shaders\static_mesh</Filter>
     </None>
+    <None Include="Shaders\SoureCode\glth_model.hlsli">
+      <Filter>Shaders\gltf_model</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\SoureCode\blur_ps.hlsl">
@@ -495,6 +501,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\static_mesh_vs.hlsl">
       <Filter>Shaders\static_mesh</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\gltf_model_vs.hlsl">
+      <Filter>Shaders\gltf_model</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\gltf_model_ps.hlsl">
+      <Filter>Shaders\gltf_model</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
