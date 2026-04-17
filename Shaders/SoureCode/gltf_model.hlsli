@@ -33,3 +33,9 @@ cbuffer SCENE_CONSTNANT_BUFFER : register(b1)
     float4 light_direction;             //平行香華の方向ベクトル
     float4 camera_position;             //ワールド空間におけるカメラの現在位置
 }
+
+static const uint PRIMITIVE_MAX_JOINTS = 512;
+cbuffer PRIMITIVE_JOINT_CONSTANTS : register(b2)
+{
+    row_major float4x4 joint_matrices[PRIMITIVE_MAX_JOINTS];
+}
