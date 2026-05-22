@@ -189,6 +189,6 @@ bool GltfModelSerializer::Save(const std::string& filename, const std::shared_pt
 	}
 	catch (...)			//‘‚«‚İ’†‚É—\Šú‚¹‚Ê—áŠO‚ª”­¶‚µ‚½ê‡
 	{
-		return false;//¸”s‚Æ‚µ‚Äfalse‚ğ•Ô‚·
+		return false;	//¸”s‚Æ‚µ‚Äfalse‚ğ•Ô‚·
 	}
 }

@@ -227,6 +227,9 @@ public:
 	//復元した生データからGPUリソースを構築
 	void CreateGpuResources(ID3D11Device* device);
 
+	//バイナリキャッシュを利用してモデルを読み込む
+	static std::shared_ptr<GltfModelData> Load(ID3D11Device* device, const std::string& filename);
+
 private:
 	DXGI_FORMAT ConvertFormat(const tinygltf::Accessor& accessor);
 	void FetchMeshes(const tinygltf::Model& gltf_model);

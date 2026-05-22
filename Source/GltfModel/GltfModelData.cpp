@@ -1,4 +1,5 @@
 #include "GltfModelData.h"
+#include "../Serialization/GltfModelSerializer.h"
 #include <stack>
 #include <texture.h>
 #include <misc.h>
@@ -176,6 +177,30 @@ void GltfModelData::CreateGpuResources(ID3D11Device* device)
 		}
 	}
 
+}
+
+//================================================
+//バイナリキャッシュを利用してモデルを読み込む
+//================================================
+std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const std::string& filename)
+{
+	//-----------------------------
+	//キャッシュファイル名の生成
+	//-----------------------------
+	std::string binary_filename = filename + ".bin";							//元の名前に「.bin」を付与してキャッシュ用ファイル名とする
+	std::shared_ptr<GltfModelData> data = std::make_shared<GltfModelData>();	//空のデータインスタンスを生成
+
+	//-------------------------------
+	//キャッシュからのロード試行
+	//-------------------------------
+	if (GltfModelSerializer::Load(binary_filename, data))	//バイナリファイルが存在し、読み込みに成功した場合
+	{
+		data->CreateGpuResources(device);	//復元した生データから即座にGPUバッファを生成
+		return data;						//完成したデータを返す
+	}	
+
+
+	return std::shared_ptr<GltfModelData>();
 }
 
 //=================================================
