@@ -4,6 +4,7 @@
 #include "misc.h"
 #include "../Graphics/shader.h"
 #include "../ObjectsRender/texture.h"
+#include "GltfModelData.h"
 
 //==============================================
 //画像読み込みをスキップするためのダミー関数
