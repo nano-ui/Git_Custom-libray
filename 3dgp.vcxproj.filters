@@ -140,6 +140,9 @@
     <Filter Include="Source\ObjectRender\GltfModel\GltfModelAnimation">
       <UniqueIdentifier>{8a3f9165-2a96-4b03-aa9d-ae5d6c61177e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ObjectRender\GltfModel\GltfModelRenderer">
+      <UniqueIdentifier>{fe487eff-2e16-46a3-ad96-d8cf513fddaf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -258,6 +261,9 @@
     </ClCompile>
     <ClCompile Include="Source\GltfModel\TinygltfImpl.cpp">
       <Filter>Source\ObjectRender\GltfModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GltfModel\GltfModelRenderer.cpp">
+      <Filter>Source\ObjectRender\GltfModel\GltfModelRenderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -392,6 +398,9 @@
     </ClInclude>
     <ClInclude Include="Source\GltfModel\GltfModelAnimation.h">
       <Filter>Source\ObjectRender\GltfModel\GltfModelAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GltfModel\GltfModelRenderer.h">
+      <Filter>Source\ObjectRender\GltfModel\GltfModelRenderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

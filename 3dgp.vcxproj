@@ -230,6 +230,7 @@
     <ClCompile Include="Source\GltfModel\GltfModel.cpp" />
     <ClCompile Include="Source\GltfModel\GltfModelAnimation.cpp" />
     <ClCompile Include="Source\GltfModel\GltfModelData.cpp" />
+    <ClCompile Include="Source\GltfModel\GltfModelRenderer.cpp" />
     <ClCompile Include="Source\GltfModel\TinygltfImpl.cpp" />
     <ClCompile Include="Source\Graphics\DirectXDevice.cpp" />
     <ClCompile Include="Source\Graphics\framebuffer.cpp" />
@@ -275,6 +276,7 @@
     <ClInclude Include="Source\GltfModel\GltfModel.h" />
     <ClInclude Include="Source\GltfModel\GltfModelAnimation.h" />
     <ClInclude Include="Source\GltfModel\GltfModelData.h" />
+    <ClInclude Include="Source\GltfModel\GltfModelRenderer.h" />
     <ClInclude Include="Source\Graphics\DirectXDevice.h" />
     <ClInclude Include="Source\Graphics\fbx_utility.h" />
     <ClInclude Include="Source\Graphics\framebuffer.h" />

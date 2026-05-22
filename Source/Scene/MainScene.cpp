@@ -113,8 +113,15 @@ void MainScene::Initialize()
 
 	fbx_skinned_model->PlayAnimation("NIC_Idle");
 
-	gltf_models[0] = std::make_unique<GltfModel>(device,
-		"./glTF-Sample-Models-main/2.0/CesiumMan/glTF-Binary/CesiumMan.glb");
+	//gltf_models[0] = std::make_unique<GltfModel>(device,
+	//	"./glTF-Sample-Models-main/2.0/CesiumMan/glTF-Binary/CesiumMan.glb");
+
+	gltf_model_data = std::make_unique<GltfModelData>(device,"./glTF-Sample-Models-main/2.0/CesiumMan/glTF-Binary/CesiumMan.glb");
+	gltf_model_animation = std::make_unique<GltfModelAnimation>();
+	gltf_model_renderer = std::make_unique<GltfModelRenderer>(device);
+
+	animated_nodes_ = gltf_model_data->nodes;
+	gltf_model_animation->CumulateTransforms(*gltf_model_data, animated_nodes_);
 
 	//skinned_meshes[0] = make_unique<skinned_mesh>(device.Get(), "./resources/AimTest/MNK_Mesh.fbx");
 	//skinned_meshes[0]->append_animations("./resources/AimTest/Aim_Space.fbx", 0);
@@ -211,6 +218,10 @@ void MainScene::Update(float elapsed_time)
 	{
 		fbx_skinned_model->AnimationUpdate(elapsed_time);
 	}
+
+	animation_time += elapsed_time;
+	const size_t CURRENT_ANIMATION_INDEX = 0;
+	gltf_model_animation->Animate(*gltf_model_data, CURRENT_ANIMATION_INDEX, animation_time, animated_nodes_);
 }
 
 //描画処理
@@ -451,14 +462,15 @@ void MainScene::Render(float elapsed_time)
 
 		DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };	//カラーを初期化(現在GLTFでは未使用)
 
-		static std::vector<GltfModel::node> animated_nodes = gltf_models[0]->nodes;
-		static float time = 0;
-		gltf_models[0]->Animate(0/*animation index*/, time += elapsed_time, animated_nodes);
-		if (gltf_models[0]->animations.at(0/*animation index*/).duration < time)
-		{
-			time = 0;
-		}
-		gltf_models[0]->Render(context, world, animated_nodes);	//GLTFモデルの描画を実行
+		//static std::vector<GltfModel::node> animated_nodes = gltf_models[0]->nodes;
+		//static float time = 0;
+		//gltf_models[0]->Animate(0/*animation index*/, time += elapsed_time, animated_nodes);
+		//if (gltf_models[0]->animations.at(0/*animation index*/).duration < time)
+		//{
+		//	time = 0;
+		//}
+		//gltf_models[0]->Render(context, world, animated_nodes);	//GLTFモデルの描画を実行
+		gltf_model_renderer->Render(context, *gltf_model_data, world, animated_nodes_);
 	}
 
 	// 深度テスト OFF
