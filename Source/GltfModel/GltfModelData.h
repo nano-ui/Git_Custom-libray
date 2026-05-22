@@ -9,6 +9,7 @@
 #include <map>
 #include <unordered_map>
 #include <filesystem>
+#include <unordered_map>
 
 #define TINYGLTF_NO_EXTERNAL_IMAGE
 #define TINYGLTF_NO_STB_IMAGE
@@ -227,6 +228,9 @@ private:
 	void FetchTextures(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const tinygltf::Model& gltf_model);
 	void FetchAnimations(const tinygltf::Model& gltf_model);
 
+	//アニメーション名をマップに登録
+	void MapAnimationNames(const tinygltf::Model& gltf_model);
+
 public:
 	std::string filename;	//ファイルの名前
 
@@ -245,5 +249,7 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> material_resource_view;	//全マテリアル情報を格納したSRV
 
 	int default_scene = 0;	//開始シーン番号
+
+	std::unordered_map<std::string, size_t> animation_index_map;	//アニメーション名からインデックスを検索するためのマップ
 };
 

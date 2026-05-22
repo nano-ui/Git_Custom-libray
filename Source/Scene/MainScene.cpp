@@ -122,6 +122,7 @@ void MainScene::Initialize()
 
 	animated_nodes_ = gltf_model_data->nodes;
 	gltf_model_animation->CumulateTransforms(*gltf_model_data, animated_nodes_);
+	gltf_model_animation->PlayAniamtion(*gltf_model_data, "anim_0", true);
 
 	//skinned_meshes[0] = make_unique<skinned_mesh>(device.Get(), "./resources/AimTest/MNK_Mesh.fbx");
 	//skinned_meshes[0]->append_animations("./resources/AimTest/Aim_Space.fbx", 0);
@@ -218,10 +219,7 @@ void MainScene::Update(float elapsed_time)
 	{
 		fbx_skinned_model->AnimationUpdate(elapsed_time);
 	}
-
-	animation_time += elapsed_time;
-	const size_t CURRENT_ANIMATION_INDEX = 0;
-	gltf_model_animation->Animate(*gltf_model_data, CURRENT_ANIMATION_INDEX, animation_time, animated_nodes_);
+	gltf_model_animation->UpdateAnimation(*gltf_model_data, elapsed_time, animated_nodes_);
 }
 
 //•`‰æˆ—

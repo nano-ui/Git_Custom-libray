@@ -10,16 +10,66 @@ void GltfModelAnimation::CumulateTransforms(const GltfModelData& data, std::vect
 	//--------------------------------------------------
 	// ルートノードからの巡回処理
 	//--------------------------------------------------
-	std::stack<DirectX::XMFLOAT4X4> parent_global_transforms;							// 親ノードの行列情報を順次保持するためのスタックを作成
-	DirectX::XMFLOAT4X4 identity_matrix;												// 処理の起点となる単位行列用の変数を宣言
-	DirectX::XMStoreFloat4x4(&identity_matrix, DirectX::XMMatrixIdentity());			// DirectXの関数を利用して変数に単位行列を格納
+	std::stack<DirectX::XMFLOAT4X4> parent_global_transforms;							//親ノードの行列情報を順次保持するためのスタックを作成
+	DirectX::XMFLOAT4X4 identity_matrix;												//処理の起点となる単位行列用の変数を宣言
+	DirectX::XMStoreFloat4x4(&identity_matrix, DirectX::XMMatrixIdentity());			//DirectXの関数を利用して変数に単位行列を格納
 
-	for (int node_index : data.scenes.at(data.default_scene).nodes)						// 現在のデフォルトシーンに登録されている全てのルートノードをループ
+	for (int node_index : data.scenes.at(data.default_scene).nodes)						//現在のデフォルトシーンに登録されている全てのルートノードをループ
 	{
-		parent_global_transforms.push(identity_matrix);									// 一番根っこの親として単位行列をスタックに追加
-		TraverseNodeForTransform(node_index, target_nodes, parent_global_transforms);	// ルートノードのインデックスを渡し階層の巡回処理を開始
-		parent_global_transforms.pop();													// 全探索が終了した後にスタックの単位行列を取り除きクリア
+		parent_global_transforms.push(identity_matrix);									//一番根っこの親として単位行列をスタックに追加
+		TraverseNodeForTransform(node_index, target_nodes, parent_global_transforms);	//ルートノードのインデックスを渡し階層の巡回処理を開始
+		parent_global_transforms.pop();													//全探索が終了した後にスタックの単位行列を取り除きクリア
 	}
+}
+
+//===========================================
+//名前を指定してアニメーションの再生を開始
+//===========================================
+void GltfModelAnimation::PlayAniamtion(const GltfModelData& data, const std::string& animation_name, bool is_loop)
+{
+	//-------------------------------------
+	//マップからアニメーション番号の検索
+	//--------------------------------------
+	auto iterator = data.animation_index_map.find(animation_name);	//指定されたアニメーションを検索
+	if (iterator == data.animation_index_map.end())					//名前が見つからない場合
+	{
+		return;	//処理を終了
+	}
+
+	//--------------------
+	//再生状態の初期化
+	//--------------------
+	current_animation_index = iterator->second;	//検索結果からインデックス番号を取得
+	is_loop_enabled = is_loop;					//ループフラグを設定
+	current_animation_time = 0.0f;				//再生時間をリセット
+	current_animation_duration = CalculateAnimationDuration(data, current_animation_index);	//アニメーション終了時間を取得
+	is_playing = true;							//再生フラグを起動
+}
+
+//============================
+//アニメーション更新処理
+//============================
+void GltfModelAnimation::UpdateAnimation(const GltfModelData& data, float delta_time, std::vector<GltfModelData::node>& animated_nodes)
+{
+	if (!is_playing || data.animations.empty())return;
+
+	//------------------------
+	//時間の進行とループ判定
+	//------------------------
+	current_animation_time += delta_time;						//経過時間を加算してアニメーションを進める
+	if (current_animation_time > current_animation_duration)	//現在の時間がアニメーションの終了時間を超過した場合
+	{
+		if (is_loop_enabled)	//ループ再生が有効な場合
+		{
+			current_animation_time = fmod(current_animation_time, current_animation_duration);	//超過した余りの時間を計算し、最初からループ
+		}
+		else
+		{
+			current_animation_time = current_animation_duration;	//終了時間でピッタリ止めるため数値を固定
+			is_playing = false;										//再生完了としてフラグをオフに設定
+		}
+	}
+	Animate(data, current_animation_index, current_animation_time, animated_nodes);	//実際の計算処理
 }
 
 //========================================================
@@ -80,7 +130,7 @@ void GltfModelAnimation::Animate(const GltfModelData& data, size_t animation_ind
 			const std::vector<XMFLOAT3>& translations = animation.translations.at(sampler.output);		// サンプラーから位置座標の配列を取得
 			XMVECTOR trans_start = XMLoadFloat3(&translations.at(keyframe_index));						// 現在のキーフレームの位置座標をロード
 			XMVECTOR trans_end = XMLoadFloat3(&translations.at(keyframe_index + INDEX_OFFSET_NEXT));	// 次のキーフレームの位置座標をロード
-			XMVECTOR lerped_trans = XMVectorLerp(trans_start, trans_end, interpolation_factor);			// 線形補間(Lerp)を用いて開始と終了の中間座標を高速計算
+			XMVECTOR lerped_trans = XMVectorLerp(trans_start, trans_end, interpolation_factor);			// 線形補間(Lerp)を用いて開始と終了の中間座標を計算
 			XMStoreFloat3(&animated_nodes.at(channel.target_node).translation, lerped_trans);			// 計算結果を対象ノードの位置座標変数に直接保存
 		}
 	}
@@ -167,4 +217,23 @@ size_t GltfModelAnimation::GetAnimationKeyframeIndex(const std::vector<float>& t
 	interpolation_factor = (time - timelines.at(keyframe_index)) / time_difference;								// 現在の時間がその区間でどの位置にあるかの割合を計算
 
 	return keyframe_index;
+}
+
+//====================================
+//アニメーションの全体の長さを計算
+//====================================
+float GltfModelAnimation::CalculateAnimationDuration(const GltfModelData& data, size_t animation_index)
+{
+	float max_time = 0.0f;	//記録用の最大時間変数
+	const GltfModelData::animation& animation = data.animations.at(animation_index);	//指定されたアニメーションデータを取得
+	for (const GltfModelData::animation::channel& channel : animation.channels)			//アニメーションが持つ全チャンネルをループ
+	{
+		const GltfModelData::animation::sampler& sampler = animation.samplers.at(channel.sampler);	//サンプラーを取得
+		const std::vector<float>& timeline = animation.timelines.at(sampler.input);					//サンプラーからの時間軸の配列を取得
+		if (!timeline.empty())	//タイムラインにデータが存在する場合
+		{
+			max_time = std::max<float>(max_time, timeline.back());	//これまでの最大時間と、現在のタイムラインの最後の時間を比較し、大きい方を記録
+		}
+	}
+	return max_time;	//アニメーション終了時間を返す
 }

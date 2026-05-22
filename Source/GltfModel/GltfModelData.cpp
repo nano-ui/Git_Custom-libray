@@ -65,6 +65,7 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 	FetchMaterials(device, gltf_model);	//マテリアルデータの抽出
 	FetchTextures(device, gltf_model);	//テクスチャ情報の抽出
 	FetchAnimations(gltf_model);		//アニメーション情報を抽出
+	MapAnimationNames(gltf_model);		//抽出したアニメーション名から検索用マップを構築
 }
 
 //=================================================
@@ -490,5 +491,22 @@ void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 		{
 			animation.duration = std::max<float>(animation.duration, timelines.second.back());
 		}
+	}
+}
+
+//===================================
+//アニメーション名をマップに登録
+//===================================
+void GltfModelData::MapAnimationNames(const tinygltf::Model& gltf_model)
+{
+	//全てのアニメーションをループ
+	for (size_t animation_index = 0; animation_index < animations.size(); animation_index++)
+	{
+		std::string animation_name = gltf_model.animations.at(animation_index).name;	//gltfデータからアニメーション名を取得
+		if (animation_name.empty())	//モデラーが名前を設定しておらず空欄だった場合
+		{
+			animation_name = "anim_" + std::to_string(animation_index);	//anim_0, anim_1 のように連番の仮名を作成しエラーを防ぐ
+		}
+		animation_index_map.insert(std::make_pair(animation_name, animation_index));	//名前をキーとして、インデックス番号をマップに登録
 	}
 }
