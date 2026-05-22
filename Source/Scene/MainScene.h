@@ -21,10 +21,9 @@
 #include "../FbxModel/FbxSkinnedModel.h"
 #include "../FbxModel/FbxSkinnedResource.h"
 
-#include "../GltfModel/GltfModel.h"
 #include "../GltfModel/GltfModelData.h"
-#include "../GltfModel/GltfModelAnimation.h"
 #include "../GltfModel/GltfModelRenderer.h"
+#include "../GltfModel/GltfModel.h"
 
 class MainScene :public Scene
 {
@@ -54,12 +53,9 @@ private:
 	std::shared_ptr<FbxSkinnedResource> resource;
 	std::unique_ptr<FbxSkinnedModel> fbx_skinned_model;
 
-	std::unique_ptr<GltfModel> gltf_models[8];
-	std::unique_ptr<GltfModelData> gltf_model_data;
-	std::unique_ptr<GltfModelAnimation> gltf_model_animation;
-	std::unique_ptr<GltfModelRenderer> gltf_model_renderer;
-	std::vector<GltfModelData::node> animated_nodes_;
-	float animation_time = 0.0f;
+	std::unique_ptr<GltfModel> gltf_models;
+	std::shared_ptr<GltfModelData> gltf_model_data;
+	std::shared_ptr<GltfModelRenderer> gltf_model_renderer;
 
 private:
 	struct Transform

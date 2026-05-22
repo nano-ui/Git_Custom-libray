@@ -250,9 +250,6 @@
     <ClCompile Include="External\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GltfModel\GltfModel.cpp">
-      <Filter>Source\ObjectRender\GltfModel</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GltfModel\GltfModelData.cpp">
       <Filter>Source\ObjectRender\GltfModel\GltfModelData</Filter>
     </ClCompile>
@@ -264,6 +261,9 @@
     </ClCompile>
     <ClCompile Include="Source\GltfModel\GltfModelRenderer.cpp">
       <Filter>Source\ObjectRender\GltfModel\GltfModelRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GltfModel\GltfModel.cpp">
+      <Filter>Source\ObjectRender\GltfModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -390,9 +390,6 @@
     <ClInclude Include="External\imgui\imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GltfModel\GltfModel.h">
-      <Filter>Source\ObjectRender\GltfModel</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GltfModel\GltfModelData.h">
       <Filter>Source\ObjectRender\GltfModel\GltfModelData</Filter>
     </ClInclude>
@@ -401,6 +398,9 @@
     </ClInclude>
     <ClInclude Include="Source\GltfModel\GltfModelRenderer.h">
       <Filter>Source\ObjectRender\GltfModel\GltfModelRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GltfModel\GltfModel.h">
+      <Filter>Source\ObjectRender\GltfModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -2,11 +2,29 @@
 
 #include <algorithm>
 
+
+//============================================
+//アニメーションクラスをモデルデータで初期化
+//============================================
+void GltfModelAnimation::Initialize(const std::shared_ptr<const GltfModelData>& data)
+{
+	//----------------------------------------
+	//データの保持と作業用ノード配列の初期化
+	//----------------------------------------
+	model_data = data;	//モデルデータを保存
+	if (model_data)		//モデルデータが有効か確認
+	{
+		animated_nodes = model_data->nodes;	//初期状態のノード構造をアニメーション用の可変配列にコピー
+		CumulateTransforms();				//初期姿勢のグローバル行列を一度計算して確定
+	}
+}
+
 //====================================================
 //親子関係をたどって各ノードのグローバル行列を計算
 //====================================================
-void GltfModelAnimation::CumulateTransforms(const GltfModelData& data, std::vector<GltfModelData::node>& target_nodes)
+void GltfModelAnimation::CumulateTransforms()
 {
+	if (!model_data) return;	//モデルデータが有効か確認
 	//--------------------------------------------------
 	// ルートノードからの巡回処理
 	//--------------------------------------------------
@@ -14,10 +32,10 @@ void GltfModelAnimation::CumulateTransforms(const GltfModelData& data, std::vect
 	DirectX::XMFLOAT4X4 identity_matrix;												//処理の起点となる単位行列用の変数を宣言
 	DirectX::XMStoreFloat4x4(&identity_matrix, DirectX::XMMatrixIdentity());			//DirectXの関数を利用して変数に単位行列を格納
 
-	for (int node_index : data.scenes.at(data.default_scene).nodes)						//現在のデフォルトシーンに登録されている全てのルートノードをループ
+	for (int node_index : model_data->scenes.at(model_data->default_scene).nodes)		//現在のデフォルトシーンに登録されている全てのルートノードをループ
 	{
 		parent_global_transforms.push(identity_matrix);									//一番根っこの親として単位行列をスタックに追加
-		TraverseNodeForTransform(node_index, target_nodes, parent_global_transforms);	//ルートノードのインデックスを渡し階層の巡回処理を開始
+		TraverseNodeForTransform(node_index, parent_global_transforms);					//ルートノードのインデックスを渡し階層の巡回処理を開始
 		parent_global_transforms.pop();													//全探索が終了した後にスタックの単位行列を取り除きクリア
 	}
 }
@@ -25,13 +43,14 @@ void GltfModelAnimation::CumulateTransforms(const GltfModelData& data, std::vect
 //===========================================
 //名前を指定してアニメーションの再生を開始
 //===========================================
-void GltfModelAnimation::PlayAniamtion(const GltfModelData& data, const std::string& animation_name, bool is_loop)
+void GltfModelAnimation::PlayAniamtion(const std::string& animation_name, bool is_loop)
 {
+	if (!model_data) return;	//モデルデータが有効か確認
 	//-------------------------------------
 	//マップからアニメーション番号の検索
 	//--------------------------------------
-	auto iterator = data.animation_index_map.find(animation_name);	//指定されたアニメーションを検索
-	if (iterator == data.animation_index_map.end())					//名前が見つからない場合
+	auto iterator = model_data->animation_index_map.find(animation_name);	//指定されたアニメーションを検索
+	if (iterator == model_data->animation_index_map.end())					//名前が見つからない場合
 	{
 		return;	//処理を終了
 	}
@@ -42,16 +61,16 @@ void GltfModelAnimation::PlayAniamtion(const GltfModelData& data, const std::str
 	current_animation_index = iterator->second;	//検索結果からインデックス番号を取得
 	is_loop_enabled = is_loop;					//ループフラグを設定
 	current_animation_time = 0.0f;				//再生時間をリセット
-	current_animation_duration = CalculateAnimationDuration(data, current_animation_index);	//アニメーション終了時間を取得
+	current_animation_duration = CalculateAnimationDuration(current_animation_index);	//アニメーション終了時間を取得
 	is_playing = true;							//再生フラグを起動
 }
 
 //============================
 //アニメーション更新処理
 //============================
-void GltfModelAnimation::UpdateAnimation(const GltfModelData& data, float delta_time, std::vector<GltfModelData::node>& animated_nodes)
+void GltfModelAnimation::UpdateAnimation(float delta_time)
 {
-	if (!is_playing || data.animations.empty())return;
+	if (!model_data || !is_playing || model_data->animations.empty())return;
 
 	//------------------------
 	//時間の進行とループ判定
@@ -69,25 +88,25 @@ void GltfModelAnimation::UpdateAnimation(const GltfModelData& data, float delta_
 			is_playing = false;										//再生完了としてフラグをオフに設定
 		}
 	}
-	Animate(data, current_animation_index, current_animation_time, animated_nodes);	//実際の計算処理
+	Animate(current_animation_index, current_animation_time);	//実際の計算処理
 }
 
 //========================================================
 //指定した時間のアニメーションを適用しノード情報を更新
 //========================================================
-void GltfModelAnimation::Animate(const GltfModelData& data, size_t animation_index, float time, std::vector<GltfModelData::node>& animated_nodes)
+void GltfModelAnimation::Animate(size_t animation_index, float time)
 {
 	//--------------------------------------------------
 	// アニメーションデータの有無の確認
 	//--------------------------------------------------
-	if (data.animations.empty())	// GltfModelData内にアニメーションデータが存在しない場合
+	if (model_data->animations.empty())	// GltfModelData内にアニメーションデータが存在しない場合
 	{
 		return;						// 更新する対象がないため何も処理せずに安全に終了
 	}
 
 	using namespace DirectX;															// DirectXMathの名前空間を使用
 	const size_t INDEX_OFFSET_NEXT = 1;													// 次の要素を参照するためのインデックスオフセット定数
-	const GltfModelData::animation& animation = data.animations.at(animation_index);	// 引数で指定されたアニメーションデータを参照として取得
+	const GltfModelData::animation& animation = model_data->animations.at(animation_index);	// 引数で指定されたアニメーションデータを参照として取得
 
 	//--------------------------------------------------
 	// チャンネル（操作対象）ごとのアニメーション適用
@@ -138,19 +157,19 @@ void GltfModelAnimation::Animate(const GltfModelData& data, size_t animation_ind
 	//--------------------------------------------------
 	// 更新されたノードのグローバル行列を再計算
 	//--------------------------------------------------
-	CumulateTransforms(data, animated_nodes);
+	CumulateTransforms();
 }
 
 //===========================
 //行列計算用の再帰呼び出し
 //===========================
-void GltfModelAnimation::TraverseNodeForTransform(int node_index, std::vector<GltfModelData::node>& nodes, std::stack<DirectX::XMFLOAT4X4>& parent_global_transforms)
+void GltfModelAnimation::TraverseNodeForTransform(int node_index, std::stack<DirectX::XMFLOAT4X4>& parent_global_transforms)
 {
 	//--------------------------------------------------
 	// ローカル変換行列の構築とグローバル行列の計算
 	//--------------------------------------------------
 	using namespace DirectX;                                                                                                    // DirectXMathの名前空間を使用し記述を省略
-	GltfModelData::node& current_node = nodes.at(node_index);                                                                   // 対象のノードを参照で取得し更新可能にする
+	GltfModelData::node& current_node = animated_nodes.at(node_index);                                                                   // 対象のノードを参照で取得し更新可能にする
 	XMMATRIX scale_matrix = XMMatrixScaling(current_node.scale.x, current_node.scale.y, current_node.scale.z);                  // XYZのスケール値からスケール行列を作成
 	XMMATRIX rotation_matrix = XMMatrixRotationQuaternion(XMVectorSet(current_node.rotation.x, current_node.rotation.y, current_node.rotation.z, current_node.rotation.w)); // クォータニオン情報から回転行列を作成
 	XMMATRIX translation_matrix = XMMatrixTranslation(current_node.translation.x, current_node.translation.y, current_node.translation.z); // XYZの位置座標から移動行列を作成
@@ -165,7 +184,7 @@ void GltfModelAnimation::TraverseNodeForTransform(int node_index, std::vector<Gl
 	for (int child_index : current_node.children)								// ノードが持つ全ての子ノードに対してループ処理
 	{
 		parent_global_transforms.push(current_node.global_transform);			// 自身のグローバル行列を「親の行列」としてスタックの最上部に積む
-		TraverseNodeForTransform(child_index, nodes, parent_global_transforms);	// 子ノードのインデックスを渡し自身を再帰呼び出し
+		TraverseNodeForTransform(child_index, parent_global_transforms);		// 子ノードのインデックスを渡し自身を再帰呼び出し
 		parent_global_transforms.pop();											// 子ノードの処理が終わったらスタックから自身の行列を取り除く
 	}
 }
@@ -222,10 +241,10 @@ size_t GltfModelAnimation::GetAnimationKeyframeIndex(const std::vector<float>& t
 //====================================
 //アニメーションの全体の長さを計算
 //====================================
-float GltfModelAnimation::CalculateAnimationDuration(const GltfModelData& data, size_t animation_index)
+float GltfModelAnimation::CalculateAnimationDuration(size_t animation_index)
 {
 	float max_time = 0.0f;	//記録用の最大時間変数
-	const GltfModelData::animation& animation = data.animations.at(animation_index);	//指定されたアニメーションデータを取得
+	const GltfModelData::animation& animation = model_data->animations.at(animation_index);	//指定されたアニメーションデータを取得
 	for (const GltfModelData::animation::channel& channel : animation.channels)			//アニメーションが持つ全チャンネルをループ
 	{
 		const GltfModelData::animation::sampler& sampler = animation.samplers.at(channel.sampler);	//サンプラーを取得
