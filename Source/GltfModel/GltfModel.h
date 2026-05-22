@@ -9,7 +9,6 @@
 #define TINYGLTF_NO_STB_IMAGE
 #define TINYGLTF_NO_STB_IMAGE_WRITE
 #include "tinygltf-release/tiny_gltf.h"
- 
 class GltfModel
 {
 private:

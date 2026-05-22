@@ -134,6 +134,12 @@
     <Filter Include="Shaders\gltf_model">
       <UniqueIdentifier>{61fcf465-3a9b-4632-86ec-1354de3c8eee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ObjectRender\GltfModel\GltfModelData">
+      <UniqueIdentifier>{1a1a3e82-a5ae-4915-bdb8-c2e48df203d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GltfModel\GltfModelAnimation">
+      <UniqueIdentifier>{8a3f9165-2a96-4b03-aa9d-ae5d6c61177e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -242,6 +248,15 @@
       <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="Source\GltfModel\GltfModel.cpp">
+      <Filter>Source\ObjectRender\GltfModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GltfModel\GltfModelData.cpp">
+      <Filter>Source\ObjectRender\GltfModel\GltfModelData</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GltfModel\GltfModelAnimation.cpp">
+      <Filter>Source\ObjectRender\GltfModel\GltfModelAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GltfModel\TinygltfImpl.cpp">
       <Filter>Source\ObjectRender\GltfModel</Filter>
     </ClCompile>
   </ItemGroup>
@@ -371,6 +386,12 @@
     </ClInclude>
     <ClInclude Include="Source\GltfModel\GltfModel.h">
       <Filter>Source\ObjectRender\GltfModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GltfModel\GltfModelData.h">
+      <Filter>Source\ObjectRender\GltfModel\GltfModelData</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GltfModel\GltfModelAnimation.h">
+      <Filter>Source\ObjectRender\GltfModel\GltfModelAnimation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

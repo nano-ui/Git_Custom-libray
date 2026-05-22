@@ -123,7 +123,7 @@ public:
 	//PBR(物理ベースレンダリング)の金属・粗さ情報
 	struct pbr_metallic_roughness
 	{
-		float basecolor_factor[4] = { 1.0f,1.0f,1.0f,1.0f };	//基本色
+		float basecolor_factor[4] = { 1.0f,1.0f,1.0f,1.0f };//基本色
 		texture_info basecolor_texture;						//基礎テクスチャ情報
 		float metallic_factor = 1;							//金属の強さ
 		float roughness_factor = 1;							//表面の粗さ

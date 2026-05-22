@@ -1,5 +1,4 @@
 #include "GltfModel.h"
-#define TINYGLTF_IMPLEMENTATION
 #include "tinygltf-release/tiny_gltf.h"
 #include "misc.h"
 #include "../Graphics/shader.h"
@@ -9,12 +8,12 @@
 //==============================================
 //画像読み込みをスキップするためのダミー関数
 //==============================================
-bool null_load_image_data(tinygltf::Image*, const int, std::string*, std::string*,
-	int, int, const unsigned char*, int, void*)
-{
-	//常に成功を返して画像処理をバイパスする
-	return true;
-}
+//bool null_load_image_data(tinygltf::Image*, const int, std::string*, std::string*,
+//	int, int, const unsigned char*, int, void*)
+//{
+//	//常に成功を返して画像処理をバイパスする
+//	return true;
+//}
 
 //==================================================
 //デバイスとファイルを受け取ってモデルを初期化
@@ -67,7 +66,7 @@ GltfModel::GltfModel(ID3D11Device* device, const std::string& filename) :filenam
 	//tinygltfのロード設定
 	//-----------------------
 	tinygltf::TinyGLTF tiny_gltf;	//tinygltfのローダーオブジェクト
-	tiny_gltf.SetImageLoader(null_load_image_data, nullptr);	//画像読み込みをスキップ
+	//tiny_gltf.SetImageLoader(null_load_image_data, nullptr);	//画像読み込みをスキップ
 
 	tinygltf::Model gltf_model;	//解析結果を格納するモデル
 	std::string error, warning;	//警告やエラーメッセージを格納
