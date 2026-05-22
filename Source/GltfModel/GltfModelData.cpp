@@ -17,6 +17,8 @@ bool null_load_image_data(tinygltf::Image*, const int, std::string*, std::string
 //デバイスとファイルを受け取ってモデルデータを初期化
 GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const std::string& filename)
 {
+	this->filename = filename;	//ファイル名を保持
+
 	//-----------------------
 	//tinygltfのロード設定
 	//-----------------------
@@ -60,12 +62,120 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 	//------------------
 	//モデル情報の解析
 	//------------------
-	FetchMeshes(device, gltf_model);	//メッシュデータの抽出とバッファの生成
+	FetchMeshes(gltf_model);	//メッシュデータの抽出とバッファの生成
 	FetchNodes(gltf_model);				//ノード情報の抽出と階層行列の計算
-	FetchMaterials(device, gltf_model);	//マテリアルデータの抽出
-	FetchTextures(device, gltf_model);	//テクスチャ情報の抽出
+	FetchMaterials(gltf_model);	//マテリアルデータの抽出
+	FetchTextures(gltf_model);	//テクスチャ情報の抽出
 	FetchAnimations(gltf_model);		//アニメーション情報を抽出
 	MapAnimationNames(gltf_model);		//抽出したアニメーション名から検索用マップを構築
+
+	//-------------------------------------
+	//バッファの生データを丸ごと保存
+	//--------------------------------------
+	for (const tinygltf::Buffer& gltf_buffer : gltf_model.buffers)
+	{
+		raw_buffers.push_back(gltf_buffer.data);	//CPU側に生のバイト配列をコピーして保持
+	}
+	//----------------------------------------------------
+	//抽出した生データをもとに、GPU用のバッファを生成
+	//----------------------------------------------------
+	if (device)
+	{
+		CreateGpuResources(device.Get());
+	}
+}
+
+//========================================
+//復元した生データからGPUリソースを構築
+//========================================
+void GltfModelData::CreateGpuResources(ID3D11Device* device)
+{
+	buffers.resize(raw_buffers.size());	//格納用ベクトルをリサイズ
+
+	//---------------------------------------------
+	//メッシュのバッファーリソースビューの生成
+	//---------------------------------------------
+	buffers.resize(raw_buffers.size());										// 生成するバッファの数を生データに合わせる
+	for (size_t i = 0; i < raw_buffers.size(); i++)							// 保持している全ての生バッファをループ
+	{
+		if (raw_buffers.at(i).empty()) return;								//生データが空っぽの場合はバッファを作らずにスキップ
+		D3D11_BUFFER_DESC buffer_desc = {};
+		buffer_desc.ByteWidth = static_cast<UINT>(raw_buffers.at(i).size());// バイトサイズを生データから取得
+		buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+		buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_INDEX_BUFFER;	// 頂点・インデックス両用としてフラグを立てる
+
+		D3D11_SUBRESOURCE_DATA subresource_data = {};
+		subresource_data.pSysMem = raw_buffers.at(i).data();				// メモリのポインタを生データ配列の先頭に指定
+
+		HRESULT hr = device->CreateBuffer(&buffer_desc, &subresource_data, buffers.at(i).ReleaseAndGetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));							// バッファ生成を実行
+	}
+
+	std::vector<material::cbuffer> material_data;	//シェーダーに送るデータのみを格納する配列
+	for (std::vector<material>::const_reference material : materials)	//解析済みの全マテリアルを走査
+	{
+		material_data.emplace_back(material.data);	//データ構造体のみを抽出してリストに追加
+	}
+
+	//---------------------------------------------
+	//マテリアルのシェーダーリソースビューを生成
+	//---------------------------------------------
+	HRESULT hr;	//DirectXの関数実行結果を格納する変数
+	Microsoft::WRL::ComPtr<ID3D11Buffer> material_buffer;	//バッファ本体を保存
+	if (!material_data.empty())
+	{
+		D3D11_BUFFER_DESC buffer_desc = {};		//バッファの特性を定義する設定構造体
+		buffer_desc.ByteWidth = static_cast<UINT>(sizeof(material::cbuffer) * material_data.size());	//マテリアルの合計バイトサイズを指定
+		buffer_desc.StructureByteStride = sizeof(material::cbuffer);	//1要素(マテリアル1つ分)のサイズを指定
+		buffer_desc.Usage = D3D11_USAGE_DEFAULT;	//GPUによる読み書き可能に設定
+		buffer_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;	//シェーダーからリソースとしてアクセス可能に設定
+		buffer_desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;	//配列形式でアクセスする「構造化バッファ」作成
+
+		D3D11_SUBRESOURCE_DATA subresource_data = {};	//作成と同時に書き込む初期データを定義
+		subresource_data.pSysMem = material_data.data();	//CPU側のメモリにあるマテリアル配列の先頭アドレスを指定
+		hr = device->CreateBuffer(&buffer_desc, &subresource_data, material_buffer.GetAddressOf());	//バッファ作成
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));	//バッファが作成されたかチェック
+
+		D3D11_SHADER_RESOURCE_VIEW_DESC shader_resource_view_desc = {};	//シェーダーからバッファを見るための窓口(ビュー)の設定
+		shader_resource_view_desc.Format = DXGI_FORMAT_UNKNOWN;	//構造化バッファの場合はフォーマットをUNKONWNに設定
+		shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;	//ビューの対象が通常のバッファであることを指定
+		shader_resource_view_desc.Buffer.NumElements = static_cast<UINT>(material_data.size());	//配列の要素数(マテリアル数)を指定
+		hr = device->CreateShaderResourceView(material_buffer.Get(), &shader_resource_view_desc, material_resource_view.GetAddressOf());	//シェーダーリソースビューを作成
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));	//シェーダーリソースビューが作成されたかチェック
+	}
+
+	//------------------------------------------------------
+	//テクスチャのシェーダーリソースビュー（SRV）の生成
+	//------------------------------------------------------
+	for (const image& img : images)
+	{
+		ID3D11ShaderResourceView* shader_resource_view = nullptr;
+		HRESULT hr = S_OK;
+
+		if (!img.raw_image_data.empty()) // 生データが保持されている場合（メモリからの読み込み）
+		{
+			hr = load_texture_from_memory(device, img.raw_image_data.data(), img.raw_image_data.size(), &shader_resource_view);
+		}
+		else if (!img.uri.empty()) // 外部ファイルパスが指定されている場合
+		{
+			std::filesystem::path path = filename;
+			std::wstring w_filename = path.parent_path().concat(L"/").wstring() + std::wstring(img.uri.begin(), img.uri.end());
+			D3D11_TEXTURE2D_DESC texture2d_desc;
+			hr = load_texture_from_file(device, w_filename.c_str(), &shader_resource_view, &texture2d_desc);
+		}
+
+		if (hr == S_OK && shader_resource_view != nullptr)
+		{
+			texture_resource_views.emplace_back();
+			texture_resource_views.back().Attach(shader_resource_view);
+		}
+		else
+		{
+			// テクスチャの読み込みに失敗した場合でも、インデックスのズレを防ぐために空の要素を追加する
+			texture_resource_views.emplace_back(nullptr);
+		}
+	}
+
 }
 
 //=================================================
@@ -131,32 +241,8 @@ DXGI_FORMAT GltfModelData::ConvertFormat(const tinygltf::Accessor& accessor)
 //=================================
 //メッシュ情報とGPUバッファを生成
 //=================================
-void GltfModelData::FetchMeshes(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const tinygltf::Model& gltf_model)
+void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 {
-	HRESULT hr;	//APIの実行結果を格納
-
-	//-------------------------
-	//GPUバッファの一括生成
-	//-------------------------
-	size_t gltf_buffer_count = gltf_model.buffers.size();		//gltfに含まれるバッファ数取得
-	buffers.resize(gltf_buffer_count);	//格納用ベクトルをリサイズ
-
-	for (size_t gltf_buffer_index = 0; gltf_buffer_index < gltf_buffer_count; gltf_buffer_index++)	//全バッファを処理
-	{
-		const tinygltf::Buffer& gltf_buffer = gltf_model.buffers.at(gltf_buffer_index);	//ソースバッファを参照
-
-		D3D11_BUFFER_DESC buffer_desc = {};	//DirectXバッファ設定用構造体
-		buffer_desc.ByteWidth = static_cast<UINT>(gltf_buffer.data.size());	//バッファ全体のサイズ指定
-		buffer_desc.Usage = D3D11_USAGE_DEFAULT;	//GPUによる読み書きが可能に設定
-		buffer_desc.BindFlags = D3D11_BIND_INDEX_BUFFER | D3D11_BIND_VERTEX_BUFFER;	//頂点とインデックス両方に使用可能
-
-		D3D11_SUBRESOURCE_DATA subresource_data = {};	//初期データ転送用構造体
-		subresource_data.pSysMem = gltf_buffer.data.data();	//CPU側のデータポインタを渡す
-
-		hr = device->CreateBuffer(&buffer_desc, &subresource_data, buffers.at(gltf_buffer_index).GetAddressOf());	//バッファを作成
-		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));	//作成成功かチェック
-	}
-
 	//-------------------------------------
 	//メッシュとプリミティブ情報の構成
 	//-------------------------------------
@@ -268,11 +354,11 @@ void GltfModelData::FetchNodes(const tinygltf::Model& gltf_model)
 //===================================================
 //tinygltfのモデルからマテリアルデータを抽出
 //===================================================
-void GltfModelData::FetchMaterials(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const tinygltf::Model& gltf_model)
+void GltfModelData::FetchMaterials(const tinygltf::Model& gltf_model)
 {
 	//---------------------------------------
-//gltfモデル内の全マテリアルを走査
-//---------------------------------------
+	//gltfモデル内の全マテリアルを走査
+	//---------------------------------------
 	for (std::vector<tinygltf::Material>::const_reference gltf_material : gltf_model.materials)
 	{
 		std::vector<material>::reference material = materials.emplace_back();	//マテリアル領域を追加
@@ -308,42 +394,12 @@ void GltfModelData::FetchMaterials(const Microsoft::WRL::ComPtr<ID3D11Device>& d
 		material.data.emissive_texture.index = gltf_material.emissiveTexture.index;			//発光テクスチャの番号を設定
 		material.data.emissive_texture.texcoord = gltf_material.emissiveTexture.texCoord;	//発光テクスチャ用のUV番号を設定
 	}
-
-	//---------------------------------
-	//GPU転送用の構造化バッファの生成
-	//---------------------------------
-	std::vector<material::cbuffer> material_data;	//シェーダーに送るデータのみを格納する配列
-	for (std::vector<material>::const_reference material : materials)	//解析済みの全マテリアルを走査
-	{
-		material_data.emplace_back(material.data);	//データ構造体のみを抽出してリストに追加
-	}
-
-	HRESULT hr;	//DirectXの関数実行結果を格納する変数
-	Microsoft::WRL::ComPtr<ID3D11Buffer> material_buffer;	//バッファ本体を保存
-	D3D11_BUFFER_DESC buffer_desc = {};		//バッファの特性を定義する設定構造体
-	buffer_desc.ByteWidth = static_cast<UINT>(sizeof(material::cbuffer) * material_data.size());	//マテリアルの合計バイトサイズを指定
-	buffer_desc.StructureByteStride = sizeof(material::cbuffer);	//1要素(マテリアル1つ分)のサイズを指定
-	buffer_desc.Usage = D3D11_USAGE_DEFAULT;	//GPUによる読み書き可能に設定
-	buffer_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;	//シェーダーからリソースとしてアクセス可能に設定
-	buffer_desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;	//配列形式でアクセスする「構造化バッファ」作成
-
-	D3D11_SUBRESOURCE_DATA subresource_data = {};	//作成と同時に書き込む初期データを定義
-	subresource_data.pSysMem = material_data.data();	//CPU側のメモリにあるマテリアル配列の先頭アドレスを指定
-	hr = device->CreateBuffer(&buffer_desc, &subresource_data, material_buffer.GetAddressOf());	//バッファ作成
-	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));	//バッファが作成されたかチェック
-
-	D3D11_SHADER_RESOURCE_VIEW_DESC shader_resource_view_desc = {};	//シェーダーからバッファを見るための窓口(ビュー)の設定
-	shader_resource_view_desc.Format = DXGI_FORMAT_UNKNOWN;	//構造化バッファの場合はフォーマットをUNKONWNに設定
-	shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;	//ビューの対象が通常のバッファであることを指定
-	shader_resource_view_desc.Buffer.NumElements = static_cast<UINT>(material_data.size());	//配列の要素数(マテリアル数)を指定
-	hr = device->CreateShaderResourceView(material_buffer.Get(), &shader_resource_view_desc, material_resource_view.GetAddressOf());	//シェーダーリソースビューを作成
-	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));	//シェーダーリソースビューが作成されたかチェック
 }
 
 //=======================
 //テクスチャ情報を抽出
 //=======================
-void GltfModelData::FetchTextures(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const tinygltf::Model& gltf_model)
+void GltfModelData::FetchTextures(const tinygltf::Model& gltf_model)
 {
 	HRESULT hr = S_OK;
 
@@ -372,26 +428,10 @@ void GltfModelData::FetchTextures(const Microsoft::WRL::ComPtr<ID3D11Device>& de
 		{
 			const tinygltf::BufferView& buffer_view = gltf_model.bufferViews.at(gltf_image.bufferView);
 			const tinygltf::Buffer& buffer = gltf_model.buffers.at(buffer_view.buffer);
-			const ::byte* data = buffer.data.data() + buffer_view.byteOffset;
-
-			ID3D11ShaderResourceView* texture_resource_view = {};
-			hr = load_texture_from_memory(device.Get(), data, buffer_view.byteLength, &texture_resource_view);
-			if (hr == S_OK)
-			{
-				texture_resource_views.emplace_back().Attach(texture_resource_view);
-			}
-		}
-		else
-		{
-			const std::filesystem::path path = filename;
-			ID3D11ShaderResourceView* shader_resource_view = {};
-			D3D11_TEXTURE2D_DESC texture2d_desc;
-			std::wstring filename = path.parent_path().concat(L"/").wstring() + std::wstring(gltf_image.uri.begin(), gltf_image.uri.end());
-			hr = load_texture_from_file(device.Get(), filename.c_str(), &shader_resource_view, &texture2d_desc);
-			if (hr == S_OK)
-			{
-				texture_resource_views.emplace_back().Attach(shader_resource_view);
-			}
+			image.raw_image_data.assign(
+				buffer.data.begin() + buffer_view.byteOffset,
+				buffer.data.begin() + buffer_view.byteOffset + buffer_view.byteLength
+			);
 		}
 	}
 }

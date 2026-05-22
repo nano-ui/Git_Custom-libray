@@ -8,6 +8,7 @@
 #include <cereal/types/string.hpp>
 #include <cereal/types/unordered_map.hpp>
 #include <cereal/types/memory.hpp>
+#include "GltfModelSerializer.h"
 
 //DirectX型のシリアライズ定義
 namespace DirectX {

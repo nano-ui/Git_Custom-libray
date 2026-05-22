@@ -143,6 +143,12 @@
     <Filter Include="Source\ObjectRender\GltfModel\GltfModelRenderer">
       <UniqueIdentifier>{fe487eff-2e16-46a3-ad96-d8cf513fddaf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Serializer\FbxModelSerializer">
+      <UniqueIdentifier>{b562292f-e576-4027-8a2d-a505e87d7161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Serializer\GltfModelSerializer">
+      <UniqueIdentifier>{ff774d3c-de3d-4476-94be-aa54c78f7b06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -208,9 +214,6 @@
     <ClCompile Include="Source\ObjectsRender\SkinnedMeshComponents.cpp">
       <Filter>Source\ObjectRender\FbxModel\SkinnedMeshComponents</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp">
-      <Filter>Source\Serializer</Filter>
-    </ClCompile>
     <ClCompile Include="Source\FbxModel\FbxBone.cpp">
       <Filter>Source\ObjectRender\FbxModel\FbxBone</Filter>
     </ClCompile>
@@ -264,6 +267,12 @@
     </ClCompile>
     <ClCompile Include="Source\GltfModel\GltfModel.cpp">
       <Filter>Source\ObjectRender\GltfModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp">
+      <Filter>Source\Serializer\FbxModelSerializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Serialization\GltfModelSerializer.cpp">
+      <Filter>Source\Serializer\GltfModelSerializer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -339,9 +348,6 @@
     <ClInclude Include="Source\ObjectsRender\SkinnedMeshComponents.h">
       <Filter>Source\ObjectRender\FbxModel\SkinnedMeshComponents</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h">
-      <Filter>Source\Serializer</Filter>
-    </ClInclude>
     <ClInclude Include="Source\FbxModel\FbxBone.h">
       <Filter>Source\ObjectRender\FbxModel\FbxBone</Filter>
     </ClInclude>
@@ -401,6 +407,12 @@
     </ClInclude>
     <ClInclude Include="Source\GltfModel\GltfModel.h">
       <Filter>Source\ObjectRender\GltfModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h">
+      <Filter>Source\Serializer\FbxModelSerializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Serialization\GltfModelSerializer.h">
+      <Filter>Source\Serializer\GltfModelSerializer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

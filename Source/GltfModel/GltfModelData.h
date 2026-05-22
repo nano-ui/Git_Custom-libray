@@ -172,6 +172,7 @@ public:
 		std::string mime_type;	//MIMEタイプ
 		std::string uri;		//UPIパス
 		bool as_is = false;		//生データフラグ
+		std::vector<unsigned char> raw_image_data;	//シリアライズ用に画像の生バイナリデータを直接保持する配列
 	};
 
 public:
@@ -217,21 +218,28 @@ public:
 	};
 
 public:
+	//コンストラクタ
+	GltfModelData() = default;
+
 	//デバイスとファイルを受け取ってモデルデータを初期化
 	GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const std::string& filename);
 
+	//復元した生データからGPUリソースを構築
+	void CreateGpuResources(ID3D11Device* device);
+
 private:
 	DXGI_FORMAT ConvertFormat(const tinygltf::Accessor& accessor);
-	void FetchMeshes(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const tinygltf::Model& gltf_model);
+	void FetchMeshes(const tinygltf::Model& gltf_model);
 	void FetchNodes(const tinygltf::Model& gltf_model);
-	void FetchMaterials(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const tinygltf::Model& gltf_model);
-	void FetchTextures(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const tinygltf::Model& gltf_model);
+	void FetchMaterials(const tinygltf::Model& gltf_model);
+	void FetchTextures(const tinygltf::Model& gltf_model);
 	void FetchAnimations(const tinygltf::Model& gltf_model);
 
 	//アニメーション名をマップに登録
 	void MapAnimationNames(const tinygltf::Model& gltf_model);
 
 public:
+	std::vector<std::vector<unsigned char>> raw_buffers;	//シリアライズ用の生データ保持配列
 	std::string filename;	//ファイルの名前
 
 	std::vector<scene> scenes;			//全シーンのリスト
