@@ -105,22 +105,16 @@ void MainScene::Initialize()
 	//	(device, "./resources/nico.fbx", true);
 
 	//a
-	resource = std::make_shared<FbxSkinnedResource>(device);
 
-	resource->Load("./resources/nico.fbx");
-
-	fbx_skinned_model = std::make_unique<FbxSkinnedModel>(resource);
-
-	fbx_skinned_model->PlayAnimation("NIC_Idle");
+	fbx_model = std::make_unique<Model>(device, "./resources/nico.fbx");
+	fbx_model->PlayAnimation("NIC_Idle", true);
 
 	//gltf_models[0] = std::make_unique<GltfModel>(device,
 	//	"./glTF-Sample-Models-main/2.0/CesiumMan/glTF-Binary/CesiumMan.glb");
 
 	//gltf_model_data = std::make_shared<GltfModelData>(device,"./glTF-Sample-Models-main/2.0/CesiumMan/glTF-Binary/CesiumMan.glb");
-	gltf_model_data = GltfModelData::Load(device, "./glTF-Sample-Models-main/2.0/CesiumMan/glTF-Binary/CesiumMan.glb");
-	gltf_model_renderer = std::make_shared<GltfModelRenderer>(device);
-	gltf_models = std::make_unique<GltfModel>(gltf_model_data, gltf_model_renderer);
-	gltf_models->PlayAnimation("anim_0", true);
+	gltf_model = std::make_unique<Model>(device, "./glTF-Sample-Models-main/2.0/CesiumMan/glTF-Binary/CesiumMan.glb");
+	gltf_model->PlayAnimation("anim_0", true);
 
 
 	//skinned_meshes[0] = make_unique<skinned_mesh>(device.Get(), "./resources/AimTest/MNK_Mesh.fbx");
@@ -213,12 +207,8 @@ void MainScene::Update(float elapsed_time)
 
 	//ImGui::End();
 #endif
-
-	if (fbx_skinned_model)
-	{
-		fbx_skinned_model->AnimationUpdate(elapsed_time);
-	}
-	gltf_models->Update(elapsed_time);
+	fbx_model->Update(elapsed_time);
+	gltf_model->Update(elapsed_time);
 }
 
 //描画処理
@@ -437,7 +427,7 @@ void MainScene::Render(float elapsed_time)
 	);
 	//immediate_context->RSSetState(reasterizer_states[0].Get());
 
-	if (fbx_skinned_model)	//モデルが存在するかチェック
+	if (fbx_model)	//モデルが存在するかチェック
 	{
 		//--------------------------------------------------
 		//GLTFモデルのワールド行列を作成して描画する
@@ -467,7 +457,7 @@ void MainScene::Render(float elapsed_time)
 		//	time = 0;
 		//}
 		//gltf_models[0]->Render(context, world, animated_nodes);	//GLTFモデルの描画を実行
-		gltf_models->Render(context, world);
+		gltf_model->Render(context, world);
 	}
 
 	// 深度テスト OFF

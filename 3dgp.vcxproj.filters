@@ -92,9 +92,6 @@
     <Filter Include="Source\ObjectRender\Model">
       <UniqueIdentifier>{1563c0d9-8878-4481-bd39-2d9641d69e3b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ObjectRender\ModelRenderer">
-      <UniqueIdentifier>{446d5407-dc6c-44df-8a63-d62a32914675}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Scene">
       <UniqueIdentifier>{eeba2563-d716-45cb-b8b8-6ea187fa0afc}</UniqueIdentifier>
     </Filter>
@@ -195,9 +192,6 @@
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\Model.cpp">
       <Filter>Source\ObjectRender\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ObjectsRender\ModelRenderer.cpp">
-      <Filter>Source\ObjectRender\ModelRenderer</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\framework.cpp">
       <Filter>Source\Graphics\Framework</Filter>
@@ -326,9 +320,6 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\fbx_utility.h">
       <Filter>Source\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ObjectsRender\ModelRenderer.h">
-      <Filter>Source\ObjectRender\ModelRenderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\framework.h">
       <Filter>Source\Graphics\Framework</Filter>

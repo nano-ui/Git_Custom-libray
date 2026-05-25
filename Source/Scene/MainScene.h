@@ -18,12 +18,7 @@
 #include "../Graphics/PostProcessConstantBuffers.h"
 #include "../Common/high_resolution_timer.h"
 
-#include "../FbxModel/FbxSkinnedModel.h"
-#include "../FbxModel/FbxSkinnedResource.h"
-
-#include "../GltfModel/GltfModelData.h"
-#include "../GltfModel/GltfModelRenderer.h"
-#include "../GltfModel/GltfModel.h"
+#include "../ObjectsRender/Model.h"
 
 class MainScene :public Scene
 {
@@ -50,12 +45,8 @@ public:
 	void Render(float elapsed_time) override;
 
 private:
-	std::shared_ptr<FbxSkinnedResource> resource;
-	std::unique_ptr<FbxSkinnedModel> fbx_skinned_model;
-
-	std::unique_ptr<GltfModel> gltf_models;
-	std::shared_ptr<GltfModelData> gltf_model_data;
-	std::shared_ptr<GltfModelRenderer> gltf_model_renderer;
+	std::unique_ptr<Model> fbx_model;
+	std::unique_ptr<Model> gltf_model;
 
 private:
 	struct Transform

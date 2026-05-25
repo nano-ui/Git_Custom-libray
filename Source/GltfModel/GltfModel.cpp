@@ -3,6 +3,7 @@
 #include "GltfModelData.h"
 #include "GltfModelAnimation.h"
 #include "GltfModelRenderer.h"
+#include "Model.h"
 
 //==================
 //コンストラクタ

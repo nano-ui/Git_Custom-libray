@@ -1,8 +1,19 @@
 #pragma once
 
 #include <memory>
+#include <wrl.h>
+#include <d3d11.h>
+#include <DirectXMath.h>
 #include "DirectXDevice.h"
 #include "PipelineStates.h"
+
+//シェーダーに渡すシーン共通の定数構造体
+struct scene_constants
+{
+	DirectX::XMFLOAT4X4 view_projection; // ビュー行列とプロジェクション行列を合成した行列です
+	DirectX::XMFLOAT4 light_direction;   // 平行光源の向きを表すベクトルです
+	DirectX::XMFLOAT4 camera_position;   // カメラのワールド座標（w成分は1.0）です
+};
 
 class Graphics
 {
@@ -22,6 +33,12 @@ public:
 	//描画終了
 	void EndFrame();
 
+	//シーン定数バッファを生成
+	bool CreateSceneConstantBuffer();
+
+	//シーン定数バッファを更新
+	void UpdateSceneConstantBuffer(const scene_constants& constants);
+
 	//コンポーネントへのアクセサ
 	DirectXDevice* GetDirectXDevice() const { return directx_device.get(); }
 	PipelineStates* GetPipelineStates()const { return pipline_states.get(); }
@@ -38,5 +55,6 @@ private:
 private:
 	std::unique_ptr<DirectXDevice> directx_device;
 	std::unique_ptr<PipelineStates> pipline_states;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> scene_constant_buffer;
 };
 
