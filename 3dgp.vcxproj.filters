@@ -146,6 +146,27 @@
     <Filter Include="Source\Serializer\GltfModelSerializer">
       <UniqueIdentifier>{ff774d3c-de3d-4476-94be-aa54c78f7b06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Camera">
+      <UniqueIdentifier>{05632b8d-4753-4647-9e67-3d0f2ef53ef5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Light">
+      <UniqueIdentifier>{3ab4965e-1756-40c0-bf0d-1b8d9b35ed7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Shader\PostProcess">
+      <UniqueIdentifier>{abd6a32d-6905-476a-9f7f-716de6eab554}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Shader\BasicShader">
+      <UniqueIdentifier>{31e19f14-ba73-467c-add3-bf9008b5da82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Shader\ShaderManager">
+      <UniqueIdentifier>{95743834-c82d-4ab4-aa4b-558088619811}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Shader\PostProcess\LuminanceExtractionEffect">
+      <UniqueIdentifier>{3c8bcf3b-f4be-4ed6-85fe-331aa4b922a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Shader\PostProcess\BlurEffect">
+      <UniqueIdentifier>{de913255-5198-4284-bc05-b5e26bb384a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -267,6 +288,24 @@
     </ClCompile>
     <ClCompile Include="Source\Serialization\GltfModelSerializer.cpp">
       <Filter>Source\Serializer\GltfModelSerializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera\Camera.cpp">
+      <Filter>Source\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Light\Light.cpp">
+      <Filter>Source\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shaders\BasicShader.cpp">
+      <Filter>Source\Graphics\Shader\BasicShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shaders\ShaderManager.cpp">
+      <Filter>Source\Graphics\Shader\ShaderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shaders\LuminanceExtractionEffect.cpp">
+      <Filter>Source\Graphics\Shader\PostProcess\LuminanceExtractionEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shaders\BlurEffect.cpp">
+      <Filter>Source\Graphics\Shader\PostProcess\BlurEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -405,12 +444,30 @@
     <ClInclude Include="Source\Serialization\GltfModelSerializer.h">
       <Filter>Source\Serializer\GltfModelSerializer</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Camera\Camera.h">
+      <Filter>Source\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Light\Light.h">
+      <Filter>Source\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shaders\PostProcess.h">
+      <Filter>Source\Graphics\Shader\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shaders\BasicShader.h">
+      <Filter>Source\Graphics\Shader\BasicShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shaders\ShaderManager.h">
+      <Filter>Source\Graphics\Shader\ShaderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shaders\LuminanceExtractionEffect.h">
+      <Filter>Source\Graphics\Shader\PostProcess\LuminanceExtractionEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shaders\BlurEffect.h">
+      <Filter>Source\Graphics\Shader\PostProcess\BlurEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Compiled\blur_ps.cod">
-      <Filter>Shaders\blur</Filter>
-    </None>
-    <None Include="Shaders\Compiled\blur_ps.cso">
       <Filter>Shaders\blur</Filter>
     </None>
     <None Include="Shaders\Compiled\fullscreen_quad_ps.cod">
@@ -497,11 +554,11 @@
     <None Include="Shaders\SoureCode\gltf_model.hlsli">
       <Filter>Shaders\gltf_model</Filter>
     </None>
+    <None Include="Shaders\Compiled\blur_ps.cso">
+      <Filter>Shaders\blur</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\SoureCode\blur_ps.hlsl">
-      <Filter>Shaders\blur</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\SoureCode\fullscreen_quad_ps.hlsl">
       <Filter>Shaders\fullscreen_qiad</Filter>
     </FxCompile>
@@ -540,6 +597,9 @@
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\gltf_model_ps.hlsl">
       <Filter>Shaders\gltf_model</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\blur_ps.hlsl">
+      <Filter>Shaders\blur</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

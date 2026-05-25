@@ -19,7 +19,6 @@
 // Name                                 Type  Format         Dim      HLSL Bind  Count
 // ------------------------------ ---------- ------- ----------- -------------- ------
 // sampler_states[1]                 sampler      NA          NA             s1      1 
-// sampler_states[2]                 sampler      NA          NA             s2      1 
 // texture_maps[0]                   texture  float4          2d             t0      1 
 // texture_maps[1]                   texture  float4          2d             t1      1 
 // BloomParams                       cbuffer      NA          NA            cb1      1 
@@ -44,7 +43,6 @@ ps_5_0
 dcl_globalFlags refactoringAllowed | skipOptimization
 dcl_constantbuffer CB1[1], immediateIndexed
 dcl_sampler s1, mode_default
-dcl_sampler s2, mode_default
 dcl_resource_texture2d (float,float,float,float) t0
 dcl_resource_texture2d (float,float,float,float) t1
 dcl_input_ps linear v1.xy
@@ -65,7 +63,7 @@ mov r0.x, r0.x  // r0.x <- width
 mov r0.y, r0.y  // r0.y <- height
 
 #line 18
-sample_indexable(texture2d)(float,float,float,float) r1.xyzw, v1.xyxx, t0.xyzw, s2  // r1.x <- color.x; r1.y <- color.y; r1.z <- color.z; r1.w <- color.w
+sample_indexable(texture2d)(float,float,float,float) r1.xyzw, v1.xyxx, t0.xyzw, s1  // r1.x <- color.x; r1.y <- color.y; r1.z <- color.z; r1.w <- color.w
 
 #line 19
 mov r1.w, r1.w  // r1.w <- alpha

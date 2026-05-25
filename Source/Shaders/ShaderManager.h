@@ -21,6 +21,9 @@ public:
 	//適用したいシェーダーをリストに追加
 	void AddShader(std::unique_ptr<PostProcess> shader) { shaders.push_back(std::move(shader)); }
 
+	//エフェクト適用前の元のシーン画像を取得
+	ID3D11ShaderResourceView* GetSceneSRV()const { return scene_buffer->shader_resource_views[0].Get(); }
+
 private:
 	std::unique_ptr<framebuffer> scene_buffer;			//3Dシーンに最初に書き込むメインバッファ
 	std::unique_ptr<framebuffer> work_buffer;			//シェーダーを交互に書き込むための一時作業用バッファ

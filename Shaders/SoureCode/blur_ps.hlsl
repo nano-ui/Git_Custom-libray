@@ -15,7 +15,7 @@ float4 main(VS_OUT pin) : SV_TARGET
     texture_maps[1].GetDimensions(mip_level, width, height, number_of_levels);
     
     //元のカラーを取得
-    float4 color = texture_maps[0].Sample(sampler_states[ANISOTROPIC], pin.texcoord);
+    float4 color = texture_maps[0].Sample(sampler_states[LINEAR], pin.texcoord);
     float alpha = color.a;
     
     //ガウスブラーの準備

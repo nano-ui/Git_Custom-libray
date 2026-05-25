@@ -57,6 +57,6 @@ void ShaderManager::EndRender(ID3D11DeviceContext* context, ID3D11RenderTargetVi
 			}
 		}
 	}
-
-
+	ID3D11ShaderResourceView* null_srv[2] = { nullptr,nullptr };
+	context->PSSetShaderResources(0, 2, null_srv);
 }

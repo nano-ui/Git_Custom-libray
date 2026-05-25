@@ -219,6 +219,7 @@
     <ClCompile Include="External\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="External\imgui\imgui_ja_gryph_ranges.cpp" />
     <ClCompile Include="External\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Common\main.cpp" />
     <ClCompile Include="Source\FbxModel\FbxAnimation.cpp" />
     <ClCompile Include="Source\FbxModel\FbxBone.cpp" />
@@ -241,6 +242,7 @@
     <ClCompile Include="Source\Graphics\PostProcessConstantBuffers.cpp" />
     <ClCompile Include="Source\Graphics\SceneConstantBuffers.cpp" />
     <ClCompile Include="Source\Graphics\shader.cpp" />
+    <ClCompile Include="Source\Light\Light.cpp" />
     <ClCompile Include="Source\ObjectsRender\AssetManager.cpp" />
     <ClCompile Include="Source\ObjectsRender\geometric_primitive.cpp" />
     <ClCompile Include="Source\ObjectsRender\Model.cpp" />
@@ -253,6 +255,10 @@
     <ClCompile Include="Source\Scene\MainScene.cpp" />
     <ClCompile Include="Source\Serialization\GltfModelSerializer.cpp" />
     <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp" />
+    <ClCompile Include="Source\Shaders\BasicShader.cpp" />
+    <ClCompile Include="Source\Shaders\BlurEffect.cpp" />
+    <ClCompile Include="Source\Shaders\LuminanceExtractionEffect.cpp" />
+    <ClCompile Include="Source\Shaders\ShaderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h" />
@@ -263,6 +269,7 @@
     <ClInclude Include="External\imgui\imstb_rectpack.h" />
     <ClInclude Include="External\imgui\imstb_textedit.h" />
     <ClInclude Include="External\imgui\imstb_truetype.h" />
+    <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Common\high_resolution_timer.h" />
     <ClInclude Include="Source\Common\misc.h" />
     <ClInclude Include="Source\Common\ModelData.h" />
@@ -287,6 +294,7 @@
     <ClInclude Include="Source\Graphics\PostProcessConstantBuffers.h" />
     <ClInclude Include="Source\Graphics\SceneConstantBuffers.h" />
     <ClInclude Include="Source\Graphics\shader.h" />
+    <ClInclude Include="Source\Light\Light.h" />
     <ClInclude Include="Source\ObjectsRender\AssetManager.h" />
     <ClInclude Include="Source\ObjectsRender\geometric_primitive.h" />
     <ClInclude Include="Source\ObjectsRender\Model.h" />
@@ -300,6 +308,11 @@
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Serialization\GltfModelSerializer.h" />
     <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h" />
+    <ClInclude Include="Source\Shaders\BasicShader.h" />
+    <ClInclude Include="Source\Shaders\BlurEffect.h" />
+    <ClInclude Include="Source\Shaders\LuminanceExtractionEffect.h" />
+    <ClInclude Include="Source\Shaders\PostProcess.h" />
+    <ClInclude Include="Source\Shaders\ShaderManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Compiled\blur_ps.cod" />
