@@ -116,7 +116,8 @@ void MainScene::Initialize()
 	//gltf_models[0] = std::make_unique<GltfModel>(device,
 	//	"./glTF-Sample-Models-main/2.0/CesiumMan/glTF-Binary/CesiumMan.glb");
 
-	gltf_model_data = std::make_shared<GltfModelData>(device,"./glTF-Sample-Models-main/2.0/CesiumMan/glTF-Binary/CesiumMan.glb");
+	//gltf_model_data = std::make_shared<GltfModelData>(device,"./glTF-Sample-Models-main/2.0/CesiumMan/glTF-Binary/CesiumMan.glb");
+	gltf_model_data = GltfModelData::Load(device, "./glTF-Sample-Models-main/2.0/CesiumMan/glTF-Binary/CesiumMan.glb");
 	gltf_model_renderer = std::make_shared<GltfModelRenderer>(device);
 	gltf_models = std::make_unique<GltfModel>(gltf_model_data, gltf_model_renderer);
 	gltf_models->PlayAnimation("anim_0", true);

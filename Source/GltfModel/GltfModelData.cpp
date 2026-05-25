@@ -63,10 +63,10 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 	//------------------
 	//モデル情報の解析
 	//------------------
-	FetchMeshes(gltf_model);	//メッシュデータの抽出とバッファの生成
+	FetchMeshes(gltf_model);			//メッシュデータの抽出とバッファの生成
 	FetchNodes(gltf_model);				//ノード情報の抽出と階層行列の計算
-	FetchMaterials(gltf_model);	//マテリアルデータの抽出
-	FetchTextures(gltf_model);	//テクスチャ情報の抽出
+	FetchMaterials(gltf_model);			//マテリアルデータの抽出
+	FetchTextures(gltf_model);			//テクスチャ情報の抽出
 	FetchAnimations(gltf_model);		//アニメーション情報を抽出
 	MapAnimationNames(gltf_model);		//抽出したアニメーション名から検索用マップを構築
 
@@ -199,8 +199,18 @@ std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const s
 		return data;						//完成したデータを返す
 	}	
 
+	//------------------------------------
+	//キャッシュがない場合の通常読み込み
+	//------------------------------------
+	Microsoft::WRL::ComPtr<ID3D11Device> com_device(device);
+	data = std::make_shared<GltfModelData>(com_device, filename);
 
-	return std::shared_ptr<GltfModelData>();
+	//------------------------------------
+	//次回起動時のためにベイク保存処理
+	//------------------------------------
+	GltfModelSerializer::Save(binary_filename, data);
+
+	return data;
 }
 
 //=================================================
