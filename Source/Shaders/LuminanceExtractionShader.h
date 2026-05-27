@@ -9,7 +9,7 @@
 struct threshold_constant_data
 {
 	float brightness_threshold;	//明るさ
-	DirectX::XMFLOAT2 padding;	//16バイトに合わせるための詰め物
+	DirectX::XMFLOAT3 padding;	//16バイトに合わせるための詰め物
 };
 
 class LuminanceExtractionShader

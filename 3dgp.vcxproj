@@ -255,6 +255,7 @@
     <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp" />
     <ClCompile Include="Source\Shaders\BlurShader.cpp" />
     <ClCompile Include="Source\Shaders\CustomShader.cpp" />
+    <ClCompile Include="Source\Shaders\LuminanceExtractionShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h" />
@@ -304,6 +305,7 @@
     <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h" />
     <ClInclude Include="Source\Shaders\BlurShader.h" />
     <ClInclude Include="Source\Shaders\CustomShader.h" />
+    <ClInclude Include="Source\Shaders\LuminanceExtractionShader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Compiled\blur_ps.cod" />

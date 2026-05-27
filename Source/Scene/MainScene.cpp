@@ -87,6 +87,12 @@ void MainScene::Initialize()
 		_ASSERT_EXPR(false, L"Failed to initialize BlurShader");
 	}
 
+	luminance_shader = std::make_unique<LuminanceExtractionShader>();
+	if (!luminance_shader->Initialize())
+	{
+		_ASSERT_EXPR(false, L"Failed to initialize LuminanceShader");
+	}
+
 	//上記までがDirectX11の初期設定処理
 
 	//下記からはゲームで必要なオブジェクトの初期化
@@ -353,20 +359,16 @@ void MainScene::RenderPostProcesses()
 	// ------------------------------------------------------------------------------
 	framebuffers[main_framebuffer_idx]->deactivate(context); // メインカラーバッファのバインド解除
 
-	// マップ＆アンマップで高速にしきい値データを定数バッファへ書き込みます
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	context->Map(thresholdBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	memcpy(mappedResource.pData, &tb, sizeof(tb));
-	context->Unmap(thresholdBuffer.Get(), 0);
-	context->PSSetConstantBuffers(threshold_buffer_slot, 1, thresholdBuffer.GetAddressOf());
+	luminance_shader->SetThreshold(tb.brightness_threshold);
+	luminance_shader->Apply();
 
 	// 抽出結果を書き込む縮小バッファを有効化します
-	framebuffers[luminance_framebuffer_idx]->clear(context);
-	framebuffers[luminance_framebuffer_idx]->activate(context);
+	framebuffers[1]->clear(context);
+	framebuffers[1]->activate(context);
 
 	// 輝度抽出ピクセルシェーダー(pixel_shaders[0])を用いて全画面描画を実行します
-	bit_block_transfer->blit(context, framebuffers[main_framebuffer_idx]->shader_resource_views[0].GetAddressOf(), 0, 1, pixel_shaders[0].Get());
-	framebuffers[luminance_framebuffer_idx]->deactivate(context);
+	bit_block_transfer->blit(context, framebuffers[0]->shader_resource_views[0].GetAddressOf(), 0, 1, luminance_shader->GetPixelShader());
+	framebuffers[1]->deactivate(context);
 
 	// ------------------------------------------------------------------------------
 	// -- パス2: ブルーム（ブラー）合成処理 --

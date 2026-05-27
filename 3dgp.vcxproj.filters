@@ -155,6 +155,9 @@
     <Filter Include="Source\Shaders\BlurShader">
       <UniqueIdentifier>{533b7e7e-256a-49ae-820f-78bc545056eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Shaders\LuminanceExtractionShader">
+      <UniqueIdentifier>{a2f013ce-7873-473e-8a17-d49265ad98bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -282,6 +285,9 @@
     </ClCompile>
     <ClCompile Include="Source\Shaders\BlurShader.cpp">
       <Filter>Source\Shaders\BlurShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shaders\LuminanceExtractionShader.cpp">
+      <Filter>Source\Shaders\LuminanceExtractionShader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -425,6 +431,9 @@
     </ClInclude>
     <ClInclude Include="Source\Shaders\BlurShader.h">
       <Filter>Source\Shaders\BlurShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shaders\LuminanceExtractionShader.h">
+      <Filter>Source\Shaders\LuminanceExtractionShader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

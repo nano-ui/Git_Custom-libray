@@ -16,6 +16,7 @@
 #include "../Graphics/fullscreen_quad.h"
 #include "../Graphics/Graphics.h"
 #include "../Shaders/BlurShader.h"
+#include "../Shaders/LuminanceExtractionShader.h"
 #include "../Graphics/PostProcessConstantBuffers.h"
 #include "../Common/high_resolution_timer.h"
 
@@ -67,6 +68,8 @@ private:
 private:
 	std::unique_ptr<BlurShader> blur_shader;
 	bloom_params_data bloom_data;
+
+	std::unique_ptr<LuminanceExtractionShader> luminance_shader;
 
 private:
 	struct Transform

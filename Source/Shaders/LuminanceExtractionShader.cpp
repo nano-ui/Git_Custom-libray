@@ -15,7 +15,7 @@ bool LuminanceExtractionShader::Initialize()
 
 	//専用定数バッファの生成
 	bool is_buffer_created = CreateConstantBuffer();
-	if (is_buffer_created)return false;
+	if (!is_buffer_created)return false;
 
 	return true;
 }
