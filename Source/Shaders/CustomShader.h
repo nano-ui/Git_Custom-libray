@@ -18,7 +18,7 @@ public:
 	//保持しているシェーダーと入力レイアウトをパイプラインにバインド
 	void Apply();
 
-	//内部で生成・保持しているピクセルシェーダーを取得
+	//ピクセルシェーダーを取得
 	ID3D11PixelShader* GetPixelShader()const { return pixel_shader.Get(); }
 
 private:
