@@ -2,6 +2,7 @@
 
 #include <wrl.h>
 #include <string>
+#include <d3d11.h>
 #include <d3dcompiler.h>
 
 struct ID3D11VertexShader;
@@ -16,6 +17,9 @@ public:
 
 	//保持しているシェーダーと入力レイアウトをパイプラインにバインド
 	void Apply();
+
+	//内部で生成・保持しているピクセルシェーダーを取得
+	ID3D11PixelShader* GetPixelShader()const { return pixel_shader.Get(); }
 
 private:
 	//頂点シェーダーを読み込み、リフレクションで入力レイアウトを自動生成

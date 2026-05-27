@@ -15,6 +15,7 @@
 #include "../Graphics/framebuffer.h"
 #include "../Graphics/fullscreen_quad.h"
 #include "../Graphics/Graphics.h"
+#include "../Shaders/BlurShader.h"
 #include "../Graphics/PostProcessConstantBuffers.h"
 #include "../Common/high_resolution_timer.h"
 
@@ -44,9 +45,28 @@ public:
 	//描画処理
 	void Render(float elapsed_time) override;
 
+	//ImGuiデバッグ描画
+	void RenderGui()override;
+
+private:
+
+	//カメラとライトの行列計算を行い、シーン共通定数バッファをGPUへ転送
+	void UpdateSceneConstants();
+
+	//シーン内の背景、3Dモデル、幾何プリミティブをメインバッファに描画
+	void RenderSceneObjects();
+
+	//輝度抽出とBlurShaderコンポーネントによるポストプロセスエフェクトを実行
+	void RenderPostProcesses();
+
+
 private:
 	std::unique_ptr<Model> fbx_model;
 	std::unique_ptr<Model> gltf_model;
+
+private:
+	std::unique_ptr<BlurShader> blur_shader;
+	bloom_params_data bloom_data;
 
 private:
 	struct Transform

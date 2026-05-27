@@ -253,6 +253,8 @@
     <ClCompile Include="Source\Scene\MainScene.cpp" />
     <ClCompile Include="Source\Serialization\GltfModelSerializer.cpp" />
     <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp" />
+    <ClCompile Include="Source\Shaders\BlurShader.cpp" />
+    <ClCompile Include="Source\Shaders\CustomShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h" />
@@ -300,6 +302,8 @@
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Serialization\GltfModelSerializer.h" />
     <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h" />
+    <ClInclude Include="Source\Shaders\BlurShader.h" />
+    <ClInclude Include="Source\Shaders\CustomShader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Compiled\blur_ps.cod" />

@@ -146,6 +146,15 @@
     <Filter Include="Source\Serializer\GltfModelSerializer">
       <UniqueIdentifier>{ff774d3c-de3d-4476-94be-aa54c78f7b06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Shaders">
+      <UniqueIdentifier>{a95b2b09-eaed-4a5e-bffb-fd5c38ff4c32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shaders\CustomShader">
+      <UniqueIdentifier>{df8ac468-d6e3-43a0-b487-261abe202bea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shaders\BlurShader">
+      <UniqueIdentifier>{533b7e7e-256a-49ae-820f-78bc545056eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -267,6 +276,12 @@
     </ClCompile>
     <ClCompile Include="Source\Serialization\GltfModelSerializer.cpp">
       <Filter>Source\Serializer\GltfModelSerializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shaders\CustomShader.cpp">
+      <Filter>Source\Shaders\CustomShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shaders\BlurShader.cpp">
+      <Filter>Source\Shaders\BlurShader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -405,6 +420,12 @@
     <ClInclude Include="Source\Serialization\GltfModelSerializer.h">
       <Filter>Source\Serializer\GltfModelSerializer</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Shaders\CustomShader.h">
+      <Filter>Source\Shaders\CustomShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shaders\BlurShader.h">
+      <Filter>Source\Shaders\BlurShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Compiled\blur_ps.cod">
@@ -505,9 +526,6 @@
     <FxCompile Include="Shaders\SoureCode\fullscreen_quad_ps.hlsl">
       <Filter>Shaders\fullscreen_qiad</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\SoureCode\fullscreen_quad_vs.hlsl">
-      <Filter>Shaders\fullscreen_qiad</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\SoureCode\geometric_primitive_ps.hlsl">
       <Filter>Shaders\geometric_primitive</Filter>
     </FxCompile>
@@ -540,6 +558,9 @@
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\gltf_model_ps.hlsl">
       <Filter>Shaders\gltf_model</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\fullscreen_quad_vs.hlsl">
+      <Filter>Shaders\geometric_primitive</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

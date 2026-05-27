@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <vector>
 #include <memory>
+#include "BlurShader.h"
 
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxguid.lib")
@@ -43,7 +44,7 @@ bool CustomShader::Initialize(
         ps_name.c_str(),
         pixel_shader.GetAddressOf()
     );
-    if (FALSE(hr))
+    if (FAILED(hr))
     {
         return false;
     }
