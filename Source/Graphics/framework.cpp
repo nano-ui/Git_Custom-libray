@@ -1,6 +1,8 @@
 ﻿#include "framework.h"
 #include "../Graphics/Graphics.h"
-#include "../Scene/MainScene.h"
+#include "../Scene/SceneTitle.h"
+
+#include <sstream>
 
 #ifdef USE_IMGUI
 #include "imgui.h"
@@ -36,7 +38,7 @@ int framework::run()
 	ImGui::StyleColorsDark();
 #endif
 	//MainSceneを作成・初期化
-	scene = std::make_unique<MainScene>();
+	scene = std::make_unique<SceneTitle>();
 	scene->Initialize();
 
 	//メインループ

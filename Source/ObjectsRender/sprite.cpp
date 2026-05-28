@@ -113,9 +113,6 @@ sprite::sprite(ID3D11Device* device, const wchar_t* filename)
 	texture2d->GetDesc(&texture2d_desc);
 
 	texture2d->Release();
-
-
-
 }
 
 sprite::~sprite()

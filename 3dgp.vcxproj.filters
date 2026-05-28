@@ -158,6 +158,12 @@
     <Filter Include="Source\Shaders\LuminanceExtractionShader">
       <UniqueIdentifier>{a2f013ce-7873-473e-8a17-d49265ad98bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Scene\SceneTitle">
+      <UniqueIdentifier>{71b91ccd-a77a-46df-b532-f8cb4b6ec02b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\MainScene">
+      <UniqueIdentifier>{9e0d08fc-d1c2-49aa-a580-7046e2ac64ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -213,9 +219,6 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\Graphics.cpp">
       <Filter>Source\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene\MainScene.cpp">
-      <Filter>Source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\SkinnedMeshComponents.cpp">
       <Filter>Source\ObjectRender\FbxModel\SkinnedMeshComponents</Filter>
@@ -289,6 +292,12 @@
     <ClCompile Include="Source\Shaders\LuminanceExtractionShader.cpp">
       <Filter>Source\Shaders\LuminanceExtractionShader</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\SceneTitle.cpp">
+      <Filter>Source\Scene\SceneTitle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\MainScene.cpp">
+      <Filter>Source\Scene\MainScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Common\high_resolution_timer.h">
@@ -352,9 +361,6 @@
       <Filter>Source\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene\Scene.h">
-      <Filter>Source\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene\MainScene.h">
       <Filter>Source\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\SkinnedMeshComponents.h">
@@ -434,6 +440,12 @@
     </ClInclude>
     <ClInclude Include="Source\Shaders\LuminanceExtractionShader.h">
       <Filter>Source\Shaders\LuminanceExtractionShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\SceneTitle.h">
+      <Filter>Source\Scene\SceneTitle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\MainScene.h">
+      <Filter>Source\Scene\MainScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
