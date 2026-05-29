@@ -24,7 +24,6 @@ private:
 	//フルスクリーンとウィンドウモードの切り替え
 	void toggle_fullscreen();
 
-	std::unique_ptr<Scene> scene;
 	high_resolution_timer tictoc;
 	uint32_t frames_per_second{ 0 };
 	float count_by_seconds{ 0.0f };

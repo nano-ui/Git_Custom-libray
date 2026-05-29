@@ -256,6 +256,7 @@
     <ClCompile Include="Source\ObjectsRender\texture.cpp" />
     <ClCompile Include="Source\Scene\MainScene.cpp" />
     <ClCompile Include="Source\Scene\SceneGame.cpp" />
+    <ClCompile Include="Source\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Scene\SceneTitle.cpp" />
     <ClCompile Include="Source\Serialization\GltfModelSerializer.cpp" />
     <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp" />
@@ -312,6 +313,7 @@
     <ClInclude Include="Source\Scene\MainScene.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Scene\SceneGame.h" />
+    <ClInclude Include="Source\Scene\SceneManager.h" />
     <ClInclude Include="Source\Scene\SceneTitle.h" />
     <ClInclude Include="Source\Serialization\GltfModelSerializer.h" />
     <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h" />

@@ -1,6 +1,7 @@
 ﻿#include "framework.h"
 #include "../Graphics/Graphics.h"
 #include "../Scene/SceneTitle.h"
+#include "../Scene/SceneManager.h"
 
 #include <sstream>
 
@@ -37,9 +38,9 @@ int framework::run()
 	ImGui_ImplDX11_Init(Graphics::Instance().GetDevice(), Graphics::Instance().GetContext());
 	ImGui::StyleColorsDark();
 #endif
-	//MainSceneを作成・初期化
-	scene = std::make_unique<SceneTitle>();
-	scene->Initialize();
+	//初期シーンの登録
+	std::unique_ptr<SceneTitle> title_scene = std::make_unique<SceneTitle>();
+	SceneManager::Instance().ChangeScene(std::move(title_scene));
 
 	//メインループ
 	while (WM_QUIT != msg.message)
@@ -55,11 +56,8 @@ int framework::run()
 			calculate_frame_stats();
 
 			//シーンの更新と描画
-			if (scene)
-			{
-				scene->Update(tictoc.time_interval());
-				scene->Render(tictoc.time_interval());
-			}
+			SceneManager::Instance().Update(tictoc.time_interval());
+			SceneManager::Instance().Render(tictoc.time_interval());
 		}
 	}
 
@@ -70,10 +68,7 @@ int framework::run()
 #endif
 
 	//シーンの終了処理
-	if (scene)
-	{
-		scene->Finalize();
-	}
+	SceneManager::Instance().Finalize();
 
 	Graphics::Instance().Finalize();
 	return static_cast<int>(msg.wParam);

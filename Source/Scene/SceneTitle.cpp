@@ -1,4 +1,6 @@
 #include "SceneTitle.h"
+#include "SceneManager.h"
+#include "SceneGame.h"
 #include "../ObjectsRender/sprite_batch.h"
 #include "../Graphics/Graphics.h"
 #include "../Common/misc.h"
@@ -40,8 +42,15 @@ void SceneTitle::Finalize()
 //更新処理
 void SceneTitle::Update(float elapsed_time)
 {
+	//画面スケール補正とデバッグUIの更新
 	Scene::ImGuiScaleCorrection();
 	RenderGui();
+
+	if (GetAsyncKeyState('Z') & 0x8000)
+	{
+		std::unique_ptr<SceneGame> next_scene = std::make_unique<SceneGame>();
+		SceneManager::Instance().ChangeScene(std::move(next_scene));
+	}
 }
 
 //描画処理
