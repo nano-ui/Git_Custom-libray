@@ -96,7 +96,11 @@ LRESULT framework::handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 		{
 			PostMessage(hwnd, msg, wparam, lparam);
 		}
-		return 0;
+		if (wparam == VK_F11)
+		{
+			toggle_fullscreen(); // フルスクリーン切り替え関数を呼び出し
+			return 0;
+		}
 	default:
 		return DefWindowProc(hwnd, msg, wparam, lparam);
 	}
@@ -124,4 +128,51 @@ void framework::calculate_frame_stats()
 		frames_per_second = 0;
 		count_by_seconds += 1.0f;
 	}
+}
+
+//フルスクリーンとウィンドウモードの切り替え
+void framework::toggle_fullscreen()
+{
+	static bool is_fullscreen = false;
+	static RECT window_rect = {};
+	static DWORD window_style = 0;
+
+	//現在のモード判定とウィンドウスタイルの変更処理
+	if (!is_fullscreen)
+	{
+		GetWindowRect(hwnd, &window_rect);
+		window_style = GetWindowLong(hwnd, GWL_STYLE);
+		SetWindowLong(hwnd, GWL_STYLE, (window_style & ~(WS_CAPTION | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SYSMENU | WS_THICKFRAME)) | WS_POPUP);
+
+		//モニター情報の取得とウィンドウの全画面拡大
+		MONITORINFO monitor_info = {};
+		monitor_info.cbSize = sizeof(monitor_info);
+		GetMonitorInfo(MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST), &monitor_info);
+
+		SetWindowPos(hwnd, HWND_TOP,
+			monitor_info.rcMonitor.left,
+			monitor_info.rcMonitor.top,
+			monitor_info.rcMonitor.right - monitor_info.rcMonitor.left,
+			monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top,
+			SWP_FRAMECHANGED | SWP_NOZORDER);
+
+		SetForegroundWindow(hwnd);
+		SetFocus(hwnd);
+	}
+	else
+	{
+		//ウィンドウモードへの復帰処理
+		SetWindowLong(hwnd, GWL_STYLE, window_style);
+
+		SetWindowPos(hwnd, HWND_TOP,
+			window_rect.left,
+			window_rect.top,
+			window_rect.right - window_rect.left,
+			window_rect.bottom - window_rect.top,
+			SWP_FRAMECHANGED | SWP_NOZORDER);
+
+		SetForegroundWindow(hwnd);
+		SetFocus(hwnd);
+	}
+	is_fullscreen = !is_fullscreen;
 }
