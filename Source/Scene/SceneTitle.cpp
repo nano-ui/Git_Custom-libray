@@ -44,30 +44,7 @@ void SceneTitle::Finalize()
 //更新処理
 void SceneTitle::Update(float elapsed_time)
 {
-#ifdef USE_IMGUI
-	ImGui_ImplDX11_NewFrame(); // DirectX11用のImGuiフレームを新規開始
-	ImGui_ImplWin32_NewFrame(); // Win32用のImGuiフレームを新規開始
-
-	//任意のウィンドウサイズに対応するマウス座標とUIスケールの補正
-	ImGuiIO& io = ImGui::GetIO();
-	HWND hwnd = GetForegroundWindow();
-	if (hwnd)
-	{
-		RECT rect = {};
-		GetClientRect(hwnd, &rect);
-		float actual_width = static_cast<float>(rect.right - rect.left);
-		float actual_height = static_cast<float>(rect.bottom - rect.top);
-		if (actual_width > 0.0f && actual_height > 0.0f)
-		{
-			io.DisplaySize = ImVec2(logical_screen_width, logical_screen_height);
-			io.MousePos.x *= (logical_screen_width / actual_width);
-			io.MousePos.y *= (logical_screen_height / actual_height);
-		}
-	}
-
-	ImGui::NewFrame(); // ImGuiのコアロジックのフレームを新規開始
-#endif
-
+	Scene::ImGuiScaleCorrection();
 	RenderGui();
 }
 
