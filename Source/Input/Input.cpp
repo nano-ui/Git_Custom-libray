@@ -28,13 +28,18 @@ Input::~Input()
 //初期化処理
 void Input::Initialize()
 {
-	//配列と構造体のゼロクリア
+	//キーとパッドの初期化
 	ZeroMemory(current_key_state, sizeof(current_key_state));
 	ZeroMemory(prev_key_state, sizeof(prev_key_state));
 
 	ZeroMemory(&current_pad_state, sizeof(XINPUT_STATE));
 	ZeroMemory(&prev_pad_state, sizeof(XINPUT_STATE));
 	is_pad_connected = false;
+
+	//マウス座標の初期化
+	current_mouse_pos = { 0,0 };
+	GetCursorPos(&current_mouse_pos);
+	prev_mouse_pos = current_mouse_pos;
 }
 
 //更新処理
@@ -57,6 +62,10 @@ void Input::Update()
 		is_pad_connected = false;
 		ZeroMemory(&current_pad_state, sizeof(XINPUT_STATE));
 	}
+
+	//マウス座標の更新
+	prev_mouse_pos = current_mouse_pos;
+	GetCursorPos(&current_mouse_pos);
 }
 
 //キーボードが押されているか判定
@@ -137,4 +146,16 @@ float Input::GetLeftSticeY() const
 		return 0.0f;
 	}
 	return value;
+}
+
+//マウスのX方向の移動量を取得
+float Input::GetMouseDeltaX() const
+{
+	return static_cast<float>(current_mouse_pos.x - prev_mouse_pos.x);
+}
+
+//マウスのY方向の移動量を取得
+float Input::GetMouseDeltaY() const
+{
+	return static_cast<float>(current_mouse_pos.y - prev_mouse_pos.y);
 }

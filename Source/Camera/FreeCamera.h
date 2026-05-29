@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Camera.h"
-#include <windows.h>
 
 class FreeCamera : public Camera
 {
@@ -25,6 +24,5 @@ private:
 	DirectX::XMFLOAT2 rotation_angle;	//回転速度
 	float move_speed;					//移動速度
 	float turn_sensitivity;				//視点回転の感度
-	POINT prev_mouse_pos;				//前フレームのマウス座標
 };
 

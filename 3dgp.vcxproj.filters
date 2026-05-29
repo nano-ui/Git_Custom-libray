@@ -185,6 +185,15 @@
     <Filter Include="Source\Scene\SceneManager">
       <UniqueIdentifier>{e99e0810-3ebc-4b1e-96cc-80ed57de4bc4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Camera">
+      <UniqueIdentifier>{b02199cb-fbd1-48fb-a433-da03218101a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Camera\FreeCamera">
+      <UniqueIdentifier>{f0f8b878-b42b-43bd-b1a2-8a57dd525ff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Input">
+      <UniqueIdentifier>{7ee54a03-8d85-4f90-92e4-3ec7b3f6d078}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -336,6 +345,15 @@
     </ClCompile>
     <ClCompile Include="Source\GameObjects\Objects\Stage.cpp">
       <Filter>Source\GameObject\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera\Camera.cpp">
+      <Filter>Source\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera\FreeCamera.cpp">
+      <Filter>Source\Camera\FreeCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Input\Input.cpp">
+      <Filter>Source\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -503,6 +521,15 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Objects\Stage.h">
       <Filter>Source\GameObject\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera\Camera.h">
+      <Filter>Source\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera\FreeCamera.h">
+      <Filter>Source\Camera\FreeCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Input\Input.h">
+      <Filter>Source\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

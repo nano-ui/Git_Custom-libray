@@ -41,6 +41,12 @@ public:
 	//コントローラーの左スティックのY軸入力を取得
 	float GetLeftSticeY()const;
 
+	//マウスのX方向の移動量を取得
+	float GetMouseDeltaX()const;
+
+	//マウスのY方向の移動量を取得
+	float GetMouseDeltaY()const;
+
 private:
 	//コンストラクタ
 	Input();
@@ -59,5 +65,7 @@ private:
 	XINPUT_STATE current_pad_state;			//現在のコントローラーの状態を保存
 	XINPUT_STATE prev_pad_state;			//前回のコントローラーの状態を保存
 	bool is_pad_connected;					//コントローラーの接続フラグ
+	POINT current_mouse_pos;				//現在のマウス座標
+	POINT prev_mouse_pos;					//前回のマウス座標
 };
 
