@@ -18,6 +18,9 @@ public:
 	//XVˆ—
 	virtual void Update(float elapsed_time) = 0;
 
+	//ImGui•`‰æˆ—
+	virtual void RenderGui() = 0;
+
 	// w’è•ûŒü‚ğŒü‚­
 	void SetLookAt(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& focus, const DirectX::XMFLOAT3& up);
 
