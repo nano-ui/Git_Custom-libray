@@ -31,6 +31,9 @@ public:
 	 //生存フラグを取得
 	 bool IsActive()const { return is_active; }
 
+	 //ワールド変換行列の合成、取得
+	 DirectX::XMMATRIX GetWorldMatrix()const;
+
 protected:
 	DirectX::XMFLOAT3 position;	//位置
 	DirectX::XMFLOAT4 rotation;	//角度
