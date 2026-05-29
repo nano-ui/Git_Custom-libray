@@ -3,10 +3,6 @@
 #include "../Graphics/Graphics.h"
 #include "../Common/misc.h"
 
-#include <imgui.h> 
-#include <imgui_impl_dx11.h> 
-#include <imgui_impl_win32.h>
-
 static constexpr float logical_screen_width = 1280.0f; //ゲームの設計上の基本横幅
 static constexpr float logical_screen_height = 720.0f; //ゲームの設計上の基本縦幅
 

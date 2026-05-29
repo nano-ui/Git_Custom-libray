@@ -164,6 +164,9 @@
     <Filter Include="Source\Scene\MainScene">
       <UniqueIdentifier>{9e0d08fc-d1c2-49aa-a580-7046e2ac64ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Scene\SceneGame">
+      <UniqueIdentifier>{f1ce9a23-c616-4fe3-b471-a87cf52357b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -298,6 +301,7 @@
     <ClCompile Include="Source\Scene\MainScene.cpp">
       <Filter>Source\Scene\MainScene</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\SceneGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Common\high_resolution_timer.h">
@@ -447,6 +451,7 @@
     <ClInclude Include="Source\Scene\MainScene.h">
       <Filter>Source\Scene\MainScene</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Scene\SceneGame.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Compiled\blur_ps.cod">
