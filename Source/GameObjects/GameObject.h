@@ -26,7 +26,7 @@ public:
 	 virtual void RenderDebug() = 0;
 
 	 //ImGuiデバッグ描画
-	 virtual void RenderGui();
+	 virtual void RenderGui() {};
 
 	 //削除要求
 	 void Destory() { is_active = false; }

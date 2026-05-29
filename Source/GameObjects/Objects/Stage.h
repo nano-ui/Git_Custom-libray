@@ -28,7 +28,7 @@ public:
 	void Render(ID3D11DeviceContext* context)override;
 
 	//デバッグ描画
-	//void RenderDebug()override;
+	void RenderDebug()override;
 
 	//ImGuiデバッグ描画
 	void RenderGui()override;

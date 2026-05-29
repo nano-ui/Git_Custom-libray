@@ -24,6 +24,13 @@ public:
 
 	//アニメーション再生
 	virtual void PlayAnimation(const std::string& animation_name, bool is_loop) = 0;
+
+	//頂点座標リストの取得
+	virtual std::vector<DirectX::XMFLOAT3> GetVertices()const = 0;
+
+	//インデックスリストの取得
+	virtual std::vector<uint32_t> GetIndices()const = 0;
+
 };
 
 //FBXモデルを扱うための実装クラス
@@ -58,6 +65,47 @@ public:
 	{
 		model->PlayAnimation(animation_name, is_loop);
 	}
+
+	//頂点座標リストの取得
+	std::vector<DirectX::XMFLOAT3> GetVertices()const override
+	{
+		std::vector<DirectX::XMFLOAT3> vertices_data;
+
+		//全メッシュの頂点座標を結合
+		if (resource)
+		{
+			for (const auto& mesh : resource->GetMeshes())
+			{
+				for (const auto& vertex : mesh.vertices)
+				{
+					vertices_data.push_back(vertex.position);
+				}
+			}
+		}
+		return vertices_data;
+	}
+
+	//インデックスリストの取得
+	std::vector<uint32_t> GetIndices()const override
+	{
+		std::vector<uint32_t> indeices_data;
+		uint32_t vertex_offset = 0;
+
+		//全メッシュのインデックスを結合し、オフセットを適用
+		if (resource)
+		{
+			for (const auto& mesh : resource->GetMeshes())
+			{
+				for (uint32_t index : mesh.indices)
+				{
+					indeices_data.push_back(index + vertex_offset);
+					vertex_offset += static_cast<uint32_t>(mesh.vertices.size());
+				}
+			}
+		}
+		return indeices_data;
+	}
+
 };
 
 class GltfModelImpl :public Model::ModelImpl
@@ -91,6 +139,90 @@ public:
 	void PlayAnimation(const std::string& animation_nama, bool is_loop)override
 	{
 		model->PlayAnimation(animation_nama, is_loop);
+	}
+
+	//頂点座標リストの取得
+	std::vector<DirectX::XMFLOAT3> GetVertices() const override
+	{
+		std::vector<DirectX::XMFLOAT3> vertices_data;
+
+		//全メッシュの頂点座標を結合
+		if (data)
+		{
+			for (const auto& mesh : data->meshes)
+			{
+				for (const auto& primitive : mesh.primitives)
+				{
+					//"POSITION" のマップ要素を検索し、独自のbuffer_view構造体を取得
+					auto it = primitive.vertex_buffer_views.find("POSITION");
+					if (it != primitive.vertex_buffer_views.end())
+					{
+						const GltfModelData::buffer_view& view = it->second;
+						if (view.buffer > -1)
+						{
+							//raw_buffersから生データを取得し、指定された間隔でXMFLOAT3を抽出
+							const std::vector<unsigned char>& raw_buffer = data->raw_buffers[view.buffer];
+							const uint8_t* data_ptr = raw_buffer.data() + view.byte_offset;
+							size_t stride = (view.stride_in_bytes > 0) ? view.stride_in_bytes : sizeof(DirectX::XMFLOAT3);
+							for (size_t i = 0; i < view.count; i++)
+							{
+								const DirectX::XMFLOAT3* pos = reinterpret_cast<const DirectX::XMFLOAT3*>(data_ptr + (i * stride));
+								vertices_data.push_back(*pos);
+							}
+
+						}
+					}
+				}
+			}
+		}
+		return vertices_data;
+	}
+
+	//インデックスリストの取得
+	std::vector<uint32_t> GetIndices()const override
+	{
+		std::vector<uint32_t> indices_data;
+		uint32_t vertex_offset = 0;
+
+		if (data)
+		{
+			for (const auto& mesh : data->meshes)
+			{
+				for (const auto& primitive : mesh.primitives)
+				{
+					//プリミティブが保持しているインデックス用のbuffer_viewを取得
+					const GltfModelData::buffer_view& index_view = primitive.index_buffer_view;
+					if (index_view.buffer > -1)
+					{
+						const std::vector<unsigned char>& raw_buffer = data->raw_buffers[index_view.buffer];
+						const uint8_t* data_ptr = raw_buffer.data() + index_view.byte_offset;
+						size_t stride = (index_view.stride_in_bytes > 0) ? index_view.stride_in_bytes : ((index_view.format == DXGI_FORMAT_R32_UINT) ? sizeof(uint32_t) : sizeof(uint16_t));
+
+						//ビット数に応じて生データを整数として抽出
+						for (size_t i = 0; i < index_view.count; i++)
+						{
+							if (stride == sizeof(uint32_t))
+							{
+								uint32_t index_value = *reinterpret_cast<const uint32_t*>(data_ptr + (i * stride));
+								indices_data.push_back(index_value + vertex_offset);
+							}
+							else
+							{
+								uint16_t index_value = *reinterpret_cast<const uint16_t*>(data_ptr + (i * stride));
+								indices_data.push_back(static_cast<uint32_t>(index_value) + vertex_offset);
+							}
+						}
+					}
+					//次のパーツのために頂点オフセットを進める
+					auto it = primitive.vertex_buffer_views.find("POSITION");
+					if (it != primitive.vertex_buffer_views.end())
+					{
+						vertex_offset += static_cast<uint32_t>(it->second.count);
+					}
+				}
+			}
+		}
+		return indices_data;
 	}
 };
 
@@ -153,4 +285,26 @@ void Model::Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& worl
 void Model::PlayAnimation(const std::string& animation_name, bool is_loop)
 {
 	if (model_impl)model_impl->PlayAnimation(animation_name, is_loop);
+}
+
+//頂点座標リストの取得
+std::vector<DirectX::XMFLOAT3> Model::GetVertices()const
+{
+	std::vector<DirectX::XMFLOAT3> vertices;
+	if (model_impl)
+	{
+		vertices = model_impl->GetVertices();
+	}
+	return vertices;
+}
+
+//インデックスリストの取得
+std::vector<uint32_t> Model::GetIndices()const
+{
+	std::vector<uint32_t> indices;
+	if (model_impl)
+	{
+		indices = model_impl->GetIndices();
+	}
+	return indices;
 }

@@ -167,6 +167,21 @@
     <Filter Include="Source\Scene\SceneGame">
       <UniqueIdentifier>{f1ce9a23-c616-4fe3-b471-a87cf52357b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\GameObject">
+      <UniqueIdentifier>{4485b032-990c-44e8-ac62-d7d8c536d8fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameObject\Charecter">
+      <UniqueIdentifier>{deb63a3f-54cb-441e-87db-ef7c09750f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameObject\Stage">
+      <UniqueIdentifier>{998f87bb-88a8-4d11-b3de-158d5f49c033}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameObject\ObjectManager">
+      <UniqueIdentifier>{ac6cc497-89c0-4cef-991a-793380671e52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Collision">
+      <UniqueIdentifier>{41ef2ec6-c909-475a-a667-bf97aa85d76e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -301,7 +316,19 @@
     <ClCompile Include="Source\Scene\MainScene.cpp">
       <Filter>Source\Scene\MainScene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene\SceneGame.cpp" />
+    <ClCompile Include="Source\GameObjects\GameObject.cpp">
+      <Filter>Source\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\SceneGame.cpp">
+      <Filter>Source\Scene\SceneGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\ObjectManager.cpp">
+      <Filter>Source\GameObject\ObjectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collision\SpaceDivisionCast.cpp">
+      <Filter>Source\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Objects\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Common\high_resolution_timer.h">
@@ -451,7 +478,19 @@
     <ClInclude Include="Source\Scene\MainScene.h">
       <Filter>Source\Scene\MainScene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Scene\SceneGame.h" />
+    <ClInclude Include="Source\GameObjects\GameObject.h">
+      <Filter>Source\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\SceneGame.h">
+      <Filter>Source\Scene\SceneGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\ObjectManager.h">
+      <Filter>Source\GameObject\ObjectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collision\SpaceDivisionCast.h">
+      <Filter>Source\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Objects\Stage.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Compiled\blur_ps.cod">

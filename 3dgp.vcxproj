@@ -219,6 +219,7 @@
     <ClCompile Include="External\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="External\imgui\imgui_ja_gryph_ranges.cpp" />
     <ClCompile Include="External\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Collision\SpaceDivisionCast.cpp" />
     <ClCompile Include="Source\Common\main.cpp" />
     <ClCompile Include="Source\FbxModel\FbxAnimation.cpp" />
     <ClCompile Include="Source\FbxModel\FbxBone.cpp" />
@@ -227,6 +228,9 @@
     <ClCompile Include="Source\FbxModel\FbxSkinnedModel.cpp" />
     <ClCompile Include="Source\FbxModel\FbxSkinnedMesh.cpp" />
     <ClCompile Include="Source\FbxModel\FbxSkinnedResource.cpp" />
+    <ClCompile Include="Source\GameObjects\GameObject.cpp" />
+    <ClCompile Include="Source\GameObjects\ObjectManager.cpp" />
+    <ClCompile Include="Source\GameObjects\Objects\Stage.cpp" />
     <ClCompile Include="Source\GltfModel\GltfModel.cpp" />
     <ClCompile Include="Source\GltfModel\GltfModelAnimation.cpp" />
     <ClCompile Include="Source\GltfModel\GltfModelData.cpp" />
@@ -268,6 +272,7 @@
     <ClInclude Include="External\imgui\imstb_rectpack.h" />
     <ClInclude Include="External\imgui\imstb_textedit.h" />
     <ClInclude Include="External\imgui\imstb_truetype.h" />
+    <ClInclude Include="Source\Collision\SpaceDivisionCast.h" />
     <ClInclude Include="Source\Common\high_resolution_timer.h" />
     <ClInclude Include="Source\Common\misc.h" />
     <ClInclude Include="Source\Common\ModelData.h" />
@@ -278,6 +283,9 @@
     <ClInclude Include="Source\FbxModel\FbxSkinnedModel.h" />
     <ClInclude Include="Source\FbxModel\FbxSkinnedMesh.h" />
     <ClInclude Include="Source\FbxModel\FbxSkinnedResource.h" />
+    <ClInclude Include="Source\GameObjects\GameObject.h" />
+    <ClInclude Include="Source\GameObjects\ObjectManager.h" />
+    <ClInclude Include="Source\GameObjects\Objects\Stage.h" />
     <ClInclude Include="Source\GltfModel\GltfModel.h" />
     <ClInclude Include="Source\GltfModel\GltfModelAnimation.h" />
     <ClInclude Include="Source\GltfModel\GltfModelData.h" />

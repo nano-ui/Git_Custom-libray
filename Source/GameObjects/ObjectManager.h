@@ -15,6 +15,22 @@ public:
 	//デストラクタ
 	~ObjectManager();
 
+	//オブジェクトの生成・初期化・自動登録
+	template <class T, class... Args>
+	T* Instantiate(Args&&... args) 
+	{
+		//オブジェクトの生成
+		std::unique_ptr<T> new_object = std::make_unique<T>(std::forward<Args>(args)...);
+		T* raw_pointer = new_object.get();
+
+		//派生クラスの構築完了を待ってから初期化を実行
+		new_object->Initialize();
+
+		//マネージャーのリストへ所有権を移動して登録
+		game_objects.push_back(std::move(new_object));
+		return raw_pointer;
+	}
+
 	//オブジェクトの登録
 	void Register(std::unique_ptr<GameObject> object);
 

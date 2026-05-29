@@ -1,8 +1,15 @@
 #include "SceneGame.h"
+#include "../GameObjects/ObjectManager.h"
+#include "../GameObjects/Objects/Stage.h"
+#include "../Graphics/Graphics.h"
+#include "../Camera/Camera.h"
+#include "../Light/Light.h"
 
 //コンストラクタ
 SceneGame::SceneGame()
 {
+	object_manager = std::make_unique<ObjectManager>();
+	Stage* stage = object_manager->Instantiate<Stage>();
 }
 
 //デストラクタ
@@ -23,6 +30,11 @@ void SceneGame::Finalize()
 //更新処理
 void SceneGame::Update(float elapsed_time)
 {
+	
+	if (object_manager)
+	{
+		object_manager->Update(elapsed_time);
+	}
 }
 
 //描画処理
@@ -34,6 +46,12 @@ void SceneGame::Render(float elapsed_time)
 	context->RSSetState(states->GetRasterizerState(2).Get());
 	context->PSSetSamplers(0, 1, states->GetSamplerState(0).GetAddressOf());
 	Graphics::Instance().BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);
+
+	if (object_manager)
+	{
+		object_manager->Render(context);
+		object_manager->RenderGui();
+	}
 
 
 #ifdef USE_IMGUI

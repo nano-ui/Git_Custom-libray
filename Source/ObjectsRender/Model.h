@@ -4,6 +4,7 @@
 #include <DirectXMath.h>
 #include <memory>
 #include <string>
+#include <vector>
 
 //拡張子に応じて適切なモデルを管理する統合クラス
 class Model
@@ -23,6 +24,12 @@ public:
 
 	//アニメーションの再生
 	void PlayAnimation(const std::string& animation_name, bool is_loop);
+
+	//頂点座標リストの取得
+	std::vector<DirectX::XMFLOAT3> GetVertices()const;
+
+	//インデックスリストの取得
+	std::vector<uint32_t> GetIndices()const;
 
 public:
 	class ModelImpl;						//実際の処理を行う内部クラス

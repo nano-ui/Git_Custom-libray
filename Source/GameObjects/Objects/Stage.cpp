@@ -2,13 +2,13 @@
 #include "../ObjectsRender/Model.h"
 #include "../Graphics/Graphics.h"
 #include "../Collision/SpaceDivisionCast.h"
-#include "../GameObjects/ObjectManager.h"
 
 #include <imgui.h>
 
 //コンストラクタ
 Stage::Stage()
 {
+
 }
 
 //デストラクタ
@@ -26,7 +26,6 @@ void Stage::Initialize()
 	//空間分割キャストの生成とデータ構築
 	space_division_cast = std::make_unique<SpaceDivisionCast>();
 	BuildCollisionData();
-
 }
 
 //更新処理
@@ -42,6 +41,12 @@ void Stage::Render(ID3D11DeviceContext* context)
 	DirectX::XMFLOAT4X4 transform_matrix;
 	DirectX::XMStoreFloat4x4(&transform_matrix, world_matrix);
 	stage_model->Render(context, transform_matrix);
+}
+
+//デバッグ描画
+void Stage::RenderDebug()
+{
+
 }
 
 //ImGuiデバッグ描画
@@ -69,6 +74,9 @@ void Stage::BuildCollisionData()
 	//モデルから当たり判定用の頂点とインデックスを抽出
 	std::vector<DirectX::XMFLOAT3> vertices_data;
 	std::vector<uint32_t> indices_data;
+
+	vertices_data = stage_model->GetVertices();
+	indices_data = stage_model->GetIndices();
 
 	//空間分割クラスへのデータ登録
 	if (!vertices_data.empty() && !indices_data.empty())
