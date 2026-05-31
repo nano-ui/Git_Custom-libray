@@ -45,7 +45,7 @@ void FreeCamera::Initialize()
 	SetLookAt(eye, focus, up);
 
 	//¶¬‚³‚ê‚½‹ü•ûŒüƒxƒNƒgƒ‹‚©‚ç‰Šú‰ñ“]Šp“x‚ğ‹tZ‚µ‚Ä“¯Šú
-	rotation_angle.y = std::atan2f(front.x, front.y);
+	rotation_angle.y = std::atan2f(front.x, front.z);
 	rotation_angle.x = std::asinf(-front.y);
 }
 

@@ -1,6 +1,7 @@
 #include "GltfModelRenderer.h"
 #include <misc.h>
 #include "../Graphics/shader.h"
+#include "../Graphics/Graphics.h"
 
 //=========================================
 //デバイスを受け取り描画リソースを初期化
@@ -198,6 +199,15 @@ void GltfModelRenderer::TraverseNodeForRender
 					data.texture_resource_views.at(data.textures.at(texture_indices[texture_index]).source).Get() : nullptr;//実体のリソースビューを取得、無効ならnullptr
 			}
 			immediate_context->PSSetShaderResources(SHADER_SLOT_1, static_cast<UINT>(shader_resource_views.size()), shader_resource_views.data()); //全テクスチャを一括でピクセルシェーダーの1番スロットからセット
+
+			auto states = Graphics::Instance().GetPipelineStates();
+			ID3D11SamplerState* sampler_states[] = {
+				states->GetSamplerState(0).Get(),
+				states->GetSamplerState(1).Get(),
+				states->GetSamplerState(2).Get()
+			};
+
+			immediate_context->PSSetSamplers(0, 3, sampler_states);
 
 			//--------------------------------------------------
 			//実際の描画命令の発行

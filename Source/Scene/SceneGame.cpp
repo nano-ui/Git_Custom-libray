@@ -78,7 +78,6 @@ void SceneGame::Render(float elapsed_time)
 	if (object_manager)
 	{
 		object_manager->Render(context);
-		object_manager->RenderGui();
 	}
 
 
@@ -91,8 +90,13 @@ void SceneGame::Render(float elapsed_time)
 void SceneGame::RenderGui()
 {
 #ifdef USE_IMGUI
+	Scene::ImGuiScaleCorrection();
 	if (ImGui::Begin("Game Debug"))
 	{
+		if (object_manager)
+		{
+			object_manager->RenderGui();
+		}
 		if (camera)
 		{
 			camera->RenderGui();
