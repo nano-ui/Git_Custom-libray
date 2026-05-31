@@ -197,9 +197,6 @@
     <Filter Include="Source\Light">
       <UniqueIdentifier>{1b081ca8-3ff0-4a1a-b7e5-0130c0a0bd73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ObjectRender\GpuResorceUtils">
-      <UniqueIdentifier>{671968b6-2b63-4598-a7c7-9eae3686ec7c}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">

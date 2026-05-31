@@ -156,6 +156,7 @@ void GltfModelData::CreateGpuResources(ID3D11Device* device)
 		if (!img.raw_image_data.empty()) // 生データが保持されている場合（メモリからの読み込み）
 		{
 			hr = load_texture_from_memory(device, img.raw_image_data.data(), img.raw_image_data.size(), &shader_resource_view);
+			_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		}
 		else if (!img.uri.empty()) // 外部ファイルパスが指定されている場合
 		{
@@ -163,6 +164,7 @@ void GltfModelData::CreateGpuResources(ID3D11Device* device)
 			std::wstring w_filename = path.parent_path().concat(L"/").wstring() + std::wstring(img.uri.begin(), img.uri.end());
 			D3D11_TEXTURE2D_DESC texture2d_desc;
 			hr = load_texture_from_file(device, w_filename.c_str(), &shader_resource_view, &texture2d_desc);
+			_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		}
 
 		if (hr == S_OK && shader_resource_view != nullptr)
