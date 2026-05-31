@@ -248,6 +248,7 @@
     <ClCompile Include="Source\Graphics\SceneConstantBuffers.cpp" />
     <ClCompile Include="Source\Graphics\shader.cpp" />
     <ClCompile Include="Source\Input\Input.cpp" />
+    <ClCompile Include="Source\Light\Light.cpp" />
     <ClCompile Include="Source\ObjectsRender\AssetManager.cpp" />
     <ClCompile Include="Source\ObjectsRender\geometric_primitive.cpp" />
     <ClCompile Include="Source\ObjectsRender\Model.cpp" />
@@ -307,6 +308,7 @@
     <ClInclude Include="Source\Graphics\SceneConstantBuffers.h" />
     <ClInclude Include="Source\Graphics\shader.h" />
     <ClInclude Include="Source\Input\Input.h" />
+    <ClInclude Include="Source\Light\Light.h" />
     <ClInclude Include="Source\ObjectsRender\AssetManager.h" />
     <ClInclude Include="Source\ObjectsRender\geometric_primitive.h" />
     <ClInclude Include="Source\ObjectsRender\Model.h" />

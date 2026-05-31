@@ -2,6 +2,7 @@
 #include "../Graphics/Graphics.h"
 #include "../Scene/SceneTitle.h"
 #include "../Scene/SceneManager.h"
+#include "../Input/Input.h"
 
 #include <sstream>
 
@@ -41,6 +42,7 @@ int framework::run()
 	//初期シーンの登録
 	std::unique_ptr<SceneTitle> title_scene = std::make_unique<SceneTitle>();
 	SceneManager::Instance().ChangeScene(std::move(title_scene));
+	Input::Instance().Initialize();
 
 	//メインループ
 	while (WM_QUIT != msg.message)
@@ -52,12 +54,25 @@ int framework::run()
 		}
 		else
 		{
+#ifdef USE_IMGUI
+			ImGui_ImplDX11_NewFrame();
+			ImGui_ImplWin32_NewFrame();
+			ImGui::NewFrame();
+#endif // USE_IMGUI
+
 			tictoc.tick();
 			calculate_frame_stats();
+			Input::Instance().Update();
 
 			//シーンの更新と描画
 			SceneManager::Instance().Update(tictoc.time_interval());
+			Graphics::Instance().BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);
 			SceneManager::Instance().Render(tictoc.time_interval());
+#ifdef USE_IMGUI
+			ImGui::Render();
+			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+#endif // USE_IMGUI
+			Graphics::Instance().EndFrame();
 		}
 	}
 

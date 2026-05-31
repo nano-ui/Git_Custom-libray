@@ -62,3 +62,15 @@ void Camera::SetPerspectiveFov(float fovY, float aspect, float nearZ, float farZ
 	DirectX::XMMATRIX Projection = DirectX::XMMatrixPerspectiveFovLH(fovY, aspect, nearZ, farZ);
 	DirectX::XMStoreFloat4x4(&projection, Projection);
 }
+
+//ビュープロジェクション合成行列取得
+DirectX::XMFLOAT4X4 Camera::GetViewProjectionMatrix() const
+{
+	DirectX::XMFLOAT4X4 view_projection = {};
+	DirectX::XMMATRIX View = DirectX::XMLoadFloat4x4(&view);
+	DirectX::XMMATRIX Projection = DirectX::XMLoadFloat4x4(&projection);
+	DirectX::XMMATRIX ViewProjection = DirectX::XMMatrixMultiply(View, Projection);
+	DirectX::XMStoreFloat4x4(&view_projection, ViewProjection);
+
+	return view_projection;
+}

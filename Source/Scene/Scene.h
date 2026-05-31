@@ -21,9 +21,6 @@ protected:
 	void ImGuiScaleCorrection()
 	{
 		#ifdef USE_IMGUI
-			ImGui_ImplDX11_NewFrame(); // DirectX11用のImGuiフレームを新規開始
-			ImGui_ImplWin32_NewFrame(); // Win32用のImGuiフレームを新規開始
-
 			//任意のウィンドウサイズに対応するマウス座標とUIスケールの補正
 			ImGuiIO& io = ImGui::GetIO();
 			HWND hwnd = GetForegroundWindow();
@@ -40,8 +37,6 @@ protected:
 					io.MousePos.y *= (logical_screen_height / actual_height);
 				}
 			}
-
-			ImGui::NewFrame(); // ImGuiのコアロジックのフレームを新規開始
 		#endif
 	}
 private:

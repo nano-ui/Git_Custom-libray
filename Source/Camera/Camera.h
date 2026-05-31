@@ -48,6 +48,12 @@ public:
 	// 右方向取得
 	const DirectX::XMFLOAT3& GetRight() const { return right; }
 
+	//カメラ座標取得
+	const DirectX::XMFLOAT4 GetPosition()const { return { eye.x,eye.y,eye.z,1.0f }; }
+
+	//ビュープロジェクション合成行列取得
+	DirectX::XMFLOAT4X4 GetViewProjectionMatrix() const;
+
 protected:
 	DirectX::XMFLOAT4X4		view;		//ビュー変換行列
 	DirectX::XMFLOAT4X4		projection;	//プロジェクション変換行列

@@ -44,7 +44,6 @@ void SceneTitle::Update(float elapsed_time)
 {
 	//画面スケール補正とデバッグUIの更新
 	Scene::ImGuiScaleCorrection();
-	RenderGui();
 
 	if (GetAsyncKeyState('Z') & 0x8000)
 	{
@@ -61,7 +60,6 @@ void SceneTitle::Render(float elapsed_time)
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(0).Get(), 1);
 	context->RSSetState(states->GetRasterizerState(2).Get());
 	context->PSSetSamplers(0, 1, states->GetSamplerState(0).GetAddressOf());
-	Graphics::Instance().BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);
 
 	if (title_sprite)
 	{
@@ -76,24 +74,25 @@ void SceneTitle::Render(float elapsed_time)
 		title_sprite->end(context);
 	}
 #ifdef USE_IMGUI
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData()); 
+	RenderGui();
 #endif // USE_IMGUI
-
-	Graphics::Instance().EndFrame();
 }
 
 //ImGuiデバッグ描画
 void SceneTitle::RenderGui()
 {
 #ifdef USE_IMGUI
-	if (ImGui::CollapsingHeader("SceneTitle", ImGuiTreeNodeFlags_None))
+	if (ImGui::Begin("Title Debug"))
 	{
-		ImGui::DragFloat2("TitlePos", &title_pos.x, 0.1f);
-		ImGui::DragFloat2("Size", &screen_size.x, 0.1f);
-		ImGui::ColorEdit4("TitleColor", &color.x);
-		ImGui::SliderFloat("Angle", &angle, 0.0f, 360.0f);
+		if (ImGui::CollapsingHeader("SceneTitle", ImGuiTreeNodeFlags_None))
+		{
+			ImGui::DragFloat2("TitlePos", &title_pos.x, 0.1f);
+			ImGui::DragFloat2("Size", &screen_size.x, 0.1f);
+			ImGui::ColorEdit4("TitleColor", &color.x);
+			ImGui::SliderFloat("Angle", &angle, 0.0f, 360.0f);
+		}
 	}
+	ImGui::End();
 #endif // DEBUG
 }
 

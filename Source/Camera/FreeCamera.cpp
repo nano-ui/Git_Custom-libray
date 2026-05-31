@@ -17,6 +17,9 @@ static constexpr float default_turn_sensitivity = 0.2f; //初期状態のマウスドラッ
 static constexpr float default_eye_x = 0.0f;			//ゲーム開始時の初期カメラ位置X
 static constexpr float default_eye_y = 5.0f;			//地形を見下ろすためのカメラ高度Y
 static constexpr float default_eye_z = -10.0f;			//後方に引くカメラ距離Z
+static constexpr float default_focus_x = 0.0f;			//ゲーム開始時の初期注視点位置X
+static constexpr float default_focus_y = 0.0f;			//ゲーム開始時の初期注視点位置Y
+static constexpr float default_focus_z = 0.0f;			//ゲーム開始時の初期注視点位置Z
 
 //コンストラクタ
 FreeCamera::FreeCamera()
@@ -37,7 +40,7 @@ void FreeCamera::Initialize()
 {
 	//カメラトランスフォームの初期配置設定
 	eye = { default_eye_x,default_eye_y,default_eye_z };
-	focus = { default_eye_x,default_eye_y,default_eye_z };
+	focus = { default_focus_x,default_focus_y,default_focus_z };
 	up = { 0.0f,1.0f,0.0f };
 	SetLookAt(eye, focus, up);
 

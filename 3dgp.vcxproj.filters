@@ -194,6 +194,12 @@
     <Filter Include="Source\Input">
       <UniqueIdentifier>{7ee54a03-8d85-4f90-92e4-3ec7b3f6d078}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Light">
+      <UniqueIdentifier>{1b081ca8-3ff0-4a1a-b7e5-0130c0a0bd73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GpuResorceUtils">
+      <UniqueIdentifier>{671968b6-2b63-4598-a7c7-9eae3686ec7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -354,6 +360,9 @@
     </ClCompile>
     <ClCompile Include="Source\Input\Input.cpp">
       <Filter>Source\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Light\Light.cpp">
+      <Filter>Source\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -530,6 +539,9 @@
     </ClInclude>
     <ClInclude Include="Source\Input\Input.h">
       <Filter>Source\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Light\Light.h">
+      <Filter>Source\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

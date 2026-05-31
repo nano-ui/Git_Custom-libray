@@ -47,7 +47,11 @@ void Input::Update()
 {
 	//キーボードの状態更新
 	memcpy(prev_key_state, current_key_state, sizeof(current_key_state));
-	GetKeyboardState(current_key_state);
+	bool success_keyboard = GetKeyboardState(current_key_state);
+	if (success_keyboard)
+	{
+		ZeroMemory(current_key_state, sizeof(current_key_state));
+	}
 
 	//コントローラーの状態更新
 	prev_pad_state = current_pad_state;

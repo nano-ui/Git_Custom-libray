@@ -53,12 +53,16 @@ void Stage::RenderDebug()
 void Stage::RenderGui()
 {
 #ifdef USE_IMGUI
-	if (ImGui::CollapsingHeader("Stage", ImGuiTreeNodeFlags_None))
+	if (ImGui::Begin("Stage Debug"))
 	{
-		ImGui::DragFloat3("Position", &position.x, 0.1f);
-		ImGui::DragFloat4("Rotation", &rotation.x, DirectX::XM_1DIVPI);
-		ImGui::DragFloat3("Scale", &scale.x, 0.1f);
+		if (ImGui::CollapsingHeader("Stage", ImGuiTreeNodeFlags_None))
+		{
+			ImGui::DragFloat3("Position", &position.x, 0.1f);
+			ImGui::DragFloat4("Rotation", &rotation.x, DirectX::XM_1DIVPI);
+			ImGui::DragFloat3("Scale", &scale.x, 0.1f);
+		}
 	}
+	ImGui::End();
 #endif // USE_IMGUI
 }
 

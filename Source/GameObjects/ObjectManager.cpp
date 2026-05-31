@@ -67,7 +67,7 @@ void ObjectManager::RemoveInactiveObject()
 {
 	for (auto iterator = game_objects.begin(); iterator != game_objects.end();)
 	{
-		if ((*iterator)->IsActive())
+		if (!(*iterator)->IsActive())
 		{
 			iterator = game_objects.erase(iterator);
 		}
