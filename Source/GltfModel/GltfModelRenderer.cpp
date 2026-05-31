@@ -76,12 +76,19 @@ void GltfModelRenderer::Render(ID3D11DeviceContext* immediate_context, const Glt
 	immediate_context->IASetInputLayout(input_layout.Get());							//頂点データのメモリレイアウトを有効化
 	immediate_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	//頂点を3つずつ結んで三角形を描画するモード（トポロジー）に設定
 
+	auto states = Graphics::Instance().GetPipelineStates();
+	ID3D11SamplerState* sampler_states[] = {
+		states->GetSamplerState(0).Get(),
+		states->GetSamplerState(1).Get(),
+		states->GetSamplerState(2).Get()
+	};
+
 	//-----------------------------------
 	//ルートノードからの描画巡回処理
 	//-----------------------------------
 	for (int node_index : data.scenes.at(data.default_scene).nodes)
 	{
-		TraverseNodeForRender(node_index, immediate_context, data, nodes_to_render, world);
+		TraverseNodeForRender(node_index, immediate_context, data, nodes_to_render, world, sampler_states);
 	}
 }
 
@@ -94,7 +101,8 @@ void GltfModelRenderer::TraverseNodeForRender
 	ID3D11DeviceContext* immediate_context,
 	const GltfModelData& data,
 	const std::vector<GltfModelData::node>& nodes,
-	const DirectX::XMFLOAT4X4& world
+	const DirectX::XMFLOAT4X4& world,
+	ID3D11SamplerState** sampler_states
 )
 {
 	using namespace DirectX;														// DirectXMathの名前空間を使用
@@ -200,14 +208,13 @@ void GltfModelRenderer::TraverseNodeForRender
 			}
 			immediate_context->PSSetShaderResources(SHADER_SLOT_1, static_cast<UINT>(shader_resource_views.size()), shader_resource_views.data()); //全テクスチャを一括でピクセルシェーダーの1番スロットからセット
 
-			auto states = Graphics::Instance().GetPipelineStates();
-			ID3D11SamplerState* sampler_states[] = {
-				states->GetSamplerState(0).Get(),
-				states->GetSamplerState(1).Get(),
-				states->GetSamplerState(2).Get()
-			};
+			ID3D11SamplerState* sampler_p0 = sampler_states[0];
+			ID3D11SamplerState* sampler_p1 = sampler_states[1];
+			ID3D11SamplerState* sampler_p2 = sampler_states[2];
 
-			immediate_context->PSSetSamplers(0, 3, sampler_states);
+			immediate_context->PSSetSamplers(0, 1, &sampler_p0);
+			immediate_context->PSSetSamplers(1, 1, &sampler_p1);
+			immediate_context->PSSetSamplers(2, 1, &sampler_p2);
 
 			//--------------------------------------------------
 			//実際の描画命令の発行
@@ -230,6 +237,6 @@ void GltfModelRenderer::TraverseNodeForRender
 	//--------------------------------------------------
 	for (int child_index : current_node.children)																			// 描画が完了したノードの全ての子ノードをループ
 	{
-		TraverseNodeForRender(child_index, immediate_context, data, nodes, world);											// 子ノードのインデックスを渡し自身を再帰呼び出し
+		TraverseNodeForRender(child_index, immediate_context, data, nodes, world, sampler_states);											// 子ノードのインデックスを渡し自身を再帰呼び出し
 	}
 }

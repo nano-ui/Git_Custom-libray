@@ -59,7 +59,11 @@ void SceneTitle::Render(float elapsed_time)
 	auto states = Graphics::Instance().GetPipelineStates();
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(0).Get(), 1);
 	context->RSSetState(states->GetRasterizerState(2).Get());
+
 	context->PSSetSamplers(0, 1, states->GetSamplerState(0).GetAddressOf());
+	context->PSSetSamplers(1, 1, states->GetSamplerState(1).GetAddressOf());
+	context->PSSetSamplers(2, 1, states->GetSamplerState(2).GetAddressOf());
+
 
 	if (title_sprite)
 	{

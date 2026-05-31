@@ -20,7 +20,7 @@ public:
 
 private:
 	//描画対象のノードを階層順に巡回
-	void TraverseNodeForRender(int node_index, ID3D11DeviceContext* immediate_context, const GltfModelData& data, const std::vector<GltfModelData::node>& nodes, const DirectX::XMFLOAT4X4& world);
+	void TraverseNodeForRender(int node_index, ID3D11DeviceContext* immediate_context, const GltfModelData& data, const std::vector<GltfModelData::node>& nodes, const DirectX::XMFLOAT4X4& world, ID3D11SamplerState** sampler_states);
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_cbuffer;				//プリミティブの情報を送るための定数バッファ

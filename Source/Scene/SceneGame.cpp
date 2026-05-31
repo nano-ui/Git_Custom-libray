@@ -58,13 +58,9 @@ void SceneGame::Render(float elapsed_time)
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
 	context->RSSetState(states->GetRasterizerState(2).Get());
 
-	ID3D11SamplerState* sampler_states[] = {
-		states->GetSamplerState(0).Get(),
-		states->GetSamplerState(1).Get(),
-		states->GetSamplerState(2).Get()
-	};
-
-	context->PSSetSamplers(0, 3, sampler_states);
+	context->PSSetSamplers(0, 1, states->GetSamplerState(0).GetAddressOf());
+	context->PSSetSamplers(1, 1, states->GetSamplerState(1).GetAddressOf());
+	context->PSSetSamplers(2, 1, states->GetSamplerState(2).GetAddressOf());
 
 	scene_constants constants{};
 	if (camera && light)
