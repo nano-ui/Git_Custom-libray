@@ -85,7 +85,7 @@ void FreeCamera::Update(float elapsed_time)
 	DirectX::XMVECTOR move_vector = DirectX::XMVectorZero();
 
 	//キーボード移動
-	if (Input::Instance().IsKeyPress(key_move_forward))
+	if (Input::Instance().IsKeyPress(key_move_forward) || (GetAsyncKeyState('W') & 0x8000))
 	{
 		move_vector = DirectX::XMVectorAdd(move_vector, new_front);
 	}
@@ -109,7 +109,10 @@ void FreeCamera::Update(float elapsed_time)
 	move_vector = DirectX::XMVectorAdd(move_vector, DirectX::XMVectorMultiply(new_right, DirectX::XMVectorReplicate(stick_x)));
 	
 	//新しいカメラ座標・注視点の計算とビュー行列への反映
-	move_vector = DirectX::XMVector3Normalize(move_vector);
+	if (!DirectX::XMVector3Equal(move_vector, DirectX::XMVectorZero()))
+	{
+		move_vector = DirectX::XMVector3Normalize(move_vector);
+	}
 	DirectX::XMVECTOR current_eye = DirectX::XMLoadFloat3(&eye);
 	current_eye = DirectX::XMVectorMultiplyAdd(move_vector, DirectX::XMVectorReplicate(move_speed * elapsed_time), current_eye);
 	DirectX::XMStoreFloat3(&eye, current_eye);

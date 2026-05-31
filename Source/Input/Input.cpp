@@ -48,7 +48,7 @@ void Input::Update()
 	//キーボードの状態更新
 	memcpy(prev_key_state, current_key_state, sizeof(current_key_state));
 	bool success_keyboard = GetKeyboardState(current_key_state);
-	if (success_keyboard)
+	if (!success_keyboard)
 	{
 		ZeroMemory(current_key_state, sizeof(current_key_state));
 	}
@@ -92,7 +92,7 @@ bool Input::IsKeyRelease(int key_code) const
 	bool is_current_press = (current_key_state[key_code] & key_press_mask) != 0;
 	bool is_prev_press = (prev_key_state[key_code] & key_press_mask) != 0;
 
-	return is_current_press && is_prev_press;
+	return !is_current_press && is_prev_press;
 }
 
 //コントローラーのボタンが押されているか判定
@@ -130,7 +130,7 @@ float Input::GetLeftStickX() const
 	if (!is_pad_connected)return 0.0f;
 
 	//アナログ値を正規化してデッドゾーンを処理
-	float value = static_cast<float>(current_pad_state.Gamepad.sThumbLY) / stick_max_value;
+	float value = static_cast<float>(current_pad_state.Gamepad.sThumbLX) / stick_max_value;
 	if (value > -dead_zone && value < dead_zone)
 	{
 		return 0.0f;
