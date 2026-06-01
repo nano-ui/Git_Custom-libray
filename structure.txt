@@ -21,7 +21,10 @@ C:.
 劆       劌劅劅劅Debug
 劆       劆   劆   3dgp.Build.CppClean.log
 劆       劆   劆   3dgp.exe.recipe
+<<<<<<< HEAD
 劆       劆   劆   3dgp.ilk
+=======
+>>>>>>> Scene閬风Щ
 劆       劆   劆   3dgp.log
 劆       劆   劆   3dgp.vcxproj.FileListAbsolute.txt
 劆       劆   劆   AssetManager.obj
@@ -37,6 +40,18 @@ C:.
 劆       劆   劆   framework.obj
 劆       劆   劆   fullscreen_quad.obj
 劆       劆   劆   geometric_primitive.obj
+<<<<<<< HEAD
+=======
+劆       劆   劆   GltfAnimation.obj
+劆       劆   劆   GltfBone.obj
+劆       劆   劆   GltfDynamicMaterial.obj
+劆       劆   劆   GltfDynamicMesh.obj
+劆       劆   劆   GltfDynamicModel.obj
+劆       劆   劆   GltfDynamicModelResource.obj
+劆       劆   劆   GltfDynamicModelShader.obj
+劆       劆   劆   GltfStaticMaterial.obj
+劆       劆   劆   GlthStaticModel.obj
+>>>>>>> Scene閬风Щ
 劆       劆   劆   Graphics.obj
 劆       劆   劆   imgui.obj
 劆       劆   劆   imgui_draw.obj
@@ -52,6 +67,10 @@ C:.
 劆       劆   劆   PostProcessConstantBuffers.obj
 劆       劆   劆   SceneConstantBuffers.obj
 劆       劆   劆   shader.obj
+<<<<<<< HEAD
+=======
+劆       劆   劆   ShaderManager.obj
+>>>>>>> Scene閬风Щ
 劆       劆   劆   SkinnedMeshComponent.obj
 劆       劆   劆   SkinnedMeshComponents.obj
 劆       劆   劆   SkinnedMeshConmponents.obj
@@ -78,6 +97,10 @@ C:.
 劆       劆           link.read.1.tlog
 劆       劆           link.secondary.1.tlog
 劆       劆           link.write.1.tlog
+<<<<<<< HEAD
+=======
+劆       劆           unsuccessfulbuild
+>>>>>>> Scene閬风Щ
 劆       劆           
 劆       劋劅劅劅Release
 劆           劆   3dgp.log
@@ -105,6 +128,7 @@ C:.
 劆                   fxc.write.1.tlog
 劆                   unsuccessfulbuild
 劆                   
+<<<<<<< HEAD
 劌劅劅劅cereal-master
 劆   劆   .gitignore
 劆   劆   .travis.yml
@@ -357,6 +381,8 @@ C:.
 劆               variant.cpp
 劆               variant.hpp
 劆               
+=======
+>>>>>>> Scene閬风Щ
 劌劅劅劅Data
 劆   劌劅劅劅Audio
 劆   劌劅劅劅Effect
@@ -366,6 +392,7 @@ C:.
 劆   劋劅劅劅Sprite
 劌劅劅劅DirectXTK-main
 劆   劋劅劅劅DirectXTK-main
+<<<<<<< HEAD
 劆       劆   .editorconfig
 劆       劆   .gitattributes
 劆       劆   .gitignore
@@ -1086,6 +1113,359 @@ C:.
 劆   劆       劆   劋劅劅劅workflows
 劆   劆       劌劅劅劅.nuget
 劆   劆       劌劅劅劅Audio
+=======
+劆       劋劅劅劅Bin
+劆           劋劅劅劅Desktop_2019
+劆               劋劅劅劅x64
+劆                   劋劅劅劅Debug
+劆                           DirectXTK_Desktop_2019.log
+劆                           
+劌劅劅劅External
+劆   劌劅劅劅cereal-master
+劆   劆   劆   .gitignore
+劆   劆   劆   .travis.yml
+劆   劆   劆   appveyor.yml
+劆   劆   劆   cereal.pc.in
+劆   劆   劆   CMakeLists.txt
+劆   劆   劆   Config.cmake.in
+劆   劆   劆   LICENSE
+劆   劆   劆   README.md
+劆   劆   劆   
+劆   劆   劌劅劅劅.github
+劆   劆   劆   劋劅劅劅workflows
+劆   劆   劆           ci-macos.yml
+劆   劆   劆           ci.yml
+劆   劆   劆           
+劆   劆   劌劅劅劅doc
+劆   劆   劆       CMakeLists.txt
+劆   劆   劆       doxygen.in
+劆   劆   劆       DoxygenLayout.xml
+劆   劆   劆       footer.html
+劆   劆   劆       mainpage.dox
+劆   劆   劆       
+劆   劆   劌劅劅劅include
+劆   劆   劆   劋劅劅劅cereal
+劆   劆   劆       劆   access.hpp
+劆   劆   劆       劆   cereal.hpp
+劆   劆   劆       劆   macros.hpp
+劆   劆   劆       劆   specialize.hpp
+劆   劆   劆       劆   version.hpp
+劆   劆   劆       劆   
+劆   劆   劆       劌劅劅劅archives
+劆   劆   劆       劆       adapters.hpp
+劆   劆   劆       劆       binary.hpp
+劆   劆   劆       劆       json.hpp
+劆   劆   劆       劆       portable_binary.hpp
+劆   劆   劆       劆       xml.hpp
+劆   劆   劆       劆       
+劆   劆   劆       劌劅劅劅details
+劆   劆   劆       劆       helpers.hpp
+劆   劆   劆       劆       polymorphic_impl.hpp
+劆   劆   劆       劆       polymorphic_impl_fwd.hpp
+劆   劆   劆       劆       static_object.hpp
+劆   劆   劆       劆       traits.hpp
+劆   劆   劆       劆       util.hpp
+劆   劆   劆       劆       
+劆   劆   劆       劌劅劅劅external
+劆   劆   劆       劆   劆   base64.hpp
+劆   劆   劆       劆   劆   LICENSE
+劆   劆   劆       劆   劆   
+劆   劆   劆       劆   劌劅劅劅rapidjson
+劆   劆   劆       劆   劆   劆   allocators.h
+劆   劆   劆       劆   劆   劆   cursorstreamwrapper.h
+劆   劆   劆       劆   劆   劆   document.h
+劆   劆   劆       劆   劆   劆   encodedstream.h
+劆   劆   劆       劆   劆   劆   encodings.h
+劆   劆   劆       劆   劆   劆   filereadstream.h
+劆   劆   劆       劆   劆   劆   filewritestream.h
+劆   劆   劆       劆   劆   劆   fwd.h
+劆   劆   劆       劆   劆   劆   istreamwrapper.h
+劆   劆   劆       劆   劆   劆   LICENSE
+劆   劆   劆       劆   劆   劆   memorybuffer.h
+劆   劆   劆       劆   劆   劆   memorystream.h
+劆   劆   劆       劆   劆   劆   ostreamwrapper.h
+劆   劆   劆       劆   劆   劆   pointer.h
+劆   劆   劆       劆   劆   劆   prettywriter.h
+劆   劆   劆       劆   劆   劆   rapidjson.h
+劆   劆   劆       劆   劆   劆   reader.h
+劆   劆   劆       劆   劆   劆   schema.h
+劆   劆   劆       劆   劆   劆   stream.h
+劆   劆   劆       劆   劆   劆   stringbuffer.h
+劆   劆   劆       劆   劆   劆   writer.h
+劆   劆   劆       劆   劆   劆   
+劆   劆   劆       劆   劆   劌劅劅劅error
+劆   劆   劆       劆   劆   劆       en.h
+劆   劆   劆       劆   劆   劆       error.h
+劆   劆   劆       劆   劆   劆       
+劆   劆   劆       劆   劆   劌劅劅劅internal
+劆   劆   劆       劆   劆   劆       biginteger.h
+劆   劆   劆       劆   劆   劆       diyfp.h
+劆   劆   劆       劆   劆   劆       dtoa.h
+劆   劆   劆       劆   劆   劆       ieee754.h
+劆   劆   劆       劆   劆   劆       itoa.h
+劆   劆   劆       劆   劆   劆       meta.h
+劆   劆   劆       劆   劆   劆       pow10.h
+劆   劆   劆       劆   劆   劆       regex.h
+劆   劆   劆       劆   劆   劆       stack.h
+劆   劆   劆       劆   劆   劆       strfunc.h
+劆   劆   劆       劆   劆   劆       strtod.h
+劆   劆   劆       劆   劆   劆       swap.h
+劆   劆   劆       劆   劆   劆       
+劆   劆   劆       劆   劆   劋劅劅劅msinttypes
+劆   劆   劆       劆   劆           inttypes.h
+劆   劆   劆       劆   劆           LICENSE
+劆   劆   劆       劆   劆           stdint.h
+劆   劆   劆       劆   劆           
+劆   劆   劆       劆   劋劅劅劅rapidxml
+劆   劆   劆       劆           license.txt
+劆   劆   劆       劆           manual.html
+劆   劆   劆       劆           rapidxml.hpp
+劆   劆   劆       劆           rapidxml_iterators.hpp
+劆   劆   劆       劆           rapidxml_print.hpp
+劆   劆   劆       劆           rapidxml_utils.hpp
+劆   劆   劆       劆           
+劆   劆   劆       劋劅劅劅types
+劆   劆   劆           劆   array.hpp
+劆   劆   劆           劆   atomic.hpp
+劆   劆   劆           劆   base_class.hpp
+劆   劆   劆           劆   bitset.hpp
+劆   劆   劆           劆   boost_variant.hpp
+劆   劆   劆           劆   chrono.hpp
+劆   劆   劆           劆   common.hpp
+劆   劆   劆           劆   complex.hpp
+劆   劆   劆           劆   deque.hpp
+劆   劆   劆           劆   forward_list.hpp
+劆   劆   劆           劆   functional.hpp
+劆   劆   劆           劆   list.hpp
+劆   劆   劆           劆   map.hpp
+劆   劆   劆           劆   memory.hpp
+劆   劆   劆           劆   optional.hpp
+劆   劆   劆           劆   polymorphic.hpp
+劆   劆   劆           劆   queue.hpp
+劆   劆   劆           劆   set.hpp
+劆   劆   劆           劆   stack.hpp
+劆   劆   劆           劆   string.hpp
+劆   劆   劆           劆   tuple.hpp
+劆   劆   劆           劆   unordered_map.hpp
+劆   劆   劆           劆   unordered_set.hpp
+劆   劆   劆           劆   utility.hpp
+劆   劆   劆           劆   valarray.hpp
+劆   劆   劆           劆   variant.hpp
+劆   劆   劆           劆   vector.hpp
+劆   劆   劆           劆   
+劆   劆   劆           劋劅劅劅concepts
+劆   劆   劆                   pair_associative_container.hpp
+劆   劆   劆                   
+劆   劆   劌劅劅劅sandbox
+劆   劆   劆   劆   CMakeLists.txt
+劆   劆   劆   劆   performance.cpp
+劆   劆   劆   劆   sandbox.cpp
+劆   劆   劆   劆   sandbox_json.cpp
+劆   劆   劆   劆   sandbox_rtti.cpp
+劆   劆   劆   劆   sandbox_vs.cpp
+劆   劆   劆   劆   
+劆   劆   劆   劋劅劅劅sandbox_shared_lib
+劆   劆   劆           base.cpp
+劆   劆   劆           base.hpp
+劆   劆   劆           CMakeLists.txt
+劆   劆   劆           derived.cpp
+劆   劆   劆           derived.hpp
+劆   劆   劆           
+劆   劆   劌劅劅劅scripts
+劆   劆   劆       add_rapidjson_prefix.sh
+劆   劆   劆       appveyor.bat
+劆   劆   劆       renameincludes.sh
+劆   劆   劆       updatecoverage.sh
+劆   劆   劆       updatedoc.in
+劆   劆   劆       
+劆   劆   劋劅劅劅unittests
+劆   劆       劆   array.cpp
+劆   劆       劆   array.hpp
+劆   劆       劆   atomic.cpp
+劆   劆       劆   atomic.hpp
+劆   劆       劆   basic_string.cpp
+劆   劆       劆   basic_string.hpp
+劆   劆       劆   bitset.cpp
+劆   劆       劆   bitset.hpp
+劆   劆       劆   chrono.cpp
+劆   劆       劆   chrono.hpp
+劆   劆       劆   cmake-config-module.cmake
+劆   劆       劆   CMakeLists.txt
+劆   劆       劆   common.hpp
+劆   劆       劆   complex.cpp
+劆   劆       劆   complex.hpp
+劆   劆       劆   defer.cpp
+劆   劆       劆   defer.hpp
+劆   劆       劆   deque.cpp
+劆   劆       劆   deque.hpp
+劆   劆       劆   doctest.h
+劆   劆       劆   forward_list.cpp
+劆   劆       劆   forward_list.hpp
+劆   劆       劆   list.cpp
+劆   劆       劆   list.hpp
+劆   劆       劆   load_construct.cpp
+劆   劆       劆   load_construct.hpp
+劆   劆       劆   map.cpp
+劆   劆       劆   map.hpp
+劆   劆       劆   memory.cpp
+劆   劆       劆   memory.hpp
+劆   劆       劆   memory_cycles.cpp
+劆   劆       劆   memory_cycles.hpp
+劆   劆       劆   multimap.cpp
+劆   劆       劆   multimap.hpp
+劆   劆       劆   multiset.cpp
+劆   劆       劆   multiset.hpp
+劆   劆       劆   pair.cpp
+劆   劆       劆   pair.hpp
+劆   劆       劆   pod.cpp
+劆   劆       劆   pod.hpp
+劆   劆       劆   polymorphic.cpp
+劆   劆       劆   polymorphic.hpp
+劆   劆       劆   portability_test.cpp
+劆   劆       劆   portable_binary_archive.cpp
+劆   劆       劆   portable_binary_archive.hpp
+劆   劆       劆   priority_queue.cpp
+劆   劆       劆   priority_queue.hpp
+劆   劆       劆   queue.cpp
+劆   劆       劆   queue.hpp
+劆   劆       劆   run_portability_test.cmake
+劆   劆       劆   run_valgrind.sh
+劆   劆       劆   set.cpp
+劆   劆       劆   set.hpp
+劆   劆       劆   stack.cpp
+劆   劆       劆   stack.hpp
+劆   劆       劆   structs.cpp
+劆   劆       劆   structs.hpp
+劆   劆       劆   structs_minimal.cpp
+劆   劆       劆   structs_minimal.hpp
+劆   劆       劆   structs_specialized.cpp
+劆   劆       劆   structs_specialized.hpp
+劆   劆       劆   tuple.cpp
+劆   劆       劆   tuple.hpp
+劆   劆       劆   unordered_loads.cpp
+劆   劆       劆   unordered_loads.hpp
+劆   劆       劆   unordered_map.cpp
+劆   劆       劆   unordered_map.hpp
+劆   劆       劆   unordered_multimap.cpp
+劆   劆       劆   unordered_multimap.hpp
+劆   劆       劆   unordered_multiset.cpp
+劆   劆       劆   unordered_multiset.hpp
+劆   劆       劆   unordered_set.cpp
+劆   劆       劆   unordered_set.hpp
+劆   劆       劆   user_data_adapters.cpp
+劆   劆       劆   user_data_adapters.hpp
+劆   劆       劆   valarray.cpp
+劆   劆       劆   valarray.hpp
+劆   劆       劆   vector.cpp
+劆   劆       劆   vector.hpp
+劆   劆       劆   versioning.cpp
+劆   劆       劆   versioning.hpp
+劆   劆       劆   
+劆   劆       劌劅劅劅boost
+劆   劆       劆       boost_variant.cpp
+劆   劆       劆       boost_variant.hpp
+劆   劆       劆       CMakeLists.txt
+劆   劆       劆       
+劆   劆       劋劅劅劅cpp17
+劆   劆               CMakeLists.txt
+劆   劆               optional.cpp
+劆   劆               optional.hpp
+劆   劆               variant.cpp
+劆   劆               variant.hpp
+劆   劆               
+劆   劌劅劅劅DirectXTK-main
+劆   劆   劋劅劅劅DirectXTK-main
+劆   劆       劆   .editorconfig
+劆   劆       劆   .gitattributes
+劆   劆       劆   .gitignore
+劆   劆       劆   .onefuzz
+劆   劆       劆   CHANGELOG.md
+劆   劆       劆   CMakeLists.txt
+劆   劆       劆   CMakePresets.json
+劆   劆       劆   CODE_OF_CONDUCT.md
+劆   劆       劆   DirectXTK_Desktop_2019.sln
+劆   劆       劆   DirectXTK_Desktop_2019.vcxproj
+劆   劆       劆   DirectXTK_Desktop_2019.vcxproj.filters
+劆   劆       劆   DirectXTK_Desktop_2019.vcxproj.user
+劆   劆       劆   DirectXTK_Desktop_2019_Win10.sln
+劆   劆       劆   DirectXTK_Desktop_2019_Win10.vcxproj.filters
+劆   劆       劆   DirectXTK_Desktop_2022.sln
+劆   劆       劆   DirectXTK_Desktop_2022.vcxproj
+劆   劆       劆   DirectXTK_Desktop_2022.vcxproj.filters
+劆   劆       劆   DirectXTK_Desktop_2022_Win10.sln
+劆   劆       劆   DirectXTK_Desktop_2022_Win10.vcxproj
+劆   劆       劆   DirectXTK_Desktop_2022_Win10.vcxproj.filters
+劆   劆       劆   DirectXTK_GDK_2019.sln
+劆   劆       劆   DirectXTK_GDK_2019.vcxproj
+劆   劆       劆   DirectXTK_GDK_2019.vcxproj.filters
+劆   劆       劆   DirectXTK_GDK_2022.sln
+劆   劆       劆   DirectXTK_GDK_2022.vcxproj.filters
+劆   劆       劆   DirectXTK_Windows10_2022.sln
+劆   劆       劆   DirectXTK_Windows10_2022.vcxproj
+劆   劆       劆   DirectXTK_Windows10_2022.vcxproj.filters
+劆   劆       劆   LICENSE
+劆   劆       劆   README.md
+劆   劆       劆   SECURITY.md
+劆   劆       劆   
+劆   劆       劌劅劅劅.azuredevops
+劆   劆       劆   劌劅劅劅pipelines
+劆   劆       劆   劆       DirectXTK-GitHub-CMake-Dev17.yml
+劆   劆       劆   劆       DirectXTK-GitHub-CMake.yml
+劆   劆       劆   劆       DirectXTK-GitHub-Dev17.yml
+劆   劆       劆   劆       DirectXTK-GitHub-GDK-Dev17.yml
+劆   劆       劆   劆       DirectXTK-GitHub-GDK.yml
+劆   劆       劆   劆       DirectXTK-GitHub-MinGW.yml
+劆   劆       劆   劆       DirectXTK-GitHub-SDK-prerelease.yml
+劆   劆       劆   劆       DirectXTK-GitHub-SDK-release.yml
+劆   劆       劆   劆       DirectXTK-GitHub-Test-Dev17.yml
+劆   劆       劆   劆       DirectXTK-GitHub-Test.yml
+劆   劆       劆   劆       DirectXTK-GitHub-WSL-11.yml
+劆   劆       劆   劆       DirectXTK-GitHub-WSL-13.yml
+劆   劆       劆   劆       DirectXTK-GitHub.yml
+劆   劆       劆   劆       DirectXTK-OneFuzz-Coverage.yml
+劆   劆       劆   劆       DirectXTK-OneFuzz.yml
+劆   劆       劆   劆       DirectXTK-SDL.yml
+劆   劆       劆   劆       
+劆   劆       劆   劋劅劅劅policies
+劆   劆       劆           approvercountpolicy.yml
+劆   劆       劆           
+劆   劆       劌劅劅劅.github
+劆   劆       劆   劆   dependabot.yml
+劆   劆       劆   劆   
+劆   劆       劆   劋劅劅劅workflows
+劆   劆       劆           codeql.yml
+劆   劆       劆           main.yml
+劆   劆       劆           msbuild.yml
+劆   劆       劆           msvc.yml
+劆   劆       劆           test.yml
+劆   劆       劆           uwp.yml
+劆   劆       劆           vcpkg.yml
+劆   劆       劆           win10.yml
+劆   劆       劆           
+劆   劆       劌劅劅劅.nuget
+劆   劆       劆       directxtk_desktop_2019.nuspec
+劆   劆       劆       directxtk_desktop_2019.targets
+劆   劆       劆       directxtk_desktop_win10.nuspec
+劆   劆       劆       directxtk_desktop_win10.targets
+劆   劆       劆       directxtk_uwp.nuspec
+劆   劆       劆       directxtk_uwp.targets
+劆   劆       劆       icon.jpg
+劆   劆       劆       
+劆   劆       劌劅劅劅Audio
+劆   劆       劆       AudioEngine.cpp
+劆   劆       劆       DynamicSoundEffectInstance.cpp
+劆   劆       劆       SoundCommon.cpp
+劆   劆       劆       SoundCommon.h
+劆   劆       劆       SoundEffect.cpp
+劆   劆       劆       SoundEffectInstance.cpp
+劆   劆       劆       SoundStreamInstance.cpp
+劆   劆       劆       WaveBank.cpp
+劆   劆       劆       WaveBankReader.cpp
+劆   劆       劆       WaveBankReader.h
+劆   劆       劆       WAVFileReader.cpp
+劆   劆       劆       WAVFileReader.h
+劆   劆       劆       
+>>>>>>> Scene閬风Щ
 劆   劆       劌劅劅劅Bin
 劆   劆       劆   劋劅劅劅Desktop_2019
 劆   劆       劆       劋劅劅劅x64
@@ -1223,8 +1603,66 @@ C:.
 劆   劆       劆                       Lib.command.1.tlog
 劆   劆       劆                       
 劆   劆       劌劅劅劅build
+<<<<<<< HEAD
 劆   劆       劌劅劅劅Inc
 劆   劆       劌劅劅劅MakeSpriteFont
+=======
+劆   劆       劆       CompilerAndLinker.cmake
+劆   劆       劆       CopyASan.targets
+劆   劆       劆       Directory.Build.props
+劆   劆       劆       DirectXTK-config.cmake.in
+劆   劆       劆       DirectXTK.pc.in
+劆   劆       劆       DirectXTK.rc.in
+劆   劆       劆       JoinPaths.cmake
+劆   劆       劆       onefuzz-setup.ps1
+劆   劆       劆       OneFuzzConfig.json
+劆   劆       劆       preparerelease.ps1
+劆   劆       劆       SetupBWOI.cmd
+劆   劆       劆       SetupBWOI.targets
+劆   劆       劆       vcpkg.json
+劆   劆       劆       versioninfo.ps1
+劆   劆       劆       
+劆   劆       劌劅劅劅Inc
+劆   劆       劆       Audio.h
+劆   劆       劆       BufferHelpers.h
+劆   劆       劆       CommonStates.h
+劆   劆       劆       DDSTextureLoader.h
+劆   劆       劆       DirectXHelpers.h
+劆   劆       劆       Effects.h
+劆   劆       劆       GamePad.h
+劆   劆       劆       GeometricPrimitive.h
+劆   劆       劆       GraphicsMemory.h
+劆   劆       劆       Keyboard.h
+劆   劆       劆       Model.h
+劆   劆       劆       Mouse.h
+劆   劆       劆       PostProcess.h
+劆   劆       劆       PrimitiveBatch.h
+劆   劆       劆       ScreenGrab.h
+劆   劆       劆       SimpleMath.h
+劆   劆       劆       SimpleMath.inl
+劆   劆       劆       SpriteBatch.h
+劆   劆       劆       SpriteFont.h
+劆   劆       劆       VertexTypes.h
+劆   劆       劆       WICTextureLoader.h
+劆   劆       劆       XboxDDSTextureLoader.h
+劆   劆       劆       
+劆   劆       劌劅劅劅MakeSpriteFont
+劆   劆       劆   劆   app.config
+劆   劆       劆   劆   BitmapImporter.cs
+劆   劆       劆   劆   BitmapUtils.cs
+劆   劆       劆   劆   CharacterRegion.cs
+劆   劆       劆   劆   CommandLineOptions.cs
+劆   劆       劆   劆   CommandLineParser.cs
+劆   劆       劆   劆   Glyph.cs
+劆   劆       劆   劆   GlyphCropper.cs
+劆   劆       劆   劆   GlyphPacker.cs
+劆   劆       劆   劆   IFontImporter.cs
+劆   劆       劆   劆   MakeSpriteFont.csproj
+劆   劆       劆   劆   Program.cs
+劆   劆       劆   劆   SpriteFontWriter.cs
+劆   劆       劆   劆   TrueTypeImporter.cs
+劆   劆       劆   劆   
+>>>>>>> Scene閬风Щ
 劆   劆       劆   劌劅劅劅bin
 劆   劆       劆   劆   劋劅劅劅Debug
 劆   劆       劆   劌劅劅劅obj
@@ -1235,6 +1673,7 @@ C:.
 劆   劆       劆   劆       劆   
 劆   劆       劆   劆       劋劅劅劅TempPE
 劆   劆       劆   劋劅劅劅Properties
+<<<<<<< HEAD
 劆   劆       劌劅劅劅Src
 劆   劆       劆   劋劅劅劅Shaders
 劆   劆       劆       劋劅劅劅Compiled
@@ -1428,6 +1867,479 @@ C:.
 劆   劆       劆               
 劆   劆       劋劅劅劅XWBTool
 劆   劆               XWBTool_Desktop_2019.vcxproj.user
+=======
+劆   劆       劆           AssemblyInfo.cs
+劆   劆       劆           
+劆   劆       劌劅劅劅Src
+劆   劆       劆   劆   AlignedNew.h
+劆   劆       劆   劆   AlphaTestEffect.cpp
+劆   劆       劆   劆   BasicEffect.cpp
+劆   劆       劆   劆   BasicPostProcess.cpp
+劆   劆       劆   劆   Bezier.h
+劆   劆       劆   劆   BinaryReader.cpp
+劆   劆       劆   劆   BinaryReader.h
+劆   劆       劆   劆   BufferHelpers.cpp
+劆   劆       劆   劆   CMO.h
+劆   劆       劆   劆   CommonStates.cpp
+劆   劆       劆   劆   DDS.h
+劆   劆       劆   劆   DDSTextureLoader.cpp
+劆   劆       劆   劆   DebugEffect.cpp
+劆   劆       劆   劆   DemandCreate.h
+劆   劆       劆   劆   DGSLEffect.cpp
+劆   劆       劆   劆   DGSLEffectFactory.cpp
+劆   劆       劆   劆   DirectXHelpers.cpp
+劆   劆       劆   劆   DualPostProcess.cpp
+劆   劆       劆   劆   DualTextureEffect.cpp
+劆   劆       劆   劆   EffectCommon.cpp
+劆   劆       劆   劆   EffectCommon.h
+劆   劆       劆   劆   EffectFactory.cpp
+劆   劆       劆   劆   EnvironmentMapEffect.cpp
+劆   劆       劆   劆   GamePad.cpp
+劆   劆       劆   劆   GeometricPrimitive.cpp
+劆   劆       劆   劆   Geometry.cpp
+劆   劆       劆   劆   Geometry.h
+劆   劆       劆   劆   GraphicsMemory.cpp
+劆   劆       劆   劆   Keyboard.cpp
+劆   劆       劆   劆   LoaderHelpers.h
+劆   劆       劆   劆   Model.cpp
+劆   劆       劆   劆   ModelLoadCMO.cpp
+劆   劆       劆   劆   ModelLoadSDKMESH.cpp
+劆   劆       劆   劆   ModelLoadVBO.cpp
+劆   劆       劆   劆   Mouse.cpp
+劆   劆       劆   劆   NormalMapEffect.cpp
+劆   劆       劆   劆   PBREffect.cpp
+劆   劆       劆   劆   PBREffectFactory.cpp
+劆   劆       劆   劆   pch.cpp
+劆   劆       劆   劆   pch.h
+劆   劆       劆   劆   PlatformHelpers.h
+劆   劆       劆   劆   PrimitiveBatch.cpp
+劆   劆       劆   劆   ScreenGrab.cpp
+劆   劆       劆   劆   SDKMesh.h
+劆   劆       劆   劆   SharedResourcePool.h
+劆   劆       劆   劆   SimpleMath.cpp
+劆   劆       劆   劆   SkinnedEffect.cpp
+劆   劆       劆   劆   SpriteBatch.cpp
+劆   劆       劆   劆   SpriteFont.cpp
+劆   劆       劆   劆   TeapotData.inc
+劆   劆       劆   劆   ToneMapPostProcess.cpp
+劆   劆       劆   劆   vbo.h
+劆   劆       劆   劆   VertexTypes.cpp
+劆   劆       劆   劆   WICTextureLoader.cpp
+劆   劆       劆   劆   XboxDDSTextureLoader.cpp
+劆   劆       劆   劆   
+劆   劆       劆   劋劅劅劅Shaders
+劆   劆       劆       劆   AlphaTestEffect.fx
+劆   劆       劆       劆   BasicEffect.fx
+劆   劆       劆       劆   Common.fxh
+劆   劆       劆       劆   CompileShaders.cmd
+劆   劆       劆       劆   DebugEffect.fx
+劆   劆       劆       劆   DGSLEffect.fx
+劆   劆       劆       劆   DGSLLambert.hlsl
+劆   劆       劆       劆   DGSLPhong.hlsl
+劆   劆       劆       劆   DGSLUnlit.hlsl
+劆   劆       劆       劆   DualTextureEffect.fx
+劆   劆       劆       劆   EnvironmentMapEffect.fx
+劆   劆       劆       劆   Lighting.fxh
+劆   劆       劆       劆   NormalMapEffect.fx
+劆   劆       劆       劆   PBRCommon.fxh
+劆   劆       劆       劆   PBREffect.fx
+劆   劆       劆       劆   PixelPacking_Velocity.hlsli
+劆   劆       劆       劆   PostProcess.fx
+劆   劆       劆       劆   SkinnedEffect.fx
+劆   劆       劆       劆   Skinning.fxh
+劆   劆       劆       劆   SpriteEffect.fx
+劆   劆       劆       劆   Structures.fxh
+劆   劆       劆       劆   ToneMap.fx
+劆   劆       劆       劆   Utilities.fxh
+劆   劆       劆       劆   
+劆   劆       劆       劋劅劅劅Compiled
+劆   劆       劆               AlphaTestEffect_PSAlphaTestEqNe.inc
+劆   劆       劆               AlphaTestEffect_PSAlphaTestEqNe.pdb
+劆   劆       劆               AlphaTestEffect_PSAlphaTestEqNeNoFog.inc
+劆   劆       劆               AlphaTestEffect_PSAlphaTestEqNeNoFog.pdb
+劆   劆       劆               AlphaTestEffect_PSAlphaTestLtGt.inc
+劆   劆       劆               AlphaTestEffect_PSAlphaTestLtGt.pdb
+劆   劆       劆               AlphaTestEffect_PSAlphaTestLtGtNoFog.inc
+劆   劆       劆               AlphaTestEffect_PSAlphaTestLtGtNoFog.pdb
+劆   劆       劆               AlphaTestEffect_VSAlphaTest.inc
+劆   劆       劆               AlphaTestEffect_VSAlphaTest.pdb
+劆   劆       劆               AlphaTestEffect_VSAlphaTestNoFog.inc
+劆   劆       劆               AlphaTestEffect_VSAlphaTestNoFog.pdb
+劆   劆       劆               AlphaTestEffect_VSAlphaTestVc.inc
+劆   劆       劆               AlphaTestEffect_VSAlphaTestVc.pdb
+劆   劆       劆               AlphaTestEffect_VSAlphaTestVcNoFog.inc
+劆   劆       劆               AlphaTestEffect_VSAlphaTestVcNoFog.pdb
+劆   劆       劆               BasicEffect_PSBasic.inc
+劆   劆       劆               BasicEffect_PSBasic.pdb
+劆   劆       劆               BasicEffect_PSBasicNoFog.inc
+劆   劆       劆               BasicEffect_PSBasicNoFog.pdb
+劆   劆       劆               BasicEffect_PSBasicPixelLighting.inc
+劆   劆       劆               BasicEffect_PSBasicPixelLighting.pdb
+劆   劆       劆               BasicEffect_PSBasicPixelLightingTx.inc
+劆   劆       劆               BasicEffect_PSBasicPixelLightingTx.pdb
+劆   劆       劆               BasicEffect_PSBasicTx.inc
+劆   劆       劆               BasicEffect_PSBasicTx.pdb
+劆   劆       劆               BasicEffect_PSBasicTxNoFog.inc
+劆   劆       劆               BasicEffect_PSBasicTxNoFog.pdb
+劆   劆       劆               BasicEffect_PSBasicVertexLighting.inc
+劆   劆       劆               BasicEffect_PSBasicVertexLighting.pdb
+劆   劆       劆               BasicEffect_PSBasicVertexLightingNoFog.inc
+劆   劆       劆               BasicEffect_PSBasicVertexLightingNoFog.pdb
+劆   劆       劆               BasicEffect_PSBasicVertexLightingTx.inc
+劆   劆       劆               BasicEffect_PSBasicVertexLightingTx.pdb
+劆   劆       劆               BasicEffect_PSBasicVertexLightingTxNoFog.inc
+劆   劆       劆               BasicEffect_PSBasicVertexLightingTxNoFog.pdb
+劆   劆       劆               BasicEffect_VSBasic.inc
+劆   劆       劆               BasicEffect_VSBasic.pdb
+劆   劆       劆               BasicEffect_VSBasicNoFog.inc
+劆   劆       劆               BasicEffect_VSBasicNoFog.pdb
+劆   劆       劆               BasicEffect_VSBasicOneLight.inc
+劆   劆       劆               BasicEffect_VSBasicOneLight.pdb
+劆   劆       劆               BasicEffect_VSBasicOneLightBn.inc
+劆   劆       劆               BasicEffect_VSBasicOneLightBn.pdb
+劆   劆       劆               BasicEffect_VSBasicOneLightTx.inc
+劆   劆       劆               BasicEffect_VSBasicOneLightTx.pdb
+劆   劆       劆               BasicEffect_VSBasicOneLightTxBn.inc
+劆   劆       劆               BasicEffect_VSBasicOneLightTxBn.pdb
+劆   劆       劆               BasicEffect_VSBasicOneLightTxVc.inc
+劆   劆       劆               BasicEffect_VSBasicOneLightTxVc.pdb
+劆   劆       劆               BasicEffect_VSBasicOneLightTxVcBn.inc
+劆   劆       劆               BasicEffect_VSBasicOneLightTxVcBn.pdb
+劆   劆       劆               BasicEffect_VSBasicOneLightVc.inc
+劆   劆       劆               BasicEffect_VSBasicOneLightVc.pdb
+劆   劆       劆               BasicEffect_VSBasicOneLightVcBn.inc
+劆   劆       劆               BasicEffect_VSBasicOneLightVcBn.pdb
+劆   劆       劆               BasicEffect_VSBasicPixelLighting.inc
+劆   劆       劆               BasicEffect_VSBasicPixelLighting.pdb
+劆   劆       劆               BasicEffect_VSBasicPixelLightingBn.inc
+劆   劆       劆               BasicEffect_VSBasicPixelLightingBn.pdb
+劆   劆       劆               BasicEffect_VSBasicPixelLightingTx.inc
+劆   劆       劆               BasicEffect_VSBasicPixelLightingTx.pdb
+劆   劆       劆               BasicEffect_VSBasicPixelLightingTxBn.inc
+劆   劆       劆               BasicEffect_VSBasicPixelLightingTxBn.pdb
+劆   劆       劆               BasicEffect_VSBasicPixelLightingTxVc.inc
+劆   劆       劆               BasicEffect_VSBasicPixelLightingTxVc.pdb
+劆   劆       劆               BasicEffect_VSBasicPixelLightingTxVcBn.inc
+劆   劆       劆               BasicEffect_VSBasicPixelLightingTxVcBn.pdb
+劆   劆       劆               BasicEffect_VSBasicPixelLightingVc.inc
+劆   劆       劆               BasicEffect_VSBasicPixelLightingVc.pdb
+劆   劆       劆               BasicEffect_VSBasicPixelLightingVcBn.inc
+劆   劆       劆               BasicEffect_VSBasicPixelLightingVcBn.pdb
+劆   劆       劆               BasicEffect_VSBasicTx.inc
+劆   劆       劆               BasicEffect_VSBasicTx.pdb
+劆   劆       劆               BasicEffect_VSBasicTxNoFog.inc
+劆   劆       劆               BasicEffect_VSBasicTxNoFog.pdb
+劆   劆       劆               BasicEffect_VSBasicTxVc.inc
+劆   劆       劆               BasicEffect_VSBasicTxVc.pdb
+劆   劆       劆               BasicEffect_VSBasicTxVcNoFog.inc
+劆   劆       劆               BasicEffect_VSBasicTxVcNoFog.pdb
+劆   劆       劆               BasicEffect_VSBasicVc.inc
+劆   劆       劆               BasicEffect_VSBasicVc.pdb
+劆   劆       劆               BasicEffect_VSBasicVcNoFog.inc
+劆   劆       劆               BasicEffect_VSBasicVcNoFog.pdb
+劆   劆       劆               BasicEffect_VSBasicVertexLighting.inc
+劆   劆       劆               BasicEffect_VSBasicVertexLighting.pdb
+劆   劆       劆               BasicEffect_VSBasicVertexLightingBn.inc
+劆   劆       劆               BasicEffect_VSBasicVertexLightingBn.pdb
+劆   劆       劆               BasicEffect_VSBasicVertexLightingTx.inc
+劆   劆       劆               BasicEffect_VSBasicVertexLightingTx.pdb
+劆   劆       劆               BasicEffect_VSBasicVertexLightingTxBn.inc
+劆   劆       劆               BasicEffect_VSBasicVertexLightingTxBn.pdb
+劆   劆       劆               BasicEffect_VSBasicVertexLightingTxVc.inc
+劆   劆       劆               BasicEffect_VSBasicVertexLightingTxVc.pdb
+劆   劆       劆               BasicEffect_VSBasicVertexLightingTxVcBn.inc
+劆   劆       劆               BasicEffect_VSBasicVertexLightingTxVcBn.pdb
+劆   劆       劆               BasicEffect_VSBasicVertexLightingVc.inc
+劆   劆       劆               BasicEffect_VSBasicVertexLightingVc.pdb
+劆   劆       劆               BasicEffect_VSBasicVertexLightingVcBn.inc
+劆   劆       劆               BasicEffect_VSBasicVertexLightingVcBn.pdb
+劆   劆       劆               DebugEffect_PSHemiAmbient.inc
+劆   劆       劆               DebugEffect_PSHemiAmbient.pdb
+劆   劆       劆               DebugEffect_PSRGBBiTangents.inc
+劆   劆       劆               DebugEffect_PSRGBBiTangents.pdb
+劆   劆       劆               DebugEffect_PSRGBNormals.inc
+劆   劆       劆               DebugEffect_PSRGBNormals.pdb
+劆   劆       劆               DebugEffect_PSRGBTangents.inc
+劆   劆       劆               DebugEffect_PSRGBTangents.pdb
+劆   劆       劆               DebugEffect_VSDebug.inc
+劆   劆       劆               DebugEffect_VSDebug.pdb
+劆   劆       劆               DebugEffect_VSDebugBn.inc
+劆   劆       劆               DebugEffect_VSDebugBn.pdb
+劆   劆       劆               DebugEffect_VSDebugBnInst.inc
+劆   劆       劆               DebugEffect_VSDebugBnInst.pdb
+劆   劆       劆               DebugEffect_VSDebugInst.inc
+劆   劆       劆               DebugEffect_VSDebugInst.pdb
+劆   劆       劆               DebugEffect_VSDebugVc.inc
+劆   劆       劆               DebugEffect_VSDebugVc.pdb
+劆   劆       劆               DebugEffect_VSDebugVcBn.inc
+劆   劆       劆               DebugEffect_VSDebugVcBn.pdb
+劆   劆       劆               DebugEffect_VSDebugVcBnInst.inc
+劆   劆       劆               DebugEffect_VSDebugVcBnInst.pdb
+劆   劆       劆               DebugEffect_VSDebugVcInst.inc
+劆   劆       劆               DebugEffect_VSDebugVcInst.pdb
+劆   劆       劆               DGSLEffect_main.inc
+劆   劆       劆               DGSLEffect_main.pdb
+劆   劆       劆               DGSLEffect_main1Bones.inc
+劆   劆       劆               DGSLEffect_main1Bones.pdb
+劆   劆       劆               DGSLEffect_main1BonesVc.inc
+劆   劆       劆               DGSLEffect_main1BonesVc.pdb
+劆   劆       劆               DGSLEffect_main2Bones.inc
+劆   劆       劆               DGSLEffect_main2Bones.pdb
+劆   劆       劆               DGSLEffect_main2BonesVc.inc
+劆   劆       劆               DGSLEffect_main2BonesVc.pdb
+劆   劆       劆               DGSLEffect_main4Bones.inc
+劆   劆       劆               DGSLEffect_main4Bones.pdb
+劆   劆       劆               DGSLEffect_main4BonesVc.inc
+劆   劆       劆               DGSLEffect_main4BonesVc.pdb
+劆   劆       劆               DGSLEffect_mainVc.inc
+劆   劆       劆               DGSLEffect_mainVc.pdb
+劆   劆       劆               DGSLLambert_main.inc
+劆   劆       劆               DGSLLambert_main.pdb
+劆   劆       劆               DGSLLambert_mainTk.inc
+劆   劆       劆               DGSLLambert_mainTk.pdb
+劆   劆       劆               DGSLLambert_mainTx.inc
+劆   劆       劆               DGSLLambert_mainTx.pdb
+劆   劆       劆               DGSLLambert_mainTxTk.inc
+劆   劆       劆               DGSLLambert_mainTxTk.pdb
+劆   劆       劆               DGSLPhong_main.inc
+劆   劆       劆               DGSLPhong_main.pdb
+劆   劆       劆               DGSLPhong_mainTk.inc
+劆   劆       劆               DGSLPhong_mainTk.pdb
+劆   劆       劆               DGSLPhong_mainTx.inc
+劆   劆       劆               DGSLPhong_mainTx.pdb
+劆   劆       劆               DGSLPhong_mainTxTk.inc
+劆   劆       劆               DGSLPhong_mainTxTk.pdb
+劆   劆       劆               DGSLUnlit_main.inc
+劆   劆       劆               DGSLUnlit_main.pdb
+劆   劆       劆               DGSLUnlit_mainTk.inc
+劆   劆       劆               DGSLUnlit_mainTk.pdb
+劆   劆       劆               DGSLUnlit_mainTx.inc
+劆   劆       劆               DGSLUnlit_mainTx.pdb
+劆   劆       劆               DGSLUnlit_mainTxTk.inc
+劆   劆       劆               DGSLUnlit_mainTxTk.pdb
+劆   劆       劆               DualTextureEffect_PSDualTexture.inc
+劆   劆       劆               DualTextureEffect_PSDualTexture.pdb
+劆   劆       劆               DualTextureEffect_PSDualTextureNoFog.inc
+劆   劆       劆               DualTextureEffect_PSDualTextureNoFog.pdb
+劆   劆       劆               DualTextureEffect_VSDualTexture.inc
+劆   劆       劆               DualTextureEffect_VSDualTexture.pdb
+劆   劆       劆               DualTextureEffect_VSDualTextureNoFog.inc
+劆   劆       劆               DualTextureEffect_VSDualTextureNoFog.pdb
+劆   劆       劆               DualTextureEffect_VSDualTextureVc.inc
+劆   劆       劆               DualTextureEffect_VSDualTextureVc.pdb
+劆   劆       劆               DualTextureEffect_VSDualTextureVcNoFog.inc
+劆   劆       劆               DualTextureEffect_VSDualTextureVcNoFog.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMap.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMap.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLighting.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLighting.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingFresnel.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingFresnel.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingFresnelNoFog.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingFresnelNoFog.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingNoFog.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingNoFog.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapNoFog.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapNoFog.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapPixelLighting.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapPixelLighting.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapPixelLightingFresnel.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapPixelLightingFresnel.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapPixelLightingFresnelNoFog.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapPixelLightingFresnelNoFog.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapPixelLightingNoFog.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapPixelLightingNoFog.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapSpecular.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapSpecular.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapSpecularNoFog.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapSpecularNoFog.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapSpherePixelLighting.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapSpherePixelLighting.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapSpherePixelLightingFresnel.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapSpherePixelLightingFresnel.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapSpherePixelLightingFresnelNoFog.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapSpherePixelLightingFresnelNoFog.pdb
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapSpherePixelLightingNoFog.inc
+劆   劆       劆               EnvironmentMapEffect_PSEnvMapSpherePixelLightingNoFog.pdb
+劆   劆       劆               EnvironmentMapEffect_VSEnvMap.inc
+劆   劆       劆               EnvironmentMapEffect_VSEnvMap.pdb
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapBn.inc
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapBn.pdb
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapFresnel.inc
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapFresnel.pdb
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapFresnelBn.inc
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapFresnelBn.pdb
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapOneLight.inc
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapOneLight.pdb
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapOneLightBn.inc
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapOneLightBn.pdb
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapOneLightFresnel.inc
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapOneLightFresnel.pdb
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapOneLightFresnelBn.inc
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapOneLightFresnelBn.pdb
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapPixelLighting.inc
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapPixelLighting.pdb
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapPixelLightingBn.inc
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapPixelLightingBn.pdb
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapPixelLightingBnSM4.inc
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapPixelLightingBnSM4.pdb
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapPixelLightingSM4.inc
+劆   劆       劆               EnvironmentMapEffect_VSEnvMapPixelLightingSM4.pdb
+劆   劆       劆               NormalMapEffect_PSNormalPixelLightingTx.inc
+劆   劆       劆               NormalMapEffect_PSNormalPixelLightingTx.pdb
+劆   劆       劆               NormalMapEffect_PSNormalPixelLightingTxNoFog.inc
+劆   劆       劆               NormalMapEffect_PSNormalPixelLightingTxNoFog.pdb
+劆   劆       劆               NormalMapEffect_PSNormalPixelLightingTxNoFogSpec.inc
+劆   劆       劆               NormalMapEffect_PSNormalPixelLightingTxNoFogSpec.pdb
+劆   劆       劆               NormalMapEffect_PSNormalPixelLightingTxNoSpec.inc
+劆   劆       劆               NormalMapEffect_PSNormalPixelLightingTxNoSpec.pdb
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTx.inc
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTx.pdb
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTxBn.inc
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTxBn.pdb
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTxBnInst.inc
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTxBnInst.pdb
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTxInst.inc
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTxInst.pdb
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTxVc.inc
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTxVc.pdb
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTxVcBn.inc
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTxVcBn.pdb
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTxVcBnInst.inc
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTxVcBnInst.pdb
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTxVcInst.inc
+劆   劆       劆               NormalMapEffect_VSNormalPixelLightingTxVcInst.pdb
+劆   劆       劆               NormalMapEffect_VSSkinnedPixelLightingTx.inc
+劆   劆       劆               NormalMapEffect_VSSkinnedPixelLightingTx.pdb
+劆   劆       劆               NormalMapEffect_VSSkinnedPixelLightingTxBn.inc
+劆   劆       劆               NormalMapEffect_VSSkinnedPixelLightingTxBn.pdb
+劆   劆       劆               PBREffect_PSConstant.inc
+劆   劆       劆               PBREffect_PSConstant.pdb
+劆   劆       劆               PBREffect_PSTextured.inc
+劆   劆       劆               PBREffect_PSTextured.pdb
+劆   劆       劆               PBREffect_PSTexturedEmissive.inc
+劆   劆       劆               PBREffect_PSTexturedEmissive.pdb
+劆   劆       劆               PBREffect_PSTexturedEmissiveVelocity.inc
+劆   劆       劆               PBREffect_PSTexturedEmissiveVelocity.pdb
+劆   劆       劆               PBREffect_PSTexturedVelocity.inc
+劆   劆       劆               PBREffect_PSTexturedVelocity.pdb
+劆   劆       劆               PBREffect_VSConstant.inc
+劆   劆       劆               PBREffect_VSConstant.pdb
+劆   劆       劆               PBREffect_VSConstantBn.inc
+劆   劆       劆               PBREffect_VSConstantBn.pdb
+劆   劆       劆               PBREffect_VSConstantBnInst.inc
+劆   劆       劆               PBREffect_VSConstantBnInst.pdb
+劆   劆       劆               PBREffect_VSConstantInst.inc
+劆   劆       劆               PBREffect_VSConstantInst.pdb
+劆   劆       劆               PBREffect_VSConstantVelocity.inc
+劆   劆       劆               PBREffect_VSConstantVelocity.pdb
+劆   劆       劆               PBREffect_VSConstantVelocityBn.inc
+劆   劆       劆               PBREffect_VSConstantVelocityBn.pdb
+劆   劆       劆               PBREffect_VSSkinned.inc
+劆   劆       劆               PBREffect_VSSkinned.pdb
+劆   劆       劆               PBREffect_VSSkinnedBn.inc
+劆   劆       劆               PBREffect_VSSkinnedBn.pdb
+劆   劆       劆               PostProcess_PSBloomBlur.inc
+劆   劆       劆               PostProcess_PSBloomBlur.pdb
+劆   劆       劆               PostProcess_PSBloomCombine.inc
+劆   劆       劆               PostProcess_PSBloomCombine.pdb
+劆   劆       劆               PostProcess_PSBloomExtract.inc
+劆   劆       劆               PostProcess_PSBloomExtract.pdb
+劆   劆       劆               PostProcess_PSCopy.inc
+劆   劆       劆               PostProcess_PSCopy.pdb
+劆   劆       劆               PostProcess_PSDownScale2x2.inc
+劆   劆       劆               PostProcess_PSDownScale2x2.pdb
+劆   劆       劆               PostProcess_PSDownScale4x4.inc
+劆   劆       劆               PostProcess_PSDownScale4x4.pdb
+劆   劆       劆               PostProcess_PSGaussianBlur5x5.inc
+劆   劆       劆               PostProcess_PSGaussianBlur5x5.pdb
+劆   劆       劆               PostProcess_PSMerge.inc
+劆   劆       劆               PostProcess_PSMerge.pdb
+劆   劆       劆               PostProcess_PSMonochrome.inc
+劆   劆       劆               PostProcess_PSMonochrome.pdb
+劆   劆       劆               PostProcess_PSSepia.inc
+劆   劆       劆               PostProcess_PSSepia.pdb
+劆   劆       劆               PostProcess_VSQuad.inc
+劆   劆       劆               PostProcess_VSQuad.pdb
+劆   劆       劆               SkinnedEffect_PSSkinnedPixelLighting.inc
+劆   劆       劆               SkinnedEffect_PSSkinnedPixelLighting.pdb
+劆   劆       劆               SkinnedEffect_PSSkinnedVertexLighting.inc
+劆   劆       劆               SkinnedEffect_PSSkinnedVertexLighting.pdb
+劆   劆       劆               SkinnedEffect_PSSkinnedVertexLightingNoFog.inc
+劆   劆       劆               SkinnedEffect_PSSkinnedVertexLightingNoFog.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedOneLightFourBones.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedOneLightFourBones.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedOneLightFourBonesBn.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedOneLightFourBonesBn.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedOneLightOneBone.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedOneLightOneBone.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedOneLightOneBoneBn.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedOneLightOneBoneBn.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedOneLightTwoBones.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedOneLightTwoBones.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedOneLightTwoBonesBn.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedOneLightTwoBonesBn.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedPixelLightingFourBones.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedPixelLightingFourBones.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedPixelLightingFourBonesBn.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedPixelLightingFourBonesBn.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedPixelLightingOneBone.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedPixelLightingOneBone.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedPixelLightingOneBoneBn.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedPixelLightingOneBoneBn.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedPixelLightingTwoBones.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedPixelLightingTwoBones.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedPixelLightingTwoBonesBn.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedPixelLightingTwoBonesBn.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedVertexLightingFourBones.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedVertexLightingFourBones.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedVertexLightingFourBonesBn.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedVertexLightingFourBonesBn.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedVertexLightingOneBone.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedVertexLightingOneBone.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedVertexLightingOneBoneBn.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedVertexLightingOneBoneBn.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedVertexLightingTwoBones.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedVertexLightingTwoBones.pdb
+劆   劆       劆               SkinnedEffect_VSSkinnedVertexLightingTwoBonesBn.inc
+劆   劆       劆               SkinnedEffect_VSSkinnedVertexLightingTwoBonesBn.pdb
+劆   劆       劆               SpriteEffect_SpritePixelShader.inc
+劆   劆       劆               SpriteEffect_SpritePixelShader.pdb
+劆   劆       劆               SpriteEffect_SpriteVertexShader.inc
+劆   劆       劆               SpriteEffect_SpriteVertexShader.pdb
+劆   劆       劆               ToneMap_PSACESFilmic.inc
+劆   劆       劆               ToneMap_PSACESFilmic.pdb
+劆   劆       劆               ToneMap_PSACESFilmic_SRGB.inc
+劆   劆       劆               ToneMap_PSACESFilmic_SRGB.pdb
+劆   劆       劆               ToneMap_PSCopy.inc
+劆   劆       劆               ToneMap_PSCopy.pdb
+劆   劆       劆               ToneMap_PSHDR10.inc
+劆   劆       劆               ToneMap_PSHDR10.pdb
+劆   劆       劆               ToneMap_PSReinhard.inc
+劆   劆       劆               ToneMap_PSReinhard.pdb
+劆   劆       劆               ToneMap_PSReinhard_SRGB.inc
+劆   劆       劆               ToneMap_PSReinhard_SRGB.pdb
+劆   劆       劆               ToneMap_PSSaturate.inc
+劆   劆       劆               ToneMap_PSSaturate.pdb
+劆   劆       劆               ToneMap_PSSaturate_SRGB.inc
+劆   劆       劆               ToneMap_PSSaturate_SRGB.pdb
+劆   劆       劆               ToneMap_PS_SRGB.inc
+劆   劆       劆               ToneMap_PS_SRGB.pdb
+劆   劆       劆               ToneMap_VSQuad.inc
+劆   劆       劆               ToneMap_VSQuad.pdb
+劆   劆       劆               
+劆   劆       劋劅劅劅XWBTool
+劆   劆               CmdLineHelpers.h
+劆   劆               directx.ico
+劆   劆               settings.manifest
+劆   劆               xwbtool.cpp
+劆   劆               xwbtool.rc
+劆   劆               xwbtool_Desktop_2019.vcxproj
+劆   劆               xwbtool_Desktop_2019.vcxproj.filters
+劆   劆               XWBTool_Desktop_2019.vcxproj.user
+劆   劆               xwbtool_Desktop_2022.vcxproj
+劆   劆               xwbtool_Desktop_2022.vcxproj.filters
+>>>>>>> Scene閬风Щ
 劆   劆               
 劆   劌劅劅劅imgui
 劆   劆       imconfig.h
@@ -1445,6 +2357,7 @@ C:.
 劆   劆       imstb_textedit.h
 劆   劆       imstb_truetype.h
 劆   劆       
+<<<<<<< HEAD
 劆   劌劅劅劅json-develop
 劆   劆   劋劅劅劅json-develop
 劆   劆       劌劅劅劅.github
@@ -1581,6 +2494,759 @@ C:.
 劆       imstb_textedit.h
 劆       imstb_truetype.h
 劆       
+=======
+劆   劋劅劅劅json-develop
+劆       劋劅劅劅json-develop
+劆           劌劅劅劅.github
+劆           劆   劌劅劅劅external_ci
+劆           劆   劌劅劅劅ISSUE_TEMPLATE
+劆           劆   劋劅劅劅workflows
+劆           劌劅劅劅.reuse
+劆           劆   劋劅劅劅templates
+劆           劌劅劅劅cmake
+劆           劆   劌劅劅劅requirements
+劆           劆   劋劅劅劅scripts
+劆           劌劅劅劅docs
+劆           劆   劌劅劅劅docset
+劆           劆   劋劅劅劅mkdocs
+劆           劆       劌劅劅劅docs
+劆           劆       劆   劌劅劅劅api
+劆           劆       劆   劆   劌劅劅劅adl_serializer
+劆           劆       劆   劆   劌劅劅劅basic_json
+劆           劆       劆   劆   劌劅劅劅byte_container_with_subtype
+劆           劆       劆   劆   劌劅劅劅json_pointer
+劆           劆       劆   劆   劌劅劅劅json_sax
+劆           劆       劆   劆   劋劅劅劅macros
+劆           劆       劆   劌劅劅劅community
+劆           劆       劆   劌劅劅劅css
+劆           劆       劆   劌劅劅劅examples
+劆           劆       劆   劌劅劅劅features
+劆           劆       劆   劆   劌劅劅劅binary_formats
+劆           劆       劆   劆   劌劅劅劅element_access
+劆           劆       劆   劆   劌劅劅劅parsing
+劆           劆       劆   劆   劋劅劅劅types
+劆           劆       劆   劌劅劅劅home
+劆           劆       劆   劌劅劅劅images
+劆           劆       劆   劆   劋劅劅劅package_managers
+劆           劆       劆   劋劅劅劅integration
+劆           劆       劆       劌劅劅劅bazel
+劆           劆       劆       劌劅劅劅cget
+劆           劆       劆       劌劅劅劅conan
+劆           劆       劆       劌劅劅劅conda
+劆           劆       劆       劌劅劅劅cpm
+劆           劆       劆       劌劅劅劅homebrew
+劆           劆       劆       劌劅劅劅hunter
+劆           劆       劆       劌劅劅劅macports
+劆           劆       劆       劌劅劅劅meson
+劆           劆       劆       劌劅劅劅nuget
+劆           劆       劆       劌劅劅劅spack
+劆           劆       劆       劌劅劅劅vcpkg
+劆           劆       劆       劋劅劅劅xmake
+劆           劆       劌劅劅劅includes
+劆           劆       劋劅劅劅scripts
+劆           劌劅劅劅include
+劆           劆   劋劅劅劅nlohmann
+劆           劆       劌劅劅劅detail
+劆           劆       劆   劌劅劅劅conversions
+劆           劆       劆   劌劅劅劅input
+劆           劆       劆   劌劅劅劅iterators
+劆           劆       劆   劌劅劅劅meta
+劆           劆       劆   劆   劋劅劅劅call_std
+劆           劆       劆   劋劅劅劅output
+劆           劆       劋劅劅劅thirdparty
+劆           劆           劋劅劅劅hedley
+劆           劌劅劅劅LICENSES
+劆           劌劅劅劅single_include
+劆           劆   劋劅劅劅nlohmann
+劆           劌劅劅劅src
+劆           劆   劋劅劅劅modules
+劆           劌劅劅劅tests
+劆           劆   劌劅劅劅abi
+劆           劆   劆   劌劅劅劅config
+劆           劆   劆   劌劅劅劅diag
+劆           劆   劆   劌劅劅劅include
+劆           劆   劆   劆   劋劅劅劅nlohmann
+劆           劆   劆   劋劅劅劅inline_ns
+劆           劆   劌劅劅劅benchmarks
+劆           劆   劆   劋劅劅劅src
+劆           劆   劌劅劅劅cmake_add_subdirectory
+劆           劆   劆   劋劅劅劅project
+劆           劆   劌劅劅劅cmake_fetch_content
+劆           劆   劆   劋劅劅劅project
+劆           劆   劌劅劅劅cmake_fetch_content2
+劆           劆   劆   劋劅劅劅project
+劆           劆   劌劅劅劅cmake_import
+劆           劆   劆   劋劅劅劅project
+劆           劆   劌劅劅劅cmake_import_minver
+劆           劆   劆   劋劅劅劅project
+劆           劆   劌劅劅劅cmake_target_include_directories
+劆           劆   劆   劋劅劅劅project
+劆           劆   劌劅劅劅cuda_example
+劆           劆   劌劅劅劅module_cpp20
+劆           劆   劌劅劅劅reports
+劆           劆   劆   劌劅劅劅2016-08-29-fuzz
+劆           劆   劆   劌劅劅劅2016-09-09-nativejson_benchmark
+劆           劆   劆   劋劅劅劅2016-10-02-fuzz
+劆           劆   劌劅劅劅src
+劆           劆   劋劅劅劅thirdparty
+劆           劆       劌劅劅劅doctest
+劆           劆       劌劅劅劅fifo_map
+劆           劆       劌劅劅劅Fuzzer
+劆           劆       劆   劌劅劅劅afl
+劆           劆       劆   劌劅劅劅standalone
+劆           劆       劆   劋劅劅劅test
+劆           劆       劆       劌劅劅劅no-coverage
+劆           劆       劆       劌劅劅劅ubsan
+劆           劆       劆       劌劅劅劅uninstrumented
+劆           劆       劆       劋劅劅劅unit
+劆           劆       劋劅劅劅imapdl
+劆           劋劅劅劅tools
+劆               劌劅劅劅amalgamate
+劆               劌劅劅劅astyle
+劆               劌劅劅劅gdb_pretty_printer
+劆               劌劅劅劅generate_natvis
+劆               劌劅劅劅macro_builder
+劆               劋劅劅劅serve_header
+劌劅劅劅glTF-Sample-Models-main
+劆   劌劅劅劅1.0
+劆   劆   劌劅劅劅2CylinderEngine
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Avocado
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BarramundiFish
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Box
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BoxAnimated
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BoxSemantics
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BoxTextured
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BoxWithoutIndices
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BrainStem
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Buggy
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅CesiumMan
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅CesiumMilkTruck
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Duck
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅GearboxAssy
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Monster
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅ReciprocatingSaw
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅RiggedFigure
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅RiggedSimple
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅SmilingFace
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅VC
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-MaterialsCommon
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劋劅劅劅WalkingLady
+劆   劆       劌劅劅劅glTF
+劆   劆       劌劅劅劅glTF-Binary
+劆   劆       劌劅劅劅glTF-Embedded
+劆   劆       劌劅劅劅glTF-MaterialsCommon
+劆   劆       劋劅劅劅screenshot
+劆   劌劅劅劅2.0
+劆   劆   劌劅劅劅2CylinderEngine
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅ABeautifulGame
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅AlphaBlendModeTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅AnimatedCube
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅AnimatedMorphCube
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Quantized
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅AnimatedMorphSphere
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅AnimatedTriangle
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅AntiqueCamera
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅AttenuationTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Avocado
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劌劅劅劅glTF-Quantized
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BarramundiFish
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BoomBox
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BoomBoxWithAxes
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Box
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Box With Spaces
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BoxAnimated
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BoxInterleaved
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BoxTextured
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BoxTexturedNonPowerOfTwo
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BoxVertexColors
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅BrainStem
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-Meshopt
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Buggy
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Cameras
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅CarbonFibre
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅CesiumMan
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅CesiumMilkTruck
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅ClearCoatCarPaint
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅ClearcoatRing
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅ClearcoatSphere
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅ClearCoatTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅ClearcoatWicker
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Corset
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Cube
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅DamagedHelmet
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅DirectionalLight
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅DragonAttenuation
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Meshopt
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Duck
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劌劅劅劅glTF-Quantized
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅EmissiveStrengthTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅EnvironmentTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劆   劋劅劅劅EnvironmentTest_images
+劆   劆   劆   劌劅劅劅glTF-IBL
+劆   劆   劆   劆   劋劅劅劅EnvironmentTest_images
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅FlightHelmet
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-KTX-BasisU
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Fox
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅GearboxAssy
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅GlamVelvetSofa
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅InterpolationTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅IridescenceDielectricSpheres
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劆   劋劅劅劅textures
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅IridescenceLamp
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅IridescenceMetallicSpheres
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劆   劋劅劅劅textures
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅IridescenceSuzanne
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅IridescentDishWithOlives
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Lantern
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劌劅劅劅glTF-Quantized
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅LightsPunctualLamp
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅MaterialsVariantsShoe
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅MeshPrimitiveModes
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅MetalRoughSpheres
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅MetalRoughSpheresNoTextures
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅MorphPrimitivesTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅MorphStressTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅MosquitoInAmber
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅MultipleScenes
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅MultiUVTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅NegativeScaleTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅NormalTangentMirrorTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅NormalTangentTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅OrientationTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅PrimitiveModeNormalsTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅ReciprocatingSaw
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅RecursiveSkeletons
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅RiggedFigure
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅RiggedSimple
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅SciFiHelmet
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅SheenChair
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅SheenCloth
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅SheenDamask
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅screenshot
+劆   劆   劆   劋劅劅劅screenshots
+劆   劆   劌劅劅劅SheenHighHeel
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅SimpleInstancing
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅SimpleMeshes
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅SimpleMorph
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅SimpleSkin
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅SimpleSparseAccessor
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅SpecGlossVsMetalRough
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅SpecularTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Sponza
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅StainedGlassLamp
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-JPG-PNG
+劆   劆   劆   劌劅劅劅glTF-KTX-BasisU
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Suzanne
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅SuzanneMorphSparse
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅TextureCoordinateTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅TextureEncodingTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅TextureLinearInterpolationTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅TextureSettingsTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅TextureTransformMultiTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅TextureTransformTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅ToyCar
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅TransmissionRoughnessTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅TransmissionSuzanne
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅TransmissionTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劆   劋劅劅劅TransmissionTest_images
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Triangle
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅TriangleWithoutIndices
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅TwoSidedPlane
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅Unicode??Test
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅UnlitTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅VC
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅VertexColorTest
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Embedded
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劌劅劅劅WaterBottle
+劆   劆   劆   劌劅劅劅glTF
+劆   劆   劆   劌劅劅劅glTF-Binary
+劆   劆   劆   劌劅劅劅glTF-Draco
+劆   劆   劆   劋劅劅劅screenshot
+劆   劆   劋劅劅劅XmpMetadataRoundedCube
+劆   劆       劌劅劅劅glTF
+劆   劆       劆   劋劅劅劅MODEL_ROUNDED_CUBE_PART_1
+劆   劆       劌劅劅劅glTF-Binary
+劆   劆       劋劅劅劅screenshot
+劆   劋劅劅劅sourceModels
+劆       劌劅劅劅2CylinderEngine
+劆       劌劅劅劅AlphaBlendModeTest
+劆       劌劅劅劅AnimatedMorphCube
+劆       劌劅劅劅AttenuationTest
+劆       劌劅劅劅Avocado
+劆       劌劅劅劅BarramundiFish
+劆       劌劅劅劅BoomBox
+劆       劌劅劅劅Box
+劆       劌劅劅劅BoxAnimated
+劆       劌劅劅劅BoxSemantics
+劆       劌劅劅劅BoxTextured
+劆       劌劅劅劅BoxVertexColors
+劆       劌劅劅劅BoxWithoutIndices
+劆       劌劅劅劅BrainStem
+劆       劌劅劅劅Buggy
+劆       劌劅劅劅CesiumMan
+劆       劌劅劅劅CesiumMilkTruck
+劆       劌劅劅劅ClearCoatTest
+劆       劌劅劅劅Corset
+劆       劌劅劅劅DamagedHelmet
+劆       劌劅劅劅DragonAttenuation
+劆       劌劅劅劅Duck
+劆       劌劅劅劅EmissiveStrengthTest
+劆       劌劅劅劅FlightHelmet
+劆       劆   劋劅劅劅MayaProject
+劆       劆       劌劅劅劅scenes
+劆       劆       劋劅劅劅textures
+劆       劌劅劅劅GearboxAssy
+劆       劌劅劅劅Lantern
+劆       劌劅劅劅MetalRoughSpheres
+劆       劌劅劅劅Monster
+劆       劌劅劅劅MorphStressTest
+劆       劆   劋劅劅劅Textures
+劆       劌劅劅劅MultiUVTest
+劆       劌劅劅劅NegativeScaleTest
+劆       劌劅劅劅NormalTangentMirrorTest
+劆       劌劅劅劅NormalTangentTest
+劆       劌劅劅劅OrientationTest
+劆       劌劅劅劅ReciprocatingSaw
+劆       劌劅劅劅RiggedFigure
+劆       劌劅劅劅RiggedSimple
+劆       劌劅劅劅SmilingFace
+劆       劌劅劅劅SpecularTest
+劆       劌劅劅劅StainedGlassLamp
+劆       劆   劋劅劅劅screenshot
+劆       劌劅劅劅TextureCoordinateTest
+劆       劌劅劅劅TextureSettingsTest
+劆       劌劅劅劅TextureTransformMultiTest
+劆       劌劅劅劅ToyCar
+劆       劌劅劅劅TransmissionRoughnessTest
+劆       劌劅劅劅TransmissionSuzanne
+劆       劌劅劅劅VC
+劆       劌劅劅劅VertexColorTest
+劆       劌劅劅劅WalkingLady
+劆       劋劅劅劅WaterBottle
+>>>>>>> Scene閬风Щ
 劌劅劅劅ModelEditor
 劆   劆   imgui.ini
 劆   劆   ModelEditor.ini
@@ -1772,12 +3438,22 @@ C:.
 劆   劆       PLT_N.png
 劆   劆       PLT_S.png
 劆   劆       
+<<<<<<< HEAD
 劆   劋劅劅劅Rock
 劆           Rock-Texture-Surface.jpg
 劆           Rock-Texture-Surface_n.png
 劆           Rock.mtl
 劆           Rock.obj
 劆           
+=======
+劆   劌劅劅劅Rock
+劆   劆       Rock-Texture-Surface.jpg
+劆   劆       Rock-Texture-Surface_n.png
+劆   劆       Rock.mtl
+劆   劆       Rock.obj
+劆   劆       
+劆   劋劅劅劅temp_textures
+>>>>>>> Scene閬风Щ
 劌劅劅劅Shaders
 劆   劌劅劅劅Compiled
 劆   劆       blur_ps.cod
@@ -1855,6 +3531,7 @@ C:.
 劆   劌劅劅劅GameObjects
 劆   劆   劌劅劅劅Characters
 劆   劆   劋劅劅劅Objects
+<<<<<<< HEAD
 劆   劌劅劅劅GlthModel
 劆   劆   劌劅劅劅GlthSkinnedModel
 劆   劆   劋劅劅劅GlthStaticModel
@@ -1862,6 +3539,8 @@ C:.
 劆   劆           GlthStaticModel.h
 劆   劆           GlthStaticModelData.h
 劆   劆           
+=======
+>>>>>>> Scene閬风Щ
 劆   劌劅劅劅Graphics
 劆   劆       DirectXDevice.cpp
 劆   劆       DirectXDevice.h
@@ -1924,7 +3603,10 @@ C:.
 劆   劋劅劅劅UniqueSystem
 劋劅劅劅x64
     劌劅劅劅Debug
+<<<<<<< HEAD
     劆       3dgp.exe
+=======
+>>>>>>> Scene閬风Щ
     劆       3dgp.exp
     劆       3dgp.lib
     劆       3dgp.pdb
