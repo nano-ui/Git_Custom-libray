@@ -26,7 +26,7 @@ DirectX::XMVECTOR LockAtRotation::Update(const DirectX::XMVECTOR& current_rotati
 //=====================
 //ëŒè€Ç…å¸Ç´ë±ÇØÇÈ
 //=====================
-float LockAtRotation::UpdateAngle(float current_angle, const DirectX::XMFLOAT3& target_dir)
+float LockAtRotation::UpdateAngle(float elapsed_time, float current_angle, const DirectX::XMFLOAT3& target_dir)
 {
     float length_sq = (target_dir.x * target_dir.x) + (target_dir.z * target_dir.z);
     if (length_sq < 0.001f)
@@ -40,7 +40,7 @@ float LockAtRotation::UpdateAngle(float current_angle, const DirectX::XMFLOAT3& 
     while (angle_diff < -DirectX::XM_PI) angle_diff += DirectX::XM_2PI;
 
     float rotate_speed = DirectX::XM_2PI * 0.5f;
-    float rotate_rate = rotate_speed * TimeManager::Instance().GetDeltaTime();
+    float rotate_rate = rotate_speed * elapsed_time;
 
     if (rotate_rate > fabsf(angle_diff))
     {

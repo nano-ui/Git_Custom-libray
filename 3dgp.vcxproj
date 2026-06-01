@@ -230,6 +230,7 @@
     <ClCompile Include="Source\FbxModel\FbxSkinnedModel.cpp" />
     <ClCompile Include="Source\FbxModel\FbxSkinnedMesh.cpp" />
     <ClCompile Include="Source\FbxModel\FbxSkinnedResource.cpp" />
+    <ClCompile Include="Source\GameObjects\Characters\Character.cpp" />
     <ClCompile Include="Source\GameObjects\GameObject.cpp" />
     <ClCompile Include="Source\GameObjects\ObjectManager.cpp" />
     <ClCompile Include="Source\GameObjects\Objects\Stage.cpp" />
@@ -250,6 +251,10 @@
     <ClCompile Include="Source\Graphics\ShapeRenderer.cpp" />
     <ClCompile Include="Source\Input\Input.cpp" />
     <ClCompile Include="Source\Light\Light.cpp" />
+    <ClCompile Include="Source\Move\CircularMove.cpp" />
+    <ClCompile Include="Source\Move\LinearMove.cpp" />
+    <ClCompile Include="Source\Move\MoveFactory.cpp" />
+    <ClCompile Include="Source\Move\RepulsiveMove.cpp" />
     <ClCompile Include="Source\ObjectsRender\AssetManager.cpp" />
     <ClCompile Include="Source\ObjectsRender\geometric_primitive.cpp" />
     <ClCompile Include="Source\ObjectsRender\Model.cpp" />
@@ -259,6 +264,8 @@
     <ClCompile Include="Source\ObjectsRender\sprite_batch.cpp" />
     <ClCompile Include="Source\ObjectsRender\static_mesh.cpp" />
     <ClCompile Include="Source\ObjectsRender\texture.cpp" />
+    <ClCompile Include="Source\Rotation\LockAtRotation.cpp" />
+    <ClCompile Include="Source\Rotation\RotationFactory.cpp" />
     <ClCompile Include="Source\Scene\MainScene.cpp" />
     <ClCompile Include="Source\Scene\SceneGame.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
@@ -291,6 +298,7 @@
     <ClInclude Include="Source\FbxModel\FbxSkinnedModel.h" />
     <ClInclude Include="Source\FbxModel\FbxSkinnedMesh.h" />
     <ClInclude Include="Source\FbxModel\FbxSkinnedResource.h" />
+    <ClInclude Include="Source\GameObjects\Characters\Character.h" />
     <ClInclude Include="Source\GameObjects\GameObject.h" />
     <ClInclude Include="Source\GameObjects\ObjectManager.h" />
     <ClInclude Include="Source\GameObjects\Objects\Stage.h" />
@@ -311,6 +319,11 @@
     <ClInclude Include="Source\Graphics\ShapeRenderer.h" />
     <ClInclude Include="Source\Input\Input.h" />
     <ClInclude Include="Source\Light\Light.h" />
+    <ClInclude Include="Source\Move\CircularMove.h" />
+    <ClInclude Include="Source\Move\LinearMove.h" />
+    <ClInclude Include="Source\Move\MoveBase.h" />
+    <ClInclude Include="Source\Move\MoveFactory.h" />
+    <ClInclude Include="Source\Move\RepulsiveMove.h" />
     <ClInclude Include="Source\ObjectsRender\AssetManager.h" />
     <ClInclude Include="Source\ObjectsRender\geometric_primitive.h" />
     <ClInclude Include="Source\ObjectsRender\Model.h" />
@@ -320,6 +333,9 @@
     <ClInclude Include="Source\ObjectsRender\sprite_batch.h" />
     <ClInclude Include="Source\ObjectsRender\static_mesh.h" />
     <ClInclude Include="Source\ObjectsRender\texture.h" />
+    <ClInclude Include="Source\Rotation\LockAtRotation.h" />
+    <ClInclude Include="Source\Rotation\RotationBase.h" />
+    <ClInclude Include="Source\Rotation\RotationFactory.h" />
     <ClInclude Include="Source\Scene\MainScene.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Scene\SceneGame.h" />

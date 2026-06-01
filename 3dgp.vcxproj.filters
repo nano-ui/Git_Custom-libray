@@ -170,9 +170,6 @@
     <Filter Include="Source\GameObject">
       <UniqueIdentifier>{4485b032-990c-44e8-ac62-d7d8c536d8fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\GameObject\Charecter">
-      <UniqueIdentifier>{deb63a3f-54cb-441e-87db-ef7c09750f3b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\GameObject\Stage">
       <UniqueIdentifier>{998f87bb-88a8-4d11-b3de-158d5f49c033}</UniqueIdentifier>
     </Filter>
@@ -202,6 +199,15 @@
     </Filter>
     <Filter Include="Source\Graphics\ShapeRenderer">
       <UniqueIdentifier>{00b79683-3751-4ce2-9925-207e9458ff98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Move">
+      <UniqueIdentifier>{f5d68dd8-d4f8-4219-b396-52ade158546b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Rotation">
+      <UniqueIdentifier>{c3f30b96-abde-405e-b7c6-1e1ce2088b54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameObject\Character">
+      <UniqueIdentifier>{8342b0b0-6443-4dfd-be42-8f4d9d70304b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -369,6 +375,27 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\ShapeRenderer.cpp">
       <Filter>Source\Graphics\ShapeRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Move\CircularMove.cpp">
+      <Filter>Source\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Move\LinearMove.cpp">
+      <Filter>Source\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Move\MoveFactory.cpp">
+      <Filter>Source\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Move\RepulsiveMove.cpp">
+      <Filter>Source\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rotation\LockAtRotation.cpp">
+      <Filter>Source\Rotation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rotation\RotationFactory.cpp">
+      <Filter>Source\Rotation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Characters\Character.cpp">
+      <Filter>Source\GameObject\Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -551,6 +578,33 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\ShapeRenderer.h">
       <Filter>Source\Graphics\ShapeRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Move\CircularMove.h">
+      <Filter>Source\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Move\LinearMove.h">
+      <Filter>Source\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Move\MoveBase.h">
+      <Filter>Source\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Move\MoveFactory.h">
+      <Filter>Source\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Move\RepulsiveMove.h">
+      <Filter>Source\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rotation\LockAtRotation.h">
+      <Filter>Source\Rotation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rotation\RotationBase.h">
+      <Filter>Source\Rotation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rotation\RotationFactory.h">
+      <Filter>Source\Rotation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Characters\Character.h">
+      <Filter>Source\GameObject\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

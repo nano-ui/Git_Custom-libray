@@ -1,6 +1,5 @@
 #pragma once
 #include "RotationBase.h"
-#include "TimeManager.h"
 
 class LockAtRotation : public RotationBase
 {
@@ -9,6 +8,6 @@ public:
 	DirectX::XMVECTOR Update(const DirectX::XMVECTOR& current_rotation, const DirectX::XMFLOAT3& target_dir) override;
 
 	//ëŒè€Ç…å¸Ç´ë±ÇØÇÈ
-	float UpdateAngle(float current_angle, const DirectX::XMFLOAT3& target_dir);
+	float UpdateAngle(float elapsed_time, float current_angle, const DirectX::XMFLOAT3& target_dir);
 };
 
