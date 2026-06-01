@@ -43,6 +43,9 @@ public:
 	//全オブジェクトのImGuiデバッグ描画処理
 	void RenderGui();
 
+	//全オブジェクトのデバッグ描画
+	void RenderDebug();
+
 	//全オブジェクトの強制削除処理
 	void Clear() { game_objects.clear(); }
 

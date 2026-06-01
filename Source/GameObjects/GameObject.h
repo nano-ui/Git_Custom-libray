@@ -4,6 +4,8 @@
 #include <string>
 #include <d3d11.h>
 
+#include "../Graphics/ShapeRenderer.h"
+
 class GameObject
 {
 public:

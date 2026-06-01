@@ -22,7 +22,7 @@ SceneTitle::SceneTitle()
 //デストラクタ
 SceneTitle::~SceneTitle()
 {
-	Finalize();
+	//Finalize();
 }
 
 //初期化

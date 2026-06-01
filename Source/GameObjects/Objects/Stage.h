@@ -41,7 +41,10 @@ private:
 	void BuildCollisionData();
 
 private:
-	std::unique_ptr<Model> stage_model;	//ステージ描画用モデル
-	std::unique_ptr<SpaceDivisionCast> space_division_cast;	//当たり判定空間分割クラスを管理
+	std::unique_ptr<Model> stage_model;						//ステージ描画用モデル
+	std::unique_ptr<ShapeRenderer> shape_renderer;			//デバッグ描画クラス
+	std::unique_ptr<SpaceDivisionCast> space_division_cast;	//当たり判定空間分割クラス
+	bool is_draw_areas = false;
+	DirectX::XMFLOAT4 area_draw_color = { 1.0f,0.0f,0.0f,1.0f };
 };
 

@@ -62,7 +62,6 @@ void SceneManager::Finalize()
 	//保持している全シーンの明示的破棄
 	if (current_scene)
 	{
-		current_scene->Finalize();
 		current_scene.reset();
 	}
 	if (reserved_scene)

@@ -20,7 +20,6 @@ SceneGame::SceneGame()
 //デストラクタ
 SceneGame::~SceneGame()
 {
-	Finalize();
 }
 
 //初期化
@@ -80,9 +79,14 @@ void SceneGame::Render(float elapsed_time)
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
 	context->RSSetState(states->GetRasterizerState(2).Get());
 
-	context->PSSetSamplers(0, 1, states->GetSamplerState(0).GetAddressOf());
-	context->PSSetSamplers(1, 1, states->GetSamplerState(1).GetAddressOf());
-	context->PSSetSamplers(2, 1, states->GetSamplerState(2).GetAddressOf());
+	ID3D11SamplerState* sampler_p0 = states->GetSamplerState(0).Get(); //POINTサンプラー
+	ID3D11SamplerState* sampler_p1 = states->GetSamplerState(1).Get(); //LINEARサンプラー
+	ID3D11SamplerState* sampler_p2 = states->GetSamplerState(2).Get(); //ANISOTROPICサンプラー
+
+	//各スロットへ1つずつバインドします
+	context->PSSetSamplers(0, 1, &sampler_p0);
+	context->PSSetSamplers(1, 1, &sampler_p1);
+	context->PSSetSamplers(2, 1, &sampler_p2);
 
 	scene_constants constants{};
 	if (camera && light)
@@ -116,7 +120,7 @@ void SceneGame::Render(float elapsed_time)
 				shape_renderer->DrawCylinder(shape.position, rotation, 0.5f, 1.0f, shape.color, mode);
 				break;
 			case debug_shape_type::capsule:
-				shape_renderer->DrawCapsule(shape.position, rotation, 0.5f, 1.0f, shape.color, mode);
+				shape_renderer->DrawCapsule(shape.position, rotation, 0.5f, 3.0f, shape.color, mode);
 				break;
 			}
 		}
@@ -126,6 +130,7 @@ void SceneGame::Render(float elapsed_time)
 
 #ifdef USE_IMGUI
 	RenderGui();
+
 #endif // USE_IMGUI
 }
 
@@ -139,6 +144,7 @@ void SceneGame::RenderGui()
 		if (object_manager)
 		{
 			object_manager->RenderGui();
+			object_manager->RenderDebug();
 		}
 		if (camera)
 		{

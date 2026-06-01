@@ -30,6 +30,12 @@ public:
 	//静的OBBキャスト
 	bool StaticObbCast(const DirectX::XMFLOAT3& center_pos, const DirectX::XMFLOAT3& extents, const DirectX::XMFLOAT4& orientation, DirectX::XMFLOAT3& hit_normal);
 
+	//全ての境界線のリストを取得
+	std::vector<DirectX::BoundingBox>GetAreaBoundingBoxes()const;
+
+	//エリアの総数を取得
+	size_t GetAreaCount();
+
 private:
 	//エリアを作成
 	void CreateAreas(const DirectX::XMFLOAT3& volume_min, const DirectX::XMFLOAT3& volume_max);

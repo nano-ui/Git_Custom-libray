@@ -47,6 +47,11 @@ public:
 	ID3D11Device* GetDevice()const { return directx_device->GetDevice().Get(); }
 	ID3D11DeviceContext* GetContext()const { return directx_device->GetImmediateContext().Get(); }
 
+	void SetViewMatrix(const DirectX::XMFLOAT4X4& view) { view_matrix = view; }
+	void SetProjectionMatrix(const DirectX::XMFLOAT4X4& projection) { projection_matrix = projection; }
+	const DirectX::XMFLOAT4X4& GetViewMatrix() const { return view_matrix; }
+	const DirectX::XMFLOAT4X4& GetProjectionMatrix() const { return projection_matrix; }
+
 private:
 	Graphics() = default;
 	~Graphics() = default;
@@ -56,5 +61,7 @@ private:
 	std::unique_ptr<DirectXDevice> directx_device;
 	std::unique_ptr<PipelineStates> pipline_states;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> scene_constant_buffer;
+	DirectX::XMFLOAT4X4 view_matrix{};			//現在のビュー行列
+	DirectX::XMFLOAT4X4 projection_matrix{};	//現在のプロジェクション行列
 };
 

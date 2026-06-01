@@ -26,6 +26,8 @@ void Stage::Initialize()
 	//空間分割キャストの生成とデータ構築
 	space_division_cast = std::make_unique<SpaceDivisionCast>();
 	BuildCollisionData();
+
+	shape_renderer = std::make_unique<ShapeRenderer>(device);
 }
 
 //更新処理
@@ -46,7 +48,40 @@ void Stage::Render(ID3D11DeviceContext* context)
 //デバッグ描画
 void Stage::RenderDebug()
 {
+	//描画フラグのチェック
+	if (!is_draw_areas)return;
 
+	//境界線データを取得
+	std::vector<DirectX::BoundingBox> bboxes = space_division_cast->GetAreaBoundingBoxes();
+	DirectX::XMMATRIX stage_world = GetWorldMatrix();
+
+	//取得した境界線を全て描画登録
+	if (!shape_renderer)return;
+	DirectX::XMFLOAT4 identity_rotation = { 0.0f,0.0f,0.0f,1.0f };
+	static constexpr float size_multiplier = 2.0f;
+
+	//取得した全ての境界線データをループ
+	for (size_t i = 0; i < bboxes.size(); i++)
+	{
+		const DirectX::BoundingBox& box = bboxes.at(i);
+		DirectX::XMVECTOR local_center = DirectX::XMLoadFloat3(&box.Center);
+		DirectX::XMVECTOR world_center = DirectX::XMVector3TransformCoord(local_center, stage_world);
+		DirectX::XMFLOAT3 final_center_pos;
+		DirectX::XMStoreFloat3(&final_center_pos, world_center);
+		DirectX::XMFLOAT3 extents_size = box.Extents;
+		DirectX::XMFLOAT3 full_size = {
+			extents_size.x * size_multiplier * scale.x,
+			extents_size.y * size_multiplier * scale.y,
+			extents_size.z * size_multiplier * scale.z
+		};
+		shape_renderer->DrawBox(final_center_pos, rotation, full_size, area_draw_color, ShapeDrawMode::Wireframe);
+	}
+
+	//画面への描画
+	ID3D11DeviceContext* context = Graphics::Instance().GetContext();
+	DirectX::XMFLOAT4X4 view = Graphics::Instance().GetViewMatrix();
+	DirectX::XMFLOAT4X4 projection = Graphics::Instance().GetProjectionMatrix();
+	shape_renderer->Render(context, view, projection);
 }
 
 //ImGuiデバッグ描画
@@ -73,6 +108,13 @@ void Stage::RenderGui()
 				DirectX::XMStoreFloat4(&rotation, quaternion);
 			}
 			ImGui::DragFloat3("Scale", &scale.x, 0.1f);
+			ImGui::Checkbox("Draw Areas", &is_draw_areas);
+			ImGui::ColorEdit4("Area Color", &area_draw_color.x);
+			if (space_division_cast)
+			{
+				size_t box_count = space_division_cast->GetAreaCount();
+				ImGui::Text("Bounding Box Count : %zu", box_count);
+			}
 		}
 	}
 	ImGui::End();

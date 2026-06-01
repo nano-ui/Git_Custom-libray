@@ -369,6 +369,32 @@ bool SpaceDivisionCast::StaticObbCast(const DirectX::XMFLOAT3& center_pos, const
 	return is_hit;	//判定結果を返す
 }
 
+//============================
+//全ての境界線のリストを取得
+//============================
+std::vector<DirectX::BoundingBox> SpaceDivisionCast::GetAreaBoundingBoxes() const
+{
+	//戻り値用のコンテナを準備
+	std::vector<DirectX::BoundingBox> bboxes;
+	bboxes.reserve(areas_list.size());
+
+	//エリアリストから境界線データを抽出
+	for (size_t i = 0; i < areas_list.size(); i++)
+	{
+		bboxes.push_back(areas_list.at(i).bounding_box);
+	}
+
+	return bboxes;
+}
+
+//====================
+//エリアの総数を取得
+//====================
+size_t SpaceDivisionCast::GetAreaCount()
+{
+	return areas_list.size();
+}
+
 //===============
 //エリアを作成
 //===============
@@ -413,12 +439,11 @@ void SpaceDivisionCast::CreateAreas(const DirectX::XMFLOAT3& volume_min, const D
 				{
 					new_area.triangle_indices.push_back(i);	//交差していれば、このエリアに三角形インデックスを追加
 				}
-
-				//三角形が1つ以上含まれるエリアのみ保存
-				if (!new_area.triangle_indices.empty())
-				{
-					areas_list.push_back(new_area);	//エリアリストに追加
-				}
+			}
+			//三角形が1つ以上含まれるエリアのみ保存
+			if (!new_area.triangle_indices.empty())
+			{
+				areas_list.push_back(new_area);	//エリアリストに追加
 			}
 		}
 	}

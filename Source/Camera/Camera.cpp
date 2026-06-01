@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "../Graphics/Graphics.h"
 
 // コンストラクタ
 Camera::Camera()
@@ -53,6 +54,8 @@ void Camera::SetLookAt(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& fo
 	// 視点、注視点を保存
 	this->eye = eye;
 	this->focus = focus;
+
+	Graphics::Instance().SetViewMatrix(view);
 }
 
 // パースペクティブ設定
@@ -61,6 +64,7 @@ void Camera::SetPerspectiveFov(float fovY, float aspect, float nearZ, float farZ
 	// 画角、画面比率、クリップ距離からプロジェクション行列を作成
 	DirectX::XMMATRIX Projection = DirectX::XMMatrixPerspectiveFovLH(fovY, aspect, nearZ, farZ);
 	DirectX::XMStoreFloat4x4(&projection, Projection);
+	Graphics::Instance().SetProjectionMatrix(projection);
 }
 
 //ビュープロジェクション合成行列取得
