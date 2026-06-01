@@ -131,8 +131,7 @@ void FbxSkinnedMesh::Fetch(
 		FetchBoneInfuences(fbx_mesh, bones, influences);
 
 		//-------------------------------------------------------------------------
-		// サブセット（マテリアル）の準備
-		// unordered_mapを使わず、vectorを使ってFBXのマテリアル順序を維持する
+		//サブセット（マテリアル）の準備
 		//-------------------------------------------------------------------------
 		int material_count = node->GetMaterialCount();
 		mesh_data.subsets.resize(material_count > 0 ? material_count : 1);
@@ -146,7 +145,7 @@ void FbxSkinnedMesh::Fetch(
 		}
 
 		//-------------------------------------------------------------------------
-		// [PASS 1] ポリゴンを走査して、各サブセットのインデックス数をカウント
+		//ポリゴンを走査して、各サブセットのインデックス数をカウント
 		//-------------------------------------------------------------------------
 		int polygon_count = fbx_mesh->GetPolygonCount();
 		FbxGeometryElementMaterial* material_element = fbx_mesh->GetElementMaterial(0);
@@ -192,7 +191,7 @@ void FbxSkinnedMesh::Fetch(
 		mesh_data.indices.resize(total_vertex_count);
 
 		//-------------------------------------------------------------------------
-		// [PASS 2] 頂点データの取得と格納
+		//頂点データの取得と格納
 		//-------------------------------------------------------------------------
 		FbxVector4* control_points = fbx_mesh->GetControlPoints();
 		FbxGeometryElementNormal* normal_element = fbx_mesh->GetElementNormal(0);

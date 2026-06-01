@@ -92,9 +92,6 @@
     <Filter Include="Source\ObjectRender\Model">
       <UniqueIdentifier>{1563c0d9-8878-4481-bd39-2d9641d69e3b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ObjectRender\ModelRenderer">
-      <UniqueIdentifier>{446d5407-dc6c-44df-8a63-d62a32914675}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Scene">
       <UniqueIdentifier>{eeba2563-d716-45cb-b8b8-6ea187fa0afc}</UniqueIdentifier>
     </Filter>
@@ -128,6 +125,7 @@
     <Filter Include="Source\ObjectRender\FbxModel\FbxSkinnedModel">
       <UniqueIdentifier>{cd223bbf-8258-4143-8796-765924e2d2b6}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
     <Filter Include="Source\ObjectRender\GlthModel">
       <UniqueIdentifier>{0d2c1708-0064-4386-9e11-ee4c7af2c2aa}</UniqueIdentifier>
     </Filter>
@@ -142,27 +140,88 @@
     </Filter>
     <Filter Include="Source\ObjectRender\GlthModel\GlthStaticModel\GltfStaticMaterial">
       <UniqueIdentifier>{0be97940-dc28-4733-a119-e1a7db5e16c1}</UniqueIdentifier>
+=======
+    <Filter Include="Source\ObjectRender\GltfModel">
+      <UniqueIdentifier>{afc37076-22ce-4558-8131-a38e2f5653b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\gltf_model">
+      <UniqueIdentifier>{61fcf465-3a9b-4632-86ec-1354de3c8eee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GltfModel\GltfModelData">
+      <UniqueIdentifier>{1a1a3e82-a5ae-4915-bdb8-c2e48df203d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GltfModel\GltfModelAnimation">
+      <UniqueIdentifier>{8a3f9165-2a96-4b03-aa9d-ae5d6c61177e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ObjectRender\GltfModel\GltfModelRenderer">
+      <UniqueIdentifier>{fe487eff-2e16-46a3-ad96-d8cf513fddaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Serializer\FbxModelSerializer">
+      <UniqueIdentifier>{b562292f-e576-4027-8a2d-a505e87d7161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Serializer\GltfModelSerializer">
+      <UniqueIdentifier>{ff774d3c-de3d-4476-94be-aa54c78f7b06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shaders">
+      <UniqueIdentifier>{a95b2b09-eaed-4a5e-bffb-fd5c38ff4c32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shaders\CustomShader">
+      <UniqueIdentifier>{df8ac468-d6e3-43a0-b487-261abe202bea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shaders\BlurShader">
+      <UniqueIdentifier>{533b7e7e-256a-49ae-820f-78bc545056eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shaders\LuminanceExtractionShader">
+      <UniqueIdentifier>{a2f013ce-7873-473e-8a17-d49265ad98bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\SceneTitle">
+      <UniqueIdentifier>{71b91ccd-a77a-46df-b532-f8cb4b6ec02b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\MainScene">
+      <UniqueIdentifier>{9e0d08fc-d1c2-49aa-a580-7046e2ac64ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\SceneGame">
+      <UniqueIdentifier>{f1ce9a23-c616-4fe3-b471-a87cf52357b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameObject">
+      <UniqueIdentifier>{4485b032-990c-44e8-ac62-d7d8c536d8fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameObject\Charecter">
+      <UniqueIdentifier>{deb63a3f-54cb-441e-87db-ef7c09750f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameObject\Stage">
+      <UniqueIdentifier>{998f87bb-88a8-4d11-b3de-158d5f49c033}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameObject\ObjectManager">
+      <UniqueIdentifier>{ac6cc497-89c0-4cef-991a-793380671e52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Collision">
+      <UniqueIdentifier>{41ef2ec6-c909-475a-a667-bf97aa85d76e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\SceneManager">
+      <UniqueIdentifier>{e99e0810-3ebc-4b1e-96cc-80ed57de4bc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Camera">
+      <UniqueIdentifier>{b02199cb-fbd1-48fb-a433-da03218101a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Camera\FreeCamera">
+      <UniqueIdentifier>{f0f8b878-b42b-43bd-b1a2-8a57dd525ff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Input">
+      <UniqueIdentifier>{7ee54a03-8d85-4f90-92e4-3ec7b3f6d078}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Light">
+      <UniqueIdentifier>{1b081ca8-3ff0-4a1a-b7e5-0130c0a0bd73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\spape_renderer">
+      <UniqueIdentifier>{ed1c8450-eea4-4daa-845e-90227ccb4658}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\ShapeRenderer">
+      <UniqueIdentifier>{00b79683-3751-4ce2-9925-207e9458ff98}</UniqueIdentifier>
+>>>>>>> Scene遷移
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="imgui\imgui.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_draw.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_impl_dx11.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_impl_win32.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_ja_gryph_ranges.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_widgets.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Common\main.cpp">
       <Filter>Source\Common</Filter>
     </ClCompile>
@@ -208,9 +267,6 @@
     <ClCompile Include="Source\ObjectsRender\Model.cpp">
       <Filter>Source\ObjectRender\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ObjectsRender\ModelRenderer.cpp">
-      <Filter>Source\ObjectRender\ModelRenderer</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\framework.cpp">
       <Filter>Source\Graphics\Framework</Filter>
     </ClCompile>
@@ -220,14 +276,8 @@
     <ClCompile Include="Source\Graphics\Graphics.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene\MainScene.cpp">
-      <Filter>Source\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ObjectsRender\SkinnedMeshComponents.cpp">
       <Filter>Source\ObjectRender\FbxModel\SkinnedMeshComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp">
-      <Filter>Source\Serializer</Filter>
     </ClCompile>
     <ClCompile Include="Source\FbxModel\FbxBone.cpp">
       <Filter>Source\ObjectRender\FbxModel\FbxBone</Filter>
@@ -250,38 +300,103 @@
     <ClCompile Include="Source\FbxModel\FbxSkinnedModel.cpp">
       <Filter>Source\ObjectRender\FbxModel\FbxSkinnedModel</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="Source\GlthModel\GlthStaticModel\GlthStaticModel.cpp">
       <Filter>Source\ObjectRender\GlthModel\GlthStaticModel</Filter>
     </ClCompile>
     <ClCompile Include="Source\GlthModel\GlthStaticModel\GltfStaticMaterial.cpp">
       <Filter>Source\ObjectRender\GlthModel\GlthStaticModel\GltfStaticMaterial</Filter>
+=======
+    <ClCompile Include="External\imgui\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui\imgui_impl_dx11.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui\imgui_impl_win32.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui\imgui_ja_gryph_ranges.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GltfModel\GltfModelData.cpp">
+      <Filter>Source\ObjectRender\GltfModel\GltfModelData</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GltfModel\GltfModelAnimation.cpp">
+      <Filter>Source\ObjectRender\GltfModel\GltfModelAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GltfModel\TinygltfImpl.cpp">
+      <Filter>Source\ObjectRender\GltfModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GltfModel\GltfModelRenderer.cpp">
+      <Filter>Source\ObjectRender\GltfModel\GltfModelRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GltfModel\GltfModel.cpp">
+      <Filter>Source\ObjectRender\GltfModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp">
+      <Filter>Source\Serializer\FbxModelSerializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Serialization\GltfModelSerializer.cpp">
+      <Filter>Source\Serializer\GltfModelSerializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shaders\CustomShader.cpp">
+      <Filter>Source\Shaders\CustomShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shaders\BlurShader.cpp">
+      <Filter>Source\Shaders\BlurShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shaders\LuminanceExtractionShader.cpp">
+      <Filter>Source\Shaders\LuminanceExtractionShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\SceneTitle.cpp">
+      <Filter>Source\Scene\SceneTitle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\MainScene.cpp">
+      <Filter>Source\Scene\MainScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\GameObject.cpp">
+      <Filter>Source\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\SceneGame.cpp">
+      <Filter>Source\Scene\SceneGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\ObjectManager.cpp">
+      <Filter>Source\GameObject\ObjectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collision\SpaceDivisionCast.cpp">
+      <Filter>Source\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\SceneManager.cpp">
+      <Filter>Source\Scene\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Objects\Stage.cpp">
+      <Filter>Source\GameObject\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera\Camera.cpp">
+      <Filter>Source\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera\FreeCamera.cpp">
+      <Filter>Source\Camera\FreeCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Input\Input.cpp">
+      <Filter>Source\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Light\Light.cpp">
+      <Filter>Source\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\ShapeRenderer.cpp">
+      <Filter>Source\Graphics\ShapeRenderer</Filter>
+>>>>>>> Scene遷移
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="imgui\imconfig.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui_impl_dx11.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui_impl_win32.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui_internal.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imstb_rectpack.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imstb_textedit.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imstb_truetype.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\high_resolution_timer.h">
       <Filter>Source\Common</Filter>
     </ClInclude>
@@ -333,9 +448,6 @@
     <ClInclude Include="Source\Graphics\fbx_utility.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ObjectsRender\ModelRenderer.h">
-      <Filter>Source\ObjectRender\ModelRenderer</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphics\framework.h">
       <Filter>Source\Graphics\Framework</Filter>
     </ClInclude>
@@ -348,14 +460,8 @@
     <ClInclude Include="Source\Scene\Scene.h">
       <Filter>Source\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Scene\MainScene.h">
-      <Filter>Source\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ObjectsRender\SkinnedMeshComponents.h">
       <Filter>Source\ObjectRender\FbxModel\SkinnedMeshComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h">
-      <Filter>Source\Serializer</Filter>
     </ClInclude>
     <ClInclude Include="Source\FbxModel\FbxBone.h">
       <Filter>Source\ObjectRender\FbxModel\FbxBone</Filter>
@@ -381,6 +487,7 @@
     <ClInclude Include="Source\FbxModel\FbxSkinnedModel.h">
       <Filter>Source\ObjectRender\FbxModel\FbxSkinnedModel</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Source\GlthModel\GlthStaticModel\GlthStaticModel.h">
       <Filter>Source\ObjectRender\GlthModel\GlthStaticModel</Filter>
     </ClInclude>
@@ -389,6 +496,97 @@
     </ClInclude>
     <ClInclude Include="Source\GlthModel\GlthStaticModel\GltfStaticMaterial.h">
       <Filter>Source\ObjectRender\GlthModel\GlthStaticModel\GltfStaticMaterial</Filter>
+=======
+    <ClInclude Include="External\imgui\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui\imgui_impl_dx11.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui\imgui_impl_win32.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui\imstb_rectpack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui\imstb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui\imstb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GltfModel\GltfModelData.h">
+      <Filter>Source\ObjectRender\GltfModel\GltfModelData</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GltfModel\GltfModelAnimation.h">
+      <Filter>Source\ObjectRender\GltfModel\GltfModelAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GltfModel\GltfModelRenderer.h">
+      <Filter>Source\ObjectRender\GltfModel\GltfModelRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GltfModel\GltfModel.h">
+      <Filter>Source\ObjectRender\GltfModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h">
+      <Filter>Source\Serializer\FbxModelSerializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Serialization\GltfModelSerializer.h">
+      <Filter>Source\Serializer\GltfModelSerializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shaders\CustomShader.h">
+      <Filter>Source\Shaders\CustomShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shaders\BlurShader.h">
+      <Filter>Source\Shaders\BlurShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shaders\LuminanceExtractionShader.h">
+      <Filter>Source\Shaders\LuminanceExtractionShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\SceneTitle.h">
+      <Filter>Source\Scene\SceneTitle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\MainScene.h">
+      <Filter>Source\Scene\MainScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\GameObject.h">
+      <Filter>Source\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\SceneGame.h">
+      <Filter>Source\Scene\SceneGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\ObjectManager.h">
+      <Filter>Source\GameObject\ObjectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collision\SpaceDivisionCast.h">
+      <Filter>Source\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\SceneManager.h">
+      <Filter>Source\Scene\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Objects\Stage.h">
+      <Filter>Source\GameObject\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera\Camera.h">
+      <Filter>Source\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera\FreeCamera.h">
+      <Filter>Source\Camera\FreeCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Input\Input.h">
+      <Filter>Source\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Light\Light.h">
+      <Filter>Source\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\ShapeRenderer.h">
+      <Filter>Source\Graphics\ShapeRenderer</Filter>
+>>>>>>> Scene遷移
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -479,8 +677,16 @@
     <None Include="Shaders\Compiled\static_mesh_vs.cso">
       <Filter>Shaders\static_mesh</Filter>
     </None>
+<<<<<<< HEAD
     <None Include="Shaders\SoureCode\gltf_static_mesh.hlsli">
       <Filter>Shaders\gltf_static_mesh</Filter>
+=======
+    <None Include="Shaders\SoureCode\gltf_model.hlsli">
+      <Filter>Shaders\gltf_model</Filter>
+    </None>
+    <None Include="Shaders\SoureCode\shape_renderer.hlsli">
+      <Filter>Shaders\spape_renderer</Filter>
+>>>>>>> Scene遷移
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -488,9 +694,6 @@
       <Filter>Shaders\blur</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\fullscreen_quad_ps.hlsl">
-      <Filter>Shaders\fullscreen_qiad</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\SoureCode\fullscreen_quad_vs.hlsl">
       <Filter>Shaders\fullscreen_qiad</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\geometric_primitive_ps.hlsl">
@@ -520,11 +723,28 @@
     <FxCompile Include="Shaders\SoureCode\static_mesh_vs.hlsl">
       <Filter>Shaders\static_mesh</Filter>
     </FxCompile>
+<<<<<<< HEAD
     <FxCompile Include="Shaders\SoureCode\gltf_static_mesh_vsr.hlsl">
       <Filter>Shaders\gltf_static_mesh</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\gltf_static_mesh_ps.hlsl">
       <Filter>Shaders\gltf_static_mesh</Filter>
+=======
+    <FxCompile Include="Shaders\SoureCode\gltf_model_vs.hlsl">
+      <Filter>Shaders\gltf_model</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\gltf_model_ps.hlsl">
+      <Filter>Shaders\gltf_model</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\fullscreen_quad_vs.hlsl">
+      <Filter>Shaders\fullscreen_qiad</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\shape_renderer_ps.hlsl">
+      <Filter>Shaders\spape_renderer</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\shape_renderer_vs.hlsl">
+      <Filter>Shaders\spape_renderer</Filter>
+>>>>>>> Scene遷移
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -15,11 +15,12 @@
 #include "../Graphics/framebuffer.h"
 #include "../Graphics/fullscreen_quad.h"
 #include "../Graphics/Graphics.h"
+#include "../Shaders/BlurShader.h"
+#include "../Shaders/LuminanceExtractionShader.h"
 #include "../Graphics/PostProcessConstantBuffers.h"
 #include "../Common/high_resolution_timer.h"
 
-#include "../FbxModel/FbxSkinnedModel.h"
-#include "../FbxModel/FbxSkinnedResource.h"
+#include "../ObjectsRender/Model.h"
 
 // GLTFモデルローダーのインクルード
 #include "../GlthModel/GlthStaticModel/GlthStaticModel.h"
@@ -37,9 +38,30 @@ public:
 	void Update(float elapsed_time) override;
 	void Render(float elapsed_time) override;
 
+	//ImGuiデバッグ描画
+	void RenderGui()override;
+
 private:
-	std::shared_ptr<FbxSkinnedResource> resource;
-	std::unique_ptr<FbxSkinnedModel> fbx_skinned_model;
+
+	//カメラとライトの行列計算を行い、シーン共通定数バッファをGPUへ転送
+	void UpdateSceneConstants();
+
+	//シーン内の背景、3Dモデル、幾何プリミティブをメインバッファに描画
+	void RenderSceneObjects();
+
+	//輝度抽出とBlurShaderコンポーネントによるポストプロセスエフェクトを実行
+	void RenderPostProcesses();
+
+
+private:
+	std::unique_ptr<Model> fbx_model;
+	std::unique_ptr<Model> gltf_model;
+
+private:
+	std::unique_ptr<BlurShader> blur_shader;
+	bloom_params_data bloom_data;
+
+	std::unique_ptr<LuminanceExtractionShader> luminance_shader;
 
 	// GLTFモデル関連
 	std::shared_ptr<GltfModel> gltf_model;

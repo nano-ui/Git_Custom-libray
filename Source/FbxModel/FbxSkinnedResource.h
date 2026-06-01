@@ -43,6 +43,5 @@ private:
 	std::vector<BoneData> bones;								//読み込んだボーンデータを格納するリスト
 	std::unordered_map<std::string, AnimationClip> animations;	//読み込んだアニメーションデータを格納するリスト
 	std::unordered_map<uint64_t, MaterialData> materials;		//読み込んだマテリアルデータを格納するリスト
-
 };
 
