@@ -104,13 +104,15 @@ LRESULT framework::handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 	case WM_KEYDOWN:
 		if (wparam == VK_ESCAPE)
 		{
-			PostMessage(hwnd, msg, wparam, lparam);
+			PostMessage(hwnd, WM_CLOSE, 0, 0);
+			return 0;
 		}
 		if (wparam == VK_F11)
 		{
 			toggle_fullscreen(); // フルスクリーン切り替え関数を呼び出し
 			return 0;
 		}
+		break;
 	default:
 		return DefWindowProc(hwnd, msg, wparam, lparam);
 	}

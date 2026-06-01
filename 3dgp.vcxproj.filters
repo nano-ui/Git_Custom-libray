@@ -197,6 +197,12 @@
     <Filter Include="Source\Light">
       <UniqueIdentifier>{1b081ca8-3ff0-4a1a-b7e5-0130c0a0bd73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\spape_renderer">
+      <UniqueIdentifier>{ed1c8450-eea4-4daa-845e-90227ccb4658}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\ShapeRenderer">
+      <UniqueIdentifier>{00b79683-3751-4ce2-9925-207e9458ff98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -360,6 +366,9 @@
     </ClCompile>
     <ClCompile Include="Source\Light\Light.cpp">
       <Filter>Source\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\ShapeRenderer.cpp">
+      <Filter>Source\Graphics\ShapeRenderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -540,6 +549,9 @@
     <ClInclude Include="Source\Light\Light.h">
       <Filter>Source\Light</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\ShapeRenderer.h">
+      <Filter>Source\Graphics\ShapeRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Compiled\blur_ps.cod">
@@ -632,6 +644,9 @@
     <None Include="Shaders\SoureCode\gltf_model.hlsli">
       <Filter>Shaders\gltf_model</Filter>
     </None>
+    <None Include="Shaders\SoureCode\shape_renderer.hlsli">
+      <Filter>Shaders\spape_renderer</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\SoureCode\blur_ps.hlsl">
@@ -674,7 +689,13 @@
       <Filter>Shaders\gltf_model</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\fullscreen_quad_vs.hlsl">
-      <Filter>Shaders\geometric_primitive</Filter>
+      <Filter>Shaders\fullscreen_qiad</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\shape_renderer_ps.hlsl">
+      <Filter>Shaders\spape_renderer</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\shape_renderer_vs.hlsl">
+      <Filter>Shaders\spape_renderer</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

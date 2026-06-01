@@ -110,6 +110,8 @@ bool CustomShader::CreateVertexShaderWithReflection(const std::string& vs_name)
 
     //ƒŠƒ\[ƒX‚Ì¶¬
     auto device = Graphics::Instance().GetDevice();
+    hr = device->CreateVertexShader(shader_data.get(), file_size, nullptr, vertex_shader.GetAddressOf());
+    if (FAILED(hr))return false;
     hr = device->CreateInputLayout(input_elements.data(), static_cast<UINT>(input_elements.size()), shader_data.get(), file_size, input_layout.GetAddressOf());
     if (FAILED(hr))return false;
 

@@ -156,8 +156,6 @@ void MainScene::Finalize()
 	thresholdBuffer.Reset();
 	bloomParamBuffer.Reset();
 	blurDirectionBuffer.Reset();
-
-	Graphics::Instance().Finalize();
 }
 
 //XVˆ—

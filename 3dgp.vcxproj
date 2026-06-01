@@ -247,6 +247,7 @@
     <ClCompile Include="Source\Graphics\PostProcessConstantBuffers.cpp" />
     <ClCompile Include="Source\Graphics\SceneConstantBuffers.cpp" />
     <ClCompile Include="Source\Graphics\shader.cpp" />
+    <ClCompile Include="Source\Graphics\ShapeRenderer.cpp" />
     <ClCompile Include="Source\Input\Input.cpp" />
     <ClCompile Include="Source\Light\Light.cpp" />
     <ClCompile Include="Source\ObjectsRender\AssetManager.cpp" />
@@ -307,6 +308,7 @@
     <ClInclude Include="Source\Graphics\PostProcessConstantBuffers.h" />
     <ClInclude Include="Source\Graphics\SceneConstantBuffers.h" />
     <ClInclude Include="Source\Graphics\shader.h" />
+    <ClInclude Include="Source\Graphics\ShapeRenderer.h" />
     <ClInclude Include="Source\Input\Input.h" />
     <ClInclude Include="Source\Light\Light.h" />
     <ClInclude Include="Source\ObjectsRender\AssetManager.h" />
@@ -357,6 +359,7 @@
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli" />
     <None Include="Shaders\SoureCode\geometric_primitive.hlsli" />
     <None Include="Shaders\SoureCode\gltf_model.hlsli" />
+    <None Include="Shaders\SoureCode\shape_renderer.hlsli" />
     <None Include="Shaders\SoureCode\skinned_mesh.hlsli" />
     <None Include="Shaders\SoureCode\sprite.hlsli" />
     <None Include="Shaders\SoureCode\static_mesh.hlsli" />
@@ -425,6 +428,22 @@
       <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
       <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\shape_renderer_ps.hlsl">
+      <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
+      <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\shape_renderer_vs.hlsl">
+      <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
+      <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\skinned_mesh_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

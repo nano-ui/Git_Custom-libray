@@ -5,6 +5,7 @@
 #include "../Camera/Camera.h"
 #include "../Camera/FreeCamera.h"
 #include "../Light/Light.h"
+#include "../Graphics/ShapeRenderer.h"
 
 //コンストラクタ
 SceneGame::SceneGame()
@@ -19,6 +20,7 @@ SceneGame::SceneGame()
 //デストラクタ
 SceneGame::~SceneGame()
 {
+	Finalize();
 }
 
 //初期化
@@ -30,11 +32,31 @@ void SceneGame::Initialize()
 	{
 		light->SetDirection(init_light_dir);
 	}
+
+	ID3D11Device* device = Graphics::Instance().GetDevice();
+	shape_renderer = std::make_unique<ShapeRenderer>(device);
 }
 
 //終了化
 void SceneGame::Finalize()
 {
+	debug_shapes.clear();
+	if (shape_renderer)
+	{
+		shape_renderer.reset();
+	}
+	if (object_manager)
+	{
+		object_manager.reset();
+	}
+	if (camera)
+	{
+		camera.reset();
+	}
+	if (light)
+	{
+		light.reset();
+	}
 }
 
 //更新処理
@@ -76,6 +98,31 @@ void SceneGame::Render(float elapsed_time)
 		object_manager->Render(context);
 	}
 
+	if (shape_renderer && camera)
+	{
+		for (const debug_shape & shape : debug_shapes)
+		{
+			ShapeDrawMode mode = static_cast<ShapeDrawMode>(shape.draw_mode);
+			DirectX::XMFLOAT4 rotation = { 0.0f,0.0f,0.0f,1.0f };
+			switch (shape.type)
+			{
+			case debug_shape_type::box:
+				shape_renderer->DrawBox(shape.position, rotation, { 1.0f, 1.0f, 1.0f }, shape.color, mode);
+				break;
+			case debug_shape_type::sphere:
+				shape_renderer->DrawSphere(shape.position, 0.5f, shape.color, mode);
+				break;
+			case debug_shape_type::cylinder:
+				shape_renderer->DrawCylinder(shape.position, rotation, 0.5f, 1.0f, shape.color, mode);
+				break;
+			case debug_shape_type::capsule:
+				shape_renderer->DrawCapsule(shape.position, rotation, 0.5f, 1.0f, shape.color, mode);
+				break;
+			}
+		}
+		shape_renderer->Render(context, camera->GetView(), camera->GetProjection());
+	}
+
 
 #ifdef USE_IMGUI
 	RenderGui();
@@ -96,6 +143,44 @@ void SceneGame::RenderGui()
 		if (camera)
 		{
 			camera->RenderGui();
+		}
+		if (ImGui::CollapsingHeader("Shape Generator", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::RadioButton(u8"枠線のみ (Wireframe)", &current_debug_draw_mode, 0);
+			ImGui::RadioButton(u8"面のみ (Solid)", &current_debug_draw_mode, 1);
+			ImGui::RadioButton(u8"両方 (Solid & Wireframe)", &current_debug_draw_mode, 2);
+			ImGui::ColorEdit4("Shape Color", &current_debug_color.x);
+			ImGui::Spacing();
+			if (camera)
+			{
+				DirectX::XMFLOAT3 focus = camera->GetFocus();
+				ImGui::InputFloat3("Camera Focus", &focus.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
+				if (ImGui::Button("Spawn Box"))
+				{
+					debug_shapes.push_back({ debug_shape_type::box, focus, current_debug_draw_mode, current_debug_color });
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Spawn Sphere"))
+				{
+					debug_shapes.push_back({ debug_shape_type::sphere, focus, current_debug_draw_mode, current_debug_color });
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Spawn Cylinder"))
+				{
+					debug_shapes.push_back({ debug_shape_type::cylinder, focus, current_debug_draw_mode, current_debug_color });
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Spawn Capsule"))
+				{
+					debug_shapes.push_back({ debug_shape_type::capsule, focus, current_debug_draw_mode, current_debug_color });
+				}
+
+				ImGui::Spacing();
+				if (ImGui::Button("Clear All Shapes"))
+				{
+					debug_shapes.clear();
+				}
+			}
 		}
 	}
 	ImGui::End();

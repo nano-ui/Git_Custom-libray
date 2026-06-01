@@ -58,7 +58,20 @@ void Stage::RenderGui()
 		if (ImGui::CollapsingHeader("Stage", ImGuiTreeNodeFlags_None))
 		{
 			ImGui::DragFloat3("Position", &position.x, 0.1f);
-			ImGui::DragFloat4("Rotation", &rotation.x, DirectX::XM_1DIVPI);
+
+			static constexpr float min_angle_deg = -180.0f;
+			static constexpr float max_angle_deg = 180.0f;
+			DirectX::XMFLOAT3 rotation_euler = { 0.0f,0.0f,0.0f };
+			bool is_changed = ImGui::SliderFloat3("Rotation(Euler)", &rotation_euler.x, min_angle_deg, max_angle_deg);
+			if (is_changed)
+			{
+				float pitch_rad = DirectX::XMConvertToRadians(rotation_euler.x);
+				float yaw_rad = DirectX::XMConvertToRadians(rotation_euler.y);
+				float roll_rad = DirectX::XMConvertToRadians(rotation_euler.z);
+				DirectX::XMMATRIX rotation_matrix = DirectX::XMMatrixRotationRollPitchYaw(pitch_rad, yaw_rad, roll_rad);
+				DirectX::XMVECTOR quaternion = DirectX::XMQuaternionRotationMatrix(rotation_matrix);
+				DirectX::XMStoreFloat4(&rotation, quaternion);
+			}
 			ImGui::DragFloat3("Scale", &scale.x, 0.1f);
 		}
 	}

@@ -85,7 +85,7 @@ void FreeCamera::Update(float elapsed_time)
 	DirectX::XMVECTOR move_vector = DirectX::XMVectorZero();
 
 	//キーボード移動
-	if (Input::Instance().IsKeyPress(key_move_forward) || (GetAsyncKeyState('W') & 0x8000))
+	if (Input::Instance().IsKeyPress(key_move_forward))
 	{
 		move_vector = DirectX::XMVectorAdd(move_vector, new_front);
 	}
@@ -118,7 +118,8 @@ void FreeCamera::Update(float elapsed_time)
 	DirectX::XMStoreFloat3(&eye, current_eye);
 	DirectX::XMVECTOR current_focus = DirectX::XMVectorAdd(current_eye, new_front);
 	DirectX::XMStoreFloat3(&focus, current_focus);
-	SetLookAt(eye, focus, up);
+	DirectX::XMFLOAT3 absolute_up = { 0.0f,1.0f,0.0f };
+	SetLookAt(eye, focus, absolute_up);
 }
 
 //ImGui描画処理
@@ -127,10 +128,10 @@ void FreeCamera::RenderGui()
 #ifdef USE_IMGUI
 	if (ImGui::CollapsingHeader("FreeCamera", ImGuiTreeNodeFlags_None))
 	{
-		ImGui::DragFloat(u8"カメラ速度", &move_speed, 0.1f);
-		ImGui::DragFloat(u8"カメラ感度", &turn_sensitivity, 0.01f);
-		ImGui::InputFloat3(u8"カメラ座標", &eye.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputFloat3(u8"正面ベクトル", &front.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
+		ImGui::DragFloat("Speed", &move_speed, 0.1f);
+		ImGui::DragFloat("Sensitivity", &turn_sensitivity, 0.01f);
+		ImGui::InputFloat3("Position", &eye.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputFloat3("FrontVec", &front.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
 	}
 
 #endif // USE_IMGUI
