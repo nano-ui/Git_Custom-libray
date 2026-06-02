@@ -231,6 +231,7 @@
     <ClCompile Include="Source\FbxModel\FbxSkinnedMesh.cpp" />
     <ClCompile Include="Source\FbxModel\FbxSkinnedResource.cpp" />
     <ClCompile Include="Source\GameObjects\Characters\Character.cpp" />
+    <ClCompile Include="Source\GameObjects\Characters\Player.cpp" />
     <ClCompile Include="Source\GameObjects\GameObject.cpp" />
     <ClCompile Include="Source\GameObjects\ObjectManager.cpp" />
     <ClCompile Include="Source\GameObjects\Objects\Stage.cpp" />
@@ -299,6 +300,7 @@
     <ClInclude Include="Source\FbxModel\FbxSkinnedMesh.h" />
     <ClInclude Include="Source\FbxModel\FbxSkinnedResource.h" />
     <ClInclude Include="Source\GameObjects\Characters\Character.h" />
+    <ClInclude Include="Source\GameObjects\Characters\Player.h" />
     <ClInclude Include="Source\GameObjects\GameObject.h" />
     <ClInclude Include="Source\GameObjects\ObjectManager.h" />
     <ClInclude Include="Source\GameObjects\Objects\Stage.h" />

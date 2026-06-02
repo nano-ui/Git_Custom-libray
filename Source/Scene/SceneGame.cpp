@@ -6,12 +6,15 @@
 #include "../Camera/FreeCamera.h"
 #include "../Light/Light.h"
 #include "../Graphics/ShapeRenderer.h"
+#include "../GameObjects/Characters/Player.h"
 
 //コンストラクタ
 SceneGame::SceneGame()
 {
 	object_manager = std::make_unique<ObjectManager>();
 	Stage* stage = object_manager->Instantiate<Stage>();
+
+	Player* player = object_manager->Instantiate<Player>();
 
 	camera = std::make_unique<FreeCamera>();
 	light = std::make_unique <Light>();

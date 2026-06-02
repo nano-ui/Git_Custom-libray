@@ -19,7 +19,6 @@ framework::framework(HWND hwnd):hwnd(hwnd)
 
 framework::~framework()
 {
-	Graphics::Instance().Finalize();
 }
 
 int framework::run()
@@ -77,15 +76,11 @@ int framework::run()
 		}
 	}
 
-	//シーンの終了処理
-	SceneManager::Instance().Finalize();
 #ifdef USE_IMGUI
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 #endif
-
-	Graphics::Instance().Finalize();
 	return static_cast<int>(msg.wParam);
 }
 

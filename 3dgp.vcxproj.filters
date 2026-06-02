@@ -209,6 +209,9 @@
     <Filter Include="Source\GameObject\Character">
       <UniqueIdentifier>{8342b0b0-6443-4dfd-be42-8f4d9d70304b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\GameObject\Character\Player">
+      <UniqueIdentifier>{089619b3-f9df-459f-812b-58993ff76e5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -396,6 +399,9 @@
     </ClCompile>
     <ClCompile Include="Source\GameObjects\Characters\Character.cpp">
       <Filter>Source\GameObject\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Characters\Player.cpp">
+      <Filter>Source\GameObject\Character\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -605,6 +611,9 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Characters\Character.h">
       <Filter>Source\GameObject\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Characters\Player.h">
+      <Filter>Source\GameObject\Character\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
