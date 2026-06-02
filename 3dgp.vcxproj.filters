@@ -212,6 +212,9 @@
     <Filter Include="Source\GameObject\Character\Player">
       <UniqueIdentifier>{089619b3-f9df-459f-812b-58993ff76e5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ObjectRender\GpuResorceUtilty">
+      <UniqueIdentifier>{f87e07bc-22b4-4da1-90f1-3898e1e44f9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -291,24 +294,6 @@
     </ClCompile>
     <ClCompile Include="Source\FbxModel\FbxSkinnedModel.cpp">
       <Filter>Source\ObjectRender\FbxModel\FbxSkinnedModel</Filter>
-    </ClCompile>
-    <ClCompile Include="External\imgui\imgui.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\imgui\imgui_draw.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\imgui\imgui_impl_dx11.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\imgui\imgui_impl_win32.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\imgui\imgui_ja_gryph_ranges.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\imgui\imgui_widgets.cpp">
-      <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="Source\GltfModel\GltfModelData.cpp">
       <Filter>Source\ObjectRender\GltfModel\GltfModelData</Filter>
@@ -403,6 +388,27 @@
     <ClCompile Include="Source\GameObjects\Characters\Player.cpp">
       <Filter>Source\GameObject\Character\Player</Filter>
     </ClCompile>
+    <ClCompile Include="External\imgui-docking\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-docking\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-docking\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-docking\imgui_impl_dx11.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-docking\imgui_impl_win32.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-docking\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\GpuResourceUtils.cpp">
+      <Filter>Source\ObjectRender\GpuResorceUtilty</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Common\high_resolution_timer.h">
@@ -494,30 +500,6 @@
     </ClInclude>
     <ClInclude Include="Source\FbxModel\FbxSkinnedModel.h">
       <Filter>Source\ObjectRender\FbxModel\FbxSkinnedModel</Filter>
-    </ClInclude>
-    <ClInclude Include="External\imgui\imconfig.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\imgui\imgui.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\imgui\imgui_impl_dx11.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\imgui\imgui_impl_win32.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\imgui\imgui_internal.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\imgui\imstb_rectpack.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\imgui\imstb_textedit.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\imgui\imstb_truetype.h">
-      <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="Source\GltfModel\GltfModelData.h">
       <Filter>Source\ObjectRender\GltfModel\GltfModelData</Filter>
@@ -614,6 +596,33 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Characters\Player.h">
       <Filter>Source\GameObject\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-docking\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-docking\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-docking\imgui_impl_dx11.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-docking\imgui_impl_win32.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-docking\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-docking\imstb_rectpack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-docking\imstb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-docking\imstb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\GpuResourceUtils.h">
+      <Filter>Source\ObjectRender\GpuResorceUtilty</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

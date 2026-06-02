@@ -122,15 +122,15 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;USE_IMGUI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\External\cereal-master\include;.\External\DirectXTK-main\DirectXTK-main\Inc;.\External\imgui;.\External\json-develop;.\External\tinygltf-release;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\External\cereal-master\include;.\External\DirectXTK-main\DirectXTK-main\Inc;.\External\DirectXTex;.\External\imgui-docking;.\External\ImGuizmo;.\External\json-develop;.\External\imgui;.\External\json-develop;.\External\tinygltf-release;%(AdditionalIncludeDirectories);.\External\DirectXTe;.\External\DirectXTex</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\lib\x64\debug;.\External\DirectXTK-main\DirectXTK-main\Bin\Desktop_2019\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;d3d11.lib;dxgi.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\lib\x64\debug;.\External\DirectXTK-main\DirectXTK-main\Bin\Desktop_2019\x64\Debug;%(AdditionalLibraryDirectories);$(SolutionDir)External\DirectXTex\Lib\x64\Debug;.\External\DirectXTex\Bin\Desktop_2022\x64\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;d3d11.lib;dxgi.lib;DirectXTK.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -187,7 +187,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\External\cereal-master\include;.\External\DirectXTK-main\DirectXTK-main\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\External\cereal-master\include;.\External\DirectXTK-main\DirectXTK-main\Inc;.\External\DirectXTex;.\External\imgui-docking;.\External\ImGuizmo;.\External\json-develop;%(AdditionalIncludeDirectories);.\External\DirectXTe;.\External\DirectXTex</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -195,8 +195,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\lib\x64\release;.\External\DirectXTK-main\DirectXTK-main\Bin\Desktop_2019\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;d3d11.lib;dxgi.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\lib\x64\release;.\External\DirectXTK-main\DirectXTK-main\Bin\Desktop_2019\x64\Release;%(AdditionalLibraryDirectories);$(SolutionDir)External\DirectXTex\Lib\x64\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;d3d11.lib;dxgi.lib;DirectXTK.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -213,12 +213,12 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="External\imgui\imgui.cpp" />
-    <ClCompile Include="External\imgui\imgui_draw.cpp" />
-    <ClCompile Include="External\imgui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="External\imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="External\imgui\imgui_ja_gryph_ranges.cpp" />
-    <ClCompile Include="External\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui_demo.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui_draw.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui_impl_dx11.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui_impl_win32.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui_widgets.cpp" />
     <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Camera\FreeCamera.cpp" />
     <ClCompile Include="Source\Collision\SpaceDivisionCast.cpp" />
@@ -258,6 +258,7 @@
     <ClCompile Include="Source\Move\RepulsiveMove.cpp" />
     <ClCompile Include="Source\ObjectsRender\AssetManager.cpp" />
     <ClCompile Include="Source\ObjectsRender\geometric_primitive.cpp" />
+    <ClCompile Include="Source\ObjectsRender\GpuResourceUtils.cpp" />
     <ClCompile Include="Source\ObjectsRender\Model.cpp" />
     <ClCompile Include="Source\ObjectsRender\SkinnedMeshComponents.cpp" />
     <ClCompile Include="Source\ObjectsRender\skinned_mesh.cpp" />
@@ -278,14 +279,14 @@
     <ClCompile Include="Source\Shaders\LuminanceExtractionShader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="External\imgui\imconfig.h" />
-    <ClInclude Include="External\imgui\imgui.h" />
-    <ClInclude Include="External\imgui\imgui_impl_dx11.h" />
-    <ClInclude Include="External\imgui\imgui_impl_win32.h" />
-    <ClInclude Include="External\imgui\imgui_internal.h" />
-    <ClInclude Include="External\imgui\imstb_rectpack.h" />
-    <ClInclude Include="External\imgui\imstb_textedit.h" />
-    <ClInclude Include="External\imgui\imstb_truetype.h" />
+    <ClInclude Include="External\imgui-docking\imconfig.h" />
+    <ClInclude Include="External\imgui-docking\imgui.h" />
+    <ClInclude Include="External\imgui-docking\imgui_impl_dx11.h" />
+    <ClInclude Include="External\imgui-docking\imgui_impl_win32.h" />
+    <ClInclude Include="External\imgui-docking\imgui_internal.h" />
+    <ClInclude Include="External\imgui-docking\imstb_rectpack.h" />
+    <ClInclude Include="External\imgui-docking\imstb_textedit.h" />
+    <ClInclude Include="External\imgui-docking\imstb_truetype.h" />
     <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Camera\FreeCamera.h" />
     <ClInclude Include="Source\Collision\SpaceDivisionCast.h" />
@@ -328,6 +329,7 @@
     <ClInclude Include="Source\Move\RepulsiveMove.h" />
     <ClInclude Include="Source\ObjectsRender\AssetManager.h" />
     <ClInclude Include="Source\ObjectsRender\geometric_primitive.h" />
+    <ClInclude Include="Source\ObjectsRender\GpuResourceUtils.h" />
     <ClInclude Include="Source\ObjectsRender\Model.h" />
     <ClInclude Include="Source\ObjectsRender\SkinnedMeshComponents.h" />
     <ClInclude Include="Source\ObjectsRender\skinned_mesh.h" />

@@ -41,8 +41,8 @@ void Player::RenderDebug()
 //ImGuiデバッグ描画
 void Player::RenderGui()
 {
-	Character::RenderGui();
 	ImGui::Begin("Player");
+	Character::RenderGui();
 	ImGui::DragFloat("PlayerSpeed",&move_speed, 0.1f);
 	ImGui::End();
 }

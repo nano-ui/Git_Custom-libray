@@ -35,6 +35,9 @@ int framework::run()
 	//ImGuiの初期化
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(Graphics::Instance().GetDevice(), Graphics::Instance().GetContext());
 	ImGui::StyleColorsDark();
@@ -71,6 +74,11 @@ int framework::run()
 #ifdef USE_IMGUI
 			ImGui::Render();
 			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+			if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+			{
+				ImGui::UpdatePlatformWindows();
+				ImGui::RenderPlatformWindowsDefault();
+			}
 #endif // USE_IMGUI
 			Graphics::Instance().EndFrame();
 		}
