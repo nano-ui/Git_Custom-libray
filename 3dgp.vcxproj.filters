@@ -215,6 +215,12 @@
     <Filter Include="Source\ObjectRender\GpuResorceUtilty">
       <UniqueIdentifier>{f87e07bc-22b4-4da1-90f1-3898e1e44f9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Collision\SpaceDivisionCast">
+      <UniqueIdentifier>{f428daf6-fe10-4b0c-9c30-568b617a838c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Collision\CollisionLogic">
+      <UniqueIdentifier>{d0700e30-dccd-4ce4-85d6-95b766476e15}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -340,9 +346,6 @@
     <ClCompile Include="Source\GameObjects\ObjectManager.cpp">
       <Filter>Source\GameObject\ObjectManager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collision\SpaceDivisionCast.cpp">
-      <Filter>Source\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene\SceneManager.cpp">
       <Filter>Source\Scene\SceneManager</Filter>
     </ClCompile>
@@ -408,6 +411,12 @@
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\GpuResourceUtils.cpp">
       <Filter>Source\ObjectRender\GpuResorceUtilty</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collision\SpaceDivisionCast.cpp">
+      <Filter>Source\Collision\SpaceDivisionCast</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collision\CollisionLogic.cpp">
+      <Filter>Source\Collision\CollisionLogic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -543,9 +552,6 @@
     <ClInclude Include="Source\GameObjects\ObjectManager.h">
       <Filter>Source\GameObject\ObjectManager</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Collision\SpaceDivisionCast.h">
-      <Filter>Source\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Scene\SceneManager.h">
       <Filter>Source\Scene\SceneManager</Filter>
     </ClInclude>
@@ -623,6 +629,15 @@
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\GpuResourceUtils.h">
       <Filter>Source\ObjectRender\GpuResorceUtilty</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collision\SpaceDivisionCast.h">
+      <Filter>Source\Collision\SpaceDivisionCast</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collision\CollisionLogic.h">
+      <Filter>Source\Collision\CollisionLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collision\Collider.h">
+      <Filter>Source\Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
