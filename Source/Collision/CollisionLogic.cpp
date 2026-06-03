@@ -1,4 +1,5 @@
 #include "CollisionLogic.h"
+#include <cmath>
 
 //==================================
 //カプセルとスフィアの当たり判定
@@ -73,7 +74,33 @@ bool CollisionLogic::IsSphereSphereCollision(const SphereCollider* sphere_a, con
 
     //距離と半径を用いた交差判定
     DirectX::XMVECTOR diff_vec = DirectX::XMVectorSubtract(center_a, center_b);
-    //DirectX::XMVECTOR dist_sq = DirectX::
+    DirectX::XMVECTOR dist_sq_vec = DirectX::XMVector3Dot(diff_vec, diff_vec);
+    float dist_sq = DirectX::XMVectorGetX(dist_sq_vec);
+    float total_radius = sphere_a->radius + sphere_b->radius;
+    float total_radius_sq = total_radius * total_radius;
+    if (dist_sq > total_radius_sq)return false;
 
-    return false;
+    //衝突時の詳細データの構築
+    constexpr float epsilon = 0.0001f;
+    float dist = std::sqrtf(dist_sq);
+    DirectX::XMVECTOR normal_vec;
+    if (dist < epsilon)
+    {
+        normal_vec = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    }
+    else
+    {
+        normal_vec = DirectX::XMVectorScale(diff_vec, 1.0f / dist);
+    }
+    float penetration = total_radius - dist;
+    DirectX::XMVECTOR push_vec = DirectX::XMVectorScale(normal_vec, penetration);
+    DirectX::XMVECTOR safe_pos_vev = DirectX::XMVectorAdd(center_a, push_vec);
+
+    //計算結果の格納
+    DirectX::XMVECTOR hit_pos_vec = DirectX::XMVectorAdd(center_b, DirectX::XMVectorScale(normal_vec, sphere_b->radius));
+    DirectX::XMStoreFloat3(&out_result.hit_normal, normal_vec);
+    DirectX::XMStoreFloat3(&out_result.safe_position, safe_pos_vev);
+    out_result.hit_layer = sphere_b->layer;
+
+    return true;
 }
