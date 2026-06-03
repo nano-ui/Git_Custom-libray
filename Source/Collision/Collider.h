@@ -115,3 +115,23 @@ struct OBB :public Collider
 		type = ColliderType::OBB;
 	}
 };
+
+//カプセルコライダー
+struct CapsuleCollider:public Collider
+{
+	DirectX::XMFLOAT3 start_center;		//カプセルの始点の中心座標
+	DirectX::XMFLOAT3 end_center;		//カプセルの終点の中心座標
+	DirectX::XMFLOAT3 old_start_center;	//移動前の始点座標
+	DirectX::XMFLOAT3 old_end_center;	//移動前の終点座標
+	float radius;						//カプセルの半径
+
+	CapsuleCollider()
+	{
+		type = ColliderType::Capsule;
+		radius = 0.0f;
+		start_center = { 0.0f,0.0f,0.0f };
+		end_center = { 0.0f,0.0f,0.0f };
+		old_start_center = { 0.0f,0.0f,0.0f };
+		old_end_center = { 0.0f,0.0f,0.0f };
+	}
+};
