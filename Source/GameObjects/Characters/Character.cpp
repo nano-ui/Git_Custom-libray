@@ -61,15 +61,16 @@ void Character::RenderDebug()
 //ImGui表示
 void Character::RenderGui()
 {
-	ImGui::Begin("Character");
+	ImGui::DragFloat3("Position", &position.x, 0.1f);
+	ImGui::DragFloat3("Angle", &angle.x, 0.1f);
+	ImGui::DragFloat3("Scale", &scale.x, 0.1f);
+	ImGui::Separator();
 	ImGui::DragFloat("Health", &height, 0.1f);
 	ImGui::DragFloat("Gravity", &gravity, 0.1f);
 	ImGui::DragFloat("Friction", &friction, 0.1f);
 	ImGui::DragFloat("Acceleration", &acceleration, 0.1f);
 	ImGui::DragFloat("MaxSpeed", &max_speed, 0.1f);
 	ImGui::DragFloat("AttackPower", &attack_power, 0.1f);
-
-	ImGui::End();
 }
 
 //ダメージ処理

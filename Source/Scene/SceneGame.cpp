@@ -141,19 +141,22 @@ void SceneGame::Render(float elapsed_time)
 void SceneGame::RenderGui()
 {
 #ifdef USE_IMGUI
-	Scene::ImGuiScaleCorrection();
+	//Scene::ImGuiScaleCorrection();
+	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+
+	if (object_manager)
+	{
+		object_manager->RenderGui();
+		object_manager->RenderDebug();
+	}
+
 	if (ImGui::Begin("Game Debug"))
 	{
-		if (object_manager)
-		{
-			object_manager->RenderGui();
-			object_manager->RenderDebug();
-		}
 		if (camera)
 		{
 			camera->RenderGui();
 		}
-		if (ImGui::CollapsingHeader("Shape Generator", ImGuiTreeNodeFlags_DefaultOpen))
+		if (ImGui::CollapsingHeader("Shape Generator", ImGuiDockNodeFlags_None));
 		{
 			ImGui::RadioButton(u8"ògê¸ÇÃÇ› (Wireframe)", &current_debug_draw_mode, 0);
 			ImGui::RadioButton(u8"ñ ÇÃÇ› (Solid)", &current_debug_draw_mode, 1);

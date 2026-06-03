@@ -53,7 +53,7 @@ void FreeCamera::Initialize()
 void FreeCamera::Update(float elapsed_time)
 {
 	//マウス操作：右ボタンドラッグによる視線回転角の計算
-	if (Input::Instance().IsKeyPress(VK_RBUTTON))
+	if (!ImGui::GetIO().WantCaptureMouse && Input::Instance().IsKeyPress(VK_RBUTTON))
 	{
 		float delta_x = Input::Instance().GetMouseDeltaX();
 		float delta_y = Input::Instance().GetMouseDeltaY();

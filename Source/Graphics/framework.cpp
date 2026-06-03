@@ -101,12 +101,18 @@ int framework::run()
 	//メインループ
 	while (WM_QUIT != msg.message)
 	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		//現在のフレームに溜まっているWindowsメッセージを全て消化
+		while (PeekMessage(&msg,NULL,0,0,PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+			if (WM_QUIT == msg.message)
+			{
+				break;
+			}
+
 		}
-		else
+		if (WM_QUIT != msg.message)
 		{
 #ifdef USE_IMGUI
 			ImGui_ImplDX11_NewFrame();
@@ -143,7 +149,7 @@ LRESULT framework::handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 {
 #ifdef  USE_IMGUI
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
-		return true; 
+		return 1; 
 #endif //  USE_IMGUI
 
 	switch (msg)
@@ -163,11 +169,9 @@ LRESULT framework::handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 			return 0;
 		}
 		break;
-	default:
-		return DefWindowProc(hwnd, msg, wparam, lparam);
 	}
 
-	return LRESULT();
+	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
 void framework::calculate_frame_stats()
