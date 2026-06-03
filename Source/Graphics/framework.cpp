@@ -5,12 +5,54 @@
 #include "../Input/Input.h"
 
 #include <sstream>
+#include <memory>
+
+namespace
+{
+	struct GraphicsScopeDeleter
+	{
+		void operator()(Graphics* graphics) const noexcept
+		{
+			if (graphics)
+			{
+				graphics->Finalize();
+			}
+		}
+	};
+
+	struct SceneManagerScopeDeleter
+	{
+		void operator()(SceneManager* scene_manager) const noexcept
+		{
+			if (scene_manager)
+			{
+				scene_manager->Finalize();
+			}
+		}
+	};
+}
 
 #ifdef USE_IMGUI
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+namespace
+{
+	struct ImGuiScopeDeleter
+	{
+		void operator()(ImGuiContext* context) const noexcept
+		{
+			if (context)
+			{
+				ImGui_ImplDX11_Shutdown();
+				ImGui_ImplWin32_Shutdown();
+				ImGui::DestroyContext(context);
+			}
+		}
+	};
+}
 #endif
 
 framework::framework(HWND hwnd):hwnd(hwnd)
@@ -24,27 +66,36 @@ framework::~framework()
 int framework::run()
 {
 	MSG msg{};
+	std::unique_ptr<Graphics, GraphicsScopeDeleter> graphics_scope(&Graphics::Instance());
+	std::unique_ptr<SceneManager, SceneManagerScopeDeleter> scene_manager_scope(&SceneManager::Instance());
 
 	//グラフィックの初期化
-	if (!Graphics::Instance().Initialize(hwnd))
+	if (!graphics_scope->Initialize(hwnd))
 	{
 		return 0;
 	}
 
 #ifdef USE_IMGUI
+	std::unique_ptr<ImGuiContext, ImGuiScopeDeleter> imgui_scope;
 	//ImGuiの初期化
 	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
+	imgui_scope.reset(ImGui::CreateContext());
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	ImGui_ImplWin32_Init(hwnd);
-	ImGui_ImplDX11_Init(Graphics::Instance().GetDevice(), Graphics::Instance().GetContext());
+	if (!ImGui_ImplWin32_Init(hwnd))
+	{
+		return 0;
+	}
+	if (!ImGui_ImplDX11_Init(graphics_scope->GetDevice(), graphics_scope->GetContext()))
+	{
+		return 0;
+	}
 	ImGui::StyleColorsDark();
 #endif
 	//初期シーンの登録
 	std::unique_ptr<SceneTitle> title_scene = std::make_unique<SceneTitle>();
-	SceneManager::Instance().ChangeScene(std::move(title_scene));
+	scene_manager_scope->ChangeScene(std::move(title_scene));
 	Input::Instance().Initialize();
 
 	//メインループ
@@ -68,9 +119,9 @@ int framework::run()
 			Input::Instance().Update();
 
 			//シーンの更新と描画
-			SceneManager::Instance().Update(tictoc.time_interval());
-			Graphics::Instance().BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);
-			SceneManager::Instance().Render(tictoc.time_interval());
+			scene_manager_scope->Update(tictoc.time_interval());
+			graphics_scope->BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);
+			scene_manager_scope->Render(tictoc.time_interval());
 #ifdef USE_IMGUI
 			ImGui::Render();
 			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -80,15 +131,9 @@ int framework::run()
 				ImGui::RenderPlatformWindowsDefault();
 			}
 #endif // USE_IMGUI
-			Graphics::Instance().EndFrame();
+			graphics_scope->EndFrame();
 		}
 	}
-
-#ifdef USE_IMGUI
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
-#endif
 	return static_cast<int>(msg.wParam);
 }
 
