@@ -161,9 +161,6 @@
     <Filter Include="Source\Scene\SceneTitle">
       <UniqueIdentifier>{71b91ccd-a77a-46df-b532-f8cb4b6ec02b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Scene\MainScene">
-      <UniqueIdentifier>{9e0d08fc-d1c2-49aa-a580-7046e2ac64ef}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Scene\SceneGame">
       <UniqueIdentifier>{f1ce9a23-c616-4fe3-b471-a87cf52357b8}</UniqueIdentifier>
     </Filter>
@@ -333,9 +330,6 @@
     </ClCompile>
     <ClCompile Include="Source\Scene\SceneTitle.cpp">
       <Filter>Source\Scene\SceneTitle</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene\MainScene.cpp">
-      <Filter>Source\Scene\MainScene</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\GameObject.cpp">
       <Filter>Source\GameObject</Filter>
@@ -539,9 +533,6 @@
     </ClInclude>
     <ClInclude Include="Source\Scene\SceneTitle.h">
       <Filter>Source\Scene\SceneTitle</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene\MainScene.h">
-      <Filter>Source\Scene\MainScene</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\GameObject.h">
       <Filter>Source\GameObject</Filter>

@@ -269,7 +269,6 @@
     <ClCompile Include="Source\ObjectsRender\texture.cpp" />
     <ClCompile Include="Source\Rotation\LockAtRotation.cpp" />
     <ClCompile Include="Source\Rotation\RotationFactory.cpp" />
-    <ClCompile Include="Source\Scene\MainScene.cpp" />
     <ClCompile Include="Source\Scene\SceneGame.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Scene\SceneTitle.cpp" />
@@ -343,7 +342,6 @@
     <ClInclude Include="Source\Rotation\LockAtRotation.h" />
     <ClInclude Include="Source\Rotation\RotationBase.h" />
     <ClInclude Include="Source\Rotation\RotationFactory.h" />
-    <ClInclude Include="Source\Scene\MainScene.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Scene\SceneGame.h" />
     <ClInclude Include="Source\Scene\SceneManager.h" />
