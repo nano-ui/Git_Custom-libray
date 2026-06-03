@@ -10,7 +10,7 @@ public:
 	Character();
 
 	//デストラクタ
-	~Character();
+	virtual ~Character();
 
 	//初期化処理
 	void Initialize()override;

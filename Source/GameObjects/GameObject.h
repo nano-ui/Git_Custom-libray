@@ -14,7 +14,7 @@ public:
 	GameObject();
 
 	//デストラクタ
-	~GameObject();
+	virtual ~GameObject();
 
 	//初期化処理
 	 virtual void Initialize() = 0;

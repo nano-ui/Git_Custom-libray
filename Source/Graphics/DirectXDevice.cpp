@@ -1,6 +1,8 @@
 #include "DirectXDevice.h"
 #include "misc.h"
 
+#include <dxgi1_2.h>
+
 ////ウィンドウハンドルを受け取り、メンバ変数に保持
 DirectXDevice::DirectXDevice(HWND window_handle)
 	:window_handle_(window_handle)
@@ -21,24 +23,8 @@ bool DirectXDevice::Initialize()
 	//機能レベルの指定
 	D3D_FEATURE_LEVEL feature_levels{ D3D_FEATURE_LEVEL_11_0 };//DirectX 11.0 の機能レベルを使用
 
-	//スワップチェーンの設定
-	DXGI_SWAP_CHAIN_DESC swap_chain_desc{};							//スワップチェーン（画面表示の仕組み）の設定構造体
-	swap_chain_desc.BufferCount = 2;								//描画バッファの数を2に設定
-	swap_chain_desc.BufferDesc.Width = SCREEN_WIDTH;				//バッファの幅を設定
-	swap_chain_desc.BufferDesc.Height = SCREEN_HEIGHT;				//バッファの高さを設定
-	swap_chain_desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	//色形式をRGBA各8ビットの標準的な形式に設定
-	swap_chain_desc.BufferDesc.RefreshRate.Numerator = 60;			//リフレッシュレートの分子を 60 に設定
-	swap_chain_desc.BufferDesc.RefreshRate.Denominator = 1;			//リフレッシュレートの分母を 1 に設定
-	swap_chain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	//バッファの用途を「描画先（レンダーターゲット）」として設定
-	swap_chain_desc.OutputWindow = window_handle_;					//描画結果を出力するウィンドウを指定
-	swap_chain_desc.SampleDesc.Count = 1;							//マルチサンプリングの数を 1（MSAAなし）に設定
-	swap_chain_desc.SampleDesc.Quality = 0;							//アンチエイリアシング（MSAA）の品質レベルを設定
-	swap_chain_desc.Windowed = !FULLSCREEN;							//ウィンドウモードを設定
-	swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;		//コピー処理をなくして、効率よく画面を表示させる
-	swap_chain_desc.Flags = 0;										//スワップチェーンの動作に関する特別なオプション（フラグ）を何も設定しない
-
-	//デバイス、コンテキスト、スワップチェーンの作成
-	hr = D3D11CreateDeviceAndSwapChain(
+	//D3D11デバイスと即時コンテキストのみを先に独立して作成
+	hr = D3D11CreateDevice(
 		NULL,								//描画アダプタの指定
 		D3D_DRIVER_TYPE_HARDWARE,			//ハードウェアレンダリングを使用
 		NULL,								//ソフトウェアラスタライザは使用しない
@@ -46,15 +32,53 @@ bool DirectXDevice::Initialize()
 		&feature_levels,					//機能レベルの配列
 		1,									//機能レベルの数
 		D3D11_SDK_VERSION,					//SDKバージョン
-		&swap_chain_desc,					//スワップチェーン設定
-		swap_chain_.GetAddressOf(),			//[出力] スワップチェーン
 		device_.GetAddressOf(),				//[出力] デバイス
 		NULL,								//[出力] 機能レベル
 		immediate_context_.GetAddressOf()	//[出力] 即時コンテキスト
 	);
 
-	//エラーチェック
+	//スワップチェーン生成に必要なDXGIファクトリを取得
+	Microsoft::WRL::ComPtr<IDXGIDevice> dxgi_device;
+	hr = device_.As(&dxgi_device);
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	Microsoft::WRL::ComPtr<IDXGIAdapter> dxgi_adapter;
+	hr = dxgi_device->GetAdapter(dxgi_adapter.GetAddressOf());
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	Microsoft::WRL::ComPtr<IDXGIFactory2> dxgi_factory;
+	hr = dxgi_adapter->GetParent(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(dxgi_factory.GetAddressOf()));
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+	//スワップチェーンの設定
+	DXGI_SWAP_CHAIN_DESC1 swap_chain_desc{};	//スワップチェーン設定構造体							
+	swap_chain_desc.Width = SCREEN_WIDTH;
+	swap_chain_desc.Height = SCREEN_HEIGHT;
+	swap_chain_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	swap_chain_desc.Stereo = FALSE;
+	swap_chain_desc.SampleDesc.Count = 1;
+	swap_chain_desc.SampleDesc.Quality = 0;
+	swap_chain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	swap_chain_desc.BufferCount = 2;
+	swap_chain_desc.Scaling = DXGI_SCALING_NONE;
+	swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+	swap_chain_desc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
+	swap_chain_desc.Flags = 0;
+
+	//スワップチェーンを生成
+	Microsoft::WRL::ComPtr<IDXGISwapChain1> swap_chain1;
+	hr = dxgi_factory->CreateSwapChainForHwnd(
+		device_.Get(),
+		window_handle_,
+		&swap_chain_desc,
+		NULL,
+		NULL,
+		swap_chain1.GetAddressOf()
+	);
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	if (SUCCEEDED(hr))
+	{
+		hr = swap_chain1.As(&swap_chain_);
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	}
 
 	return SUCCEEDED(hr);					//初期化が成功したかどうかの結果を返す
 }

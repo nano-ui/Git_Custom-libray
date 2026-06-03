@@ -134,6 +134,8 @@ int framework::run()
 			graphics_scope->EndFrame();
 		}
 	}
+	scene_manager_scope.reset();
+
 	return static_cast<int>(msg.wParam);
 }
 
@@ -177,12 +179,12 @@ void framework::calculate_frame_stats()
 		float mspf = 1000.0f / fps;
 
 		//表示する文字列を作成
-		std::wostringstream outs;
-		outs.precision(6);
-		outs << L"Game Framework" << L" : FPS : " << fps << L" / " << L"Frame Time : " << mspf << L" (ms)";
+		const size_t buffer_size = 256;
+		wchar_t buffer[buffer_size] = {};
+		swprintf_s(buffer, buffer_size, L"Game Framework : FPS : %.6f / Frame Time : %6f(ms)", fps, mspf);
 
 		//ウィンドウのタイトルを変更
-		SetWindowText(hwnd, outs.str().c_str());
+		SetWindowText(hwnd, buffer);
 
 		//カウンタをリセット
 		frames_per_second = 0;
