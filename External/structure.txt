@@ -1,0 +1,2814 @@
+[Project Structure] 
+ 
+Folder PATH listing for volume Windows
+Volume serial number is 0000003B 0255:C8DA
+C:.
+Да   structure.txt
+Да   _dump_structure.bat
+Да   
+ДеДЯДЯДЯcereal-master
+Да   Да   .gitignore
+Да   Да   .travis.yml
+Да   Да   appveyor.yml
+Да   Да   cereal.pc.in
+Да   Да   CMakeLists.txt
+Да   Да   Config.cmake.in
+Да   Да   LICENSE
+Да   Да   README.md
+Да   Да   
+Да   ДеДЯДЯДЯ.github
+Да   Да   ДдДЯДЯДЯworkflows
+Да   Да           ci-macos.yml
+Да   Да           ci.yml
+Да   Да           
+Да   ДеДЯДЯДЯdoc
+Да   Да       CMakeLists.txt
+Да   Да       doxygen.in
+Да   Да       DoxygenLayout.xml
+Да   Да       footer.html
+Да   Да       mainpage.dox
+Да   Да       
+Да   ДеДЯДЯДЯinclude
+Да   Да   ДдДЯДЯДЯcereal
+Да   Да       Да   access.hpp
+Да   Да       Да   cereal.hpp
+Да   Да       Да   macros.hpp
+Да   Да       Да   specialize.hpp
+Да   Да       Да   version.hpp
+Да   Да       Да   
+Да   Да       ДеДЯДЯДЯarchives
+Да   Да       Да       adapters.hpp
+Да   Да       Да       binary.hpp
+Да   Да       Да       json.hpp
+Да   Да       Да       portable_binary.hpp
+Да   Да       Да       xml.hpp
+Да   Да       Да       
+Да   Да       ДеДЯДЯДЯdetails
+Да   Да       Да       helpers.hpp
+Да   Да       Да       polymorphic_impl.hpp
+Да   Да       Да       polymorphic_impl_fwd.hpp
+Да   Да       Да       static_object.hpp
+Да   Да       Да       traits.hpp
+Да   Да       Да       util.hpp
+Да   Да       Да       
+Да   Да       ДеДЯДЯДЯexternal
+Да   Да       Да   Да   base64.hpp
+Да   Да       Да   Да   LICENSE
+Да   Да       Да   Да   
+Да   Да       Да   ДеДЯДЯДЯrapidjson
+Да   Да       Да   Да   Да   allocators.h
+Да   Да       Да   Да   Да   cursorstreamwrapper.h
+Да   Да       Да   Да   Да   document.h
+Да   Да       Да   Да   Да   encodedstream.h
+Да   Да       Да   Да   Да   encodings.h
+Да   Да       Да   Да   Да   filereadstream.h
+Да   Да       Да   Да   Да   filewritestream.h
+Да   Да       Да   Да   Да   fwd.h
+Да   Да       Да   Да   Да   istreamwrapper.h
+Да   Да       Да   Да   Да   LICENSE
+Да   Да       Да   Да   Да   memorybuffer.h
+Да   Да       Да   Да   Да   memorystream.h
+Да   Да       Да   Да   Да   ostreamwrapper.h
+Да   Да       Да   Да   Да   pointer.h
+Да   Да       Да   Да   Да   prettywriter.h
+Да   Да       Да   Да   Да   rapidjson.h
+Да   Да       Да   Да   Да   reader.h
+Да   Да       Да   Да   Да   schema.h
+Да   Да       Да   Да   Да   stream.h
+Да   Да       Да   Да   Да   stringbuffer.h
+Да   Да       Да   Да   Да   writer.h
+Да   Да       Да   Да   Да   
+Да   Да       Да   Да   ДеДЯДЯДЯerror
+Да   Да       Да   Да   Да       en.h
+Да   Да       Да   Да   Да       error.h
+Да   Да       Да   Да   Да       
+Да   Да       Да   Да   ДеДЯДЯДЯinternal
+Да   Да       Да   Да   Да       biginteger.h
+Да   Да       Да   Да   Да       diyfp.h
+Да   Да       Да   Да   Да       dtoa.h
+Да   Да       Да   Да   Да       ieee754.h
+Да   Да       Да   Да   Да       itoa.h
+Да   Да       Да   Да   Да       meta.h
+Да   Да       Да   Да   Да       pow10.h
+Да   Да       Да   Да   Да       regex.h
+Да   Да       Да   Да   Да       stack.h
+Да   Да       Да   Да   Да       strfunc.h
+Да   Да       Да   Да   Да       strtod.h
+Да   Да       Да   Да   Да       swap.h
+Да   Да       Да   Да   Да       
+Да   Да       Да   Да   ДдДЯДЯДЯmsinttypes
+Да   Да       Да   Да           inttypes.h
+Да   Да       Да   Да           LICENSE
+Да   Да       Да   Да           stdint.h
+Да   Да       Да   Да           
+Да   Да       Да   ДдДЯДЯДЯrapidxml
+Да   Да       Да           license.txt
+Да   Да       Да           manual.html
+Да   Да       Да           rapidxml.hpp
+Да   Да       Да           rapidxml_iterators.hpp
+Да   Да       Да           rapidxml_print.hpp
+Да   Да       Да           rapidxml_utils.hpp
+Да   Да       Да           
+Да   Да       ДдДЯДЯДЯtypes
+Да   Да           Да   array.hpp
+Да   Да           Да   atomic.hpp
+Да   Да           Да   base_class.hpp
+Да   Да           Да   bitset.hpp
+Да   Да           Да   boost_variant.hpp
+Да   Да           Да   chrono.hpp
+Да   Да           Да   common.hpp
+Да   Да           Да   complex.hpp
+Да   Да           Да   deque.hpp
+Да   Да           Да   forward_list.hpp
+Да   Да           Да   functional.hpp
+Да   Да           Да   list.hpp
+Да   Да           Да   map.hpp
+Да   Да           Да   memory.hpp
+Да   Да           Да   optional.hpp
+Да   Да           Да   polymorphic.hpp
+Да   Да           Да   queue.hpp
+Да   Да           Да   set.hpp
+Да   Да           Да   stack.hpp
+Да   Да           Да   string.hpp
+Да   Да           Да   tuple.hpp
+Да   Да           Да   unordered_map.hpp
+Да   Да           Да   unordered_set.hpp
+Да   Да           Да   utility.hpp
+Да   Да           Да   valarray.hpp
+Да   Да           Да   variant.hpp
+Да   Да           Да   vector.hpp
+Да   Да           Да   
+Да   Да           ДдДЯДЯДЯconcepts
+Да   Да                   pair_associative_container.hpp
+Да   Да                   
+Да   ДеДЯДЯДЯsandbox
+Да   Да   Да   CMakeLists.txt
+Да   Да   Да   performance.cpp
+Да   Да   Да   sandbox.cpp
+Да   Да   Да   sandbox_json.cpp
+Да   Да   Да   sandbox_rtti.cpp
+Да   Да   Да   sandbox_vs.cpp
+Да   Да   Да   
+Да   Да   ДдДЯДЯДЯsandbox_shared_lib
+Да   Да           base.cpp
+Да   Да           base.hpp
+Да   Да           CMakeLists.txt
+Да   Да           derived.cpp
+Да   Да           derived.hpp
+Да   Да           
+Да   ДеДЯДЯДЯscripts
+Да   Да       add_rapidjson_prefix.sh
+Да   Да       appveyor.bat
+Да   Да       renameincludes.sh
+Да   Да       updatecoverage.sh
+Да   Да       updatedoc.in
+Да   Да       
+Да   ДдДЯДЯДЯunittests
+Да       Да   array.cpp
+Да       Да   array.hpp
+Да       Да   atomic.cpp
+Да       Да   atomic.hpp
+Да       Да   basic_string.cpp
+Да       Да   basic_string.hpp
+Да       Да   bitset.cpp
+Да       Да   bitset.hpp
+Да       Да   chrono.cpp
+Да       Да   chrono.hpp
+Да       Да   cmake-config-module.cmake
+Да       Да   CMakeLists.txt
+Да       Да   common.hpp
+Да       Да   complex.cpp
+Да       Да   complex.hpp
+Да       Да   defer.cpp
+Да       Да   defer.hpp
+Да       Да   deque.cpp
+Да       Да   deque.hpp
+Да       Да   doctest.h
+Да       Да   forward_list.cpp
+Да       Да   forward_list.hpp
+Да       Да   list.cpp
+Да       Да   list.hpp
+Да       Да   load_construct.cpp
+Да       Да   load_construct.hpp
+Да       Да   map.cpp
+Да       Да   map.hpp
+Да       Да   memory.cpp
+Да       Да   memory.hpp
+Да       Да   memory_cycles.cpp
+Да       Да   memory_cycles.hpp
+Да       Да   multimap.cpp
+Да       Да   multimap.hpp
+Да       Да   multiset.cpp
+Да       Да   multiset.hpp
+Да       Да   pair.cpp
+Да       Да   pair.hpp
+Да       Да   pod.cpp
+Да       Да   pod.hpp
+Да       Да   polymorphic.cpp
+Да       Да   polymorphic.hpp
+Да       Да   portability_test.cpp
+Да       Да   portable_binary_archive.cpp
+Да       Да   portable_binary_archive.hpp
+Да       Да   priority_queue.cpp
+Да       Да   priority_queue.hpp
+Да       Да   queue.cpp
+Да       Да   queue.hpp
+Да       Да   run_portability_test.cmake
+Да       Да   run_valgrind.sh
+Да       Да   set.cpp
+Да       Да   set.hpp
+Да       Да   stack.cpp
+Да       Да   stack.hpp
+Да       Да   structs.cpp
+Да       Да   structs.hpp
+Да       Да   structs_minimal.cpp
+Да       Да   structs_minimal.hpp
+Да       Да   structs_specialized.cpp
+Да       Да   structs_specialized.hpp
+Да       Да   tuple.cpp
+Да       Да   tuple.hpp
+Да       Да   unordered_loads.cpp
+Да       Да   unordered_loads.hpp
+Да       Да   unordered_map.cpp
+Да       Да   unordered_map.hpp
+Да       Да   unordered_multimap.cpp
+Да       Да   unordered_multimap.hpp
+Да       Да   unordered_multiset.cpp
+Да       Да   unordered_multiset.hpp
+Да       Да   unordered_set.cpp
+Да       Да   unordered_set.hpp
+Да       Да   user_data_adapters.cpp
+Да       Да   user_data_adapters.hpp
+Да       Да   valarray.cpp
+Да       Да   valarray.hpp
+Да       Да   vector.cpp
+Да       Да   vector.hpp
+Да       Да   versioning.cpp
+Да       Да   versioning.hpp
+Да       Да   
+Да       ДеДЯДЯДЯboost
+Да       Да       boost_variant.cpp
+Да       Да       boost_variant.hpp
+Да       Да       CMakeLists.txt
+Да       Да       
+Да       ДдДЯДЯДЯcpp17
+Да               CMakeLists.txt
+Да               optional.cpp
+Да               optional.hpp
+Да               variant.cpp
+Да               variant.hpp
+Да               
+ДеДЯДЯДЯDirectXTex
+Да   Да   BC.cpp
+Да   Да   BC.h
+Да   Да   BC4BC5.cpp
+Да   Да   BC6HBC7.cpp
+Да   Да   BCDirectCompute.cpp
+Да   Да   BCDirectCompute.h
+Да   Да   d3dx12.h
+Да   Да   DDS.h
+Да   Да   DirectXTex.h
+Да   Да   DirectXTex.inl
+Да   Да   DirectXTexCompress.cpp
+Да   Да   DirectXTexCompressGPU.cpp
+Да   Да   DirectXTexConvert.cpp
+Да   Да   DirectXTexD3D11.cpp
+Да   Да   DirectXTexD3D12.cpp
+Да   Да   DirectXTexDDS.cpp
+Да   Да   DirectXTexFlipRotate.cpp
+Да   Да   DirectXTexHDR.cpp
+Да   Да   DirectXTexImage.cpp
+Да   Да   DirectXTexMipmaps.cpp
+Да   Да   DirectXTexMisc.cpp
+Да   Да   DirectXTexNormalMaps.cpp
+Да   Да   DirectXTexP.h
+Да   Да   DirectXTexPMAlpha.cpp
+Да   Да   DirectXTexResize.cpp
+Да   Да   DirectXTexTGA.cpp
+Да   Да   DirectXTexUtil.cpp
+Да   Да   DirectXTexWIC.cpp
+Да   Да   DirectXTex_Desktop_2019.vcxproj
+Да   Да   DirectXTex_Desktop_2019.vcxproj.filters
+Да   Да   DirectXTex_Desktop_2019_Win10.vcxproj
+Да   Да   DirectXTex_Desktop_2019_Win10.vcxproj.filters
+Да   Да   DirectXTex_Desktop_2022.vcxproj
+Да   Да   DirectXTex_Desktop_2022.vcxproj.filters
+Да   Да   DirectXTex_Desktop_2022.vcxproj.user
+Да   Да   DirectXTex_Desktop_2022_Win10.vcxproj
+Да   Да   DirectXTex_Desktop_2022_Win10.vcxproj.filters
+Да   Да   DirectXTex_GDK_2019.vcxproj
+Да   Да   DirectXTex_GDK_2019.vcxproj.filters
+Да   Да   DirectXTex_GDK_2022.vcxproj
+Да   Да   DirectXTex_GDK_2022.vcxproj.filters
+Да   Да   DirectXTex_GXDK_PC_2019.vcxproj
+Да   Да   DirectXTex_GXDK_PC_2019.vcxproj.filters
+Да   Да   DirectXTex_GXDK_PC_2022.vcxproj
+Да   Да   DirectXTex_GXDK_PC_2022.vcxproj.filters
+Да   Да   DirectXTex_Windows10_2022.vcxproj
+Да   Да   DirectXTex_Windows10_2022.vcxproj.filters
+Да   Да   filters.h
+Да   Да   scoped.h
+Да   Да   
+Да   ДеДЯДЯДЯBin
+Да   Да   ДдДЯДЯДЯDesktop_2022
+Да   Да       ДдДЯДЯДЯx64
+Да   Да           ДдДЯДЯДЯDebug
+Да   Да               Да   BC.obj
+Да   Да               Да   BC4BC5.obj
+Да   Да               Да   BC6HBC7.obj
+Да   Да               Да   BCDirectCompute.obj
+Да   Да               Да   DirectXTex.lib
+Да   Да               Да   DirectXTex.lib.recipe
+Да   Да               Да   DirectXTex.pch
+Да   Да               Да   DirectXTex.pdb
+Да   Да               Да   DirectXTexCompress.obj
+Да   Да               Да   DirectXTexCompressGPU.obj
+Да   Да               Да   DirectXTexConvert.obj
+Да   Да               Да   DirectXTexD3D11.obj
+Да   Да               Да   DirectXTexDDS.obj
+Да   Да               Да   DirectXTexFlipRotate.obj
+Да   Да               Да   DirectXTexHDR.obj
+Да   Да               Да   DirectXTexImage.obj
+Да   Да               Да   DirectXTexMipMaps.obj
+Да   Да               Да   DirectXTexMisc.obj
+Да   Да               Да   DirectXTexNormalMaps.obj
+Да   Да               Да   DirectXTexPMAlpha.obj
+Да   Да               Да   DirectXTexResize.obj
+Да   Да               Да   DirectXTexTGA.obj
+Да   Да               Да   DirectXTexUtil.obj
+Да   Да               Да   DirectXTexWIC.obj
+Да   Да               Да   DirectXTex_Desktop_2022.log
+Да   Да               Да   DirectXTex_Desktop_2022.vcxproj.FileListAbsolute.txt
+Да   Да               Да   
+Да   Да               ДдДЯДЯДЯDirectXTex.tlog
+Да   Да                       CL.command.1.tlog
+Да   Да                       Cl.items.tlog
+Да   Да                       CL.read.1.tlog
+Да   Да                       CL.write.1.tlog
+Да   Да                       DirectXTex.lastbuildstate
+Да   Да                       Lib-link.read.1.tlog
+Да   Да                       Lib-link.write.1.tlog
+Да   Да                       Lib.command.1.tlog
+Да   Да                       
+Да   ДдДЯДЯДЯShaders
+Да       Да   BC6HEncode.hlsl
+Да       Да   BC7Encode.hlsl
+Да       Да   CompileShaders.cmd
+Да       Да   
+Да       ДдДЯДЯДЯCompiled
+Да               BC6HEncode_EncodeBlockCS.inc
+Да               BC6HEncode_EncodeBlockCS.pdb
+Да               BC6HEncode_EncodeBlockCS_cs40.inc
+Да               BC6HEncode_EncodeBlockCS_cs40.pdb
+Да               BC6HEncode_TryModeG10CS.inc
+Да               BC6HEncode_TryModeG10CS.pdb
+Да               BC6HEncode_TryModeG10CS_cs40.inc
+Да               BC6HEncode_TryModeG10CS_cs40.pdb
+Да               BC6HEncode_TryModeLE10CS.inc
+Да               BC6HEncode_TryModeLE10CS.pdb
+Да               BC6HEncode_TryModeLE10CS_cs40.inc
+Да               BC6HEncode_TryModeLE10CS_cs40.pdb
+Да               BC7Encode_EncodeBlockCS.inc
+Да               BC7Encode_EncodeBlockCS.pdb
+Да               BC7Encode_EncodeBlockCS_cs40.inc
+Да               BC7Encode_EncodeBlockCS_cs40.pdb
+Да               BC7Encode_TryMode02CS.inc
+Да               BC7Encode_TryMode02CS.pdb
+Да               BC7Encode_TryMode02CS_cs40.inc
+Да               BC7Encode_TryMode02CS_cs40.pdb
+Да               BC7Encode_TryMode137CS.inc
+Да               BC7Encode_TryMode137CS.pdb
+Да               BC7Encode_TryMode137CS_cs40.inc
+Да               BC7Encode_TryMode137CS_cs40.pdb
+Да               BC7Encode_TryMode456CS.inc
+Да               BC7Encode_TryMode456CS.pdb
+Да               BC7Encode_TryMode456CS_cs40.inc
+Да               BC7Encode_TryMode456CS_cs40.pdb
+Да               
+ДеДЯДЯДЯDirectXTK-main
+Да   ДдДЯДЯДЯDirectXTK-main
+Да       Да   .editorconfig
+Да       Да   .gitattributes
+Да       Да   .gitignore
+Да       Да   .onefuzz
+Да       Да   CHANGELOG.md
+Да       Да   CMakeLists.txt
+Да       Да   CMakePresets.json
+Да       Да   CODE_OF_CONDUCT.md
+Да       Да   DirectXTK_Desktop_2019.sln
+Да       Да   DirectXTK_Desktop_2019.vcxproj
+Да       Да   DirectXTK_Desktop_2019.vcxproj.filters
+Да       Да   DirectXTK_Desktop_2019.vcxproj.user
+Да       Да   DirectXTK_Desktop_2019_Win10.sln
+Да       Да   DirectXTK_Desktop_2019_Win10.vcxproj.filters
+Да       Да   DirectXTK_Desktop_2022.sln
+Да       Да   DirectXTK_Desktop_2022.vcxproj
+Да       Да   DirectXTK_Desktop_2022.vcxproj.filters
+Да       Да   DirectXTK_Desktop_2022_Win10.sln
+Да       Да   DirectXTK_Desktop_2022_Win10.vcxproj
+Да       Да   DirectXTK_Desktop_2022_Win10.vcxproj.filters
+Да       Да   DirectXTK_GDK_2019.sln
+Да       Да   DirectXTK_GDK_2019.vcxproj
+Да       Да   DirectXTK_GDK_2019.vcxproj.filters
+Да       Да   DirectXTK_GDK_2022.sln
+Да       Да   DirectXTK_GDK_2022.vcxproj.filters
+Да       Да   DirectXTK_Windows10_2022.sln
+Да       Да   DirectXTK_Windows10_2022.vcxproj
+Да       Да   DirectXTK_Windows10_2022.vcxproj.filters
+Да       Да   LICENSE
+Да       Да   README.md
+Да       Да   SECURITY.md
+Да       Да   
+Да       ДеДЯДЯДЯ.azuredevops
+Да       Да   ДеДЯДЯДЯpipelines
+Да       Да   Да       DirectXTK-GitHub-CMake-Dev17.yml
+Да       Да   Да       DirectXTK-GitHub-CMake.yml
+Да       Да   Да       DirectXTK-GitHub-Dev17.yml
+Да       Да   Да       DirectXTK-GitHub-GDK-Dev17.yml
+Да       Да   Да       DirectXTK-GitHub-GDK.yml
+Да       Да   Да       DirectXTK-GitHub-MinGW.yml
+Да       Да   Да       DirectXTK-GitHub-SDK-prerelease.yml
+Да       Да   Да       DirectXTK-GitHub-SDK-release.yml
+Да       Да   Да       DirectXTK-GitHub-Test-Dev17.yml
+Да       Да   Да       DirectXTK-GitHub-Test.yml
+Да       Да   Да       DirectXTK-GitHub-WSL-11.yml
+Да       Да   Да       DirectXTK-GitHub-WSL-13.yml
+Да       Да   Да       DirectXTK-GitHub.yml
+Да       Да   Да       DirectXTK-OneFuzz-Coverage.yml
+Да       Да   Да       DirectXTK-OneFuzz.yml
+Да       Да   Да       DirectXTK-SDL.yml
+Да       Да   Да       
+Да       Да   ДдДЯДЯДЯpolicies
+Да       Да           approvercountpolicy.yml
+Да       Да           
+Да       ДеДЯДЯДЯ.github
+Да       Да   Да   dependabot.yml
+Да       Да   Да   
+Да       Да   ДдДЯДЯДЯworkflows
+Да       Да           codeql.yml
+Да       Да           main.yml
+Да       Да           msbuild.yml
+Да       Да           msvc.yml
+Да       Да           test.yml
+Да       Да           uwp.yml
+Да       Да           vcpkg.yml
+Да       Да           win10.yml
+Да       Да           
+Да       ДеДЯДЯДЯ.nuget
+Да       Да       directxtk_desktop_2019.nuspec
+Да       Да       directxtk_desktop_2019.targets
+Да       Да       directxtk_desktop_win10.nuspec
+Да       Да       directxtk_desktop_win10.targets
+Да       Да       directxtk_uwp.nuspec
+Да       Да       directxtk_uwp.targets
+Да       Да       icon.jpg
+Да       Да       
+Да       ДеДЯДЯДЯAudio
+Да       Да       AudioEngine.cpp
+Да       Да       DynamicSoundEffectInstance.cpp
+Да       Да       SoundCommon.cpp
+Да       Да       SoundCommon.h
+Да       Да       SoundEffect.cpp
+Да       Да       SoundEffectInstance.cpp
+Да       Да       SoundStreamInstance.cpp
+Да       Да       WaveBank.cpp
+Да       Да       WaveBankReader.cpp
+Да       Да       WaveBankReader.h
+Да       Да       WAVFileReader.cpp
+Да       Да       WAVFileReader.h
+Да       Да       
+Да       ДеДЯДЯДЯBin
+Да       Да   ДдДЯДЯДЯDesktop_2019
+Да       Да       ДдДЯДЯДЯx64
+Да       Да           ДеДЯДЯДЯDebug
+Да       Да           Да   Да   AlphaTestEffect.obj
+Да       Да           Да   Да   AudioEngine.obj
+Да       Да           Да   Да   BasicEffect.obj
+Да       Да           Да   Да   BasicPostProcess.obj
+Да       Да           Да   Да   BinaryReader.obj
+Да       Да           Да   Да   BufferHelpers.obj
+Да       Да           Да   Да   CommonStates.obj
+Да       Да           Да   Да   DDSTextureLoader.obj
+Да       Да           Да   Да   DebugEffect.obj
+Да       Да           Да   Да   DGSLEffect.obj
+Да       Да           Да   Да   DGSLEffectFactory.obj
+Да       Да           Да   Да   DirectXHelpers.obj
+Да       Да           Да   Да   DirectXTK.Build.CppClean.log
+Да       Да           Да   Да   DirectXTK.lib
+Да       Да           Да   Да   DirectXTK.lib.recipe
+Да       Да           Да   Да   DirectXTK.pch
+Да       Да           Да   Да   DirectXTK.pdb
+Да       Да           Да   Да   DirectXTK_Desktop_2019.log
+Да       Да           Да   Да   DirectXTK_Desktop_2019.vcxproj.FileListAbsolute.txt
+Да       Да           Да   Да   DualPostProcess.obj
+Да       Да           Да   Да   DualTextureEffect.obj
+Да       Да           Да   Да   DynamicSoundEffectInstance.obj
+Да       Да           Да   Да   EffectCommon.obj
+Да       Да           Да   Да   EffectFactory.obj
+Да       Да           Да   Да   EnvironmentMapEffect.obj
+Да       Да           Да   Да   GamePad.obj
+Да       Да           Да   Да   GeometricPrimitive.obj
+Да       Да           Да   Да   Geometry.obj
+Да       Да           Да   Да   GraphicsMemory.obj
+Да       Да           Да   Да   Keyboard.obj
+Да       Да           Да   Да   Model.obj
+Да       Да           Да   Да   ModelLoadCMO.obj
+Да       Да           Да   Да   ModelLoadSDKMESH.obj
+Да       Да           Да   Да   ModelLoadVBO.obj
+Да       Да           Да   Да   Mouse.obj
+Да       Да           Да   Да   NormalMapEffect.obj
+Да       Да           Да   Да   PBREffect.obj
+Да       Да           Да   Да   PBREffectFactory.obj
+Да       Да           Да   Да   pch.obj
+Да       Да           Да   Да   PrimitiveBatch.obj
+Да       Да           Да   Да   ScreenGrab.obj
+Да       Да           Да   Да   SimpleMath.obj
+Да       Да           Да   Да   SkinnedEffect.obj
+Да       Да           Да   Да   SoundCommon.obj
+Да       Да           Да   Да   SoundEffect.obj
+Да       Да           Да   Да   SoundEffectInstance.obj
+Да       Да           Да   Да   SoundStreamInstance.obj
+Да       Да           Да   Да   SpriteBatch.obj
+Да       Да           Да   Да   SpriteFont.obj
+Да       Да           Да   Да   ToneMapPostProcess.obj
+Да       Да           Да   Да   VertexTypes.obj
+Да       Да           Да   Да   WaveBank.obj
+Да       Да           Да   Да   WaveBankReader.obj
+Да       Да           Да   Да   WAVFileReader.obj
+Да       Да           Да   Да   WICTextureLoader.obj
+Да       Да           Да   Да   
+Да       Да           Да   ДдДЯДЯДЯDirectXT.E0B52AE7.tlog
+Да       Да           Да           CL.command.1.tlog
+Да       Да           Да           Cl.items.tlog
+Да       Да           Да           CL.read.1.tlog
+Да       Да           Да           CL.write.1.tlog
+Да       Да           Да           DirectXTK_Desktop_2019.lastbuildstate
+Да       Да           Да           Lib-link.read.1.tlog
+Да       Да           Да           Lib-link.write.1.tlog
+Да       Да           Да           Lib.command.1.tlog
+Да       Да           Да           
+Да       Да           ДдДЯДЯДЯRelease
+Да       Да               Да   AlphaTestEffect.obj
+Да       Да               Да   AudioEngine.obj
+Да       Да               Да   BasicEffect.obj
+Да       Да               Да   BasicPostProcess.obj
+Да       Да               Да   BinaryReader.obj
+Да       Да               Да   BufferHelpers.obj
+Да       Да               Да   CommonStates.obj
+Да       Да               Да   DDSTextureLoader.obj
+Да       Да               Да   DebugEffect.obj
+Да       Да               Да   DGSLEffect.obj
+Да       Да               Да   DGSLEffectFactory.obj
+Да       Да               Да   DirectXHelpers.obj
+Да       Да               Да   DirectXTK.lib
+Да       Да               Да   DirectXTK.lib.recipe
+Да       Да               Да   DirectXTK.pch
+Да       Да               Да   DirectXTK.pdb
+Да       Да               Да   DirectXTK_Desktop_2019.log
+Да       Да               Да   DirectXTK_Desktop_2019.vcxproj.FileListAbsolute.txt
+Да       Да               Да   DualPostProcess.obj
+Да       Да               Да   DualTextureEffect.obj
+Да       Да               Да   DynamicSoundEffectInstance.obj
+Да       Да               Да   EffectCommon.obj
+Да       Да               Да   EffectFactory.obj
+Да       Да               Да   EnvironmentMapEffect.obj
+Да       Да               Да   GamePad.obj
+Да       Да               Да   GeometricPrimitive.obj
+Да       Да               Да   Geometry.obj
+Да       Да               Да   GraphicsMemory.obj
+Да       Да               Да   Keyboard.obj
+Да       Да               Да   Model.obj
+Да       Да               Да   ModelLoadCMO.obj
+Да       Да               Да   ModelLoadSDKMESH.obj
+Да       Да               Да   ModelLoadVBO.obj
+Да       Да               Да   Mouse.obj
+Да       Да               Да   NormalMapEffect.obj
+Да       Да               Да   PBREffect.obj
+Да       Да               Да   PBREffectFactory.obj
+Да       Да               Да   pch.obj
+Да       Да               Да   PrimitiveBatch.obj
+Да       Да               Да   ScreenGrab.obj
+Да       Да               Да   SimpleMath.obj
+Да       Да               Да   SkinnedEffect.obj
+Да       Да               Да   SoundCommon.obj
+Да       Да               Да   SoundEffect.obj
+Да       Да               Да   SoundEffectInstance.obj
+Да       Да               Да   SoundStreamInstance.obj
+Да       Да               Да   SpriteBatch.obj
+Да       Да               Да   SpriteFont.obj
+Да       Да               Да   ToneMapPostProcess.obj
+Да       Да               Да   VertexTypes.obj
+Да       Да               Да   WaveBank.obj
+Да       Да               Да   WaveBankReader.obj
+Да       Да               Да   WAVFileReader.obj
+Да       Да               Да   WICTextureLoader.obj
+Да       Да               Да   
+Да       Да               ДдДЯДЯДЯDirectXT.E0B52AE7.tlog
+Да       Да                       CL.command.1.tlog
+Да       Да                       Cl.items.tlog
+Да       Да                       CL.read.1.tlog
+Да       Да                       CL.write.1.tlog
+Да       Да                       DirectXTK_Desktop_2019.lastbuildstate
+Да       Да                       Lib-link.read.1.tlog
+Да       Да                       Lib-link.write.1.tlog
+Да       Да                       Lib.command.1.tlog
+Да       Да                       
+Да       ДеДЯДЯДЯbuild
+Да       Да       CompilerAndLinker.cmake
+Да       Да       CopyASan.targets
+Да       Да       Directory.Build.props
+Да       Да       DirectXTK-config.cmake.in
+Да       Да       DirectXTK.pc.in
+Да       Да       DirectXTK.rc.in
+Да       Да       JoinPaths.cmake
+Да       Да       onefuzz-setup.ps1
+Да       Да       OneFuzzConfig.json
+Да       Да       preparerelease.ps1
+Да       Да       SetupBWOI.cmd
+Да       Да       SetupBWOI.targets
+Да       Да       vcpkg.json
+Да       Да       versioninfo.ps1
+Да       Да       
+Да       ДеДЯДЯДЯInc
+Да       Да       Audio.h
+Да       Да       BufferHelpers.h
+Да       Да       CommonStates.h
+Да       Да       DDSTextureLoader.h
+Да       Да       DirectXHelpers.h
+Да       Да       Effects.h
+Да       Да       GamePad.h
+Да       Да       GeometricPrimitive.h
+Да       Да       GraphicsMemory.h
+Да       Да       Keyboard.h
+Да       Да       Model.h
+Да       Да       Mouse.h
+Да       Да       PostProcess.h
+Да       Да       PrimitiveBatch.h
+Да       Да       ScreenGrab.h
+Да       Да       SimpleMath.h
+Да       Да       SimpleMath.inl
+Да       Да       SpriteBatch.h
+Да       Да       SpriteFont.h
+Да       Да       VertexTypes.h
+Да       Да       WICTextureLoader.h
+Да       Да       XboxDDSTextureLoader.h
+Да       Да       
+Да       ДеДЯДЯДЯMakeSpriteFont
+Да       Да   Да   app.config
+Да       Да   Да   BitmapImporter.cs
+Да       Да   Да   BitmapUtils.cs
+Да       Да   Да   CharacterRegion.cs
+Да       Да   Да   CommandLineOptions.cs
+Да       Да   Да   CommandLineParser.cs
+Да       Да   Да   Glyph.cs
+Да       Да   Да   GlyphCropper.cs
+Да       Да   Да   GlyphPacker.cs
+Да       Да   Да   IFontImporter.cs
+Да       Да   Да   MakeSpriteFont.csproj
+Да       Да   Да   Program.cs
+Да       Да   Да   SpriteFontWriter.cs
+Да       Да   Да   TrueTypeImporter.cs
+Да       Да   Да   
+Да       Да   ДеДЯДЯДЯbin
+Да       Да   Да   ДдДЯДЯДЯDebug
+Да       Да   ДеДЯДЯДЯobj
+Да       Да   Да   ДдДЯДЯДЯDebug
+Да       Да   Да       Да   .NETFramework,Version=v4.7.2.AssemblyAttributes.cs
+Да       Да   Да       Да   DesignTimeResolveAssemblyReferencesInput.cache
+Да       Да   Да       Да   MakeSpriteFont.csproj.AssemblyReference.cache
+Да       Да   Да       Да   
+Да       Да   Да       ДдДЯДЯДЯTempPE
+Да       Да   ДдДЯДЯДЯProperties
+Да       Да           AssemblyInfo.cs
+Да       Да           
+Да       ДеДЯДЯДЯSrc
+Да       Да   Да   AlignedNew.h
+Да       Да   Да   AlphaTestEffect.cpp
+Да       Да   Да   BasicEffect.cpp
+Да       Да   Да   BasicPostProcess.cpp
+Да       Да   Да   Bezier.h
+Да       Да   Да   BinaryReader.cpp
+Да       Да   Да   BinaryReader.h
+Да       Да   Да   BufferHelpers.cpp
+Да       Да   Да   CMO.h
+Да       Да   Да   CommonStates.cpp
+Да       Да   Да   DDS.h
+Да       Да   Да   DDSTextureLoader.cpp
+Да       Да   Да   DebugEffect.cpp
+Да       Да   Да   DemandCreate.h
+Да       Да   Да   DGSLEffect.cpp
+Да       Да   Да   DGSLEffectFactory.cpp
+Да       Да   Да   DirectXHelpers.cpp
+Да       Да   Да   DualPostProcess.cpp
+Да       Да   Да   DualTextureEffect.cpp
+Да       Да   Да   EffectCommon.cpp
+Да       Да   Да   EffectCommon.h
+Да       Да   Да   EffectFactory.cpp
+Да       Да   Да   EnvironmentMapEffect.cpp
+Да       Да   Да   GamePad.cpp
+Да       Да   Да   GeometricPrimitive.cpp
+Да       Да   Да   Geometry.cpp
+Да       Да   Да   Geometry.h
+Да       Да   Да   GraphicsMemory.cpp
+Да       Да   Да   Keyboard.cpp
+Да       Да   Да   LoaderHelpers.h
+Да       Да   Да   Model.cpp
+Да       Да   Да   ModelLoadCMO.cpp
+Да       Да   Да   ModelLoadSDKMESH.cpp
+Да       Да   Да   ModelLoadVBO.cpp
+Да       Да   Да   Mouse.cpp
+Да       Да   Да   NormalMapEffect.cpp
+Да       Да   Да   PBREffect.cpp
+Да       Да   Да   PBREffectFactory.cpp
+Да       Да   Да   pch.cpp
+Да       Да   Да   pch.h
+Да       Да   Да   PlatformHelpers.h
+Да       Да   Да   PrimitiveBatch.cpp
+Да       Да   Да   ScreenGrab.cpp
+Да       Да   Да   SDKMesh.h
+Да       Да   Да   SharedResourcePool.h
+Да       Да   Да   SimpleMath.cpp
+Да       Да   Да   SkinnedEffect.cpp
+Да       Да   Да   SpriteBatch.cpp
+Да       Да   Да   SpriteFont.cpp
+Да       Да   Да   TeapotData.inc
+Да       Да   Да   ToneMapPostProcess.cpp
+Да       Да   Да   vbo.h
+Да       Да   Да   VertexTypes.cpp
+Да       Да   Да   WICTextureLoader.cpp
+Да       Да   Да   XboxDDSTextureLoader.cpp
+Да       Да   Да   
+Да       Да   ДдДЯДЯДЯShaders
+Да       Да       Да   AlphaTestEffect.fx
+Да       Да       Да   BasicEffect.fx
+Да       Да       Да   Common.fxh
+Да       Да       Да   CompileShaders.cmd
+Да       Да       Да   DebugEffect.fx
+Да       Да       Да   DGSLEffect.fx
+Да       Да       Да   DGSLLambert.hlsl
+Да       Да       Да   DGSLPhong.hlsl
+Да       Да       Да   DGSLUnlit.hlsl
+Да       Да       Да   DualTextureEffect.fx
+Да       Да       Да   EnvironmentMapEffect.fx
+Да       Да       Да   Lighting.fxh
+Да       Да       Да   NormalMapEffect.fx
+Да       Да       Да   PBRCommon.fxh
+Да       Да       Да   PBREffect.fx
+Да       Да       Да   PixelPacking_Velocity.hlsli
+Да       Да       Да   PostProcess.fx
+Да       Да       Да   SkinnedEffect.fx
+Да       Да       Да   Skinning.fxh
+Да       Да       Да   SpriteEffect.fx
+Да       Да       Да   Structures.fxh
+Да       Да       Да   ToneMap.fx
+Да       Да       Да   Utilities.fxh
+Да       Да       Да   
+Да       Да       ДдДЯДЯДЯCompiled
+Да       Да               AlphaTestEffect_PSAlphaTestEqNe.inc
+Да       Да               AlphaTestEffect_PSAlphaTestEqNe.pdb
+Да       Да               AlphaTestEffect_PSAlphaTestEqNeNoFog.inc
+Да       Да               AlphaTestEffect_PSAlphaTestEqNeNoFog.pdb
+Да       Да               AlphaTestEffect_PSAlphaTestLtGt.inc
+Да       Да               AlphaTestEffect_PSAlphaTestLtGt.pdb
+Да       Да               AlphaTestEffect_PSAlphaTestLtGtNoFog.inc
+Да       Да               AlphaTestEffect_PSAlphaTestLtGtNoFog.pdb
+Да       Да               AlphaTestEffect_VSAlphaTest.inc
+Да       Да               AlphaTestEffect_VSAlphaTest.pdb
+Да       Да               AlphaTestEffect_VSAlphaTestNoFog.inc
+Да       Да               AlphaTestEffect_VSAlphaTestNoFog.pdb
+Да       Да               AlphaTestEffect_VSAlphaTestVc.inc
+Да       Да               AlphaTestEffect_VSAlphaTestVc.pdb
+Да       Да               AlphaTestEffect_VSAlphaTestVcNoFog.inc
+Да       Да               AlphaTestEffect_VSAlphaTestVcNoFog.pdb
+Да       Да               BasicEffect_PSBasic.inc
+Да       Да               BasicEffect_PSBasic.pdb
+Да       Да               BasicEffect_PSBasicNoFog.inc
+Да       Да               BasicEffect_PSBasicNoFog.pdb
+Да       Да               BasicEffect_PSBasicPixelLighting.inc
+Да       Да               BasicEffect_PSBasicPixelLighting.pdb
+Да       Да               BasicEffect_PSBasicPixelLightingTx.inc
+Да       Да               BasicEffect_PSBasicPixelLightingTx.pdb
+Да       Да               BasicEffect_PSBasicTx.inc
+Да       Да               BasicEffect_PSBasicTx.pdb
+Да       Да               BasicEffect_PSBasicTxNoFog.inc
+Да       Да               BasicEffect_PSBasicTxNoFog.pdb
+Да       Да               BasicEffect_PSBasicVertexLighting.inc
+Да       Да               BasicEffect_PSBasicVertexLighting.pdb
+Да       Да               BasicEffect_PSBasicVertexLightingNoFog.inc
+Да       Да               BasicEffect_PSBasicVertexLightingNoFog.pdb
+Да       Да               BasicEffect_PSBasicVertexLightingTx.inc
+Да       Да               BasicEffect_PSBasicVertexLightingTx.pdb
+Да       Да               BasicEffect_PSBasicVertexLightingTxNoFog.inc
+Да       Да               BasicEffect_PSBasicVertexLightingTxNoFog.pdb
+Да       Да               BasicEffect_VSBasic.inc
+Да       Да               BasicEffect_VSBasic.pdb
+Да       Да               BasicEffect_VSBasicNoFog.inc
+Да       Да               BasicEffect_VSBasicNoFog.pdb
+Да       Да               BasicEffect_VSBasicOneLight.inc
+Да       Да               BasicEffect_VSBasicOneLight.pdb
+Да       Да               BasicEffect_VSBasicOneLightBn.inc
+Да       Да               BasicEffect_VSBasicOneLightBn.pdb
+Да       Да               BasicEffect_VSBasicOneLightTx.inc
+Да       Да               BasicEffect_VSBasicOneLightTx.pdb
+Да       Да               BasicEffect_VSBasicOneLightTxBn.inc
+Да       Да               BasicEffect_VSBasicOneLightTxBn.pdb
+Да       Да               BasicEffect_VSBasicOneLightTxVc.inc
+Да       Да               BasicEffect_VSBasicOneLightTxVc.pdb
+Да       Да               BasicEffect_VSBasicOneLightTxVcBn.inc
+Да       Да               BasicEffect_VSBasicOneLightTxVcBn.pdb
+Да       Да               BasicEffect_VSBasicOneLightVc.inc
+Да       Да               BasicEffect_VSBasicOneLightVc.pdb
+Да       Да               BasicEffect_VSBasicOneLightVcBn.inc
+Да       Да               BasicEffect_VSBasicOneLightVcBn.pdb
+Да       Да               BasicEffect_VSBasicPixelLighting.inc
+Да       Да               BasicEffect_VSBasicPixelLighting.pdb
+Да       Да               BasicEffect_VSBasicPixelLightingBn.inc
+Да       Да               BasicEffect_VSBasicPixelLightingBn.pdb
+Да       Да               BasicEffect_VSBasicPixelLightingTx.inc
+Да       Да               BasicEffect_VSBasicPixelLightingTx.pdb
+Да       Да               BasicEffect_VSBasicPixelLightingTxBn.inc
+Да       Да               BasicEffect_VSBasicPixelLightingTxBn.pdb
+Да       Да               BasicEffect_VSBasicPixelLightingTxVc.inc
+Да       Да               BasicEffect_VSBasicPixelLightingTxVc.pdb
+Да       Да               BasicEffect_VSBasicPixelLightingTxVcBn.inc
+Да       Да               BasicEffect_VSBasicPixelLightingTxVcBn.pdb
+Да       Да               BasicEffect_VSBasicPixelLightingVc.inc
+Да       Да               BasicEffect_VSBasicPixelLightingVc.pdb
+Да       Да               BasicEffect_VSBasicPixelLightingVcBn.inc
+Да       Да               BasicEffect_VSBasicPixelLightingVcBn.pdb
+Да       Да               BasicEffect_VSBasicTx.inc
+Да       Да               BasicEffect_VSBasicTx.pdb
+Да       Да               BasicEffect_VSBasicTxNoFog.inc
+Да       Да               BasicEffect_VSBasicTxNoFog.pdb
+Да       Да               BasicEffect_VSBasicTxVc.inc
+Да       Да               BasicEffect_VSBasicTxVc.pdb
+Да       Да               BasicEffect_VSBasicTxVcNoFog.inc
+Да       Да               BasicEffect_VSBasicTxVcNoFog.pdb
+Да       Да               BasicEffect_VSBasicVc.inc
+Да       Да               BasicEffect_VSBasicVc.pdb
+Да       Да               BasicEffect_VSBasicVcNoFog.inc
+Да       Да               BasicEffect_VSBasicVcNoFog.pdb
+Да       Да               BasicEffect_VSBasicVertexLighting.inc
+Да       Да               BasicEffect_VSBasicVertexLighting.pdb
+Да       Да               BasicEffect_VSBasicVertexLightingBn.inc
+Да       Да               BasicEffect_VSBasicVertexLightingBn.pdb
+Да       Да               BasicEffect_VSBasicVertexLightingTx.inc
+Да       Да               BasicEffect_VSBasicVertexLightingTx.pdb
+Да       Да               BasicEffect_VSBasicVertexLightingTxBn.inc
+Да       Да               BasicEffect_VSBasicVertexLightingTxBn.pdb
+Да       Да               BasicEffect_VSBasicVertexLightingTxVc.inc
+Да       Да               BasicEffect_VSBasicVertexLightingTxVc.pdb
+Да       Да               BasicEffect_VSBasicVertexLightingTxVcBn.inc
+Да       Да               BasicEffect_VSBasicVertexLightingTxVcBn.pdb
+Да       Да               BasicEffect_VSBasicVertexLightingVc.inc
+Да       Да               BasicEffect_VSBasicVertexLightingVc.pdb
+Да       Да               BasicEffect_VSBasicVertexLightingVcBn.inc
+Да       Да               BasicEffect_VSBasicVertexLightingVcBn.pdb
+Да       Да               DebugEffect_PSHemiAmbient.inc
+Да       Да               DebugEffect_PSHemiAmbient.pdb
+Да       Да               DebugEffect_PSRGBBiTangents.inc
+Да       Да               DebugEffect_PSRGBBiTangents.pdb
+Да       Да               DebugEffect_PSRGBNormals.inc
+Да       Да               DebugEffect_PSRGBNormals.pdb
+Да       Да               DebugEffect_PSRGBTangents.inc
+Да       Да               DebugEffect_PSRGBTangents.pdb
+Да       Да               DebugEffect_VSDebug.inc
+Да       Да               DebugEffect_VSDebug.pdb
+Да       Да               DebugEffect_VSDebugBn.inc
+Да       Да               DebugEffect_VSDebugBn.pdb
+Да       Да               DebugEffect_VSDebugBnInst.inc
+Да       Да               DebugEffect_VSDebugBnInst.pdb
+Да       Да               DebugEffect_VSDebugInst.inc
+Да       Да               DebugEffect_VSDebugInst.pdb
+Да       Да               DebugEffect_VSDebugVc.inc
+Да       Да               DebugEffect_VSDebugVc.pdb
+Да       Да               DebugEffect_VSDebugVcBn.inc
+Да       Да               DebugEffect_VSDebugVcBn.pdb
+Да       Да               DebugEffect_VSDebugVcBnInst.inc
+Да       Да               DebugEffect_VSDebugVcBnInst.pdb
+Да       Да               DebugEffect_VSDebugVcInst.inc
+Да       Да               DebugEffect_VSDebugVcInst.pdb
+Да       Да               DGSLEffect_main.inc
+Да       Да               DGSLEffect_main.pdb
+Да       Да               DGSLEffect_main1Bones.inc
+Да       Да               DGSLEffect_main1Bones.pdb
+Да       Да               DGSLEffect_main1BonesVc.inc
+Да       Да               DGSLEffect_main1BonesVc.pdb
+Да       Да               DGSLEffect_main2Bones.inc
+Да       Да               DGSLEffect_main2Bones.pdb
+Да       Да               DGSLEffect_main2BonesVc.inc
+Да       Да               DGSLEffect_main2BonesVc.pdb
+Да       Да               DGSLEffect_main4Bones.inc
+Да       Да               DGSLEffect_main4Bones.pdb
+Да       Да               DGSLEffect_main4BonesVc.inc
+Да       Да               DGSLEffect_main4BonesVc.pdb
+Да       Да               DGSLEffect_mainVc.inc
+Да       Да               DGSLEffect_mainVc.pdb
+Да       Да               DGSLLambert_main.inc
+Да       Да               DGSLLambert_main.pdb
+Да       Да               DGSLLambert_mainTk.inc
+Да       Да               DGSLLambert_mainTk.pdb
+Да       Да               DGSLLambert_mainTx.inc
+Да       Да               DGSLLambert_mainTx.pdb
+Да       Да               DGSLLambert_mainTxTk.inc
+Да       Да               DGSLLambert_mainTxTk.pdb
+Да       Да               DGSLPhong_main.inc
+Да       Да               DGSLPhong_main.pdb
+Да       Да               DGSLPhong_mainTk.inc
+Да       Да               DGSLPhong_mainTk.pdb
+Да       Да               DGSLPhong_mainTx.inc
+Да       Да               DGSLPhong_mainTx.pdb
+Да       Да               DGSLPhong_mainTxTk.inc
+Да       Да               DGSLPhong_mainTxTk.pdb
+Да       Да               DGSLUnlit_main.inc
+Да       Да               DGSLUnlit_main.pdb
+Да       Да               DGSLUnlit_mainTk.inc
+Да       Да               DGSLUnlit_mainTk.pdb
+Да       Да               DGSLUnlit_mainTx.inc
+Да       Да               DGSLUnlit_mainTx.pdb
+Да       Да               DGSLUnlit_mainTxTk.inc
+Да       Да               DGSLUnlit_mainTxTk.pdb
+Да       Да               DualTextureEffect_PSDualTexture.inc
+Да       Да               DualTextureEffect_PSDualTexture.pdb
+Да       Да               DualTextureEffect_PSDualTextureNoFog.inc
+Да       Да               DualTextureEffect_PSDualTextureNoFog.pdb
+Да       Да               DualTextureEffect_VSDualTexture.inc
+Да       Да               DualTextureEffect_VSDualTexture.pdb
+Да       Да               DualTextureEffect_VSDualTextureNoFog.inc
+Да       Да               DualTextureEffect_VSDualTextureNoFog.pdb
+Да       Да               DualTextureEffect_VSDualTextureVc.inc
+Да       Да               DualTextureEffect_VSDualTextureVc.pdb
+Да       Да               DualTextureEffect_VSDualTextureVcNoFog.inc
+Да       Да               DualTextureEffect_VSDualTextureVcNoFog.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMap.inc
+Да       Да               EnvironmentMapEffect_PSEnvMap.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLighting.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLighting.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingFresnel.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingFresnel.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingFresnelNoFog.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingFresnelNoFog.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingNoFog.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapDualParabolaPixelLightingNoFog.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapNoFog.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapNoFog.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapPixelLighting.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapPixelLighting.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapPixelLightingFresnel.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapPixelLightingFresnel.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapPixelLightingFresnelNoFog.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapPixelLightingFresnelNoFog.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapPixelLightingNoFog.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapPixelLightingNoFog.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapSpecular.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapSpecular.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapSpecularNoFog.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapSpecularNoFog.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapSpherePixelLighting.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapSpherePixelLighting.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapSpherePixelLightingFresnel.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapSpherePixelLightingFresnel.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapSpherePixelLightingFresnelNoFog.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapSpherePixelLightingFresnelNoFog.pdb
+Да       Да               EnvironmentMapEffect_PSEnvMapSpherePixelLightingNoFog.inc
+Да       Да               EnvironmentMapEffect_PSEnvMapSpherePixelLightingNoFog.pdb
+Да       Да               EnvironmentMapEffect_VSEnvMap.inc
+Да       Да               EnvironmentMapEffect_VSEnvMap.pdb
+Да       Да               EnvironmentMapEffect_VSEnvMapBn.inc
+Да       Да               EnvironmentMapEffect_VSEnvMapBn.pdb
+Да       Да               EnvironmentMapEffect_VSEnvMapFresnel.inc
+Да       Да               EnvironmentMapEffect_VSEnvMapFresnel.pdb
+Да       Да               EnvironmentMapEffect_VSEnvMapFresnelBn.inc
+Да       Да               EnvironmentMapEffect_VSEnvMapFresnelBn.pdb
+Да       Да               EnvironmentMapEffect_VSEnvMapOneLight.inc
+Да       Да               EnvironmentMapEffect_VSEnvMapOneLight.pdb
+Да       Да               EnvironmentMapEffect_VSEnvMapOneLightBn.inc
+Да       Да               EnvironmentMapEffect_VSEnvMapOneLightBn.pdb
+Да       Да               EnvironmentMapEffect_VSEnvMapOneLightFresnel.inc
+Да       Да               EnvironmentMapEffect_VSEnvMapOneLightFresnel.pdb
+Да       Да               EnvironmentMapEffect_VSEnvMapOneLightFresnelBn.inc
+Да       Да               EnvironmentMapEffect_VSEnvMapOneLightFresnelBn.pdb
+Да       Да               EnvironmentMapEffect_VSEnvMapPixelLighting.inc
+Да       Да               EnvironmentMapEffect_VSEnvMapPixelLighting.pdb
+Да       Да               EnvironmentMapEffect_VSEnvMapPixelLightingBn.inc
+Да       Да               EnvironmentMapEffect_VSEnvMapPixelLightingBn.pdb
+Да       Да               EnvironmentMapEffect_VSEnvMapPixelLightingBnSM4.inc
+Да       Да               EnvironmentMapEffect_VSEnvMapPixelLightingBnSM4.pdb
+Да       Да               EnvironmentMapEffect_VSEnvMapPixelLightingSM4.inc
+Да       Да               EnvironmentMapEffect_VSEnvMapPixelLightingSM4.pdb
+Да       Да               NormalMapEffect_PSNormalPixelLightingTx.inc
+Да       Да               NormalMapEffect_PSNormalPixelLightingTx.pdb
+Да       Да               NormalMapEffect_PSNormalPixelLightingTxNoFog.inc
+Да       Да               NormalMapEffect_PSNormalPixelLightingTxNoFog.pdb
+Да       Да               NormalMapEffect_PSNormalPixelLightingTxNoFogSpec.inc
+Да       Да               NormalMapEffect_PSNormalPixelLightingTxNoFogSpec.pdb
+Да       Да               NormalMapEffect_PSNormalPixelLightingTxNoSpec.inc
+Да       Да               NormalMapEffect_PSNormalPixelLightingTxNoSpec.pdb
+Да       Да               NormalMapEffect_VSNormalPixelLightingTx.inc
+Да       Да               NormalMapEffect_VSNormalPixelLightingTx.pdb
+Да       Да               NormalMapEffect_VSNormalPixelLightingTxBn.inc
+Да       Да               NormalMapEffect_VSNormalPixelLightingTxBn.pdb
+Да       Да               NormalMapEffect_VSNormalPixelLightingTxBnInst.inc
+Да       Да               NormalMapEffect_VSNormalPixelLightingTxBnInst.pdb
+Да       Да               NormalMapEffect_VSNormalPixelLightingTxInst.inc
+Да       Да               NormalMapEffect_VSNormalPixelLightingTxInst.pdb
+Да       Да               NormalMapEffect_VSNormalPixelLightingTxVc.inc
+Да       Да               NormalMapEffect_VSNormalPixelLightingTxVc.pdb
+Да       Да               NormalMapEffect_VSNormalPixelLightingTxVcBn.inc
+Да       Да               NormalMapEffect_VSNormalPixelLightingTxVcBn.pdb
+Да       Да               NormalMapEffect_VSNormalPixelLightingTxVcBnInst.inc
+Да       Да               NormalMapEffect_VSNormalPixelLightingTxVcBnInst.pdb
+Да       Да               NormalMapEffect_VSNormalPixelLightingTxVcInst.inc
+Да       Да               NormalMapEffect_VSNormalPixelLightingTxVcInst.pdb
+Да       Да               NormalMapEffect_VSSkinnedPixelLightingTx.inc
+Да       Да               NormalMapEffect_VSSkinnedPixelLightingTx.pdb
+Да       Да               NormalMapEffect_VSSkinnedPixelLightingTxBn.inc
+Да       Да               NormalMapEffect_VSSkinnedPixelLightingTxBn.pdb
+Да       Да               PBREffect_PSConstant.inc
+Да       Да               PBREffect_PSConstant.pdb
+Да       Да               PBREffect_PSTextured.inc
+Да       Да               PBREffect_PSTextured.pdb
+Да       Да               PBREffect_PSTexturedEmissive.inc
+Да       Да               PBREffect_PSTexturedEmissive.pdb
+Да       Да               PBREffect_PSTexturedEmissiveVelocity.inc
+Да       Да               PBREffect_PSTexturedEmissiveVelocity.pdb
+Да       Да               PBREffect_PSTexturedVelocity.inc
+Да       Да               PBREffect_PSTexturedVelocity.pdb
+Да       Да               PBREffect_VSConstant.inc
+Да       Да               PBREffect_VSConstant.pdb
+Да       Да               PBREffect_VSConstantBn.inc
+Да       Да               PBREffect_VSConstantBn.pdb
+Да       Да               PBREffect_VSConstantBnInst.inc
+Да       Да               PBREffect_VSConstantBnInst.pdb
+Да       Да               PBREffect_VSConstantInst.inc
+Да       Да               PBREffect_VSConstantInst.pdb
+Да       Да               PBREffect_VSConstantVelocity.inc
+Да       Да               PBREffect_VSConstantVelocity.pdb
+Да       Да               PBREffect_VSConstantVelocityBn.inc
+Да       Да               PBREffect_VSConstantVelocityBn.pdb
+Да       Да               PBREffect_VSSkinned.inc
+Да       Да               PBREffect_VSSkinned.pdb
+Да       Да               PBREffect_VSSkinnedBn.inc
+Да       Да               PBREffect_VSSkinnedBn.pdb
+Да       Да               PostProcess_PSBloomBlur.inc
+Да       Да               PostProcess_PSBloomBlur.pdb
+Да       Да               PostProcess_PSBloomCombine.inc
+Да       Да               PostProcess_PSBloomCombine.pdb
+Да       Да               PostProcess_PSBloomExtract.inc
+Да       Да               PostProcess_PSBloomExtract.pdb
+Да       Да               PostProcess_PSCopy.inc
+Да       Да               PostProcess_PSCopy.pdb
+Да       Да               PostProcess_PSDownScale2x2.inc
+Да       Да               PostProcess_PSDownScale2x2.pdb
+Да       Да               PostProcess_PSDownScale4x4.inc
+Да       Да               PostProcess_PSDownScale4x4.pdb
+Да       Да               PostProcess_PSGaussianBlur5x5.inc
+Да       Да               PostProcess_PSGaussianBlur5x5.pdb
+Да       Да               PostProcess_PSMerge.inc
+Да       Да               PostProcess_PSMerge.pdb
+Да       Да               PostProcess_PSMonochrome.inc
+Да       Да               PostProcess_PSMonochrome.pdb
+Да       Да               PostProcess_PSSepia.inc
+Да       Да               PostProcess_PSSepia.pdb
+Да       Да               PostProcess_VSQuad.inc
+Да       Да               PostProcess_VSQuad.pdb
+Да       Да               SkinnedEffect_PSSkinnedPixelLighting.inc
+Да       Да               SkinnedEffect_PSSkinnedPixelLighting.pdb
+Да       Да               SkinnedEffect_PSSkinnedVertexLighting.inc
+Да       Да               SkinnedEffect_PSSkinnedVertexLighting.pdb
+Да       Да               SkinnedEffect_PSSkinnedVertexLightingNoFog.inc
+Да       Да               SkinnedEffect_PSSkinnedVertexLightingNoFog.pdb
+Да       Да               SkinnedEffect_VSSkinnedOneLightFourBones.inc
+Да       Да               SkinnedEffect_VSSkinnedOneLightFourBones.pdb
+Да       Да               SkinnedEffect_VSSkinnedOneLightFourBonesBn.inc
+Да       Да               SkinnedEffect_VSSkinnedOneLightFourBonesBn.pdb
+Да       Да               SkinnedEffect_VSSkinnedOneLightOneBone.inc
+Да       Да               SkinnedEffect_VSSkinnedOneLightOneBone.pdb
+Да       Да               SkinnedEffect_VSSkinnedOneLightOneBoneBn.inc
+Да       Да               SkinnedEffect_VSSkinnedOneLightOneBoneBn.pdb
+Да       Да               SkinnedEffect_VSSkinnedOneLightTwoBones.inc
+Да       Да               SkinnedEffect_VSSkinnedOneLightTwoBones.pdb
+Да       Да               SkinnedEffect_VSSkinnedOneLightTwoBonesBn.inc
+Да       Да               SkinnedEffect_VSSkinnedOneLightTwoBonesBn.pdb
+Да       Да               SkinnedEffect_VSSkinnedPixelLightingFourBones.inc
+Да       Да               SkinnedEffect_VSSkinnedPixelLightingFourBones.pdb
+Да       Да               SkinnedEffect_VSSkinnedPixelLightingFourBonesBn.inc
+Да       Да               SkinnedEffect_VSSkinnedPixelLightingFourBonesBn.pdb
+Да       Да               SkinnedEffect_VSSkinnedPixelLightingOneBone.inc
+Да       Да               SkinnedEffect_VSSkinnedPixelLightingOneBone.pdb
+Да       Да               SkinnedEffect_VSSkinnedPixelLightingOneBoneBn.inc
+Да       Да               SkinnedEffect_VSSkinnedPixelLightingOneBoneBn.pdb
+Да       Да               SkinnedEffect_VSSkinnedPixelLightingTwoBones.inc
+Да       Да               SkinnedEffect_VSSkinnedPixelLightingTwoBones.pdb
+Да       Да               SkinnedEffect_VSSkinnedPixelLightingTwoBonesBn.inc
+Да       Да               SkinnedEffect_VSSkinnedPixelLightingTwoBonesBn.pdb
+Да       Да               SkinnedEffect_VSSkinnedVertexLightingFourBones.inc
+Да       Да               SkinnedEffect_VSSkinnedVertexLightingFourBones.pdb
+Да       Да               SkinnedEffect_VSSkinnedVertexLightingFourBonesBn.inc
+Да       Да               SkinnedEffect_VSSkinnedVertexLightingFourBonesBn.pdb
+Да       Да               SkinnedEffect_VSSkinnedVertexLightingOneBone.inc
+Да       Да               SkinnedEffect_VSSkinnedVertexLightingOneBone.pdb
+Да       Да               SkinnedEffect_VSSkinnedVertexLightingOneBoneBn.inc
+Да       Да               SkinnedEffect_VSSkinnedVertexLightingOneBoneBn.pdb
+Да       Да               SkinnedEffect_VSSkinnedVertexLightingTwoBones.inc
+Да       Да               SkinnedEffect_VSSkinnedVertexLightingTwoBones.pdb
+Да       Да               SkinnedEffect_VSSkinnedVertexLightingTwoBonesBn.inc
+Да       Да               SkinnedEffect_VSSkinnedVertexLightingTwoBonesBn.pdb
+Да       Да               SpriteEffect_SpritePixelShader.inc
+Да       Да               SpriteEffect_SpritePixelShader.pdb
+Да       Да               SpriteEffect_SpriteVertexShader.inc
+Да       Да               SpriteEffect_SpriteVertexShader.pdb
+Да       Да               ToneMap_PSACESFilmic.inc
+Да       Да               ToneMap_PSACESFilmic.pdb
+Да       Да               ToneMap_PSACESFilmic_SRGB.inc
+Да       Да               ToneMap_PSACESFilmic_SRGB.pdb
+Да       Да               ToneMap_PSCopy.inc
+Да       Да               ToneMap_PSCopy.pdb
+Да       Да               ToneMap_PSHDR10.inc
+Да       Да               ToneMap_PSHDR10.pdb
+Да       Да               ToneMap_PSReinhard.inc
+Да       Да               ToneMap_PSReinhard.pdb
+Да       Да               ToneMap_PSReinhard_SRGB.inc
+Да       Да               ToneMap_PSReinhard_SRGB.pdb
+Да       Да               ToneMap_PSSaturate.inc
+Да       Да               ToneMap_PSSaturate.pdb
+Да       Да               ToneMap_PSSaturate_SRGB.inc
+Да       Да               ToneMap_PSSaturate_SRGB.pdb
+Да       Да               ToneMap_PS_SRGB.inc
+Да       Да               ToneMap_PS_SRGB.pdb
+Да       Да               ToneMap_VSQuad.inc
+Да       Да               ToneMap_VSQuad.pdb
+Да       Да               
+Да       ДдДЯДЯДЯXWBTool
+Да               CmdLineHelpers.h
+Да               directx.ico
+Да               settings.manifest
+Да               xwbtool.cpp
+Да               xwbtool.rc
+Да               xwbtool_Desktop_2019.vcxproj
+Да               xwbtool_Desktop_2019.vcxproj.filters
+Да               XWBTool_Desktop_2019.vcxproj.user
+Да               xwbtool_Desktop_2022.vcxproj
+Да               xwbtool_Desktop_2022.vcxproj.filters
+Да               
+ДеДЯДЯДЯimgui
+Да       imconfig.h
+Да       imgui.cpp
+Да       imgui.h
+Да       imgui_draw.cpp
+Да       imgui_impl_dx11.cpp
+Да       imgui_impl_dx11.h
+Да       imgui_impl_win32.cpp
+Да       imgui_impl_win32.h
+Да       imgui_internal.h
+Да       imgui_ja_gryph_ranges.cpp
+Да       imgui_widgets.cpp
+Да       imstb_rectpack.h
+Да       imstb_textedit.h
+Да       imstb_truetype.h
+Да       
+ДеДЯДЯДЯimgui-docking
+Да       imconfig.h
+Да       imgui.cpp
+Да       imgui.h
+Да       imgui_demo.cpp
+Да       imgui_draw.cpp
+Да       imgui_impl_dx11.cpp
+Да       imgui_impl_dx11.h
+Да       imgui_impl_win32.cpp
+Да       imgui_impl_win32.h
+Да       imgui_internal.h
+Да       imgui_widgets.cpp
+Да       imstb_rectpack.h
+Да       imstb_textedit.h
+Да       imstb_truetype.h
+Да       
+ДеДЯДЯДЯImGuizmo
+Да       ImCurveEdit.cpp
+Да       ImCurveEdit.h
+Да       ImGradient.cpp
+Да       ImGradient.h
+Да       ImGuizmo.cpp
+Да       ImGuizmo.h
+Да       ImSequencer.cpp
+Да       ImSequencer.h
+Да       
+ДеДЯДЯДЯjson-develop
+Да   ДдДЯДЯДЯjson-develop
+Да       ДеДЯДЯДЯ.github
+Да       Да   ДеДЯДЯДЯexternal_ci
+Да       Да   ДеДЯДЯДЯISSUE_TEMPLATE
+Да       Да   ДдДЯДЯДЯworkflows
+Да       ДеДЯДЯДЯ.reuse
+Да       Да   ДдДЯДЯДЯtemplates
+Да       ДеДЯДЯДЯcmake
+Да       Да   ДеДЯДЯДЯrequirements
+Да       Да   ДдДЯДЯДЯscripts
+Да       ДеДЯДЯДЯdocs
+Да       Да   ДеДЯДЯДЯdocset
+Да       Да   ДдДЯДЯДЯmkdocs
+Да       Да       ДеДЯДЯДЯdocs
+Да       Да       Да   ДеДЯДЯДЯapi
+Да       Да       Да   Да   ДеДЯДЯДЯadl_serializer
+Да       Да       Да   Да   ДеДЯДЯДЯbasic_json
+Да       Да       Да   Да   ДеДЯДЯДЯbyte_container_with_subtype
+Да       Да       Да   Да   ДеДЯДЯДЯjson_pointer
+Да       Да       Да   Да   ДеДЯДЯДЯjson_sax
+Да       Да       Да   Да   ДдДЯДЯДЯmacros
+Да       Да       Да   ДеДЯДЯДЯcommunity
+Да       Да       Да   ДеДЯДЯДЯcss
+Да       Да       Да   ДеДЯДЯДЯexamples
+Да       Да       Да   ДеДЯДЯДЯfeatures
+Да       Да       Да   Да   ДеДЯДЯДЯbinary_formats
+Да       Да       Да   Да   ДеДЯДЯДЯelement_access
+Да       Да       Да   Да   ДеДЯДЯДЯparsing
+Да       Да       Да   Да   ДдДЯДЯДЯtypes
+Да       Да       Да   ДеДЯДЯДЯhome
+Да       Да       Да   ДеДЯДЯДЯimages
+Да       Да       Да   Да   ДдДЯДЯДЯpackage_managers
+Да       Да       Да   ДдДЯДЯДЯintegration
+Да       Да       Да       ДеДЯДЯДЯbazel
+Да       Да       Да       ДеДЯДЯДЯcget
+Да       Да       Да       ДеДЯДЯДЯconan
+Да       Да       Да       ДеДЯДЯДЯconda
+Да       Да       Да       ДеДЯДЯДЯcpm
+Да       Да       Да       ДеДЯДЯДЯhomebrew
+Да       Да       Да       ДеДЯДЯДЯhunter
+Да       Да       Да       ДеДЯДЯДЯmacports
+Да       Да       Да       ДеДЯДЯДЯmeson
+Да       Да       Да       ДеДЯДЯДЯnuget
+Да       Да       Да       ДеДЯДЯДЯspack
+Да       Да       Да       ДеДЯДЯДЯvcpkg
+Да       Да       Да       ДдДЯДЯДЯxmake
+Да       Да       ДеДЯДЯДЯincludes
+Да       Да       ДдДЯДЯДЯscripts
+Да       ДеДЯДЯДЯinclude
+Да       Да   ДдДЯДЯДЯnlohmann
+Да       Да       ДеДЯДЯДЯdetail
+Да       Да       Да   ДеДЯДЯДЯconversions
+Да       Да       Да   ДеДЯДЯДЯinput
+Да       Да       Да   ДеДЯДЯДЯiterators
+Да       Да       Да   ДеДЯДЯДЯmeta
+Да       Да       Да   Да   ДдДЯДЯДЯcall_std
+Да       Да       Да   ДдДЯДЯДЯoutput
+Да       Да       ДдДЯДЯДЯthirdparty
+Да       Да           ДдДЯДЯДЯhedley
+Да       ДеДЯДЯДЯLICENSES
+Да       ДеДЯДЯДЯsingle_include
+Да       Да   ДдДЯДЯДЯnlohmann
+Да       ДеДЯДЯДЯsrc
+Да       Да   ДдДЯДЯДЯmodules
+Да       ДеДЯДЯДЯtests
+Да       Да   ДеДЯДЯДЯabi
+Да       Да   Да   ДеДЯДЯДЯconfig
+Да       Да   Да   ДеДЯДЯДЯdiag
+Да       Да   Да   ДеДЯДЯДЯinclude
+Да       Да   Да   Да   ДдДЯДЯДЯnlohmann
+Да       Да   Да   ДдДЯДЯДЯinline_ns
+Да       Да   ДеДЯДЯДЯbenchmarks
+Да       Да   Да   ДдДЯДЯДЯsrc
+Да       Да   ДеДЯДЯДЯcmake_add_subdirectory
+Да       Да   Да   ДдДЯДЯДЯproject
+Да       Да   ДеДЯДЯДЯcmake_fetch_content
+Да       Да   Да   ДдДЯДЯДЯproject
+Да       Да   ДеДЯДЯДЯcmake_fetch_content2
+Да       Да   Да   ДдДЯДЯДЯproject
+Да       Да   ДеДЯДЯДЯcmake_import
+Да       Да   Да   ДдДЯДЯДЯproject
+Да       Да   ДеДЯДЯДЯcmake_import_minver
+Да       Да   Да   ДдДЯДЯДЯproject
+Да       Да   ДеДЯДЯДЯcmake_target_include_directories
+Да       Да   Да   ДдДЯДЯДЯproject
+Да       Да   ДеДЯДЯДЯcuda_example
+Да       Да   ДеДЯДЯДЯmodule_cpp20
+Да       Да   ДеДЯДЯДЯreports
+Да       Да   Да   ДеДЯДЯДЯ2016-08-29-fuzz
+Да       Да   Да   ДеДЯДЯДЯ2016-09-09-nativejson_benchmark
+Да       Да   Да   ДдДЯДЯДЯ2016-10-02-fuzz
+Да       Да   ДеДЯДЯДЯsrc
+Да       Да   ДдДЯДЯДЯthirdparty
+Да       Да       ДеДЯДЯДЯdoctest
+Да       Да       ДеДЯДЯДЯfifo_map
+Да       Да       ДеДЯДЯДЯFuzzer
+Да       Да       Да   ДеДЯДЯДЯafl
+Да       Да       Да   ДеДЯДЯДЯstandalone
+Да       Да       Да   ДдДЯДЯДЯtest
+Да       Да       Да       ДеДЯДЯДЯno-coverage
+Да       Да       Да       ДеДЯДЯДЯubsan
+Да       Да       Да       ДеДЯДЯДЯuninstrumented
+Да       Да       Да       ДдДЯДЯДЯunit
+Да       Да       ДдДЯДЯДЯimapdl
+Да       ДдДЯДЯДЯtools
+Да           ДеДЯДЯДЯamalgamate
+Да           ДеДЯДЯДЯastyle
+Да           ДеДЯДЯДЯgdb_pretty_printer
+Да           ДеДЯДЯДЯgenerate_natvis
+Да           ДеДЯДЯДЯmacro_builder
+Да           ДдДЯДЯДЯserve_header
+ДдДЯДЯДЯtinygltf-release
+    ДдДЯДЯДЯtinygltf-release
+        Да   .clang-format
+        Да   .gitignore
+        Да   CMakeLists.txt
+        Да   examples.bat
+        Да   json.hpp
+        Да   LICENSE
+        Да   loader_example.cc
+        Да   Makefile
+        Да   premake5.lua
+        Да   README.md
+        Да   SECURITY.md
+        Да   stb_image.h
+        Да   stb_image_write.h
+        Да   test_runner.py
+        Да   tinygltf_json.h
+        Да   tiny_gltf.cc
+        Да   tiny_gltf.h
+        Да   tiny_gltf_v3.h
+        Да   vcsetup.bat
+        Да   
+        ДеДЯДЯДЯ.github
+        Да   Да   FUNDING.yml
+        Да   Да   PULL_REQUEST_TEMPLATE.md
+        Да   Да   
+        Да   ДеДЯДЯДЯinstructions
+        Да   Да       copilot-instructions.md
+        Да   Да       
+        Да   ДеДЯДЯДЯISSUE_TEMPLATE
+        Да   Да       config.yml
+        Да   Да       issue-report.md
+        Да   Да       
+        Да   ДдДЯДЯДЯworkflows
+        Да           c-cpp.yml
+        Да           ci.yml
+        Да           codeql-analysis.yml
+        Да           mingw-w64-msys2.yml
+        Да           
+        ДеДЯДЯДЯbenchmark
+        Да       bench_v3.cpp
+        Да       gen_synthetic.cpp
+        Да       Makefile
+        Да       
+        ДеДЯДЯДЯcmake
+        Да       TinyGLTFConfig.cmake.in
+        Да       
+        ДеДЯДЯДЯdeps
+        Да       cpplint.py
+        Да       
+        ДеДЯДЯДЯexamples
+        Да   ДеДЯДЯДЯbasic
+        Да   Да   Да   .gitignore
+        Да   Да   Да   main.cpp
+        Да   Да   Да   premake5.lua
+        Да   Да   Да   README.md
+        Да   Да   Да   screenshot.JPG
+        Да   Да   Да   shaders.cpp
+        Да   Да   Да   shaders.h
+        Да   Да   Да   window.cpp
+        Да   Да   Да   window.h
+        Да   Да   Да   
+        Да   Да   ДдДЯДЯДЯbasic
+        Да   Да           basic.sln
+        Да   Да           basic.vcxproj
+        Да   Да           basic.vcxproj.filters
+        Да   Да           basic.vcxproj.user
+        Да   Да           packages.config
+        Да   Да           
+        Да   ДеДЯДЯДЯbuild-gltf
+        Да   Да       CMakeLists.txt
+        Да   Да       create_triangle_gltf.cpp
+        Да   Да       Makefile
+        Да   Да       
+        Да   ДеДЯДЯДЯcommon
+        Да   Да   Да   findOpenGLGlewGlut.lua
+        Да   Да   Да   LICENSE.lodepng
+        Да   Да   Да   lodepng.cpp
+        Да   Да   Да   lodepng.h
+        Да   Да   Да   matrix.cc
+        Да   Да   Да   matrix.h
+        Да   Да   Да   picojson.h
+        Да   Да   Да   README.md
+        Да   Да   Да   stb_image_write.h
+        Да   Да   Да   tinyexr.h
+        Да   Да   Да   tiny_obj_loader.cc
+        Да   Да   Да   tiny_obj_loader.h
+        Да   Да   Да   trackball.cc
+        Да   Да   Да   trackball.h
+        Да   Да   Да   
+        Да   Да   ДеДЯДЯДЯglm
+        Да   Да   Да   Да   .appveyor.yml
+        Да   Да   Да   Да   .gitignore
+        Да   Да   Да   Да   .travis.yml
+        Да   Да   Да   Да   CMakeLists.txt
+        Да   Да   Да   Да   manual.md
+        Да   Да   Да   Да   readme.md
+        Да   Да   Да   Да   
+        Да   Да   Да   ДеДЯДЯДЯcmake
+        Да   Да   Да   Да       glm.pc.in
+        Да   Да   Да   Да       glmBuildConfig.cmake.in
+        Да   Да   Да   Да       glmConfig.cmake.in
+        Да   Да   Да   Да       
+        Да   Да   Да   ДеДЯДЯДЯdoc
+        Да   Да   Да   Да   Да   man.doxy
+        Да   Да   Да   Да   Да   pages.doxy
+        Да   Да   Да   Да   Да   
+        Да   Да   Да   Да   ДеДЯДЯДЯapi
+        Да   Да   Да   Да   Да   Да   a00001.html
+        Да   Да   Да   Да   Да   Да   a00001_source.html
+        Да   Да   Да   Да   Да   Да   a00002.html
+        Да   Да   Да   Да   Да   Да   a00002_source.html
+        Да   Да   Да   Да   Да   Да   a00003.html
+        Да   Да   Да   Да   Да   Да   a00003_source.html
+        Да   Да   Да   Да   Да   Да   a00004.html
+        Да   Да   Да   Да   Да   Да   a00004_source.html
+        Да   Да   Да   Да   Да   Да   a00005.html
+        Да   Да   Да   Да   Да   Да   a00005_source.html
+        Да   Да   Да   Да   Да   Да   a00006.html
+        Да   Да   Да   Да   Да   Да   a00006_source.html
+        Да   Да   Да   Да   Да   Да   a00007.html
+        Да   Да   Да   Да   Да   Да   a00007_source.html
+        Да   Да   Да   Да   Да   Да   a00008.html
+        Да   Да   Да   Да   Да   Да   a00008_source.html
+        Да   Да   Да   Да   Да   Да   a00009.html
+        Да   Да   Да   Да   Да   Да   a00009_source.html
+        Да   Да   Да   Да   Да   Да   a00010.html
+        Да   Да   Да   Да   Да   Да   a00010_source.html
+        Да   Да   Да   Да   Да   Да   a00011.html
+        Да   Да   Да   Да   Да   Да   a00011_source.html
+        Да   Да   Да   Да   Да   Да   a00012.html
+        Да   Да   Да   Да   Да   Да   a00012_source.html
+        Да   Да   Да   Да   Да   Да   a00013.html
+        Да   Да   Да   Да   Да   Да   a00013_source.html
+        Да   Да   Да   Да   Да   Да   a00014.html
+        Да   Да   Да   Да   Да   Да   a00014_source.html
+        Да   Да   Да   Да   Да   Да   a00015.html
+        Да   Да   Да   Да   Да   Да   a00015_source.html
+        Да   Да   Да   Да   Да   Да   a00016.html
+        Да   Да   Да   Да   Да   Да   a00016_source.html
+        Да   Да   Да   Да   Да   Да   a00017.html
+        Да   Да   Да   Да   Да   Да   a00017_source.html
+        Да   Да   Да   Да   Да   Да   a00018.html
+        Да   Да   Да   Да   Да   Да   a00018_source.html
+        Да   Да   Да   Да   Да   Да   a00019.html
+        Да   Да   Да   Да   Да   Да   a00019_source.html
+        Да   Да   Да   Да   Да   Да   a00020.html
+        Да   Да   Да   Да   Да   Да   a00020_source.html
+        Да   Да   Да   Да   Да   Да   a00021.html
+        Да   Да   Да   Да   Да   Да   a00021_source.html
+        Да   Да   Да   Да   Да   Да   a00022.html
+        Да   Да   Да   Да   Да   Да   a00022_source.html
+        Да   Да   Да   Да   Да   Да   a00023.html
+        Да   Да   Да   Да   Да   Да   a00023_source.html
+        Да   Да   Да   Да   Да   Да   a00024.html
+        Да   Да   Да   Да   Да   Да   a00024_source.html
+        Да   Да   Да   Да   Да   Да   a00025.html
+        Да   Да   Да   Да   Да   Да   a00025_source.html
+        Да   Да   Да   Да   Да   Да   a00026.html
+        Да   Да   Да   Да   Да   Да   a00026_source.html
+        Да   Да   Да   Да   Да   Да   a00027.html
+        Да   Да   Да   Да   Да   Да   a00027_source.html
+        Да   Да   Да   Да   Да   Да   a00028.html
+        Да   Да   Да   Да   Да   Да   a00028_source.html
+        Да   Да   Да   Да   Да   Да   a00029.html
+        Да   Да   Да   Да   Да   Да   a00029_source.html
+        Да   Да   Да   Да   Да   Да   a00030.html
+        Да   Да   Да   Да   Да   Да   a00030_source.html
+        Да   Да   Да   Да   Да   Да   a00031.html
+        Да   Да   Да   Да   Да   Да   a00031_source.html
+        Да   Да   Да   Да   Да   Да   a00032.html
+        Да   Да   Да   Да   Да   Да   a00032_source.html
+        Да   Да   Да   Да   Да   Да   a00033.html
+        Да   Да   Да   Да   Да   Да   a00033_source.html
+        Да   Да   Да   Да   Да   Да   a00034.html
+        Да   Да   Да   Да   Да   Да   a00034_source.html
+        Да   Да   Да   Да   Да   Да   a00035.html
+        Да   Да   Да   Да   Да   Да   a00035_source.html
+        Да   Да   Да   Да   Да   Да   a00036.html
+        Да   Да   Да   Да   Да   Да   a00036_source.html
+        Да   Да   Да   Да   Да   Да   a00037.html
+        Да   Да   Да   Да   Да   Да   a00037_source.html
+        Да   Да   Да   Да   Да   Да   a00038.html
+        Да   Да   Да   Да   Да   Да   a00038_source.html
+        Да   Да   Да   Да   Да   Да   a00039.html
+        Да   Да   Да   Да   Да   Да   a00039_source.html
+        Да   Да   Да   Да   Да   Да   a00040.html
+        Да   Да   Да   Да   Да   Да   a00040_source.html
+        Да   Да   Да   Да   Да   Да   a00041.html
+        Да   Да   Да   Да   Да   Да   a00041_source.html
+        Да   Да   Да   Да   Да   Да   a00042.html
+        Да   Да   Да   Да   Да   Да   a00042_source.html
+        Да   Да   Да   Да   Да   Да   a00043.html
+        Да   Да   Да   Да   Да   Да   a00043_source.html
+        Да   Да   Да   Да   Да   Да   a00044.html
+        Да   Да   Да   Да   Да   Да   a00044_source.html
+        Да   Да   Да   Да   Да   Да   a00045.html
+        Да   Да   Да   Да   Да   Да   a00045_source.html
+        Да   Да   Да   Да   Да   Да   a00046.html
+        Да   Да   Да   Да   Да   Да   a00046_source.html
+        Да   Да   Да   Да   Да   Да   a00047.html
+        Да   Да   Да   Да   Да   Да   a00047_source.html
+        Да   Да   Да   Да   Да   Да   a00048.html
+        Да   Да   Да   Да   Да   Да   a00048_source.html
+        Да   Да   Да   Да   Да   Да   a00049.html
+        Да   Да   Да   Да   Да   Да   a00049_source.html
+        Да   Да   Да   Да   Да   Да   a00050.html
+        Да   Да   Да   Да   Да   Да   a00050_source.html
+        Да   Да   Да   Да   Да   Да   a00051_source.html
+        Да   Да   Да   Да   Да   Да   a00052.html
+        Да   Да   Да   Да   Да   Да   a00052_source.html
+        Да   Да   Да   Да   Да   Да   a00053.html
+        Да   Да   Да   Да   Да   Да   a00053_source.html
+        Да   Да   Да   Да   Да   Да   a00054.html
+        Да   Да   Да   Да   Да   Да   a00054_source.html
+        Да   Да   Да   Да   Да   Да   a00055.html
+        Да   Да   Да   Да   Да   Да   a00055_source.html
+        Да   Да   Да   Да   Да   Да   a00056.html
+        Да   Да   Да   Да   Да   Да   a00056_source.html
+        Да   Да   Да   Да   Да   Да   a00057.html
+        Да   Да   Да   Да   Да   Да   a00057_source.html
+        Да   Да   Да   Да   Да   Да   a00058.html
+        Да   Да   Да   Да   Да   Да   a00058_source.html
+        Да   Да   Да   Да   Да   Да   a00059.html
+        Да   Да   Да   Да   Да   Да   a00059_source.html
+        Да   Да   Да   Да   Да   Да   a00060.html
+        Да   Да   Да   Да   Да   Да   a00060_source.html
+        Да   Да   Да   Да   Да   Да   a00061.html
+        Да   Да   Да   Да   Да   Да   a00061_source.html
+        Да   Да   Да   Да   Да   Да   a00062.html
+        Да   Да   Да   Да   Да   Да   a00062_source.html
+        Да   Да   Да   Да   Да   Да   a00063.html
+        Да   Да   Да   Да   Да   Да   a00063_source.html
+        Да   Да   Да   Да   Да   Да   a00064.html
+        Да   Да   Да   Да   Да   Да   a00064_source.html
+        Да   Да   Да   Да   Да   Да   a00065.html
+        Да   Да   Да   Да   Да   Да   a00065_source.html
+        Да   Да   Да   Да   Да   Да   a00066.html
+        Да   Да   Да   Да   Да   Да   a00066_source.html
+        Да   Да   Да   Да   Да   Да   a00067.html
+        Да   Да   Да   Да   Да   Да   a00067_source.html
+        Да   Да   Да   Да   Да   Да   a00068.html
+        Да   Да   Да   Да   Да   Да   a00068_source.html
+        Да   Да   Да   Да   Да   Да   a00069.html
+        Да   Да   Да   Да   Да   Да   a00069_source.html
+        Да   Да   Да   Да   Да   Да   a00070.html
+        Да   Да   Да   Да   Да   Да   a00070_source.html
+        Да   Да   Да   Да   Да   Да   a00071.html
+        Да   Да   Да   Да   Да   Да   a00071_source.html
+        Да   Да   Да   Да   Да   Да   a00072.html
+        Да   Да   Да   Да   Да   Да   a00072_source.html
+        Да   Да   Да   Да   Да   Да   a00073.html
+        Да   Да   Да   Да   Да   Да   a00073_source.html
+        Да   Да   Да   Да   Да   Да   a00074.html
+        Да   Да   Да   Да   Да   Да   a00074_source.html
+        Да   Да   Да   Да   Да   Да   a00075.html
+        Да   Да   Да   Да   Да   Да   a00075_source.html
+        Да   Да   Да   Да   Да   Да   a00076.html
+        Да   Да   Да   Да   Да   Да   a00076_source.html
+        Да   Да   Да   Да   Да   Да   a00077.html
+        Да   Да   Да   Да   Да   Да   a00077_source.html
+        Да   Да   Да   Да   Да   Да   a00078.html
+        Да   Да   Да   Да   Да   Да   a00078_source.html
+        Да   Да   Да   Да   Да   Да   a00079.html
+        Да   Да   Да   Да   Да   Да   a00079_source.html
+        Да   Да   Да   Да   Да   Да   a00080.html
+        Да   Да   Да   Да   Да   Да   a00080_source.html
+        Да   Да   Да   Да   Да   Да   a00081.html
+        Да   Да   Да   Да   Да   Да   a00081_source.html
+        Да   Да   Да   Да   Да   Да   a00082.html
+        Да   Да   Да   Да   Да   Да   a00082_source.html
+        Да   Да   Да   Да   Да   Да   a00083_source.html
+        Да   Да   Да   Да   Да   Да   a00084.html
+        Да   Да   Да   Да   Да   Да   a00084_source.html
+        Да   Да   Да   Да   Да   Да   a00085.html
+        Да   Да   Да   Да   Да   Да   a00085_source.html
+        Да   Да   Да   Да   Да   Да   a00086.html
+        Да   Да   Да   Да   Да   Да   a00086_source.html
+        Да   Да   Да   Да   Да   Да   a00087.html
+        Да   Да   Да   Да   Да   Да   a00087_source.html
+        Да   Да   Да   Да   Да   Да   a00088.html
+        Да   Да   Да   Да   Да   Да   a00088_source.html
+        Да   Да   Да   Да   Да   Да   a00089.html
+        Да   Да   Да   Да   Да   Да   a00089_source.html
+        Да   Да   Да   Да   Да   Да   a00090.html
+        Да   Да   Да   Да   Да   Да   a00090_source.html
+        Да   Да   Да   Да   Да   Да   a00091.html
+        Да   Да   Да   Да   Да   Да   a00091_source.html
+        Да   Да   Да   Да   Да   Да   a00092.html
+        Да   Да   Да   Да   Да   Да   a00092_source.html
+        Да   Да   Да   Да   Да   Да   a00093.html
+        Да   Да   Да   Да   Да   Да   a00093_source.html
+        Да   Да   Да   Да   Да   Да   a00094.html
+        Да   Да   Да   Да   Да   Да   a00094_source.html
+        Да   Да   Да   Да   Да   Да   a00095.html
+        Да   Да   Да   Да   Да   Да   a00095_source.html
+        Да   Да   Да   Да   Да   Да   a00096.html
+        Да   Да   Да   Да   Да   Да   a00096_source.html
+        Да   Да   Да   Да   Да   Да   a00097.html
+        Да   Да   Да   Да   Да   Да   a00097_source.html
+        Да   Да   Да   Да   Да   Да   a00098.html
+        Да   Да   Да   Да   Да   Да   a00098_source.html
+        Да   Да   Да   Да   Да   Да   a00099.html
+        Да   Да   Да   Да   Да   Да   a00099_source.html
+        Да   Да   Да   Да   Да   Да   a00100.html
+        Да   Да   Да   Да   Да   Да   a00100_source.html
+        Да   Да   Да   Да   Да   Да   a00101.html
+        Да   Да   Да   Да   Да   Да   a00101_source.html
+        Да   Да   Да   Да   Да   Да   a00102.html
+        Да   Да   Да   Да   Да   Да   a00102_source.html
+        Да   Да   Да   Да   Да   Да   a00103.html
+        Да   Да   Да   Да   Да   Да   a00103_source.html
+        Да   Да   Да   Да   Да   Да   a00104.html
+        Да   Да   Да   Да   Да   Да   a00104_source.html
+        Да   Да   Да   Да   Да   Да   a00105.html
+        Да   Да   Да   Да   Да   Да   a00105_source.html
+        Да   Да   Да   Да   Да   Да   a00106.html
+        Да   Да   Да   Да   Да   Да   a00106_source.html
+        Да   Да   Да   Да   Да   Да   a00107.html
+        Да   Да   Да   Да   Да   Да   a00107_source.html
+        Да   Да   Да   Да   Да   Да   a00108.html
+        Да   Да   Да   Да   Да   Да   a00108_source.html
+        Да   Да   Да   Да   Да   Да   a00109.html
+        Да   Да   Да   Да   Да   Да   a00109_source.html
+        Да   Да   Да   Да   Да   Да   a00110.html
+        Да   Да   Да   Да   Да   Да   a00110_source.html
+        Да   Да   Да   Да   Да   Да   a00111.html
+        Да   Да   Да   Да   Да   Да   a00111_source.html
+        Да   Да   Да   Да   Да   Да   a00112.html
+        Да   Да   Да   Да   Да   Да   a00112_source.html
+        Да   Да   Да   Да   Да   Да   a00113.html
+        Да   Да   Да   Да   Да   Да   a00113_source.html
+        Да   Да   Да   Да   Да   Да   a00114.html
+        Да   Да   Да   Да   Да   Да   a00114_source.html
+        Да   Да   Да   Да   Да   Да   a00115.html
+        Да   Да   Да   Да   Да   Да   a00115_source.html
+        Да   Да   Да   Да   Да   Да   a00116.html
+        Да   Да   Да   Да   Да   Да   a00116_source.html
+        Да   Да   Да   Да   Да   Да   a00117.html
+        Да   Да   Да   Да   Да   Да   a00117_source.html
+        Да   Да   Да   Да   Да   Да   a00118.html
+        Да   Да   Да   Да   Да   Да   a00118_source.html
+        Да   Да   Да   Да   Да   Да   a00119.html
+        Да   Да   Да   Да   Да   Да   a00119_source.html
+        Да   Да   Да   Да   Да   Да   a00120.html
+        Да   Да   Да   Да   Да   Да   a00120_source.html
+        Да   Да   Да   Да   Да   Да   a00121.html
+        Да   Да   Да   Да   Да   Да   a00121_source.html
+        Да   Да   Да   Да   Да   Да   a00122.html
+        Да   Да   Да   Да   Да   Да   a00122_source.html
+        Да   Да   Да   Да   Да   Да   a00123.html
+        Да   Да   Да   Да   Да   Да   a00123_source.html
+        Да   Да   Да   Да   Да   Да   a00124.html
+        Да   Да   Да   Да   Да   Да   a00124_source.html
+        Да   Да   Да   Да   Да   Да   a00125.html
+        Да   Да   Да   Да   Да   Да   a00125_source.html
+        Да   Да   Да   Да   Да   Да   a00126.html
+        Да   Да   Да   Да   Да   Да   a00126_source.html
+        Да   Да   Да   Да   Да   Да   a00127.html
+        Да   Да   Да   Да   Да   Да   a00127_source.html
+        Да   Да   Да   Да   Да   Да   a00128.html
+        Да   Да   Да   Да   Да   Да   a00128_source.html
+        Да   Да   Да   Да   Да   Да   a00129.html
+        Да   Да   Да   Да   Да   Да   a00129_source.html
+        Да   Да   Да   Да   Да   Да   a00130.html
+        Да   Да   Да   Да   Да   Да   a00130_source.html
+        Да   Да   Да   Да   Да   Да   a00131.html
+        Да   Да   Да   Да   Да   Да   a00131_source.html
+        Да   Да   Да   Да   Да   Да   a00132.html
+        Да   Да   Да   Да   Да   Да   a00132_source.html
+        Да   Да   Да   Да   Да   Да   a00133.html
+        Да   Да   Да   Да   Да   Да   a00133_source.html
+        Да   Да   Да   Да   Да   Да   a00134.html
+        Да   Да   Да   Да   Да   Да   a00134_source.html
+        Да   Да   Да   Да   Да   Да   a00135.html
+        Да   Да   Да   Да   Да   Да   a00135_source.html
+        Да   Да   Да   Да   Да   Да   a00136.html
+        Да   Да   Да   Да   Да   Да   a00136_source.html
+        Да   Да   Да   Да   Да   Да   a00137.html
+        Да   Да   Да   Да   Да   Да   a00137_source.html
+        Да   Да   Да   Да   Да   Да   a00138.html
+        Да   Да   Да   Да   Да   Да   a00138_source.html
+        Да   Да   Да   Да   Да   Да   a00139.html
+        Да   Да   Да   Да   Да   Да   a00139_source.html
+        Да   Да   Да   Да   Да   Да   a00145.html
+        Да   Да   Да   Да   Да   Да   a00146.html
+        Да   Да   Да   Да   Да   Да   a00147.html
+        Да   Да   Да   Да   Да   Да   a00148.html
+        Да   Да   Да   Да   Да   Да   a00149.html
+        Да   Да   Да   Да   Да   Да   a00150.html
+        Да   Да   Да   Да   Да   Да   a00151.html
+        Да   Да   Да   Да   Да   Да   a00152.html
+        Да   Да   Да   Да   Да   Да   a00153.html
+        Да   Да   Да   Да   Да   Да   a00154.html
+        Да   Да   Да   Да   Да   Да   a00155.html
+        Да   Да   Да   Да   Да   Да   a00156.html
+        Да   Да   Да   Да   Да   Да   a00157.html
+        Да   Да   Да   Да   Да   Да   a00158.html
+        Да   Да   Да   Да   Да   Да   a00159.html
+        Да   Да   Да   Да   Да   Да   a00160.html
+        Да   Да   Да   Да   Да   Да   a00161.html
+        Да   Да   Да   Да   Да   Да   a00162.html
+        Да   Да   Да   Да   Да   Да   a00163.html
+        Да   Да   Да   Да   Да   Да   a00164.html
+        Да   Да   Да   Да   Да   Да   a00165.html
+        Да   Да   Да   Да   Да   Да   a00166.html
+        Да   Да   Да   Да   Да   Да   a00167.html
+        Да   Да   Да   Да   Да   Да   a00168.html
+        Да   Да   Да   Да   Да   Да   a00169.html
+        Да   Да   Да   Да   Да   Да   a00170.html
+        Да   Да   Да   Да   Да   Да   a00171.html
+        Да   Да   Да   Да   Да   Да   a00172.html
+        Да   Да   Да   Да   Да   Да   a00173.html
+        Да   Да   Да   Да   Да   Да   a00174.html
+        Да   Да   Да   Да   Да   Да   a00175.html
+        Да   Да   Да   Да   Да   Да   a00176.html
+        Да   Да   Да   Да   Да   Да   a00177.html
+        Да   Да   Да   Да   Да   Да   a00178.html
+        Да   Да   Да   Да   Да   Да   a00179.html
+        Да   Да   Да   Да   Да   Да   a00180.html
+        Да   Да   Да   Да   Да   Да   a00181.html
+        Да   Да   Да   Да   Да   Да   a00182.html
+        Да   Да   Да   Да   Да   Да   a00183.html
+        Да   Да   Да   Да   Да   Да   a00184.html
+        Да   Да   Да   Да   Да   Да   a00185.html
+        Да   Да   Да   Да   Да   Да   a00186.html
+        Да   Да   Да   Да   Да   Да   a00187.html
+        Да   Да   Да   Да   Да   Да   a00188.html
+        Да   Да   Да   Да   Да   Да   a00189.html
+        Да   Да   Да   Да   Да   Да   a00190.html
+        Да   Да   Да   Да   Да   Да   a00191.html
+        Да   Да   Да   Да   Да   Да   a00192.html
+        Да   Да   Да   Да   Да   Да   a00193.html
+        Да   Да   Да   Да   Да   Да   a00194.html
+        Да   Да   Да   Да   Да   Да   a00195.html
+        Да   Да   Да   Да   Да   Да   a00196.html
+        Да   Да   Да   Да   Да   Да   a00197.html
+        Да   Да   Да   Да   Да   Да   a00198.html
+        Да   Да   Да   Да   Да   Да   a00199.html
+        Да   Да   Да   Да   Да   Да   a00200.html
+        Да   Да   Да   Да   Да   Да   a00201.html
+        Да   Да   Да   Да   Да   Да   a00202.html
+        Да   Да   Да   Да   Да   Да   a00203.html
+        Да   Да   Да   Да   Да   Да   a00204.html
+        Да   Да   Да   Да   Да   Да   a00205.html
+        Да   Да   Да   Да   Да   Да   a00206.html
+        Да   Да   Да   Да   Да   Да   a00207.html
+        Да   Да   Да   Да   Да   Да   a00208.html
+        Да   Да   Да   Да   Да   Да   a00209.html
+        Да   Да   Да   Да   Да   Да   a00210.html
+        Да   Да   Да   Да   Да   Да   a00211.html
+        Да   Да   Да   Да   Да   Да   a00212.html
+        Да   Да   Да   Да   Да   Да   a00213.html
+        Да   Да   Да   Да   Да   Да   a00214.html
+        Да   Да   Да   Да   Да   Да   a00215.html
+        Да   Да   Да   Да   Да   Да   a00216.html
+        Да   Да   Да   Да   Да   Да   a00217.html
+        Да   Да   Да   Да   Да   Да   a00218.html
+        Да   Да   Да   Да   Да   Да   a00219.html
+        Да   Да   Да   Да   Да   Да   a00220.html
+        Да   Да   Да   Да   Да   Да   a00221.html
+        Да   Да   Да   Да   Да   Да   a00222.html
+        Да   Да   Да   Да   Да   Да   a00223.html
+        Да   Да   Да   Да   Да   Да   a00224.html
+        Да   Да   Да   Да   Да   Да   a00225.html
+        Да   Да   Да   Да   Да   Да   a00226.html
+        Да   Да   Да   Да   Да   Да   a00227.html
+        Да   Да   Да   Да   Да   Да   a00228.html
+        Да   Да   Да   Да   Да   Да   a00229.html
+        Да   Да   Да   Да   Да   Да   a00230.html
+        Да   Да   Да   Да   Да   Да   a00231.html
+        Да   Да   Да   Да   Да   Да   a00232.html
+        Да   Да   Да   Да   Да   Да   a00233.html
+        Да   Да   Да   Да   Да   Да   a00234.html
+        Да   Да   Да   Да   Да   Да   a00235.html
+        Да   Да   Да   Да   Да   Да   a00236.html
+        Да   Да   Да   Да   Да   Да   arrowdown.png
+        Да   Да   Да   Да   Да   Да   arrowright.png
+        Да   Да   Да   Да   Да   Да   bc_s.png
+        Да   Да   Да   Да   Да   Да   bdwn.png
+        Да   Да   Да   Да   Да   Да   closed.png
+        Да   Да   Да   Да   Да   Да   dir_304be5dfae1339a7705426c0b536faf2.html
+        Да   Да   Да   Да   Да   Да   dir_45973f864e07b2505003ae343b7c8af7.html
+        Да   Да   Да   Да   Да   Да   dir_48eca2e6cf73effdec262031e861eeb0.html
+        Да   Да   Да   Да   Да   Да   dir_7997edb062bdde9a99cb6835d42b0d9d.html
+        Да   Да   Да   Да   Да   Да   dir_9344afb825aed5e2f5be1d2015dde43c.html
+        Да   Да   Да   Да   Да   Да   dir_934f46a345653ef2b3014a1b37a162c1.html
+        Да   Да   Да   Да   Да   Да   dir_98f7f9d41f9d3029bd68cf237526a774.html
+        Да   Да   Да   Да   Да   Да   dir_da256b9dd32ba43e2eaa8a2832c37f1b.html
+        Да   Да   Да   Да   Да   Да   dir_e8f3c1046ba4b357711397765359cd18.html
+        Да   Да   Да   Да   Да   Да   doc.png
+        Да   Да   Да   Да   Да   Да   doxygen.css
+        Да   Да   Да   Да   Да   Да   doxygen.png
+        Да   Да   Да   Да   Да   Да   dynsections.js
+        Да   Да   Да   Да   Да   Да   files.html
+        Да   Да   Да   Да   Да   Да   folderclosed.png
+        Да   Да   Да   Да   Да   Да   folderopen.png
+        Да   Да   Да   Да   Да   Да   index.html
+        Да   Да   Да   Да   Да   Да   jquery.js
+        Да   Да   Да   Да   Да   Да   logo-mini.png
+        Да   Да   Да   Да   Да   Да   modules.html
+        Да   Да   Да   Да   Да   Да   nav_f.png
+        Да   Да   Да   Да   Да   Да   nav_g.png
+        Да   Да   Да   Да   Да   Да   nav_h.png
+        Да   Да   Да   Да   Да   Да   open.png
+        Да   Да   Да   Да   Да   Да   splitbar.png
+        Да   Да   Да   Да   Да   Да   sync_off.png
+        Да   Да   Да   Да   Да   Да   sync_on.png
+        Да   Да   Да   Да   Да   Да   tabs.css
+        Да   Да   Да   Да   Да   Да   tab_a.png
+        Да   Да   Да   Да   Да   Да   tab_b.png
+        Да   Да   Да   Да   Да   Да   tab_h.png
+        Да   Да   Да   Да   Да   Да   tab_s.png
+        Да   Да   Да   Да   Да   Да   
+        Да   Да   Да   Да   Да   ДдДЯДЯДЯsearch
+        Да   Да   Да   Да   Да           all_0.html
+        Да   Да   Да   Да   Да           all_0.js
+        Да   Да   Да   Да   Да           all_1.html
+        Да   Да   Да   Да   Да           all_1.js
+        Да   Да   Да   Да   Да           all_10.html
+        Да   Да   Да   Да   Да           all_10.js
+        Да   Да   Да   Да   Да           all_11.html
+        Да   Да   Да   Да   Да           all_11.js
+        Да   Да   Да   Да   Да           all_12.html
+        Да   Да   Да   Да   Да           all_12.js
+        Да   Да   Да   Да   Да           all_13.html
+        Да   Да   Да   Да   Да           all_13.js
+        Да   Да   Да   Да   Да           all_14.html
+        Да   Да   Да   Да   Да           all_14.js
+        Да   Да   Да   Да   Да           all_15.html
+        Да   Да   Да   Да   Да           all_15.js
+        Да   Да   Да   Да   Да           all_16.html
+        Да   Да   Да   Да   Да           all_16.js
+        Да   Да   Да   Да   Да           all_17.html
+        Да   Да   Да   Да   Да           all_17.js
+        Да   Да   Да   Да   Да           all_2.html
+        Да   Да   Да   Да   Да           all_2.js
+        Да   Да   Да   Да   Да           all_3.html
+        Да   Да   Да   Да   Да           all_3.js
+        Да   Да   Да   Да   Да           all_4.html
+        Да   Да   Да   Да   Да           all_4.js
+        Да   Да   Да   Да   Да           all_5.html
+        Да   Да   Да   Да   Да           all_5.js
+        Да   Да   Да   Да   Да           all_6.html
+        Да   Да   Да   Да   Да           all_6.js
+        Да   Да   Да   Да   Да           all_7.html
+        Да   Да   Да   Да   Да           all_7.js
+        Да   Да   Да   Да   Да           all_8.html
+        Да   Да   Да   Да   Да           all_8.js
+        Да   Да   Да   Да   Да           all_9.html
+        Да   Да   Да   Да   Да           all_9.js
+        Да   Да   Да   Да   Да           all_a.html
+        Да   Да   Да   Да   Да           all_a.js
+        Да   Да   Да   Да   Да           all_b.html
+        Да   Да   Да   Да   Да           all_b.js
+        Да   Да   Да   Да   Да           all_c.html
+        Да   Да   Да   Да   Да           all_c.js
+        Да   Да   Да   Да   Да           all_d.html
+        Да   Да   Да   Да   Да           all_d.js
+        Да   Да   Да   Да   Да           all_e.html
+        Да   Да   Да   Да   Да           all_e.js
+        Да   Да   Да   Да   Да           all_f.html
+        Да   Да   Да   Да   Да           all_f.js
+        Да   Да   Да   Да   Да           close.png
+        Да   Да   Да   Да   Да           files_0.html
+        Да   Да   Да   Да   Да           files_0.js
+        Да   Да   Да   Да   Да           files_1.html
+        Да   Да   Да   Да   Да           files_1.js
+        Да   Да   Да   Да   Да           files_10.html
+        Да   Да   Да   Да   Да           files_10.js
+        Да   Да   Да   Да   Да           files_11.html
+        Да   Да   Да   Да   Да           files_11.js
+        Да   Да   Да   Да   Да           files_12.html
+        Да   Да   Да   Да   Да           files_12.js
+        Да   Да   Да   Да   Да           files_13.html
+        Да   Да   Да   Да   Да           files_13.js
+        Да   Да   Да   Да   Да           files_14.html
+        Да   Да   Да   Да   Да           files_14.js
+        Да   Да   Да   Да   Да           files_2.html
+        Да   Да   Да   Да   Да           files_2.js
+        Да   Да   Да   Да   Да           files_3.html
+        Да   Да   Да   Да   Да           files_3.js
+        Да   Да   Да   Да   Да           files_4.html
+        Да   Да   Да   Да   Да           files_4.js
+        Да   Да   Да   Да   Да           files_5.html
+        Да   Да   Да   Да   Да           files_5.js
+        Да   Да   Да   Да   Да           files_6.html
+        Да   Да   Да   Да   Да           files_6.js
+        Да   Да   Да   Да   Да           files_7.html
+        Да   Да   Да   Да   Да           files_7.js
+        Да   Да   Да   Да   Да           files_8.html
+        Да   Да   Да   Да   Да           files_8.js
+        Да   Да   Да   Да   Да           files_9.html
+        Да   Да   Да   Да   Да           files_9.js
+        Да   Да   Да   Да   Да           files_a.html
+        Да   Да   Да   Да   Да           files_a.js
+        Да   Да   Да   Да   Да           files_b.html
+        Да   Да   Да   Да   Да           files_b.js
+        Да   Да   Да   Да   Да           files_c.html
+        Да   Да   Да   Да   Да           files_c.js
+        Да   Да   Да   Да   Да           files_d.html
+        Да   Да   Да   Да   Да           files_d.js
+        Да   Да   Да   Да   Да           files_e.html
+        Да   Да   Да   Да   Да           files_e.js
+        Да   Да   Да   Да   Да           files_f.html
+        Да   Да   Да   Да   Да           files_f.js
+        Да   Да   Да   Да   Да           functions_0.html
+        Да   Да   Да   Да   Да           functions_0.js
+        Да   Да   Да   Да   Да           functions_1.html
+        Да   Да   Да   Да   Да           functions_1.js
+        Да   Да   Да   Да   Да           functions_10.html
+        Да   Да   Да   Да   Да           functions_10.js
+        Да   Да   Да   Да   Да           functions_11.html
+        Да   Да   Да   Да   Да           functions_11.js
+        Да   Да   Да   Да   Да           functions_12.html
+        Да   Да   Да   Да   Да           functions_12.js
+        Да   Да   Да   Да   Да           functions_13.html
+        Да   Да   Да   Да   Да           functions_13.js
+        Да   Да   Да   Да   Да           functions_14.html
+        Да   Да   Да   Да   Да           functions_14.js
+        Да   Да   Да   Да   Да           functions_15.html
+        Да   Да   Да   Да   Да           functions_15.js
+        Да   Да   Да   Да   Да           functions_16.html
+        Да   Да   Да   Да   Да           functions_16.js
+        Да   Да   Да   Да   Да           functions_2.html
+        Да   Да   Да   Да   Да           functions_2.js
+        Да   Да   Да   Да   Да           functions_3.html
+        Да   Да   Да   Да   Да           functions_3.js
+        Да   Да   Да   Да   Да           functions_4.html
+        Да   Да   Да   Да   Да           functions_4.js
+        Да   Да   Да   Да   Да           functions_5.html
+        Да   Да   Да   Да   Да           functions_5.js
+        Да   Да   Да   Да   Да           functions_6.html
+        Да   Да   Да   Да   Да           functions_6.js
+        Да   Да   Да   Да   Да           functions_7.html
+        Да   Да   Да   Да   Да           functions_7.js
+        Да   Да   Да   Да   Да           functions_8.html
+        Да   Да   Да   Да   Да           functions_8.js
+        Да   Да   Да   Да   Да           functions_9.html
+        Да   Да   Да   Да   Да           functions_9.js
+        Да   Да   Да   Да   Да           functions_a.html
+        Да   Да   Да   Да   Да           functions_a.js
+        Да   Да   Да   Да   Да           functions_b.html
+        Да   Да   Да   Да   Да           functions_b.js
+        Да   Да   Да   Да   Да           functions_c.html
+        Да   Да   Да   Да   Да           functions_c.js
+        Да   Да   Да   Да   Да           functions_d.html
+        Да   Да   Да   Да   Да           functions_d.js
+        Да   Да   Да   Да   Да           functions_e.html
+        Да   Да   Да   Да   Да           functions_e.js
+        Да   Да   Да   Да   Да           functions_f.html
+        Да   Да   Да   Да   Да           functions_f.js
+        Да   Да   Да   Да   Да           groups_0.html
+        Да   Да   Да   Да   Да           groups_0.js
+        Да   Да   Да   Да   Да           groups_1.html
+        Да   Да   Да   Да   Да           groups_1.js
+        Да   Да   Да   Да   Да           groups_2.html
+        Да   Да   Да   Да   Да           groups_2.js
+        Да   Да   Да   Да   Да           groups_3.html
+        Да   Да   Да   Да   Да           groups_3.js
+        Да   Да   Да   Да   Да           groups_4.html
+        Да   Да   Да   Да   Да           groups_4.js
+        Да   Да   Да   Да   Да           groups_5.html
+        Да   Да   Да   Да   Да           groups_5.js
+        Да   Да   Да   Да   Да           groups_6.html
+        Да   Да   Да   Да   Да           groups_6.js
+        Да   Да   Да   Да   Да           groups_7.html
+        Да   Да   Да   Да   Да           groups_7.js
+        Да   Да   Да   Да   Да           groups_8.html
+        Да   Да   Да   Да   Да           groups_8.js
+        Да   Да   Да   Да   Да           groups_9.html
+        Да   Да   Да   Да   Да           groups_9.js
+        Да   Да   Да   Да   Да           mag_sel.png
+        Да   Да   Да   Да   Да           nomatches.html
+        Да   Да   Да   Да   Да           pages_0.html
+        Да   Да   Да   Да   Да           pages_0.js
+        Да   Да   Да   Да   Да           search.css
+        Да   Да   Да   Да   Да           search.js
+        Да   Да   Да   Да   Да           searchdata.js
+        Да   Да   Да   Да   Да           search_l.png
+        Да   Да   Да   Да   Да           search_m.png
+        Да   Да   Да   Да   Да           search_r.png
+        Да   Да   Да   Да   Да           typedefs_0.html
+        Да   Да   Да   Да   Да           typedefs_0.js
+        Да   Да   Да   Да   Да           typedefs_1.html
+        Да   Да   Да   Да   Да           typedefs_1.js
+        Да   Да   Да   Да   Да           typedefs_2.html
+        Да   Да   Да   Да   Да           typedefs_2.js
+        Да   Да   Да   Да   Да           typedefs_3.html
+        Да   Да   Да   Да   Да           typedefs_3.js
+        Да   Да   Да   Да   Да           typedefs_4.html
+        Да   Да   Да   Да   Да           typedefs_4.js
+        Да   Да   Да   Да   Да           typedefs_5.html
+        Да   Да   Да   Да   Да           typedefs_5.js
+        Да   Да   Да   Да   Да           typedefs_6.html
+        Да   Да   Да   Да   Да           typedefs_6.js
+        Да   Да   Да   Да   Да           typedefs_7.html
+        Да   Да   Да   Да   Да           typedefs_7.js
+        Да   Да   Да   Да   Да           typedefs_8.html
+        Да   Да   Да   Да   Да           typedefs_8.js
+        Да   Да   Да   Да   Да           typedefs_9.html
+        Да   Да   Да   Да   Да           typedefs_9.js
+        Да   Да   Да   Да   Да           typedefs_a.html
+        Да   Да   Да   Да   Да           typedefs_a.js
+        Да   Да   Да   Да   Да           typedefs_b.html
+        Да   Да   Да   Да   Да           typedefs_b.js
+        Да   Да   Да   Да   Да           typedefs_c.html
+        Да   Да   Да   Да   Да           typedefs_c.js
+        Да   Да   Да   Да   Да           
+        Да   Да   Да   Да   ДеДЯДЯДЯmanual
+        Да   Да   Да   Да   Да       frontpage1.png
+        Да   Да   Да   Да   Да       frontpage2.png
+        Да   Да   Да   Да   Да       g-truc.png
+        Да   Да   Да   Да   Да       logo-mini.png
+        Да   Да   Да   Да   Да       noise-perlin1.jpg
+        Да   Да   Да   Да   Да       noise-perlin2.jpg
+        Да   Да   Да   Да   Да       noise-perlin3.jpg
+        Да   Да   Да   Да   Да       noise-perlin4.png
+        Да   Да   Да   Да   Да       noise-perlin5.png
+        Да   Да   Да   Да   Да       noise-perlin6.png
+        Да   Да   Да   Да   Да       noise-simplex1.jpg
+        Да   Да   Да   Да   Да       noise-simplex2.jpg
+        Да   Да   Да   Да   Да       noise-simplex3.jpg
+        Да   Да   Да   Да   Да       random-ballrand.png
+        Да   Да   Да   Да   Да       random-circularrand.png
+        Да   Да   Да   Да   Да       random-diskrand.png
+        Да   Да   Да   Да   Да       random-gaussrand.png
+        Да   Да   Да   Да   Да       random-linearrand.png
+        Да   Да   Да   Да   Да       random-sphericalrand.png
+        Да   Да   Да   Да   Да       references-cinder.png
+        Да   Да   Да   Да   Да       references-glsl4book.jpg
+        Да   Да   Да   Да   Да       references-leosfortune.jpeg
+        Да   Да   Да   Да   Да       references-leosfortune2.jpg
+        Да   Да   Да   Да   Да       references-opencloth1.png
+        Да   Да   Да   Да   Да       references-opencloth3.png
+        Да   Да   Да   Да   Да       references-outerra1.jpg
+        Да   Да   Да   Да   Да       references-outerra2.jpg
+        Да   Да   Да   Да   Да       references-outerra3.jpg
+        Да   Да   Да   Да   Да       references-outerra4.jpg
+        Да   Да   Да   Да   Да       
+        Да   Да   Да   Да   ДдДЯДЯДЯtheme
+        Да   Да   Да   Да           doxygen.css
+        Да   Да   Да   Да           tabs.css
+        Да   Да   Да   Да           
+        Да   Да   Да   ДеДЯДЯДЯglm
+        Да   Да   Да   Да   Да   CMakeLists.txt
+        Да   Да   Да   Да   Да   common.hpp
+        Да   Да   Да   Да   Да   exponential.hpp
+        Да   Да   Да   Да   Да   ext.hpp
+        Да   Да   Да   Да   Да   fwd.hpp
+        Да   Да   Да   Да   Да   geometric.hpp
+        Да   Да   Да   Да   Да   glm.hpp
+        Да   Да   Да   Да   Да   integer.hpp
+        Да   Да   Да   Да   Да   mat2x2.hpp
+        Да   Да   Да   Да   Да   mat2x3.hpp
+        Да   Да   Да   Да   Да   mat2x4.hpp
+        Да   Да   Да   Да   Да   mat3x2.hpp
+        Да   Да   Да   Да   Да   mat3x3.hpp
+        Да   Да   Да   Да   Да   mat3x4.hpp
+        Да   Да   Да   Да   Да   mat4x2.hpp
+        Да   Да   Да   Да   Да   mat4x3.hpp
+        Да   Да   Да   Да   Да   mat4x4.hpp
+        Да   Да   Да   Да   Да   matrix.hpp
+        Да   Да   Да   Да   Да   packing.hpp
+        Да   Да   Да   Да   Да   trigonometric.hpp
+        Да   Да   Да   Да   Да   vec2.hpp
+        Да   Да   Да   Да   Да   vec3.hpp
+        Да   Да   Да   Да   Да   vec4.hpp
+        Да   Да   Да   Да   Да   vector_relational.hpp
+        Да   Да   Да   Да   Да   
+        Да   Да   Да   Да   ДеДЯДЯДЯdetail
+        Да   Да   Да   Да   Да       dummy.cpp
+        Да   Да   Да   Да   Да       func_common.hpp
+        Да   Да   Да   Да   Да       func_common.inl
+        Да   Да   Да   Да   Да       func_common_simd.inl
+        Да   Да   Да   Да   Да       func_exponential.hpp
+        Да   Да   Да   Да   Да       func_exponential.inl
+        Да   Да   Да   Да   Да       func_exponential_simd.inl
+        Да   Да   Да   Да   Да       func_geometric.hpp
+        Да   Да   Да   Да   Да       func_geometric.inl
+        Да   Да   Да   Да   Да       func_geometric_simd.inl
+        Да   Да   Да   Да   Да       func_integer.hpp
+        Да   Да   Да   Да   Да       func_integer.inl
+        Да   Да   Да   Да   Да       func_integer_simd.inl
+        Да   Да   Да   Да   Да       func_matrix.hpp
+        Да   Да   Да   Да   Да       func_matrix.inl
+        Да   Да   Да   Да   Да       func_matrix_simd.inl
+        Да   Да   Да   Да   Да       func_packing.hpp
+        Да   Да   Да   Да   Да       func_packing.inl
+        Да   Да   Да   Да   Да       func_packing_simd.inl
+        Да   Да   Да   Да   Да       func_trigonometric.hpp
+        Да   Да   Да   Да   Да       func_trigonometric.inl
+        Да   Да   Да   Да   Да       func_trigonometric_simd.inl
+        Да   Да   Да   Да   Да       func_vector_relational.hpp
+        Да   Да   Да   Да   Да       func_vector_relational.inl
+        Да   Да   Да   Да   Да       func_vector_relational_simd.inl
+        Да   Да   Да   Да   Да       glm.cpp
+        Да   Да   Да   Да   Да       precision.hpp
+        Да   Да   Да   Да   Да       setup.hpp
+        Да   Да   Да   Да   Да       type_float.hpp
+        Да   Да   Да   Да   Да       type_gentype.hpp
+        Да   Да   Да   Да   Да       type_gentype.inl
+        Да   Да   Да   Да   Да       type_half.hpp
+        Да   Да   Да   Да   Да       type_half.inl
+        Да   Да   Да   Да   Да       type_int.hpp
+        Да   Да   Да   Да   Да       type_mat.hpp
+        Да   Да   Да   Да   Да       type_mat.inl
+        Да   Да   Да   Да   Да       type_mat2x2.hpp
+        Да   Да   Да   Да   Да       type_mat2x2.inl
+        Да   Да   Да   Да   Да       type_mat2x3.hpp
+        Да   Да   Да   Да   Да       type_mat2x3.inl
+        Да   Да   Да   Да   Да       type_mat2x4.hpp
+        Да   Да   Да   Да   Да       type_mat2x4.inl
+        Да   Да   Да   Да   Да       type_mat3x2.hpp
+        Да   Да   Да   Да   Да       type_mat3x2.inl
+        Да   Да   Да   Да   Да       type_mat3x3.hpp
+        Да   Да   Да   Да   Да       type_mat3x3.inl
+        Да   Да   Да   Да   Да       type_mat3x4.hpp
+        Да   Да   Да   Да   Да       type_mat3x4.inl
+        Да   Да   Да   Да   Да       type_mat4x2.hpp
+        Да   Да   Да   Да   Да       type_mat4x2.inl
+        Да   Да   Да   Да   Да       type_mat4x3.hpp
+        Да   Да   Да   Да   Да       type_mat4x3.inl
+        Да   Да   Да   Да   Да       type_mat4x4.hpp
+        Да   Да   Да   Да   Да       type_mat4x4.inl
+        Да   Да   Да   Да   Да       type_mat4x4_simd.inl
+        Да   Да   Да   Да   Да       type_vec.hpp
+        Да   Да   Да   Да   Да       type_vec.inl
+        Да   Да   Да   Да   Да       type_vec1.hpp
+        Да   Да   Да   Да   Да       type_vec1.inl
+        Да   Да   Да   Да   Да       type_vec2.hpp
+        Да   Да   Да   Да   Да       type_vec2.inl
+        Да   Да   Да   Да   Да       type_vec3.hpp
+        Да   Да   Да   Да   Да       type_vec3.inl
+        Да   Да   Да   Да   Да       type_vec4.hpp
+        Да   Да   Да   Да   Да       type_vec4.inl
+        Да   Да   Да   Да   Да       type_vec4_simd.inl
+        Да   Да   Да   Да   Да       _features.hpp
+        Да   Да   Да   Да   Да       _fixes.hpp
+        Да   Да   Да   Да   Да       _noise.hpp
+        Да   Да   Да   Да   Да       _swizzle.hpp
+        Да   Да   Да   Да   Да       _swizzle_func.hpp
+        Да   Да   Да   Да   Да       _vectorize.hpp
+        Да   Да   Да   Да   Да       
+        Да   Да   Да   Да   ДеДЯДЯДЯgtc
+        Да   Да   Да   Да   Да       bitfield.hpp
+        Да   Да   Да   Да   Да       bitfield.inl
+        Да   Да   Да   Да   Да       color_space.hpp
+        Да   Да   Да   Да   Да       color_space.inl
+        Да   Да   Да   Да   Да       constants.hpp
+        Да   Да   Да   Да   Да       constants.inl
+        Да   Да   Да   Да   Да       epsilon.hpp
+        Да   Да   Да   Да   Да       epsilon.inl
+        Да   Да   Да   Да   Да       functions.hpp
+        Да   Да   Да   Да   Да       functions.inl
+        Да   Да   Да   Да   Да       integer.hpp
+        Да   Да   Да   Да   Да       integer.inl
+        Да   Да   Да   Да   Да       matrix_access.hpp
+        Да   Да   Да   Да   Да       matrix_access.inl
+        Да   Да   Да   Да   Да       matrix_integer.hpp
+        Да   Да   Да   Да   Да       matrix_inverse.hpp
+        Да   Да   Да   Да   Да       matrix_inverse.inl
+        Да   Да   Да   Да   Да       matrix_transform.hpp
+        Да   Да   Да   Да   Да       matrix_transform.inl
+        Да   Да   Да   Да   Да       noise.hpp
+        Да   Да   Да   Да   Да       noise.inl
+        Да   Да   Да   Да   Да       packing.hpp
+        Да   Да   Да   Да   Да       packing.inl
+        Да   Да   Да   Да   Да       quaternion.hpp
+        Да   Да   Да   Да   Да       quaternion.inl
+        Да   Да   Да   Да   Да       quaternion_simd.inl
+        Да   Да   Да   Да   Да       random.hpp
+        Да   Да   Да   Да   Да       random.inl
+        Да   Да   Да   Да   Да       reciprocal.hpp
+        Да   Да   Да   Да   Да       reciprocal.inl
+        Да   Да   Да   Да   Да       round.hpp
+        Да   Да   Да   Да   Да       round.inl
+        Да   Да   Да   Да   Да       type_aligned.hpp
+        Да   Да   Да   Да   Да       type_precision.hpp
+        Да   Да   Да   Да   Да       type_precision.inl
+        Да   Да   Да   Да   Да       type_ptr.hpp
+        Да   Да   Да   Да   Да       type_ptr.inl
+        Да   Да   Да   Да   Да       ulp.hpp
+        Да   Да   Да   Да   Да       ulp.inl
+        Да   Да   Да   Да   Да       vec1.hpp
+        Да   Да   Да   Да   Да       vec1.inl
+        Да   Да   Да   Да   Да       
+        Да   Да   Да   Да   ДеДЯДЯДЯgtx
+        Да   Да   Да   Да   Да       associated_min_max.hpp
+        Да   Да   Да   Да   Да       associated_min_max.inl
+        Да   Да   Да   Да   Да       bit.hpp
+        Да   Да   Да   Да   Да       bit.inl
+        Да   Да   Да   Да   Да       closest_point.hpp
+        Да   Да   Да   Да   Да       closest_point.inl
+        Да   Да   Да   Да   Да       color_encoding.hpp
+        Да   Да   Да   Да   Да       color_encoding.inl
+        Да   Да   Да   Да   Да       color_space.hpp
+        Да   Да   Да   Да   Да       color_space.inl
+        Да   Да   Да   Да   Да       color_space_YCoCg.hpp
+        Да   Да   Да   Да   Да       color_space_YCoCg.inl
+        Да   Да   Да   Да   Да       common.hpp
+        Да   Да   Да   Да   Да       common.inl
+        Да   Да   Да   Да   Да       compatibility.hpp
+        Да   Да   Да   Да   Да       compatibility.inl
+        Да   Да   Да   Да   Да       component_wise.hpp
+        Да   Да   Да   Да   Да       component_wise.inl
+        Да   Да   Да   Да   Да       dual_quaternion.hpp
+        Да   Да   Да   Да   Да       dual_quaternion.inl
+        Да   Да   Да   Да   Да       euler_angles.hpp
+        Да   Да   Да   Да   Да       euler_angles.inl
+        Да   Да   Да   Да   Да       extend.hpp
+        Да   Да   Да   Да   Да       extend.inl
+        Да   Да   Да   Да   Да       extended_min_max.hpp
+        Да   Да   Да   Да   Да       extended_min_max.inl
+        Да   Да   Да   Да   Да       exterior_product.hpp
+        Да   Да   Да   Да   Да       exterior_product.inl
+        Да   Да   Да   Да   Да       fast_exponential.hpp
+        Да   Да   Да   Да   Да       fast_exponential.inl
+        Да   Да   Да   Да   Да       fast_square_root.hpp
+        Да   Да   Да   Да   Да       fast_square_root.inl
+        Да   Да   Да   Да   Да       fast_trigonometry.hpp
+        Да   Да   Да   Да   Да       fast_trigonometry.inl
+        Да   Да   Да   Да   Да       float_notmalize.inl
+        Да   Да   Да   Да   Да       gradient_paint.hpp
+        Да   Да   Да   Да   Да       gradient_paint.inl
+        Да   Да   Да   Да   Да       handed_coordinate_space.hpp
+        Да   Да   Да   Да   Да       handed_coordinate_space.inl
+        Да   Да   Да   Да   Да       hash.hpp
+        Да   Да   Да   Да   Да       hash.inl
+        Да   Да   Да   Да   Да       integer.hpp
+        Да   Да   Да   Да   Да       integer.inl
+        Да   Да   Да   Да   Да       intersect.hpp
+        Да   Да   Да   Да   Да       intersect.inl
+        Да   Да   Да   Да   Да       io.hpp
+        Да   Да   Да   Да   Да       io.inl
+        Да   Да   Да   Да   Да       log_base.hpp
+        Да   Да   Да   Да   Да       log_base.inl
+        Да   Да   Да   Да   Да       matrix_cross_product.hpp
+        Да   Да   Да   Да   Да       matrix_cross_product.inl
+        Да   Да   Да   Да   Да       matrix_decompose.hpp
+        Да   Да   Да   Да   Да       matrix_decompose.inl
+        Да   Да   Да   Да   Да       matrix_factorisation.hpp
+        Да   Да   Да   Да   Да       matrix_factorisation.inl
+        Да   Да   Да   Да   Да       matrix_interpolation.hpp
+        Да   Да   Да   Да   Да       matrix_interpolation.inl
+        Да   Да   Да   Да   Да       matrix_major_storage.hpp
+        Да   Да   Да   Да   Да       matrix_major_storage.inl
+        Да   Да   Да   Да   Да       matrix_operation.hpp
+        Да   Да   Да   Да   Да       matrix_operation.inl
+        Да   Да   Да   Да   Да       matrix_query.hpp
+        Да   Да   Да   Да   Да       matrix_query.inl
+        Да   Да   Да   Да   Да       matrix_transform_2d.hpp
+        Да   Да   Да   Да   Да       matrix_transform_2d.inl
+        Да   Да   Да   Да   Да       mixed_product.hpp
+        Да   Да   Да   Да   Да       mixed_product.inl
+        Да   Да   Да   Да   Да       norm.hpp
+        Да   Да   Да   Да   Да       norm.inl
+        Да   Да   Да   Да   Да       normal.hpp
+        Да   Да   Да   Да   Да       normal.inl
+        Да   Да   Да   Да   Да       normalize_dot.hpp
+        Да   Да   Да   Да   Да       normalize_dot.inl
+        Да   Да   Да   Да   Да       number_precision.hpp
+        Да   Да   Да   Да   Да       number_precision.inl
+        Да   Да   Да   Да   Да       optimum_pow.hpp
+        Да   Да   Да   Да   Да       optimum_pow.inl
+        Да   Да   Да   Да   Да       orthonormalize.hpp
+        Да   Да   Да   Да   Да       orthonormalize.inl
+        Да   Да   Да   Да   Да       perpendicular.hpp
+        Да   Да   Да   Да   Да       perpendicular.inl
+        Да   Да   Да   Да   Да       polar_coordinates.hpp
+        Да   Да   Да   Да   Да       polar_coordinates.inl
+        Да   Да   Да   Да   Да       projection.hpp
+        Да   Да   Да   Да   Да       projection.inl
+        Да   Да   Да   Да   Да       quaternion.hpp
+        Да   Да   Да   Да   Да       quaternion.inl
+        Да   Да   Да   Да   Да       range.hpp
+        Да   Да   Да   Да   Да       raw_data.hpp
+        Да   Да   Да   Да   Да       raw_data.inl
+        Да   Да   Да   Да   Да       rotate_normalized_axis.hpp
+        Да   Да   Да   Да   Да       rotate_normalized_axis.inl
+        Да   Да   Да   Да   Да       rotate_vector.hpp
+        Да   Да   Да   Да   Да       rotate_vector.inl
+        Да   Да   Да   Да   Да       scalar_multiplication.hpp
+        Да   Да   Да   Да   Да       scalar_relational.hpp
+        Да   Да   Да   Да   Да       scalar_relational.inl
+        Да   Да   Да   Да   Да       spline.hpp
+        Да   Да   Да   Да   Да       spline.inl
+        Да   Да   Да   Да   Да       std_based_type.hpp
+        Да   Да   Да   Да   Да       std_based_type.inl
+        Да   Да   Да   Да   Да       string_cast.hpp
+        Да   Да   Да   Да   Да       string_cast.inl
+        Да   Да   Да   Да   Да       transform.hpp
+        Да   Да   Да   Да   Да       transform.inl
+        Да   Да   Да   Да   Да       transform2.hpp
+        Да   Да   Да   Да   Да       transform2.inl
+        Да   Да   Да   Да   Да       type_aligned.hpp
+        Да   Да   Да   Да   Да       type_aligned.inl
+        Да   Да   Да   Да   Да       type_trait.hpp
+        Да   Да   Да   Да   Да       type_trait.inl
+        Да   Да   Да   Да   Да       vector_angle.hpp
+        Да   Да   Да   Да   Да       vector_angle.inl
+        Да   Да   Да   Да   Да       vector_query.hpp
+        Да   Да   Да   Да   Да       vector_query.inl
+        Да   Да   Да   Да   Да       vec_swizzle.hpp
+        Да   Да   Да   Да   Да       wrap.hpp
+        Да   Да   Да   Да   Да       wrap.inl
+        Да   Да   Да   Да   Да       
+        Да   Да   Да   Да   ДдДЯДЯДЯsimd
+        Да   Да   Да   Да           common.h
+        Да   Да   Да   Да           exponential.h
+        Да   Да   Да   Да           geometric.h
+        Да   Да   Да   Да           integer.h
+        Да   Да   Да   Да           matrix.h
+        Да   Да   Да   Да           packing.h
+        Да   Да   Да   Да           platform.h
+        Да   Да   Да   Да           trigonometric.h
+        Да   Да   Да   Да           vector_relational.h
+        Да   Да   Да   Да           
+        Да   Да   Да   ДеДЯДЯДЯtest
+        Да   Да   Да   Да   Да   CMakeLists.txt
+        Да   Да   Да   Да   Да   glm.cppcheck
+        Да   Да   Да   Да   Да   
+        Да   Да   Да   Да   ДеДЯДЯДЯbug
+        Да   Да   Да   Да   Да       bug_ms_vec_static.cpp
+        Да   Да   Да   Да   Да       CMakeLists.txt
+        Да   Да   Да   Да   Да       
+        Да   Да   Да   Да   ДеДЯДЯДЯcore
+        Да   Да   Да   Да   Да       CMakeLists.txt
+        Да   Да   Да   Да   Да       core_force_pure.cpp
+        Да   Да   Да   Да   Да       core_force_unrestricted_gentype.cpp
+        Да   Да   Да   Да   Да       core_func_common.cpp
+        Да   Да   Да   Да   Да       core_func_exponential.cpp
+        Да   Да   Да   Да   Да       core_func_geometric.cpp
+        Да   Да   Да   Да   Да       core_func_integer.cpp
+        Да   Да   Да   Да   Да       core_func_integer_bit_count.cpp
+        Да   Да   Да   Да   Да       core_func_integer_find_lsb.cpp
+        Да   Да   Да   Да   Да       core_func_integer_find_msb.cpp
+        Да   Да   Да   Да   Да       core_func_matrix.cpp
+        Да   Да   Да   Да   Да       core_func_noise.cpp
+        Да   Да   Да   Да   Да       core_func_packing.cpp
+        Да   Да   Да   Да   Да       core_func_swizzle.cpp
+        Да   Да   Да   Да   Да       core_func_trigonometric.cpp
+        Да   Да   Да   Да   Да       core_func_vector_relational.cpp
+        Да   Да   Да   Да   Да       core_setup_force_cxx98.cpp
+        Да   Да   Да   Да   Да       core_setup_force_size_t_length.cpp
+        Да   Да   Да   Да   Да       core_setup_message.cpp
+        Да   Да   Да   Да   Да       core_setup_precision.cpp
+        Да   Да   Да   Да   Да       core_type_aligned.cpp
+        Да   Да   Да   Да   Да       core_type_cast.cpp
+        Да   Да   Да   Да   Да       core_type_ctor.cpp
+        Да   Да   Да   Да   Да       core_type_float.cpp
+        Да   Да   Да   Да   Да       core_type_int.cpp
+        Да   Да   Да   Да   Да       core_type_length.cpp
+        Да   Да   Да   Да   Да       core_type_mat2x2.cpp
+        Да   Да   Да   Да   Да       core_type_mat2x3.cpp
+        Да   Да   Да   Да   Да       core_type_mat2x4.cpp
+        Да   Да   Да   Да   Да       core_type_mat3x2.cpp
+        Да   Да   Да   Да   Да       core_type_mat3x3.cpp
+        Да   Да   Да   Да   Да       core_type_mat3x4.cpp
+        Да   Да   Да   Да   Да       core_type_mat4x2.cpp
+        Да   Да   Да   Да   Да       core_type_mat4x3.cpp
+        Да   Да   Да   Да   Да       core_type_mat4x4.cpp
+        Да   Да   Да   Да   Да       core_type_vec1.cpp
+        Да   Да   Да   Да   Да       core_type_vec2.cpp
+        Да   Да   Да   Да   Да       core_type_vec3.cpp
+        Да   Да   Да   Да   Да       core_type_vec4.cpp
+        Да   Да   Да   Да   Да       
+        Да   Да   Да   Да   ДеДЯДЯДЯexternal
+        Да   Да   Да   Да   Да   ДдДЯДЯДЯgli
+        Да   Да   Да   Да   Да       Да   clear.hpp
+        Да   Да   Да   Да   Да       Да   CMakeLists.txt
+        Да   Да   Да   Да   Да       Да   comparison.hpp
+        Да   Да   Да   Да   Да       Да   convert.hpp
+        Да   Да   Да   Да   Да       Да   copy.hpp
+        Да   Да   Да   Да   Да       Да   duplicate.hpp
+        Да   Да   Да   Да   Да       Да   dx.hpp
+        Да   Да   Да   Да   Да       Да   format.hpp
+        Да   Да   Да   Да   Да       Да   generate_mipmaps.hpp
+        Да   Да   Да   Да   Да       Да   gl.hpp
+        Да   Да   Да   Да   Да       Да   gli.hpp
+        Да   Да   Да   Да   Да       Да   image.hpp
+        Да   Да   Да   Да   Да       Да   levels.hpp
+        Да   Да   Да   Да   Да       Да   load.hpp
+        Да   Да   Да   Да   Да       Да   load_dds.hpp
+        Да   Да   Да   Да   Да       Да   load_kmg.hpp
+        Да   Да   Да   Да   Да       Да   load_ktx.hpp
+        Да   Да   Да   Да   Да       Да   make_texture.hpp
+        Да   Да   Да   Да   Да       Да   reduce.hpp
+        Да   Да   Да   Да   Да       Да   sampler.hpp
+        Да   Да   Да   Да   Да       Да   sampler1d.hpp
+        Да   Да   Да   Да   Да       Да   sampler1d_array.hpp
+        Да   Да   Да   Да   Да       Да   sampler2d.hpp
+        Да   Да   Да   Да   Да       Да   sampler2d_array.hpp
+        Да   Да   Да   Да   Да       Да   sampler3d.hpp
+        Да   Да   Да   Да   Да       Да   sampler_cube.hpp
+        Да   Да   Да   Да   Да       Да   sampler_cube_array.hpp
+        Да   Да   Да   Да   Да       Да   save.hpp
+        Да   Да   Да   Да   Да       Да   save_dds.hpp
+        Да   Да   Да   Да   Да       Да   save_kmg.hpp
+        Да   Да   Да   Да   Да       Да   save_ktx.hpp
+        Да   Да   Да   Да   Да       Да   target.hpp
+        Да   Да   Да   Да   Да       Да   texture.hpp
+        Да   Да   Да   Да   Да       Да   texture1d.hpp
+        Да   Да   Да   Да   Да       Да   texture1d_array.hpp
+        Да   Да   Да   Да   Да       Да   texture2d.hpp
+        Да   Да   Да   Да   Да       Да   texture2d_array.hpp
+        Да   Да   Да   Да   Да       Да   texture3d.hpp
+        Да   Да   Да   Да   Да       Да   texture_cube.hpp
+        Да   Да   Да   Да   Да       Да   texture_cube_array.hpp
+        Да   Да   Да   Да   Да       Да   transform.hpp
+        Да   Да   Да   Да   Да       Да   type.hpp
+        Да   Да   Да   Да   Да       Да   view.hpp
+        Да   Да   Да   Да   Да       Да   
+        Да   Да   Да   Да   Да       ДдДЯДЯДЯcore
+        Да   Да   Да   Да   Да               clear.hpp
+        Да   Да   Да   Да   Да               clear.inl
+        Да   Да   Да   Да   Да               comparison.inl
+        Да   Да   Да   Да   Да               convert.inl
+        Да   Да   Да   Да   Да               convert_func.hpp
+        Да   Да   Да   Да   Да               coord.hpp
+        Да   Да   Да   Да   Да               copy.inl
+        Да   Да   Да   Да   Да               dummy.cpp
+        Да   Да   Да   Да   Да               duplicate.inl
+        Да   Да   Да   Да   Да               dx.inl
+        Да   Да   Да   Да   Да               file.hpp
+        Да   Да   Да   Да   Да               file.inl
+        Да   Да   Да   Да   Да               filter.hpp
+        Да   Да   Да   Да   Да               filter.inl
+        Да   Да   Да   Да   Да               filter_compute.hpp
+        Да   Да   Да   Да   Да               flip.hpp
+        Да   Да   Да   Да   Да               flip.inl
+        Да   Да   Да   Да   Да               format.inl
+        Да   Да   Да   Да   Да               generate_mipmaps.inl
+        Да   Да   Да   Да   Да               gl.inl
+        Да   Да   Да   Да   Да               image.inl
+        Да   Да   Да   Да   Да               levels.inl
+        Да   Да   Да   Да   Да               load.inl
+        Да   Да   Да   Да   Да               load_dds.inl
+        Да   Да   Да   Да   Да               load_kmg.inl
+        Да   Да   Да   Да   Да               load_ktx.inl
+        Да   Да   Да   Да   Да               make_texture.inl
+        Да   Да   Да   Да   Да               mipmaps_compute.hpp
+        Да   Да   Да   Да   Да               reduce.inl
+        Да   Да   Да   Да   Да               sampler.inl
+        Да   Да   Да   Да   Да               sampler1d.inl
+        Да   Да   Да   Да   Да               sampler1d_array.inl
+        Да   Да   Да   Да   Да               sampler2d.inl
+        Да   Да   Да   Да   Да               sampler2d_array.inl
+        Да   Да   Да   Да   Да               sampler3d.inl
+        Да   Да   Да   Да   Да               sampler_cube.inl
+        Да   Да   Да   Да   Да               sampler_cube_array.inl
+        Да   Да   Да   Да   Да               save.inl
+        Да   Да   Да   Да   Да               save_dds.inl
+        Да   Да   Да   Да   Да               save_kmg.inl
+        Да   Да   Да   Да   Да               save_ktx.inl
+        Да   Да   Да   Да   Да               storage.hpp
+        Да   Да   Да   Да   Да               storage.inl
+        Да   Да   Да   Да   Да               storage_linear.hpp
+        Да   Да   Да   Да   Да               storage_linear.inl
+        Да   Да   Да   Да   Да               texture.inl
+        Да   Да   Да   Да   Да               texture1d.inl
+        Да   Да   Да   Да   Да               texture1d_array.inl
+        Да   Да   Да   Да   Да               texture2d.inl
+        Да   Да   Да   Да   Да               texture2d_array.inl
+        Да   Да   Да   Да   Да               texture3d.inl
+        Да   Да   Да   Да   Да               texture_cube.inl
+        Да   Да   Да   Да   Да               texture_cube_array.inl
+        Да   Да   Да   Да   Да               transform.inl
+        Да   Да   Да   Да   Да               view.inl
+        Да   Да   Да   Да   Да               workaround.hpp
+        Да   Да   Да   Да   Да               
+        Да   Да   Да   Да   ДеДЯДЯДЯgtc
+        Да   Да   Да   Да   Да       CMakeLists.txt
+        Да   Да   Да   Да   Да       gtc_bitfield.cpp
+        Да   Да   Да   Да   Да       gtc_color_space.cpp
+        Да   Да   Да   Да   Да       gtc_constants.cpp
+        Да   Да   Да   Да   Да       gtc_epsilon.cpp
+        Да   Да   Да   Да   Да       gtc_functions.cpp
+        Да   Да   Да   Да   Да       gtc_integer.cpp
+        Да   Да   Да   Да   Да       gtc_matrix_access.cpp
+        Да   Да   Да   Да   Да       gtc_matrix_integer.cpp
+        Да   Да   Да   Да   Да       gtc_matrix_inverse.cpp
+        Да   Да   Да   Да   Да       gtc_matrix_transform.cpp
+        Да   Да   Да   Да   Да       gtc_noise.cpp
+        Да   Да   Да   Да   Да       gtc_packing.cpp
+        Да   Да   Да   Да   Да       gtc_quaternion.cpp
+        Да   Да   Да   Да   Да       gtc_random.cpp
+        Да   Да   Да   Да   Да       gtc_reciprocal.cpp
+        Да   Да   Да   Да   Да       gtc_round.cpp
+        Да   Да   Да   Да   Да       gtc_type_aligned.cpp
+        Да   Да   Да   Да   Да       gtc_type_precision.cpp
+        Да   Да   Да   Да   Да       gtc_type_ptr.cpp
+        Да   Да   Да   Да   Да       gtc_ulp.cpp
+        Да   Да   Да   Да   Да       gtc_user_defined_types.cpp
+        Да   Да   Да   Да   Да       gtc_vec1.cpp
+        Да   Да   Да   Да   Да       
+        Да   Да   Да   Да   ДдДЯДЯДЯgtx
+        Да   Да   Да   Да           CMakeLists.txt
+        Да   Да   Да   Да           gtx_associated_min_max.cpp
+        Да   Да   Да   Да           gtx_closest_point.cpp
+        Да   Да   Да   Да           gtx_color_encoding.cpp
+        Да   Да   Да   Да           gtx_color_space.cpp
+        Да   Да   Да   Да           gtx_color_space_YCoCg.cpp
+        Да   Да   Да   Да           gtx_common.cpp
+        Да   Да   Да   Да           gtx_compatibility.cpp
+        Да   Да   Да   Да           gtx_component_wise.cpp
+        Да   Да   Да   Да           gtx_dual_quaternion.cpp
+        Да   Да   Да   Да           gtx_euler_angle.cpp
+        Да   Да   Да   Да           gtx_extend.cpp
+        Да   Да   Да   Да           gtx_extended_min_max.cpp
+        Да   Да   Да   Да           gtx_extented_min_max.cpp
+        Да   Да   Да   Да           gtx_exterior_product.cpp
+        Да   Да   Да   Да           gtx_fast_exponential.cpp
+        Да   Да   Да   Да           gtx_fast_square_root.cpp
+        Да   Да   Да   Да           gtx_fast_trigonometry.cpp
+        Да   Да   Да   Да           gtx_gradient_paint.cpp
+        Да   Да   Да   Да           gtx_handed_coordinate_space.cpp
+        Да   Да   Да   Да           gtx_integer.cpp
+        Да   Да   Да   Да           gtx_intersect.cpp
+        Да   Да   Да   Да           gtx_int_10_10_10_2.cpp
+        Да   Да   Да   Да           gtx_io.cpp
+        Да   Да   Да   Да           gtx_log_base.cpp
+        Да   Да   Да   Да           gtx_matrix_cross_product.cpp
+        Да   Да   Да   Да           gtx_matrix_decompose.cpp
+        Да   Да   Да   Да           gtx_matrix_factorisation.cpp
+        Да   Да   Да   Да           gtx_matrix_interpolation.cpp
+        Да   Да   Да   Да           gtx_matrix_major_storage.cpp
+        Да   Да   Да   Да           gtx_matrix_operation.cpp
+        Да   Да   Да   Да           gtx_matrix_query.cpp
+        Да   Да   Да   Да           gtx_matrix_transform_2d.cpp
+        Да   Да   Да   Да           gtx_mixed_product.cpp
+        Да   Да   Да   Да           gtx_norm.cpp
+        Да   Да   Да   Да           gtx_normal.cpp
+        Да   Да   Да   Да           gtx_normalize_dot.cpp
+        Да   Да   Да   Да           gtx_number_precision.cpp
+        Да   Да   Да   Да           gtx_optimum_pow.cpp
+        Да   Да   Да   Да           gtx_orthonormalize.cpp
+        Да   Да   Да   Да           gtx_perpendicular.cpp
+        Да   Да   Да   Да           gtx_polar_coordinates.cpp
+        Да   Да   Да   Да           gtx_projection.cpp
+        Да   Да   Да   Да           gtx_quaternion.cpp
+        Да   Да   Да   Да           gtx_random.cpp
+        Да   Да   Да   Да           gtx_range.cpp
+        Да   Да   Да   Да           gtx_rotate_normalized_axis.cpp
+        Да   Да   Да   Да           gtx_rotate_vector.cpp
+        Да   Да   Да   Да           gtx_scalar_multiplication.cpp
+        Да   Да   Да   Да           gtx_scalar_relational.cpp
+        Да   Да   Да   Да           gtx_simd_mat4.cpp
+        Да   Да   Да   Да           gtx_simd_vec4.cpp
+        Да   Да   Да   Да           gtx_spline.cpp
+        Да   Да   Да   Да           gtx_string_cast.cpp
+        Да   Да   Да   Да           gtx_type_aligned.cpp
+        Да   Да   Да   Да           gtx_type_trait.cpp
+        Да   Да   Да   Да           gtx_vector_angle.cpp
+        Да   Да   Да   Да           gtx_vector_query.cpp
+        Да   Да   Да   Да           gtx_vec_swizzle.cpp
+        Да   Да   Да   Да           gtx_wrap.cpp
+        Да   Да   Да   Да           
+        Да   Да   Да   ДдДЯДЯДЯutil
+        Да   Да   Да       Да   autoexp.txt
+        Да   Да   Да       Да   autoexp.vc2010.dat
+        Да   Да   Да       Да   glm.natvis
+        Да   Да   Да       Да   usertype.dat
+        Да   Да   Да       Да   
+        Да   Да   Да       ДдДЯДЯДЯconan-package
+        Да   Да   Да           Да   .gitignore
+        Да   Да   Да           Да   conanfile.py
+        Да   Да   Да           Да   README.md
+        Да   Да   Да           Да   
+        Да   Да   Да           ДеДЯДЯДЯlib_licenses
+        Да   Да   Да           Да       LICENSE1.txt
+        Да   Да   Да           Да       LICENSE2.txt
+        Да   Да   Да           Да       
+        Да   Да   Да           ДдДЯДЯДЯtest_package
+        Да   Да   Да                   CMakeLists.txt
+        Да   Да   Да                   conanfile.py
+        Да   Да   Да                   main.cpp
+        Да   Да   Да                   
+        Да   Да   ДеДЯДЯДЯimgui
+        Да   Да   Да       imconfig.h
+        Да   Да   Да       imgui.cpp
+        Да   Да   Да       imgui.h
+        Да   Да   Да       ImGuizmo.cpp
+        Да   Да   Да       ImGuizmo.h
+        Да   Да   Да       ImGuizmo.LICENSE
+        Да   Да   Да       imgui_draw.cpp
+        Да   Да   Да       imgui_impl_btgui.cpp
+        Да   Да   Да       imgui_impl_btgui.h
+        Да   Да   Да       imgui_internal.h
+        Да   Да   Да       stb_image.h
+        Да   Да   Да       stb_rect_pack.h
+        Да   Да   Да       stb_textedit.h
+        Да   Да   Да       stb_truetype.h
+        Да   Да   Да       
+        Да   Да   ДеДЯДЯДЯnativefiledialog
+        Да   Да   Да   Да   LICENSE
+        Да   Да   Да   Да   README.md
+        Да   Да   Да   Да   
+        Да   Да   Да   ДеДЯДЯДЯscreens
+        Да   Да   Да   Да       open_cocoa.png
+        Да   Да   Да   Да       open_gtk3.png
+        Да   Да   Да   Да       open_win8.png
+        Да   Да   Да   Да       
+        Да   Да   Да   ДеДЯДЯДЯsrc
+        Да   Да   Да   Да   Да   common.h
+        Да   Да   Да   Да   Да   nfd_cocoa.m
+        Да   Да   Да   Да   Да   nfd_common.c
+        Да   Да   Да   Да   Да   nfd_common.h
+        Да   Да   Да   Да   Да   nfd_gtk.c
+        Да   Да   Да   Да   Да   nfd_win.cpp
+        Да   Да   Да   Да   Да   SConstruct
+        Да   Да   Да   Да   Да   
+        Да   Да   Да   Да   ДдДЯДЯДЯinclude
+        Да   Да   Да   Да           nfd.h
+        Да   Да   Да   Да           
+        Да   Да   Да   ДдДЯДЯДЯtest
+        Да   Да   Да           SConstruct
+        Да   Да   Да           test_opendialog.c
+        Да   Да   Да           test_opendialogmultiple.c
+        Да   Да   Да           test_savedialog.c
+        Да   Да   Да           
+        Да   Да   ДеДЯДЯДЯOpenGLWindow
+        Да   Да   Да       CommonWindowInterface.h
+        Да   Да   Да       MacOpenGLWindow.h
+        Да   Да   Да       MacOpenGLWindow.mm
+        Да   Да   Да       OpenGL2Include.h
+        Да   Да   Да       OpenGLInclude.h
+        Да   Да   Да       Win32InternalWindowData.h
+        Да   Да   Да       Win32OpenGLWindow.cpp
+        Да   Да   Да       Win32OpenGLWindow.h
+        Да   Да   Да       Win32Window.cpp
+        Да   Да   Да       Win32Window.h
+        Да   Да   Да       X11OpenGLWindow.cpp
+        Да   Да   Да       X11OpenGLWindow.h
+        Да   Да   Да       
+        Да   Да   ДдДЯДЯДЯThirdPartyLibs
+        Да   Да       ДдДЯДЯДЯGlew
+        Да   Да           Да   glew.c
+        Да   Да           Да   
+        Да   Да           ДдДЯДЯДЯCustomGL
+        Да   Да                   glew.h
+        Да   Да                   glxew.h
+        Да   Да                   wglew.h
+        Да   Да                   
+        Да   ДеДЯДЯДЯdxview
+        Да   Да   Да   CMakeLists.txt
+        Да   Да   Да   README.md
+        Да   Да   Да   
+        Да   Да   ДеДЯДЯДЯres
+        Да   Да   Да       gray.hlsl
+        Да   Да   Да       lighting.hlsl
+        Да   Да   Да       primitive.hlsl
+        Да   Да   Да       
+        Да   Да   ДдДЯДЯДЯsrc
+        Да   Да           dxview.cc
+        Да   Да           Viewer.cc
+        Да   Да           Viewer.h
+        Да   Да           
+        Да   ДеДЯДЯДЯgltfutil
+        Да   Да       CMakeLists.txt
+        Да   Да       gltfuilconfig.h
+        Да   Да       main.cc
+        Да   Да       stb_image_write.h
+        Да   Да       texture_dumper.cc
+        Да   Да       texture_dumper.h
+        Да   Да       
+        Да   ДеДЯДЯДЯglview
+        Да   Да   Да   .gitignore
+        Да   Да   Да   CMakeLists.txt
+        Да   Да   Да   glview.cc
+        Да   Да   Да   glview.sln
+        Да   Да   Да   premake5.lua
+        Да   Да   Да   README.md
+        Да   Да   Да   shader.frag
+        Да   Да   Да   shader.vert
+        Да   Да   Да   
+        Да   Да   ДеДЯДЯДЯcmake
+        Да   Да   Да       GLFW3Config.cmake
+        Да   Да   Да       
+        Да   Да   ДдДЯДЯДЯglview
+        Да   Да           glview.vcxproj
+        Да   Да           glview.vcxproj.filters
+        Да   Да           glview.vcxproj.user
+        Да   Да           packages.config
+        Да   Да           
+        Да   ДеДЯДЯДЯraytrace
+        Да   Да   Да   config.json
+        Да   Да   Да   cornellbox_suzanne.obj
+        Да   Да   Да   gltf-loader.cc
+        Да   Да   Да   gltf-loader.h
+        Да   Да   Да   main.cc
+        Да   Да   Да   material.h
+        Да   Да   Да   matrix.cc
+        Да   Да   Да   mesh.h
+        Да   Да   Да   nanort.cc
+        Да   Да   Да   nanort.h
+        Да   Да   Да   nanosg.h
+        Да   Да   Да   obj-loader.cc
+        Да   Да   Да   obj-loader.h
+        Да   Да   Да   premake5.lua
+        Да   Да   Да   README.md
+        Да   Да   Да   render-config.cc
+        Да   Да   Да   render-config.h
+        Да   Да   Да   render.cc
+        Да   Да   Да   render.h
+        Да   Да   Да   stbi-impl.cc
+        Да   Да   Да   viwewer.make
+        Да   Да   Да   
+        Да   Да   ДдДЯДЯДЯimages
+        Да   Да           nanosg-demo.png
+        Да   Да           
+        Да   ДеДЯДЯДЯsaver
+        Да   Да       main.cc
+        Да   Да       Makefile.dev
+        Да   Да       README.md
+        Да   Да       
+        Да   ДдДЯДЯДЯvalidator
+        Да       Да   CMakeLists.txt
+        Да       Да   LICENSE.json-schema-validator.MIT
+        Да       Да   LICENSE.jsonhpp.MIT
+        Да       Да   README.md
+        Да       Да   
+        Да       ДеДЯДЯДЯapp
+        Да       Да       tinygltf-validate.cc
+        Да       Да       
+        Да       ДдДЯДЯДЯsrc
+        Да               json-schema-draft4.json.cpp
+        Да               json-schema.hpp
+        Да               json-uri.cpp
+        Да               json-validator.cpp
+        Да               json.hpp
+        Да               
+        ДеДЯДЯДЯexperimental
+        Да       gen.py
+        Да       README.md
+        Да       
+        ДеДЯДЯДЯmodels
+        Да   Да   box01.glb
+        Да   Да   
+        Да   ДеДЯДЯДЯBoundsChecking
+        Да   Да       integer-out-of-bounds.gltf
+        Да   Да       invalid-buffer-index.gltf
+        Да   Да       invalid-buffer-view-index.gltf
+        Да   Да       invalid-primitive-indices.gltf
+        Да   Да       simpleTriangle.bin
+        Да   Да       
+        Да   ДеДЯДЯДЯCube
+        Да   Да       Cube.bin
+        Да   Да       Cube.gltf
+        Да   Да       Cube_BaseColor.png
+        Да   Да       Cube_MetallicRoughness.png
+        Да   Да       README.md
+        Да   Да       
+        Да   ДеДЯДЯДЯCube-texture-ext
+        Да   Да       Cube-textransform.gltf
+        Да   Да       Cube.bin
+        Да   Да       Cube_MetallicRoughness.png
+        Да   Да       README.md
+        Да   Да       
+        Да   ДеДЯДЯДЯCubeImageUriSpaces
+        Да   Да       2x2 image  has multiple      spaces.png
+        Да   Да       2x2 image has spaces.png
+        Да   Да       CubeImageUriMultipleSpaces.gltf
+        Да   Да       CubeImageUriSpaces.bin
+        Да   Да       CubeImageUriSpaces.gltf
+        Да   Да       
+        Да   ДеДЯДЯДЯExtensions-issue97
+        Да   Да       test.gltf
+        Да   Да       
+        Да   ДеДЯДЯДЯExtensions-overwrite-issue261
+        Да   Да       issue-261.bin
+        Да   Да       issue-261.gltf
+        Да   Да       
+        Да   ДеДЯДЯДЯregression
+        Да   Да       unassigned-skeleton.gltf
+        Да   Да       zero-sized-bin-chunk-issue-440.glb
+        Да   Да       
+        Да   ДдДЯДЯДЯSparseMorphTargets-issue280
+        Да           singleBlendshapeCube_sparse.glb
+        Да           
+        ДеДЯДЯДЯtests
+        Да   Да   catch.hpp
+        Да   Да   issue-416.gltf
+        Да   Да   issue-492.glb
+        Да   Да   Makefile
+        Да   Да   tester.cc
+        Да   Да   tester_intensive_customjson.cc
+        Да   Да   
+        Да   ДеДЯДЯДЯfuzzer
+        Да   Да       fuzz_gltf.cc
+        Да   Да       fuzz_gltf_customjson.cc
+        Да   Да       meson.build
+        Да   Да       README.md
+        Да   Да       
+        Да   ДдДЯДЯДЯv3
+        Да       ДдДЯДЯДЯfuzzer
+        Да               fuzz_gltf_v3.cc
+        Да               Makefile
+        Да               
+        ДеДЯДЯДЯtools
+        Да   ДдДЯДЯДЯwindows
+        Да           premake5.exe
+        Да           
+        ДдДЯДЯДЯwasm
+                Makefile
+                README.md
+                

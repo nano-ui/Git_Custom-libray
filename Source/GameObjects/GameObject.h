@@ -5,6 +5,7 @@
 #include <d3d11.h>
 
 #include "../Graphics/ShapeRenderer.h"
+#include "../ObjectsRender/Model.h"
 
 class GameObject
 {
@@ -13,7 +14,7 @@ public:
 	GameObject();
 
 	//デストラクタ
-	~GameObject();
+	virtual ~GameObject();
 
 	//初期化処理
 	 virtual void Initialize() = 0;
@@ -38,6 +39,9 @@ public:
 
 	 //ワールド変換行列の合成、取得
 	 DirectX::XMMATRIX GetWorldMatrix()const;
+
+	 //座標取得
+	 DirectX::XMFLOAT3 GetPosition()const { return position; }
 
 protected:
 	DirectX::XMFLOAT3 position;	//位置

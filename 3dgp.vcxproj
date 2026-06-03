@@ -122,19 +122,15 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;USE_IMGUI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-<<<<<<< HEAD
-      <AdditionalIncludeDirectories>.\DirectXTK-main\DirectXTK-main\Inc;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\cereal-master\include;.\External\tinygltf;.\External\cereal-master;.\External\DirectXTK-main;.\External\imgui;.\External\json-develop;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-=======
-      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\External\cereal-master\include;.\External\DirectXTK-main\DirectXTK-main\Inc;.\External\imgui;.\External\json-develop;.\External\tinygltf-release;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
->>>>>>> Scene遷移
+      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\External\cereal-master\include;.\External\DirectXTK-main\DirectXTK-main\Inc;.\External\DirectXTex;.\External\imgui-docking;.\External\ImGuizmo;.\External\json-develop;.\External\imgui;.\External\json-develop;.\External\tinygltf-release;%(AdditionalIncludeDirectories);.\External\DirectXTe;.\External\DirectXTex</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\lib\x64\debug;.\External\DirectXTK-main\DirectXTK-main\Bin\Desktop_2019\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;d3d11.lib;dxgi.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\lib\x64\debug;.\External\DirectXTK-main\DirectXTK-main\Bin\Desktop_2019\x64\Debug;%(AdditionalLibraryDirectories);$(SolutionDir)External\DirectXTex\Lib\x64\Debug;.\External\DirectXTex\Bin\Desktop_2022\x64\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;d3d11.lib;dxgi.lib;DirectXTK.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -191,7 +187,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\External\cereal-master\include;.\External\DirectXTK-main\DirectXTK-main\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\External\cereal-master\include;.\External\DirectXTK-main\DirectXTK-main\Inc;.\External\DirectXTex;.\External\imgui-docking;.\External\ImGuizmo;.\External\json-develop;%(AdditionalIncludeDirectories);.\External\DirectXTe;.\External\DirectXTex</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -199,8 +195,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\lib\x64\release;.\External\DirectXTK-main\DirectXTK-main\Bin\Desktop_2019\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;d3d11.lib;dxgi.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\lib\x64\release;.\External\DirectXTK-main\DirectXTK-main\Bin\Desktop_2019\x64\Release;%(AdditionalLibraryDirectories);$(SolutionDir)External\DirectXTex\Lib\x64\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;d3d11.lib;dxgi.lib;DirectXTK.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -217,14 +213,15 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="External\imgui\imgui.cpp" />
-    <ClCompile Include="External\imgui\imgui_draw.cpp" />
-    <ClCompile Include="External\imgui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="External\imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="External\imgui\imgui_ja_gryph_ranges.cpp" />
-    <ClCompile Include="External\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui_demo.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui_draw.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui_impl_dx11.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui_impl_win32.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui_widgets.cpp" />
     <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Camera\FreeCamera.cpp" />
+    <ClCompile Include="Source\Collision\CollisionLogic.cpp" />
     <ClCompile Include="Source\Collision\SpaceDivisionCast.cpp" />
     <ClCompile Include="Source\Common\main.cpp" />
     <ClCompile Include="Source\FbxModel\FbxAnimation.cpp" />
@@ -234,10 +231,8 @@
     <ClCompile Include="Source\FbxModel\FbxSkinnedModel.cpp" />
     <ClCompile Include="Source\FbxModel\FbxSkinnedMesh.cpp" />
     <ClCompile Include="Source\FbxModel\FbxSkinnedResource.cpp" />
-<<<<<<< HEAD
-    <ClCompile Include="Source\GlthModel\GlthStaticModel\GltfStaticMaterial.cpp" />
-    <ClCompile Include="Source\GlthModel\GlthStaticModel\GlthStaticModel.cpp" />
-=======
+    <ClCompile Include="Source\GameObjects\Characters\Character.cpp" />
+    <ClCompile Include="Source\GameObjects\Characters\Player.cpp" />
     <ClCompile Include="Source\GameObjects\GameObject.cpp" />
     <ClCompile Include="Source\GameObjects\ObjectManager.cpp" />
     <ClCompile Include="Source\GameObjects\Objects\Stage.cpp" />
@@ -246,7 +241,6 @@
     <ClCompile Include="Source\GltfModel\GltfModelData.cpp" />
     <ClCompile Include="Source\GltfModel\GltfModelRenderer.cpp" />
     <ClCompile Include="Source\GltfModel\TinygltfImpl.cpp" />
->>>>>>> Scene遷移
     <ClCompile Include="Source\Graphics\DirectXDevice.cpp" />
     <ClCompile Include="Source\Graphics\framebuffer.cpp" />
     <ClCompile Include="Source\Graphics\framework.cpp" />
@@ -259,8 +253,13 @@
     <ClCompile Include="Source\Graphics\ShapeRenderer.cpp" />
     <ClCompile Include="Source\Input\Input.cpp" />
     <ClCompile Include="Source\Light\Light.cpp" />
+    <ClCompile Include="Source\Move\CircularMove.cpp" />
+    <ClCompile Include="Source\Move\LinearMove.cpp" />
+    <ClCompile Include="Source\Move\MoveFactory.cpp" />
+    <ClCompile Include="Source\Move\RepulsiveMove.cpp" />
     <ClCompile Include="Source\ObjectsRender\AssetManager.cpp" />
     <ClCompile Include="Source\ObjectsRender\geometric_primitive.cpp" />
+    <ClCompile Include="Source\ObjectsRender\GpuResourceUtils.cpp" />
     <ClCompile Include="Source\ObjectsRender\Model.cpp" />
     <ClCompile Include="Source\ObjectsRender\SkinnedMeshComponents.cpp" />
     <ClCompile Include="Source\ObjectsRender\skinned_mesh.cpp" />
@@ -268,6 +267,8 @@
     <ClCompile Include="Source\ObjectsRender\sprite_batch.cpp" />
     <ClCompile Include="Source\ObjectsRender\static_mesh.cpp" />
     <ClCompile Include="Source\ObjectsRender\texture.cpp" />
+    <ClCompile Include="Source\Rotation\LockAtRotation.cpp" />
+    <ClCompile Include="Source\Rotation\RotationFactory.cpp" />
     <ClCompile Include="Source\Scene\MainScene.cpp" />
     <ClCompile Include="Source\Scene\SceneGame.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
@@ -279,16 +280,18 @@
     <ClCompile Include="Source\Shaders\LuminanceExtractionShader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="External\imgui\imconfig.h" />
-    <ClInclude Include="External\imgui\imgui.h" />
-    <ClInclude Include="External\imgui\imgui_impl_dx11.h" />
-    <ClInclude Include="External\imgui\imgui_impl_win32.h" />
-    <ClInclude Include="External\imgui\imgui_internal.h" />
-    <ClInclude Include="External\imgui\imstb_rectpack.h" />
-    <ClInclude Include="External\imgui\imstb_textedit.h" />
-    <ClInclude Include="External\imgui\imstb_truetype.h" />
+    <ClInclude Include="External\imgui-docking\imconfig.h" />
+    <ClInclude Include="External\imgui-docking\imgui.h" />
+    <ClInclude Include="External\imgui-docking\imgui_impl_dx11.h" />
+    <ClInclude Include="External\imgui-docking\imgui_impl_win32.h" />
+    <ClInclude Include="External\imgui-docking\imgui_internal.h" />
+    <ClInclude Include="External\imgui-docking\imstb_rectpack.h" />
+    <ClInclude Include="External\imgui-docking\imstb_textedit.h" />
+    <ClInclude Include="External\imgui-docking\imstb_truetype.h" />
     <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Camera\FreeCamera.h" />
+    <ClInclude Include="Source\Collision\Collider.h" />
+    <ClInclude Include="Source\Collision\CollisionLogic.h" />
     <ClInclude Include="Source\Collision\SpaceDivisionCast.h" />
     <ClInclude Include="Source\Common\high_resolution_timer.h" />
     <ClInclude Include="Source\Common\misc.h" />
@@ -300,11 +303,8 @@
     <ClInclude Include="Source\FbxModel\FbxSkinnedModel.h" />
     <ClInclude Include="Source\FbxModel\FbxSkinnedMesh.h" />
     <ClInclude Include="Source\FbxModel\FbxSkinnedResource.h" />
-<<<<<<< HEAD
-    <ClInclude Include="Source\GlthModel\GlthStaticModel\GltfStaticMaterial.h" />
-    <ClInclude Include="Source\GlthModel\GlthStaticModel\GlthStaticModel.h" />
-    <ClInclude Include="Source\GlthModel\GlthStaticModel\GlthStaticModelData.h" />
-=======
+    <ClInclude Include="Source\GameObjects\Characters\Character.h" />
+    <ClInclude Include="Source\GameObjects\Characters\Player.h" />
     <ClInclude Include="Source\GameObjects\GameObject.h" />
     <ClInclude Include="Source\GameObjects\ObjectManager.h" />
     <ClInclude Include="Source\GameObjects\Objects\Stage.h" />
@@ -312,7 +312,6 @@
     <ClInclude Include="Source\GltfModel\GltfModelAnimation.h" />
     <ClInclude Include="Source\GltfModel\GltfModelData.h" />
     <ClInclude Include="Source\GltfModel\GltfModelRenderer.h" />
->>>>>>> Scene遷移
     <ClInclude Include="Source\Graphics\DirectXDevice.h" />
     <ClInclude Include="Source\Graphics\fbx_utility.h" />
     <ClInclude Include="Source\Graphics\framebuffer.h" />
@@ -326,8 +325,14 @@
     <ClInclude Include="Source\Graphics\ShapeRenderer.h" />
     <ClInclude Include="Source\Input\Input.h" />
     <ClInclude Include="Source\Light\Light.h" />
+    <ClInclude Include="Source\Move\CircularMove.h" />
+    <ClInclude Include="Source\Move\LinearMove.h" />
+    <ClInclude Include="Source\Move\MoveBase.h" />
+    <ClInclude Include="Source\Move\MoveFactory.h" />
+    <ClInclude Include="Source\Move\RepulsiveMove.h" />
     <ClInclude Include="Source\ObjectsRender\AssetManager.h" />
     <ClInclude Include="Source\ObjectsRender\geometric_primitive.h" />
+    <ClInclude Include="Source\ObjectsRender\GpuResourceUtils.h" />
     <ClInclude Include="Source\ObjectsRender\Model.h" />
     <ClInclude Include="Source\ObjectsRender\SkinnedMeshComponents.h" />
     <ClInclude Include="Source\ObjectsRender\skinned_mesh.h" />
@@ -335,6 +340,9 @@
     <ClInclude Include="Source\ObjectsRender\sprite_batch.h" />
     <ClInclude Include="Source\ObjectsRender\static_mesh.h" />
     <ClInclude Include="Source\ObjectsRender\texture.h" />
+    <ClInclude Include="Source\Rotation\LockAtRotation.h" />
+    <ClInclude Include="Source\Rotation\RotationBase.h" />
+    <ClInclude Include="Source\Rotation\RotationFactory.h" />
     <ClInclude Include="Source\Scene\MainScene.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Scene\SceneGame.h" />
@@ -373,12 +381,8 @@
     <None Include="Shaders\Compiled\static_mesh_vs.cso" />
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli" />
     <None Include="Shaders\SoureCode\geometric_primitive.hlsli" />
-<<<<<<< HEAD
-    <None Include="Shaders\SoureCode\gltf_static_mesh.hlsli" />
-=======
     <None Include="Shaders\SoureCode\gltf_model.hlsli" />
     <None Include="Shaders\SoureCode\shape_renderer.hlsli" />
->>>>>>> Scene遷移
     <None Include="Shaders\SoureCode\skinned_mesh.hlsli" />
     <None Include="Shaders\SoureCode\sprite.hlsli" />
     <None Include="Shaders\SoureCode\static_mesh.hlsli" />
@@ -424,33 +428,21 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
       <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
     </FxCompile>
-<<<<<<< HEAD
-    <FxCompile Include="Shaders\SoureCode\gltf_static_mesh_ps.hlsl">
-=======
     <FxCompile Include="Shaders\SoureCode\gltf_model_ps.hlsl">
->>>>>>> Scene遷移
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-<<<<<<< HEAD
-    </FxCompile>
-    <FxCompile Include="Shaders\SoureCode\gltf_static_mesh_vsr.hlsl">
-=======
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
       <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\gltf_model_vs.hlsl">
->>>>>>> Scene遷移
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-<<<<<<< HEAD
-=======
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
       <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
->>>>>>> Scene遷移
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\luminance_extraction_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

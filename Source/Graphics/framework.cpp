@@ -5,12 +5,54 @@
 #include "../Input/Input.h"
 
 #include <sstream>
+#include <memory>
+
+namespace
+{
+	struct GraphicsScopeDeleter
+	{
+		void operator()(Graphics* graphics) const noexcept
+		{
+			if (graphics)
+			{
+				graphics->Finalize();
+			}
+		}
+	};
+
+	struct SceneManagerScopeDeleter
+	{
+		void operator()(SceneManager* scene_manager) const noexcept
+		{
+			if (scene_manager)
+			{
+				scene_manager->Finalize();
+			}
+		}
+	};
+}
 
 #ifdef USE_IMGUI
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+namespace
+{
+	struct ImGuiScopeDeleter
+	{
+		void operator()(ImGuiContext* context) const noexcept
+		{
+			if (context)
+			{
+				ImGui_ImplDX11_Shutdown();
+				ImGui_ImplWin32_Shutdown();
+				ImGui::DestroyContext(context);
+			}
+		}
+	};
+}
 #endif
 
 framework::framework(HWND hwnd):hwnd(hwnd)
@@ -19,41 +61,58 @@ framework::framework(HWND hwnd):hwnd(hwnd)
 
 framework::~framework()
 {
-	Graphics::Instance().Finalize();
 }
 
 int framework::run()
 {
 	MSG msg{};
+	std::unique_ptr<Graphics, GraphicsScopeDeleter> graphics_scope(&Graphics::Instance());
+	std::unique_ptr<SceneManager, SceneManagerScopeDeleter> scene_manager_scope(&SceneManager::Instance());
 
 	//グラフィックの初期化
-	if (!Graphics::Instance().Initialize(hwnd))
+	if (!graphics_scope->Initialize(hwnd))
 	{
 		return 0;
 	}
 
 #ifdef USE_IMGUI
+	std::unique_ptr<ImGuiContext, ImGuiScopeDeleter> imgui_scope;
 	//ImGuiの初期化
 	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui_ImplWin32_Init(hwnd);
-	ImGui_ImplDX11_Init(Graphics::Instance().GetDevice(), Graphics::Instance().GetContext());
+	imgui_scope.reset(ImGui::CreateContext());
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	if (!ImGui_ImplWin32_Init(hwnd))
+	{
+		return 0;
+	}
+	if (!ImGui_ImplDX11_Init(graphics_scope->GetDevice(), graphics_scope->GetContext()))
+	{
+		return 0;
+	}
 	ImGui::StyleColorsDark();
 #endif
 	//初期シーンの登録
 	std::unique_ptr<SceneTitle> title_scene = std::make_unique<SceneTitle>();
-	SceneManager::Instance().ChangeScene(std::move(title_scene));
+	scene_manager_scope->ChangeScene(std::move(title_scene));
 	Input::Instance().Initialize();
 
 	//メインループ
 	while (WM_QUIT != msg.message)
 	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		//現在のフレームに溜まっているWindowsメッセージを全て消化
+		while (PeekMessage(&msg,NULL,0,0,PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+			if (WM_QUIT == msg.message)
+			{
+				break;
+			}
+
 		}
-		else
+		if (WM_QUIT != msg.message)
 		{
 #ifdef USE_IMGUI
 			ImGui_ImplDX11_NewFrame();
@@ -66,26 +125,23 @@ int framework::run()
 			Input::Instance().Update();
 
 			//シーンの更新と描画
-			SceneManager::Instance().Update(tictoc.time_interval());
-			Graphics::Instance().BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);
-			SceneManager::Instance().Render(tictoc.time_interval());
+			scene_manager_scope->Update(tictoc.time_interval());
+			graphics_scope->BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);
+			scene_manager_scope->Render(tictoc.time_interval());
 #ifdef USE_IMGUI
 			ImGui::Render();
 			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+			if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+			{
+				ImGui::UpdatePlatformWindows();
+				ImGui::RenderPlatformWindowsDefault();
+			}
 #endif // USE_IMGUI
-			Graphics::Instance().EndFrame();
+			graphics_scope->EndFrame();
 		}
 	}
+	scene_manager_scope.reset();
 
-	//シーンの終了処理
-	SceneManager::Instance().Finalize();
-#ifdef USE_IMGUI
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
-#endif
-
-	Graphics::Instance().Finalize();
 	return static_cast<int>(msg.wParam);
 }
 
@@ -93,7 +149,7 @@ LRESULT framework::handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 {
 #ifdef  USE_IMGUI
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
-		return true; 
+		return 1; 
 #endif //  USE_IMGUI
 
 	switch (msg)
@@ -113,11 +169,9 @@ LRESULT framework::handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 			return 0;
 		}
 		break;
-	default:
-		return DefWindowProc(hwnd, msg, wparam, lparam);
 	}
 
-	return LRESULT();
+	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
 void framework::calculate_frame_stats()
@@ -129,12 +183,12 @@ void framework::calculate_frame_stats()
 		float mspf = 1000.0f / fps;
 
 		//表示する文字列を作成
-		std::wostringstream outs;
-		outs.precision(6);
-		outs << L"Game Framework" << L" : FPS : " << fps << L" / " << L"Frame Time : " << mspf << L" (ms)";
+		const size_t buffer_size = 256;
+		wchar_t buffer[buffer_size] = {};
+		swprintf_s(buffer, buffer_size, L"Game Framework : FPS : %.6f / Frame Time : %6f(ms)", fps, mspf);
 
 		//ウィンドウのタイトルを変更
-		SetWindowText(hwnd, outs.str().c_str());
+		SetWindowText(hwnd, buffer);
 
 		//カウンタをリセット
 		frames_per_second = 0;
