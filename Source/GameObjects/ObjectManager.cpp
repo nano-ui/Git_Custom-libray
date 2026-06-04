@@ -1,5 +1,6 @@
 #include "ObjectManager.h"
 #include "GameObject.h"
+#include "../Collision/CollisionManager.h"
 
 //コンストラクタ
 ObjectManager::ObjectManager()
@@ -82,6 +83,13 @@ void ObjectManager::RemoveInactiveObject()
 	{
 		if (!(*iterator)->IsActive())
 		{
+			if (collision_manager)
+			{
+				for (Collider* col : (*iterator)->GetColliders())
+				{
+					collision_manager->Remove(col);
+				}
+			}
 			iterator = game_objects.erase(iterator);
 		}
 		else
@@ -89,4 +97,19 @@ void ObjectManager::RemoveInactiveObject()
 			iterator++;
 		}
 	}
+}
+
+void ObjectManager::Clear()
+{
+	if (collision_manager)
+	{
+		for (auto& object : game_objects)
+		{
+			for (Collider* col : object->GetColliders())
+			{
+				collision_manager->Remove(col);
+			}
+		}
+	}
+	game_objects.clear();
 }

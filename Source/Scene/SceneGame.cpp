@@ -13,16 +13,15 @@
 SceneGame::SceneGame()
 {
 	object_manager = std::make_unique<ObjectManager>();
+	collision_manager = std::make_unique<CollisionManager>();
+	object_manager->SetCollisionManager(collision_manager.get());
+
 	Stage* stage = object_manager->Instantiate<Stage>();
 
 	Player* player = object_manager->Instantiate<Player>();
 
 	camera = std::make_unique<FreeCamera>();
 	light = std::make_unique <Light>();
-
-	collision_manager = std::make_unique<CollisionManager>();
-	collision_manager->Register(player->GetCapsuleCollider());
-	collision_manager->Register(stage->GetCollider());
 }
 
 //デストラクタ

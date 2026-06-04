@@ -152,6 +152,7 @@ struct SpaceDivisionCollider :public Collider
 	SpaceDivisionCast* space_cast;	//‹óŠÔ•ªŠ„ƒf[ƒ^
 	SpaceDivisionCollider()
 	{
+		type = ColliderType::SpaceDivision;
 		space_cast = nullptr;
 	}
 };

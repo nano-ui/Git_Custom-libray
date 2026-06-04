@@ -5,6 +5,7 @@
 
 class ShapeRenderer;
 class GameObject;
+class CollisionManager;
 struct ID3D11DeviceContext;
 
 class ObjectManager
@@ -27,6 +28,15 @@ public:
 		//派生クラスの構築完了を待ってから初期化を実行
 		new_object->Initialize();
 
+		//コライダーの自動登録処理
+		if (collision_manager)
+		{
+			for (Collider* col : new_object->GetColliders())
+			{
+				collision_manager->Register(col);
+			}
+		}
+
 		//マネージャーのリストへ所有権を移動して登録
 		game_objects.push_back(std::move(new_object));
 		return raw_pointer;
@@ -48,7 +58,10 @@ public:
 	void RenderDebug(ShapeRenderer* renderer);
 
 	//全オブジェクトの強制削除処理
-	void Clear() { game_objects.clear(); }
+	void Clear();
+
+	//当たり判定マネージャーの連携
+	void SetCollisionManager(CollisionManager* manager) { collision_manager = manager; }
 
 private:
 	//無効になったオブジェクトの削除処理
@@ -56,5 +69,6 @@ private:
 
 private:
 	std::vector<std::unique_ptr<GameObject>> game_objects;	//ゲームオブジェクトを管理する配列
+	CollisionManager* collision_manager = nullptr;			//CollisionManagerのポインタ
 };
 

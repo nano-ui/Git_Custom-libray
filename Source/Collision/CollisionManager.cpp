@@ -120,17 +120,21 @@ void CollisionManager::RenderGui()
 {
 #ifdef USE_IMGUI
     {
-        ImGui::Checkbox("Enable Global Collision", &is_enable_collision);
+        if (ImGui::CollapsingHeader("CollisionManagerInfo", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            ImGui::Checkbox("Enable Global Collision", &is_enable_collision);
 
-        constexpr float min_cell = 1.0f;
-        constexpr float max_cell = 100.0f;
+            constexpr float min_cell = 1.0f;
+            constexpr float max_cell = 100.0f;
 
-        ImGui::SliderFloat("Grid Cell Size", &cell_size, min_cell, max_cell);
+            ImGui::SliderFloat("Grid Cell Size", &cell_size, min_cell, max_cell);
 
-        ImGui::Text("Registered Spheres: %zu", sphere_colliders.size());
-        ImGui::Text("Registered Spaces: %zu", space_colliders.size());
+            ImGui::Text("Registered Spheres: %zu", sphere_colliders.size());
+            ImGui::Text("Registered Capsules:%zu", capsule_colliders.size());
+            ImGui::Text("Registered Spaces: %zu", space_colliders.size());
 
-        ImGui::Text("Active Grid Cells: %zu", spatial_grid.size());
+            ImGui::Text("Active Grid Cells: %zu", spatial_grid.size());
+        }
     }
 #endif // USE_IMGUI
 }
@@ -278,7 +282,9 @@ void CollisionManager::AddColluderToGrid(Collider* collider)
                 case ColliderType::Sphere:
                     spatial_grid[key].spheres.push_back(static_cast<SphereCollider*>(collider));
                     break;
-
+                case ColliderType::Capsule:
+                    spatial_grid[key].capsules.push_back(static_cast<CapsuleCollider*>(collider));
+                    break;
 
                 default:
                     break;
@@ -304,6 +310,22 @@ GridRange CollisionManager::CalculateGridRenge(Collider* collider) const
         SphereCollider* sphere = static_cast<SphereCollider*>(collider);
         min_pos = { sphere->center.x - sphere->radius,sphere->center.y - sphere->radius,sphere->center.z - sphere->radius };
         max_pos = { sphere->center.x + sphere->radius,sphere->center.y + sphere->radius,sphere->center.z + sphere->radius };
+        break;
+    }
+    case ColliderType::Capsule:
+    {
+        CapsuleCollider* capsule = static_cast<CapsuleCollider*>(collider);
+
+        //点と終点の2つの位置から各軸の最小値を求め、さらに半径を引き算して最小位置を計算
+        min_pos.x = std::min(capsule->start_center.x, capsule->end_center.x) - capsule->radius;
+        min_pos.y = std::min(capsule->start_center.y, capsule->end_center.y) - capsule->radius;
+        min_pos.z = std::min(capsule->start_center.z, capsule->end_center.z) - capsule->radius;
+
+        //始点と終点の2つの位置から各軸の最大値を求め、さらに半径を足し算して最大位置を計算
+        max_pos.x = std::max(capsule->start_center.x, capsule->end_center.x) + capsule->radius;
+        max_pos.y = std::max(capsule->start_center.y, capsule->end_center.y) + capsule->radius;
+        max_pos.z = std::max(capsule->start_center.z, capsule->end_center.z) + capsule->radius;
+
         break;
     }
     default:

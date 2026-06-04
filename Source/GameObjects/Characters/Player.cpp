@@ -32,6 +32,7 @@ void Player::Initialize()
 	capsule_collider.attribute = ColliderAttribute::Player;
 	capsule_collider.listener = this;
 	capsule_collider.is_active = true;
+	AddCollider(&capsule_collider);
 }
 
 //XVˆ—
