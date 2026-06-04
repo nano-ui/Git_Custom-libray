@@ -2,6 +2,9 @@
 #include "GameObject.h"
 #include "../Collision/CollisionManager.h"
 
+//静的変数の実体定義
+ObjectManager* ObjectManager::instance_ptr = nullptr;
+
 //コンストラクタ
 ObjectManager::ObjectManager()
 {
@@ -18,6 +21,17 @@ void ObjectManager::Register(std::unique_ptr<GameObject> object)
 {
 	//オブジェクトの初期化とリストに追加
 	object->Initialize();
+	
+	//コライダーの登録
+	if (collision_manager)
+	{
+		for (Collider* col : object->GetColliders())
+		{
+			collision_manager->Register(col);
+		}
+	}
+
+	//リストへの登録
 	game_objects.push_back(std::move(object));
 }
 

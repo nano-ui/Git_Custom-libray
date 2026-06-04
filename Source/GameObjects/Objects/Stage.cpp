@@ -2,8 +2,11 @@
 #include "../ObjectsRender/Model.h"
 #include "../Graphics/Graphics.h"
 #include "../Collision/SpaceDivisionCast.h"
+#include "../GameObjects/ObjectFactory.h"
 
 #include <imgui.h>
+
+static AutoRegister<Stage> auto_register_stage("Stage");
 
 //コンストラクタ
 Stage::Stage()

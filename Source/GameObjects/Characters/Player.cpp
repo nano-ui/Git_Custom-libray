@@ -2,8 +2,11 @@
 
 #include "../Input/Input.h"
 #include "../Graphics/Graphics.h"
+#include "../GameObjects/ObjectFactory.h"
 
 #include <imgui.h>
+
+static AutoRegister<Player> auto_register_player("Player");
 
 //コンストラクタ
 Player::Player()

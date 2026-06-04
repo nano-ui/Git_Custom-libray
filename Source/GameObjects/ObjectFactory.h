@@ -31,18 +31,17 @@ private:
 		static std::unordered_map<std::string, CreateFunc> registry;
 		return registry;
 	}
+};
 
-	//©“®“o˜^—pƒwƒ‹ƒp[\‘¢‘Ì
-	template<class T>
-	struct AutoRegister
+//©“®“o˜^—pƒwƒ‹ƒp[\‘¢‘Ì
+template<class T>
+struct AutoRegister
+{
+	AutoRegister(const std::string& class_name)
 	{
-		AutoRegister(const std::string& class_name)
-		{
-			ObjectFactory::RegisterClass(class_name, []()->std::unique_ptr<GameObject> {
-				return std::make_unique<T>();
-				})
-		}
-	};
-
+		ObjectFactory::RegisterClass(class_name, []()->std::unique_ptr<GameObject> {
+			return std::make_unique<T>();
+			});
+	}
 };
 

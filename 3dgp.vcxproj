@@ -235,6 +235,7 @@
     <ClCompile Include="Source\GameObjects\Characters\Character.cpp" />
     <ClCompile Include="Source\GameObjects\Characters\Player.cpp" />
     <ClCompile Include="Source\GameObjects\GameObject.cpp" />
+    <ClCompile Include="Source\GameObjects\ObjectFactory.cpp" />
     <ClCompile Include="Source\GameObjects\ObjectManager.cpp" />
     <ClCompile Include="Source\GameObjects\Objects\Stage.cpp" />
     <ClCompile Include="Source\GltfModel\GltfModel.cpp" />
@@ -307,6 +308,7 @@
     <ClInclude Include="Source\GameObjects\Characters\Character.h" />
     <ClInclude Include="Source\GameObjects\Characters\Player.h" />
     <ClInclude Include="Source\GameObjects\GameObject.h" />
+    <ClInclude Include="Source\GameObjects\ObjectFactory.h" />
     <ClInclude Include="Source\GameObjects\ObjectManager.h" />
     <ClInclude Include="Source\GameObjects\Objects\Stage.h" />
     <ClInclude Include="Source\GltfModel\GltfModel.h" />

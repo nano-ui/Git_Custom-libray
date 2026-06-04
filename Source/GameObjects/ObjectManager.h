@@ -17,6 +17,9 @@ public:
 	//デストラクタ
 	~ObjectManager();
 
+	//シングルトンの取得
+	static ObjectManager& Instance() { return *instance_ptr; }
+
 	//オブジェクトの生成・初期化・自動登録
 	template <class T, class... Args>
 	T* Instantiate(Args&&... args) 
@@ -70,5 +73,6 @@ private:
 private:
 	std::vector<std::unique_ptr<GameObject>> game_objects;	//ゲームオブジェクトを管理する配列
 	CollisionManager* collision_manager = nullptr;			//CollisionManagerのポインタ
+	static ObjectManager* instance_ptr;						//静的インスタンスポインタ
 };
 
