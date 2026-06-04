@@ -4,15 +4,17 @@
 #include <DirectXMath.h>
 #include <cstdint>
 
+class SpaceDivisionCast;
 
-namespace CollisionLayer
+//当たり判定の属性
+enum class ColliderAttribute
 {
-	constexpr uint32_t none = 0;			//0000 0000
-	constexpr uint32_t cast = 1 << 0;		//0000 0001 (キャスト)
-	constexpr uint32_t collision = 1 << 1;  //0000 0010 (押し出し)
-	constexpr uint32_t attack = 1 << 3;     //0000 1000 (攻撃判定)
-	constexpr uint32_t all = 0xFFFFFFFF;	//全てのビットが立つ
-}
+	None,       // 属性なし
+	Stage,      // ステージ（壁・床）
+	Player,     // プレイヤー
+	Enemy,      // 敵
+	Attack      // 攻撃判定
+};
 
 //判定結果
 struct CollisionResult
@@ -31,18 +33,25 @@ public:
 	virtual void OnCollisionHit(const CollisionResult& result) = 0;
 };
 
-enum class ColliderType { Sphere, Box, Cylinder, OBB, Capsule };
+enum class ColliderType
+{
+	Sphere,
+	Box,
+	Cylinder,
+	OBB,
+	Capsule,
+	SpaceDivision
+};
 
 //コライダー基底構造体
 struct Collider
 {
-	ColliderType type;								//形状
-	DirectX::XMFLOAT3 mtd;							//押し出しベクトル
-	uint32_t layer = CollisionLayer::none;			//所属するレイヤー
-	uint32_t target_mask = CollisionLayer::none;	//相手のレイヤー
-	bool is_active = true;							//有効フラグ
-	ICollisionListener* listener = nullptr;			//衝突を通知する相手
-	virtual  ~Collider() = default;
+	ColliderType type;                                      //コライダーの形状
+	DirectX::XMFLOAT3 mtd;                                  //押し出しベクトル
+	ColliderAttribute attribute = ColliderAttribute::None;  //自身の属性
+	bool is_active = true;                                  //有効フラグ
+	ICollisionListener* listener = nullptr;                 //衝突の通知先
+	virtual ~Collider() = default;
 };
 
 //スフィアコライダー
@@ -133,5 +142,15 @@ struct CapsuleCollider:public Collider
 		end_center = { 0.0f,0.0f,0.0f };
 		old_start_center = { 0.0f,0.0f,0.0f };
 		old_end_center = { 0.0f,0.0f,0.0f };
+	}
+};
+
+//空間分割コライダー
+struct SpaceDivisionCallier:public Collider
+{
+	SpaceDivisionCast* space_cast;	//空間分割データ
+	SpaceDivisionCallier()
+	{
+		space_cast = nullptr;
 	}
 };

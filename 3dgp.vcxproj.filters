@@ -41,9 +41,6 @@
     <Filter Include="Shaders\static_mesh">
       <UniqueIdentifier>{bb7a2708-8768-4056-a538-ccf6926b000b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ObjectRender">
-      <UniqueIdentifier>{012fe70d-7b34-462a-bcfd-b354527e0a9f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Graphics\DirectXDivice">
       <UniqueIdentifier>{42ac1c21-0304-42cb-87c1-ae2de61d962b}</UniqueIdentifier>
     </Filter>
@@ -65,32 +62,8 @@
     <Filter Include="Source\Graphics\Shader">
       <UniqueIdentifier>{eafa76a5-30c4-4df1-8921-299442ba031e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ObjectRender\AssetManager">
-      <UniqueIdentifier>{b619075d-3927-4b4a-98f4-6cecafe1b8ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\GeometricPrimitive">
-      <UniqueIdentifier>{39479b18-2d48-4b49-a73f-bb8e97382f25}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\SkinnedMesh">
-      <UniqueIdentifier>{22a17abc-366f-45db-8379-1bf3eaf612a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\Sprite">
-      <UniqueIdentifier>{e3397693-60a3-4352-a295-df00f5b0df08}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\SpriteBatch">
-      <UniqueIdentifier>{de396ab0-f763-408d-8209-24074b8db1b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\StaticMesh">
-      <UniqueIdentifier>{a8a024c4-47bd-4d1d-8426-73f71e29afc3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\Texture">
-      <UniqueIdentifier>{cb22bcc2-bff3-45f9-b8c3-9ea3eff64f0b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Graphics\Framework">
       <UniqueIdentifier>{8dfb05e0-54a8-45c4-ad62-b53268d3b51f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\Model">
-      <UniqueIdentifier>{1563c0d9-8878-4481-bd39-2d9641d69e3b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Scene">
       <UniqueIdentifier>{eeba2563-d716-45cb-b8b8-6ea187fa0afc}</UniqueIdentifier>
@@ -98,47 +71,8 @@
     <Filter Include="Source\Serializer">
       <UniqueIdentifier>{65cdd1d2-62fe-45b6-94fb-165d67cccc30}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ObjectRender\FbxModel">
-      <UniqueIdentifier>{492d0e90-1c5d-4e0e-ab16-dd3f6ddd86a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\FbxModel\FbxAnimation">
-      <UniqueIdentifier>{62d950db-5ac0-463f-8e08-b54bbe242f64}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\FbxModel\FbxBone">
-      <UniqueIdentifier>{50613803-caf7-4a72-a0be-c6d91dd08a40}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\FbxModel\FbxLoader">
-      <UniqueIdentifier>{fbe65991-3d7e-4bff-9901-e7169bfd4ad5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\FbxModel\FbxMaterial">
-      <UniqueIdentifier>{6a89ca5a-2f9a-4b05-9d3e-a53992d217d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\FbxModel\FbxSkinnedMesh">
-      <UniqueIdentifier>{9d32767d-b0a8-4581-bfa1-936612a593ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\FbxModel\SkinnedMeshComponents">
-      <UniqueIdentifier>{70cb8607-fd6d-4507-95da-332c06c9f6ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\FbxModel\FbxResource">
-      <UniqueIdentifier>{f178e398-7994-48a2-9d33-2a4bfc566ebf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\FbxModel\FbxSkinnedModel">
-      <UniqueIdentifier>{cd223bbf-8258-4143-8796-765924e2d2b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\GltfModel">
-      <UniqueIdentifier>{afc37076-22ce-4558-8131-a38e2f5653b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\gltf_model">
       <UniqueIdentifier>{61fcf465-3a9b-4632-86ec-1354de3c8eee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\GltfModel\GltfModelData">
-      <UniqueIdentifier>{1a1a3e82-a5ae-4915-bdb8-c2e48df203d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\GltfModel\GltfModelAnimation">
-      <UniqueIdentifier>{8a3f9165-2a96-4b03-aa9d-ae5d6c61177e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ObjectRender\GltfModel\GltfModelRenderer">
-      <UniqueIdentifier>{fe487eff-2e16-46a3-ad96-d8cf513fddaf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Serializer\FbxModelSerializer">
       <UniqueIdentifier>{b562292f-e576-4027-8a2d-a505e87d7161}</UniqueIdentifier>
@@ -209,14 +143,83 @@
     <Filter Include="Source\GameObject\Character\Player">
       <UniqueIdentifier>{089619b3-f9df-459f-812b-58993ff76e5e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ObjectRender\GpuResorceUtilty">
-      <UniqueIdentifier>{f87e07bc-22b4-4da1-90f1-3898e1e44f9c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Collision\SpaceDivisionCast">
       <UniqueIdentifier>{f428daf6-fe10-4b0c-9c30-568b617a838c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Collision\CollisionLogic">
       <UniqueIdentifier>{d0700e30-dccd-4ce4-85d6-95b766476e15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Collision\Collider">
+      <UniqueIdentifier>{b3ed732f-eaf8-44c4-9cf2-fd175c64b73e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render">
+      <UniqueIdentifier>{012fe70d-7b34-462a-bcfd-b354527e0a9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\AssetManager">
+      <UniqueIdentifier>{b619075d-3927-4b4a-98f4-6cecafe1b8ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\GeometricPrimitive">
+      <UniqueIdentifier>{39479b18-2d48-4b49-a73f-bb8e97382f25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\SkinnedMesh">
+      <UniqueIdentifier>{22a17abc-366f-45db-8379-1bf3eaf612a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\Sprite">
+      <UniqueIdentifier>{e3397693-60a3-4352-a295-df00f5b0df08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\SpriteBatch">
+      <UniqueIdentifier>{de396ab0-f763-408d-8209-24074b8db1b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\StaticMesh">
+      <UniqueIdentifier>{a8a024c4-47bd-4d1d-8426-73f71e29afc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\Texture">
+      <UniqueIdentifier>{cb22bcc2-bff3-45f9-b8c3-9ea3eff64f0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\Model">
+      <UniqueIdentifier>{1563c0d9-8878-4481-bd39-2d9641d69e3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\FbxModel">
+      <UniqueIdentifier>{492d0e90-1c5d-4e0e-ab16-dd3f6ddd86a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\FbxModel\FbxAnimation">
+      <UniqueIdentifier>{62d950db-5ac0-463f-8e08-b54bbe242f64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\FbxModel\FbxBone">
+      <UniqueIdentifier>{50613803-caf7-4a72-a0be-c6d91dd08a40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\FbxModel\FbxLoader">
+      <UniqueIdentifier>{fbe65991-3d7e-4bff-9901-e7169bfd4ad5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\FbxModel\FbxMaterial">
+      <UniqueIdentifier>{6a89ca5a-2f9a-4b05-9d3e-a53992d217d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\FbxModel\FbxSkinnedMesh">
+      <UniqueIdentifier>{9d32767d-b0a8-4581-bfa1-936612a593ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\FbxModel\SkinnedMeshComponents">
+      <UniqueIdentifier>{70cb8607-fd6d-4507-95da-332c06c9f6ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\FbxModel\FbxResource">
+      <UniqueIdentifier>{f178e398-7994-48a2-9d33-2a4bfc566ebf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\FbxModel\FbxSkinnedModel">
+      <UniqueIdentifier>{cd223bbf-8258-4143-8796-765924e2d2b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\GltfModel">
+      <UniqueIdentifier>{afc37076-22ce-4558-8131-a38e2f5653b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\GltfModel\GltfModelData">
+      <UniqueIdentifier>{1a1a3e82-a5ae-4915-bdb8-c2e48df203d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\GltfModel\GltfModelAnimation">
+      <UniqueIdentifier>{8a3f9165-2a96-4b03-aa9d-ae5d6c61177e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\GltfModel\GltfModelRenderer">
+      <UniqueIdentifier>{fe487eff-2e16-46a3-ad96-d8cf513fddaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\GpuResorceUtilty">
+      <UniqueIdentifier>{f87e07bc-22b4-4da1-90f1-3898e1e44f9c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -242,28 +245,28 @@
       <Filter>Source\Graphics\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\AssetManager.cpp">
-      <Filter>Source\ObjectRender\AssetManager</Filter>
+      <Filter>Source\Render\AssetManager</Filter>
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\geometric_primitive.cpp">
-      <Filter>Source\ObjectRender\GeometricPrimitive</Filter>
+      <Filter>Source\Render\GeometricPrimitive</Filter>
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\skinned_mesh.cpp">
-      <Filter>Source\ObjectRender\SkinnedMesh</Filter>
+      <Filter>Source\Render\SkinnedMesh</Filter>
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\sprite.cpp">
-      <Filter>Source\ObjectRender\Sprite</Filter>
+      <Filter>Source\Render\Sprite</Filter>
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\sprite_batch.cpp">
-      <Filter>Source\ObjectRender\SpriteBatch</Filter>
+      <Filter>Source\Render\SpriteBatch</Filter>
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\static_mesh.cpp">
-      <Filter>Source\ObjectRender\StaticMesh</Filter>
+      <Filter>Source\Render\StaticMesh</Filter>
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\texture.cpp">
-      <Filter>Source\ObjectRender\Texture</Filter>
+      <Filter>Source\Render\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\Model.cpp">
-      <Filter>Source\ObjectRender\Model</Filter>
+      <Filter>Source\Render\Model</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\framework.cpp">
       <Filter>Source\Graphics\Framework</Filter>
@@ -275,43 +278,43 @@
       <Filter>Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\SkinnedMeshComponents.cpp">
-      <Filter>Source\ObjectRender\FbxModel\SkinnedMeshComponents</Filter>
+      <Filter>Source\Render\FbxModel\SkinnedMeshComponents</Filter>
     </ClCompile>
     <ClCompile Include="Source\FbxModel\FbxBone.cpp">
-      <Filter>Source\ObjectRender\FbxModel\FbxBone</Filter>
+      <Filter>Source\Render\FbxModel\FbxBone</Filter>
     </ClCompile>
     <ClCompile Include="Source\FbxModel\FbxAnimation.cpp">
-      <Filter>Source\ObjectRender\FbxModel\FbxAnimation</Filter>
+      <Filter>Source\Render\FbxModel\FbxAnimation</Filter>
     </ClCompile>
     <ClCompile Include="Source\FbxModel\FbxLoader.cpp">
-      <Filter>Source\ObjectRender\FbxModel\FbxLoader</Filter>
+      <Filter>Source\Render\FbxModel\FbxLoader</Filter>
     </ClCompile>
     <ClCompile Include="Source\FbxModel\FbxSkinnedMesh.cpp">
-      <Filter>Source\ObjectRender\FbxModel\FbxSkinnedMesh</Filter>
+      <Filter>Source\Render\FbxModel\FbxSkinnedMesh</Filter>
     </ClCompile>
     <ClCompile Include="Source\FbxModel\FbxMaterial.cpp">
-      <Filter>Source\ObjectRender\FbxModel\FbxMaterial</Filter>
+      <Filter>Source\Render\FbxModel\FbxMaterial</Filter>
     </ClCompile>
     <ClCompile Include="Source\FbxModel\FbxSkinnedResource.cpp">
-      <Filter>Source\ObjectRender\FbxModel\FbxResource</Filter>
+      <Filter>Source\Render\FbxModel\FbxResource</Filter>
     </ClCompile>
     <ClCompile Include="Source\FbxModel\FbxSkinnedModel.cpp">
-      <Filter>Source\ObjectRender\FbxModel\FbxSkinnedModel</Filter>
+      <Filter>Source\Render\FbxModel\FbxSkinnedModel</Filter>
     </ClCompile>
     <ClCompile Include="Source\GltfModel\GltfModelData.cpp">
-      <Filter>Source\ObjectRender\GltfModel\GltfModelData</Filter>
+      <Filter>Source\Render\GltfModel\GltfModelData</Filter>
     </ClCompile>
     <ClCompile Include="Source\GltfModel\GltfModelAnimation.cpp">
-      <Filter>Source\ObjectRender\GltfModel\GltfModelAnimation</Filter>
+      <Filter>Source\Render\GltfModel\GltfModelAnimation</Filter>
     </ClCompile>
     <ClCompile Include="Source\GltfModel\TinygltfImpl.cpp">
-      <Filter>Source\ObjectRender\GltfModel</Filter>
+      <Filter>Source\Render\GltfModel</Filter>
     </ClCompile>
     <ClCompile Include="Source\GltfModel\GltfModelRenderer.cpp">
-      <Filter>Source\ObjectRender\GltfModel\GltfModelRenderer</Filter>
+      <Filter>Source\Render\GltfModel\GltfModelRenderer</Filter>
     </ClCompile>
     <ClCompile Include="Source\GltfModel\GltfModel.cpp">
-      <Filter>Source\ObjectRender\GltfModel</Filter>
+      <Filter>Source\Render\GltfModel</Filter>
     </ClCompile>
     <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp">
       <Filter>Source\Serializer\FbxModelSerializer</Filter>
@@ -404,7 +407,7 @@
       <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="Source\ObjectsRender\GpuResourceUtils.cpp">
-      <Filter>Source\ObjectRender\GpuResorceUtilty</Filter>
+      <Filter>Source\Render\GpuResorceUtilty</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collision\SpaceDivisionCast.cpp">
       <Filter>Source\Collision\SpaceDivisionCast</Filter>
@@ -439,28 +442,28 @@
       <Filter>Source\Graphics\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\AssetManager.h">
-      <Filter>Source\ObjectRender\AssetManager</Filter>
+      <Filter>Source\Render\AssetManager</Filter>
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\geometric_primitive.h">
-      <Filter>Source\ObjectRender\GeometricPrimitive</Filter>
+      <Filter>Source\Render\GeometricPrimitive</Filter>
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\skinned_mesh.h">
-      <Filter>Source\ObjectRender\SkinnedMesh</Filter>
+      <Filter>Source\Render\SkinnedMesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\sprite.h">
-      <Filter>Source\ObjectRender\Sprite</Filter>
+      <Filter>Source\Render\Sprite</Filter>
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\sprite_batch.h">
-      <Filter>Source\ObjectRender\SpriteBatch</Filter>
+      <Filter>Source\Render\SpriteBatch</Filter>
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\static_mesh.h">
-      <Filter>Source\ObjectRender\StaticMesh</Filter>
+      <Filter>Source\Render\StaticMesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\texture.h">
-      <Filter>Source\ObjectRender\Texture</Filter>
+      <Filter>Source\Render\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\Model.h">
-      <Filter>Source\ObjectRender\Model</Filter>
+      <Filter>Source\Render\Model</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\fbx_utility.h">
       <Filter>Source\Graphics</Filter>
@@ -478,43 +481,43 @@
       <Filter>Source\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\SkinnedMeshComponents.h">
-      <Filter>Source\ObjectRender\FbxModel\SkinnedMeshComponents</Filter>
+      <Filter>Source\Render\FbxModel\SkinnedMeshComponents</Filter>
     </ClInclude>
     <ClInclude Include="Source\FbxModel\FbxBone.h">
-      <Filter>Source\ObjectRender\FbxModel\FbxBone</Filter>
+      <Filter>Source\Render\FbxModel\FbxBone</Filter>
     </ClInclude>
     <ClInclude Include="Source\FbxModel\FbxAnimation.h">
-      <Filter>Source\ObjectRender\FbxModel\FbxAnimation</Filter>
+      <Filter>Source\Render\FbxModel\FbxAnimation</Filter>
     </ClInclude>
     <ClInclude Include="Source\FbxModel\FbxLoader.h">
-      <Filter>Source\ObjectRender\FbxModel\FbxLoader</Filter>
+      <Filter>Source\Render\FbxModel\FbxLoader</Filter>
     </ClInclude>
     <ClInclude Include="Source\FbxModel\FbxSkinnedMesh.h">
-      <Filter>Source\ObjectRender\FbxModel\FbxSkinnedMesh</Filter>
+      <Filter>Source\Render\FbxModel\FbxSkinnedMesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\FbxModel\FbxMaterial.h">
-      <Filter>Source\ObjectRender\FbxModel\FbxMaterial</Filter>
+      <Filter>Source\Render\FbxModel\FbxMaterial</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\ModelData.h">
       <Filter>Source\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\FbxModel\FbxSkinnedResource.h">
-      <Filter>Source\ObjectRender\FbxModel\FbxResource</Filter>
+      <Filter>Source\Render\FbxModel\FbxResource</Filter>
     </ClInclude>
     <ClInclude Include="Source\FbxModel\FbxSkinnedModel.h">
-      <Filter>Source\ObjectRender\FbxModel\FbxSkinnedModel</Filter>
+      <Filter>Source\Render\FbxModel\FbxSkinnedModel</Filter>
     </ClInclude>
     <ClInclude Include="Source\GltfModel\GltfModelData.h">
-      <Filter>Source\ObjectRender\GltfModel\GltfModelData</Filter>
+      <Filter>Source\Render\GltfModel\GltfModelData</Filter>
     </ClInclude>
     <ClInclude Include="Source\GltfModel\GltfModelAnimation.h">
-      <Filter>Source\ObjectRender\GltfModel\GltfModelAnimation</Filter>
+      <Filter>Source\Render\GltfModel\GltfModelAnimation</Filter>
     </ClInclude>
     <ClInclude Include="Source\GltfModel\GltfModelRenderer.h">
-      <Filter>Source\ObjectRender\GltfModel\GltfModelRenderer</Filter>
+      <Filter>Source\Render\GltfModel\GltfModelRenderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\GltfModel\GltfModel.h">
-      <Filter>Source\ObjectRender\GltfModel</Filter>
+      <Filter>Source\Render\GltfModel</Filter>
     </ClInclude>
     <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h">
       <Filter>Source\Serializer\FbxModelSerializer</Filter>
@@ -619,7 +622,7 @@
       <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\GpuResourceUtils.h">
-      <Filter>Source\ObjectRender\GpuResorceUtilty</Filter>
+      <Filter>Source\Render\GpuResorceUtilty</Filter>
     </ClInclude>
     <ClInclude Include="Source\Collision\SpaceDivisionCast.h">
       <Filter>Source\Collision\SpaceDivisionCast</Filter>
@@ -628,7 +631,7 @@
       <Filter>Source\Collision\CollisionLogic</Filter>
     </ClInclude>
     <ClInclude Include="Source\Collision\Collider.h">
-      <Filter>Source\Collision</Filter>
+      <Filter>Source\Collision\Collider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
