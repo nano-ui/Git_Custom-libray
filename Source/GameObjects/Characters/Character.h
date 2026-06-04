@@ -81,7 +81,7 @@ protected:
 	float move_vecX;			//移動ベクトルX
 	float move_vecZ;			//移動ベクトルZ
 	bool is_ground;				//接地判定フラグ
-	float height;				//体力
+	float height;				//高さ
 	float invincible_timer;		//無敵時間
 	float acceleration;			//加速度
 	float max_speed;			//最大移動速度
