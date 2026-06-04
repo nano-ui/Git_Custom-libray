@@ -1,14 +1,19 @@
 #include "CollisionManager.h"
 #include "../Collision/SpaceDivisionCast.h"
+#include "../Graphics/ShapeRenderer.h"
 
 #include <imgui.h>
 #include <cmath>
 #include <algorithm>
 
+#undef min
+#undef max
+
 //コンストラクタ
 CollisionManager::CollisionManager()
 {
 	is_enable_collision = true;
+    is_draw_grid = false;
 	constexpr float default_cell_size = 10.0f;
 	cell_size = default_cell_size;
 	collision_logic = std::make_unique<CollisionLogic>();
@@ -123,6 +128,7 @@ void CollisionManager::RenderGui()
         if (ImGui::CollapsingHeader("CollisionManagerInfo", ImGuiTreeNodeFlags_DefaultOpen))
         {
             ImGui::Checkbox("Enable Global Collision", &is_enable_collision);
+            ImGui::Checkbox("Draw Spatial Grid", &is_draw_grid);
 
             constexpr float min_cell = 1.0f;
             constexpr float max_cell = 100.0f;
@@ -137,6 +143,29 @@ void CollisionManager::RenderGui()
         }
     }
 #endif // USE_IMGUI
+}
+
+//デバッグ描画
+void CollisionManager::RenderDebug(ShapeRenderer* renderer)
+{
+    if (!is_draw_grid || !renderer)return;
+
+    DirectX::XMFLOAT4 color = { 1.0f,1.0f,0.0f,1.0f };
+    DirectX::XMFLOAT4 rotation = { 0.0f,0.0f,0.0f,1.0f };
+    DirectX::XMFLOAT3 size = { cell_size,cell_size,cell_size };
+
+    //ハッシュマップに登録されている全てのアクティブなセルをループ
+    for (auto it = spatial_grid.begin(); it != spatial_grid.end(); it++)
+    {
+        const GridKey& key = it->first;
+        DirectX::XMFLOAT3 center = {
+            (key.x * cell_size) + (cell_size * 0.5f),
+            (key.y * cell_size) + (cell_size * 0.5f),
+            (key.z * cell_size) + (cell_size * 0.5f),
+        };
+        renderer->DrawBox(center, rotation, size, color, ShapeDrawMode::Wireframe);
+    }
+
 }
 
 //動的コライダーと空間分割の判定

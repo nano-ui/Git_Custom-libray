@@ -204,6 +204,7 @@ void SceneGame::RenderGui()
 		if (collision_manager)
 		{
 			collision_manager->RenderGui();
+			collision_manager->RenderDebug(shape_renderer.get());
 		}
 	}
 	ImGui::End();

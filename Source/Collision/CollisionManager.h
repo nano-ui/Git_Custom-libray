@@ -8,6 +8,8 @@
 #include "Collider.h"
 #include "CollisionLogic.h"
 
+class ShapeRenderer;
+
 struct CellData
 {
 	std::vector<SphereCollider*> spheres;			//スフィアコライダー登録リスト
@@ -76,6 +78,9 @@ public:
 	//ImGuiデバッグ描画
 	void RenderGui();
 
+	//デバッグ描画
+	void RenderDebug(ShapeRenderer* renderer);
+
 private:
 	//動的コライダーと空間分割の判定
 	void CheckDynamicVsSpace();
@@ -98,5 +103,6 @@ private:
 	std::unordered_map<GridKey, CellData, GridKeyHasher > spatial_grid;	//グリッド分割のハッシュマップ
 	float cell_size;			//グリッド1セルの一辺の長さ
 	bool is_enable_collision;	//当たり判定システムの有効フラグ
+	bool is_draw_grid;			//グリッド描画有効フラグ
 };
 
