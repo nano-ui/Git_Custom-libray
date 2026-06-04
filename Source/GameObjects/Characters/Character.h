@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../GameObjects/GameObject.h"
-
+#include "../Collision/Collider.h"
 
 class Character : public GameObject
 {
@@ -54,6 +54,9 @@ protected:
 
 	//死亡時イベント
 	virtual void OnDead() {}
+
+	//ステージとの衝突処理
+	void ResolveStageCollision(const CollisionResult& result, CapsuleCollider& collider, float cap_height, float offset_y);
 
 private:
 	//垂直方向の移動速度更新

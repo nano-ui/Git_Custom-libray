@@ -148,6 +148,47 @@ void Character::UpdateInvincibleTimer(float elapsed_time)
 	}
 }
 
+//ステージとの衝突処理
+void Character::ResolveStageCollision(
+	const CollisionResult& result,
+	CapsuleCollider& collider,
+	float cap_height,
+	float offset_y)
+{
+	//押し出しベクトルの逆算
+	float push_x = result.safe_position.x - collider.start_center.x;
+	float push_y = result.safe_position.y - collider.start_center.y;
+	float push_z = result.safe_position.z - collider.start_center.z;
+
+	//スロープと壁・天井の自動識別
+	constexpr float SLOPE_THRESHOLD = 0.5f;
+	
+	if (result.hit_normal.y > SLOPE_THRESHOLD)
+	{
+		is_ground = true;
+		if (velocity.y < 0.0f)velocity.y = 0.0f;
+		float penetration_depth = std::sqrtf(push_x * push_x + push_y * push_y + push_z * push_z);
+		float upward_push = penetration_depth / result.hit_normal.y;
+		position.y += upward_push;
+	}
+	else if (result.hit_normal.y < -SLOPE_THRESHOLD)
+	{
+		if (velocity.y > 0.0f)velocity.y = 0.0f;
+		position.y += push_y;
+	}
+	else
+	{
+		position.x += push_x;
+		position.z += push_z;
+	}
+
+	//コライダー一の即時上書き
+	collider.start_center = position;
+	collider.start_center.y += offset_y;
+	collider.end_center = position;
+	collider.end_center.y += cap_height + offset_y;
+}
+
 //垂直方向の移動速度更新
 void Character::UpdateVerticalVelocity(float elapsed_time)
 {

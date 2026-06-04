@@ -105,13 +105,7 @@ void Player::OnCollisionHit(const CollisionResult& result)
 {
 	if (result.hit_attribute == ColliderAttribute::Stage)
 	{
-		position = result.safe_position;
-		position.y -= offset_y;
-
-		capsule_collider.start_center = position;
-		capsule_collider.start_center.y += offset_y;
-		capsule_collider.end_center = position;
-		capsule_collider.end_center.y += height + offset_y;
+		ResolveStageCollision(result, capsule_collider, height, offset_y);
 	}
 }
 
