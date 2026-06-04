@@ -1,6 +1,6 @@
 #pragma once
-#include "../GameObjects/GameObject.h"
 
+#include "../GameObjects/GameObject.h"
 
 
 class Character : public GameObject
@@ -22,7 +22,7 @@ public:
 	void Render(ID3D11DeviceContext* context)override;
 
 	//デバッグ描画
-	void RenderDebug()override;
+	void RenderDebug(ShapeRenderer* renderer)override;
 
 	//ImGui表示
 	void RenderGui()override;
@@ -46,17 +46,14 @@ protected:
 	//無敵時間更新処理
 	void UpdateInvincibleTimer(float elapsed_time);
 
-	//衝突イベント
-	virtual void OnCollision(){}
-
 	//接地時イベント
-	virtual void OnLanding(){}
+	virtual void OnLanding() {}
 
 	//被弾時イベント
-	virtual void OnDamage(){}
+	virtual void OnDamage() {}
 
 	//死亡時イベント
-	virtual void OnDead(){}
+	virtual void OnDead() {}
 
 private:
 	//垂直方向の移動速度更新

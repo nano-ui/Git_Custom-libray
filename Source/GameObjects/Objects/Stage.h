@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../GameObjects/GameObject.h"
+#include "../Collision/Collider.h"
 
 #include <memory>
 #include <vector>
@@ -28,7 +29,7 @@ public:
 	void Render(ID3D11DeviceContext* context)override;
 
 	//デバッグ描画
-	void RenderDebug()override;
+	void RenderDebug(ShapeRenderer* renderer)override;
 
 	//ImGuiデバッグ描画
 	void RenderGui()override;
@@ -36,6 +37,8 @@ public:
 	//当たり判定用の空間分割キャストオブジェクトを取得
 	SpaceDivisionCast* GetSpaceDivisionCast();
 
+	//コライダー取得
+	SpaceDivisionCollider* GetCollider() { return &space_collider; }
 private:
 	//空間分割データの構築処理
 	void BuildCollisionData();
@@ -46,5 +49,6 @@ private:
 	std::unique_ptr<SpaceDivisionCast> space_division_cast;	//当たり判定空間分割クラス
 	bool is_draw_areas = false;
 	DirectX::XMFLOAT4 area_draw_color = { 1.0f,0.0f,0.0f,1.0f };
+	SpaceDivisionCollider space_collider;
 };
 

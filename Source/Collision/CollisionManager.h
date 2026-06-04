@@ -11,6 +11,7 @@
 struct CellData
 {
 	std::vector<SphereCollider*> spheres;			//スフィアコライダー登録リスト
+	std::vector<CapsuleCollider*> capsules;			//カプセルコライダー登録リスト
 };
 
 //グリッドキー構造体
@@ -76,8 +77,8 @@ public:
 	void RenderGui();
 
 private:
-	//スフィアと空間分割の判定
-	void CheckSphereVsSpace();
+	//動的コライダーと空間分割の判定
+	void CheckDynamicVsSpace();
 
 	//スフィア同士の総当たり判定
 	void CheckSphereVsSphere();
@@ -91,11 +92,11 @@ private:
 private:
 	std::unique_ptr<CollisionLogic> collision_logic;					//判定ロジッククラス
 	std::vector<SphereCollider*> sphere_colliders;						//スフィアコライダーの登録リスト
+	std::vector<CapsuleCollider*> capsule_colliders;					//カプセルコライダーの登録リスト
 	std::vector<SpaceDivisionCollider*> space_colliders;				//空間分割コライダー登録リスト
 	std::vector<Collider*> dynamic_colliders;							//動的コライダーの登録リスト
 	std::unordered_map<GridKey, CellData, GridKeyHasher > spatial_grid;	//グリッド分割のハッシュマップ
 	float cell_size;			//グリッド1セルの一辺の長さ
 	bool is_enable_collision;	//当たり判定システムの有効フラグ
-
 };
 

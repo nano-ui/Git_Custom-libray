@@ -22,13 +22,13 @@ public:
 	bool PsseudoSpheraCast(const DirectX::XMFLOAT3& start_pos, const DirectX::XMFLOAT3& end_pos, float radius, DirectX::XMFLOAT3& hit_position, DirectX::XMFLOAT3& hit_normal);
 	
 	//静的球交差判定
-	bool StaticSpheraCast(const DirectX::XMFLOAT3& start_pos, const DirectX::XMFLOAT3& end_pos, float radius, DirectX::XMFLOAT3& hit_normal);
+	bool StaticSpheraCast(const DirectX::XMFLOAT3& start_pos, const DirectX::XMFLOAT3& end_pos, float radius, DirectX::XMFLOAT3 hit_position, DirectX::XMFLOAT3& hit_normal);
 
 	//複数球を用いた疑似カプセルキャスト
-	bool MultiSpheraCast(const DirectX::XMFLOAT3& bottom_pos, const DirectX::XMFLOAT3& top_pos, float radius, DirectX::XMFLOAT3& hit_normal);
+	bool MultiSpheraCast(const DirectX::XMFLOAT3& bottom_pos, const DirectX::XMFLOAT3& top_pos, float radius, DirectX::XMFLOAT3& hit_position, DirectX::XMFLOAT3& hit_normal);
 
 	//静的OBBキャスト
-	bool StaticObbCast(const DirectX::XMFLOAT3& center_pos, const DirectX::XMFLOAT3& extents, const DirectX::XMFLOAT4& orientation, DirectX::XMFLOAT3& hit_normal);
+	bool StaticObbCast(const DirectX::XMFLOAT3& center_pos, const DirectX::XMFLOAT3& extents, const DirectX::XMFLOAT4& orientation, DirectX::XMFLOAT3& hit_position, DirectX::XMFLOAT3& hit_normal);
 
 	//全ての境界線のリストを取得
 	std::vector<DirectX::BoundingBox>GetAreaBoundingBoxes()const;

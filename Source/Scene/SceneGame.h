@@ -8,6 +8,7 @@ class ObjectManager;
 class Camera;
 class Light;
 class ShapeRenderer;
+class CollisionManager;
 
 class SceneGame : public Scene
 {
@@ -54,6 +55,7 @@ private:
 	std::unique_ptr<ObjectManager> object_manager;	//全ゲームオブジェクトを一括管理
 	std::unique_ptr<Camera> camera;	//カメラ管理
 	std::unique_ptr<Light> light;	//ライト管理
+	std::unique_ptr<CollisionManager> collision_manager;	//当たり判定管理マネージャー
 
 	std::unique_ptr<ShapeRenderer> shape_renderer;
 	std::vector<debug_shape> debug_shapes;

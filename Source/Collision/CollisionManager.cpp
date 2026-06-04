@@ -35,13 +35,15 @@ void CollisionManager::Register(Collider* collider)
     switch (collider->type)
     {
     case ColliderType::Sphere:
-        // スフィア型に安全にキャストし、専用リストに追加します。
         sphere_colliders.push_back(static_cast<SphereCollider*>(collider));
         break;
 
     case ColliderType::SpaceDivision:
-        // 空間分割型に安全にキャストし、専用リストに追加します。
         space_colliders.push_back(static_cast<SpaceDivisionCollider*>(collider));
+        break;
+
+    case ColliderType::Capsule:
+        capsule_colliders.push_back(static_cast<CapsuleCollider*>(collider));
         break;
 
     default:
@@ -69,20 +71,23 @@ void CollisionManager::Remove(Collider* collider)
     {
     case ColliderType::Sphere:
     {
-        //キャストしてスフィアのリストから削除対象を検索
         auto sphere_ptr = static_cast<SphereCollider*>(collider);
         auto it = std::remove(sphere_colliders.begin(), sphere_colliders.end(), sphere_ptr);
-        //リストから完全に削除。
         sphere_colliders.erase(it, sphere_colliders.end());
         break;
     }
     case ColliderType::SpaceDivision:
     {
-        //キャストして空間分割のリストから削除対象を検索
         auto space_ptr = static_cast<SpaceDivisionCollider*>(collider);
         auto it = std::remove(space_colliders.begin(), space_colliders.end(), space_ptr);
-        //リストから完全に削除
         space_colliders.erase(it, space_colliders.end());
+        break;
+    }
+    case ColliderType::Capsule:
+    {
+        auto capsule = static_cast<CapsuleCollider*>(collider);
+        auto it = std::remove(capsule_colliders.begin(), capsule_colliders.end(), capsule);
+        capsule_colliders.erase(it, capsule_colliders.end());
         break;
     }
     default:
@@ -106,16 +111,14 @@ void CollisionManager::ExecuteCollision()
     }
 
     //各判定の呼び出し
-    CheckSphereVsSpace();
+    CheckDynamicVsSpace();
     CheckSphereVsSphere();
-
 }
 
 //ImGuiデバッグ描画
 void CollisionManager::RenderGui()
 {
 #ifdef USE_IMGUI
-    if (ImGui::Begin("Collision System"))
     {
         ImGui::Checkbox("Enable Global Collision", &is_enable_collision);
 
@@ -129,18 +132,17 @@ void CollisionManager::RenderGui()
 
         ImGui::Text("Active Grid Cells: %zu", spatial_grid.size());
     }
-    ImGui::End();
 #endif // USE_IMGUI
 }
 
-//スフィアと空間分割の判定
-void CollisionManager::CheckSphereVsSpace()
+//動的コライダーと空間分割の判定
+void CollisionManager::CheckDynamicVsSpace()
 {
     //スフィアのループ処理
-    for (size_t i = 0; i < sphere_colliders.size(); i++)
+    for (size_t i = 0; i < dynamic_colliders.size(); i++)
     {
-        SphereCollider* sphere = sphere_colliders.at(i);
-        if (!sphere || !sphere->is_active)continue;
+        Collider* collider = dynamic_colliders.at(i);
+        if (!collider || !collider->is_active)continue;
 
         //空間分割のループ処理
         for (size_t j = 0; j < space_colliders.size(); j++)
@@ -149,20 +151,48 @@ void CollisionManager::CheckSphereVsSpace()
             if (!space || !space->space_cast)continue;
             DirectX::XMFLOAT3 temp_hit_pos = { 0.0f,0.0f,0.0f };
             DirectX::XMFLOAT3 temp_hit_normal = { 0.0f,0.0f,0.0f };
-
             bool is_hit = false;
 
-            is_hit = space->space_cast->PsseudoSpheraCast(sphere->old_center, sphere->center, sphere->radius, temp_hit_pos, temp_hit_normal);
+            //形状に応じたキャスト方法の自動選択
+            switch (collider->type)
+            {
+            case ColliderType::Sphere:
+            {
+                SphereCollider* sphere = static_cast<SphereCollider*>(collider);
+                is_hit = space->space_cast->StaticSpheraCast(
+                    sphere->center,
+                    sphere->center,
+                    sphere->radius,
+                    temp_hit_pos,
+                    temp_hit_normal
+                );
+                break;
+            }
+            case ColliderType::Capsule:
+            {
+                CapsuleCollider* capsule = static_cast<CapsuleCollider*>(collider);
+                is_hit = space->space_cast->MultiSpheraCast(
+                    capsule->old_start_center,
+                    capsule->old_end_center,
+                    capsule->radius,
+                    temp_hit_pos,
+                    temp_hit_normal
+                );
+                break;
+            }
+            default:
+                break;
+            }
 
             //衝突通知の実行
-            if (is_hit && sphere->listener)
+            if (is_hit && collider->listener)
             {
                 CollisionResult result;
                 result.hit_position = temp_hit_pos;
                 result.hit_normal = temp_hit_normal;
                 result.safe_position = temp_hit_pos;
                 result.hit_attribute = space->attribute;
-                sphere->listener->OnCollisionHit(result);
+                collider->listener->OnCollisionHit(result);
             }
         }
     }

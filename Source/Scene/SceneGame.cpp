@@ -7,6 +7,7 @@
 #include "../Light/Light.h"
 #include "../Graphics/ShapeRenderer.h"
 #include "../GameObjects/Characters/Player.h"
+#include "../Collision/CollisionManager.h"
 
 //コンストラクタ
 SceneGame::SceneGame()
@@ -18,6 +19,10 @@ SceneGame::SceneGame()
 
 	camera = std::make_unique<FreeCamera>();
 	light = std::make_unique <Light>();
+
+	collision_manager = std::make_unique<CollisionManager>();
+	collision_manager->Register(player->GetCapsuleCollider());
+	collision_manager->Register(stage->GetCollider());
 }
 
 //デストラクタ
@@ -71,6 +76,10 @@ void SceneGame::Update(float elapsed_time)
 	if (camera)
 	{
 		camera->Update(elapsed_time);
+	}
+	if (collision_manager)
+	{
+		collision_manager->ExecuteCollision();
 	}
 }
 
@@ -147,7 +156,7 @@ void SceneGame::RenderGui()
 	if (object_manager)
 	{
 		object_manager->RenderGui();
-		object_manager->RenderDebug();
+		object_manager->RenderDebug(shape_renderer.get());
 	}
 
 	if (ImGui::Begin("Game Debug"))
@@ -156,7 +165,7 @@ void SceneGame::RenderGui()
 		{
 			camera->RenderGui();
 		}
-		if (ImGui::CollapsingHeader("Shape Generator", ImGuiDockNodeFlags_None));
+		if (ImGui::CollapsingHeader("Shape Generator", ImGuiDockNodeFlags_None))
 		{
 			ImGui::RadioButton(u8"枠線のみ (Wireframe)", &current_debug_draw_mode, 0);
 			ImGui::RadioButton(u8"面のみ (Solid)", &current_debug_draw_mode, 1);
@@ -193,6 +202,10 @@ void SceneGame::RenderGui()
 					debug_shapes.clear();
 				}
 			}
+		}
+		if (collision_manager)
+		{
+			collision_manager->RenderGui();
 		}
 	}
 	ImGui::End();

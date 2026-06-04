@@ -12,7 +12,7 @@ Character::Character()
 	invincible_timer = 0.0f;
 	radius = 2.0f;
 	height = 4.0f;
-	gravity = 30.0f;
+	gravity = 0.0f;
 	height = 100.0f;
 	acceleration = 50.0f;
 	move_vecX = 0.0f;
@@ -53,7 +53,7 @@ void Character::Render(ID3D11DeviceContext* context)
 }
 
 //デバッグ描画
-void Character::RenderDebug()
+void Character::RenderDebug(ShapeRenderer* renderer)
 {
 
 }

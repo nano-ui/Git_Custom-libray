@@ -26,7 +26,7 @@ public:
 	 virtual void Render(ID3D11DeviceContext* context) = 0;
 
 	 //デバッグ描画処理
-	 virtual void RenderDebug() = 0;
+	 virtual void RenderDebug(ShapeRenderer* renderer) = 0;
 
 	 //ImGuiデバッグ描画
 	 virtual void RenderGui() {};

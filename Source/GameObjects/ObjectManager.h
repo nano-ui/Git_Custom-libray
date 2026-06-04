@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 
+class ShapeRenderer;
 class GameObject;
 struct ID3D11DeviceContext;
 
@@ -44,7 +45,7 @@ public:
 	void RenderGui();
 
 	//全オブジェクトのデバッグ描画
-	void RenderDebug();
+	void RenderDebug(ShapeRenderer* renderer);
 
 	//全オブジェクトの強制削除処理
 	void Clear() { game_objects.clear(); }

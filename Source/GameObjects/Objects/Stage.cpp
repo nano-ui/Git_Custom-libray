@@ -27,6 +27,10 @@ void Stage::Initialize()
 	space_division_cast = std::make_unique<SpaceDivisionCast>();
 	BuildCollisionData();
 
+	space_collider.space_cast = space_division_cast.get();
+	space_collider.attribute = ColliderAttribute::Stage;
+	space_collider.is_active = true;
+
 	shape_renderer = std::make_unique<ShapeRenderer>(device);
 }
 
@@ -46,7 +50,7 @@ void Stage::Render(ID3D11DeviceContext* context)
 }
 
 //ƒfƒoƒbƒO•`‰æ
-void Stage::RenderDebug()
+void Stage::RenderDebug(ShapeRenderer* renderer)
 {
 	//•`‰æƒtƒ‰ƒO‚Ìƒ`ƒFƒbƒN
 	if (!is_draw_areas)return;
@@ -56,7 +60,7 @@ void Stage::RenderDebug()
 	DirectX::XMMATRIX stage_world = GetWorldMatrix();
 
 	//Žæ“¾‚µ‚½‹«ŠEü‚ð‘S‚Ä•`‰æ“o˜^
-	if (!shape_renderer)return;
+	if (!renderer)return;
 	DirectX::XMFLOAT4 identity_rotation = { 0.0f,0.0f,0.0f,1.0f };
 	static constexpr float size_multiplier = 2.0f;
 
@@ -74,14 +78,14 @@ void Stage::RenderDebug()
 			extents_size.y * size_multiplier * scale.y,
 			extents_size.z * size_multiplier * scale.z
 		};
-		shape_renderer->DrawBox(final_center_pos, rotation, full_size, area_draw_color, ShapeDrawMode::Wireframe);
+		renderer->DrawBox(final_center_pos, rotation, full_size, area_draw_color, ShapeDrawMode::Wireframe);
 	}
 
 	//‰æ–Ê‚Ö‚Ì•`‰æ
 	ID3D11DeviceContext* context = Graphics::Instance().GetContext();
 	DirectX::XMFLOAT4X4 view = Graphics::Instance().GetViewMatrix();
 	DirectX::XMFLOAT4X4 projection = Graphics::Instance().GetProjectionMatrix();
-	shape_renderer->Render(context, view, projection);
+	renderer->Render(context, view, projection);
 }
 
 //ImGuiƒfƒoƒbƒO•`‰æ

@@ -11,12 +11,14 @@ Player::Player()
 	auto device = Graphics::Instance().GetDevice();
 	character = std::make_unique<Model>(device, "Data/Model/Character/unitychan.glb");
 	move_speed = 5.0f;
+	height = 1.0f;
+	radius = 0.5f;
 }
 
 //デストラクタ
 Player::~Player()
 {
-
+	
 }
 
 //初期化処理
@@ -24,18 +26,52 @@ void Player::Initialize()
 {
 	Character::Initialize();
 	position = { 0.0f,0.0f,0.0f };
+
+	//当たり判定の初期設定
+	capsule_collider.radius = radius;
+	capsule_collider.attribute = ColliderAttribute::Player;
+	capsule_collider.listener = this;
+	capsule_collider.is_active = true;
 }
 
 //更新処理
 void Player::Update(float elapsed_time)
 {
+	capsule_collider.old_start_center = position;
+	capsule_collider.old_end_center = position;
+	capsule_collider.old_end_center.y += height;
+
 	UpdateInput(elapsed_time);
 	Character::Update(elapsed_time);
+
+	capsule_collider.start_center = position;
+	capsule_collider.end_center = position;
+	capsule_collider.end_center.y += height;
 }
 
 //デバッグ描画
-void Player::RenderDebug()
+void Player::RenderDebug(ShapeRenderer* renderer)
 {
+	if (!capsule_collider.is_active || !renderer) return;
+
+	//ShapeRendererの仕様に合わせたパラメータの変換
+	DirectX::XMFLOAT3 cap_center = {
+		position.x,
+		position.y + (height * 0.5f),
+		position.z
+	};
+	float total_height = height + (capsule_collider.radius * 2.0f);
+
+	//既存関数の呼び出し
+	DirectX::XMFLOAT4 color = { 0.0f, 1.0f, 0.0f, 1.0f };
+	renderer->DrawCapsule(
+		cap_center,
+		rotation,
+		capsule_collider.radius,
+		total_height,
+		color,
+		ShapeDrawMode::Wireframe
+	);
 }
 
 //ImGuiデバッグ描画
@@ -44,7 +80,34 @@ void Player::RenderGui()
 	ImGui::Begin("Player");
 	Character::RenderGui();
 	ImGui::DragFloat("PlayerSpeed",&move_speed, 0.1f);
+
+	//当たり判定パラメータ設定
+	if (ImGui::CollapsingHeader("Capsule Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::Checkbox("Is Active", &capsule_collider.is_active);
+		constexpr float min_val = 0.1f;
+		constexpr float max_radius = 20.0f;
+		constexpr float max_height = 100.0f;
+		if (ImGui::SliderFloat("Radius", &capsule_collider.radius, min_val, max_radius))
+		{
+			radius = capsule_collider.radius;
+		}
+		ImGui::SliderFloat("Height", &height, min_val, max_height);
+	}
+
 	ImGui::End();
+}
+
+//衝突処理
+void Player::OnCollisionHit(const CollisionResult& result)
+{
+	if (result.hit_attribute == ColliderAttribute::Stage)
+	{
+		position = result.safe_position;
+		capsule_collider.start_center = position;
+		capsule_collider.end_center = position;
+		capsule_collider.end_center.y += height;
+	}
 }
 
 //入力更新処理

@@ -201,177 +201,151 @@ bool SpaceDivisionCast::PsseudoSpheraCast(const DirectX::XMFLOAT3& start_pos, co
 	return is_any_hit;	//判定結果を返す
 }
 
-//=====================
 //静的球交差判定
-//=====================
-bool SpaceDivisionCast::StaticSpheraCast(const DirectX::XMFLOAT3& start_pos, const DirectX::XMFLOAT3& end_pos, float radius, DirectX::XMFLOAT3& hit_normal)
+bool SpaceDivisionCast::StaticSpheraCast(const DirectX::XMFLOAT3& start_pos, const DirectX::XMFLOAT3& end_pos, float radius, DirectX::XMFLOAT3 hit_position, DirectX::XMFLOAT3& hit_normal)
 {
-	if (areas_list.empty())return false;	//未構築の場合は処理を終了
+	if (areas_list.empty())return false;	
 
-	//-----------------------------
 	//判定用の球体作成と初期化
-	//-----------------------------
-	DirectX::BoundingSphere sphere;										//移動先の座標に判定用の球体を作成
-	sphere.Center = end_pos;											//球の中心座標を設定
-	sphere.Radius = radius;												//球の半径を設定
-	bool is_hit = false;												//ヒットしたかどうかを保存するフラグ
-	float closest_dist = std::numeric_limits<float>::max();				//最短ヒット距離を浮動小数点の最大値で初期化
-	DirectX::XMVECTOR start_vec = DirectX::XMLoadFloat3(&start_pos);	//始点の座標をベクトルとしてロード
+	DirectX::BoundingSphere sphere;										
+	sphere.Center = end_pos;											
+	sphere.Radius = radius;												
+	bool is_hit = false;												
+	float closest_dist = std::numeric_limits<float>::max();				
+	DirectX::XMVECTOR start_vec = DirectX::XMLoadFloat3(&start_pos);
 
-	//-------------------------
 	//エリアと球の交差判定
-	//-------------------------
-	for (const Area& area : areas_list)	//登録されたすべての空間分割エリアをループ
+	for (const Area& area : areas_list)	
 	{
-		if (area.bounding_box.Intersects(sphere))	//エリアのバウンディングボックスと球が交差するか大まかに判定
+		if (area.bounding_box.Intersects(sphere))
 		{
 
-			//--------------------------------
-			//三角形面と球の正確な交差判定
-			//--------------------------------
-			for (int tri_index : area.triangle_indices)	//エリアに含まれるすべての三角形に対して判定
+			//三角形面と球の交差判定
+			for (int tri_index : area.triangle_indices)
 			{
-				const Traiangle& tri = triangles_list[tri_index];						//判定対象の三角形データを参照
-				DirectX::XMVECTOR vertex_a = DirectX::XMLoadFloat3(&tri.position[0]);	//三角形の頂点Aをベクトルとしてロード
-				DirectX::XMVECTOR vertex_b = DirectX::XMLoadFloat3(&tri.position[1]);	//三角形の頂点Bをベクトルとしてロード
-				DirectX::XMVECTOR vertex_c = DirectX::XMLoadFloat3(&tri.position[2]);	//三角形の頂点Cをベクトルとしてロード
+				const Traiangle& tri = triangles_list[tri_index];						
+				DirectX::XMVECTOR vertex_a = DirectX::XMLoadFloat3(&tri.position[0]);
+				DirectX::XMVECTOR vertex_b = DirectX::XMLoadFloat3(&tri.position[1]);
+				DirectX::XMVECTOR vertex_c = DirectX::XMLoadFloat3(&tri.position[2]);
 				
-				if (sphere.Intersects(vertex_a, vertex_b, vertex_c))	//DirectXの公式関数を使用して、球と三角形（面）の正確な交差判定を行う
+				if (sphere.Intersects(vertex_a, vertex_b, vertex_c))	
 				{
-					DirectX::XMVECTOR sum_ab = DirectX::XMVectorAdd(vertex_a, vertex_b);			//複数の面に当たった場合、一番近い面を優先するため、三角形の中心を求める
-					DirectX::XMVECTOR sum_abc = DirectX::XMVectorAdd(sum_ab, vertex_c);				//3頂点の合計を計算
-					const float ONE_THIRD = 1.0f / 3.0f;											//3で割るためのマジックナンバー回避用定数
-					DirectX::XMVECTOR tri_center = DirectX::XMVectorScale(sum_abc, ONE_THIRD);		//合計を3で割って中心座標を計算
-					DirectX::XMVECTOR dist_vec = DirectX::XMVectorSubtract(tri_center, start_vec);	//始点から三角形の中心までのベクトルを計算
-					float dist = DirectX::XMVectorGetX(DirectX::XMVector3Length(dist_vec));			//ベクトルの長さを計算して距離を取得
-					if (dist < closest_dist)	//より近い面に当たった場合のみ法線を更新
+					DirectX::XMVECTOR sum_ab = DirectX::XMVectorAdd(vertex_a, vertex_b);			
+					DirectX::XMVECTOR sum_abc = DirectX::XMVectorAdd(sum_ab, vertex_c);							
+					const float ONE_THIRD = 1.0f / 3.0f;											
+					DirectX::XMVECTOR tri_center = DirectX::XMVectorScale(sum_abc, ONE_THIRD);		
+					DirectX::XMVECTOR dist_vec = DirectX::XMVectorSubtract(tri_center, start_vec);	
+					float dist = DirectX::XMVectorGetX(DirectX::XMVector3Length(dist_vec));			
+					if (dist < closest_dist)
 					{
-						closest_dist = dist;		//最短距離を更新
-						hit_normal = tri.normal;	//当たった面の法線ベクトルを保存
-						is_hit = true;				//ヒットフラグを立てる
+						closest_dist = dist;		
+						hit_normal = tri.normal;	
+
+						DirectX::XMVECTOR vec_center = DirectX::XMLoadFloat3(&end_pos);
+						DirectX::XMVECTOR vec_normal = DirectX::XMLoadFloat3(&tri.normal);
+						DirectX::XMVECTOR vec_hit_pos = DirectX::XMVectorSubtract(vec_center, DirectX::XMVectorScale(vec_normal, radius));
+						DirectX::XMStoreFloat3(&hit_position, vec_hit_pos);
+						is_hit = true;				
 					}
 				}
 			}
 		}
 	}
-	return is_hit;	//判定結果を返す
+	return is_hit;
 }
 
-//=====================================
 //複数球を用いた疑似カプセルキャスト
-//=====================================
-bool SpaceDivisionCast::MultiSpheraCast(const DirectX::XMFLOAT3& bottom_pos, const DirectX::XMFLOAT3& top_pos, float radius, DirectX::XMFLOAT3& hit_normal)
+bool SpaceDivisionCast::MultiSpheraCast(
+	const DirectX::XMFLOAT3& bottom_pos, const DirectX::XMFLOAT3& top_pos,
+	float radius,
+	DirectX::XMFLOAT3& hit_position, DirectX::XMFLOAT3& hit_normal)
 {
-	//-----------------------------------------
 	//カプセルの長さと配置する球の数の計算
-	//-----------------------------------------
-	DirectX::XMVECTOR bottom_vec = DirectX::XMLoadFloat3(&bottom_pos);					//下端の座標をベクトルとしてロード
-	DirectX::XMVECTOR top_vec = DirectX::XMLoadFloat3(&top_pos);						//上端の座標をベクトルとしてロード
-	DirectX::XMVECTOR dir_vec = DirectX::XMVectorSubtract(top_vec, bottom_vec);			//下端から上端へのベクトルを計算
-	float capsule_length = DirectX::XMVectorGetX(DirectX::XMVector3Length(dir_vec));	//カプセルの長さ（下端から上端までの距離）を計算
-	int sphere_count = CalculateSpheraCount(capsule_length, radius);					//配置する球の数を専用関数で計算
-	bool is_any_hit = false;															//ヒットしたかどうかを保存する全体フラグ
-	DirectX::XMVECTOR total_normal_vec = DirectX::XMVectorZero();						//複数の球が当たった場合に法線を合成するためのベクトルを初期化
-	
-	//----------------------------------
+	DirectX::XMVECTOR bottom_vec = DirectX::XMLoadFloat3(&bottom_pos);					
+	DirectX::XMVECTOR top_vec = DirectX::XMLoadFloat3(&top_pos);						
+	DirectX::XMVECTOR dir_vec = DirectX::XMVectorSubtract(top_vec, bottom_vec);			
+	float capsule_length = DirectX::XMVectorGetX(DirectX::XMVector3Length(dir_vec));	
+	int sphere_count = CalculateSpheraCount(capsule_length, radius);					
+
+	//配置割合のステップ幅の事前計算
+	float step_ratio = 0.0f;
+	if (sphere_count > 1)
+	{
+		step_ratio = 1.0f / static_cast<float>(sphere_count - 1);
+	}
+
 	//配置した球ごとに交差判定ループ
-	//----------------------------------
-	for (int i = 0; i < sphere_count; i++)	//計算した球の数だけループ処理を行う
+	for (int i = 0; i < sphere_count; i++)
 	{
-		float ratio = static_cast<float>(i) / static_cast<float>(sphere_count - 1);				//下端(0.0)から上端(1.0)までの割合（配置位置）を計算
-		DirectX::XMFLOAT3 current_sphere_pos = GetLerpPosition(bottom_vec, top_vec, ratio);		//割合に応じた球の中心座標を専用関数で計算
-		DirectX::XMFLOAT3 current_normal;														//球がヒットした際の法線を受け取る
-		bool is_sphere_hit = StaticSpheraCast(current_sphere_pos, current_sphere_pos, radius, current_normal);	//静的球交差判定関数を呼び出して判定
+		float ratio = static_cast<float>(i) * step_ratio;										
+		DirectX::XMFLOAT3 current_sphere_pos = GetLerpPosition(bottom_vec, top_vec, ratio);	
+		DirectX::XMFLOAT3 current_position = { 0.0f,0.0f,0.0f };
+		DirectX::XMFLOAT3 current_normal = { 0.0f,0.0f,0.0f };
+		bool is_sphere_hit = StaticSpheraCast(current_sphere_pos, current_sphere_pos, radius, current_position, current_normal);
 
-		//---------------------------
-		//ヒット時の法線合成処理
-		//---------------------------
-		if (is_sphere_hit)	//球が何かにヒットしたか確認
+		//ヒット時の処理
+		if (is_sphere_hit)
 		{
-			is_any_hit = true;	//全体ヒットフラグを立てる
-			DirectX::XMVECTOR normal_vec = DirectX::XMLoadFloat3(&current_normal);	//取得した法線をベクトルとしてロード
-			total_normal_vec = DirectX::XMVectorAdd(total_normal_vec, normal_vec);	//合成用ベクトルに加算して蓄積
+			hit_position = current_position;
+			hit_normal = current_normal;
+			return true;
 		}
 	}
 
-	//--------------------------------
-	//最終的な合成法線の正規化処理
-	//--------------------------------
-	if (is_any_hit)	//1つ以上の球がヒットしたか確認
-	{
-		float length_sq = DirectX::XMVectorGetX(DirectX::XMVector3LengthSq(total_normal_vec));	//合成した法線ベクトルの長さの2乗を計算
-		const float EPSILON_LENGTH = 0.0001f;	//計算誤差や相殺によるゼロベクトル化を防ぐための極小値
-		if (length_sq > EPSILON_LENGTH)			//長さが十分にある場合のみ正規化
-		{
-			total_normal_vec = DirectX::XMVector3Normalize(total_normal_vec);	//合成法線ベクトルを正規化
-			DirectX::XMStoreFloat3(&hit_normal, total_normal_vec);				//正規化した結果を出力用の変数に保存
-		}
-		else
-		{
-			hit_normal = { 0.0f,1.0f,0.0f };	//相殺されてゼロになった場合は、安全のため上方向（Y軸）を法線にする
-		}
-	}
-	return is_any_hit;	//判定結果を返す
+	return false;
 }
 
 //=======================
 //静的OBBキャスト
 //=======================
-bool SpaceDivisionCast::StaticObbCast(const DirectX::XMFLOAT3& center_pos, const DirectX::XMFLOAT3& extents, const DirectX::XMFLOAT4& orientation, DirectX::XMFLOAT3& hit_normal)
+bool SpaceDivisionCast::StaticObbCast(const DirectX::XMFLOAT3& center_pos, const DirectX::XMFLOAT3& extents, const DirectX::XMFLOAT4& orientation, DirectX::XMFLOAT3& hit_position, DirectX::XMFLOAT3& hit_normal)
 {
-	if (areas_list.empty())return false;	//未構築（エリアデータがない）の場合は処理を終了
+	if (areas_list.empty())return false;
 
-	//--------------------
 	//判定用OBB作成
-	//--------------------
-	DirectX::BoundingOrientedBox obb;									//DirectX公式のOBB構造体を作成
-	obb.Center = center_pos;											//ボックスの中心座標を設定
-	obb.Extents = extents;												//ボックスの各軸の半分の長さ（サイズ）を設定
-	obb.Orientation = orientation;										//ボックスの向き（クォータニオン）を設定
-	bool is_hit = false;												//ヒットしたかどうかを保存
-	float closest_dist = std::numeric_limits<float>::max();				//最短ヒット距離を浮動小数点の最大値で初期化
-	DirectX::XMVECTOR center_vec = DirectX::XMLoadFloat3(&center_pos);	//距離計算のためにボックスの中心座標をベクトルとしてロード
+	DirectX::BoundingOrientedBox obb;									
+	obb.Center = center_pos;											
+	obb.Extents = extents;												
+	obb.Orientation = orientation;										
+	bool is_hit = false;												
+	float closest_dist = std::numeric_limits<float>::max();				
+	DirectX::XMVECTOR center_vec = DirectX::XMLoadFloat3(&center_pos);
 
-	//---------------------------------------
 	//空間分割エリアとボックスの交差判定
-	//---------------------------------------
-	for (const Area& area : areas_list)	//登録されたすべての空間分割エリアをループ
+	for (const Area& area : areas_list)
 	{
-		if (area.bounding_box.Intersects(obb))	//エリアの境界（AABB）と今回のボックス（OBB）が交差するか大まかに判定
+		if (area.bounding_box.Intersects(obb))
 		{
-			//----------------------------
 			//三角形面とOBBの交差判定
-			//----------------------------
-			for (int tri_index : area.triangle_indices)	//エリアに含まれるすべての三角形に対して判定
+			for (int tri_index : area.triangle_indices)
 			{
-				const Traiangle& tri = triangles_list[tri_index];						//判定対象の三角形データを参照
-				DirectX::XMVECTOR vertex_a = DirectX::XMLoadFloat3(&tri.position[0]);	//三角形の頂点Aをベクトルとしてロード
-				DirectX::XMVECTOR vertex_b = DirectX::XMLoadFloat3(&tri.position[1]);	//三角形の頂点Bをベクトルとしてロード
-				DirectX::XMVECTOR vertex_c = DirectX::XMLoadFloat3(&tri.position[2]);	//三角形の頂点Cをベクトルとしてロード
-				if (obb.Intersects(vertex_a, vertex_b, vertex_c))	//OBBと三角形の判定を実行
+				const Traiangle& tri = triangles_list[tri_index];						
+				DirectX::XMVECTOR vertex_a = DirectX::XMLoadFloat3(&tri.position[0]);
+				DirectX::XMVECTOR vertex_b = DirectX::XMLoadFloat3(&tri.position[1]);
+				DirectX::XMVECTOR vertex_c = DirectX::XMLoadFloat3(&tri.position[2]);
+				if (obb.Intersects(vertex_a, vertex_b, vertex_c))
 				{
-					DirectX::XMVECTOR sum_ab = DirectX::XMVectorAdd(vertex_a, vertex_b);			//複数の面に当たった場合、一番近い面を優先するため、三角形の中心を求める
-					DirectX::XMVECTOR sum_abc = DirectX::XMVectorAdd(sum_ab, vertex_c);				//3頂点の合計を計算
-					const float ONE_THIRD = 1.0f / 3.0f;											//3で割るためのマジックナンバー回避用定数
-					DirectX::XMVECTOR tri_center = DirectX::XMVectorScale(sum_abc, ONE_THIRD);		//合計を3で割って中心座標を計算
-					DirectX::XMVECTOR dist_vec = DirectX::XMVectorSubtract(tri_center, center_vec);	//始点から三角形の中心までのベクトルを計算
-					float dist = DirectX::XMVectorGetX(DirectX::XMVector3Length(dist_vec));			//ベクトルの長さを計算して距離を取得
-					if (dist < closest_dist)	//より近い面に当たった場合のみ法線を更新
+					DirectX::XMVECTOR sum_ab = DirectX::XMVectorAdd(vertex_a, vertex_b);			
+					DirectX::XMVECTOR sum_abc = DirectX::XMVectorAdd(sum_ab, vertex_c);				
+					const float ONE_THIRD = 1.0f / 3.0f;											
+					DirectX::XMVECTOR tri_center = DirectX::XMVectorScale(sum_abc, ONE_THIRD);		
+					DirectX::XMVECTOR dist_vec = DirectX::XMVectorSubtract(tri_center, center_vec);
+					float dist = DirectX::XMVectorGetX(DirectX::XMVector3Length(dist_vec));			
+					if (dist < closest_dist)	
 					{
-						closest_dist = dist;		//最短距離を更新
-						hit_normal = tri.normal;	//当たった面の法線ベクトルを保存
-						is_hit = true;				//ヒットフラグを立てる
+						closest_dist = dist;		
+						hit_normal = tri.normal;
+						DirectX::XMStoreFloat3(&hit_position, tri_center);
+						is_hit = true;			
 					}
 				}
 			}
 		}
 	}
-	return is_hit;	//判定結果を返す
+	return is_hit;
 }
 
-//============================
 //全ての境界線のリストを取得
-//============================
 std::vector<DirectX::BoundingBox> SpaceDivisionCast::GetAreaBoundingBoxes() const
 {
 	//戻り値用のコンテナを準備
@@ -387,21 +361,17 @@ std::vector<DirectX::BoundingBox> SpaceDivisionCast::GetAreaBoundingBoxes() cons
 	return bboxes;
 }
 
-//====================
 //エリアの総数を取得
-//====================
 size_t SpaceDivisionCast::GetAreaCount()
 {
 	return areas_list.size();
 }
 
-//===============
 //エリアを作成
-//===============
 void SpaceDivisionCast::CreateAreas(const DirectX::XMFLOAT3& volume_min, const DirectX::XMFLOAT3& volume_max)
 {
-	int count_x = static_cast<int>(std::ceil((volume_max.x - volume_min.x) / CELL_SIZE));	//X軸方向のエリア数を計算
-	int count_z = static_cast<int>(std::ceil((volume_max.z - volume_min.z) / CELL_SIZE));	//Z軸方向のエリア数を計算
+	int count_x = static_cast<int>(std::ceil((volume_max.x - volume_min.x) / CELL_SIZE));	
+	int count_z = static_cast<int>(std::ceil((volume_max.z - volume_min.z) / CELL_SIZE));
 
 	//エリアが0以下の場合は最低1つにする
 	if (count_x <= 0)count_x = 1;
@@ -415,60 +385,56 @@ void SpaceDivisionCast::CreateAreas(const DirectX::XMFLOAT3& volume_min, const D
 		{
 			Area new_area;	//新しいエリアを作成
 
-			float center_x = volume_min.x + (x * CELL_SIZE) + (CELL_SIZE * 0.5f);	//エリアの中心座標Xを計算
-			float center_y = (volume_max.y + volume_min.y) * 0.5f;					//エリアの中心座標Yは全体の中心をする
-			float center_z = volume_min.z + (z * CELL_SIZE) + (CELL_SIZE * 0.5f);	//エリアの中心座標Zを計算
+			float center_x = volume_min.x + (x * CELL_SIZE) + (CELL_SIZE * 0.5f);	
+			float center_y = (volume_max.y + volume_min.y) * 0.5f;					
+			float center_z = volume_min.z + (z * CELL_SIZE) + (CELL_SIZE * 0.5f);	
 
 			//エリアの広さの半分を計算
-			float extents_x = CELL_SIZE * 0.5f;							//X方向の広さの半分を計算
-			float extents_y = (volume_max.y - volume_min.y) * 0.5f;		//Y方向は全体の高さをカバーする
-			float extents_z = CELL_SIZE * 0.5f;							//Z方向の広さの半分を計算
+			float extents_x = CELL_SIZE * 0.5f;							
+			float extents_y = (volume_max.y - volume_min.y) * 0.5f;		
+			float extents_z = CELL_SIZE * 0.5f;							
 
-			new_area.bounding_box.Center = DirectX::XMFLOAT3(center_x, center_y, center_z);		//バウンディングボックスの中心を設定
-			new_area.bounding_box.Extents = DirectX::XMFLOAT3(extents_x, extents_y, extents_z);	//バウンディングボックスのサイズを設定
+			new_area.bounding_box.Center = DirectX::XMFLOAT3(center_x, center_y, center_z);		
+			new_area.bounding_box.Extents = DirectX::XMFLOAT3(extents_x, extents_y, extents_z);	
 
 			//全ての三角形に対してエリアとの交差判定を行う
 			for (int i = 0; i < static_cast<int>(triangles_list.size()); ++i)
 			{
-				DirectX::XMVECTOR tri_a = DirectX::XMLoadFloat3(&triangles_list[i].position[0]);	//頂点Aをロード
-				DirectX::XMVECTOR tri_b = DirectX::XMLoadFloat3(&triangles_list[i].position[1]);	//頂点Bをロード
-				DirectX::XMVECTOR tri_c = DirectX::XMLoadFloat3(&triangles_list[i].position[2]);	//頂点Cをロード
+				DirectX::XMVECTOR tri_a = DirectX::XMLoadFloat3(&triangles_list[i].position[0]);
+				DirectX::XMVECTOR tri_b = DirectX::XMLoadFloat3(&triangles_list[i].position[1]);
+				DirectX::XMVECTOR tri_c = DirectX::XMLoadFloat3(&triangles_list[i].position[2]);
 
 				//DirectXの公式関数を使用して、Boxと三角形が交差するか判定
 				if (new_area.bounding_box.Intersects(tri_a, tri_b, tri_c))
 				{
-					new_area.triangle_indices.push_back(i);	//交差していれば、このエリアに三角形インデックスを追加
+					new_area.triangle_indices.push_back(i);
 				}
 			}
 			//三角形が1つ以上含まれるエリアのみ保存
 			if (!new_area.triangle_indices.empty())
 			{
-				areas_list.push_back(new_area);	//エリアリストに追加
+				areas_list.push_back(new_area);	
 			}
 		}
 	}
 }
 
-//==================================================
 //カプセルの隙間を埋めるために必要な球の数を計算
-//==================================================
 int SpaceDivisionCast::CalculateSpheraCount(float capsule_length, float radius) const
 {
-	float interval = radius * SPHERE_INTERVAL_RATIO;					//配置間隔（半径 × 密度比率）を計算
-	if (interval <= 0.0f) return 2;										//間隔が0以下になる異常事態を防ぐためのチェック
-	int count = static_cast<int>(std::ceil(capsule_length / interval));	//長さを間隔で割り、切り上げて必要な数を計算
-	count += 1;															//端の球を追加するため+1
-	if (count < 2) count = 2;											//カプセルには最低でも下端と上端の2つの球が必要なため補正
-	return count;														//計算した数を返す
+	float interval = radius * SPHERE_INTERVAL_RATIO;					
+	if (interval <= 0.0f) return 2;										
+	int count = static_cast<int>(std::ceil(capsule_length / interval));	
+	count += 1;															
+	if (count < 2) count = 2;											
+	return count;														
 }
 
-//================================================
 //2点間を指定した割合で線形補間した座標を計算
-//================================================
 DirectX::XMFLOAT3 SpaceDivisionCast::GetLerpPosition(const DirectX::XMVECTOR& start_vec, const DirectX::XMVECTOR& end_vec, float ratio) const
 {
-	DirectX::XMVECTOR lerp_vec = DirectX::XMVectorLerp(start_vec, end_vec, ratio);	//DirectXの公式関数を使用して線形補間
-	DirectX::XMFLOAT3 result_pos;													//計算結果を保存
-	DirectX::XMStoreFloat3(&result_pos, lerp_vec);									//ベクトルを構造体に書き込み
-	return result_pos;																//補間した座標を返す
+	DirectX::XMVECTOR lerp_vec = DirectX::XMVectorLerp(start_vec, end_vec, ratio);	
+	DirectX::XMFLOAT3 result_pos;													
+	DirectX::XMStoreFloat3(&result_pos, lerp_vec);									
+	return result_pos;																
 }

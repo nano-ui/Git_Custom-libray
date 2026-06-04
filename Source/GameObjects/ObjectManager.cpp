@@ -63,14 +63,14 @@ void ObjectManager::RenderGui()
 }
 
 //全オブジェクトのデバッグ描画
-void ObjectManager::RenderDebug()
+void ObjectManager::RenderDebug(ShapeRenderer* renderer)
 {
 	//生存している全オブジェクトのデバッグ描画処理
 	for (auto& object : game_objects)
 	{
 		if (object->IsActive())
 		{
-			object->RenderDebug();
+			object->RenderDebug(renderer);
 		}
 	}
 }
