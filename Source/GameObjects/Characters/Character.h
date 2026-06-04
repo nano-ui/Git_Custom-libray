@@ -58,6 +58,9 @@ protected:
 	//ステージとの衝突処理
 	void ResolveStageCollision(const CollisionResult& result, CapsuleCollider& collider, float cap_height, float offset_y);
 
+	//動的オブジェクトとの衝突処理
+	void ResolveDynamicCollision(const CollisionResult& result, CapsuleCollider& collider, float cap_height, float offset_y);
+
 private:
 	//垂直方向の移動速度更新
 	void UpdateVerticalVelocity(float elapsed_time);
@@ -89,5 +92,6 @@ protected:
 	float friction;				//摩擦力
 	float air_control;			//空中での制御力
 	float offset_y;				//当たり判定のY軸オフセット
+	float weight;				//キャラクターの重さ
 };
 

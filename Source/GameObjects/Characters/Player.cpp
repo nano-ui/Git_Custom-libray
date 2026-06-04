@@ -33,7 +33,7 @@ void Player::Initialize()
 
 	//ìñÇΩÇËîªíËÇÃèâä˙ê›íË
 	capsule_collider.radius = radius;
-	capsule_collider.attribute = ColliderAttribute::Player;
+	capsule_collider.attribute = ColliderAttribute::Collision;
 	capsule_collider.listener = this;
 	capsule_collider.is_active = true;
 	AddCollider(&capsule_collider);
@@ -43,6 +43,7 @@ void Player::Initialize()
 void Player::Update(float elapsed_time)
 {
 	capsule_collider.old_start_center = position;
+	capsule_collider.old_start_center.y = position.y + offset_y;
 	capsule_collider.old_end_center = position;
 	capsule_collider.old_end_center.y += height + offset_y;
 
@@ -50,6 +51,7 @@ void Player::Update(float elapsed_time)
 	Character::Update(elapsed_time);
 
 	capsule_collider.start_center = position;
+	capsule_collider.old_start_center.y = position.y + offset_y;
 	capsule_collider.end_center = position;
 	capsule_collider.end_center.y += height + offset_y;
 }
@@ -109,6 +111,10 @@ void Player::OnCollisionHit(const CollisionResult& result)
 	if (result.hit_attribute == ColliderAttribute::Stage)
 	{
 		ResolveStageCollision(result, capsule_collider, height, offset_y);
+	}
+	if (result.hit_attribute == ColliderAttribute::Collision)
+	{
+		ResolveDynamicCollision(result, capsule_collider, height, offset_y);
 	}
 }
 

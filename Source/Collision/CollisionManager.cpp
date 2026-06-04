@@ -298,6 +298,9 @@ void CollisionManager::CheckSphereVsSphere()
                         result_b.hit_normal.x = -result_a.hit_normal.x;
                         result_b.hit_normal.y = -result_a.hit_normal.y;
                         result_b.hit_normal.z = -result_a.hit_normal.z;
+                        result_b.penetration_vector.x = -result_a.penetration_vector.x;
+                        result_b.penetration_vector.y = -result_a.penetration_vector.y;
+                        result_b.penetration_vector.z = -result_a.penetration_vector.z;
                         result_b.hit_attribute = sphere_a->attribute;
                         sphere_b->listener->OnCollisionHit(result_b);
                     }

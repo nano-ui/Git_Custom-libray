@@ -21,6 +21,7 @@ Character::Character()
 	max_speed = 5.0f;
 	air_control = 0.3f;
 	offset_y = 0.0f;
+	weight = 10.0f;
 }
 
 //デストラクタ
@@ -73,6 +74,7 @@ void Character::RenderGui()
 	ImGui::DragFloat("MaxSpeed", &max_speed, 0.1f);
 	ImGui::DragFloat("AttackPower", &attack_power, 0.1f);
 	ImGui::DragFloat("OffsetY", &offset_y, 0.1f);
+	ImGui::DragFloat("Weight", &weight, 0.1f, 0.0f, 100.0f);
 }
 
 //ダメージ処理
@@ -180,9 +182,68 @@ void Character::ResolveStageCollision(
 	{
 		position.x += push_x;
 		position.z += push_z;
+		float nx = result.hit_normal.x;
+		float nz = result.hit_normal.z;
+		float len = std::sqrtf(nx * nx + nz * nz);
+		if (len > 0.001f)
+		{
+			nx /= len;
+			nz /= len;
+			float dot = velocity.x * nx + velocity.z * nz;
+			if (dot < 0.0f)
+			{
+				velocity.x -= dot * nx;
+				velocity.z -= dot * nz;
+			}
+		}
 	}
 
 	//コライダー一の即時上書き
+	collider.start_center = position;
+	collider.start_center.y += offset_y;
+	collider.end_center = position;
+	collider.end_center.y += cap_height + offset_y;
+}
+
+//動的オブジェクトとの衝突処理
+void Character::ResolveDynamicCollision(
+	const CollisionResult& result,
+	CapsuleCollider& collider,
+	float cap_height,
+	float offset_y)
+{
+	//相手のコライダー情報が存在するかチェック
+	if (!result.hit_collider)return;
+
+	//互いの重さを取得
+	float my_weight = collider.weight;
+	float other_weight = result.hit_collider->weight;
+
+	//押し出される割合の計算
+	float push_ratio = 1.0f;
+	if (my_weight > 0.0f && other_weight > 0.0f)
+	{
+		push_ratio = other_weight / (my_weight + other_weight);
+	}
+	else if (my_weight <= 0.0f && other_weight > 0.0f)
+	{
+		push_ratio = 0.0f;
+	}
+	else if (my_weight > 0.0f && other_weight <= 0.0f)
+	{
+		push_ratio = 1.0f;
+	}
+	else
+	{
+		push_ratio = 0.0f;
+	}
+
+	//貫通量に割合を掛けて座標を補正
+	position.x += result.penetration_vector.x * push_ratio;
+	position.y += result.penetration_vector.y * push_ratio;
+	position.z += result.penetration_vector.z * push_ratio;
+
+	//コライダー位置の即時上書き
 	collider.start_center = position;
 	collider.start_center.y += offset_y;
 	collider.end_center = position;

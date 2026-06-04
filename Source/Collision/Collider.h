@@ -5,25 +5,27 @@
 #include <cstdint>
 
 class SpaceDivisionCast;
+struct Collider;
 
 //当たり判定の属性
 enum class ColliderAttribute
 {
 	None,       // 属性なし
 	Stage,      // ステージ（壁・床）
-	Player,     // プレイヤー
-	Enemy,      // 敵
+	Collision,	// 動的当たり判定
 	Attack      // 攻撃判定
 };
 
 //判定結果
 struct CollisionResult
 {
-	DirectX::XMFLOAT3 hit_position;		//ヒットした座標
-	DirectX::XMFLOAT3 hit_normal;		//ヒットした面の法線ベクトル
-	DirectX::XMFLOAT3 safe_position;	//押し出し後の座標
-	uint32_t hit_layer;					//衝突した相手のレイヤー情報
-	ColliderAttribute hit_attribute;	//衝突した当たり判定の属性
+	DirectX::XMFLOAT3 hit_position;			//ヒットした座標
+	DirectX::XMFLOAT3 hit_normal;			//ヒットした面の法線ベクトル
+	DirectX::XMFLOAT3 safe_position;		//押し出し後の座標
+	uint32_t hit_layer;						//衝突した相手のレイヤー情報
+	ColliderAttribute hit_attribute;		//衝突した当たり判定の属性
+	DirectX::XMFLOAT3 penetration_vector;	//貫通ベクトル
+	Collider* hit_collider = nullptr;		//衝突した相手のコライダーのポインタ
 };
 
 //衝突イベント受け取り用インターフェース
@@ -50,6 +52,8 @@ struct Collider
 	ColliderType type;                                      //コライダーの形状
 	DirectX::XMFLOAT3 mtd;                                  //押し出しベクトル
 	ColliderAttribute attribute = ColliderAttribute::None;  //自身の属性
+	float weight = 1.0f;									//オブジェクトの重さ
+	float attack_power = 0.0f;								//攻撃力
 	bool is_active = true;                                  //有効フラグ
 	ICollisionListener* listener = nullptr;                 //衝突の通知先
 	virtual ~Collider() = default;
