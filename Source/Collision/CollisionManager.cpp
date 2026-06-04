@@ -176,8 +176,8 @@ void CollisionManager::CheckDynamicVsSpace()
             {
                 CapsuleCollider* capsule = static_cast<CapsuleCollider*>(collider);
                 is_hit = space->space_cast->MultiSpheraCast(
-                    capsule->old_start_center,
-                    capsule->old_end_center,
+                    capsule->start_center,
+                    capsule->end_center,
                     capsule->radius,
                     temp_hit_pos,
                     temp_hit_normal
@@ -194,7 +194,52 @@ void CollisionManager::CheckDynamicVsSpace()
                 CollisionResult result;
                 result.hit_position = temp_hit_pos;
                 result.hit_normal = temp_hit_normal;
-                result.safe_position = temp_hit_pos;
+
+                DirectX::XMVECTOR v_hit_pos = DirectX::XMLoadFloat3(&temp_hit_pos);
+                DirectX::XMVECTOR v_hit_normal = DirectX::XMLoadFloat3(&temp_hit_normal);
+                DirectX::XMVECTOR v_push = DirectX::XMVectorZero();
+                DirectX::XMFLOAT3 current_collider_base = { 0.0f,0.0f,0.0f };
+
+                //‰Ÿ‚µ–ß‚µÀ•W‚ÌŒvŽZ
+                switch (collider->type)
+                {
+                case ColliderType::Sphere:
+                {
+                    SphereCollider* sphere = static_cast<SphereCollider*>(collider);
+                    current_collider_base = sphere->center;
+                    DirectX::XMVECTOR v_sphere_center = DirectX::XMLoadFloat3(&sphere->center);
+                    DirectX::XMVECTOR v_safe_center = DirectX::XMVectorAdd(v_hit_pos, DirectX::XMVectorScale(v_hit_normal, sphere->radius));
+                    v_push = DirectX::XMVectorSubtract(v_safe_center, v_sphere_center);
+                    break;
+                }
+                case ColliderType::Capsule:
+                {
+                    CapsuleCollider* capsule = static_cast<CapsuleCollider*>(collider);
+                    current_collider_base = capsule->start_center;
+                    DirectX::XMVECTOR v_start = DirectX::XMLoadFloat3(&capsule->start_center);
+                    DirectX::XMVECTOR v_end = DirectX::XMLoadFloat3(&capsule->end_center);
+                    DirectX::XMVECTOR v_dir = DirectX::XMVectorSubtract(v_end, v_start);
+                    DirectX::XMVECTOR v_to_hit = DirectX::XMVectorSubtract(v_hit_pos, v_start);
+                    float len_sq = DirectX::XMVectorGetX(DirectX::XMVector3Dot(v_dir, v_dir));
+                    float t = 0.0f;
+                    const float ZERO_THRESHOLD = 0.001f;
+                    if (len_sq > ZERO_THRESHOLD)
+                    {
+                        t = DirectX::XMVectorGetX(DirectX::XMVector3Dot(v_to_hit, v_dir)) / len_sq;
+                        t = std::clamp(t, 0.0f, 1.0f);
+                    }
+                    DirectX::XMVECTOR v_closest = DirectX::XMVectorAdd(v_start, DirectX::XMVectorScale(v_dir, t));
+                    DirectX::XMVECTOR v_safe_center = DirectX::XMVectorAdd(v_hit_pos, DirectX::XMVectorScale(v_hit_normal, capsule->radius));
+                    v_push = DirectX::XMVectorSubtract(v_safe_center, v_closest);
+
+                    break;
+                }
+                default:
+                    break;
+                }
+                DirectX::XMVECTOR v_base = DirectX::XMLoadFloat3(&current_collider_base);
+                DirectX::XMVECTOR v_safe_pos = DirectX::XMVectorAdd(v_base, v_push);
+                DirectX::XMStoreFloat3(&result.safe_position, v_safe_pos);
                 result.hit_attribute = space->attribute;
                 collider->listener->OnCollisionHit(result);
             }

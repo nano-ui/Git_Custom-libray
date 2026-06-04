@@ -17,7 +17,6 @@ SceneGame::SceneGame()
 	object_manager->SetCollisionManager(collision_manager.get());
 
 	Stage* stage = object_manager->Instantiate<Stage>();
-
 	Player* player = object_manager->Instantiate<Player>();
 
 	camera = std::make_unique<FreeCamera>();

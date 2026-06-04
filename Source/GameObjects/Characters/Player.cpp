@@ -11,8 +11,9 @@ Player::Player()
 	auto device = Graphics::Instance().GetDevice();
 	character = std::make_unique<Model>(device, "Data/Model/Character/unitychan.glb");
 	move_speed = 5.0f;
-	height = 1.0f;
-	radius = 0.5f;
+	height = 0.8f;
+	radius = 0.4f;
+	offset_y = 0.4f;
 }
 
 //デストラクタ
@@ -40,14 +41,14 @@ void Player::Update(float elapsed_time)
 {
 	capsule_collider.old_start_center = position;
 	capsule_collider.old_end_center = position;
-	capsule_collider.old_end_center.y += height;
+	capsule_collider.old_end_center.y += height + offset_y;
 
 	UpdateInput(elapsed_time);
 	Character::Update(elapsed_time);
 
 	capsule_collider.start_center = position;
 	capsule_collider.end_center = position;
-	capsule_collider.end_center.y += height;
+	capsule_collider.end_center.y += height + offset_y;
 }
 
 //デバッグ描画
@@ -58,7 +59,7 @@ void Player::RenderDebug(ShapeRenderer* renderer)
 	//ShapeRendererの仕様に合わせたパラメータの変換
 	DirectX::XMFLOAT3 cap_center = {
 		position.x,
-		position.y + (height * 0.5f),
+		position.y + offset_y + (height * 0.5f),
 		position.z
 	};
 	float total_height = height + (capsule_collider.radius * 2.0f);
@@ -89,11 +90,11 @@ void Player::RenderGui()
 		constexpr float min_val = 0.1f;
 		constexpr float max_radius = 20.0f;
 		constexpr float max_height = 100.0f;
-		if (ImGui::SliderFloat("Radius", &capsule_collider.radius, min_val, max_radius))
+		if (ImGui::DragFloat("Radius", &capsule_collider.radius, min_val, max_radius))
 		{
 			radius = capsule_collider.radius;
 		}
-		ImGui::SliderFloat("Height", &height, min_val, max_height);
+		ImGui::DragFloat("Height", &height, min_val, max_height);
 	}
 
 	ImGui::End();
@@ -105,9 +106,12 @@ void Player::OnCollisionHit(const CollisionResult& result)
 	if (result.hit_attribute == ColliderAttribute::Stage)
 	{
 		position = result.safe_position;
+		position.y -= offset_y;
+
 		capsule_collider.start_center = position;
+		capsule_collider.start_center.y += offset_y;
 		capsule_collider.end_center = position;
-		capsule_collider.end_center.y += height;
+		capsule_collider.end_center.y += height + offset_y;
 	}
 }
 

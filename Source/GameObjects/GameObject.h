@@ -7,7 +7,7 @@
 #include "../Graphics/ShapeRenderer.h"
 #include "../ObjectsRender/Model.h"
 
-class Collider;
+struct Collider;
 
 class GameObject
 {

@@ -202,7 +202,7 @@ bool SpaceDivisionCast::PsseudoSpheraCast(const DirectX::XMFLOAT3& start_pos, co
 }
 
 //ê√ìIãÖåç∑îªíË
-bool SpaceDivisionCast::StaticSpheraCast(const DirectX::XMFLOAT3& start_pos, const DirectX::XMFLOAT3& end_pos, float radius, DirectX::XMFLOAT3 hit_position, DirectX::XMFLOAT3& hit_normal)
+bool SpaceDivisionCast::StaticSpheraCast(const DirectX::XMFLOAT3& start_pos, const DirectX::XMFLOAT3& end_pos, float radius, DirectX::XMFLOAT3& hit_position, DirectX::XMFLOAT3& hit_normal)
 {
 	if (areas_list.empty())return false;	
 
@@ -230,20 +230,17 @@ bool SpaceDivisionCast::StaticSpheraCast(const DirectX::XMFLOAT3& start_pos, con
 				
 				if (sphere.Intersects(vertex_a, vertex_b, vertex_c))	
 				{
-					DirectX::XMVECTOR sum_ab = DirectX::XMVectorAdd(vertex_a, vertex_b);			
-					DirectX::XMVECTOR sum_abc = DirectX::XMVectorAdd(sum_ab, vertex_c);							
-					const float ONE_THIRD = 1.0f / 3.0f;											
-					DirectX::XMVECTOR tri_center = DirectX::XMVectorScale(sum_abc, ONE_THIRD);		
-					DirectX::XMVECTOR dist_vec = DirectX::XMVectorSubtract(tri_center, start_vec);	
-					float dist = DirectX::XMVectorGetX(DirectX::XMVector3Length(dist_vec));			
-					if (dist < closest_dist)
-					{
-						closest_dist = dist;		
-						hit_normal = tri.normal;	
+					DirectX::XMVECTOR vec_center = DirectX::XMLoadFloat3(&end_pos);
+					DirectX::XMVECTOR vec_normal = DirectX::XMLoadFloat3(&tri.normal);
+					DirectX::XMVECTOR vec_c_to_a = DirectX::XMVectorSubtract(vec_center, vertex_a);
+					float plane_dist = DirectX::XMVectorGetX(DirectX::XMVector3Dot(vec_c_to_a, vec_normal));
+					float abs_dist = std::abs(plane_dist);
 
-						DirectX::XMVECTOR vec_center = DirectX::XMLoadFloat3(&end_pos);
-						DirectX::XMVECTOR vec_normal = DirectX::XMLoadFloat3(&tri.normal);
-						DirectX::XMVECTOR vec_hit_pos = DirectX::XMVectorSubtract(vec_center, DirectX::XMVectorScale(vec_normal, radius));
+					if (abs_dist < closest_dist)
+					{
+						closest_dist = abs_dist;
+						hit_normal = tri.normal;
+						DirectX::XMVECTOR vec_hit_pos = DirectX::XMVectorSubtract(vec_center, DirectX::XMVectorScale(vec_normal, plane_dist));
 						DirectX::XMStoreFloat3(&hit_position, vec_hit_pos);
 						is_hit = true;				
 					}

@@ -12,7 +12,7 @@ Character::Character()
 	invincible_timer = 0.0f;
 	radius = 2.0f;
 	height = 4.0f;
-	gravity = 0.0f;
+	gravity = -10.0f;
 	height = 100.0f;
 	acceleration = 50.0f;
 	move_vecX = 0.0f;
@@ -20,6 +20,7 @@ Character::Character()
 	friction = 15.0f;
 	max_speed = 5.0f;
 	air_control = 0.3f;
+	offset_y = 0.0f;
 }
 
 //デストラクタ
@@ -71,6 +72,7 @@ void Character::RenderGui()
 	ImGui::DragFloat("Acceleration", &acceleration, 0.1f);
 	ImGui::DragFloat("MaxSpeed", &max_speed, 0.1f);
 	ImGui::DragFloat("AttackPower", &attack_power, 0.1f);
+	ImGui::DragFloat("OffsetY", &offset_y, 0.1f);
 }
 
 //ダメージ処理

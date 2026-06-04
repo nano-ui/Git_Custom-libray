@@ -85,5 +85,6 @@ protected:
 	float attack_power;			//攻撃力
 	float friction;				//摩擦力
 	float air_control;			//空中での制御力
+	float offset_y;				//当たり判定のY軸オフセット
 };
 
