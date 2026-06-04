@@ -221,6 +221,9 @@
     <Filter Include="Source\Render\GpuResorceUtilty">
       <UniqueIdentifier>{f87e07bc-22b4-4da1-90f1-3898e1e44f9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Collision\CollisionManager">
+      <UniqueIdentifier>{1d497fb8-98dc-47b3-95f8-6f1046c58468}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -415,6 +418,7 @@
     <ClCompile Include="Source\Collision\CollisionLogic.cpp">
       <Filter>Source\Collision\CollisionLogic</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Collision\CollisionManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Common\high_resolution_timer.h">
@@ -633,6 +637,7 @@
     <ClInclude Include="Source\Collision\Collider.h">
       <Filter>Source\Collision\Collider</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Collision\CollisionManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Compiled\blur_ps.cod">

@@ -23,6 +23,7 @@ struct CollisionResult
 	DirectX::XMFLOAT3 hit_normal;		//ヒットした面の法線ベクトル
 	DirectX::XMFLOAT3 safe_position;	//押し出し後の座標
 	uint32_t hit_layer;					//衝突した相手のレイヤー情報
+	ColliderAttribute hit_attribute;	//衝突した当たり判定の属性
 };
 
 //衝突イベント受け取り用インターフェース
@@ -146,10 +147,10 @@ struct CapsuleCollider:public Collider
 };
 
 //空間分割コライダー
-struct SpaceDivisionCallier:public Collider
+struct SpaceDivisionCollider :public Collider
 {
 	SpaceDivisionCast* space_cast;	//空間分割データ
-	SpaceDivisionCallier()
+	SpaceDivisionCollider()
 	{
 		space_cast = nullptr;
 	}

@@ -101,8 +101,6 @@ bool CollisionLogic::IsSphereSphereCollision(const SphereCollider* sphere_a, con
     DirectX::XMVECTOR hit_pos_vec = DirectX::XMVectorAdd(center_b, DirectX::XMVectorScale(normal_vec, sphere_b->radius));
     DirectX::XMStoreFloat3(&out_result.hit_normal, normal_vec);
     DirectX::XMStoreFloat3(&out_result.safe_position, safe_pos_vev);
-    out_result.hit_layer = sphere_b->layer;
-
     return true;
 }
 
@@ -156,8 +154,6 @@ bool CollisionLogic::IsCapsuleCapsuleCollision(
     DirectX::XMStoreFloat3(&out_result.hit_normal, normal_vec);
     DirectX::XMVECTOR safe_pos_vec = DirectX::XMVectorAdd(start_a, push_vec);
     DirectX::XMStoreFloat3(&out_result.safe_position, safe_pos_vec);
-    out_result.hit_layer = capsule_b->layer;
-
     return true;
 }
 
@@ -196,7 +192,7 @@ void CollisionLogic::CalculaterClosestPointsBetweenSegments(
     else if (len_sq_b <= epsilon)
     {
         ratio_b = 0.0f;
-        ratio_a = std::clamp(-dot_a_diff, len_sq_a, 0.0f, 1.0f);
+        ratio_a = std::clamp(-dot_a_diff / len_sq_a, 0.0f, 1.0f);
     }
     else
     {
