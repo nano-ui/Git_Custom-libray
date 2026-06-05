@@ -75,12 +75,6 @@
     <ClCompile Include="External\imgui-docking\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ObjectsRender\texture.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GltfModel\TinygltfImpl.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Shaders\BlurShader.cpp">
       <Filter>Source\Shaders\BlurShader</Filter>
     </ClCompile>
@@ -246,6 +240,12 @@
     <ClCompile Include="Source\GameObjects\Objects\Stage.cpp">
       <Filter>Source\Object\GameObject\Stage</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ObjectsRender\texture.cpp">
+      <Filter>Source\Render\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GltfModel\TinygltfImpl.cpp">
+      <Filter>Source\Render\GltfModel\TinygltfImpl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui.h">
@@ -268,9 +268,6 @@
     </ClInclude>
     <ClInclude Include="External\imgui-docking\imstb_truetype.h">
       <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ObjectsRender\texture.h">
-      <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\Shaders\BlurShader.h">
       <Filter>Source\Shaders\BlurShader</Filter>
@@ -460,6 +457,9 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Objects\Stage.h">
       <Filter>Source\Object\GameObject\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectsRender\texture.h">
+      <Filter>Source\Render\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -731,6 +731,12 @@
     </Filter>
     <Filter Include="Source\Object\GameObject\Stage">
       <UniqueIdentifier>{77860506-6c1e-47a0-9ca4-b24b217e9361}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\Texture">
+      <UniqueIdentifier>{851eca2d-3dbb-4457-8479-b5d26b1d6f45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\GltfModel\TinygltfImpl">
+      <UniqueIdentifier>{406cbb8d-961b-4e64-a187-c11669f08bdf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

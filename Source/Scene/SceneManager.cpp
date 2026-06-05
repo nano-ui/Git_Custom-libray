@@ -1,5 +1,6 @@
 #include "SceneManager.h"
 #include "Scene.h"
+#include "../Input/Input.h"
 
 //シングルトンの取得
 SceneManager& SceneManager::Instance()
@@ -29,6 +30,12 @@ void SceneManager::ChangeScene(std::unique_ptr<Scene> next_scene)
 //更新処理
 void SceneManager::Update(float elapsed_time)
 {
+	//F5キーによる一時停止のトグル切り替え判定
+	if (Input::Instance().IsKeyTrigger(VK_F5))
+	{
+		is_paused = !is_paused;
+	}
+
 	//シーン遷移の予約がある場合は入れ替え
 	if (reserved_scene)
 	{

@@ -9,6 +9,7 @@
 #include "../GameObjects/Characters/Player.h"
 #include "../Collision/CollisionManager.h"
 #include "../Shaders/SkyBox.h"
+#include "SceneManager.h"
 
 //コンストラクタ
 SceneGame::SceneGame()
@@ -76,13 +77,18 @@ void SceneGame::Finalize()
 //更新処理
 void SceneGame::Update(float elapsed_time)
 {
-	if (object_manager)
-	{
-		object_manager->Update(elapsed_time);
-	}
 	if (camera)
 	{
 		camera->Update(elapsed_time);
+	}
+	if (SceneManager::Instance().IsPaused())
+	{
+		return;
+	}
+
+	if (object_manager)
+	{
+		object_manager->Update(elapsed_time);
 	}
 	if (collision_manager)
 	{
@@ -180,6 +186,11 @@ void SceneGame::RenderGui()
 
 	if (ImGui::Begin("Game Debug"))
 	{
+		bool check_paused = SceneManager::Instance().IsPaused();
+		if (ImGui::Checkbox("Game Pause (F5)", &check_paused))
+		{
+			SceneManager::Instance().SetPauseState(check_paused);
+		}
 		if (camera)
 		{
 			camera->RenderGui();

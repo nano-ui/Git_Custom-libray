@@ -85,19 +85,19 @@ void FreeCamera::Update(float elapsed_time)
 	DirectX::XMVECTOR move_vector = DirectX::XMVectorZero();
 
 	//キーボード移動
-	if (Input::Instance().IsKeyPress(key_move_forward))
+	if (Input::Instance().IsKeyPress(VK_RBUTTON) && Input::Instance().IsKeyPress(key_move_forward))
 	{
 		move_vector = DirectX::XMVectorAdd(move_vector, new_front);
 	}
-	if (Input::Instance().IsKeyPress(key_move_backward))
+	if (Input::Instance().IsKeyPress(VK_RBUTTON) && Input::Instance().IsKeyPress(key_move_backward))
 	{
 		move_vector = DirectX::XMVectorSubtract(move_vector, new_front);
 	}
-	if (Input::Instance().IsKeyPress(key_move_left))
+	if (Input::Instance().IsKeyPress(VK_RBUTTON) && Input::Instance().IsKeyPress(key_move_left))
 	{
 		move_vector = DirectX::XMVectorSubtract(move_vector, new_right);
 	}
-	if (Input::Instance().IsKeyPress(key_move_right))
+	if (Input::Instance().IsKeyPress(VK_RBUTTON) && Input::Instance().IsKeyPress(key_move_right))
 	{
 		move_vector = DirectX::XMVectorAdd(move_vector, new_right);
 	}

@@ -91,7 +91,7 @@ void Graphics::BeginFrame(float r, float g, float b, float a)
 void Graphics::EndFrame()
 {
     //垂直同期待機
-    directx_device->GetSwapChain()->Present(0, 0);
+    directx_device->GetSwapChain()->Present(1, 0);
 }
 
 //シーン定数バッファを生成
