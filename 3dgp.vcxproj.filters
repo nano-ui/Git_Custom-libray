@@ -227,14 +227,11 @@
     <Filter Include="Source\GameObject\ObjectFactory">
       <UniqueIdentifier>{41e95f94-fab8-4819-b7da-e4227b46977e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\physical_based_rendering">
-      <UniqueIdentifier>{ed187f55-429b-4292-b1de-dd626ef37bbe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\sky_box">
       <UniqueIdentifier>{705d0c5a-3072-416d-b35c-0e4cfb6e2624}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\Lights">
-      <UniqueIdentifier>{f6f1b918-bcc7-4613-ba66-b5d4495f005c}</UniqueIdentifier>
+    <Filter Include="Source\Shaders\SkyBox">
+      <UniqueIdentifier>{6e21fa8b-c616-4a8d-a24d-10314fd88cc1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -435,6 +432,9 @@
     </ClCompile>
     <ClCompile Include="Source\Collision\CollisionManager.cpp">
       <Filter>Source\Collision\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shaders\SkyBox.cpp">
+      <Filter>Source\Shaders\SkyBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -660,6 +660,9 @@
     <ClInclude Include="Source\Collision\CollisionManager.h">
       <Filter>Source\Collision\CollisionManager</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Shaders\SkyBox.h">
+      <Filter>Source\Shaders\SkyBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Compiled\blur_ps.cod">
@@ -755,6 +758,9 @@
     <None Include="Shaders\SoureCode\shape_renderer.hlsli">
       <Filter>Shaders\spape_renderer</Filter>
     </None>
+    <None Include="Shaders\SoureCode\sky_box.hlsli">
+      <Filter>Shaders\sky_box</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\SoureCode\blur_ps.hlsl">
@@ -804,6 +810,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\shape_renderer_vs.hlsl">
       <Filter>Shaders\spape_renderer</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\sky_box_vs.hlsl">
+      <Filter>Shaders\sky_box</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\sky_box_ps.hlsl">
+      <Filter>Shaders\sky_box</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
