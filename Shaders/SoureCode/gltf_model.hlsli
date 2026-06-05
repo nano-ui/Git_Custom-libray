@@ -32,6 +32,8 @@ cbuffer SCENE_CONSTNANT_BUFFER : register(b1)
     row_major float4x4 view_projection; //ビュー行列とプロジェクション行列を合成した行列
     float4 light_direction;             //平行香華の方向ベクトル
     float4 camera_position;             //ワールド空間におけるカメラの現在位置
+    float4 light_color;                 //平行光源の色と強さ
+    float4 ambient_color;               //環境光の基本色
 }
 
 static const uint PRIMITIVE_MAX_JOINTS = 512;

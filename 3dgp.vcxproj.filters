@@ -227,6 +227,15 @@
     <Filter Include="Source\GameObject\ObjectFactory">
       <UniqueIdentifier>{41e95f94-fab8-4819-b7da-e4227b46977e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\physical_based_rendering">
+      <UniqueIdentifier>{ed187f55-429b-4292-b1de-dd626ef37bbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\sky_box">
+      <UniqueIdentifier>{705d0c5a-3072-416d-b35c-0e4cfb6e2624}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Lights">
+      <UniqueIdentifier>{f6f1b918-bcc7-4613-ba66-b5d4495f005c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
