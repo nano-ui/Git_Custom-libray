@@ -10,9 +10,11 @@
 //シェーダーに渡すシーン共通の定数構造体
 struct scene_constants
 {
-	DirectX::XMFLOAT4X4 view_projection; // ビュー行列とプロジェクション行列を合成した行列です
-	DirectX::XMFLOAT4 light_direction;   // 平行光源の向きを表すベクトルです
-	DirectX::XMFLOAT4 camera_position;   // カメラのワールド座標（w成分は1.0）です
+	DirectX::XMFLOAT4X4 view_projection; //ビュー行列とプロジェクション行列を合成した行列です
+	DirectX::XMFLOAT4 light_direction;   //平行光源の向きを表すベクトルです
+	DirectX::XMFLOAT4 camera_position;   //カメラのワールド座標（w成分は1.0）です
+	DirectX::XMFLOAT4 light_color;       //平行光源の色と強さ情報を格納
+	DirectX::XMFLOAT4 ambient_color;     //IBLや環境光の色と強さ情報を格納
 };
 
 class Graphics

@@ -18,7 +18,7 @@ SkyBox::~SkyBox()
 bool SkyBox::Initialize(
 	ID3D11Device* device,
 	const std::wstring& skybox_tex,
-	std::wstring& diffuse_tex,
+	const std::wstring& diffuse_tex,
 	const std::wstring& specular_tex,
 	const std::wstring& lut_tex)
 {
@@ -40,7 +40,12 @@ bool SkyBox::Initialize(
 			"POSITION", OFFSET_ZERO, DXGI_FORMAT_R32G32B32_FLOAT, OFFSET_ZERO, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO }
 		};
 	skybox_shader = std::make_unique<CustomShader>();																	
-	bool is_success = skybox_shader->Initialize("sky_box_vs.cso", "sky_box_ps.cso", input_element_desc, _countof(input_element_desc)); 
+	bool is_success = skybox_shader->Initialize(
+		"sky_box_vs.cso",
+		"sky_box_ps.cso",
+		input_element_desc,
+		_countof(input_element_desc)
+	); 
 	_ASSERT_EXPR(is_success, L"Failed to initialize skybox shader");
 
 	//立方体を描画するための頂点・インデックス生成
@@ -76,12 +81,31 @@ bool SkyBox::Initialize(
 	buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	device->CreateBuffer(&buffer_desc, nullptr, constant_buffer.ReleaseAndGetAddressOf());
 
+	//スカイボックス専用のステートオブジェクトの生成
+	D3D11_RASTERIZER_DESC r_desc{};
+	r_desc.FillMode = D3D11_FILL_SOLID;
+	r_desc.CullMode = D3D11_CULL_NONE;
+	r_desc.FrontCounterClockwise = FALSE;
+	hr = device->CreateRasterizerState(&r_desc, rasterizer_state.GetAddressOf());
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+	D3D11_DEPTH_STENCIL_DESC d_desc{};
+	d_desc.DepthEnable = TRUE;
+	d_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	d_desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	hr = device->CreateDepthStencilState(&d_desc, depth_stencil_state.GetAddressOf());
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
 	return true;
 }
 
 //スカイボックスをシーンの背景として描画
 void SkyBox::Render(ID3D11DeviceContext* immediate_context)
 {
+	//パイプライン設定
+	immediate_context->RSSetState(rasterizer_state.Get());
+	immediate_context->OMSetDepthStencilState(depth_stencil_state.Get(), STENCIL_REF_ZERO);
+
 	//シェーダーとリソースのバインド
 	skybox_shader->Apply();
 	immediate_context->PSSetShaderResources(OFFSET_ZERO, RESOURCE_COUNT_1, skybox_srv.GetAddressOf());
@@ -89,6 +113,7 @@ void SkyBox::Render(ID3D11DeviceContext* immediate_context)
 	//ワールド行列の更新と送信
 	DirectX::XMFLOAT4X4 identity_matrix;
 	DirectX::XMStoreFloat4x4(&identity_matrix, DirectX::XMMatrixIdentity());
+	immediate_context->UpdateSubresource(constant_buffer.Get(), OFFSET_ZERO, nullptr, &identity_matrix, OFFSET_ZERO, OFFSET_ZERO);
 	immediate_context->VSSetConstantBuffers(OFFSET_ZERO, RESOURCE_COUNT_1, constant_buffer.GetAddressOf());
 
 	//描画命令の発行

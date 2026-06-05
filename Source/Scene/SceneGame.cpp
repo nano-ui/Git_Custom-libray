@@ -8,6 +8,7 @@
 #include "../Graphics/ShapeRenderer.h"
 #include "../GameObjects/Characters/Player.h"
 #include "../Collision/CollisionManager.h"
+#include "../Shaders/SkyBox.h"
 
 //コンストラクタ
 SceneGame::SceneGame()
@@ -21,6 +22,14 @@ SceneGame::SceneGame()
 
 	camera = std::make_unique<FreeCamera>();
 	light = std::make_unique <Light>();
+	skybox = std::make_unique<SkyBox>();
+	skybox->Initialize(
+		Graphics::Instance().GetDevice(),
+		L"Data/Sprite/SkyTexture/skybox.dds",			//背景用のキューブマップテクスチャ
+		L"Data/Sprite/SkyTexture/diffuse_iem.dds",		//IBL用の拡散反射テクスチャ
+		L"Data/Sprite/SkyTexture/specular_pmrem.dds",	//IBL用の鏡面反射テクスチャ
+		L"Data/Sprite/SkyTexture/lut_ggx.dds"			//IBL用のルックアップテーブル
+	);
 }
 
 //デストラクタ
@@ -104,7 +113,14 @@ void SceneGame::Render(float elapsed_time)
 		constants.view_projection = camera->GetViewProjectionMatrix();
 		constants.light_direction = light->GetDirection();
 		constants.camera_position = camera->GetPosition();
+		constants.light_color = { 1.0f,1.0f,1.0f,1.0f };
+		constants.ambient_color = { 1.0f,1.0f,1.0f,1.0f };
 		Graphics::Instance().UpdateSceneConstantBuffer(constants);
+	}
+
+	if (skybox)
+	{
+		skybox->BindIblTextures(context);
 	}
 
 	if (object_manager)
@@ -135,6 +151,11 @@ void SceneGame::Render(float elapsed_time)
 			}
 		}
 		shape_renderer->Render(context, camera->GetView(), camera->GetProjection());
+	}
+
+	if (skybox)
+	{
+		skybox->Render(context);
 	}
 
 

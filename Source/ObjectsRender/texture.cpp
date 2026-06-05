@@ -54,7 +54,11 @@ HRESULT load_texture_from_file(
     ComPtr<ID3D11Texture2D>texture2d;
     hr = resource.Get()->QueryInterface<ID3D11Texture2D>(texture2d.GetAddressOf());
     _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-    texture2d->GetDesc(texture2d_desc);
+
+	if (texture2d_desc != nullptr)
+	{
+		texture2d->GetDesc(texture2d_desc);
+	}
 
     return hr;
 }

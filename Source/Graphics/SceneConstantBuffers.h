@@ -10,6 +10,8 @@ struct SceneConstants
 	DirectX::XMFLOAT4X4 view_projection;//ビュー・プロジェクション変換行列
 	DirectX::XMFLOAT4 light_projection;	//ライトの向き
 	DirectX::XMFLOAT4 camera_position;	//カメラの位置
+	DirectX::XMFLOAT4 light_color;      //平行光源の色と強さ情報を格納
+	DirectX::XMFLOAT4 ambient_color;    //IBLや環境光の色と強さ情報を格納
 };
 
 

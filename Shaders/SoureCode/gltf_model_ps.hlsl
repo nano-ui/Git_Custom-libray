@@ -233,6 +233,10 @@ float4 main(VS_OUT pin, bool is_front_face : SV_IsFrontFace) : SV_TARGET
     
     //ç≈èIèoóÕêFÇÃçáê¨
     float3 final_color = total_diffuse + total_specular + emissive;
+    if (m.alpha_mode == 2)
+    {
+        final_color = (total_diffuse + emissive) + (total_specular * basecolor.a);
+    }
     final_color *= occlusion;
     final_color = pow(final_color, 1.0f / GammaFactor);
     return float4(final_color, basecolor.a);

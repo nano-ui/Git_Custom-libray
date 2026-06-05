@@ -16,7 +16,7 @@ Player::Player()
 	move_speed = 5.0f;
 	height = 0.8f;
 	radius = 0.4f;
-	offset_y = 0.4f;
+	offset_y = 0.5f;
 }
 
 //デストラクタ
@@ -51,7 +51,7 @@ void Player::Update(float elapsed_time)
 	Character::Update(elapsed_time);
 
 	capsule_collider.start_center = position;
-	capsule_collider.old_start_center.y = position.y + offset_y;
+	capsule_collider.start_center.y = position.y + offset_y;
 	capsule_collider.end_center = position;
 	capsule_collider.end_center.y += height + offset_y;
 }
