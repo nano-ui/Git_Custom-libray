@@ -63,6 +63,19 @@ void Graphics::BeginFrame(float r, float g, float b, float a)
     //描画のクリア色設定
     float clear_color[] = { r,g,b,a };
 
+    static constexpr float min_depth_value = 0.0f; // ビューポートの最小深度値
+    static constexpr float max_depth_value = 1.0f; // ビューポートの最大深度値
+
+    //クリアを画面全体に確定させるための全画面ビューポートの一時設定
+    D3D11_VIEWPORT full_viewport = {};
+    full_viewport.Width = static_cast<float>(current_width);
+    full_viewport.Height = static_cast<float>(current_height);
+    full_viewport.MinDepth = min_depth_value;
+    full_viewport.MaxDepth = max_depth_value;
+    full_viewport.TopLeftX = 0.0f;
+    full_viewport.TopLeftY = 0.0f;
+    context->RSSetViewports(1, &full_viewport);
+
     //レンダーターゲットのクリア
     context->ClearRenderTargetView(rtv.Get(), clear_color);
 
@@ -72,16 +85,6 @@ void Graphics::BeginFrame(float r, float g, float b, float a)
     //レンダーターゲットのセット
     ID3D11RenderTargetView* rtv_list[] = { rtv.Get() };
     context->OMSetRenderTargets(1, rtv_list, dsv.Get());
-
-    //ビューポートの設定
-    D3D11_VIEWPORT viewport{};
-    viewport.Width = static_cast<float>(SCREEN_WIDTH);
-    viewport.Height = static_cast<float>(SCREEN_HEIGHT);
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    context->RSSetViewports(1, &viewport);
 }
 
 //描画終了
@@ -126,4 +129,23 @@ void Graphics::UpdateSceneConstantBuffer(const scene_constants& constants)
     context->UpdateSubresource(scene_constant_buffer.Get(), 0, nullptr, &constants, 0, 0);
     context->VSSetConstantBuffers(constant_buffer_slot_scene, 1, scene_constant_buffer.GetAddressOf());
     context->PSSetConstantBuffers(constant_buffer_slot_scene, 1, scene_constant_buffer.GetAddressOf());
+}
+
+//描画サイズのリサイズ
+void Graphics::Resize(UINT width, UINT height)
+{
+    //横幅と縦幅のメンバ変数の更新
+    current_width = width;
+    current_height = height;
+
+    //固定アスペクト比の計算
+    static constexpr float target_aspect_ratio = 16.0f / 9.0f;
+    static constexpr float half_scale = 0.5f;
+    static constexpr float zero_value = 0.0f;
+
+    float window_width = static_cast<float>(width);
+    float window_height = static_cast<float>(height);
+    float window_aspect = window_width / window_height;
+
+    directx_device->Resize(width, height);
 }

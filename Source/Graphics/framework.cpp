@@ -169,6 +169,15 @@ LRESULT framework::handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 			return 0;
 		}
 		break;
+	case WM_SIZE:
+		//ウィンドウサイズ変更検知
+		if (wparam != SIZE_MINIMIZED)
+		{
+			UINT width = LOWORD(lparam);
+			UINT height = LOWORD(lparam);
+			Graphics::Instance().Resize(width, height);
+		}
+		return 0;
 	}
 
 	return DefWindowProc(hwnd, msg, wparam, lparam);

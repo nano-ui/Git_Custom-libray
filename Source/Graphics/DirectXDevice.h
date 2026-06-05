@@ -34,6 +34,9 @@ public:
 	//ID3D11DepthStencilViewオブジェクト（深度・ステンシルテスト用バッファ）を取得
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& GetDepthStencilView() { return depth_stencil_view_; }
 
+	//バッファのサイズ
+	void Resize(UINT width, UINT height);
+
 private:
 	const HWND window_handle_;											//描画対象のウィンドウハンドル
 	Microsoft::WRL::ComPtr<ID3D11Device> device_;						//GPUとの接続とリソース（バッファ、テクスチャなど）の作成

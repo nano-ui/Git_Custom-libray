@@ -41,6 +41,15 @@ public:
 	//シーン定数バッファを更新
 	void UpdateSceneConstantBuffer(const scene_constants& constants);
 
+	//描画サイズのリサイズ
+	void Resize(UINT width, UINT height);
+
+	//現在の画面の横幅を取得
+	UINT GetCurrentWidth() const { return current_width; }
+
+	//現在の画面の縦幅を取得
+	UINT GetCurrentHeight()const { return current_height; }
+
 	//コンポーネントへのアクセサ
 	DirectXDevice* GetDirectXDevice() const { return directx_device.get(); }
 	PipelineStates* GetPipelineStates()const { return pipline_states.get(); }
@@ -65,5 +74,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> scene_constant_buffer;
 	DirectX::XMFLOAT4X4 view_matrix{};			//現在のビュー行列
 	DirectX::XMFLOAT4X4 projection_matrix{};	//現在のプロジェクション行列
+	UINT current_width = SCREEN_WIDTH;
+	UINT current_height = SCREEN_HEIGHT;
 };
 

@@ -2,6 +2,7 @@
 #include "misc.h"
 
 #include <dxgi1_2.h>
+#include <algorithm>
 
 ////ウィンドウハンドルを受け取り、メンバ変数に保持
 DirectXDevice::DirectXDevice(HWND window_handle)
@@ -112,11 +113,14 @@ void DirectXDevice::CreateRenderTargetAndDepthStencil()
 	//深度ステンシルビュー (DSV) の作成
 	//--------------------------------------
 
+	D3D11_TEXTURE2D_DESC back_buffer_desc = {};
+	back_buffer->GetDesc(&back_buffer_desc);
+
 	//深度ステンシルバッファ用の2Dテクスチャを作成するための設定
 
 	D3D11_TEXTURE2D_DESC texture2d_desc{};					//深度ステンシルバッファ（奥行き判定用）を作るための設定構造体
-	texture2d_desc.Width = SCREEN_WIDTH;					//バッファの幅を設定
-	texture2d_desc.Height = SCREEN_HEIGHT;					//バッファの高さを設定
+	texture2d_desc.Width = back_buffer_desc.Width;			//バッファの幅を設定
+	texture2d_desc.Height = back_buffer_desc.Height;		//バッファの高さを設定
 	texture2d_desc.MipLevels = 1;							//テクスチャの解像度レベルの数を指定(1はミニマップを作成しない)
 	texture2d_desc.ArraySize = 1;							//テクスチャが配列である場合の要素数を指定
 
@@ -153,4 +157,20 @@ void DirectXDevice::CreateRenderTargetAndDepthStencil()
 		depth_stencil_view_.GetAddressOf()
 	);
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));//DSVの作成が成功したかを確認
+}
+
+//バッファのサイズ
+void DirectXDevice::Resize(UINT width, UINT height)
+{
+	//既存のビューを開放
+	render_target_view_.Reset();
+	depth_stencil_view_.Reset();
+
+	//スワップチェーンのバッファをリサイズ
+	width = (std::max)(1u, width);
+	height = (std::max)(1u, height);
+	swap_chain_->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
+
+	//RTVとDSVの再作成
+	CreateRenderTargetAndDepthStencil();
 }
