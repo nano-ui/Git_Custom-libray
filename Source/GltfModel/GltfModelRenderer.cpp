@@ -11,33 +11,22 @@ GltfModelRenderer::GltfModelRenderer(ID3D11Device* device)
 	//--------------------------------------------------
 	// シェーダーへの入力レイアウトの定義
 	//--------------------------------------------------
-		D3D11_INPUT_ELEMENT_DESC input_element_desc[]
+	D3D11_INPUT_ELEMENT_DESC input_element_desc[]
 	{
-		{ "POSITION", OFFSET_ZERO, DXGI_FORMAT_R32G32B32_FLOAT,    SHADER_SLOT_0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },	// 頂点座標の定義
-		{ "NORMAL"  , OFFSET_ZERO, DXGI_FORMAT_R32G32B32_FLOAT,    SHADER_SLOT_1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },	// 法線ベクトルの定義
-		{ "TANGENT" , OFFSET_ZERO, DXGI_FORMAT_R32G32B32A32_FLOAT, SHADER_SLOT_2, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },	// 接線ベクトルの定義
-		{ "TEXCOORD", OFFSET_ZERO, DXGI_FORMAT_R32G32_FLOAT,       3,             D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },	// テクスチャ座標の定義
-		{ "JOINTS"  , OFFSET_ZERO, DXGI_FORMAT_R16G16B16A16_UINT,  4,             D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },	// ボーンインデックスの定義
-		{ "WEIGHTS" , OFFSET_ZERO, DXGI_FORMAT_R32G32B32A32_FLOAT, 5,             D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO }	// スキンウェイトの定義
+		{ "POSITION", OFFSET_ZERO, DXGI_FORMAT_R32G32B32_FLOAT,    SHADER_SLOT_0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },	// 頂点座標の定義（スロット0）
+		{ "NORMAL"  , OFFSET_ZERO, DXGI_FORMAT_R32G32B32_FLOAT,    SHADER_SLOT_1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },	// 法線ベクトルの定義（スロット1）
+		{ "TANGENT" , OFFSET_ZERO, DXGI_FORMAT_R32G32B32A32_FLOAT, SHADER_SLOT_2, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },	// 接線ベクトルの定義（スロット2）
+		{ "TEXCOORD", OFFSET_ZERO, DXGI_FORMAT_R32G32_FLOAT,       3,             D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },	// テクスチャ座標の定義（スロット3）
+		{ "JOINTS"  , OFFSET_ZERO, DXGI_FORMAT_R16G16B16A16_UINT,  4,             D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },	// ボーンインデックスの定義（16ビット指定、スロット4）
+		{ "WEIGHTS" , OFFSET_ZERO, DXGI_FORMAT_R32G32B32A32_FLOAT, 5,             D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO }	// スキンウェイトの定義（スロット5）
 	};
 
-	//--------------------------------------------------
-	// シェーダーオブジェクトの生成
-	//--------------------------------------------------
-	create_vs_from_cso(																
-		device,
-		"gltf_model_vs.cso",							
-		vertex_shader.ReleaseAndGetAddressOf(),
-		input_layout.ReleaseAndGetAddressOf(),
-		input_element_desc,
-		_countof(input_element_desc)
-	);
-
-	create_ps_from_cso(																
-		device,
-		"gltf_model_ps.cso",														
-		pixel_shader.ReleaseAndGetAddressOf()
-	);
+	//--------------------------------------------------------
+	//シェーダーオブジェクトの生成と手動入力レイアウトの適用
+	//--------------------------------------------------------
+	custom_shader = std::make_unique<CustomShader>();
+	bool is_success = custom_shader->Initialize("gltf_model_vs.cso", "gltf_model_ps.cso", input_element_desc, _countof(input_element_desc));
+	_ASSERT_EXPR(is_success, L"Failed to initialize custom shader");
 
 	//--------------------------------------------------
 	// GPUへ送るための定数バッファの生成
@@ -71,9 +60,7 @@ void GltfModelRenderer::Render(ID3D11DeviceContext* immediate_context, const Glt
 	//パイプラインステートと共通リソースの設定
 	//------------------------------------------
 	immediate_context->PSSetShaderResources(SHADER_SLOT_0, RESOURCE_COUNT_1, data.material_resource_view.GetAddressOf());	//全マテリアル情報を格納した構造化バッファをピクセルシェーダーにセット
-	immediate_context->VSSetShader(vertex_shader.Get(), nullptr, OFFSET_ZERO);			//初期化時に読み込んだ頂点シェーダーを有効化
-	immediate_context->PSSetShader(pixel_shader.Get(), nullptr, OFFSET_ZERO);			//初期化時に読み込んだピクセルシェーダーを有効化
-	immediate_context->IASetInputLayout(input_layout.Get());							//頂点データのメモリレイアウトを有効化
+	custom_shader->Apply();
 	immediate_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	//頂点を3つずつ結んで三角形を描画するモード（トポロジー）に設定
 
 	auto states = Graphics::Instance().GetPipelineStates();

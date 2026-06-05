@@ -52,6 +52,39 @@ bool CustomShader::Initialize(
     return true;
 }
 
+//手動で入力レイアウトを指定してシェーダーを生成し初期化
+bool CustomShader::Initialize(const std::string& vs_name, const std::string& ps_name, const D3D11_INPUT_ELEMENT_DESC* input_elements, UINT element_count)
+{
+    //頂点シェーダーと手動レイアウトの生成
+    auto device = Graphics::Instance().GetDevice();
+
+    HRESULT hr = create_vs_from_cso(												//プロジェクト既存の安全な読み込み関数を使用
+        device,																		//グラフィックスデバイス
+        vs_name.c_str(),															//頂点シェーダーのファイル名
+        vertex_shader.ReleaseAndGetAddressOf(),										//頂点シェーダーの保存先ポインタ（古いものがあれば解放）
+        input_layout.ReleaseAndGetAddressOf(),										//入力レイアウトの保存先ポインタ（古いものがあれば解放）
+        const_cast<D3D11_INPUT_ELEMENT_DESC*>(input_elements),						//手動で設定した入力レイアウト配列
+        element_count																//レイアウト配列の要素数
+    );
+    if (FAILED(hr))																	//生成に失敗した場合
+    {
+        return false;																//エラーとしてfalseを返す
+    }
+
+    //ピクセルシェーダーの生成
+    hr = create_ps_from_cso(
+        device,
+        ps_name.c_str(),
+        pixel_shader.GetAddressOf()
+    );
+    if (FAILED(hr))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 //==================================================================
 //保持しているシェーダーと入力レイアウトをパイプラインにバインド
 //==================================================================

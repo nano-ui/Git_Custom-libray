@@ -2,6 +2,8 @@
 
 #include "GltfModelData.h"
 #include <wrl.h>
+#include <memory>
+#include "../Shaders/CustomShader.h"
 
 class GltfModelRenderer
 {
@@ -25,8 +27,6 @@ private:
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_cbuffer;				//プリミティブの情報を送るための定数バッファ
 	Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_joint_cbuffer;		//スキン（ボーン）行列を送るための定数バッファ
-	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertex_shader;			//頂点シェーダーオブジェクト
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shader;				//ピクセルシェーダーオブジェクト
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> input_layout;				//シェーダーへの入力データ形式を定義するレイアウト
+	std::unique_ptr<CustomShader> custom_shader;
 };
 
