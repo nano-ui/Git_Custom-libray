@@ -24,6 +24,9 @@ private:
 	const size_t max_vertices;
 	std::vector<vertex> vertices;
 
+	//頂点の回転アフィン変換処理
+	void RotateVertex(float& x, float& y, float cx, float cy, float angle);
+
 public:
 	sprite_batch(
 		ID3D11Device* device,

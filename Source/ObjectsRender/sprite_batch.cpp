@@ -13,6 +13,25 @@
 //};
 
 
+//頂点の回転アフィン変換処理
+void sprite_batch::RotateVertex(float& x, float& y, float cx, float cy, float angle)
+{
+	x -= cx;
+	y -= cy;
+
+	float cos_val{ cosf(DirectX::XMConvertToRadians(angle)) };
+	float sin_val{ sinf(DirectX::XMConvertToRadians(angle)) };
+
+	float tx = x;
+	float ty = y;
+
+	x = cos_val * tx + -sin_val * ty;
+	y = sin_val * tx + cos_val * ty;
+
+	x += cx;
+	y += cy;
+}
+
 sprite_batch::sprite_batch(
 	ID3D11Device* device,
 	const wchar_t* filename,
@@ -100,7 +119,6 @@ sprite_batch::sprite_batch(
 		&resource,
 		&shader_resource_view);
 
-	resource->Release();
 
 	ID3D11Texture2D* texture2d{};
 	hr = resource->QueryInterface<ID3D11Texture2D>(&texture2d);
@@ -108,7 +126,7 @@ sprite_batch::sprite_batch(
 	texture2d->GetDesc(&texture2d_desc);
 
 	texture2d->Release();
-
+	resource->Release();
 }
 
 sprite_batch::~sprite_batch()
@@ -123,12 +141,6 @@ void sprite_batch::render(ID3D11DeviceContext* immediate_context,
 	float angle,
 	float sx, float sy, float sw, float sh)
 {
-
-	//スクリーン(ビューポート)のサイズを取得
-	D3D11_VIEWPORT viewport{};
-	UINT num_viewport{ 1 };
-	immediate_context->RSGetViewports(&num_viewport, &viewport);
-
 	//短形の各頂点座標を計算
 	//		(x0, y0)*----* (x1, y1)  
 	//				|   /|
@@ -150,45 +162,27 @@ void sprite_batch::render(ID3D11DeviceContext* immediate_context,
 	float x3{ dx + dw };
 	float y3{ dy + dh };
 
-	auto rotate = [](float& x, float& y, float cx, float cy, float angle)
-		{
-			//描画の中心を原点に移動
-			x -= cx;
-			y -= cy;
-
-			//sin,cosの角度を求めてる
-			float cos{ cosf(DirectX::XMConvertToRadians(angle)) };
-			float sin{ sinf(DirectX::XMConvertToRadians(angle)) };
-
-			//平行移動する値を入れている
-			float tx{ x }, ty{ y };
-
-			//座標を回転するためのアフィン変換行列を行っている
-			x = cos * tx + -sin * ty;
-			y = sin * tx + cos * ty;
-
-			//元の描画位置に移動
-			x += cx;
-			y += cy;
-		};
 	//回転の中心を短形の中心点にした場合
 	float cx = dx + dw * 0.5f;
 	float cy = dy + dh * 0.5f;
-	rotate(x0, y0, cx, cy, angle);
-	rotate(x1, y1, cx, cy, angle);
-	rotate(x2, y2, cx, cy, angle);
-	rotate(x3, y3, cx, cy, angle);
+	RotateVertex(x0, y0, cx, cy, angle); 
+	RotateVertex(x1, y1, cx, cy, angle); 
+	RotateVertex(x2, y2, cx, cy, angle); 
+	RotateVertex(x3, y3, cx, cy, angle); 
 
+	static constexpr float logical_width = 1280.0f;
+	static constexpr float logical_height = 720.0f;
 
-	//スクリーン座標系からNDCへの変換
-	x0 = 2.0f * x0 / viewport.Width - 1.0f;
-	y0 = 1.0f - 2.0f * y0 / viewport.Height;
-	x1 = 2.0f * x1 / viewport.Width - 1.0f;
-	y1 = 1.0f - 2.0f * y1 / viewport.Height;
-	x2 = 2.0f * x2 / viewport.Width - 1.0f;
-	y2 = 1.0f - 2.0f * y2 / viewport.Height;
-	x3 = 2.0f * x3 / viewport.Width - 1.0f;
-	y3 = 1.0f - 2.0f * y3 / viewport.Height;
+	//各頂点をNDCにマッピング
+	x0 = 2.0f * x0 / logical_width - 1.0f;
+	y0 = 1.0f - 2.0f * y0 / logical_height;
+	x1 = 2.0f * x1 / logical_width - 1.0f;
+	y1 = 1.0f - 2.0f * y1 / logical_height;
+	x2 = 2.0f * x2 / logical_width - 1.0f;
+	y2 = 1.0f - 2.0f * y2 / logical_height;
+	x3 = 2.0f * x3 / logical_width - 1.0f;
+	y3 = 1.0f - 2.0f * y3 / logical_height;
+
 
 	float U0{ sx / texture2d_desc.Width };
 	float V0{ sy / texture2d_desc.Height };
@@ -209,72 +203,12 @@ void sprite_batch::render(
 	float r, float g, float b, float a,
 	float angle)
 {
-	//スクリーン(ビューポート)のサイズを取得
-	D3D11_VIEWPORT viewport{};
-	UINT num_viewport{ 1 };
-	immediate_context->RSGetViewports(&num_viewport, &viewport);
-
-	//短形の各頂点座標を計算
-	//		(x0, y0)*----* (x1, y1)  
-	//				|   /|
-	//				|  / |
-	//				| /  |
-	//				|/   |
-	//		(x2, y2)*----* (x3, y3) 
-
-	//left-top
-	float x0{ dx };
-	float y0{ dy };
-	//right-top
-	float x1{ dx + dw };
-	float y1{ dy };
-	//left-bottom
-	float x2{ dx };
-	float y2{ dy + dh };
-	//right-bottom
-	float x3{ dx + dw };
-	float y3{ dy + dh };
-
-	auto rotete = [](float& x, float& y, float cx, float cy, float angle)
-		{
-			//描画の中心を原点に移動
-			x -= cx;
-			y -= cy;
-
-			//sin,cosの角度を求めてる
-			float cos{ cosf(DirectX::XMConvertToRadians(angle)) };
-			float sin{ sinf(DirectX::XMConvertToRadians(angle)) };
-
-			//平行移動する値を入れている
-			float tx{ x }, ty{ y };
-
-			//座標を回転するためのアフィン変換行列を行っている
-			x = cos * tx + -sin * ty;
-			y = sin * tx + cos * ty;
-
-			//元の描画位置に移動
-			x += cx;
-			y += cy;
-		};
-	//回転の中心を短形の中心点にした場合
-	float cx = dx + dw * 0.5f;
-	float cy = dy + dh * 0.5f;
-	rotete(x0, y0, cx, cy, angle);
-	rotete(x1, y1, cx, cy, angle);
-	rotete(x2, y2, cx, cy, angle);
-	rotete(x3, y3, cx, cy, angle);
-
-	//スクリーン座標系からNDCへの変換
-	x0 = 2.0f * x0 / viewport.Width - 1.0f;
-	y0 = 1.0f - 2.0f * y0 / viewport.Height;
-	x1 = 2.0f * x1 / viewport.Width - 1.0f;
-	y1 = 1.0f - 2.0f * y1 / viewport.Height;
-	x2 = 2.0f * x2 / viewport.Width - 1.0f;
-	y2 = 1.0f - 2.0f * y2 / viewport.Height;
-	x3 = 2.0f * x3 / viewport.Width - 1.0f;
-	y3 = 1.0f - 2.0f * y3 / viewport.Height;
-
-	render(immediate_context, dx, dy, dw, dh, r, g, b, a, angle, 0, 0,
+	render(
+		immediate_context,
+		dx, dy, dw, dh,
+		r, g, b, a,
+		angle,
+		0.0f, 0.0f,
 		static_cast<float>(texture2d_desc.Width),
 		static_cast<float>(texture2d_desc.Height));
 }
@@ -287,7 +221,8 @@ void sprite_batch::render(
 		immediate_context,
 		dx,dy,		//短形の左上の座標(スクリーン座標系)
 		dw,dh,		//短形のサイズ(スクリーン座標系)
-		1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+		1.0f, 1.0f, 1.0f, 1.0f, 0.0f
+	);
 }
 
 void sprite_batch::begin(ID3D11DeviceContext* immediate_context)

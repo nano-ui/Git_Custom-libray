@@ -233,6 +233,9 @@
     <Filter Include="Source\Shaders\SkyBox">
       <UniqueIdentifier>{6e21fa8b-c616-4a8d-a24d-10314fd88cc1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Camera\StandCamera">
+      <UniqueIdentifier>{7803d928-73c7-4106-8e69-dedf324985ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\main.cpp">
@@ -435,6 +438,9 @@
     </ClCompile>
     <ClCompile Include="Source\Shaders\SkyBox.cpp">
       <Filter>Source\Shaders\SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera\StandCamera.cpp">
+      <Filter>Source\Camera\StandCamera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -662,6 +668,9 @@
     </ClInclude>
     <ClInclude Include="Source\Shaders\SkyBox.h">
       <Filter>Source\Shaders\SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera\StandCamera.h">
+      <Filter>Source\Camera\StandCamera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@
 #include "Scene.h"
 
 class sprite_batch;
+class Camera;
 
 class SceneTitle : public Scene
 {
@@ -34,6 +35,7 @@ public:
 	void RenderGui()override;
 
 private:
+	std::unique_ptr<Camera> camera;				//カメラクラス
 	std::unique_ptr<sprite_batch> title_sprite;	//タイトルロゴ
 	DirectX::XMFLOAT2 screen_size;				//ウィンドウサイズ
 	DirectX::XMFLOAT2 title_pos;				//タイトル位置

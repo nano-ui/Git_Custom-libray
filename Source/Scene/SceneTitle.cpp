@@ -4,6 +4,7 @@
 #include "../ObjectsRender/sprite_batch.h"
 #include "../Graphics/Graphics.h"
 #include "../Common/misc.h"
+#include "../Camera/StandCamera.h"
 
 static constexpr float logical_screen_width = 1280.0f; //ゲームの設計上の基本横幅
 static constexpr float logical_screen_height = 720.0f; //ゲームの設計上の基本縦幅
@@ -31,12 +32,16 @@ void SceneTitle::Initialize()
 	//画像読み込み
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	title_sprite = std::make_unique<sprite_batch>(device, L"Data/Sprite/Title/Title.png", 1);
+
+	camera = std::make_unique<StandCamera>();
+	camera->Initialize();
 }
 
 //終了化
 void SceneTitle::Finalize()
 {
 	if (title_sprite)title_sprite.reset();
+	camera.reset();
 }
 
 //更新処理
@@ -44,6 +49,11 @@ void SceneTitle::Update(float elapsed_time)
 {
 	//画面スケール補正とデバッグUIの更新
 	Scene::ImGuiScaleCorrection();
+
+	if (camera)
+	{
+		camera->Update(elapsed_time);
+	}
 
 	if (GetAsyncKeyState('Z') & 0x8000)
 	{
@@ -64,6 +74,15 @@ void SceneTitle::Render(float elapsed_time)
 	context->PSSetSamplers(1, 1, states->GetSamplerState(1).GetAddressOf());
 	context->PSSetSamplers(2, 1, states->GetSamplerState(2).GetAddressOf());
 
+	Graphics::Instance().UpdateSceneConstantBuffer({
+		camera->GetViewProjectionMatrix(),
+		{0.0f,-1.0f,1.0f,0.0f},
+		{camera->GetEye().x, camera->GetEye().y, camera->GetEye().z, 1.0f},
+		{1.0f,1.0f,1.0f,1.0f},
+		{0.2f,0.2f,0.2f,0.2f}
+		});
+
+	context->RSSetState(states->GetRasterizerState(0).Get());
 
 	if (title_sprite)
 	{
@@ -95,6 +114,10 @@ void SceneTitle::RenderGui()
 			ImGui::ColorEdit4("TitleColor", &color.x);
 			ImGui::SliderFloat("Angle", &angle, 0.0f, 360.0f);
 		}
+	}
+	if (camera)
+	{
+		camera->RenderGui();
 	}
 	ImGui::End();
 #endif // DEBUG

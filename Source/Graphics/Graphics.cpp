@@ -134,18 +134,16 @@ void Graphics::UpdateSceneConstantBuffer(const scene_constants& constants)
 //描画サイズのリサイズ
 void Graphics::Resize(UINT width, UINT height)
 {
+    auto context = directx_device->GetImmediateContext();
+    if (context)
+    {
+        context->ClearState();
+        context->Flush();
+    }
+
     //横幅と縦幅のメンバ変数の更新
     current_width = width;
     current_height = height;
-
-    //固定アスペクト比の計算
-    static constexpr float target_aspect_ratio = 16.0f / 9.0f;
-    static constexpr float half_scale = 0.5f;
-    static constexpr float zero_value = 0.0f;
-
-    float window_width = static_cast<float>(width);
-    float window_height = static_cast<float>(height);
-    float window_aspect = window_width / window_height;
 
     directx_device->Resize(width, height);
 }

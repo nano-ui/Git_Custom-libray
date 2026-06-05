@@ -174,7 +174,7 @@ LRESULT framework::handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 		if (wparam != SIZE_MINIMIZED)
 		{
 			UINT width = LOWORD(lparam);
-			UINT height = LOWORD(lparam);
+			UINT height = HIWORD(lparam);
 			Graphics::Instance().Resize(width, height);
 		}
 		return 0;
