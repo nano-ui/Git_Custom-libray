@@ -17,6 +17,9 @@ public:
 	//更新処理
 	void Update(float elapsed_time)override;
 
+	//影の書き込みパス専用の描画処理
+	void RenderCaster(ID3D11DeviceContext* context) override;
+
 	//デバッグ描画
 	void RenderDebug(ShapeRenderer* renderer)override;
 

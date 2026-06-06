@@ -56,6 +56,15 @@ void Player::Update(float elapsed_time)
 	capsule_collider.end_center.y += height + offset_y;
 }
 
+//影の書き込みパス専用の描画処理
+void Player::RenderCaster(ID3D11DeviceContext* context)
+{
+	DirectX::XMMATRIX matrix_world = GetWorldMatrix();
+	DirectX::XMFLOAT4X4 transform_matrix;
+	DirectX::XMStoreFloat4x4(&transform_matrix, matrix_world);
+	character->RenderCaster(context, transform_matrix);
+}
+
 //デバッグ描画
 void Player::RenderDebug(ShapeRenderer* renderer)
 {

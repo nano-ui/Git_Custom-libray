@@ -21,9 +21,7 @@ static constexpr BYTE mask_xy = 3;
 static constexpr BYTE mask_xyz = 7;
 static constexpr BYTE mask_xyzw = 15;
 
-//====================================================
 //指定されたファイル名からシェーダーを生成し初期化
-//====================================================
 bool CustomShader::Initialize(
     const std::string& vs_name,                     //頂点シェーダーファイル名
     const std::string& ps_name                     //ピクセルシェーダーファイル名
@@ -58,17 +56,17 @@ bool CustomShader::Initialize(const std::string& vs_name, const std::string& ps_
     //頂点シェーダーと手動レイアウトの生成
     auto device = Graphics::Instance().GetDevice();
 
-    HRESULT hr = create_vs_from_cso(												//プロジェクト既存の安全な読み込み関数を使用
-        device,																		//グラフィックスデバイス
-        vs_name.c_str(),															//頂点シェーダーのファイル名
-        vertex_shader.ReleaseAndGetAddressOf(),										//頂点シェーダーの保存先ポインタ（古いものがあれば解放）
-        input_layout.ReleaseAndGetAddressOf(),										//入力レイアウトの保存先ポインタ（古いものがあれば解放）
-        const_cast<D3D11_INPUT_ELEMENT_DESC*>(input_elements),						//手動で設定した入力レイアウト配列
-        element_count																//レイアウト配列の要素数
+    HRESULT hr = create_vs_from_cso(												
+        device,																		
+        vs_name.c_str(),															
+        vertex_shader.ReleaseAndGetAddressOf(),										
+        input_layout.ReleaseAndGetAddressOf(),										
+        const_cast<D3D11_INPUT_ELEMENT_DESC*>(input_elements),						
+        element_count																
     );
-    if (FAILED(hr))																	//生成に失敗した場合
+    if (FAILED(hr))																	
     {
-        return false;																//エラーとしてfalseを返す
+        return false;																
     }
 
     //ピクセルシェーダーの生成
@@ -85,9 +83,47 @@ bool CustomShader::Initialize(const std::string& vs_name, const std::string& ps_
     return true;
 }
 
-//==================================================================
+//頂点シェーダーのみを読み込み、リフレクションでレイアウトを自動生成
+bool CustomShader::Initialize(const std::string& vs_name)
+{
+    //頂点シェーダーと入力レイアウトの生成
+    if (!CreateVertexShaderWithReflection(vs_name))
+    {
+        return false;
+    }
+
+    //ピクセルシェーダーの明示的な無効化
+    pixel_shader.Reset();
+
+    return true;
+}
+
+//手動で入力レイアウトを指定し、頂点シェーダーのみを生成
+bool CustomShader::Initialize(const std::string& vs_name, const D3D11_INPUT_ELEMENT_DESC* input_elements, UINT element_count)
+{
+    //頂点シェーダーと手動レイアウトの生成
+    auto device = Graphics::Instance().GetDevice();
+    HRESULT hr = create_vs_from_cso(
+        device,
+        vs_name.c_str(),
+        vertex_shader.ReleaseAndGetAddressOf(),
+        input_layout.ReleaseAndGetAddressOf(),
+        const_cast<D3D11_INPUT_ELEMENT_DESC*>(input_elements),
+        element_count
+    );
+    if (FAILED(hr))
+    {
+        return false;
+    }
+
+
+    //ピクセルシェーダーの明示的な無効化
+    pixel_shader.Reset();
+
+    return true;
+}
+
 //保持しているシェーダーと入力レイアウトをパイプラインにバインド
-//==================================================================
 void CustomShader::Apply()
 {
     //バインド準備
@@ -99,9 +135,7 @@ void CustomShader::Apply()
     context->PSSetShader(pixel_shader.Get(), nullptr, 0);
 }
 
-//=====================================================================
 //頂点シェーダーを読み込み、リフレクションで入力レイアウトを自動生成
-//=====================================================================
 bool CustomShader::CreateVertexShaderWithReflection(const std::string& vs_name)
 {
     //ファイル読み込み
@@ -151,9 +185,7 @@ bool CustomShader::CreateVertexShaderWithReflection(const std::string& vs_name)
     return true;
 }
 
-//====================================================
 //シェーダーの変数型とマスク情報からDXGI_FORMATを判定
-//====================================================
 DXGI_FORMAT CustomShader::DetermineDxgiFormat(D3D_REGISTER_COMPONENT_TYPE type, BYTE mask)
 {
     //フォーマットの判定

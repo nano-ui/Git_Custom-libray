@@ -10,6 +10,8 @@ class Light;
 class ShapeRenderer;
 class CollisionManager;
 class SkyBox;
+class ShadowMap;
+
 
 class SceneGame : public Scene
 {
@@ -58,6 +60,7 @@ private:
 	std::unique_ptr<Light> light;	//ライト管理
 	std::unique_ptr<CollisionManager> collision_manager;	//当たり判定管理マネージャー
 	std::unique_ptr<SkyBox> skybox;							//スカイボックスクラス
+	std::unique_ptr<ShadowMap> shadow_map;					//シャドウマップ管理コンポーネント
 
 	std::unique_ptr<ShapeRenderer> shape_renderer;
 	std::vector<debug_shape> debug_shapes;

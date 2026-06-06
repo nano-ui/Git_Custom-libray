@@ -11,6 +11,7 @@ VS_OUT main( VS_IN vin)
         vin.weights.y * joint_matrices[vin.joints.y] +
         vin.weights.z * joint_matrices[vin.joints.z] +
         vin.weights.w * joint_matrices[vin.joints.w];
+        
         vin.position = mul(float4(vin.position.xyz, 1), skin_matrix);
         vin.normal = normalize(mul(float4(vin.normal.xyz, 0), skin_matrix));
         vin.tangent = normalize(mul(float4(vin.tangent.xyz, 0), skin_matrix));
@@ -22,8 +23,8 @@ VS_OUT main( VS_IN vin)
     //座標変換の計算
     //-------------------
     vin.position.w = 1; //位置情報として扱うためにw成分を1に設定
-    vout.position = mul(vin.position, mul(world, view_projection));  //ローカル座標からワールド座標に変換
     vout.w_position = mul(vin.position, world); //ワールド座標から射影空間(画面座標)に変換
+    vout.position = mul(vout.w_position, view_projection); //ローカル座標からワールド座標に変換
     
     //------------------
     //法線・接線の計算
@@ -36,6 +37,9 @@ VS_OUT main( VS_IN vin)
     vout.w_tangent.w = sigma; //保存した従法線の向きを適用
     
     vout.texcoord = vin.texcoord;   //テクスチャ座標をピクセルシェーダーに渡す
+    
+    //シャドウマップ用のテクスチャ座標と深度値の算出
+    vout.shadow_texcoord = CalculateShadowTexcoord(vout.w_position, light_view_projection);
     
     return vout;
 }

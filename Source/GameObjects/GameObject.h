@@ -27,6 +27,9 @@ public:
 	 //描画処理
 	 virtual void Render(ID3D11DeviceContext* context) = 0;
 
+	 //影の書き込みパス専用の描画処理
+	 virtual void RenderCaster(ID3D11DeviceContext* context) = 0;
+
 	 //デバッグ描画処理
 	 virtual void RenderDebug(ShapeRenderer* renderer) = 0;
 

@@ -24,6 +24,9 @@ public:
 	//描画処理
 	void Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world_matrix);
 
+	//影の書き込みパス専用の描画処理
+	void RenderCaster(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world_matrix);
+
 	//アニメーション切り替え
 	void PlayAnimation(const std::string& animation_name, bool is_loop);
 

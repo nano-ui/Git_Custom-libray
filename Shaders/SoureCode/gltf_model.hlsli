@@ -11,11 +11,12 @@ struct VS_IN
 
 struct VS_OUT
 {
-    float4 position : SV_POSITION;  //射影空間の座標
-    float4 w_position : POSITION;   //ワールド空間での頂点座標
-    float4 w_normal : NORMAL;       //ワールド空間での法線ベクトル
-    float4 w_tangent : TANGENT;     //ワールド空間での接線ベクトル
-    float2 texcoord : TEXCOORD;     //ピクセルシェーダーへ渡すUV座標
+    float4 position : SV_POSITION;      //射影空間の座標
+    float4 w_position : POSITION;       //ワールド空間での頂点座標
+    float4 w_normal : NORMAL;           //ワールド空間での法線ベクトル
+    float4 w_tangent : TANGENT;         //ワールド空間での接線ベクトル
+    float2 texcoord : TEXCOORD;         //ピクセルシェーダーへ渡すUV座標
+    float3 shadow_texcoord : TEXCOORD1; //シャドウマップ判定用のテクスチャUV座標および深度Z値
 };
 
 cbuffer PRIMITIVE_CONSTANT_BUFFER : register(b0)
@@ -41,3 +42,16 @@ cbuffer PRIMITIVE_JOINT_CONSTANTS : register(b2)
 {
     row_major float4x4 joint_matrices[PRIMITIVE_MAX_JOINTS];
 }
+
+//シャドウマップ用リソースおよび計算モジュール
+Texture2D shadow_map : register(t6);
+SamplerState shadow_sampler_state : register(s6);
+
+cbuffer SHADOWMAP_CONSTANT_BUFFER : register(b6)
+{
+    row_major float4x4 light_view_projection;   //ライトの位置から見たビュー・プロジェクション合成行列
+    float3 shadow_color;                        //影として乗算するカラー成分
+    float shadow_bias;                          //シャドウアクネを軽減するための深度バイアス値
+}
+
+#include "shadow_functions.hlsli"

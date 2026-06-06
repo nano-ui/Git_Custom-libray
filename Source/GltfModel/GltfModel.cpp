@@ -59,6 +59,17 @@ void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XM
 	}
 }
 
+//==========================================================
+//影の書き込みパス専用の描画処理
+//==========================================================
+void GltfModel::RenderCaster(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world_matrix)
+{
+	if (renderer && data && animation)
+	{
+		renderer->RenderCaster(immediate_context, *data, world_matrix, animation->GetAnimationNodes());
+	}
+}
+
 //===============================
 //アニメーションの再生切り替え
 //===============================

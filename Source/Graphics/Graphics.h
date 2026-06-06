@@ -41,6 +41,9 @@ public:
 	//シーン定数バッファを更新
 	void UpdateSceneConstantBuffer(const scene_constants& constants);
 
+	//オブジェクト定数バッファを更新してスロット0にバインド
+	void UpdateObjectConstantBuffer(const DirectX::XMMATRIX& world_matrix);
+
 	//描画サイズのリサイズ
 	void Resize(UINT width, UINT height);
 
@@ -68,6 +71,10 @@ private:
 	~Graphics() = default;
 	Graphics(const Graphics&) = default;
 	void operator=(const Graphics&) = delete; 
+
+	//オブジェクト定数バッファの生成処理
+	bool CreateObjectConstantBuffer();
+
 private:
 	std::unique_ptr<DirectXDevice> directx_device;
 	std::unique_ptr<PipelineStates> pipline_states;
@@ -76,5 +83,6 @@ private:
 	DirectX::XMFLOAT4X4 projection_matrix{};	//現在のプロジェクション行列
 	UINT current_width = SCREEN_WIDTH;
 	UINT current_height = SCREEN_HEIGHT;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> object_constant_buffer;
 };
 

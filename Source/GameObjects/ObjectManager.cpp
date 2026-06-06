@@ -90,6 +90,18 @@ void ObjectManager::RenderDebug(ShapeRenderer* renderer)
 	}
 }
 
+//全オブジェクトの影書き込み用描画処理
+void ObjectManager::RenderCaster(ID3D11DeviceContext* context)
+{
+	for (auto& object : game_objects)
+	{
+		if (object->IsActive())
+		{
+			object->RenderCaster(context);
+		}
+	}
+}
+
 //無効になったオブジェクトの削除処理
 void ObjectManager::RemoveInactiveObject()
 {

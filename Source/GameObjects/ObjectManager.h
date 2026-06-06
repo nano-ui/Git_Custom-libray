@@ -60,6 +60,9 @@ public:
 	//全オブジェクトのデバッグ描画
 	void RenderDebug(ShapeRenderer* renderer);
 
+	//全オブジェクトの影書き込み用描画処理
+	void RenderCaster(ID3D11DeviceContext* context);
+
 	//全オブジェクトの強制削除処理
 	void Clear();
 

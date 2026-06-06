@@ -31,6 +31,9 @@ public:
 	//デバッグ描画
 	void RenderDebug(ShapeRenderer* renderer)override;
 
+	//影の書き込みパス専用の描画処理
+	void RenderCaster(ID3D11DeviceContext* context) override;
+
 	//ImGuiデバッグ描画
 	void RenderGui()override;
 

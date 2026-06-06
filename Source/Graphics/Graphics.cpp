@@ -1,6 +1,7 @@
 #include "Graphics.h"
 
 static constexpr UINT constant_buffer_slot_scene = 1;
+static constexpr UINT constant_buffer_slot_object = 0;
 
 //シングルトンインスタンス取得
 Graphics& Graphics::Instance()
@@ -30,6 +31,10 @@ bool Graphics::Initialize(HWND window_handle)
     {
         return false;
     }
+    if (!CreateObjectConstantBuffer())
+    {
+        return false;
+    }
 
     return true;
 }
@@ -39,6 +44,7 @@ void Graphics::Finalize()
 {
     if (directx_device)
     {
+        object_constant_buffer.Reset();
         auto context = directx_device->GetImmediateContext();
         if (context)
         {
@@ -131,6 +137,22 @@ void Graphics::UpdateSceneConstantBuffer(const scene_constants& constants)
     context->PSSetConstantBuffers(constant_buffer_slot_scene, 1, scene_constant_buffer.GetAddressOf());
 }
 
+//オブジェクト定数バッファを更新してスロット0にバインド
+void Graphics::UpdateObjectConstantBuffer(const DirectX::XMMATRIX& world_matrix)
+{
+    //定数バッファのデータ転送
+    if (!object_constant_buffer)
+    {
+        return;
+    }
+    DirectX::XMFLOAT4X4 updated_world;
+    DirectX::XMStoreFloat4x4(&updated_world, world_matrix);
+
+    ID3D11DeviceContext* context = GetContext();
+    context->UpdateSubresource(object_constant_buffer.Get(), 0, nullptr, &updated_world, 0, 0);
+    context->VSSetConstantBuffers(constant_buffer_slot_object, 1, object_constant_buffer.GetAddressOf());
+}
+
 //描画サイズのリサイズ
 void Graphics::Resize(UINT width, UINT height)
 {
@@ -146,4 +168,24 @@ void Graphics::Resize(UINT width, UINT height)
     current_height = height;
 
     directx_device->Resize(width, height);
+}
+
+//オブジェクト定数バッファの生成処理
+bool Graphics::CreateObjectConstantBuffer()
+{
+    //定数バッファの各種設定設定
+    D3D11_BUFFER_DESC buffer_desc = {};
+    buffer_desc.ByteWidth = sizeof(DirectX::XMFLOAT4X4);
+    buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+    buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    buffer_desc.CPUAccessFlags = 0;
+    buffer_desc.MiscFlags = 0;
+    buffer_desc.StructureByteStride = 0;
+    HRESULT hr = GetDevice()->CreateBuffer(&buffer_desc, nullptr, object_constant_buffer.GetAddressOf());
+    if (FAILED(hr))
+    {
+        return false;
+    }
+
+    return true;
 }

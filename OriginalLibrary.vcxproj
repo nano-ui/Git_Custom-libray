@@ -275,6 +275,7 @@
     <ClCompile Include="Source\Shaders\BlurShader.cpp" />
     <ClCompile Include="Source\Shaders\CustomShader.cpp" />
     <ClCompile Include="Source\Shaders\LuminanceExtractionShader.cpp" />
+    <ClCompile Include="Source\Shaders\ShadowMap.cpp" />
     <ClCompile Include="Source\Shaders\SkyBox.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -348,12 +349,14 @@
     <ClInclude Include="Source\Shaders\BlurShader.h" />
     <ClInclude Include="Source\Shaders\CustomShader.h" />
     <ClInclude Include="Source\Shaders\LuminanceExtractionShader.h" />
+    <ClInclude Include="Source\Shaders\ShadowMap.h" />
     <ClInclude Include="Source\Shaders\SkyBox.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli" />
     <None Include="Shaders\SoureCode\geometric_primitive.hlsli" />
     <None Include="Shaders\SoureCode\gltf_model.hlsli" />
+    <None Include="Shaders\SoureCode\shadow_functions.hlsli" />
     <None Include="Shaders\SoureCode\shape_renderer.hlsli" />
     <None Include="Shaders\SoureCode\skinned_mesh.hlsli" />
     <None Include="Shaders\SoureCode\sky_box.hlsli" />
@@ -424,6 +427,14 @@
       <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
       <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
+    </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\shadowmap_caster_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
+      <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\shape_renderer_ps.hlsl">
       <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>

@@ -18,6 +18,12 @@ public:
 	//手動で入力レイアウトを指定してシェーダーを生成し初期化
 	bool Initialize(const std::string& vs_name, const std::string& ps_name, const D3D11_INPUT_ELEMENT_DESC* input_elements, UINT element_count);
 
+	//頂点シェーダーのみを読み込み、リフレクションでレイアウトを自動生成
+	bool Initialize(const std::string& vs_name);
+
+	//手動で入力レイアウトを指定し、頂点シェーダーのみを生成
+	bool Initialize(const std::string& vs_name, const D3D11_INPUT_ELEMENT_DESC* input_elements, UINT element_count);
+
 	//保持しているシェーダーと入力レイアウトをパイプラインにバインド
 	void Apply();
 

@@ -54,6 +54,11 @@ void Character::Render(ID3D11DeviceContext* context)
 	character->Render(context, transform_matrix);
 }
 
+//影の書き込みパス専用の描画処理
+void Character::RenderCaster(ID3D11DeviceContext* context)
+{
+}
+
 //デバッグ描画
 void Character::RenderDebug(ShapeRenderer* renderer)
 {

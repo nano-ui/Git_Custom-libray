@@ -55,6 +55,9 @@
     <FxCompile Include="Shaders\SoureCode\static_mesh_vs.hlsl">
       <Filter>Shaders\statuc_mesh</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\shadowmap_caster_vs.hlsl">
+      <Filter>Shaders\shadow_functions</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui-docking\imgui.cpp">
@@ -245,6 +248,9 @@
     </ClCompile>
     <ClCompile Include="Source\GltfModel\TinygltfImpl.cpp">
       <Filter>Source\Render\GltfModel\TinygltfImpl</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shaders\ShadowMap.cpp">
+      <Filter>Source\Shaders\ShadowMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -461,6 +467,9 @@
     <ClInclude Include="Source\ObjectsRender\texture.h">
       <Filter>Source\Render\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Shaders\ShadowMap.h">
+      <Filter>Source\Shaders\ShadowMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli">
@@ -486,6 +495,9 @@
     </None>
     <None Include="Shaders\SoureCode\static_mesh.hlsli">
       <Filter>Shaders\statuc_mesh</Filter>
+    </None>
+    <None Include="Shaders\SoureCode\shadow_functions.hlsli">
+      <Filter>Shaders\shadow_functions</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -737,6 +749,12 @@
     </Filter>
     <Filter Include="Source\Render\GltfModel\TinygltfImpl">
       <UniqueIdentifier>{406cbb8d-961b-4e64-a187-c11669f08bdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shaders\ShadowMap">
+      <UniqueIdentifier>{5d11319c-77ec-40e0-bd5f-9e6031eba582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\shadow_functions">
+      <UniqueIdentifier>{3589f765-84cd-4580-9976-454fc7fdd116}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

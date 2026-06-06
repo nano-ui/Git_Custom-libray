@@ -22,6 +22,9 @@ public:
 	//描画処理
 	virtual void Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4 color) = 0;
 
+	//影の書き込みパス専用の描画処理
+	virtual void RenderCaster(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& world) = 0;
+
 	//アニメーション再生
 	virtual void PlayAnimation(const std::string& animation_name, bool is_loop) = 0;
 
@@ -58,6 +61,11 @@ public:
 	void Render(ID3D11DeviceContext* contex, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4 color)override
 	{
 		model->Render(contex, world, color);
+	}
+
+	//影の書き込みパス専用の描画処理
+	void RenderCaster(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& world) override
+	{
 	}
 
 	//アニメーション再生
@@ -133,6 +141,12 @@ public:
 	void Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4 color)override
 	{
 		model->Render(context, world);
+	}
+
+	//影の書き込みパス専用の描画処理
+	void RenderCaster(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& world)override
+	{
+		model->RenderCaster(context, world);
 	}
 
 	//アニメーション再生
@@ -277,6 +291,14 @@ void Model::Update(float elapsed_time)
 void Model::Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4 color)
 {
 	if (model_impl)model_impl->Render(context, world, color);
+}
+
+//=================================
+//影の書き込みパス専用の描画処理
+//=================================
+void Model::RenderCaster(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& world)
+{
+	if (model_impl) model_impl->RenderCaster(context, world);
 }
 
 //=====================

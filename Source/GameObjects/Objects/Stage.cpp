@@ -92,6 +92,15 @@ void Stage::RenderDebug(ShapeRenderer* renderer)
 	renderer->Render(context, view, projection);
 }
 
+//影の書き込みパス専用の描画処理
+void Stage::RenderCaster(ID3D11DeviceContext* context)
+{
+	DirectX::XMMATRIX matrix_world = GetWorldMatrix();
+	DirectX::XMFLOAT4X4 transform_matrix;
+	DirectX::XMStoreFloat4x4(&transform_matrix, matrix_world);
+	stage_model->RenderCaster(context, transform_matrix);
+}
+
 //ImGuiデバッグ描画
 void Stage::RenderGui()
 {

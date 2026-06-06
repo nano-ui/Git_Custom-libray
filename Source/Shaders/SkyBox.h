@@ -40,6 +40,8 @@ public:
 	//全モデル向けにIBL色情報を一括バインド
 	void BindIblTextures(ID3D11DeviceContext* immediate_context)const;
 
+	ID3D11ShaderResourceView* GetSkyboxSrv() { return skybox_srv.Get(); }
+
 private:
 	std::unique_ptr<CustomShader> skybox_shader;						//スカイボックス描画用シェーダーオブジェクト
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertex_buffer;					//立方体の頂点データを保持するバッファ

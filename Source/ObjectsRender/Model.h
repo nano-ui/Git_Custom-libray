@@ -22,6 +22,9 @@ public:
 	//描画処理
 	void Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f });
 
+	//影の書き込みパス専用の描画処理
+	void RenderCaster(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& world);
+
 	//アニメーションの再生
 	void PlayAnimation(const std::string& animation_name, bool is_loop);
 

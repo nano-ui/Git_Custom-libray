@@ -179,7 +179,17 @@ float4 main(VS_OUT pin, bool is_front_face : SV_IsFrontFace) : SV_TARGET
     //最終的な出力用の色変数を初期化
     float3 total_diffuse = float3(0.0f, 0.0f, 0.0f);
     float3 total_specular = float3(0.0f, 0.0f, 0.0f);
-
+    
+    //シャドウマップによる影の遮蔽率の計算
+    float3 shadow_factor = CalculateShadow(
+        pin.shadow_texcoord, 
+        shadow_map,
+        shadow_sampler_state,
+        shadow_bias,
+        shadow_color
+    );
+        
+    
     //ライティング計算
     float3 L = normalize(-light_direction.xyz); //光源へのベクトル
     float3 H = normalize(V + L);                //ハーフベクトル 
@@ -203,7 +213,8 @@ float4 main(VS_OUT pin, bool is_front_face : SV_IsFrontFace) : SV_TARGET
         
         //光源のエネルギー
         float3 radiance = light_color.rgb * light_color.a * NoL;
-
+        radiance *= shadow_factor;
+        
         total_diffuse += diffuse_brdf * radiance;
         total_specular += specular_brdf * radiance;
     }

@@ -79,6 +79,20 @@ void GltfModelRenderer::Render(ID3D11DeviceContext* immediate_context, const Glt
 	}
 }
 
+//================================
+//影の書き込みパス専用の描画処理
+//================================
+void GltfModelRenderer::RenderCaster(ID3D11DeviceContext* immediate_context, const GltfModelData& data, const DirectX::XMFLOAT4X4& world, const std::vector<GltfModelData::node>& animated_nodes)
+{
+	//ルートノードからの走査開始
+	const GltfModelData::scene& gltf_scene = data.scenes.at(data.default_scene);
+
+	for (int node_index : gltf_scene.nodes)
+	{
+		TraverseNodeForRenderCaster(node_index, immediate_context, data, animated_nodes, world);
+	}
+}
+
 //==================================
 //描画対象のノードを階層順に巡回
 //==================================
@@ -225,5 +239,46 @@ void GltfModelRenderer::TraverseNodeForRender
 	for (int child_index : current_node.children)																			// 描画が完了したノードの全ての子ノードをループ
 	{
 		TraverseNodeForRender(child_index, immediate_context, data, nodes, world, sampler_states);											// 子ノードのインデックスを渡し自身を再帰呼び出し
+	}
+}
+
+//============================================
+//影の書き込みパス専用のノード階層巡回処理
+//============================================
+void GltfModelRenderer::TraverseNodeForRenderCaster(int node_index, ID3D11DeviceContext* immediate_context, const GltfModelData& data, const std::vector<GltfModelData::node>& nodes, const DirectX::XMFLOAT4X4& world)
+{
+	//現在走査している対象のノード情報を取得
+	const GltfModelData::node& gltf_node = nodes.at(node_index);
+
+	//メッシュ描画処理
+	if (gltf_node.mesh > -1)
+	{
+		const GltfModelData::mesh& gltf_mesh = data.meshes.at(gltf_node.mesh);
+		DirectX::XMMATRIX nod_matrix = DirectX::XMLoadFloat4x4(&gltf_node.global_transform);
+		DirectX::XMMATRIX world_matrix = nod_matrix * DirectX::XMLoadFloat4x4(&world);
+		Graphics::Instance().UpdateObjectConstantBuffer(world_matrix);
+
+		for (const GltfModelData::mesh::primitive& primitive : gltf_mesh.primitives)
+		{
+			ID3D11Buffer* vertex_buffer = data.buffers.at(primitive.vertex_buffer_views.at("POSITION").buffer).Get();
+			UINT stride = primitive.vertex_buffer_views.at("POSITION").stride_in_bytes;
+			UINT offset = OFFSET_ZERO;
+			immediate_context->IASetVertexBuffers(SHADER_SLOT_0, RESOURCE_COUNT_1, &vertex_buffer, &stride, &offset);
+			if (primitive.index_buffer_view.buffer > -1)
+			{
+				immediate_context->IASetIndexBuffer(data.buffers.at(primitive.index_buffer_view.buffer).Get(),
+					primitive.index_buffer_view.format, static_cast<UINT>(primitive.index_buffer_view.byte_offset));
+				immediate_context->DrawIndexed(static_cast<UINT>(primitive.index_buffer_view.count), OFFSET_ZERO, OFFSET_ZERO);
+			}
+			else
+			{
+				immediate_context->Draw(static_cast<UINT>(primitive.vertex_buffer_views.at("POSITION").count), OFFSET_ZERO);
+			}
+		}
+	}
+	//子ノードの再帰走査の開始
+	for (int child_index : gltf_node.children)
+	{
+		TraverseNodeForRenderCaster(child_index, immediate_context, data, nodes, world);
 	}
 }

@@ -20,9 +20,15 @@ public:
 	//GPUに命令を送りモデルを描画
 	void Render(ID3D11DeviceContext* immediate_context, const GltfModelData& data, const DirectX::XMFLOAT4X4& world, const std::vector<GltfModelData::node>& animated_nodes);
 
+	//影の書き込みパス専用の描画処理
+	void RenderCaster(ID3D11DeviceContext* immediate_context, const GltfModelData& data, const DirectX::XMFLOAT4X4& world, const std::vector<GltfModelData::node>& animated_nodes);
+
 private:
 	//描画対象のノードを階層順に巡回
 	void TraverseNodeForRender(int node_index, ID3D11DeviceContext* immediate_context, const GltfModelData& data, const std::vector<GltfModelData::node>& nodes, const DirectX::XMFLOAT4X4& world, ID3D11SamplerState** sampler_states);
+
+	//影の書き込みパス専用のノード階層巡回処理
+	void TraverseNodeForRenderCaster(int node_index, ID3D11DeviceContext* immediate_context, const GltfModelData& data, const std::vector<GltfModelData::node>& nodes, const DirectX::XMFLOAT4X4& world);
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_cbuffer;				//プリミティブの情報を送るための定数バッファ
