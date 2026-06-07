@@ -109,10 +109,10 @@ void SceneGame::Render(float elapsed_time)
 	DirectX::XMFLOAT4 light_dir_vector{};
 	if (light)
 	{
-		const float k_light_camera_distance = 50.0f;
-		const float k_shadow_area_size = 30.0f;
+		const float k_light_camera_distance = 100.0f;
+		const float k_shadow_area_size = 150.0f;
 		const float k_light_near_clip = 0.1f;
-		const float k_light_far_clip = 200.0f;
+		const float k_light_far_clip = 300.0f;
 
 		light_dir_vector = light->GetDirection();
 		DirectX::XMFLOAT3 camera_focus = camera->GetFocus();
