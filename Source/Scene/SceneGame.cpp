@@ -104,6 +104,14 @@ void SceneGame::Render(float elapsed_time)
 	auto states = Graphics::Instance().GetPipelineStates();
 	framebuffer* shadow_fb = Graphics::Instance().GetShadowFramebuffer();
 
+	//パイプラインのハザードを解消するためのテクスチャ解除処理
+	if (shadow_fb)
+	{
+		ID3D11ShaderResourceView* null_srv_list[] = { nullptr };
+		const UINT k_shader_shadow_srv_slot = 10;
+		context->PSSetShaderResources(k_shader_shadow_srv_slot, 1, null_srv_list);
+	}
+
 	//シャドウマップ（深度バッファ）生成パス
 	if (shadow_fb && camera && light && object_manager)
 	{
@@ -144,6 +152,11 @@ void SceneGame::Render(float elapsed_time)
 		//深度値のみを描き込むステート群のバインド
 		context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
 		context->RSSetState(states->GetRasterizerState(2).Get());
+
+		//パス1でのピクセルシェーダー警告を抑制するためのサンプラーバインド
+		ID3D11SamplerState* shadow_sampler = Graphics::Instance().GetShadowSamplerState();
+		const UINT k_shader_shadow_sampler_slot = 10;
+		context->PSSetSamplers(k_shader_shadow_sampler_slot, 1, &shadow_sampler);
 
 		//ライト視点でのシーンオブジェクト描画
 		object_manager->Render(context);
@@ -267,6 +280,33 @@ void SceneGame::RenderGui()
 		{
 			camera->RenderGui();
 		}
+
+		//シャドウマップビューア項目の描画
+		if (ImGui::CollapsingHeader("Shadow Map Viewer", ImGuiDockNodeFlags_None))
+		{
+			framebuffer* shadow_fb = Graphics::Instance().GetShadowFramebuffer();
+			if (shadow_fb)
+			{
+				ID3D11ShaderResourceView* shadow_srv = shadow_fb->shader_resource_views[1].Get();
+
+				if (shadow_srv) 
+				{
+					static const float k_shadow_viewer_width = 256.0f;
+					static const float k_shadow_viewer_height = 256.0f;
+
+					ImGui::Text("Texture SRV Slot 10 (Format: R24_UNORM_X8)");
+					ImGui::Image( 
+						reinterpret_cast<ImTextureID>(shadow_srv),
+						ImVec2(k_shadow_viewer_width, k_shadow_viewer_height)
+					);
+				}
+				else 
+				{
+					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Shadow SRV is Null.");
+				}
+			}
+		}
+
 		if (ImGui::CollapsingHeader("Shape Generator", ImGuiDockNodeFlags_None))
 		{
 			ImGui::RadioButton(u8"枠線のみ (Wireframe)", &current_debug_draw_mode, 0);
