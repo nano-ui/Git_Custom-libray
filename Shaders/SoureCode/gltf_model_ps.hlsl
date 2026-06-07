@@ -3,7 +3,8 @@
 static const float PI = 3.14159265358979f;
 static const float GammaFactor = 2.2f; //ガンマ補正
 static const float shadow_bias = 0.0005f;
-static const float3 shadow_factor = float3(0.2f, 0.2f, 0.2f);
+static const float3 shadow_factor = float3(0.05f, 0.05f, 0.05f);
+static const float ambient_shadow_factor = 0.3f;
 
 //------------------------------
 //テクスチャスロットの定義
@@ -184,6 +185,8 @@ float4 main(VS_OUT pin, bool is_front_face : SV_IsFrontFace) : SV_TARGET
     float3 total_diffuse = float3(0.0f, 0.0f, 0.0f);
     float3 total_specular = float3(0.0f, 0.0f, 0.0f);
     
+    bool is_in_shadow = false;
+    
     //ライティング計算
     float3 L = normalize(-light_direction.xyz); //光源へのベクトル
     float3 H = normalize(V + L);                //ハーフベクトル 
@@ -216,6 +219,7 @@ float4 main(VS_OUT pin, bool is_front_face : SV_IsFrontFace) : SV_TARGET
             if(pin.shadow_texcoord.z - shadow_bias>shadow_depth)
             {
                 radiance *= shadow_factor;
+                is_in_shadow = true;
             }
         }
 
@@ -242,9 +246,16 @@ float4 main(VS_OUT pin, bool is_front_face : SV_IsFrontFace) : SV_TARGET
     
     float3 ibl_specular = specular_radiance * (f0 * env_brdf.x + env_brdf.y);
     
+    //影の状態に合わせて環境光の最終適用度をコントロール
+    float ibl_shadow_multiplier = 1.0f;
+    if (is_in_shadow)
+    {
+        ibl_shadow_multiplier = ambient_shadow_factor;
+    }
+    
     //IBL結果を合算
-    total_diffuse += ibl_diffuse * ambient_color.a;
-    total_specular += ibl_specular * ambient_color.a;
+    total_diffuse += ibl_diffuse * ambient_color.a * ibl_shadow_multiplier;
+    total_specular += ibl_specular * ambient_color.a * ibl_shadow_multiplier;
     
     //最終出力色の合成
     float3 final_color = total_diffuse + total_specular + emissive;
