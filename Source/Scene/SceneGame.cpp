@@ -110,7 +110,6 @@ void SceneGame::Render(float elapsed_time)
 	if (light)
 	{
 		const float k_light_camera_distance = 100.0f;
-		const float k_shadow_area_size = 150.0f;
 		const float k_light_near_clip = 0.1f;
 		const float k_light_far_clip = 300.0f;
 
@@ -299,7 +298,7 @@ void SceneGame::RenderGui()
 			if (shadow_fb)
 			{
 				ID3D11ShaderResourceView* shadow_srv = shadow_fb->shader_resource_views[1].Get();
-
+				ImGui::DragFloat("ShadowSize", &k_shadow_area_size, 0.1f);
 				if (shadow_srv) 
 				{
 					static const float k_shadow_viewer_width = 256.0f;

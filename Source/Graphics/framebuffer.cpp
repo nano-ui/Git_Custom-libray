@@ -117,4 +117,7 @@ void framebuffer::deactivate(ID3D11DeviceContext* immediate_context)
 	/*framebufferに切り替えた描画先から、元の描画先（通常はバックバッファなど)に戻す*/
 	immediate_context->OMSetRenderTargets(1, cached_render_target_view.GetAddressOf(),
 		cached_depth_stencil_view.Get());
+
+	cached_render_target_view.Reset();
+	cached_depth_stencil_view.Reset();
 }
