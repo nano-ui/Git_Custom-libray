@@ -2,6 +2,8 @@
 
 static const float PI = 3.14159265358979f;
 static const float GammaFactor = 2.2f; //ガンマ補正
+static const float shadow_bias = 0.0005f;
+static const float3 shadow_factor = float3(0.2f, 0.2f, 0.2f);
 
 //------------------------------
 //テクスチャスロットの定義
@@ -16,6 +18,7 @@ Texture2D<float4> material_textures[5] : register(t1);  //テクスチャ配列のレジス
 TextureCube diffuse_iem_map : register(t33);    //拡散反射用環境マップ
 TextureCube specular_pmrem_map : register(t34); //鏡面反射用環境マップ
 Texture2D lut_ggx_map : register(t35);          //BRDFルックアップテーブル
+Texture2D shadow_map : register(t10);           //ライト深度が書き込まれたシャドウマップテクスチャ
 
 //-----------------------------
 //サンプラーステートの定義
@@ -24,6 +27,7 @@ Texture2D lut_ggx_map : register(t35);          //BRDFルックアップテーブル
 #define LINEAR 1        //線形フィルタリング
 #define ANISOTROPIC 2   //異方性フィルタリング
 SamplerState sampler_states[3] : register(s0);  //サンプラー配列のレジスタ設定
+SamplerState shadow_sampler_state : register(s10); //シャドウマップ用サンプラーステート
 
 //テクスチャ参照用情報の基本構造体
 struct texture_info
@@ -179,7 +183,7 @@ float4 main(VS_OUT pin, bool is_front_face : SV_IsFrontFace) : SV_TARGET
     //最終的な出力用の色変数を初期化
     float3 total_diffuse = float3(0.0f, 0.0f, 0.0f);
     float3 total_specular = float3(0.0f, 0.0f, 0.0f);
-
+    
     //ライティング計算
     float3 L = normalize(-light_direction.xyz); //光源へのベクトル
     float3 H = normalize(V + L);                //ハーフベクトル 
@@ -203,6 +207,17 @@ float4 main(VS_OUT pin, bool is_front_face : SV_IsFrontFace) : SV_TARGET
         
         //光源のエネルギー
         float3 radiance = light_color.rgb * light_color.a * NoL;
+        
+        //シャドウマップによる影の判定
+        float2 shadow_uv = pin.shadow_texcoord.xy * float2(0.5f, -0.5f);
+        if(shadow_uv.x>=0.0f && shadow_uv.x <= 1.0f && shadow_uv.y >= 0.0f && shadow_uv.y <= 1.0f)
+        {
+            float shadow_depth = shadow_map.Sample(shadow_sampler_state, shadow_uv).r;
+            if(pin.shadow_texcoord.z - shadow_bias>shadow_depth)
+            {
+                radiance *= shadow_factor;
+            }
+        }
 
         total_diffuse += diffuse_brdf * radiance;
         total_specular += specular_brdf * radiance;

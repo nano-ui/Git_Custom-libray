@@ -136,6 +136,17 @@ void SceneGame::Render(float elapsed_time)
 
 	if (shape_renderer && camera)
 	{
+		//•½sŒõŒ¹‚Ì•ûŒü‚ð‰ÂŽ‹‰»‚·‚é‹…‚ð•`‰æ
+		const float k_light_debug_distance = 5.0f;
+		DirectX::XMFLOAT4 light_dir = light->GetDirection();
+		DirectX::XMFLOAT3 light_pos = {
+			-light_dir.x * k_light_debug_distance,
+			-light_dir.y * k_light_debug_distance,
+			-light_dir.z * k_light_debug_distance
+		};
+		shape_renderer->DrawSphere(light_pos, 0.5f, { 1.0f, 1.0f, 0.0f, 1.0f }, ShapeDrawMode::Solid);
+
+
 		for (const debug_shape & shape : debug_shapes)
 		{
 			ShapeDrawMode mode = static_cast<ShapeDrawMode>(shape.draw_mode);
