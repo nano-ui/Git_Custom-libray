@@ -2,6 +2,7 @@
 #include "../GameObjects/ObjectManager.h"
 #include "../GameObjects/Objects/Stage.h"
 #include "../Graphics/Graphics.h"
+#include "../Graphics/framebuffer.h"
 #include "../Camera/Camera.h"
 #include "../Camera/FreeCamera.h"
 #include "../Light/Light.h"
@@ -101,6 +102,55 @@ void SceneGame::Render(float elapsed_time)
 {
 	ID3D11DeviceContext* context = Graphics::Instance().GetContext();
 	auto states = Graphics::Instance().GetPipelineStates();
+	framebuffer* shadow_fb = Graphics::Instance().GetShadowFramebuffer();
+
+	//シャドウマップ（深度バッファ）生成パス
+	if (shadow_fb && camera && light && object_manager)
+	{
+		//シャドウマップバッファのクリアと有効化
+		shadow_fb->clear(context, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+		shadow_fb->activate(context);
+
+		//ライト視点カメラの行列計算
+		const float k_light_camera_distance = 50.0f;
+		DirectX::XMFLOAT4 light_dir = light->GetDirection();
+		DirectX::XMVECTOR light_pos = DirectX::XMLoadFloat4(&light_dir);
+		light_pos = DirectX::XMVectorScale(light_pos, -k_light_camera_distance);
+		DirectX::XMMATRIX light_view = DirectX::XMMatrixLookAtLH(
+			light_pos,
+			DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f),
+			DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
+		);
+
+		//ライトの正射影行列の計算
+		const float k_shadow_area_size = 30.0f;
+		DirectX::XMMATRIX light_projection = DirectX::XMMatrixOrthographicLH(
+			k_shadow_area_size,
+			k_shadow_area_size,
+			0.1f, 
+			200.0f 
+		);
+
+		//ライト空間用のシーン定数バッファの構築・更新
+		scene_constants light_scene_constants{};
+		DirectX::XMStoreFloat4x4(&light_scene_constants.view_projection, light_view * light_projection);
+		light_scene_constants.light_view_projection = light_scene_constants.view_projection;
+		light_scene_constants.light_direction = light_dir;
+		light_scene_constants.camera_position = camera->GetPosition();
+		light_scene_constants.light_color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		light_scene_constants.ambient_color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		Graphics::Instance().UpdateSceneConstantBuffer(light_scene_constants);
+
+		//深度値のみを描き込むステート群のバインド
+		context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
+		context->RSSetState(states->GetRasterizerState(2).Get());
+
+		//ライト視点でのシーンオブジェクト描画
+		object_manager->Render(context);
+		shadow_fb->deactivate(context);
+	}
+
+	//通常カメラからの本描画パス
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
 	context->RSSetState(states->GetRasterizerState(2).Get());
 
@@ -112,6 +162,17 @@ void SceneGame::Render(float elapsed_time)
 	context->PSSetSamplers(0, 1, &sampler_p0);
 	context->PSSetSamplers(1, 1, &sampler_p1);
 	context->PSSetSamplers(2, 1, &sampler_p2);
+
+	//シャドウマップ用テクスチャおよびサンプラーを専用スロットへバインド
+	if (shadow_fb)
+	{
+		ID3D11ShaderResourceView* shadow_srv = shadow_fb->shader_resource_views[1].Get();
+		ID3D11SamplerState* shadow_sampler = Graphics::Instance().GetShadowSamplerState();
+		const UINT k_shader_shadow_srv_slot = 10;
+		const UINT k_shader_shadow_sampler_slot = 10;
+		context->PSSetShaderResources(k_shader_shadow_srv_slot, 1, &shadow_srv);
+		context->PSSetSamplers(k_shader_shadow_sampler_slot, 1, &shadow_sampler);
+	}
 
 	scene_constants constants{};
 	if (camera && light)

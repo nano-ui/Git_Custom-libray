@@ -1,4 +1,5 @@
 #include "Graphics.h"
+#include "framebuffer.h"
 
 static constexpr UINT constant_buffer_slot_scene = 1;
 
@@ -31,6 +32,31 @@ bool Graphics::Initialize(HWND window_handle)
         return false;
     }
 
+    //シャドウマップ用リソースの生成
+    const uint32_t k_shadow_map_width = 1024;
+    const uint32_t k_shadow_map_height = 1024;
+    shadow_framebuffer = std::make_unique<framebuffer>(GetDevice(), k_shadow_map_width, k_shadow_map_height);
+
+    //サンプラーステートのディスクリプタを設定
+    D3D11_SAMPLER_DESC sampler_desc{};
+    sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+    sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+    sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+    sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+    sampler_desc.MipLODBias = 0;
+    sampler_desc.MaxAnisotropy = 16;
+    sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+    sampler_desc.BorderColor[0] = FLT_MAX;
+    sampler_desc.BorderColor[1] = FLT_MAX;
+    sampler_desc.BorderColor[2] = FLT_MAX;
+    sampler_desc.BorderColor[3] = FLT_MAX;
+    sampler_desc.MinLOD = 0;
+    sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
+
+    //サンプラーステートオブジェクトを生成
+    HRESULT hr = GetDevice()->CreateSamplerState(&sampler_desc, shadow_sampler_state.GetAddressOf());
+    _ASSERT_EXPR(SUCCEEDED(hr), L"Failed to create shadow map SamplerState.");
+
     return true;
 }
 
@@ -46,6 +72,12 @@ void Graphics::Finalize()
             context->Flush();       //コマンドを強制実行して完了させる
         }
     }
+
+    if (shadow_framebuffer)
+    {
+        shadow_framebuffer.reset();
+    }
+    shadow_sampler_state.Reset();
 
     //スマートポインタの開放
     scene_constant_buffer.Reset();

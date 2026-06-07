@@ -7,6 +7,8 @@
 #include "DirectXDevice.h"
 #include "PipelineStates.h"
 
+class framebuffer;
+
 //シェーダーに渡すシーン共通の定数構造体
 struct scene_constants
 {
@@ -63,6 +65,8 @@ public:
 	void SetProjectionMatrix(const DirectX::XMFLOAT4X4& projection) { projection_matrix = projection; }
 	const DirectX::XMFLOAT4X4& GetViewMatrix() const { return view_matrix; }
 	const DirectX::XMFLOAT4X4& GetProjectionMatrix() const { return projection_matrix; }
+	framebuffer* GetShadowFramebuffer() const { return shadow_framebuffer.get(); }
+	ID3D11SamplerState* GetShadowSamplerState() const { return shadow_sampler_state.Get(); }
 
 private:
 	Graphics() = default;
@@ -77,5 +81,7 @@ private:
 	DirectX::XMFLOAT4X4 projection_matrix{};	//現在のプロジェクション行列
 	UINT current_width = SCREEN_WIDTH;
 	UINT current_height = SCREEN_HEIGHT;
+	std::unique_ptr<framebuffer> shadow_framebuffer;
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> shadow_sampler_state;
 };
 
