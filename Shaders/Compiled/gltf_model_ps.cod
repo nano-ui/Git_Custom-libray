@@ -19,11 +19,11 @@
 // {
 //
 //   row_major float4x4 view_projection;// Offset:    0 Size:    64 [unused]
-//   float4 camera_position;            // Offset:   64 Size:    16
-//   float4 light_color;                // Offset:   80 Size:    16
-//   float4 ambient_color;              // Offset:   96 Size:    16
-//   row_major float4x4 light_view_projection;// Offset:  112 Size:    64 [unused]
-//   float4 light_direction;            // Offset:  176 Size:    16
+//   float4 light_direction;            // Offset:   64 Size:    16
+//   float4 camera_position;            // Offset:   80 Size:    16
+//   float4 light_color;                // Offset:   96 Size:    16
+//   float4 ambient_color;              // Offset:  112 Size:    16
+//   row_major float4x4 light_view_projection;// Offset:  128 Size:    64 [unused]
 //
 // }
 //
@@ -138,7 +138,7 @@
 ps_5_0
 dcl_globalFlags refactoringAllowed | skipOptimization
 dcl_constantbuffer CB0[5], immediateIndexed
-dcl_constantbuffer CB1[12], immediateIndexed
+dcl_constantbuffer CB1[8], immediateIndexed
 dcl_sampler s1, mode_default
 dcl_sampler s2, mode_default
 dcl_sampler s10, mode_default
@@ -362,7 +362,7 @@ endif
 
 #line 170
 mov r3.xyw, -v1.xyxz
-add r3.xyw, r3.xyxw, cb1[4].xyxz
+add r3.xyw, r3.xyxw, cb1[5].xyxz
 dp3 r0.w, r3.xywx, r3.xywx
 rsq r0.w, r0.w
 mul r3.xyw, r0.wwww, r3.xyxw  // r3.x <- V.x; r3.y <- V.y; r3.w <- V.z
@@ -395,7 +395,7 @@ mov r9.xyz, l(0,0,0,0)  // r9.x <- total_diffuse.x; r9.y <- total_diffuse.y; r9.
 mov r10.xyz, l(0,0,0,0)  // r10.x <- total_specular.x; r10.y <- total_specular.y; r10.z <- total_specular.z
 
 #line 188
-mov r11.xyz, -cb1[11].xyzx
+mov r11.xyz, -cb1[4].xyzx
 dp3 r2.w, r11.xyzx, r11.xyzx
 rsq r2.w, r2.w
 mul r11.xyz, r2.wwww, r11.xyzx  // r11.x <- L.x; r11.y <- L.y; r11.z <- L.z
@@ -514,11 +514,12 @@ div r13.xyz, r4.xyzx, r0.xxxx
 mul r11.xyz, r11.xyzx, r13.xyzx  // r11.x <- diffuse_brdf.x; r11.y <- diffuse_brdf.y; r11.z <- diffuse_brdf.z
 
 #line 209
-mul r13.xyz, cb1[5].wwww, cb1[5].xyzx
+mul r13.xyz, cb1[6].wwww, cb1[6].xyzx
 mul r13.xyz, r2.wwww, r13.xyzx  // r13.x <- radiance.x; r13.y <- radiance.y; r13.z <- radiance.z
 
 #line 212
-mul r0.xw, v5.xxxy, l(0.500000, 0.000000, 0.000000, -0.500000)  // r0.x <- shadow_uv.x; r0.w <- shadow_uv.y
+mul r0.xw, v5.xxxy, l(0.500000, 0.000000, 0.000000, -0.500000)
+add r0.xw, r0.xxxw, l(0.500000, 0.000000, 0.000000, 0.500000)  // r0.x <- shadow_uv.x; r0.w <- shadow_uv.y
 
 #line 213
 ge r2.w, r0.x, l(0.000000)
@@ -625,11 +626,11 @@ add r5.xyz, r5.yyyy, r5.xzwx
 mul r3.xyz, r3.xyzx, r5.xyzx  // r3.x <- ibl_specular.x; r3.y <- ibl_specular.y; r3.z <- ibl_specular.z
 
 #line 246
-mul r4.xyz, r4.xyzx, cb1[6].wwww
+mul r4.xyz, r4.xyzx, cb1[7].wwww
 add r0.xzw, r0.xxzw, r4.xxyz
 
 #line 247
-mul r3.xyz, r3.xyzx, cb1[6].wwww
+mul r3.xyz, r3.xyzx, cb1[7].wwww
 add r1.xyz, r1.xyzx, r3.xyzx
 
 #line 250
@@ -660,4 +661,4 @@ exp r0.xyz, r0.xyzx  // r0.x <- final_color.x; r0.y <- final_color.y; r0.z <- fi
 mov o0.xyz, r0.xyzx
 mov o0.w, r4.w
 ret 
-// Approximately 288 instruction slots used
+// Approximately 289 instruction slots used

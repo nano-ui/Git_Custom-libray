@@ -104,6 +104,36 @@ void SceneGame::Render(float elapsed_time)
 	auto states = Graphics::Instance().GetPipelineStates();
 	framebuffer* shadow_fb = Graphics::Instance().GetShadowFramebuffer();
 
+	//パス間で共有するライト空間変換行列の計算
+	DirectX::XMFLOAT4X4 light_view_projection_matrix{};
+	DirectX::XMFLOAT4 light_dir_vector{};
+	if (light)
+	{
+		const float k_light_camera_distance = 50.0f;
+		const float k_shadow_area_size = 30.0f;
+		const float k_light_near_clip = 0.1f;
+		const float k_light_far_clip = 200.0f;
+
+		light_dir_vector = light->GetDirection();
+		DirectX::XMFLOAT3 camera_focus = camera->GetFocus();
+		DirectX::XMVECTOR target_pos = DirectX::XMLoadFloat3(&camera_focus);
+		DirectX::XMVECTOR light_pos = DirectX::XMLoadFloat4(&light_dir_vector);
+		light_pos = DirectX::XMVectorScale(light_pos, -k_light_camera_distance); 
+		DirectX::XMMATRIX light_view = DirectX::XMMatrixLookAtLH(
+			light_pos, 
+			target_pos,
+			DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) 
+		);
+		DirectX::XMMATRIX light_projection = DirectX::XMMatrixOrthographicLH(
+			k_shadow_area_size,
+			k_shadow_area_size, 
+			k_light_near_clip,
+			k_light_far_clip 
+		);
+		DirectX::XMStoreFloat4x4(&light_view_projection_matrix, light_view * light_projection);
+	}
+
+
 	//パイプラインのハザードを解消するためのテクスチャ解除処理
 	if (shadow_fb)
 	{
@@ -119,31 +149,11 @@ void SceneGame::Render(float elapsed_time)
 		shadow_fb->clear(context, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f);
 		shadow_fb->activate(context);
 
-		//ライト視点カメラの行列計算
-		const float k_light_camera_distance = 50.0f;
-		DirectX::XMFLOAT4 light_dir = light->GetDirection();
-		DirectX::XMVECTOR light_pos = DirectX::XMLoadFloat4(&light_dir);
-		light_pos = DirectX::XMVectorScale(light_pos, -k_light_camera_distance);
-		DirectX::XMMATRIX light_view = DirectX::XMMatrixLookAtLH(
-			light_pos,
-			DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f),
-			DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
-		);
-
-		//ライトの正射影行列の計算
-		const float k_shadow_area_size = 30.0f;
-		DirectX::XMMATRIX light_projection = DirectX::XMMatrixOrthographicLH(
-			k_shadow_area_size,
-			k_shadow_area_size,
-			0.1f, 
-			200.0f 
-		);
-
 		//ライト空間用のシーン定数バッファの構築・更新
 		scene_constants light_scene_constants{};
-		DirectX::XMStoreFloat4x4(&light_scene_constants.view_projection, light_view * light_projection);
-		light_scene_constants.light_view_projection = light_scene_constants.view_projection;
-		light_scene_constants.light_direction = light_dir;
+		light_scene_constants.view_projection = light_view_projection_matrix;
+		light_scene_constants.light_view_projection = light_view_projection_matrix;
+		light_scene_constants.light_direction = light_dir_vector;
 		light_scene_constants.camera_position = camera->GetPosition();
 		light_scene_constants.light_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		light_scene_constants.ambient_color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -195,6 +205,7 @@ void SceneGame::Render(float elapsed_time)
 		constants.camera_position = camera->GetPosition();
 		constants.light_color = { 1.0f,1.0f,1.0f,1.0f };
 		constants.ambient_color = { 1.0f,1.0f,1.0f,1.0f };
+		constants.light_view_projection = light_view_projection_matrix;
 		Graphics::Instance().UpdateSceneConstantBuffer(constants);
 	}
 

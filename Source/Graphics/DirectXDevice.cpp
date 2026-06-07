@@ -162,6 +162,15 @@ void DirectXDevice::CreateRenderTargetAndDepthStencil()
 //バッファのサイズ
 void DirectXDevice::Resize(UINT width, UINT height)
 {
+	//パイプラインバインドと既存ビューの完全クリア
+	if (immediate_context_)
+	{
+		ID3D11RenderTargetView* null_rtv_list[] = { nullptr };
+		immediate_context_->OMSetRenderTargets(1, null_rtv_list, nullptr);
+		immediate_context_->ClearState();
+		immediate_context_->Flush();
+	}
+
 	//既存のビューを開放
 	render_target_view_.Reset();
 	depth_stencil_view_.Reset();

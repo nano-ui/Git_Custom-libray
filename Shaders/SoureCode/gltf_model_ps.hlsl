@@ -209,8 +209,8 @@ float4 main(VS_OUT pin, bool is_front_face : SV_IsFrontFace) : SV_TARGET
         float3 radiance = light_color.rgb * light_color.a * NoL;
         
         //シャドウマップによる影の判定
-        float2 shadow_uv = pin.shadow_texcoord.xy * float2(0.5f, -0.5f);
-        if(shadow_uv.x>=0.0f && shadow_uv.x <= 1.0f && shadow_uv.y >= 0.0f && shadow_uv.y <= 1.0f)
+        float2 shadow_uv = pin.shadow_texcoord.xy * float2(0.5f, -0.5f) + float2(0.5f, 0.5f);
+        if (shadow_uv.x >= 0.0f && shadow_uv.x <= 1.0f && shadow_uv.y >= 0.0f && shadow_uv.y <= 1.0f)
         {
             float shadow_depth = shadow_map.Sample(shadow_sampler_state, shadow_uv).r;
             if(pin.shadow_texcoord.z - shadow_bias>shadow_depth)
