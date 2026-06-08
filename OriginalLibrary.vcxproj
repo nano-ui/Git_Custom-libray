@@ -85,6 +85,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>Source\Common;Source\Graphics;Source\ObjectsRender;imgui;Shaders\Compiled;Shaders\SoureCode;$(IncludePath)</IncludePath>
+    <LibraryPath>.\External\DirectXTex;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -123,7 +124,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;USE_IMGUI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\External\cereal-master\include;.\External\DirectXTK-main\DirectXTK-main\Inc;.\External\DirectXTex;.\External\imgui-docking;.\External\ImGuizmo;.\External\json-develop;.\External\imgui;.\External\json-develop;.\External\tinygltf-release;%(AdditionalIncludeDirectories);.\External\DirectXTe;.\External\DirectXTex</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -187,15 +188,16 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\External\cereal-master\include;.\External\DirectXTK-main\DirectXTK-main\Inc;.\External\DirectXTex;.\External\imgui-docking;.\External\ImGuizmo;.\External\json-develop;%(AdditionalIncludeDirectories);.\External\DirectXTe;.\External\DirectXTex</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\External\cereal-master\include;.\External\DirectXTK-main\DirectXTK-main\Inc;.\External\DirectXTex;.\External\imgui-docking;.\External\ImGuizmo;.\External\json-develop;.\External\tinygltf-release;.\External\DirectXTe;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\lib\x64\release;.\External\DirectXTK-main\DirectXTK-main\Bin\Desktop_2019\x64\Release;%(AdditionalLibraryDirectories);$(SolutionDir)External\DirectXTex\Lib\x64\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\lib\x64\release;.\External\DirectXTK-main\DirectXTK-main\Bin\Desktop_2019\x64\Release;.\External\DirectXTex\Bin\Desktop_2022\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;d3d11.lib;dxgi.lib;DirectXTK.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
@@ -222,8 +224,10 @@
     <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Camera\FreeCamera.cpp" />
     <ClCompile Include="Source\Camera\StandCamera.cpp" />
+    <ClCompile Include="Source\Collision\CollisionExperiment.cpp" />
     <ClCompile Include="Source\Collision\CollisionLogic.cpp" />
     <ClCompile Include="Source\Collision\CollisionManager.cpp" />
+    <ClCompile Include="Source\Collision\CollisionSphere.cpp" />
     <ClCompile Include="Source\Collision\SpaceDivisionCast.cpp" />
     <ClCompile Include="Source\Common\main.cpp" />
     <ClCompile Include="Source\FbxModel\FbxAnimation.cpp" />
@@ -290,8 +294,10 @@
     <ClInclude Include="Source\Camera\FreeCamera.h" />
     <ClInclude Include="Source\Camera\StandCamera.h" />
     <ClInclude Include="Source\Collision\Collider.h" />
+    <ClInclude Include="Source\Collision\CollisionExperiment.h" />
     <ClInclude Include="Source\Collision\CollisionLogic.h" />
     <ClInclude Include="Source\Collision\CollisionManager.h" />
+    <ClInclude Include="Source\Collision\CollisionSphere.h" />
     <ClInclude Include="Source\Collision\SpaceDivisionCast.h" />
     <ClInclude Include="Source\Common\high_resolution_timer.h" />
     <ClInclude Include="Source\Common\misc.h" />

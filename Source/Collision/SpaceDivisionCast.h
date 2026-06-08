@@ -68,5 +68,9 @@ private:
 	static constexpr float CELL_SIZE = 4.0f;	//分割するセルの1辺のサイズ
 	static constexpr float EPSILON_NORMAL = 0.0001f;
 	static constexpr float SPHERE_INTERVAL_RATIO = 1.0f;	//球を配置する間隔の密度比率
+	int grid_count_x = 0;									//X方向のグリッド総数
+	int grid_count_z = 0;									//Z方向のグリッド総数
+	DirectX::XMFLOAT3 volume_min_pos = { 0.0f,0.0f,0.0f };	//空間全体の最小座標
+	DirectX::XMFLOAT3 volume_max_pos = { 0.0f,0.0f,0.0f };	//空間全体の最大座標
 };
 

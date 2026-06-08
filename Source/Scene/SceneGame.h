@@ -10,6 +10,7 @@ class Light;
 class ShapeRenderer;
 class CollisionManager;
 class SkyBox;
+class CollisionExperiment;
 
 class SceneGame : public Scene
 {
@@ -64,5 +65,7 @@ private:
 	int current_debug_draw_mode = 0;
 	DirectX::XMFLOAT4 current_debug_color = { 1.0f,1.0f,1.0f,1.0f };
 	float k_shadow_area_size = 50.0f;
+
+	std::unique_ptr<CollisionExperiment> collision_experiment;	//“–‚½‚è”»’èŽÀŒ±ƒNƒ‰ƒX
 };
 

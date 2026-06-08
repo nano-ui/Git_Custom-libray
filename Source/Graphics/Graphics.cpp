@@ -33,8 +33,8 @@ bool Graphics::Initialize(HWND window_handle)
     }
 
     //シャドウマップ用リソースの生成
-    const uint32_t k_shadow_map_width = 4096;
-    const uint32_t k_shadow_map_height = 4096;
+    const uint32_t k_shadow_map_width = 2096;
+    const uint32_t k_shadow_map_height = 2096;
     shadow_framebuffer = std::make_unique<framebuffer>(GetDevice(), k_shadow_map_width, k_shadow_map_height);
 
     //サンプラーステートのディスクリプタを設定

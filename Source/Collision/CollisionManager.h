@@ -38,15 +38,14 @@ struct GridKeyHasher
 	std::size_t operator()(const GridKey& key) const 
 	{
 		//ビットシフト用の定数
-		constexpr int bit_shift = 1;
+		constexpr std::size_t prime_x = 73856093;
+		constexpr std::size_t prime_y = 19349663;
+		constexpr std::size_t prime_z = 83492791;
 
-		//各要素の標準ハッシュ値を計算
-		std::size_t hash_x = std::hash<int>()(key.x);
-		std::size_t hash_y = std::hash<int>()(key.y);
-		std::size_t hash_z = std::hash<int>()(key.z);
-
-		//排他的論理和とビットシフトを組み合わせて一意に近い値を生成
-		return ((hash_x ^ (hash_y << bit_shift)) >> bit_shift) ^ (hash_z << bit_shift);
+		//各座標成分に素数を掛けてXORで結合し、一意に近いハッシュ値を生成
+		return (static_cast<std::size_t>(key.x) * prime_x) ^
+			(static_cast<std::size_t>(key.y) * prime_y) ^
+			(static_cast<std::size_t>(key.z) * prime_z);
 	}
 };
 
@@ -104,5 +103,5 @@ private:
 	float cell_size;			//グリッド1セルの一辺の長さ
 	bool is_enable_collision;	//当たり判定システムの有効フラグ
 	bool is_draw_grid;			//グリッド描画有効フラグ
+	float execution_time_ms = 0.0f;	//衝突判定全体の処理負荷時間
 };
-

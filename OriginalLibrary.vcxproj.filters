@@ -246,6 +246,12 @@
     <ClCompile Include="Source\GltfModel\TinygltfImpl.cpp">
       <Filter>Source\Render\GltfModel\TinygltfImpl</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Collision\CollisionSphere.cpp">
+      <Filter>Source\Collision\CollisionSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collision\CollisionExperiment.cpp">
+      <Filter>Source\Collision\CollisionExperiment</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui.h">
@@ -460,6 +466,12 @@
     </ClInclude>
     <ClInclude Include="Source\ObjectsRender\texture.h">
       <Filter>Source\Render\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collision\CollisionSphere.h">
+      <Filter>Source\Collision\CollisionSphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collision\CollisionExperiment.h">
+      <Filter>Source\Collision\CollisionExperiment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -737,6 +749,12 @@
     </Filter>
     <Filter Include="Source\Render\GltfModel\TinygltfImpl">
       <UniqueIdentifier>{406cbb8d-961b-4e64-a187-c11669f08bdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Collision\CollisionSphere">
+      <UniqueIdentifier>{dd8c88cc-fac8-4fa4-93a0-cbb12910a23d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Collision\CollisionExperiment">
+      <UniqueIdentifier>{5a0c74bd-5863-46dd-a4a1-d6fe08a6ce59}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

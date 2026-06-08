@@ -23,4 +23,3 @@ public:
 		ID3D11PixelShader* replaced_pixel_shader = nullptr);
 
 };
-

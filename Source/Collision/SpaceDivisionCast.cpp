@@ -1,6 +1,7 @@
 #include "SpaceDivisionCast.h"
 #include <limits>
 #include <cmath>
+#include <algorithm>
 
 //===========================
 //空間分割データを構築
@@ -33,7 +34,8 @@ void SpaceDivisionCast::Build(const std::vector<DirectX::XMFLOAT3>& vertices_dat
 
 		vec_n = DirectX::XMVector3Normalize(vec_n);	//法線ベクトルを正規化
 
-		Traiangle& new_triangle = triangles_list.emplace_back();	//新しい三角形データを配列の末尾に追加
+		triangles_list.emplace_back();
+		Traiangle& new_triangle = triangles_list.back();	//新しい三角形データを配列の末尾に追加
 		DirectX::XMStoreFloat3(&new_triangle.position[0], vec_a);	//頂点Aを保存
 		DirectX::XMStoreFloat3(&new_triangle.position[1], vec_b);	//頂点Bを保存
 		DirectX::XMStoreFloat3(&new_triangle.position[2], vec_c);	//頂点Cを保存
@@ -214,36 +216,60 @@ bool SpaceDivisionCast::StaticSpheraCast(const DirectX::XMFLOAT3& start_pos, con
 	float closest_dist = std::numeric_limits<float>::max();				
 	DirectX::XMVECTOR start_vec = DirectX::XMLoadFloat3(&start_pos);
 
-	//エリアと球の交差判定
-	for (const Area& area : areas_list)	
+	//グリッドインデックスによる探索範囲の計算
+	float min_x = end_pos.x - radius;
+	float max_x = end_pos.x + radius;
+	float min_z = end_pos.z - radius;
+	float max_z = end_pos.z + radius;
+
+	int start_x = static_cast<int>(std::floor((min_x - volume_min_pos.x) / CELL_SIZE));
+	int end_x = static_cast<int>(std::floor((max_x - volume_min_pos.x) / CELL_SIZE));
+	int start_z = static_cast<int>(std::floor((min_z - volume_min_pos.z) / CELL_SIZE));
+	int end_z = static_cast<int>(std::floor((max_z - volume_min_pos.z) / CELL_SIZE));
+
+	start_x = std::clamp(start_x, 0, grid_count_x - 1);
+	end_x = std::clamp(end_x, 0, grid_count_x - 1);
+	start_z = std::clamp(start_z, 0, grid_count_z - 1);
+	end_z = std::clamp(end_z, 0, grid_count_z - 1);
+
+	//対象エリアのみの限定ループ処理
+	for (int x = start_x; x <= end_x; ++x)
 	{
-		if (area.bounding_box.Intersects(sphere))
+		for (int z = start_z; z <= end_z; ++z)
 		{
+			int index = x + z * grid_count_x;
+			const Area& area = areas_list[index];
+			if (area.triangle_indices.empty())continue;
 
-			//三角形面と球の交差判定
-			for (int tri_index : area.triangle_indices)
+			//エリアのBoundingBoxと球が交差しているか大まかに判定
+			if (area.bounding_box.Intersects(sphere))
 			{
-				const Traiangle& tri = triangles_list[tri_index];						
-				DirectX::XMVECTOR vertex_a = DirectX::XMLoadFloat3(&tri.position[0]);
-				DirectX::XMVECTOR vertex_b = DirectX::XMLoadFloat3(&tri.position[1]);
-				DirectX::XMVECTOR vertex_c = DirectX::XMLoadFloat3(&tri.position[2]);
-				
-				if (sphere.Intersects(vertex_a, vertex_b, vertex_c))	
+				//エリアに含まれる三角形のインデックスリストでループ
+				for (int tri_index : area.triangle_indices)
 				{
-					DirectX::XMVECTOR vec_center = DirectX::XMLoadFloat3(&end_pos);
-					DirectX::XMVECTOR vec_normal = DirectX::XMLoadFloat3(&tri.normal);
-					DirectX::XMVECTOR vec_c_to_a = DirectX::XMVectorSubtract(vec_center, vertex_a);
-					float plane_dist = DirectX::XMVectorGetX(DirectX::XMVector3Dot(vec_c_to_a, vec_normal));
-					float abs_dist = std::abs(plane_dist);
+					const Traiangle& tri = triangles_list[tri_index];
+					DirectX::XMVECTOR vertex_a = DirectX::XMLoadFloat3(&tri.position[0]);
+					DirectX::XMVECTOR vertex_b = DirectX::XMLoadFloat3(&tri.position[1]);
+					DirectX::XMVECTOR vertex_c = DirectX::XMLoadFloat3(&tri.position[2]);
 
-					if (abs_dist < closest_dist)
+					if (sphere.Intersects(vertex_a, vertex_b, vertex_c))
 					{
-						closest_dist = abs_dist;
-						hit_normal = tri.normal;
-						DirectX::XMVECTOR vec_hit_pos = DirectX::XMVectorSubtract(vec_center, DirectX::XMVectorScale(vec_normal, plane_dist));
-						DirectX::XMStoreFloat3(&hit_position, vec_hit_pos);
-						is_hit = true;				
+						DirectX::XMVECTOR vec_center = DirectX::XMLoadFloat3(&end_pos);
+						DirectX::XMVECTOR vec_normal = DirectX::XMLoadFloat3(&tri.normal);
+						DirectX::XMVECTOR vec_c_to_a = DirectX::XMVectorSubtract(vec_center, vertex_a);
+						float plane_dist = DirectX::XMVectorGetX(DirectX::XMVector3Dot(vec_c_to_a, vec_normal));
+						float abs_dist = std::abs(plane_dist);
+
+						if (abs_dist < closest_dist)
+						{
+							closest_dist = abs_dist;
+							hit_normal = tri.normal;
+							DirectX::XMVECTOR vec_hit_pos = DirectX::XMVectorSubtract(vec_center, DirectX::XMVectorScale(vec_normal, plane_dist));
+							DirectX::XMStoreFloat3(&hit_position, vec_hit_pos);
+							is_hit = true;
+						}
 					}
+
 				}
 			}
 		}
@@ -367,20 +393,27 @@ size_t SpaceDivisionCast::GetAreaCount()
 //エリアを作成
 void SpaceDivisionCast::CreateAreas(const DirectX::XMFLOAT3& volume_min, const DirectX::XMFLOAT3& volume_max)
 {
-	int count_x = static_cast<int>(std::ceil((volume_max.x - volume_min.x) / CELL_SIZE));	
-	int count_z = static_cast<int>(std::ceil((volume_max.z - volume_min.z) / CELL_SIZE));
+	//分割数の計算と保存
+	grid_count_x = static_cast<int>(std::ceil((volume_max.x - volume_min.x) / CELL_SIZE));
+	grid_count_z = static_cast<int>(std::ceil((volume_max.z - volume_min.z) / CELL_SIZE));
 
-	//エリアが0以下の場合は最低1つにする
-	if (count_x <= 0)count_x = 1;
-	if (count_z <= 0)count_z = 1;
+	if (grid_count_x <= 0) grid_count_x = 1;
+	if (grid_count_z <= 0) grid_count_z = 1;
+
+	volume_min_pos = volume_min;
+	volume_max_pos = volume_max;
+
+	areas_list.clear();
+	areas_list.resize(grid_count_x * grid_count_z);
 
 	//X方向のループを開始
-	for (int x = 0; x < count_x; ++x) 
+	for (int x = 0; x < grid_count_x; ++x)
 	{
 		//Z方向のループを開始
-		for (int z = 0; z < count_z; z++)
+		for (int z = 0; z < grid_count_z; z++)
 		{
-			Area new_area;	//新しいエリアを作成
+			int index = x + z * grid_count_x;
+			Area& new_area = areas_list[index];
 
 			float center_x = volume_min.x + (x * CELL_SIZE) + (CELL_SIZE * 0.5f);	
 			float center_y = (volume_max.y + volume_min.y) * 0.5f;					
@@ -406,11 +439,6 @@ void SpaceDivisionCast::CreateAreas(const DirectX::XMFLOAT3& volume_min, const D
 				{
 					new_area.triangle_indices.push_back(i);
 				}
-			}
-			//三角形が1つ以上含まれるエリアのみ保存
-			if (!new_area.triangle_indices.empty())
-			{
-				areas_list.push_back(new_area);	
 			}
 		}
 	}

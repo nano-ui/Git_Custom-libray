@@ -1,4 +1,5 @@
 #include "CollisionManager.h"
+
 #include "../Collision/SpaceDivisionCast.h"
 #include "../Graphics/ShapeRenderer.h"
 
@@ -22,6 +23,7 @@ CollisionManager::CollisionManager()
 //デストラクタ
 CollisionManager::~CollisionManager()
 {
+
 }
 
 //コライダーの登録
@@ -104,20 +106,32 @@ void CollisionManager::Remove(Collider* collider)
 void CollisionManager::ExecuteCollision()
 {
     //実行前チェック
-    if (!is_enable_collision)return;
+    if (!is_enable_collision)
+    {
+        execution_time_ms = 0.0f;
+        return;
+    }
+
+    //計測開始
+    //auto start_time = std::chrono::high_resolution_clock::now();
 
     //共通グリッドの構築
     spatial_grid.clear();
     for (size_t i = 0; i < dynamic_colliders.size(); i++)
     {
-        Collider* collider = dynamic_colliders.at(i);
-        if (!collider || !collider->is_active)continue;
-        AddColluderToGrid(collider);
+        Collider* col = dynamic_colliders.at(i);
+        if (!col || !col->is_active) continue;
+        AddColluderToGrid(col);
     }
 
     //各判定の呼び出し
     CheckDynamicVsSpace();
     CheckSphereVsSphere();
+
+    //計測終了と時間算出
+    //auto end_time = std::chrono::high_resolution_clock::now();
+    //auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    //execution_time_ms = static_cast<float>(elapsed.count()) / 1000.0f;
 }
 
 //ImGuiデバッグ描画
@@ -133,7 +147,20 @@ void CollisionManager::RenderGui()
             constexpr float min_cell = 1.0f;
             constexpr float max_cell = 100.0f;
 
+            if (ImGui::RadioButton("Grid Show", is_draw_grid == true))
+            {
+                is_draw_grid = true;
+            }
+            ImGui::SameLine();
+            if (ImGui::RadioButton("Grid Hide", is_draw_grid == false))
+            {
+                is_draw_grid = false;
+            }
+
             ImGui::SliderFloat("Grid Cell Size", &cell_size, min_cell, max_cell);
+
+            ImGui::Text("Collision Execution Time: %.3f ms", execution_time_ms);
+            ImGui::ProgressBar(execution_time_ms / 16.667f, ImVec2(0.0f, 0.0f));
 
             ImGui::Text("Registered Spheres: %zu", sphere_colliders.size());
             ImGui::Text("Registered Capsules:%zu", capsule_colliders.size());
@@ -286,21 +313,31 @@ void CollisionManager::CheckSphereVsSphere()
     for (auto it = spatial_grid.begin(); it != spatial_grid.end(); it++)
     {
         const GridKey& current_key = it->first;
-        const std::vector<SphereCollider*> cell_spheres = it->second.spheres;
+        const std::vector<SphereCollider*>& cell_spheres = it->second.spheres;
         if (cell_spheres.size() < 2)continue;
+
+        //キャッシュ層の生成
+        std::vector<GridRange> cahed_ranges;
+        cahed_ranges.resize(cell_spheres.size());
+
+        //事前に各スフィアのグリッド範囲を計算してキャッシュに格納
+        for (size_t k = 0; k < cell_spheres.size(); k++)
+        {
+            cahed_ranges[k] = CalculateGridRenge(cell_spheres[k]);
+        }
 
         //セルの内の総当たりループ
         for (size_t i = 0; i < cell_spheres.size(); i++)
         {
             SphereCollider* sphere_a = cell_spheres.at(i);
             if (!sphere_a->is_active)continue;
-            GridRange range_a = CalculateGridRenge(sphere_a);
+            GridRange range_a = cahed_ranges.at(i);
             
             for (size_t j = i + 1; j < cell_spheres.size(); j++)
             {
                 SphereCollider* sphere_b = cell_spheres.at(j);
                 if (!sphere_b->is_active || sphere_a == sphere_b)continue;
-                GridRange range_b = CalculateGridRenge(sphere_b);
+                GridRange range_b = cahed_ranges.at(j);
 
                 //タイブレーク処理
                 GridKey overlap_min_key;

@@ -9,6 +9,7 @@
 #include "../Graphics/ShapeRenderer.h"
 #include "../GameObjects/Characters/Player.h"
 #include "../Collision/CollisionManager.h"
+#include "../Collision/CollisionExperiment.h"
 #include "../Shaders/SkyBox.h"
 #include "SceneManager.h"
 
@@ -18,6 +19,8 @@ SceneGame::SceneGame()
 	object_manager = std::make_unique<ObjectManager>();
 	collision_manager = std::make_unique<CollisionManager>();
 	object_manager->SetCollisionManager(collision_manager.get());
+
+	collision_experiment = std::make_unique<CollisionExperiment>(collision_manager.get());
 
 	Stage* stage = object_manager->Instantiate<Stage>();
 	Player* player = object_manager->Instantiate<Player>();
@@ -37,6 +40,7 @@ SceneGame::SceneGame()
 //デストラクタ
 SceneGame::~SceneGame()
 {
+	collision_experiment.reset();
 }
 
 //初期化
@@ -90,6 +94,10 @@ void SceneGame::Update(float elapsed_time)
 	if (object_manager)
 	{
 		object_manager->Update(elapsed_time);
+	}
+	if (collision_experiment)
+	{
+		collision_experiment->Update(elapsed_time);
 	}
 	if (collision_manager)
 	{
@@ -218,6 +226,11 @@ void SceneGame::Render(float elapsed_time)
 		object_manager->Render(context);
 	}
 
+	if (collision_experiment)
+	{
+		collision_experiment->Render(shape_renderer.get());
+	}
+
 	if (shape_renderer && camera)
 	{
 		//平行光源の方向を可視化する球を描画
@@ -319,9 +332,9 @@ void SceneGame::RenderGui()
 
 		if (ImGui::CollapsingHeader("Shape Generator", ImGuiDockNodeFlags_None))
 		{
-			ImGui::RadioButton(u8"枠線のみ (Wireframe)", &current_debug_draw_mode, 0);
-			ImGui::RadioButton(u8"面のみ (Solid)", &current_debug_draw_mode, 1);
-			ImGui::RadioButton(u8"両方 (Solid & Wireframe)", &current_debug_draw_mode, 2);
+			ImGui::RadioButton("Wireframe", &current_debug_draw_mode, 0);
+			ImGui::RadioButton("Solid", &current_debug_draw_mode, 1);
+			ImGui::RadioButton("Solid & Wireframe", &current_debug_draw_mode, 2);
 			ImGui::ColorEdit4("Shape Color", &current_debug_color.x);
 			ImGui::Spacing();
 			if (camera)
@@ -355,6 +368,12 @@ void SceneGame::RenderGui()
 				}
 			}
 		}
+
+		if (collision_experiment)
+		{
+			collision_experiment->RenderGui();
+		}
+
 		if (collision_manager)
 		{
 			collision_manager->RenderGui();
