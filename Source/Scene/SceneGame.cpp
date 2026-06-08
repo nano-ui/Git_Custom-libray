@@ -16,10 +16,10 @@
 
 //コンストラクタ
 SceneGame::SceneGame()
+	:object_manager(std::make_unique<ObjectManager>())
+	,collision_manager(std::make_unique<CollisionManager>())
 {
-	object_manager = std::make_unique<ObjectManager>();
-	collision_manager = std::make_unique<CollisionManager>();
-	object_manager->SetCollisionManager(collision_manager.get());
+	ObjectManager::Instance().SetCollisionManager(collision_manager.get());
 
 	collision_experiment = std::make_unique<CollisionExperiment>(collision_manager.get());
 
@@ -297,7 +297,7 @@ void SceneGame::RenderGui()
 
 	if (object_manager)
 	{
-		object_manager->RenderGui();
+		//object_manager->RenderGui();
 		object_manager->RenderDebug(shape_renderer.get());
 	}
 

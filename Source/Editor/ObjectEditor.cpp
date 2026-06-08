@@ -69,8 +69,8 @@ void ObjectEditor::DrawLeftPane()
 					ImGui::SetItemDefaultFocus();
 				}
 			}
+			ImGui::ListBoxFooter();
 		}
-		ImGui::ListBoxFooter();
 	}
 
 	//¶¬ƒ{ƒ^ƒ“ˆ—

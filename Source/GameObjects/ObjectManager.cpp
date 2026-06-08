@@ -7,11 +7,17 @@ ObjectManager* ObjectManager::instance_ptr = nullptr;
 //コンストラクタ
 ObjectManager::ObjectManager()
 {
+	instance_ptr = this;
 }
 
 //デストラクタ
 ObjectManager::~ObjectManager()
 {
+	if (instance_ptr == this)
+	{
+		instance_ptr = nullptr;
+	}
+
 	Clear();
 }
 
@@ -26,6 +32,10 @@ void ObjectManager::Register(std::unique_ptr<GameObject> object)
 	{
 		for (Collider* col : object->GetColliders())
 		{
+			if (!col)
+			{
+				continue;
+			}
 			collision_manager->Register(col);
 		}
 	}

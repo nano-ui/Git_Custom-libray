@@ -10,6 +10,14 @@ void ObjectFactory::RegisterClass(const std::string& class_name, CreateFunc func
 GameObject* ObjectFactory::CreateAndRegister(const std::string& class_name)
 {
 	auto& registry = GetRegistry();
+
+	ObjectManager* manager_ptr = &ObjectManager::Instance();
+
+	if (manager_ptr == nullptr)
+	{
+		return nullptr;
+	}
+
 	if (registry.find(class_name) != registry.end())
 	{
 		std::unique_ptr<GameObject> new_object = registry[class_name]();
