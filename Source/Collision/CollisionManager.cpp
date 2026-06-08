@@ -6,6 +6,7 @@
 #include <imgui.h>
 #include <cmath>
 #include <algorithm>
+#include <chrono>
 
 #undef min
 #undef max
@@ -113,7 +114,7 @@ void CollisionManager::ExecuteCollision()
     }
 
     //計測開始
-    //auto start_time = std::chrono::high_resolution_clock::now();
+    auto start_time = std::chrono::high_resolution_clock::now();
 
     //共通グリッドの構築
     spatial_grid.clear();
@@ -129,9 +130,9 @@ void CollisionManager::ExecuteCollision()
     CheckSphereVsSphere();
 
     //計測終了と時間算出
-    //auto end_time = std::chrono::high_resolution_clock::now();
-    //auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
-    //execution_time_ms = static_cast<float>(elapsed.count()) / 1000.0f;
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    execution_time_ms = static_cast<float>(elapsed.count()) / 1000.0f;
 }
 
 //ImGuiデバッグ描画

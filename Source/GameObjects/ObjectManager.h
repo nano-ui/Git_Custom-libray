@@ -3,10 +3,12 @@
 #include <vector>
 #include <memory>
 
+#include "../Collision/CollisionManager.h"
+
 class ShapeRenderer;
 class GameObject;
-class CollisionManager;
 struct ID3D11DeviceContext;
+struct Collider;
 
 class ObjectManager
 {
@@ -34,8 +36,11 @@ public:
 		//ƒRƒ‰ƒCƒ_[‚ÌŽ©“®“o˜^ˆ—
 		if (collision_manager)
 		{
-			for (Collider* col : new_object->GetColliders())
+			auto colliders = new_object->GetColliders();
+			for (size_t i = 0; i < colliders.size(); i++) 
 			{
+				Collider* col = colliders[i];
+				if (!col) continue;
 				collision_manager->Register(col);
 			}
 		}

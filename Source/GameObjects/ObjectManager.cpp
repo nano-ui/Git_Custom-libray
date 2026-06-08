@@ -1,6 +1,5 @@
 #include "ObjectManager.h"
 #include "GameObject.h"
-#include "../Collision/CollisionManager.h"
 
 //Ã“I•Ï”‚ÌÀ‘Ì’è‹`
 ObjectManager* ObjectManager::instance_ptr = nullptr;
