@@ -7,7 +7,7 @@
 //コンストラクタ
 CollisionExperiment::CollisionExperiment(CollisionManager* collision_manager)
 	:manager_ptr(collision_manager)
-	,target_count(500)
+	,target_count(100)
 	,current_count(0)
 {
 	AdjustSphereCount();
