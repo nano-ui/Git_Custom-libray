@@ -117,6 +117,9 @@ void CollisionManager::ExecuteCollision()
     auto start_time = std::chrono::high_resolution_clock::now();
 
     //共通グリッドの構築
+    grid_heads.clear();
+    grid_elements.clear();
+    grid_elements.reserve(dynamic_colliders.size() * 4);
     spatial_grid.clear();
     for (size_t i = 0; i < dynamic_colliders.size(); i++)
     {
@@ -311,67 +314,64 @@ void CollisionManager::CheckSphereVsSphere()
     if (sphere_colliders.size() < 2)return;
 
     //セルベースの詳細判定
-    for (auto it = spatial_grid.begin(); it != spatial_grid.end(); it++)
+    for (auto it = grid_heads.begin(); it != grid_heads.end(); it++)
     {
         const GridKey& current_key = it->first;
-        const std::vector<SphereCollider*>& cell_spheres = it->second.spheres;
-        if (cell_spheres.size() < 2)continue;
+        int head_index = it->second;
 
-        //キャッシュ層の生成
-        std::vector<GridRange> cahed_ranges;
-        cahed_ranges.resize(cell_spheres.size());
+        if (head_index == -1 || grid_elements[head_index].next_index == -1)continue;
 
-        //事前に各スフィアのグリッド範囲を計算してキャッシュに格納
-        for (size_t k = 0; k < cell_spheres.size(); k++)
+        int idx_a = head_index;
+        while (idx_a != -1)
         {
-            cahed_ranges[k] = CalculateGridRenge(cell_spheres[k]);
-        }
-
-        //セルの内の総当たりループ
-        for (size_t i = 0; i < cell_spheres.size(); i++)
-        {
-            SphereCollider* sphere_a = cell_spheres.at(i);
-            if (!sphere_a->is_active)continue;
-            GridRange range_a = cahed_ranges.at(i);
-            
-            for (size_t j = i + 1; j < cell_spheres.size(); j++)
+            SphereCollider* sphere_a = grid_elements[idx_a].sphere;
+            int idx_b = grid_elements[idx_a].next_index;
+            if (sphere_a->is_active)
             {
-                SphereCollider* sphere_b = cell_spheres.at(j);
-                if (!sphere_b->is_active || sphere_a == sphere_b)continue;
-                GridRange range_b = cahed_ranges.at(j);
-
-                //タイブレーク処理
-                GridKey overlap_min_key;
-                overlap_min_key.x = std::max(range_a.min_key.x, range_b.min_key.x);
-                overlap_min_key.y = std::max(range_a.min_key.y, range_b.min_key.y);
-                overlap_min_key.z = std::max(range_a.min_key.z, range_b.min_key.z);
-
-                if (!(current_key == overlap_min_key))continue;
-
-                //判定実行と相互通知
-                CollisionResult result_a;
-                bool is_hit = collision_logic->IsSphereSphereCollision(sphere_a, sphere_b, result_a);
-
-                if (is_hit)
+                GridRange range_a = CalculateGridRenge(sphere_a);
+                while (idx_b != -1)
                 {
-                    if (sphere_a->listener)
+                    SphereCollider* sphere_b = grid_elements[idx_b].sphere;
+                    if (sphere_b->is_active && sphere_a != sphere_b)
                     {
-                        result_a.hit_attribute = sphere_b->attribute;
-                        sphere_a->listener->OnCollisionHit(result_a);
-                    }
-                    if (sphere_b->listener)
-                    {
-                        CollisionResult result_b = result_a;
-                        result_b.hit_normal.x = -result_a.hit_normal.x;
-                        result_b.hit_normal.y = -result_a.hit_normal.y;
-                        result_b.hit_normal.z = -result_a.hit_normal.z;
-                        result_b.penetration_vector.x = -result_a.penetration_vector.x;
-                        result_b.penetration_vector.y = -result_a.penetration_vector.y;
-                        result_b.penetration_vector.z = -result_a.penetration_vector.z;
-                        result_b.hit_attribute = sphere_a->attribute;
-                        sphere_b->listener->OnCollisionHit(result_b);
+                        GridRange range_b = CalculateGridRenge(sphere_b);
+
+                        //タイブレーク処理
+                        GridKey overlap_min_key;
+                        overlap_min_key.x = std::max(range_a.min_key.x, range_b.min_key.x);
+                        overlap_min_key.y = std::max(range_a.min_key.y, range_b.min_key.y);
+                        overlap_min_key.z = std::max(range_a.min_key.z, range_b.min_key.z);
+
+                        if (current_key == overlap_min_key)
+                        {
+                            CollisionResult result_a;
+                            bool is_hit = collision_logic->IsSphereSphereCollision(sphere_a, sphere_b, result_a);
+
+                            if (is_hit)
+                            {
+                                if (sphere_a->listener)
+                                {
+                                    result_a.hit_attribute = sphere_b->attribute;
+                                    sphere_a->listener->OnCollisionHit(result_a);
+                                }
+                                if (sphere_b->listener)
+                                {
+                                    CollisionResult result_b = result_a;
+                                    result_b.hit_normal.x = -result_a.hit_normal.x;
+                                    result_b.hit_normal.y = -result_a.hit_normal.y;
+                                    result_b.hit_normal.z = -result_a.hit_normal.z;
+                                    result_b.penetration_vector.x = -result_a.penetration_vector.x;
+                                    result_b.penetration_vector.y = -result_a.penetration_vector.y;
+                                    result_b.penetration_vector.z = -result_a.penetration_vector.z;
+                                    result_b.hit_attribute = sphere_a->attribute;
+                                    sphere_b->listener->OnCollisionHit(result_b);
+                                }
+                            }
+                        }
+                        idx_b = grid_elements[idx_b].next_index;
                     }
                 }
+                idx_a = grid_elements[idx_a].next_index;
             }
         }
     }
@@ -392,18 +392,14 @@ void CollisionManager::AddColluderToGrid(Collider* collider)
             {
                 GridKey key = { x,y,z };
 
-                switch (collider->type)
-                {
-                case ColliderType::Sphere:
-                    spatial_grid[key].spheres.push_back(static_cast<SphereCollider*>(collider));
-                    break;
-                case ColliderType::Capsule:
-                    spatial_grid[key].capsules.push_back(static_cast<CapsuleCollider*>(collider));
-                    break;
-
-                default:
-                    break;
-                }
+                //チェインマップ登録
+                GridElement elem;
+                elem.sphere = static_cast<SphereCollider*>(collider);
+                auto it = grid_heads.find(key);
+                elem.next_index = (it != grid_heads.end()) ? it->second : -1;
+                int new_elem_index = static_cast<int>(grid_elements.size());
+                grid_elements.push_back(elem);
+                grid_heads[key] = new_elem_index;
             }
         }
     }

@@ -94,12 +94,21 @@ private:
 	GridRange CalculateGridRenge(Collider* collider)const;
 
 private:
+	struct GridElement
+	{
+		SphereCollider* sphere;	//登録されたスフィアへのポインタ
+		int next_index;			//同じセルに属する次の要素へのリンクインデックス
+	};
+
+private:
 	std::unique_ptr<CollisionLogic> collision_logic;					//判定ロジッククラス
 	std::vector<SphereCollider*> sphere_colliders;						//スフィアコライダーの登録リスト
 	std::vector<CapsuleCollider*> capsule_colliders;					//カプセルコライダーの登録リスト
 	std::vector<SpaceDivisionCollider*> space_colliders;				//空間分割コライダー登録リスト
 	std::vector<Collider*> dynamic_colliders;							//動的コライダーの登録リスト
 	std::unordered_map<GridKey, CellData, GridKeyHasher > spatial_grid;	//グリッド分割のハッシュマップ
+	std::vector<GridElement> grid_elements;								//全セルの要素を1つにまとめた配列
+	std::unordered_map<GridKey, int, GridKeyHasher> grid_heads;			//各セルの先頭要素へのインデックスマップ
 	float cell_size;			//グリッド1セルの一辺の長さ
 	bool is_enable_collision;	//当たり判定システムの有効フラグ
 	bool is_draw_grid;			//グリッド描画有効フラグ
