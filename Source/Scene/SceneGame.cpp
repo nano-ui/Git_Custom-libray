@@ -10,6 +10,7 @@
 #include "../GameObjects/Characters/Player.h"
 #include "../Collision/CollisionManager.h"
 #include "../Collision/CollisionExperiment.h"
+#include "../Editor/ObjectEditor.h"
 #include "../Shaders/SkyBox.h"
 #include "SceneManager.h"
 
@@ -55,6 +56,9 @@ void SceneGame::Initialize()
 
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	shape_renderer = std::make_unique<ShapeRenderer>(device);
+
+	object_editor = std::make_unique<ObjectEditor>();
+	object_editor->Initialize();
 }
 
 //I—¹‰»
@@ -77,6 +81,7 @@ void SceneGame::Finalize()
 	{
 		light.reset();
 	}
+	object_editor.reset();
 }
 
 //XVˆ—
@@ -275,6 +280,10 @@ void SceneGame::Render(float elapsed_time)
 
 #ifdef USE_IMGUI
 	RenderGui();
+	if (object_editor)
+	{
+		object_editor->RenderUi();
+	}
 
 #endif // USE_IMGUI
 }

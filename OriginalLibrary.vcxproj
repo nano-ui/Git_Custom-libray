@@ -230,6 +230,7 @@
     <ClCompile Include="Source\Collision\CollisionSphere.cpp" />
     <ClCompile Include="Source\Collision\SpaceDivisionCast.cpp" />
     <ClCompile Include="Source\Common\main.cpp" />
+    <ClCompile Include="Source\Editor\ObjectEditor.cpp" />
     <ClCompile Include="Source\FbxModel\FbxAnimation.cpp" />
     <ClCompile Include="Source\FbxModel\FbxBone.cpp" />
     <ClCompile Include="Source\FbxModel\FbxLoader.cpp" />
@@ -302,6 +303,7 @@
     <ClInclude Include="Source\Common\high_resolution_timer.h" />
     <ClInclude Include="Source\Common\misc.h" />
     <ClInclude Include="Source\Common\ModelData.h" />
+    <ClInclude Include="Source\Editor\ObjectEditor.h" />
     <ClInclude Include="Source\FbxModel\FbxAnimation.h" />
     <ClInclude Include="Source\FbxModel\FbxBone.h" />
     <ClInclude Include="Source\FbxModel\FbxLoader.h" />

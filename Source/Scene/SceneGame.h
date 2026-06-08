@@ -11,6 +11,7 @@ class ShapeRenderer;
 class CollisionManager;
 class SkyBox;
 class CollisionExperiment;
+class ObjectEditor;
 
 class SceneGame : public Scene
 {
@@ -67,5 +68,6 @@ private:
 	float k_shadow_area_size = 50.0f;
 
 	std::unique_ptr<CollisionExperiment> collision_experiment;	//当たり判定実験クラス
+	std::unique_ptr<ObjectEditor> object_editor;				//オブジェクトエディタクラス
 };
 

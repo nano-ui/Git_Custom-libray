@@ -252,6 +252,9 @@
     <ClCompile Include="Source\Collision\CollisionExperiment.cpp">
       <Filter>Source\Collision\CollisionExperiment</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\ObjectEditor.cpp">
+      <Filter>Source\Editor\ObjectEditor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui.h">
@@ -472,6 +475,9 @@
     </ClInclude>
     <ClInclude Include="Source\Collision\CollisionExperiment.h">
       <Filter>Source\Collision\CollisionExperiment</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\ObjectEditor.h">
+      <Filter>Source\Editor\ObjectEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -755,6 +761,12 @@
     </Filter>
     <Filter Include="Source\Collision\CollisionExperiment">
       <UniqueIdentifier>{5a0c74bd-5863-46dd-a4a1-d6fe08a6ce59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor">
+      <UniqueIdentifier>{999d7ee6-9be9-4b17-8bb9-88c683e591c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\ObjectEditor">
+      <UniqueIdentifier>{347ff110-4e59-4995-b980-31122f2c661c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
