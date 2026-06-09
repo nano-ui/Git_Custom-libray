@@ -255,6 +255,18 @@
     <ClCompile Include="Source\Editor\ObjectEditor.cpp">
       <Filter>Source\Editor\ObjectEditor</Filter>
     </ClCompile>
+    <ClCompile Include="External\ImGuizmo\ImGuizmo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\ImGuizmo\ImCurveEdit.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\ImGuizmo\ImGradient.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\ImGuizmo\ImSequencer.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui.h">
@@ -478,6 +490,18 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\ObjectEditor.h">
       <Filter>Source\Editor\ObjectEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="External\ImGuizmo\ImGuizmo.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\ImGuizmo\ImCurveEdit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\ImGuizmo\ImGradient.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\ImGuizmo\ImSequencer.h">
+      <Filter>imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

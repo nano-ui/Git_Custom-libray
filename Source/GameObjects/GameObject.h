@@ -48,12 +48,25 @@ public:
 	 //座標を設定
 	 void SetPosition(DirectX::XMFLOAT3 pos) { position = pos; }
 
+	 //回転取得
+	 DirectX::XMFLOAT4 GetRotation()const { return rotation; }
+
+	 //回転設定
+	 void SetRotation(DirectX::XMFLOAT4 rot) { rotation = rot; }
+
+	 //スケール取得
+	 DirectX::XMFLOAT3 GetScale()const { return scale; }
+
+	 //スケール設定
+	 void SetScale(DirectX::XMFLOAT3 scl) { scale = scl; }
+
 	 //コライダーを取得
 	 const std::vector<Collider*>GetColliders()const { return collideres; }
 
-	 //クラス名を取得
+	 //クラス名設定
 	 void SetClassName(const std::string& name) { class_name = name; }
 
+	 //クラス名取得
 	 const std::string& GetClassName()const { return class_name; }
 
 protected:

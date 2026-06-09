@@ -7,6 +7,7 @@
 #include "../Input/Input.h"
 
 #include <imgui.h>
+#include <ImGuizmo.h>
 #include <string>
 #include <unordered_map>
 
@@ -21,6 +22,7 @@ ObjectEditor::ObjectEditor()
 {
 	selected_class_index = 0;
 	current_selected_object = nullptr;
+	current_gizmo_operation = static_cast<int>(ImGuizmo::TRANSLATE);
 }
 
 //デストラクタ
@@ -51,7 +53,7 @@ void ObjectEditor::Update(Camera* camera, CollisionManager* collision_manager)
 	constexpr int left_click_button = 0;	//左クリックインデックス
 
 	//左クリックが押された瞬間のみレイキャスト処理を実行
-	if (ImGui::IsMouseClicked(left_click_button))
+	if (Input::Instance().IsKeyTrigger(VK_LBUTTON))
 	{
 		//画面座標からNDCへの変換
 		const float screen_width = io.DisplaySize.x;	//画面横幅
@@ -126,6 +128,8 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 	ImGui::Begin("Inspector");
 	DrawRightPane();
 	ImGui::End();
+
+	DrawGizmo(camera);
 }
 
 //オブジェクト生成UI描画
@@ -250,5 +254,84 @@ void ObjectEditor::DrawRightPane()
 	else
 	{
 		ImGui::Text("Please select or create an object from the left pane.");
+	}
+}
+
+//ギズモ描画
+void ObjectEditor::DrawGizmo(Camera* camera)
+{
+	//実行前チェック
+	if (current_selected_object == nullptr) return;
+	if (!current_selected_object->IsActive())return;
+
+	//キーボード入力による操作モードの切り替え
+	if (Input::Instance().IsKeyTrigger('W')) current_gizmo_operation = ImGuizmo::TRANSLATE;
+	if (Input::Instance().IsKeyTrigger('E')) current_gizmo_operation = ImGuizmo::ROTATE;
+	if (Input::Instance().IsKeyTrigger('R')) current_gizmo_operation = ImGuizmo::SCALE;
+
+	//ギズモの描画領域と対象レイヤーの設定
+	ImGuiIO& io = ImGui::GetIO();
+	const float screen_width = io.DisplaySize.x;	//画面の横幅
+	const float screen_height = io.DisplaySize.y;	//画面の縦幅
+
+	ImGuizmo::SetDrawlist(ImGui::GetBackgroundDrawList());
+	ImGuizmo::SetRect(0.0f, 0.0f, screen_width, screen_height);
+
+	//行列データの取得とDirectXMathによる合成
+	DirectX::XMFLOAT4X4 view_matrix = camera->GetView();		//カメラのビュー行列
+	DirectX::XMFLOAT4X4 proj_matrix = camera->GetProjection();	//カメラのプロジェクション行列
+
+	DirectX::XMFLOAT3 pos = current_selected_object->GetPosition();	//座標
+	DirectX::XMFLOAT4 rot = current_selected_object->GetRotation();	//角度
+	DirectX::XMFLOAT3 scale = current_selected_object->GetScale();	//大きさ
+
+	DirectX::XMVECTOR v_pos = DirectX::XMLoadFloat3(&pos);		//座標ベクトル
+	DirectX::XMVECTOR v_rot = DirectX::XMLoadFloat4(&rot);		//クォータニオンベクトル
+	DirectX::XMVECTOR v_scale = DirectX::XMLoadFloat3(&scale);	//スケールベクトル
+
+	DirectX::XMMATRIX mat_scale = DirectX::XMMatrixScalingFromVector(v_scale);		//スケール行列
+	DirectX::XMMATRIX mat_rot = DirectX::XMMatrixRotationQuaternion(v_rot);			//回転行列
+	DirectX::XMMATRIX mat_trans = DirectX::XMMatrixTranslationFromVector(v_pos);	//移動行列
+
+	DirectX::XMMATRIX mat_world = mat_scale * mat_rot * mat_trans;	//ワールド変換行列
+
+	constexpr size_t matrix_element_count = 16;	//4x4行列の要素数
+	float object_matrix[matrix_element_count];	//ImGuizmoに渡すためのfloat配列
+
+	DirectX::XMStoreFloat4x4(reinterpret_cast<DirectX::XMFLOAT4X4*>(object_matrix), mat_world);
+
+	//ギズモの表示と操作判定
+	ImGuizmo::Manipulate(
+		&view_matrix.m[0][0],
+		&proj_matrix.m[0][0],
+		static_cast<ImGuizmo::OPERATION>(current_gizmo_operation),
+		ImGuizmo::LOCAL,
+		object_matrix
+	);
+
+	//操作結果の行列分解とクォータニオンの再適用
+
+	if (ImGuizmo::IsUsing())
+	{
+		DirectX::XMMATRIX manipulated_matrix = DirectX::XMLoadFloat4x4(reinterpret_cast<const DirectX::XMFLOAT4X4*>(object_matrix));
+
+		DirectX::XMVECTOR out_scale;	//スケール格納ベクトル
+		DirectX::XMVECTOR out_rot_quat;	//クォータニオン格納ベクトル
+		DirectX::XMVECTOR out_trans;	//座標格納ベクトル
+
+		if (DirectX::XMMatrixDecompose(&out_scale, &out_rot_quat, &out_trans, manipulated_matrix))
+		{
+			DirectX::XMFLOAT3 new_pos;		//新しい座標
+			DirectX::XMFLOAT4 new_rot;		//新しいクォータニオン
+			DirectX::XMFLOAT3 new_scale;	//新しいスケール
+
+			DirectX::XMStoreFloat3(&new_pos, out_trans);
+			DirectX::XMStoreFloat4(&new_rot, out_rot_quat);
+			DirectX::XMStoreFloat3(&new_scale, out_scale);
+
+			current_selected_object->SetPosition(new_pos);
+			current_selected_object->SetRotation(new_rot);
+			current_selected_object->SetScale(new_scale);
+		}
 	}
 }

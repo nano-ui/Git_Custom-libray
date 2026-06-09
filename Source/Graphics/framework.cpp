@@ -6,6 +6,7 @@
 
 #include <sstream>
 #include <memory>
+#include <ImGuizmo.h>
 
 namespace
 {
@@ -118,6 +119,7 @@ int framework::run()
 			ImGui_ImplDX11_NewFrame();
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
+			ImGuizmo::BeginFrame();
 #endif // USE_IMGUI
 
 			tictoc.tick();

@@ -33,11 +33,15 @@ private:
 	//オブジェクトパラメータ編集UI描画
 	void DrawRightPane();
 
+	//ギズモ描画
+	void DrawGizmo(Camera* camera);
+
 private:
 	int selected_class_index;				//選択されているクラスのインデックス
 	GameObject* current_selected_object;	//選択されているゲームオブジェクト
-	std::vector<std::string> cached_class_names;					//クラス名リストを毎フレーム取得しないためのキャッシュ
-	std::unordered_map<std::string, int> frame_class_counters;		//毎フレームのメモリ確保を避けるための連番カウント用マップ
-	bool is_placement_mode = false;									//配置モード切り替えフラグ
+	std::vector<std::string> cached_class_names;						//クラス名リストを毎フレーム取得しないためのキャッシュ
+	std::unordered_map<std::string, int> frame_class_counters;			//毎フレームのメモリ確保を避けるための連番カウント用マップ
+	bool is_placement_mode = false;										//配置モード切り替えフラグ
+	int current_gizmo_operation;	//ギズモの現在の操作モード
 };
 

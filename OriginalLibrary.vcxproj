@@ -221,6 +221,10 @@
     <ClCompile Include="External\imgui-docking\imgui_impl_dx11.cpp" />
     <ClCompile Include="External\imgui-docking\imgui_impl_win32.cpp" />
     <ClCompile Include="External\imgui-docking\imgui_widgets.cpp" />
+    <ClCompile Include="External\ImGuizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="External\ImGuizmo\ImGradient.cpp" />
+    <ClCompile Include="External\ImGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="External\ImGuizmo\ImSequencer.cpp" />
     <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Camera\FreeCamera.cpp" />
     <ClCompile Include="Source\Camera\StandCamera.cpp" />
@@ -291,6 +295,10 @@
     <ClInclude Include="External\imgui-docking\imstb_rectpack.h" />
     <ClInclude Include="External\imgui-docking\imstb_textedit.h" />
     <ClInclude Include="External\imgui-docking\imstb_truetype.h" />
+    <ClInclude Include="External\ImGuizmo\ImCurveEdit.h" />
+    <ClInclude Include="External\ImGuizmo\ImGradient.h" />
+    <ClInclude Include="External\ImGuizmo\ImGuizmo.h" />
+    <ClInclude Include="External\ImGuizmo\ImSequencer.h" />
     <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Camera\FreeCamera.h" />
     <ClInclude Include="Source\Camera\StandCamera.h" />
