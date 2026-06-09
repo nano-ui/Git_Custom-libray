@@ -71,6 +71,9 @@ public:
 	//当たり判定マネージャーの連携
 	void SetCollisionManager(CollisionManager* manager) { collision_manager = manager; }
 
+	//全ゲームオブジェクトのリストへの参照を取得
+	const std::vector<std::unique_ptr<GameObject>>& GetGameObjects()const { return game_objects; }
+
 private:
 	//無効になったオブジェクトの削除処理
 	void RemoveInactiveObject();

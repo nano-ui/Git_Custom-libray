@@ -21,6 +21,7 @@ GameObject* ObjectFactory::CreateAndRegister(const std::string& class_name)
 	if (registry.find(class_name) != registry.end())
 	{
 		std::unique_ptr<GameObject> new_object = registry[class_name]();
+		new_object->SetClassName(class_name);
 		GameObject* raw_pointer = new_object.get();
 		ObjectManager::Instance().Register(std::move(new_object));
 		return raw_pointer;

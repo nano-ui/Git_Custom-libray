@@ -93,6 +93,9 @@ private:
 	//座標からグリッド範囲を計算
 	GridRange CalculateGridRenge(Collider* collider)const;
 
+	//現在のコライダー密度から最適なセルサイズを計算して適用
+	void OptimizeCellSize();
+
 private:
 	struct GridElement
 	{
@@ -113,4 +116,7 @@ private:
 	bool is_enable_collision;	//当たり判定システムの有効フラグ
 	bool is_draw_grid;			//グリッド描画有効フラグ
 	float execution_time_ms = 0.0f;	//衝突判定全体の処理負荷時間
+	bool is_auto_optimize_grid;		//オートリサイズ機能を有効にするかどうかのフラグ	
+	float grid_margin_multiplier;	//セルサイズを決定する際の、平均直径に対する余裕を持たせるための倍率
+	size_t previous_collider_count = 0;	//前フレームのコライダー総数を記憶
 };

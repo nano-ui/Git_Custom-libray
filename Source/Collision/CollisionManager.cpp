@@ -16,7 +16,10 @@ CollisionManager::CollisionManager()
 {
 	is_enable_collision = true;
     is_draw_grid = false;
-	constexpr float default_cell_size = 10.0f;
+    is_auto_optimize_grid = true;
+    constexpr float default_margin = 1.5f;
+    grid_margin_multiplier = default_margin;
+	constexpr float default_cell_size = 5.0f;
 	cell_size = default_cell_size;
 	collision_logic = std::make_unique<CollisionLogic>();
 }
@@ -116,6 +119,8 @@ void CollisionManager::ExecuteCollision()
     //計測開始
     auto start_time = std::chrono::high_resolution_clock::now();
 
+    OptimizeCellSize();
+
     //共通グリッドの構築
     grid_heads.clear();
     grid_elements.clear();
@@ -147,6 +152,7 @@ void CollisionManager::RenderGui()
         {
             ImGui::Checkbox("Enable Global Collision", &is_enable_collision);
             ImGui::Checkbox("Draw Spatial Grid", &is_draw_grid);
+            ImGui::Checkbox("Auto Optimize Grid Size", &is_auto_optimize_grid);
 
             constexpr float min_cell = 1.0f;
             constexpr float max_cell = 100.0f;
@@ -161,7 +167,18 @@ void CollisionManager::RenderGui()
                 is_draw_grid = false;
             }
 
-            ImGui::SliderFloat("Grid Cell Size", &cell_size, min_cell, max_cell);
+            if (is_auto_optimize_grid)
+            {
+                ImGui::SliderFloat("Optimization Multiplier", &grid_margin_multiplier, 1.0f, 5.0f);
+                ImGui::Text("Current Optimal Cell Size: %.3f", cell_size);
+            }
+            else
+            {
+                // 手動モードの場合は通常のスライダーでサイズを変更できるようにします
+                constexpr float min_cell = 1.0f;
+                constexpr float max_cell = 100.0f;
+                ImGui::SliderFloat("Grid Cell Size", &cell_size, min_cell, max_cell);
+            }
 
             ImGui::Text("Collision Execution Time: %.3f ms", execution_time_ms);
             ImGui::ProgressBar(execution_time_ms / 16.667f, ImVec2(0.0f, 0.0f));
@@ -170,7 +187,7 @@ void CollisionManager::RenderGui()
             ImGui::Text("Registered Capsules:%zu", capsule_colliders.size());
             ImGui::Text("Registered Spaces: %zu", space_colliders.size());
 
-            ImGui::Text("Active Grid Cells: %zu", spatial_grid.size());
+            ImGui::Text("Active Grid Cells: %zu", grid_heads.size());
         }
     }
 #endif // USE_IMGUI
@@ -186,7 +203,7 @@ void CollisionManager::RenderDebug(ShapeRenderer* renderer)
     DirectX::XMFLOAT3 size = { cell_size,cell_size,cell_size };
 
     //ハッシュマップに登録されている全てのアクティブなセルをループ
-    for (auto it = spatial_grid.begin(); it != spatial_grid.end(); it++)
+    for (auto it = grid_heads.begin(); it != grid_heads.end(); it++)
     {
         const GridKey& key = it->first;
         DirectX::XMFLOAT3 center = {
@@ -457,4 +474,55 @@ GridRange CollisionManager::CalculateGridRenge(Collider* collider) const
     range.max_key.z = static_cast<int>(std::floor(max_pos.z / safe_cell));
 
     return range;
+}
+
+//現在のコライダー密度から最適なセルサイズを計算して適用
+void CollisionManager::OptimizeCellSize()
+{
+    if (!is_auto_optimize_grid || dynamic_colliders.empty())return;
+
+    const size_t current_collider_count = dynamic_colliders.size();
+    //if (current_collider_count == previous_collider_count)return;
+
+    float total_diameter = 0.0f;
+    size_t active_count = 0;
+
+    //平均サイズの算出ループ
+    for (size_t i = 0; i < dynamic_colliders.size(); i++)
+    {
+        Collider* col = dynamic_colliders[i];
+        if (!col || !col->is_active)continue;
+        switch (col->type)
+        {
+        case ColliderType::Sphere:
+        {
+            SphereCollider* sphere = static_cast<SphereCollider*>(col);
+            total_diameter += sphere->radius * 2.0f;
+            break;
+        }
+        case ColliderType::Capsule:
+        {
+            CapsuleCollider* capsule = static_cast<CapsuleCollider*>(col);
+            DirectX::XMVECTOR v_start = DirectX::XMLoadFloat3(&capsule->start_center);
+            DirectX::XMVECTOR v_end = DirectX::XMLoadFloat3(&capsule->end_center);
+            DirectX::XMVECTOR v_length = DirectX::XMVector3Length(DirectX::XMVectorSubtract(v_end, v_start));
+            total_diameter += DirectX::XMVectorGetX(v_length) + (capsule->radius * 2.0f);
+            break;
+        }
+        default:
+            break;
+        }
+        active_count++;
+    }
+
+    //最終セルサイズの適用
+    if (active_count > 0)
+    {
+        float average_diameter = total_diameter / static_cast<float>(active_count);
+        float optimal_size = average_diameter * grid_margin_multiplier;
+        constexpr float min_limit = 1.0f;
+        constexpr float max_limit = 100.0f;
+        cell_size = std::clamp(optimal_size, min_limit, max_limit);
+    }
+    previous_collider_count = dynamic_colliders.size();
 }

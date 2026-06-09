@@ -48,6 +48,11 @@ public:
 	 //コライダーを取得
 	 const std::vector<Collider*>GetColliders()const { return collideres; }
 
+	 //クラス名を取得
+	 void SetClassName(const std::string& name) { class_name = name; }
+
+	 const std::string& GetClassName()const { return class_name; }
+
 protected:
 	//コライダーを登録
 	void AddCollider(Collider* collider) { collideres.push_back(collider); }
@@ -59,6 +64,6 @@ protected:
 	DirectX::XMFLOAT4 color;	//色
 	bool is_active;				//生存フラグ
 	std::vector<Collider*> collideres;	//コライダーのリスト
-
+	std::string class_name;				//クラス名
 };
 

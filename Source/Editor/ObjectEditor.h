@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 class GameObject;
 
@@ -30,5 +31,7 @@ private:
 private:
 	int selected_class_index;				//選択されているクラスのインデックス
 	GameObject* current_selected_object;	//選択されているゲームオブジェクト
+	std::vector<std::string> cached_class_names;					//クラス名リストを毎フレーム取得しないためのキャッシュ
+	std::unordered_map<std::string, int> frame_class_counters;		//毎フレームのメモリ確保を避けるための連番カウント用マップ
 };
 

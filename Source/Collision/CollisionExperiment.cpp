@@ -7,7 +7,7 @@
 //コンストラクタ
 CollisionExperiment::CollisionExperiment(CollisionManager* collision_manager)
 	:manager_ptr(collision_manager)
-	,target_count(100)
+	,target_count(0)
 	,current_count(0)
 {
 	AdjustSphereCount();
@@ -61,12 +61,15 @@ void CollisionExperiment::Render(ShapeRenderer* renderer)
 //ImGuiデバッグ描画
 void CollisionExperiment::RenderGui()
 {
-	constexpr int max_experiment_spheres = 10000;
-	ImGui::DragInt("Target Count", &target_count, 1.0f, 0, max_experiment_spheres);
+	if (ImGui::CollapsingHeader("CollisionEnperiment", ImGuiDockNodeFlags_None))
+	{
+		constexpr int max_experiment_spheres = 10000;
+		ImGui::DragInt("Target Count", &target_count, 1.0f, 0, max_experiment_spheres);
 
-	ImGui::Text("Current Active (Physics) Spheres:%d", current_count);
-	ImGui::Text("Rendered Spheres Limit: 500");
-	ImGui::Text("Application FPS: %.1f", ImGui::GetIO().Framerate);
+		ImGui::Text("Current Active (Physics) Spheres:%d", current_count);
+		ImGui::Text("Rendered Spheres Limit: 500");
+		ImGui::Text("Application FPS: %.1f", ImGui::GetIO().Framerate);
+	}
 }
 
 //球の総数を目標数に調整

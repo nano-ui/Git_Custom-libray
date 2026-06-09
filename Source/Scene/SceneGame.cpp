@@ -280,10 +280,6 @@ void SceneGame::Render(float elapsed_time)
 
 #ifdef USE_IMGUI
 	RenderGui();
-	if (object_editor)
-	{
-		object_editor->RenderUi();
-	}
 
 #endif // USE_IMGUI
 }
@@ -388,6 +384,12 @@ void SceneGame::RenderGui()
 			collision_manager->RenderGui();
 			collision_manager->RenderDebug(shape_renderer.get());
 		}
+
+		if (object_editor)
+		{
+			object_editor->RenderUi();
+		}
+
 	}
 	ImGui::End();
 #endif // USE_IMGUI

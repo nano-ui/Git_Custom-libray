@@ -82,7 +82,7 @@ int framework::run()
 	imgui_scope.reset(ImGui::CreateContext());
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	if (!ImGui_ImplWin32_Init(hwnd))
 	{
 		return 0;
@@ -131,11 +131,11 @@ int framework::run()
 #ifdef USE_IMGUI
 			ImGui::Render();
 			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-			if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-			{
-				ImGui::UpdatePlatformWindows();
-				ImGui::RenderPlatformWindowsDefault();
-			}
+			//if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+			//{
+			//	ImGui::UpdatePlatformWindows();
+			//	ImGui::RenderPlatformWindowsDefault();
+			//}
 #endif // USE_IMGUI
 			graphics_scope->EndFrame();
 		}
