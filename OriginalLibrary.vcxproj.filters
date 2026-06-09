@@ -267,6 +267,9 @@
     <ClCompile Include="External\ImGuizmo\ImSequencer.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Serialization\JsonSerializer.cpp">
+      <Filter>Source\Serializer\JsonSerializer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui.h">
@@ -502,6 +505,9 @@
     </ClInclude>
     <ClInclude Include="External\ImGuizmo\ImSequencer.h">
       <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Serialization\JsonSerializer.h">
+      <Filter>Source\Serializer\JsonSerializer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -791,6 +797,9 @@
     </Filter>
     <Filter Include="Source\Editor\ObjectEditor">
       <UniqueIdentifier>{347ff110-4e59-4995-b980-31122f2c661c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Serializer\JsonSerializer">
+      <UniqueIdentifier>{4be978f0-ab65-4851-b094-f70ff59c125e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

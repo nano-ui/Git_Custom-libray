@@ -280,6 +280,7 @@
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Scene\SceneTitle.cpp" />
     <ClCompile Include="Source\Serialization\GltfModelSerializer.cpp" />
+    <ClCompile Include="Source\Serialization\JsonSerializer.cpp" />
     <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp" />
     <ClCompile Include="Source\Shaders\BlurShader.cpp" />
     <ClCompile Include="Source\Shaders\CustomShader.cpp" />
@@ -360,6 +361,7 @@
     <ClInclude Include="Source\Scene\SceneManager.h" />
     <ClInclude Include="Source\Scene\SceneTitle.h" />
     <ClInclude Include="Source\Serialization\GltfModelSerializer.h" />
+    <ClInclude Include="Source\Serialization\JsonSerializer.h" />
     <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h" />
     <ClInclude Include="Source\Shaders\BlurShader.h" />
     <ClInclude Include="Source\Shaders\CustomShader.h" />
