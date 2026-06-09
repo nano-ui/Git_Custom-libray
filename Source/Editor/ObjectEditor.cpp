@@ -3,6 +3,8 @@
 #include "../GameObjects/GameObject.h"
 #include "../GameObjects/ObjectManager.h"
 #include "../Collision/CollisionManager.h"
+#include "../Camera/Camera.h"
+#include "../Input/Input.h"
 
 #include <imgui.h>
 #include <string>
@@ -35,8 +37,73 @@ void ObjectEditor::Initialize()
 	cached_class_names = ObjectFactory::GetClassNames();
 }
 
+//更新
+void ObjectEditor::Update(Camera* camera, CollisionManager* collision_manager)
+{
+	//実行前チェック
+	if (!is_placement_mode)return;
+	if (selected_class_index < 0 || selected_class_index >= static_cast<int>(cached_class_names.size()))return;
+
+	ImGuiIO io = ImGui::GetIO();	//ImGuiの入出力状態
+	
+	if (io.WantCaptureMouse)return;
+
+	constexpr int left_click_button = 0;	//左クリックインデックス
+
+	//左クリックが押された瞬間のみレイキャスト処理を実行
+	if (ImGui::IsMouseClicked(left_click_button))
+	{
+		//画面座標からNDCへの変換
+		const float screen_width = io.DisplaySize.x;	//画面横幅
+		const float screen_height = io.DisplaySize.y;	//画面縦幅
+		const float mouse_x = io.MousePos.x;			//マウスのX座標
+		const float mouse_y = io.MousePos.y;			//マウスのY座標
+		constexpr float ndc_multiplier = 2.0f;			//座標変換用の定数倍率
+		constexpr float ndc_offset = 1.0f;				//座標変換用の定数オフセット
+
+		const float ndc_x = (ndc_multiplier * mouse_x) / screen_width - ndc_offset;		//NDC上のX座標
+		const float ndc_y = ndc_offset - (ndc_multiplier * mouse_y) / screen_height;	//NDC上のY座標
+
+		//逆行列を用いた光線の生成
+		DirectX::XMFLOAT4X4 vp_float4x4 = camera->GetViewProjectionMatrix();		//ビュープロジェクション行列		
+		DirectX::XMMATRIX view_proj_matrix = DirectX::XMLoadFloat4x4(&vp_float4x4);	//変換後のビュープロジェクション行列
+		DirectX::XMMATRIX inv_view_proj = DirectX::XMMatrixInverse(nullptr, view_proj_matrix);	//逆行列
+
+		constexpr float depth_near = 0.0f;	//手前の深度値
+		constexpr float depth_far = 1.0f;	//奥の深度値
+		constexpr float w_value = 1.0f;		//同座標におけるW値
+
+		DirectX::XMVECTOR near_point = DirectX::XMVectorSet(ndc_x, ndc_y, depth_near, w_value);	//手前の点
+		DirectX::XMVECTOR far_point = DirectX::XMVectorSet(ndc_x, ndc_y, depth_far, w_value);	//奥の点
+
+		near_point = DirectX::XMVector3TransformCoord(near_point, inv_view_proj);
+		far_point = DirectX::XMVector3TransformCoord(far_point, inv_view_proj);
+
+		DirectX::XMFLOAT3 ray_start = {};		//レイの開始座標
+		DirectX::XMFLOAT3 ray_end = {};			//レイの終点座標
+		DirectX::XMStoreFloat3(&ray_start, near_point);
+		DirectX::XMStoreFloat3(&ray_end, far_point);
+
+		//空間分割コリジョンへのレイキャストとオブジェクトの生成
+		DirectX::XMFLOAT3 hit_position = {};	//衝突した座標
+		
+		if (collision_manager->RayCastSpace(ray_start, ray_end, hit_position))
+		{
+			const std::string& target_class_name = cached_class_names[selected_class_index];	//選択中のクラス名
+			GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);		//新しいオブジェクト
+
+			if (new_object)
+			{
+				//new_object->Initialize();
+				new_object->SetPosition(hit_position);
+				current_selected_object = new_object;
+			}
+		}
+	}
+}
+
 //描画
-void ObjectEditor::RenderUi()
+void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 {
 	//画面解像度に基づいた初期配置位置の計算
 	ImGuiIO io = ImGui::GetIO();
@@ -49,7 +116,7 @@ void ObjectEditor::RenderUi()
 
 	//画面を左右に分割するメインウインドウ
 	ImGui::Begin("Hierarchy");
-	DrawLeftPane();
+	DrawLeftPane(camera, collision_manager);
 	ImGui::End();
 
 	const float right_window_pos_x = screen_width - panel_width;
@@ -62,7 +129,7 @@ void ObjectEditor::RenderUi()
 }
 
 //オブジェクト生成UI描画
-void ObjectEditor::DrawLeftPane()
+void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_manager)
 {
 	//クラス名リストの取得とリストボックスの描画
 	ImGui::Text("Registered Classes");
@@ -70,6 +137,9 @@ void ObjectEditor::DrawLeftPane()
 
 	if (!cached_class_names.empty())
 	{
+		ImGui::Checkbox("Enable Click Placement Mode", &is_placement_mode);
+		ImGui::Dummy(ImVec2(0.0f, dummy_height_value));
+
 		if (ImGui::ListBoxHeader("##ClassList", ImVec2(-1, ImGui::GetContentRegionAvail().y * 0.3f)))
 		{
 			for (int i = 0; i < static_cast<int>(cached_class_names.size()); ++i)
@@ -91,13 +161,13 @@ void ObjectEditor::DrawLeftPane()
 	}
 
 	//生成ボタン処理
-	if (ImGui::Button("Create and Register", ImVec2(-1, 0))) 
+	if (ImGui::Button("Create and Register", ImVec2(-1, 0)))
 	{
 		const std::string& target_class_name = cached_class_names[selected_class_index];
 		GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
 		if (new_object)
 		{
-			new_object->Initialize();
+			//new_object->Initialize();
 			current_selected_object = new_object;
 		}
 	}
@@ -113,7 +183,7 @@ void ObjectEditor::DrawLeftPane()
 	const auto& active_objects = ObjectManager::Instance().GetGameObjects();
 	frame_class_counters.clear();
 
-	if (ImGui::ListBoxHeader("##ActiveObjects", ImVec2(-1, ImGui::GetContentRegionAvail().y - active_list_height_offset))) 
+	if (ImGui::ListBoxHeader("##ActiveObjects", ImVec2(-1, ImGui::GetContentRegionAvail().y - active_list_height_offset)))
 	{
 		for (size_t i = 0; i < active_objects.size(); ++i)
 		{
@@ -133,7 +203,7 @@ void ObjectEditor::DrawLeftPane()
 					current_selected_object = obj_ptr;
 				}
 
-				if (is_current) 
+				if (is_current)
 				{
 					ImGui::SetItemDefaultFocus();
 				}
@@ -142,6 +212,8 @@ void ObjectEditor::DrawLeftPane()
 		}
 		ImGui::ListBoxFooter();
 	}
+
+	Update(camera, collision_manager);
 }
 
 //オブジェクトパラメータ編集UI描画

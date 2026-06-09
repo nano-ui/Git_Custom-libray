@@ -91,6 +91,7 @@ void SceneGame::Update(float elapsed_time)
 	{
 		camera->Update(elapsed_time);
 	}
+
 	if (SceneManager::Instance().IsPaused())
 	{
 		return;
@@ -100,10 +101,12 @@ void SceneGame::Update(float elapsed_time)
 	{
 		object_manager->Update(elapsed_time);
 	}
+
 	if (collision_experiment)
 	{
 		collision_experiment->Update(elapsed_time);
 	}
+
 	if (collision_manager)
 	{
 		collision_manager->ExecuteCollision();
@@ -384,13 +387,12 @@ void SceneGame::RenderGui()
 			collision_manager->RenderGui();
 			collision_manager->RenderDebug(shape_renderer.get());
 		}
-
-		if (object_editor)
-		{
-			object_editor->RenderUi();
-		}
-
 	}
 	ImGui::End();
+
+	if (object_editor)
+	{
+		object_editor->RenderUi(camera.get(), collision_manager.get());
+	}
 #endif // USE_IMGUI
 }

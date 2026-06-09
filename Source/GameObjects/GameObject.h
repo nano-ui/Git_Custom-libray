@@ -45,6 +45,9 @@ public:
 	 //座標取得
 	 DirectX::XMFLOAT3 GetPosition()const { return position; }
 
+	 //座標を設定
+	 void SetPosition(DirectX::XMFLOAT3 pos) { position = pos; }
+
 	 //コライダーを取得
 	 const std::vector<Collider*>GetColliders()const { return collideres; }
 

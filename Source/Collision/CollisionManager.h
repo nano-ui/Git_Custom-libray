@@ -74,6 +74,9 @@ public:
 	//登録されたコライダーの一括判定
 	void ExecuteCollision();
 
+	//動的コライダーとレイの判定
+	bool RayCastSpace(const DirectX::XMFLOAT3& start_pos, const DirectX::XMFLOAT3& end_pos, DirectX::XMFLOAT3& hit_position)const;
+
 	//ImGuiデバッグ描画
 	void RenderGui();
 

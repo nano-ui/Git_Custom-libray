@@ -84,7 +84,6 @@ void Player::RenderDebug(ShapeRenderer* renderer)
 //ImGuiデバッグ描画
 void Player::RenderGui()
 {
-	ImGui::Begin("Player");
 	Character::RenderGui();
 	ImGui::DragFloat("PlayerSpeed",&move_speed, 0.1f);
 
@@ -101,8 +100,6 @@ void Player::RenderGui()
 		}
 		ImGui::DragFloat("Height", &height, min_val, max_height);
 	}
-
-	ImGui::End();
 }
 
 //衝突処理

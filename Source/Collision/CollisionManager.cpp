@@ -324,6 +324,47 @@ void CollisionManager::CheckDynamicVsSpace()
     }
 }
 
+//動的コライダーとレイの判定
+bool CollisionManager::RayCastSpace(
+    const DirectX::XMFLOAT3& start_pos,
+    const DirectX::XMFLOAT3& end_pos,
+    DirectX::XMFLOAT3& hit_position) const
+{
+    bool is_hit = false;
+    float closest_distance = std::numeric_limits<float>::max();
+    DirectX::XMFLOAT3 temp_hit_pos = { 0.0f,0.0f,0.0f };
+    DirectX::XMFLOAT3 temp_hit_normal = { 0.0f,0.0f,0.0f };
+
+    constexpr float max_ray_distance = 10000.0f;
+
+    DirectX::XMVECTOR v_start = DirectX::XMLoadFloat3(&start_pos);
+
+    //登録されているすべての空間分割コライダーに対して判定
+    for (size_t i = 0; i < space_colliders.size(); i++)
+    {
+        SpaceDivisionCollider* space = space_colliders[i];
+        if (!space) continue;
+        if (!space->space_cast)continue;
+        if (!space->is_active)continue;
+
+        if (space->space_cast->Raycast(start_pos, end_pos, temp_hit_pos, temp_hit_normal))
+        {
+            DirectX::XMVECTOR v_hit = DirectX::XMLoadFloat3(&temp_hit_pos);
+            DirectX::XMVECTOR v_dist = DirectX::XMVectorSubtract(v_hit, v_start);
+            float dist = DirectX::XMVectorGetX(DirectX::XMVector3Length(v_dist));
+
+            if (dist < closest_distance)
+            {
+                closest_distance = dist;
+                hit_position = temp_hit_pos;
+                is_hit = true;
+            }
+        }
+
+    }
+    return is_hit;
+}
+
 //スフィア同士の総当たり判定
 void CollisionManager::CheckSphereVsSphere()
 {

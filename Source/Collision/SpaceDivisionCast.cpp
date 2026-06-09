@@ -114,6 +114,8 @@ bool SpaceDivisionCast::Raycast(const DirectX::XMFLOAT3& start_pos, const Direct
 					{
 						closest_distance = tri_dist;	//最短距離を更新
 						hit_normal = tri.normal;		//法線情報を更新
+						DirectX::XMVECTOR vec_hit_pos = DirectX::XMVectorAdd(vec_start, DirectX::XMVectorScale(vec_norm_dir, tri_dist));
+						DirectX::XMStoreFloat3(&hit_position, vec_hit_pos);
 						is_hit = true;					//ヒットフラグを立てる
 					}
 				}
