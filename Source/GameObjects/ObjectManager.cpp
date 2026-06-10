@@ -24,7 +24,9 @@ ObjectManager::~ObjectManager()
 //オブジェクトの登録
 void ObjectManager::Register(std::unique_ptr<GameObject> object)
 {
-	//オブジェクトの初期化とリストに追加
+	//プレハブシステムの完全自動化処理
+	object->SetupSerialization();
+	object->LoadFromJson();
 	object->Initialize();
 	
 	//コライダーの登録

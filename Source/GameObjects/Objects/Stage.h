@@ -31,9 +31,6 @@ public:
 	//デバッグ描画
 	void RenderDebug(ShapeRenderer* renderer)override;
 
-	//ImGuiデバッグ描画
-	void RenderGui()override;
-
 	//当たり判定用の空間分割キャストオブジェクトを取得
 	SpaceDivisionCast* GetSpaceDivisionCast();
 

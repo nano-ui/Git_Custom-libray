@@ -36,6 +36,8 @@ void Stage::Initialize()
 	AddCollider(&space_collider);
 
 	shape_renderer = std::make_unique<ShapeRenderer>(device);
+
+	SetupSerialization();
 }
 
 //更新処理
@@ -90,39 +92,6 @@ void Stage::RenderDebug(ShapeRenderer* renderer)
 	DirectX::XMFLOAT4X4 view = Graphics::Instance().GetViewMatrix();
 	DirectX::XMFLOAT4X4 projection = Graphics::Instance().GetProjectionMatrix();
 	renderer->Render(context, view, projection);
-}
-
-//ImGuiデバッグ描画
-void Stage::RenderGui()
-{
-#ifdef USE_IMGUI
-	if (ImGui::CollapsingHeader("Stage", ImGuiTreeNodeFlags_None))
-	{
-		ImGui::DragFloat3("Position", &position.x, 0.1f);
-
-		static constexpr float min_angle_deg = -180.0f;
-		static constexpr float max_angle_deg = 180.0f;
-		DirectX::XMFLOAT3 rotation_euler = { 0.0f,0.0f,0.0f };
-		bool is_changed = ImGui::SliderFloat3("Rotation(Euler)", &rotation_euler.x, min_angle_deg, max_angle_deg);
-		if (is_changed)
-		{
-			float pitch_rad = DirectX::XMConvertToRadians(rotation_euler.x);
-			float yaw_rad = DirectX::XMConvertToRadians(rotation_euler.y);
-			float roll_rad = DirectX::XMConvertToRadians(rotation_euler.z);
-			DirectX::XMMATRIX rotation_matrix = DirectX::XMMatrixRotationRollPitchYaw(pitch_rad, yaw_rad, roll_rad);
-			DirectX::XMVECTOR quaternion = DirectX::XMQuaternionRotationMatrix(rotation_matrix);
-			DirectX::XMStoreFloat4(&rotation, quaternion);
-		}
-		ImGui::DragFloat3("Scale", &scale.x, 0.1f);
-		ImGui::Checkbox("Draw Areas", &is_draw_areas);
-		ImGui::ColorEdit4("Area Color", &area_draw_color.x);
-		if (space_division_cast)
-		{
-			size_t box_count = space_division_cast->GetAreaCount();
-			ImGui::Text("Bounding Box Count : %zu", box_count);
-		}
-	}
-#endif // USE_IMGUI
 }
 
 //当たり判定用の空間分割キャストオブジェクトを取得

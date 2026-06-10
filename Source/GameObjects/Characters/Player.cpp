@@ -29,6 +29,7 @@ Player::~Player()
 void Player::Initialize()
 {
 	Character::Initialize();
+	SetupSerialization();
 	position = { 0.0f,0.0f,0.0f };
 
 	//当たり判定の初期設定
@@ -81,25 +82,10 @@ void Player::RenderDebug(ShapeRenderer* renderer)
 	);
 }
 
-//ImGuiデバッグ描画
-void Player::RenderGui()
+//変数をシリアライザに登録
+void Player::SetupSerialization()
 {
-	Character::RenderGui();
-	ImGui::DragFloat("PlayerSpeed",&move_speed, 0.1f);
-
-	//当たり判定パラメータ設定
-	if (ImGui::CollapsingHeader("Capsule Collider", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		ImGui::Checkbox("Is Active", &capsule_collider.is_active);
-		constexpr float min_val = 0.1f;
-		constexpr float max_radius = 20.0f;
-		constexpr float max_height = 100.0f;
-		if (ImGui::DragFloat("Radius", &capsule_collider.radius, min_val, max_radius))
-		{
-			radius = capsule_collider.radius;
-		}
-		ImGui::DragFloat("Height", &height, min_val, max_height);
-	}
+	Character::SetupSerialization();
 }
 
 //衝突処理

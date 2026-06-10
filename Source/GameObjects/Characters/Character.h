@@ -24,8 +24,8 @@ public:
 	//デバッグ描画
 	void RenderDebug(ShapeRenderer* renderer)override;
 
-	//ImGui表示
-	void RenderGui()override;
+	//変数をシリアライザに登録
+	void SetupSerialization()override;
 
 	//ダメージ処理
 	bool ApplyDamage(float damage, float invincible_time);
@@ -93,5 +93,7 @@ protected:
 	float air_control;			//空中での制御力
 	float offset_y;				//当たり判定のY軸オフセット
 	float weight;				//キャラクターの重さ
+	float health;				//生命力	
+	float move_speed;			//移動速度
 };
 

@@ -29,3 +29,49 @@ DirectX::XMMATRIX GameObject::GetWorldMatrix() const
 
 	return matrix_world;
 }
+
+//ImGuiデバッグ描画
+void GameObject::RenderGui()
+{
+	if (serializer)
+	{
+		serializer->RenderGui();
+	}
+
+	ImGui::Separator();
+
+	if (ImGui::Button("Save Json Data"))
+	{
+		SaveToJson();
+	}
+}
+
+//変数をシリアライザに登録
+void GameObject::SetupSerialization()
+{
+	serializer = std::make_unique<JsonSerializer>();
+	serializer->RegisterVariable("Position", &position);
+	serializer->RegisterVariable("Rotation", &rotation);
+	serializer->RegisterVariable("Scale", &scale);
+}
+
+//パラメータをJSONファイルへ保存
+void GameObject::SaveToJson()
+{
+	if (!serializer)return;
+	std::string file_path = "Data/Json/" + class_name + ".json";
+	serializer->SaveToFile(file_path);
+}
+
+//JSONファイルからパラメータを復元
+void GameObject::LoadFromJson()
+{
+	if (!serializer)return;
+
+	std::string file_path = "Data/Json/" + class_name + ".json";
+	bool is_loading = serializer->LoadFromFile(file_path);
+	if (!is_loading)
+	{
+		serializer->SaveToFile(file_path);
+	}
+}

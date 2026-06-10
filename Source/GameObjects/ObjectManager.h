@@ -30,7 +30,9 @@ public:
 		std::unique_ptr<T> new_object = std::make_unique<T>(std::forward<Args>(args)...);
 		T* raw_pointer = new_object.get();
 
-		//派生クラスの構築完了を待ってから初期化を実行
+		//プレハブシステムの完全自動化処理
+		new_object->SetupSerialization();
+		new_object->LoadFromJson();
 		new_object->Initialize();
 
 		//コライダーの自動登録処理

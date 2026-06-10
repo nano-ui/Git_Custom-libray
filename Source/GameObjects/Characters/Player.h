@@ -20,8 +20,8 @@ public:
 	//デバッグ描画
 	void RenderDebug(ShapeRenderer* renderer)override;
 
-	//ImGuiデバッグ描画
-	void RenderGui()override;
+	//変数をシリアライザに登録
+	void SetupSerialization() override;
 
 	//当たり判定情報の取得
 	CapsuleCollider* GetCapsuleCollider() { return &capsule_collider; }
@@ -34,7 +34,6 @@ private:
 	void UpdateInput(float elapsed_time);
 
 private:
-	float move_speed;					//移動速度
 	CapsuleCollider capsule_collider;	//カプセルの当たり判定
 };
 

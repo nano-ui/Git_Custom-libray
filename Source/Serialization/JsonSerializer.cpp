@@ -24,7 +24,7 @@ void JsonSerializer::SaveToFile(const std::string& file_path)
 		
 		if (current_data.property_interface != nullptr)
 		{
-			current_data.property_interface->SeveTo(root_json, current_data.name);
+			current_data.property_interface->SaveTo(root_json, current_data.name);
 		}
 	}
 
@@ -39,12 +39,12 @@ void JsonSerializer::SaveToFile(const std::string& file_path)
 }
 
 //JSONファイルからデータを変数群へ読み込む
-void JsonSerializer::LoadFromFile(const std::string& file_path)
+bool JsonSerializer::LoadFromFile(const std::string& file_path)
 {
 	std::ifstream input_file(file_path);
 	if (!input_file.is_open())
 	{
-		return;
+		return false;
 	}
 
 	nlohmann::json root_json;	//パース結果を受け取るJSONオブジェクト
@@ -59,6 +59,21 @@ void JsonSerializer::LoadFromFile(const std::string& file_path)
 		if (current_data.property_interface != nullptr)
 		{
 			current_data.property_interface->LoadFrom(root_json, current_data.name);
+		}
+	}
+	return true;
+}
+
+//登録された全変数のUIを一括描画
+void JsonSerializer::RenderGui()
+{
+	//登録変数の一括UI描画ループ
+	for (size_t i = 0; i < registered_properties.size(); i++)
+	{
+		const PropertyData& current_data = registered_properties[i];
+		if (current_data.property_interface != nullptr)
+		{
+			current_data.property_interface->DrawImGui(current_data.name);
 		}
 	}
 }

@@ -22,6 +22,8 @@ Character::Character()
 	air_control = 0.3f;
 	offset_y = 0.0f;
 	weight = 10.0f;
+	health = 100.0f;
+	move_speed = 0.0f;
 }
 
 //デストラクタ
@@ -33,6 +35,7 @@ Character::~Character()
 void Character::Initialize()
 {
 	is_active = true;
+	SetupSerialization();
 }
 
 //更新処理
@@ -60,21 +63,21 @@ void Character::RenderDebug(ShapeRenderer* renderer)
 
 }
 
-//ImGui表示
-void Character::RenderGui()
+//変数をシリアライザに登録
+void Character::SetupSerialization()
 {
-	ImGui::DragFloat3("Position", &position.x, 0.1f);
-	ImGui::DragFloat3("Angle", &angle.x, 0.1f);
-	ImGui::DragFloat3("Scale", &scale.x, 0.1f);
-	ImGui::Separator();
-	ImGui::DragFloat("Health", &height, 0.1f);
-	ImGui::DragFloat("Gravity", &gravity, 0.1f);
-	ImGui::DragFloat("Friction", &friction, 0.1f);
-	ImGui::DragFloat("Acceleration", &acceleration, 0.1f);
-	ImGui::DragFloat("MaxSpeed", &max_speed, 0.1f);
-	ImGui::DragFloat("AttackPower", &attack_power, 0.1f);
-	ImGui::DragFloat("OffsetY", &offset_y, 0.1f);
-	ImGui::DragFloat("Weight", &weight, 0.1f, 0.0f, 100.0f);
+	GameObject::SetupSerialization();
+	serializer->RegisterVariable("Health", &height);
+	serializer->RegisterVariable("Radius", &radius);
+	serializer->RegisterVariable("MaxSpeed", &max_speed);
+	serializer->RegisterVariable("MoveSpeed", &move_speed);
+	serializer->RegisterVariable("Health", &health);
+	serializer->RegisterVariable("AttackPower", &attack_power);
+	serializer->RegisterVariable("Offset_Y", &offset_y);
+	serializer->RegisterVariable("Weight", &weight);
+	serializer->RegisterVariable("Gravity", &gravity);
+	serializer->RegisterVariable("Friction", &friction);
+	serializer->RegisterVariable("Acceleration", &acceleration);
 }
 
 //ダメージ処理
