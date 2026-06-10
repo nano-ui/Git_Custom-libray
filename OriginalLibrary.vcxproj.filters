@@ -55,6 +55,9 @@
     <FxCompile Include="Shaders\SoureCode\static_mesh_vs.hlsl">
       <Filter>Shaders\statuc_mesh</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\gltf_instancing_skin_vs.hlsl">
+      <Filter>Shaders\gltf_model</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui-docking\imgui.cpp">
@@ -269,6 +272,9 @@
     </ClCompile>
     <ClCompile Include="Source\Serialization\JsonSerializer.cpp">
       <Filter>Source\Serializer\JsonSerializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GltfModel\GltfInstancingRenderer.cpp">
+      <Filter>Source\Render\GltfModel\GltfInstancingRenderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -508,6 +514,9 @@
     </ClInclude>
     <ClInclude Include="Source\Serialization\JsonSerializer.h">
       <Filter>Source\Serializer\JsonSerializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GltfModel\GltfInstancingRenderer.h">
+      <Filter>Source\Render\GltfModel\GltfInstancingRenderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -800,6 +809,9 @@
     </Filter>
     <Filter Include="Source\Serializer\JsonSerializer">
       <UniqueIdentifier>{4be978f0-ab65-4851-b094-f70ff59c125e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Render\GltfModel\GltfInstancingRenderer">
+      <UniqueIdentifier>{5c89516b-ff65-4d9f-b498-9eff9f20aa7d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -248,6 +248,7 @@
     <ClCompile Include="Source\GameObjects\ObjectFactory.cpp" />
     <ClCompile Include="Source\GameObjects\ObjectManager.cpp" />
     <ClCompile Include="Source\GameObjects\Objects\Stage.cpp" />
+    <ClCompile Include="Source\GltfModel\GltfInstancingRenderer.cpp" />
     <ClCompile Include="Source\GltfModel\GltfModel.cpp" />
     <ClCompile Include="Source\GltfModel\GltfModelAnimation.cpp" />
     <ClCompile Include="Source\GltfModel\GltfModelData.cpp" />
@@ -326,6 +327,7 @@
     <ClInclude Include="Source\GameObjects\ObjectFactory.h" />
     <ClInclude Include="Source\GameObjects\ObjectManager.h" />
     <ClInclude Include="Source\GameObjects\Objects\Stage.h" />
+    <ClInclude Include="Source\GltfModel\GltfInstancingRenderer.h" />
     <ClInclude Include="Source\GltfModel\GltfModel.h" />
     <ClInclude Include="Source\GltfModel\GltfModelAnimation.h" />
     <ClInclude Include="Source\GltfModel\GltfModelData.h" />
@@ -419,6 +421,16 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
       <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
     </FxCompile>
+    <FxCompile Include="Shaders\SoureCode\gltf_instancing_skin_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
+      <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
+      <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
+    </FxCompile>
     <FxCompile Include="Shaders\SoureCode\gltf_model_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -426,6 +438,8 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
       <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
+      <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cod</AssemblerOutputFile>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Shaders\Compiled\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="Shaders\SoureCode\gltf_model_vs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
