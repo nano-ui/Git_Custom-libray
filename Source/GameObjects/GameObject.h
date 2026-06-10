@@ -37,6 +37,12 @@ public:
 	//変数をシリアライザに登録
 	virtual void SetupSerialization();
 
+	//指定されたJSONオブジェクトへ自身のデータを書き込む
+	virtual void SaveToJObject(nlohmann::json& object_json);
+
+	//指定されたJSONオブジェクトから自身のデータを復元
+	virtual void LoadFromJObject(const nlohmann::json& object_json);
+
 	//パラメータをJSONファイルへ保存
 	void SaveToJson();
 

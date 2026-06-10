@@ -1,13 +1,11 @@
 #include "SceneGame.h"
 #include "../GameObjects/ObjectManager.h"
-#include "../GameObjects/Objects/Stage.h"
 #include "../Graphics/Graphics.h"
 #include "../Graphics/framebuffer.h"
 #include "../Camera/Camera.h"
 #include "../Camera/FreeCamera.h"
 #include "../Light/Light.h"
 #include "../Graphics/ShapeRenderer.h"
-#include "../GameObjects/Characters/Player.h"
 #include "../Collision/CollisionManager.h"
 #include "../Collision/CollisionExperiment.h"
 #include "../Editor/ObjectEditor.h"
@@ -22,9 +20,6 @@ SceneGame::SceneGame()
 	ObjectManager::Instance().SetCollisionManager(collision_manager.get());
 
 	collision_experiment = std::make_unique<CollisionExperiment>(collision_manager.get());
-
-	Stage* stage = object_manager->Instantiate<Stage>();
-	Player* player = object_manager->Instantiate<Player>();
 
 	camera = std::make_unique<FreeCamera>();
 	light = std::make_unique <Light>();

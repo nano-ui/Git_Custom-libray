@@ -10,12 +10,18 @@
 #include <ImGuizmo.h>
 #include <string>
 #include <unordered_map>
+#include <fstream>
+#include <filesystem>
+#include <windows.h>
+#include <commdlg.h>
 
 constexpr float dummy_height_value = 10.0f;
 constexpr float class_list_height_ratio = 0.3f;
 constexpr float active_list_height_offset = 60.0f;
 constexpr size_t label_buffer_size = 128;
 constexpr float panel_width_ratio = 0.2f;
+constexpr int json_indent_space_count = 4;
+constexpr size_t file_path_buffer_size = 260;
 
 //コンストラクタ
 ObjectEditor::ObjectEditor()
@@ -119,6 +125,29 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 	//画面を左右に分割するメインウインドウ
 	ImGui::Begin("Hierarchy");
 	DrawLeftPane(camera, collision_manager);
+
+	ImGui::Dummy(ImVec2(0.0f, dummy_height_value));
+	ImGui::Separator();
+	ImGui::Text("Global Scene Operations");
+
+	if (ImGui::Button("Save Scene Layout", ImVec2(-1, 0)))
+	{
+		std::string dynamic_save_path = SelectSavePath();
+		if (!dynamic_save_path.empty())
+		{
+			SaveScene(dynamic_save_path);
+		}
+	}
+
+	if (ImGui::Button("Load Scene Layout", ImVec2(-1, 0)))
+	{
+		std::string dynamic_load_path = SelectOpenPath();
+		if (!dynamic_load_path.empty())
+		{
+			LoadScene(dynamic_load_path);
+		}
+	}
+
 	ImGui::End();
 
 	const float right_window_pos_x = screen_width - panel_width;
@@ -144,7 +173,7 @@ void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_mana
 		ImGui::Checkbox("Enable Click Placement Mode", &is_placement_mode);
 		ImGui::Dummy(ImVec2(0.0f, dummy_height_value));
 
-		if (ImGui::ListBoxHeader("##ClassList", ImVec2(-1, ImGui::GetContentRegionAvail().y * 0.3f)))
+		if (ImGui::ListBoxHeader("##ClassList", ImVec2(-1, ImGui::GetContentRegionAvail().y * 0.25f)))
 		{
 			for (int i = 0; i < static_cast<int>(cached_class_names.size()); ++i)
 			{
@@ -334,4 +363,137 @@ void ObjectEditor::DrawGizmo(Camera* camera)
 			current_selected_object->SetScale(new_scale);
 		}
 	}
+}
+
+//配置されているすべてのオブジェクト状態を保存
+void ObjectEditor::SaveScene(const std::string& file_path)
+{
+	//指定された保存先フォルダの動的自動生成
+	std::filesystem::path system_path(file_path);
+	if (system_path.has_parent_path())
+	{
+		std::filesystem::create_directories(system_path.parent_path());
+	}
+
+	nlohmann::json scene_json;												//シーン全体のルート階層となるJSONオブジェクト
+	nlohmann::json objects_array = nlohmann::json::array();					//各オブジェクトデータを並べるためのJSON配列
+	const auto& active_object = ObjectManager::Instance().GetGameObjects();	//現在マネージャーが管理している全オブジェクト
+
+	//現在アクティブなオブジェクトを1つずつ走査して情報をパッケージング
+	for (size_t i = 0; i < active_object.size(); i++)
+	{
+		if (active_object[i] != nullptr && active_object[i]->IsActive())
+		{
+			nlohmann::json object_node;	//オブジェクト専用のJSONノード
+			object_node["class_name"] = active_object[i]->GetClassNameW();
+			nlohmann::json data_node;	//パラメータを格納するための配下ノード
+			active_object[i]->SaveToJObject(data_node);
+			object_node["data"] = data_node;
+			objects_array.push_back(object_node);
+		}
+	}
+
+	scene_json["object"] = objects_array;
+
+	//構築したJSON構造をファイルへ書き出す
+	std::ofstream output_file(file_path); 
+	if(output_file.is_open())
+	{
+		output_file << scene_json.dump(json_indent_space_count);
+		output_file.close();
+	}
+}
+
+//ファイルからオブジェクト群を自動生成して状態を復元
+void ObjectEditor::LoadScene(const std::string& file_path)
+{
+	std::ifstream input_file(file_path);
+	if (!input_file.is_open())
+	{
+		return;
+	}
+
+	nlohmann::json scene_json;	//解析結果を受け取るためのJSONオブジェクト
+	input_file >> scene_json;
+	input_file.close();
+
+	if (!scene_json.contains("object"))
+	{
+		return;
+	}
+
+	current_selected_object = nullptr;
+
+	//古いオブジェクトを全削除
+	const auto& active_objects = ObjectManager::Instance().GetGameObjects();
+	for (size_t i = 0; i < active_objects.size(); i++)
+	{
+		if (active_objects[i] && active_objects[i]->IsActive())
+		{
+			active_objects[i]->Destory();
+		}
+	}
+
+	const nlohmann::json& objects_array = scene_json["object"];	//オブジェクト配列ノードへの参照
+
+	//配列に記録されているデータからオブジェクトを全自動動的生成
+	for (size_t i = 0; i < objects_array.size(); ++i)
+	{
+		const nlohmann::json& object_node = objects_array[i];	//現在のインデックスの配列要素
+
+		if (object_node.contains("class_name") && object_node.contains("data"))
+		{
+			std::string class_name = object_node["class_name"].get<std::string>();	//記録されているクラス名
+			GameObject* new_object = ObjectFactory::CreateAndRegister(class_name);
+
+			if (new_object != nullptr)
+			{
+				new_object->LoadFromJObject(object_node["data"]);
+			}
+		}
+	}
+
+}
+
+//保存先のファイルパスをダイアログから選択取得
+std::string ObjectEditor::SelectSavePath()
+{
+	char absolute_path_buffer[file_path_buffer_size] = "";
+	OPENFILENAMEA open_file_name_struct = {};
+
+	open_file_name_struct.lStructSize = sizeof(open_file_name_struct);
+	open_file_name_struct.hwndOwner = nullptr;
+	open_file_name_struct.lpstrFilter = "JSON Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
+	open_file_name_struct.lpstrFile = absolute_path_buffer;
+	open_file_name_struct.nMaxFile = file_path_buffer_size;
+	open_file_name_struct.lpstrDefExt = "json";
+	open_file_name_struct.Flags = OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR;
+
+	if (GetSaveFileNameA(&open_file_name_struct))
+	{
+		return std::string(absolute_path_buffer);
+	}
+
+	return std::string();
+}
+
+//読み込み元のファイルパスをダイアログから選択取得
+std::string ObjectEditor::SelectOpenPath()
+{
+	char absolute_path_buffer[file_path_buffer_size] = "";
+	OPENFILENAMEA open_file_name_struct = {};
+
+	open_file_name_struct.lStructSize = sizeof(open_file_name_struct);
+	open_file_name_struct.hwndOwner = nullptr;
+	open_file_name_struct.lpstrFilter = "JSON Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
+	open_file_name_struct.lpstrFile = absolute_path_buffer;
+	open_file_name_struct.nMaxFile = file_path_buffer_size;
+	open_file_name_struct.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR;
+
+	if (GetOpenFileNameA(&open_file_name_struct))
+	{
+		return std::string(absolute_path_buffer);
+	}
+
+	return std::string();
 }

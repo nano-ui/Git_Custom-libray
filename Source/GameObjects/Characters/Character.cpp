@@ -13,7 +13,7 @@ Character::Character()
 	radius = 2.0f;
 	height = 4.0f;
 	gravity = -10.0f;
-	height = 100.0f;
+	height = 1.0f;
 	acceleration = 50.0f;
 	move_vecX = 0.0f;
 	move_vecZ = 0.0f;
@@ -67,7 +67,7 @@ void Character::RenderDebug(ShapeRenderer* renderer)
 void Character::SetupSerialization()
 {
 	GameObject::SetupSerialization();
-	serializer->RegisterVariable("Health", &height);
+	serializer->RegisterVariable("Heilth", &height);
 	serializer->RegisterVariable("Radius", &radius);
 	serializer->RegisterVariable("MaxSpeed", &max_speed);
 	serializer->RegisterVariable("MoveSpeed", &move_speed);
@@ -85,13 +85,13 @@ bool Character::ApplyDamage(float damage, float invincible_time)
 {
 	//ダメージの適用条件判定
 	if (damage <= 0)return false;
-	if (height <= 0)return false;
+	if (health <= 0)return false;
 	if (invincible_timer > 0.0f)return false;
 
 	//ダメージ適用とイベント実行
 	invincible_timer = invincible_time;
-	height -= damage;
-	if (height <= 0)
+	health -= damage;
+	if (health <= 0)
 	{
 		OnDead();
 	}

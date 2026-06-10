@@ -55,6 +55,24 @@ void GameObject::SetupSerialization()
 	serializer->RegisterVariable("Scale", &scale);
 }
 
+//指定されたJSONオブジェクトへ自身のデータを書き込む
+void GameObject::SaveToJObject(nlohmann::json& object_json)
+{
+	if (serializer)
+	{
+		serializer->SaveToObject(object_json);
+	}
+}
+
+//指定されたJSONオブジェクトから自身のデータを復元
+void GameObject::LoadFromJObject(const nlohmann::json& object_json)
+{
+	if (serializer)
+	{
+		serializer->LoadFromObject(object_json);
+	}
+}
+
 //パラメータをJSONファイルへ保存
 void GameObject::SaveToJson()
 {

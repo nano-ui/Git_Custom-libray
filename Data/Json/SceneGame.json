@@ -1,0 +1,57 @@
+{
+    "object": [
+        {
+            "class_name": "Stage",
+            "data": {
+                "Position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "w": 1.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            }
+        },
+        {
+            "class_name": "Player",
+            "data": {
+                "Acceleration": 50.0,
+                "AttackPower": 0.0,
+                "Friction": 15.0,
+                "Gravity": -10.0,
+                "Health": 1.0,
+                "Heilth": 0.800000011920929,
+                "MaxSpeed": 5.0,
+                "MoveSpeed": 5.0,
+                "Offset_Y": 0.5,
+                "Position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Radius": 0.4000000059604645,
+                "Rotation": {
+                    "w": 1.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "Weight": 10.0
+            }
+        }
+    ]
+}

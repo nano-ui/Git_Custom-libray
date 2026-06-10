@@ -156,6 +156,12 @@ public:
 	//JSONファイルからデータを変数群へ読み込む
 	bool LoadFromFile(const std::string& file_path);
 
+	//JSONオブジェクトへ登録データを直接書き出す
+	void SaveToObject(nlohmann::json& root_json);
+
+	//JSONオブジェクトからデータを直接読み込む
+	void LoadFromObject(const nlohmann::json& root_json);
+
 	//登録された全変数のUIを一括描画
 	void RenderGui();
 

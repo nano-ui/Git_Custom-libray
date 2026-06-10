@@ -64,6 +64,36 @@ bool JsonSerializer::LoadFromFile(const std::string& file_path)
 	return true;
 }
 
+//JSONオブジェクトへ登録データを直接書き出す
+void JsonSerializer::SaveToObject(nlohmann::json& root_json)
+{
+	//登録されているすべてのプロパティをループ処理してJSONノードへ変換
+	for (size_t i = 0; i < registered_properties.size(); i++)
+	{
+		const PropertyData& current_data = registered_properties[i];	//要素の参照
+
+		if (current_data.property_interface != nullptr)
+		{
+			current_data.property_interface->SaveTo(root_json, current_data.name);
+		}
+	}
+}
+
+//JSONオブジェクトからデータを直接読み込む
+void JsonSerializer::LoadFromObject(const nlohmann::json& root_json)
+{
+	//登録されているすべてのプロパティをループ処理して値を復元
+	for (size_t i = 0; i < registered_properties.size(); i++)
+	{
+		const PropertyData& current_data = registered_properties[i];	//要素の参照
+
+		if (current_data.property_interface != nullptr)
+		{
+			current_data.property_interface->LoadFrom(root_json, current_data.name);
+		}
+	}
+}
+
 //登録された全変数のUIを一括描画
 void JsonSerializer::RenderGui()
 {
