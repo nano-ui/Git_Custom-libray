@@ -8,11 +8,14 @@
 class GltfModelRenderer
 {
 public:
-	static constexpr UINT SHADER_SLOT_0 = 0;	// シェーダースロット0番
-	static constexpr UINT SHADER_SLOT_1 = 1;	// シェーダースロット1番
-	static constexpr UINT SHADER_SLOT_2 = 2;	// シェーダースロット2番
-	static constexpr UINT RESOURCE_COUNT_1 = 1;	// 一度にバインドするリソースの数
-	static constexpr UINT OFFSET_ZERO = 0;		// バッファ等のオフセット初期値
+	static constexpr UINT SHADER_SLOT_0 = 0;	//シェーダースロット0番
+	static constexpr UINT SHADER_SLOT_1 = 1;	//シェーダースロット1番
+	static constexpr UINT SHADER_SLOT_2 = 2;	//シェーダースロット2番
+	static constexpr UINT RESOURCE_COUNT_1 = 1;	//一度にバインドするリソースの数
+	static constexpr UINT OFFSET_ZERO = 0;		//バッファ等のオフセット初期値
+	static constexpr UINT TEXTURE_COUNT_5 = 5;	//マテリアルが保持するテクスチャの総数
+	static constexpr UINT SAMPLER_COUNT_3 = 3;	//使用するサンプラーステートの総数
+
 public:
 	//デバイスを受け取り描画リソースを初期化
 	GltfModelRenderer(ID3D11Device* device);

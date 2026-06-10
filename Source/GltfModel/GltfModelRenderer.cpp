@@ -64,11 +64,13 @@ void GltfModelRenderer::Render(ID3D11DeviceContext* immediate_context, const Glt
 	immediate_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	//頂点を3つずつ結んで三角形を描画するモード（トポロジー）に設定
 
 	auto states = Graphics::Instance().GetPipelineStates();
-	ID3D11SamplerState* sampler_states[] = {
+	ID3D11SamplerState* sampler_states[SAMPLER_COUNT_3] = {
 		states->GetSamplerState(0).Get(),
 		states->GetSamplerState(1).Get(),
 		states->GetSamplerState(2).Get()
 	};
+
+	immediate_context->PSSetSamplers(OFFSET_ZERO, SAMPLER_COUNT_3, sampler_states);
 
 	//-----------------------------------
 	//ルートノードからの描画巡回処理
@@ -187,22 +189,16 @@ void GltfModelRenderer::TraverseNodeForRender
 				material.data.occlusion_texture.index,																		//オクルージョン（環境遮蔽）
 			};
 
-			std::vector<ID3D11ShaderResourceView*> shader_resource_views(_countof(texture_indices));						//GPUにセットするためのビュー配列を用意
-			for (int texture_index = 0; texture_index < shader_resource_views.size(); texture_index++)						//用意した全テクスチャに対してループ
+			ID3D11ShaderResourceView* shader_resource_views[TEXTURE_COUNT_5];						//GPUにセットするためのビュー配列を用意
+			for (int texture_index = 0; texture_index < TEXTURE_COUNT_5; texture_index++)						//用意した全テクスチャに対してループ
 			{
-				shader_resource_views.at(texture_index) = texture_indices[texture_index] > -1 ?								//インデックスが有効な場合
-					data.texture_resource_views.at(data.textures.at(texture_indices[texture_index]).source).Get() : nullptr;//実体のリソースビューを取得、無効ならnullptr
+				shader_resource_views[texture_index] = texture_indices[texture_index] > -1 ?								// インデックスが有効な場合
+					data.texture_resource_views.at(data.textures.at(texture_indices[texture_index]).source).Get() : nullptr;
 			}
-			immediate_context->PSSetShaderResources(SHADER_SLOT_1, static_cast<UINT>(shader_resource_views.size()), shader_resource_views.data()); //全テクスチャを一括でピクセルシェーダーの1番スロットからセット
 
-			ID3D11SamplerState* sampler_p0 = sampler_states[0];
-			ID3D11SamplerState* sampler_p1 = sampler_states[1];
-			ID3D11SamplerState* sampler_p2 = sampler_states[2];
-
-			immediate_context->PSSetSamplers(0, 1, &sampler_p0);
-			immediate_context->PSSetSamplers(1, 1, &sampler_p1);
-			immediate_context->PSSetSamplers(2, 1, &sampler_p2);
-
+			// 実体のリソースビューを取得、無効ならnullptr			}
+			immediate_context->PSSetShaderResources(SHADER_SLOT_1, TEXTURE_COUNT_5, shader_resource_views); // 全テクスチャを一括でピクセルシェーダーの1番スロットからセット
+			
 			//--------------------------------------------------
 			//実際の描画命令の発行
 			//--------------------------------------------------
