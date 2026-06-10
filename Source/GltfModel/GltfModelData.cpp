@@ -72,6 +72,9 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 	FetchAnimations(gltf_model);		//アニメーション情報を抽出
 	MapAnimationNames(gltf_model);		//抽出したアニメーション名から検索用マップを構築
 
+	//行列更新およびフラット描画用の親子順序リストを計算
+	ComputeUpdateOrder();
+
 	//-------------------------------------
 	//バッファの生データを丸ごと保存
 	//--------------------------------------
@@ -199,6 +202,7 @@ std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const s
 	//-------------------------------
 	if (GltfModelSerializer::Load(binary_filename, data))	//バイナリファイルが存在し、読み込みに成功した場合
 	{
+		data->ComputeUpdateOrder();
 		data->CreateGpuResources(device);	//復元した生データから即座にGPUバッファを生成
 		return data;						//完成したデータを返す
 	}	
@@ -587,5 +591,102 @@ void GltfModelData::MapAnimationNames(const tinygltf::Model& gltf_model)
 			animation_name = "anim_" + std::to_string(animation_index);	//anim_0, anim_1 のように連番の仮名を作成しエラーを防ぐ
 		}
 		animation_index_map.insert(std::make_pair(animation_name, animation_index));	//名前をキーとして、インデックス番号をマップに登録
+	}
+}
+
+//親から子の順にノードを並べ直す
+void GltfModelData::ReorderNodes()
+{
+	std::vector<node> sorted_nodes;
+	std::vector<int> old_to_new_index(nodes.size(), -1);
+
+	//再帰的に巡回して並べ替える
+	std::function<void(int)> traverse = [&](int index) {
+		old_to_new_index[index] = static_cast<int>(sorted_nodes.size());
+		sorted_nodes.push_back(nodes[index]);
+
+		//子ノードを巡回
+		for (int child_idx : nodes[index].children)
+		{
+			traverse(child_idx);
+		}
+	};
+
+	nodes = sorted_nodes;
+}
+
+//親から子の順に行列を計算するための更新順序リストを構築
+void GltfModelData::ComputeUpdateOrder()
+{
+	//初期化とルートノードの割り出し
+	node_update_order.clear();
+	std::vector<bool> visited(nodes.size(), false);		//二重巡回を防止するためのフラグ配列
+	std::vector<bool> is_child(nodes.size(), false);	//親が存在するかを判定する配列
+
+	//全ノードの初期化と親ノード番号の逆引き設定
+	for (int node_index = 0; node_index < static_cast<int>(nodes.size()); ++node_index)
+	{
+		nodes.at(node_index).parent = -1; // まず一度全員を親なしに初期化
+	}
+
+	//全ノードの子リストを走査して、誰かの子になっているノードをマーク
+	for (int node_index = 0; node_index < static_cast<int>(nodes.size()); ++node_index)
+	{
+		const node& n = nodes.at(node_index); // 現在確認している親候補ノード
+
+		for (int child_index : n.children) // 親ノードが持っている子リストを走査
+		{
+			if (child_index >= 0 && child_index < static_cast<int>(nodes.size())) // 配列の範囲内かチェック
+			{
+				is_child[child_index] = true; 
+				nodes.at(child_index).parent = node_index; 
+			}
+		}
+	}
+	//スタックを用いた深度優先探索
+	std::stack<int> search_stack;	//巡回用のスタック
+
+	//どの親からも参照されていない「純粋なルートノード」をスタックに積む
+	for (int i = static_cast<int>(nodes.size()) - 1; i >= 0; --i)
+	{
+		if (!is_child[i])
+		{
+			search_stack.push(i);
+		}
+	}
+
+	//スタックが空になるまで巡回を続ける
+	while (!search_stack.empty())
+	{
+		int current_idx = search_stack.top();
+		search_stack.pop();
+
+		if (visited[current_idx])
+		{
+			continue;
+		}
+
+		visited[current_idx] = true;
+		node_update_order.push_back(current_idx);
+
+		//子ノードを逆算でスタックに積む
+		const node& current_node = nodes.at(current_idx);
+		for (auto it = current_node.children.rbegin(); it != current_node.children.rend(); ++it)
+		{
+			int child_idx = *it;
+			if (child_idx >= 0 && child_idx < static_cast<int>(nodes.size()) && !visited[child_idx])
+			{
+				search_stack.push(child_idx);
+			}
+		}
+	}
+
+	//万が一、循環参照などで巡回漏れしたノードがあれば救済
+	for (int i = 0; i < static_cast<int>(nodes.size()); i++)
+	{
+		if (!visited[i])
+		{
+			node_update_order.push_back(i);
+		}
 	}
 }

@@ -36,6 +36,7 @@ public:
 	struct node
 	{
 		std::string name;	//名前
+		int parent = -1;	//親ノードのインデックス
 		int skin = -1;		//スキンのインデックス
 		int mesh = -1;		//マッシュのイデックス
 		std::vector<int> children;	//子ノードのインデックス一覧
@@ -241,6 +242,12 @@ private:
 	//アニメーション名をマップに登録
 	void MapAnimationNames(const tinygltf::Model& gltf_model);
 
+	//親から子の順にノードを並べ直す
+	void ReorderNodes();
+
+	//親から子の順に行列を計算するための更新順序リストを構築
+	void ComputeUpdateOrder();
+
 public:
 	std::vector<std::vector<unsigned char>> raw_buffers;	//シリアライズ用の生データ保持配列
 	std::string filename;	//ファイルの名前
@@ -253,6 +260,8 @@ public:
 	std::vector<image> images;			//全画像のリスト
 	std::vector<skin> skins;			//全スキンのリスト
 	std::vector<animation> animations;	//全アニメーションのリスト
+
+	std::vector<int> node_update_order;	//親から子の順に並んだノードインデックスのリスト
 
 	std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> buffers;								//生成された全GPUバッファのリスト
 	std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> texture_resource_views;	//全テクスチャビューのリスト

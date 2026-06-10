@@ -38,6 +38,8 @@ void Player::Initialize()
 	capsule_collider.listener = this;
 	capsule_collider.is_active = true;
 	AddCollider(&capsule_collider);
+
+	character->PlayAnimation("Idle", true);
 }
 
 //XVˆ—
@@ -50,6 +52,7 @@ void Player::Update(float elapsed_time)
 
 	UpdateInput(elapsed_time);
 	Character::Update(elapsed_time);
+	character->Update(elapsed_time);
 
 	capsule_collider.start_center = position;
 	capsule_collider.start_center.y = position.y + offset_y;

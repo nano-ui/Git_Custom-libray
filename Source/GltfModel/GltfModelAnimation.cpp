@@ -25,18 +25,34 @@ void GltfModelAnimation::Initialize(const std::shared_ptr<const GltfModelData>& 
 void GltfModelAnimation::CumulateTransforms()
 {
 	if (!model_data) return;	//モデルデータが有効か確認
-	//--------------------------------------------------
-	// ルートノードからの巡回処理
-	//--------------------------------------------------
-	std::stack<DirectX::XMFLOAT4X4> parent_global_transforms;							//親ノードの行列情報を順次保持するためのスタックを作成
-	DirectX::XMFLOAT4X4 identity_matrix;												//処理の起点となる単位行列用の変数を宣言
-	DirectX::XMStoreFloat4x4(&identity_matrix, DirectX::XMMatrixIdentity());			//DirectXの関数を利用して変数に単位行列を格納
 
-	for (int node_index : model_data->scenes.at(model_data->default_scene).nodes)		//現在のデフォルトシーンに登録されている全てのルートノードをループ
+	using namespace DirectX;
+
+	//事前にただされた親子順リスト（node_update_order）を利用し、再帰を排して直列行列計算を行う
+	for (int node_index : model_data->node_update_order)
 	{
-		parent_global_transforms.push(identity_matrix);									//一番根っこの親として単位行列をスタックに追加
-		TraverseNodeForTransform(node_index, parent_global_transforms);					//ルートノードのインデックスを渡し階層の巡回処理を開始
-		parent_global_transforms.pop();													//全探索が終了した後にスタックの単位行列を取り除きクリア
+		GltfModelData::node& current_node = animated_nodes.at(node_index);
+
+		XMMATRIX scale_matrix = XMMatrixScaling(current_node.scale.x, current_node.scale.y, current_node.scale.z);
+		XMMATRIX rotation_matrix = XMMatrixRotationQuaternion(XMLoadFloat4(&current_node.rotation));               
+		XMMATRIX translation_matrix = XMMatrixTranslation(current_node.translation.x, current_node.translation.y, current_node.translation.z); 
+
+		//自身のローカル変換行列
+		XMMATRIX local_matrix = scale_matrix * rotation_matrix * translation_matrix;
+	
+		//親ノードが存在するか確認するため走査
+		int parent_index = current_node.parent;
+
+		//行列の合成と伝播
+		if (parent_index != -1)
+		{
+			XMStoreFloat4x4(&current_node.global_transform,
+				local_matrix * XMLoadFloat4x4(&animated_nodes.at(parent_index).global_transform));
+		}
+		else
+		{
+			XMStoreFloat4x4(&current_node.global_transform, local_matrix);
+		}
 	}
 }
 
