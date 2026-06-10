@@ -15,6 +15,10 @@
 #include <windows.h>
 #include <commdlg.h>
 
+static const std::string editor_config_path = "Data/System/EditorConfig.json";
+static const std::string config_key_scene_path = "last_opened_scene";
+static const std::string json_root_key_objects = "objects";
+
 constexpr float dummy_height_value = 10.0f;
 constexpr float class_list_height_ratio = 0.3f;
 constexpr float active_list_height_offset = 60.0f;
@@ -43,6 +47,13 @@ void ObjectEditor::Initialize()
 	selected_class_index = 0;
 	current_selected_object = nullptr;
 	cached_class_names = ObjectFactory::GetClassNames();
+
+	//起動時のシーン復元処理
+	std::string auto_load_path = LoadEditorConfig();
+	if (!auto_load_path.empty() && std::filesystem::exists(auto_load_path))
+	{
+		LoadScene(auto_load_path);
+	}
 }
 
 //更新
@@ -401,6 +412,7 @@ void ObjectEditor::SaveScene(const std::string& file_path)
 	{
 		output_file << scene_json.dump(json_indent_space_count);
 		output_file.close();
+		SaveEditorConfig(file_path);
 	}
 }
 
@@ -452,7 +464,7 @@ void ObjectEditor::LoadScene(const std::string& file_path)
 			}
 		}
 	}
-
+	SaveEditorConfig(file_path);
 }
 
 //保存先のファイルパスをダイアログから選択取得
@@ -493,6 +505,48 @@ std::string ObjectEditor::SelectOpenPath()
 	if (GetOpenFileNameA(&open_file_name_struct))
 	{
 		return std::string(absolute_path_buffer);
+	}
+
+	return std::string();
+}
+
+//エディタ設定ファイルの保存
+void ObjectEditor::SaveEditorConfig(const std::string& last_scene_path)
+{
+	//設定JSONのデータアロケーション
+	nlohmann::json config_json;	//設定をパッキングするためのJSONノード
+	config_json[config_key_scene_path] = last_scene_path;
+	
+	std::filesystem::path system_path(editor_config_path);
+	if (system_path.has_parent_path())
+	{
+		std::filesystem::create_directories(system_path.parent_path());
+	}
+
+	std::ofstream output_file(editor_config_path);
+	if (output_file.is_open())
+	{
+		output_file << config_json.dump(json_indent_space_count);
+		output_file.close();
+	}
+}
+
+//エディタ設定ファイルの読み込み
+std::string ObjectEditor::LoadEditorConfig()
+{
+	std::ifstream input_file(editor_config_path);	//設定ファイルを読み込みモード
+	if (!input_file)
+	{
+		return std::string();
+	}
+
+	nlohmann::json config_json;	//データをパースするためのオブジェクト
+	input_file >> config_json;
+	input_file.close();
+
+	if (config_json.contains(config_key_scene_path))
+	{
+		return config_json[config_key_scene_path].get<std::string>();
 	}
 
 	return std::string();
