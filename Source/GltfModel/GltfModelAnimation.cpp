@@ -24,7 +24,31 @@ void GltfModelAnimation::Initialize(const std::shared_ptr<const GltfModelData>& 
 //====================================================
 void GltfModelAnimation::CumulateTransforms()
 {
-	if (!model_data) return;	//モデルデータが有効か確認
+	//モデルデータの有効性チェック
+	if (!model_data) return;
+
+	std::vector<int> root_nodes;
+
+	//デフォルトシーン番号が配列の範囲内にあるか存在確認
+	if (model_data->default_scene >= 0 && static_cast<size_t>(model_data->default_scene) < model_data->scenes.size())
+	{
+		root_nodes = model_data->scenes.at(model_data->default_scene).nodes;
+	}
+	else
+	{
+		OutputDebugStringA("[GltfModelAnimation Error] model_data->default_scene is OUT OF RANGE!\n");
+
+		if (!model_data->scenes.empty())
+		{
+			OutputDebugStringA("[GltfModelAnimation Warning] Safety fallback: Using the first scene (0) instead.\n");
+			root_nodes = model_data->scenes.at(0).nodes;
+		}
+		else
+		{
+			OutputDebugStringA("[GltfModelAnimation Warning] Safety fallback: Scenes container is completely empty!\n");
+		}
+	}
+
 	//--------------------------------------------------
 	// ルートノードからの巡回処理
 	//--------------------------------------------------
@@ -32,11 +56,14 @@ void GltfModelAnimation::CumulateTransforms()
 	DirectX::XMFLOAT4X4 identity_matrix;												//処理の起点となる単位行列用の変数を宣言
 	DirectX::XMStoreFloat4x4(&identity_matrix, DirectX::XMMatrixIdentity());			//DirectXの関数を利用して変数に単位行列を格納
 
-	for (int node_index : model_data->scenes.at(model_data->default_scene).nodes)		//現在のデフォルトシーンに登録されている全てのルートノードをループ
+	for (int node_index : root_nodes)		//現在のデフォルトシーンに登録されている全てのルートノードをループ
 	{
-		parent_global_transforms.push(identity_matrix);									//一番根っこの親として単位行列をスタックに追加
-		TraverseNodeForTransform(node_index, parent_global_transforms);					//ルートノードのインデックスを渡し階層の巡回処理を開始
-		parent_global_transforms.pop();													//全探索が終了した後にスタックの単位行列を取り除きクリア
+		if (node_index >= 0 && static_cast<size_t>(node_index) < animated_nodes.size())
+		{
+			parent_global_transforms.push(identity_matrix);									//一番根っこの親として単位行列をスタックに追加
+			TraverseNodeForTransform(node_index, parent_global_transforms);					//ルートノードのインデックスを渡し階層の巡回処理を開始
+			parent_global_transforms.pop();													//全探索が終了した後にスタックの単位行列を取り除きクリア
+		}
 	}
 }
 
@@ -104,6 +131,11 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 		return;						// 更新する対象がないため何も処理せずに安全に終了
 	}
 
+	if (animation_index >= model_data->animations.size())
+	{
+		OutputDebugStringA("[GltfModelAnimation Error] animation_index out of range!/n");
+	}
+
 	using namespace DirectX;															// DirectXMathの名前空間を使用
 	const size_t INDEX_OFFSET_NEXT = 1;													// 次の要素を参照するためのインデックスオフセット定数
 	const GltfModelData::animation& animation = model_data->animations.at(animation_index);	// 引数で指定されたアニメーションデータを参照として取得
@@ -113,8 +145,23 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 	//--------------------------------------------------
 	for (const GltfModelData::animation::channel& channel : animation.channels)                   // アニメーションが持つ全チャンネル（誰のどの部位を動かすか）をループ
 	{
+		//サンプラーインデックスの安全な存在確認
+		if (channel.sampler < 0 || static_cast<size_t>(channel.sampler) >= animation.samplers.size())
+		{
+			OutputDebugStringA("[GltfModelAnimation Error] Animate: channel.sampler is out of range!\n");
+			continue;
+		}
+
 		const GltfModelData::animation::sampler& sampler = animation.samplers.at(channel.sampler);// チャンネルに対応するサンプラー（時間と値の紐付け情報）を取得
-		const std::vector<float>& timeline = animation.timelines.at(sampler.input);               // サンプラーからタイムライン（時間軸）の配列データを取得
+		
+		//タイムラインマップのキーの安全な存在確
+		auto timeline_it = animation.timelines.find(sampler.input);
+		if (timeline_it == animation.timelines.end())
+		{
+			OutputDebugStringA("[GltfModelAnimation Error] Animate: sampler.input key not found in timelines map!\n");
+			continue;
+		}
+		const std::vector<float>& timeline = timeline_it->second;
 
 		if (timeline.empty())                                                                     // タイムラインのデータが空の場合
 		{
@@ -127,36 +174,64 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 		//--------------------------------------------------
 		// 対象パラメータに応じた数式（補間処理）の実行
 		//--------------------------------------------------
-		if (channel.target_path == "scale")                                                       // 更新対象のパラメータがスケール（拡縮）の場合
+		if (channel.target_path == "scale")                                                      
 		{
-			const std::vector<XMFLOAT3>& scales = animation.scales.at(sampler.output);            // サンプラーからスケール値の配列を取得
-			XMVECTOR scale_start = XMLoadFloat3(&scales.at(keyframe_index));                      // 現在のキーフレームのスケールをSIMDレジスタにロード
-			XMVECTOR scale_end = XMLoadFloat3(&scales.at(keyframe_index + INDEX_OFFSET_NEXT));    // 次のキーフレームのスケールをSIMDレジスタにロード
-			XMVECTOR lerped_scale = XMVectorLerp(scale_start, scale_end, interpolation_factor);   // 線形補間(Lerp)を用いて開始と終了の中間スケールを高速計算
-			XMStoreFloat3(&animated_nodes.at(channel.target_node).scale, lerped_scale);           // 計算結果を対象ノードのスケール変数に直接保存
+			auto scale_it = animation.scales.find(sampler.output);
+			if (scale_it == animation.scales.end() || (keyframe_index + INDEX_OFFSET_NEXT) >= scale_it->second.size())
+			{
+				OutputDebugStringA("[GltfModelAnimation Error] Animate: scales key or keyframe index error!\n");
+				continue;
+			}
+			const std::vector<XMFLOAT3>& scales = scale_it->second;								
+			XMVECTOR scale_start = XMLoadFloat3(&scales.at(keyframe_index));                    
+			XMVECTOR scale_end = XMLoadFloat3(&scales.at(keyframe_index + INDEX_OFFSET_NEXT));  
+			XMVECTOR lerped_scale = XMVectorLerp(scale_start, scale_end, interpolation_factor); 
+
+			if (static_cast<size_t>(channel.target_node) < animated_nodes.size())
+			{
+				XMStoreFloat3(&animated_nodes.at(channel.target_node).scale, lerped_scale);           
+			}
 		}
-		else if (channel.target_path == "rotation")                                               // 更新対象のパラメータが回転の場合
+		else if (channel.target_path == "rotation")                                               
 		{
-			const std::vector<XMFLOAT4>& rotations = animation.rotations.at(sampler.output);      // サンプラーから回転値（クォータニオン）の配列を取得
-			XMVECTOR rot_start = XMLoadFloat4(&rotations.at(keyframe_index));                     // 現在のキーフレームの回転情報をロード
-			XMVECTOR rot_end = XMLoadFloat4(&rotations.at(keyframe_index + INDEX_OFFSET_NEXT));   // 次のキーフレームの回転情報をロード
-			XMVECTOR slerped_rot = XMQuaternionSlerp(rot_start, rot_end, interpolation_factor);   // 球面線形補間(Slerp)を用いて歪みのない滑らかな中間回転を計算
-			XMVECTOR normalized_rot = XMQuaternionNormalize(slerped_rot);                         // 丸め誤差によるクォータニオンの崩れを防ぐため正規化（長さを1にする）を実行
-			XMStoreFloat4(&animated_nodes.at(channel.target_node).rotation, normalized_rot);      // 計算結果を対象ノードの回転変数に直接保存
+			auto rot_it = animation.rotations.find(sampler.output);
+			if (rot_it == animation.rotations.end() || (keyframe_index + INDEX_OFFSET_NEXT) >= rot_it->second.size())
+			{
+				OutputDebugStringA("[GltfModelAnimation Error] Animate: rotations key or keyframe index error!\n");
+				continue;
+			}
+			const std::vector<XMFLOAT4>& rotations = rot_it->second;      
+			XMVECTOR rot_start = XMLoadFloat4(&rotations.at(keyframe_index));                     
+			XMVECTOR rot_end = XMLoadFloat4(&rotations.at(keyframe_index + INDEX_OFFSET_NEXT));   
+			XMVECTOR slerped_rot = XMQuaternionSlerp(rot_start, rot_end, interpolation_factor);   
+			XMVECTOR normalized_rot = XMQuaternionNormalize(slerped_rot);                         
+
+			if (static_cast<size_t>(channel.target_node) < animated_nodes.size())
+			{
+				XMStoreFloat4(&animated_nodes.at(channel.target_node).rotation, normalized_rot);     
+			}
 		}
-		else if (channel.target_path == "translation")                                            // 更新対象のパラメータが位置（座標移動）の場合
+		else if (channel.target_path == "translation")                                           
 		{
-			const std::vector<XMFLOAT3>& translations = animation.translations.at(sampler.output);		// サンプラーから位置座標の配列を取得
-			XMVECTOR trans_start = XMLoadFloat3(&translations.at(keyframe_index));						// 現在のキーフレームの位置座標をロード
-			XMVECTOR trans_end = XMLoadFloat3(&translations.at(keyframe_index + INDEX_OFFSET_NEXT));	// 次のキーフレームの位置座標をロード
-			XMVECTOR lerped_trans = XMVectorLerp(trans_start, trans_end, interpolation_factor);			// 線形補間(Lerp)を用いて開始と終了の中間座標を計算
-			XMStoreFloat3(&animated_nodes.at(channel.target_node).translation, lerped_trans);			// 計算結果を対象ノードの位置座標変数に直接保存
+			auto trans_it = animation.translations.find(sampler.output);
+			if (trans_it == animation.translations.end() || (keyframe_index + INDEX_OFFSET_NEXT) >= trans_it->second.size())
+			{
+				OutputDebugStringA("[GltfModelAnimation Error] Animate: translations key or keyframe index error!\n");
+				continue;
+			}
+			const std::vector<XMFLOAT3>& translations = trans_it->second;		
+			XMVECTOR trans_start = XMLoadFloat3(&translations.at(keyframe_index));						
+			XMVECTOR trans_end = XMLoadFloat3(&translations.at(keyframe_index + INDEX_OFFSET_NEXT));	
+			XMVECTOR lerped_trans = XMVectorLerp(trans_start, trans_end, interpolation_factor);			
+
+			if (static_cast<size_t>(channel.target_node) < animated_nodes.size())
+			{
+				XMStoreFloat3(&animated_nodes.at(channel.target_node).translation, lerped_trans);			
+			}
 		}
 	}
 
-	//--------------------------------------------------
 	// 更新されたノードのグローバル行列を再計算
-	//--------------------------------------------------
 	CumulateTransforms();
 }
 
@@ -165,6 +240,11 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 //===========================
 void GltfModelAnimation::TraverseNodeForTransform(int node_index, std::stack<DirectX::XMFLOAT4X4>& parent_global_transforms)
 {
+	if (node_index < 0 || static_cast<size_t>(node_index) >= animated_nodes.size())
+	{
+		return;
+	}
+
 	//--------------------------------------------------
 	// ローカル変換行列の構築とグローバル行列の計算
 	//--------------------------------------------------
@@ -183,9 +263,12 @@ void GltfModelAnimation::TraverseNodeForTransform(int node_index, std::stack<Dir
 	//--------------------------------------------------
 	for (int child_index : current_node.children)								// ノードが持つ全ての子ノードに対してループ処理
 	{
-		parent_global_transforms.push(current_node.global_transform);			// 自身のグローバル行列を「親の行列」としてスタックの最上部に積む
-		TraverseNodeForTransform(child_index, parent_global_transforms);		// 子ノードのインデックスを渡し自身を再帰呼び出し
-		parent_global_transforms.pop();											// 子ノードの処理が終わったらスタックから自身の行列を取り除く
+		if (child_index >= 0 && static_cast<size_t>(child_index) < animated_nodes.size())
+		{
+			parent_global_transforms.push(current_node.global_transform);			// 自身のグローバル行列を「親の行列」としてスタックの最上部に積む
+			TraverseNodeForTransform(child_index, parent_global_transforms);		// 子ノードのインデックスを渡し自身を再帰呼び出し
+			parent_global_transforms.pop();											// 子ノードの処理が終わったらスタックから自身の行列を取り除く
+		}
 	}
 }
 
@@ -243,12 +326,34 @@ size_t GltfModelAnimation::GetAnimationKeyframeIndex(const std::vector<float>& t
 //====================================
 float GltfModelAnimation::CalculateAnimationDuration(size_t animation_index)
 {
+	if (!model_data || model_data->animations.empty() || animation_index >= model_data->animations.size())
+	{
+		OutputDebugStringA("[GltfModelAnimation Error] CalculateAnimationDuration: index out of range!\n");
+		return 0.0f;
+	}
+
 	float max_time = 0.0f;	//記録用の最大時間変数
 	const GltfModelData::animation& animation = model_data->animations.at(animation_index);	//指定されたアニメーションデータを取得
 	for (const GltfModelData::animation::channel& channel : animation.channels)			//アニメーションが持つ全チャンネルをループ
 	{
+		//サンプラーインデックスの安全確認
+		if (channel.sampler < 0 || static_cast<size_t>(channel.sampler) >= animation.samplers.size())
+		{
+			OutputDebugStringA("[GltfModelAnimation Error] CalculateAnimationDuration : channel.sampler is out of range!\n");
+			continue;
+		}
+
 		const GltfModelData::animation::sampler& sampler = animation.samplers.at(channel.sampler);	//サンプラーを取得
-		const std::vector<float>& timeline = animation.timelines.at(sampler.input);					//サンプラーからの時間軸の配列を取得
+		
+		//タイムラインマップのキーの安全な存在確認
+		auto timeline_it = animation.timelines.find(sampler.input);
+		if (timeline_it == animation.timelines.end())
+		{
+			OutputDebugStringA("[GltfModelAnimation Error] CalculateAnimationDuration: sampler.input key not found in timelines map!\n");
+			continue;
+		}
+		
+		const std::vector<float>& timeline = timeline_it->second;					//サンプラーからの時間軸の配列を取得
 		if (!timeline.empty())	//タイムラインにデータが存在する場合
 		{
 			max_time = std::max<float>(max_time, timeline.back());	//これまでの最大時間と、現在のタイムラインの最後の時間を比較し、大きい方を記録

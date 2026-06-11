@@ -212,7 +212,7 @@ std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const s
 	//------------------------------------
 	//次回起動時のためにベイク保存処理
 	//------------------------------------
-	GltfModelSerializer::Save(binary_filename, data);
+	//GltfModelSerializer::Save(binary_filename, data);
 
 	return data;
 }

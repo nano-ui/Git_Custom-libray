@@ -12,7 +12,7 @@ static AutoRegister<Player> auto_register_player("Player");
 Player::Player()
 {
 	auto device = Graphics::Instance().GetDevice();
-	character = std::make_unique<Model>(device, "Data/Model/Character/unitychan.glb");
+	character = std::make_unique<Model>(device, "Data/Model/Character/RPG-Character.glb");
 	move_speed = 5.0f;
 	height = 0.8f;
 	radius = 0.4f;
