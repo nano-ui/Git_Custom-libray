@@ -33,12 +33,19 @@ void GltfModelAnimation::CumulateTransforms()
 	{
 		GltfModelData::node& current_node = animated_nodes.at(node_index);
 
-		XMMATRIX scale_matrix = XMMatrixScaling(current_node.scale.x, current_node.scale.y, current_node.scale.z);
-		XMMATRIX rotation_matrix = XMMatrixRotationQuaternion(XMLoadFloat4(&current_node.rotation));               
-		XMMATRIX translation_matrix = XMMatrixTranslation(current_node.translation.x, current_node.translation.y, current_node.translation.z); 
-
 		//自身のローカル変換行列
-		XMMATRIX local_matrix = scale_matrix * rotation_matrix * translation_matrix;
+		XMMATRIX local_matrix;
+		if (current_node.has_matrix)
+		{
+			local_matrix = XMLoadFloat4x4(&current_node.matrix);
+		}
+		else
+		{
+			XMMATRIX scale_matrix = XMMatrixScaling(current_node.scale.x, current_node.scale.y, current_node.scale.z);
+			XMMATRIX rotation_matrix = XMMatrixRotationQuaternion(XMLoadFloat4(&current_node.rotation));
+			XMMATRIX translation_matrix = XMMatrixTranslation(current_node.translation.x, current_node.translation.y, current_node.translation.z);
+			local_matrix = scale_matrix * rotation_matrix * translation_matrix;
+		}
 	
 		//親ノードが存在するか確認するため走査
 		int parent_index = current_node.parent;
@@ -150,6 +157,9 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 			XMVECTOR scale_end = XMLoadFloat3(&scales.at(keyframe_index + INDEX_OFFSET_NEXT));    // 次のキーフレームのスケールをSIMDレジスタにロード
 			XMVECTOR lerped_scale = XMVectorLerp(scale_start, scale_end, interpolation_factor);   // 線形補間(Lerp)を用いて開始と終了の中間スケールを高速計算
 			XMStoreFloat3(&animated_nodes.at(channel.target_node).scale, lerped_scale);           // 計算結果を対象ノードのスケール変数に直接保存
+			auto& target_node = animated_nodes.at(channel.target_node);
+			XMStoreFloat3(&target_node.scale, lerped_scale);
+			target_node.has_matrix = false;
 		}
 		else if (channel.target_path == "rotation")                                               // 更新対象のパラメータが回転の場合
 		{
@@ -159,6 +169,9 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 			XMVECTOR slerped_rot = XMQuaternionSlerp(rot_start, rot_end, interpolation_factor);   // 球面線形補間(Slerp)を用いて歪みのない滑らかな中間回転を計算
 			XMVECTOR normalized_rot = XMQuaternionNormalize(slerped_rot);                         // 丸め誤差によるクォータニオンの崩れを防ぐため正規化（長さを1にする）を実行
 			XMStoreFloat4(&animated_nodes.at(channel.target_node).rotation, normalized_rot);      // 計算結果を対象ノードの回転変数に直接保存
+			auto& target_node = animated_nodes.at(channel.target_node);
+			XMStoreFloat4(&target_node.rotation, normalized_rot);
+			target_node.has_matrix = false;
 		}
 		else if (channel.target_path == "translation")                                            // 更新対象のパラメータが位置（座標移動）の場合
 		{
@@ -167,6 +180,9 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 			XMVECTOR trans_end = XMLoadFloat3(&translations.at(keyframe_index + INDEX_OFFSET_NEXT));	// 次のキーフレームの位置座標をロード
 			XMVECTOR lerped_trans = XMVectorLerp(trans_start, trans_end, interpolation_factor);			// 線形補間(Lerp)を用いて開始と終了の中間座標を計算
 			XMStoreFloat3(&animated_nodes.at(channel.target_node).translation, lerped_trans);			// 計算結果を対象ノードの位置座標変数に直接保存
+			auto& target_node = animated_nodes.at(channel.target_node);
+			XMStoreFloat3(&target_node.translation, lerped_trans);
+			target_node.has_matrix = false;
 		}
 	}
 

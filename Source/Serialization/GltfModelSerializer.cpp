@@ -37,7 +37,19 @@ template<class Archive> void serialize(Archive& archive, GltfModelData::scene& s
 }
 template<class Archive> void serialize(Archive& archive, GltfModelData::node& n)
 {
-	archive(n.name, n.skin, n.mesh, n.children, n.rotation, n.scale, n.translation, n.global_transform);
+	archive(
+		n.name,
+		n.skin,
+		n.mesh,
+		n.children,
+		n.parent,
+		n.has_matrix,
+		n.matrix,
+		n.rotation,
+		n.scale,
+		n.translation,
+		n.global_transform
+	);
 }
 
 //--------------------------------------------------

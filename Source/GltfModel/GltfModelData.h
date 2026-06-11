@@ -50,6 +50,13 @@ public:
 			0.0f,0.0f,1.0f,0.0f,
 			0.0f,0.0f,0.0f,1.0f
 		};
+		bool has_matrix = true;					//初期トランスフォーム行列を持っているか
+		DirectX::XMFLOAT4X4 matrix = {			//初期トランスフォーム行列実体
+			1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		};
 	};
 
 public:

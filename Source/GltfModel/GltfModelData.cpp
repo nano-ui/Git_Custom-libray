@@ -345,13 +345,43 @@ void GltfModelData::FetchNodes(const tinygltf::Model& gltf_model)
 		node.name = gltf_node.name;			//ノード名を格納
 		node.skin = gltf_node.skin;			//スキン番号を格納
 		node.mesh = gltf_node.mesh;			//メッシュ番号を格納
-		node.children = gltf_node.children;	//子ノードのリストをコピー
+
+		if (!gltf_node.matrix.empty())
+		{
+			node.has_matrix = true;
+
+			node.matrix._11 = static_cast<float>(gltf_node.matrix.at(0));
+			node.matrix._12 = static_cast<float>(gltf_node.matrix.at(1));
+			node.matrix._13 = static_cast<float>(gltf_node.matrix.at(2));
+			node.matrix._14 = static_cast<float>(gltf_node.matrix.at(3));
+
+			node.matrix._21 = static_cast<float>(gltf_node.matrix.at(4));
+			node.matrix._22 = static_cast<float>(gltf_node.matrix.at(5));
+			node.matrix._23 = static_cast<float>(gltf_node.matrix.at(6));
+			node.matrix._24 = static_cast<float>(gltf_node.matrix.at(7));
+
+			node.matrix._31 = static_cast<float>(gltf_node.matrix.at(8));
+			node.matrix._32 = static_cast<float>(gltf_node.matrix.at(9));
+			node.matrix._33 = static_cast<float>(gltf_node.matrix.at(10));
+			node.matrix._34 = static_cast<float>(gltf_node.matrix.at(11));
+
+			node.matrix._41 = static_cast<float>(gltf_node.matrix.at(12));
+			node.matrix._42 = static_cast<float>(gltf_node.matrix.at(13));
+			node.matrix._43 = static_cast<float>(gltf_node.matrix.at(14));
+			node.matrix._44 = static_cast<float>(gltf_node.matrix.at(15));
+		}
+
+		for (int child : gltf_node.children)
+		{
+			node.children.push_back(child);	//子ノードのリストをコピー
+		}
 
 		//--------------------------------
 		//行列またはTRSプロパティの抽出
 		//--------------------------------
 		if (!gltf_node.matrix.empty())	//ノードに行列が直接定義されている場合
 		{
+			node.has_matrix = true;
 			DirectX::XMFLOAT4X4 matrix;	//一時的な行列格納変数
 			for (size_t row = 0; row < MATRIX_DIMENSION; row++)	//行ループを行う
 			{
