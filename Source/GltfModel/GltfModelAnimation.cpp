@@ -36,16 +36,16 @@ void GltfModelAnimation::CumulateTransforms()
 	}
 	else
 	{
-		OutputDebugStringA("[GltfModelAnimation Error] model_data->default_scene is OUT OF RANGE!\n");
+		//OutputDebugStringA("[GltfModelAnimation Error] model_data->default_scene is OUT OF RANGE!\n");
 
 		if (!model_data->scenes.empty())
 		{
-			OutputDebugStringA("[GltfModelAnimation Warning] Safety fallback: Using the first scene (0) instead.\n");
+			//OutputDebugStringA("[GltfModelAnimation Warning] Safety fallback: Using the first scene (0) instead.\n");
 			root_nodes = model_data->scenes.at(0).nodes;
 		}
 		else
 		{
-			OutputDebugStringA("[GltfModelAnimation Warning] Safety fallback: Scenes container is completely empty!\n");
+			//OutputDebugStringA("[GltfModelAnimation Warning] Safety fallback: Scenes container is completely empty!\n");
 		}
 	}
 

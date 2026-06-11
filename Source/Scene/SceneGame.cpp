@@ -185,7 +185,7 @@ void SceneGame::Render(float elapsed_time)
 
 	//通常カメラからの本描画パス
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
-	context->RSSetState(states->GetRasterizerState(2).Get());
+	context->RSSetState(states->GetRasterizerState(0).Get());
 
 	ID3D11SamplerState* sampler_p0 = states->GetSamplerState(0).Get(); //POINTサンプラー
 	ID3D11SamplerState* sampler_p1 = states->GetSamplerState(1).Get(); //LINEARサンプラー

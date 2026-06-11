@@ -28,17 +28,17 @@
                 "AttackPower": 0.0,
                 "Friction": 15.0,
                 "Gravity": -10.0,
-                "Health": 1.0,
-                "Heilth": 0.800000011920929,
+                "Health": 9.199999809265137,
+                "Heilth": 1.2000000476837158,
                 "MaxSpeed": 5.0,
                 "MoveSpeed": 5.0,
-                "Offset_Y": 0.5,
+                "Offset_Y": 0.800000011920929,
                 "Position": {
                     "x": 0.0,
                     "y": 0.0,
                     "z": 0.0
                 },
-                "Radius": 0.4000000059604645,
+                "Radius": 0.699999988079071,
                 "Rotation": {
                     "w": 1.0,
                     "x": 0.0,

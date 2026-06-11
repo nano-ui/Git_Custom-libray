@@ -38,6 +38,7 @@ void Player::Initialize()
 	capsule_collider.listener = this;
 	capsule_collider.is_active = true;
 	AddCollider(&capsule_collider);
+	character->PlayAnimation("Idle", true);
 }
 
 //XVˆ—
@@ -50,6 +51,7 @@ void Player::Update(float elapsed_time)
 
 	UpdateInput(elapsed_time);
 	Character::Update(elapsed_time);
+	character->Update(elapsed_time);
 
 	capsule_collider.start_center = position;
 	capsule_collider.start_center.y = position.y + offset_y;
@@ -69,6 +71,8 @@ void Player::RenderDebug(ShapeRenderer* renderer)
 		position.z
 	};
 	float total_height = height + (capsule_collider.radius * 2.0f);
+
+	capsule_collider.radius = radius;
 
 	//Šù‘¶ŠÖ”‚ÌŒÄ‚Ño‚µ
 	DirectX::XMFLOAT4 color = { 0.0f, 1.0f, 0.0f, 1.0f };

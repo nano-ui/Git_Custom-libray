@@ -78,17 +78,17 @@ void GltfModelRenderer::Render(ID3D11DeviceContext* immediate_context, const Glt
 	else
 	{
 		//クラッシュする一歩前に原因をデバッグ出力ウインドウへ表示
-		OutputDebugStringA("[GltfModelRenderer Error] data.default_scene is OUT OF RANGE during Render!\n");
+		//OutputDebugStringA("[GltfModelRenderer Error] data.default_scene is OUT OF RANGE during Render!\n");
 
 		//セーフガード：シーンデータが有効なら0番目を代用、無ければ全ノードを直接ルート候補にする
 		if (!data.scenes.empty())
 		{
-			OutputDebugStringA("[GltfModelRenderer Warning] Safety fallback: Using the first scene (0) for rendering.\n");
+			//OutputDebugStringA("[GltfModelRenderer Warning] Safety fallback: Using the first scene (0) for rendering.\n");
 			render_root_nodes = data.scenes.at(0).nodes;
 		}
 		else if (!nodes_to_render.empty())
 		{
-			OutputDebugStringA("[GltfModelRenderer Warning] Safety fallback: Scenes container is empty! Render all nodes directly.\n");
+			//OutputDebugStringA("[GltfModelRenderer Warning] Safety fallback: Scenes container is empty! Render all nodes directly.\n");
 			for (size_t i = 0; i < nodes_to_render.size(); ++i)
 			{
 				render_root_nodes.push_back(static_cast<int>(i));	
