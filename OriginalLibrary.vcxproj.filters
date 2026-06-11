@@ -270,6 +270,15 @@
     <ClCompile Include="Source\Serialization\JsonSerializer.cpp">
       <Filter>Source\Serializer\JsonSerializer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\StateMschine\StateBlackboard.cpp">
+      <Filter>Source\StateMachine\StateBlackboard</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StateMschine\State.cpp">
+      <Filter>Source\StateMachine\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StateMschine\StateMachine.cpp">
+      <Filter>Source\StateMachine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui.h">
@@ -508,6 +517,15 @@
     </ClInclude>
     <ClInclude Include="Source\Serialization\JsonSerializer.h">
       <Filter>Source\Serializer\JsonSerializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMschine\StateBlackboard.h">
+      <Filter>Source\StateMachine\StateBlackboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMschine\State.h">
+      <Filter>Source\StateMachine\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMschine\StateMachine.h">
+      <Filter>Source\StateMachine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -800,6 +818,15 @@
     </Filter>
     <Filter Include="Source\Serializer\JsonSerializer">
       <UniqueIdentifier>{4be978f0-ab65-4851-b094-f70ff59c125e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\StateMachine">
+      <UniqueIdentifier>{e58442ab-dc6d-45be-9edf-fdeaa2615936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\StateMachine\StateBlackboard">
+      <UniqueIdentifier>{60d90104-7757-44de-8a76-3848c3231b66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\StateMachine\State">
+      <UniqueIdentifier>{ed3e84eb-3ce5-4f86-91e6-a25c86690109}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

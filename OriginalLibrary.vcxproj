@@ -286,6 +286,9 @@
     <ClCompile Include="Source\Shaders\CustomShader.cpp" />
     <ClCompile Include="Source\Shaders\LuminanceExtractionShader.cpp" />
     <ClCompile Include="Source\Shaders\SkyBox.cpp" />
+    <ClCompile Include="Source\StateMschine\State.cpp" />
+    <ClCompile Include="Source\StateMschine\StateBlackboard.cpp" />
+    <ClCompile Include="Source\StateMschine\StateMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imconfig.h" />
@@ -367,6 +370,9 @@
     <ClInclude Include="Source\Shaders\CustomShader.h" />
     <ClInclude Include="Source\Shaders\LuminanceExtractionShader.h" />
     <ClInclude Include="Source\Shaders\SkyBox.h" />
+    <ClInclude Include="Source\StateMschine\State.h" />
+    <ClInclude Include="Source\StateMschine\StateBlackboard.h" />
+    <ClInclude Include="Source\StateMschine\StateMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli" />
