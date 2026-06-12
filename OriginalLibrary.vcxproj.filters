@@ -279,6 +279,9 @@
     <ClCompile Include="Source\StateMschine\StateMachine.cpp">
       <Filter>Source\StateMachine</Filter>
     </ClCompile>
+    <ClCompile Include="Source\StateMschine\LocamotionState.cpp">
+      <Filter>Source\StateMachine\LocomotionState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui.h">
@@ -526,6 +529,9 @@
     </ClInclude>
     <ClInclude Include="Source\StateMschine\StateMachine.h">
       <Filter>Source\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMschine\LocamotionState.h">
+      <Filter>Source\StateMachine\LocomotionState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -827,6 +833,9 @@
     </Filter>
     <Filter Include="Source\StateMachine\State">
       <UniqueIdentifier>{ed3e84eb-3ce5-4f86-91e6-a25c86690109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\StateMachine\LocomotionState">
+      <UniqueIdentifier>{acd8e128-1ea6-4d36-902f-211b383d9148}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

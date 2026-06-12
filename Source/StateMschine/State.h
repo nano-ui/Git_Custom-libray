@@ -5,6 +5,7 @@
 #include <memory>
 
 class State;
+class StateBlackboard;
 
 class Transition
 {
@@ -40,7 +41,7 @@ public:
 	virtual void Enter() {}
 
 	//çXêV
-	virtual void Update(float elapsed_time) = 0;
+	virtual void Update(float elapsed_time, StateBlackboard* blackboard) = 0;
 
 	//èIóπ
 	virtual void Exit() {}

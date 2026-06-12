@@ -33,6 +33,7 @@ void StateMachine::Update(float elapsed_time)
 			break;
 		}
 	}
+	current_state->Update(elapsed_time, blackboard.get());
 }
 
 //ó‘Ô‚Ì’Ç‰Á
