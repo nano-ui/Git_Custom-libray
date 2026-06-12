@@ -4,9 +4,7 @@
 StateBlackboard::StateBlackboard()
 {
 	move_input = { 0.0f,0.0f,0.0f };
-	is_jump_pressed = false;
-	is_attack_pressed = false;
-	is_avoid_pressed = false;
+	current_input_flags = 0;
 
 	action_category = ActionCategory::Idle;
 	sub_action_id = 0;
@@ -20,4 +18,22 @@ StateBlackboard::StateBlackboard()
 StateBlackboard::~StateBlackboard()
 {
 
+}
+
+//汎用アクセス関数
+bool StateBlackboard::IsActionPressed(const std::string& action_name) const
+{
+	auto iterator = action_states.find(action_name);
+	if (iterator == action_states.end())
+	{
+		return false;
+	}
+
+	return iterator->second;
+}
+
+//入力状態を書き込む
+void StateBlackboard::SetActionState(const std::string& action_name, bool is_pressed)
+{
+	action_states[action_name] = is_pressed;
 }

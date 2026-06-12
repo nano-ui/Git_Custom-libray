@@ -15,10 +15,10 @@ public:
 		:next_state(next_state_name){ }
 
 	//デストラクタ
-	~Transition() = default;
+	virtual ~Transition() = default;
 
 	//条件を満たしているかチェック
-	virtual bool IsTriggered() = 0;
+	virtual bool IsTriggered(StateBlackboard* blackboard) = 0;
 
 	//遷移先の状態名を取得
 	const std::string& GetNextState()const { return next_state; }

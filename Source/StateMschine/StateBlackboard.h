@@ -1,6 +1,8 @@
 #pragma once
 
 #include <DirectXMath.h>
+#include <unordered_map>
+#include <string>
 
 //キャラクターのアクションカテゴリー
 enum class ActionCategory
@@ -22,11 +24,15 @@ public:
 	//デストラクタ
 	~StateBlackboard();
 
+	//汎用アクセス関数
+	bool IsActionPressed(const std::string& action_name)const;
+
+	//入力状態を書き込む
+	void SetActionState(const std::string& action_name, bool is_pressed);
+
 public:
 	DirectX::XMFLOAT3 move_input;	//移動入力
-	bool is_jump_pressed;			//ジャンプボタン
-	bool is_attack_pressed;			//攻撃ボタン
-	bool is_avoid_pressed;			//回避ボタン
+	uint32_t current_input_flags;	//合成された入力ビットフラグ
 
 	ActionCategory action_category;	//アクションカテゴリー
 	int sub_action_id;				//技ID等の詳細な識別番号
@@ -34,5 +40,8 @@ public:
 
 	bool is_grounded;					//接地フラグ
 	DirectX::XMFLOAT3 current_velocity;	//現在の速度
+
+private:
+	std::unordered_map<std::string, bool> action_states;	//データマップ
 };
 

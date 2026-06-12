@@ -27,7 +27,7 @@ void StateMachine::Update(float elapsed_time)
 		if (!transition)continue;
 
 		//ðŒ‚ª–ž‚½‚³‚ê‚½uŠÔA‚»‚Ì‘JˆÚæ‚ÖØ‚è‘Ö‚¦‚é
-		if (transition->IsTriggered())
+		if (transition->IsTriggered(blackboard.get()))
 		{
 			DoTransition(transition->GetNextState());
 			break;

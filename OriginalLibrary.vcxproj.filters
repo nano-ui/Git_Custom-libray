@@ -282,6 +282,15 @@
     <ClCompile Include="Source\StateMschine\LocamotionState.cpp">
       <Filter>Source\StateMachine\LocomotionState</Filter>
     </ClCompile>
+    <ClCompile Include="Source\StateMschine\IdleState.cpp">
+      <Filter>Source\StateMachine\IdleState</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StateMschine\ToLocomotionTransition.cpp">
+      <Filter>Source\StateMachine\ToLocomotionTransition</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StateMschine\ToIdleTransition.cpp">
+      <Filter>Source\StateMachine\ToIdleTransition</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui.h">
@@ -532,6 +541,15 @@
     </ClInclude>
     <ClInclude Include="Source\StateMschine\LocamotionState.h">
       <Filter>Source\StateMachine\LocomotionState</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMschine\IdleState.h">
+      <Filter>Source\StateMachine\IdleState</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMschine\ToLocomotionTransition.h">
+      <Filter>Source\StateMachine\ToLocomotionTransition</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMschine\ToIdleTransition.h">
+      <Filter>Source\StateMachine\ToIdleTransition</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -836,6 +854,15 @@
     </Filter>
     <Filter Include="Source\StateMachine\LocomotionState">
       <UniqueIdentifier>{acd8e128-1ea6-4d36-902f-211b383d9148}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\StateMachine\IdleState">
+      <UniqueIdentifier>{311da080-7517-4b6a-bbf4-e670f679d8e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\StateMachine\ToLocomotionTransition">
+      <UniqueIdentifier>{27cdaac0-b269-47d9-9ffe-545ea65d49cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\StateMachine\ToIdleTransition">
+      <UniqueIdentifier>{50817c6e-d14a-4a9a-a4e2-b3e6dce5211d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
