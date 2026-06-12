@@ -2,6 +2,7 @@
 #include <misc.h>
 #include "../Graphics/shader.h"
 #include "../Graphics/Graphics.h"
+#include "../GltfModel/GltfModel.h"
 
 //=========================================
 //デバイスを受け取り描画リソースを初期化
@@ -45,64 +46,184 @@ GltfModelRenderer::GltfModelRenderer(ID3D11Device* device)
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 }
 
-//===============================
 //GPUに命令を送りモデルを描画
-//===============================
-void GltfModelRenderer::Render(ID3D11DeviceContext* immediate_context, const GltfModelData& data, const DirectX::XMFLOAT4X4& world, const std::vector<GltfModelData::node>& animated_nodes)
+void GltfModelRenderer::Render
+(
+	ID3D11DeviceContext* immediate_context,
+	const GltfModel& model,
+	const DirectX::XMFLOAT4X4& world,
+	ID3D11SamplerState* const* sampler_states
+)
 {
-	//描画対象のノード配列の設定
-	const std::vector<GltfModelData::node>& nodes_to_render = animated_nodes.empty() ? data.nodes : animated_nodes;
+	const GltfModelData& data = *model.GetData();	//モデルの実体情報
+	const std::vector<GltfModelData::node>& nodes = model.GetAnimatedNodes();	//アニメーション計算済みのノード配列
 
-	//パイプラインステートと共通リソースの設定
-	immediate_context->PSSetShaderResources(SHADER_SLOT_0, RESOURCE_COUNT_1, data.material_resource_view.GetAddressOf());	//全マテリアル情報を格納した構造化バッファをピクセルシェーダーにセット
-	custom_shader->Apply();
-	immediate_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	//頂点を3つずつ結んで三角形を描画するモード（トポロジー）に設定
-
-	auto states = Graphics::Instance().GetPipelineStates();
-	ID3D11SamplerState* sampler_states[SAMPLER_COUNT_3] = {
-		states->GetSamplerState(0).Get(),
-		states->GetSamplerState(1).Get(),
-		states->GetSamplerState(2).Get()
-	};
-
-	immediate_context->PSSetSamplers(OFFSET_ZERO, SAMPLER_COUNT_3, sampler_states);
-
-	//安全に巡回するためのルートノード一覧の抽出
-	std::vector<int> render_root_nodes;
-
-	//デフォルトシーンインデックスが配列の範囲内にあるか存在確認
-	if (data.default_scene >= 0 && static_cast<size_t>(data.default_scene) < data.scenes.size())
+	if (data.scenes.empty())
 	{
-		render_root_nodes = data.scenes.at(data.default_scene).nodes;
+		return; 
 	}
-	else
-	{
-		//クラッシュする一歩前に原因をデバッグ出力ウインドウへ表示
-		//OutputDebugStringA("[GltfModelRenderer Error] data.default_scene is OUT OF RANGE during Render!\n");
 
-		//セーフガード：シーンデータが有効なら0番目を代用、無ければ全ノードを直接ルート候補にする
-		if (!data.scenes.empty())
+	//描画コマンドの集計
+	std::vector<RenderCommand> render_commands;
+
+	int active_scene_index = data.default_scene;
+
+	if (active_scene_index < 0 || static_cast<size_t>(active_scene_index) >= data.scenes.size())
+	{
+		active_scene_index = 0; 
+	}
+
+	//デフォルトシーン番号が安全な範囲内にあるか確認
+	const std::vector<int>& root_nodes = data.scenes.at(active_scene_index).nodes;
+	for (int root_index : root_nodes)
+	{
+		GetherRenderCommands(root_index, data, nodes, world, render_commands);
+	}
+
+	if (render_commands.empty())
+	{
+		return;
+	}
+
+	if (custom_shader)
+	{
+		custom_shader->Apply();
+	}
+
+	//マテリアルIDによるソート
+	std::sort(render_commands.begin(), render_commands.end(), CompartMaterial());
+
+	//ループ描画とステート切り替え最小化
+	int last_material_id = -1;	//編集・比較を行うマテリアルIDキャッシュ
+
+	for (const RenderCommand& cmd : render_commands)
+	{
+		using namespace DirectX;
+		const GltfModelData::mesh::primitive* primitive = cmd.primitive;
+
+		//スキンのアニメーション行列の計算とGPU転送
+		if (cmd.skin_index > -1 && static_cast<size_t>(cmd.skin_index) < data.skins.size())
 		{
-			//OutputDebugStringA("[GltfModelRenderer Warning] Safety fallback: Using the first scene (0) for rendering.\n");
-			render_root_nodes = data.scenes.at(0).nodes;
-		}
-		else if (!nodes_to_render.empty())
-		{
-			//OutputDebugStringA("[GltfModelRenderer Warning] Safety fallback: Scenes container is empty! Render all nodes directly.\n");
-			for (size_t i = 0; i < nodes_to_render.size(); ++i)
+			const GltfModelData::skin& skin = data.skins.at(cmd.skin_index);
+			GltfModelData::primitive_joint_constants primitive_joint_data = {};
+
+			for (size_t joint_index = 0; joint_index < skin.joints.size() && joint_index < 512; joint_index++)
 			{
-				render_root_nodes.push_back(static_cast<int>(i));	
+				XMStoreFloat4x4(&primitive_joint_data.matrices[joint_index],
+					XMLoadFloat4x4(&skin.inverse_bind_matrices.at(joint_index)) *
+					XMLoadFloat4x4(&nodes.at(skin.joints.at(joint_index)).global_transform) *
+					XMMatrixInverse(nullptr, XMLoadFloat4x4(&cmd.node_global_matrix))
+				);
+			}
+
+			immediate_context->UpdateSubresource(primitive_joint_cbuffer.Get(), OFFSET_ZERO, nullptr, &primitive_joint_data, OFFSET_ZERO, OFFSET_ZERO);
+			immediate_context->VSSetConstantBuffers(SHADER_SLOT_2, RESOURCE_COUNT_1, primitive_joint_cbuffer.GetAddressOf());
+		}
+
+		//プリミティブごとの定数データ更新
+		{
+			GltfModelData::primitive_constants primitive_data = {};
+			primitive_data.material = primitive->material;
+			primitive_data.has_tangent = primitive->has("TANGENT") ? 1 : 0;
+			primitive_data.skin = cmd.skin_index;
+			primitive_data.world = cmd.world_matrix;
+			immediate_context->UpdateSubresource(primitive_cbuffer.Get(), OFFSET_ZERO, nullptr, &primitive_data, OFFSET_ZERO, OFFSET_ZERO);
+			immediate_context->VSSetConstantBuffers(SHADER_SLOT_0, RESOURCE_COUNT_1, primitive_cbuffer.GetAddressOf());
+			immediate_context->PSSetConstantBuffers(SHADER_SLOT_0, RESOURCE_COUNT_1, primitive_cbuffer.GetAddressOf());
+		}
+
+		//マテリアルの切り替え判定
+		if (primitive->material != last_material_id)
+		{
+			if (data.material_resource_view)
+			{
+				immediate_context->PSSetShaderResources(0, RESOURCE_COUNT_1, data.material_resource_view.GetAddressOf());
+			}
+
+			ID3D11ShaderResourceView* shader_resource_views[TEXTURE_COUNT_5] = { nullptr };
+
+			if (primitive->material >= 0 && static_cast<size_t>(primitive->material) < data.materials.size())
+			{
+				const GltfModelData::material& material = data.materials.at(primitive->material);
+				const int texture_indices[] =
+				{
+					material.data.pbr_metallic_roughness.basecolor_texture.index,
+					material.data.pbr_metallic_roughness.metallic_roughness_texture.index,
+					material.data.normal_texture.index,
+					material.data.emissive_texture.index,
+					material.data.occlusion_texture.index
+				};
+
+				for (int texture_index = 0; texture_index < TEXTURE_COUNT_5; texture_index++)
+				{
+					int tex_idx = texture_indices[texture_index];
+					if (tex_idx >= 0 && static_cast<size_t>(tex_idx) < data.textures.size())
+					{
+						int source_idx = data.textures.at(tex_idx).source;
+						if (source_idx >= 0 && static_cast<size_t>(source_idx) < data.texture_resource_views.size())
+						{
+							shader_resource_views[texture_index] = data.texture_resource_views.at(source_idx).Get();
+						}
+					}
+				}
+			}
+
+			immediate_context->PSSetShaderResources(SHADER_SLOT_1, TEXTURE_COUNT_5, shader_resource_views);
+
+			auto states = Graphics::Instance().GetPipelineStates();
+			if (states)
+			{
+				ID3D11SamplerState* samplers[SAMPLER_COUNT_3] = {
+					states->GetSamplerState(0).Get(),
+					states->GetSamplerState(1).Get(),
+					states->GetSamplerState(2).Get()
+				};
+				immediate_context->PSSetSamplers(OFFSET_ZERO, SAMPLER_COUNT_3, samplers);
+			}
+			last_material_id = primitive->material;
+		}
+
+		//頂点バッファの設定とインデックス描画
+		ID3D11Buffer* vertex_buffers[6] = { nullptr };
+		UINT strides[6] = { OFFSET_ZERO };
+		UINT offsets[6] = { OFFSET_ZERO };
+
+		const char* attribute_names[] = { "POSITION", "NORMAL", "TANGENT", "TEXCOORD_0", "JOINTS_0", "WEIGHTS_0" };
+
+		for (int i = 0; i < 6; ++i)
+		{
+			const char* attr = attribute_names[i];
+			if (primitive->has(attr))
+			{
+				auto it = primitive->vertex_buffer_views.find(attr);
+				if (it != primitive->vertex_buffer_views.end())
+				{
+					int buffer_idx = it->second.buffer;
+					if (buffer_idx >= 0 && static_cast<size_t>(buffer_idx) < data.buffers.size())
+					{
+						vertex_buffers[i] = data.buffers.at(buffer_idx).Get();
+						strides[i] = static_cast<UINT>(it->second.stride_in_bytes);
+						offsets[i] = static_cast<UINT>(it->second.byte_offset);
+					}
+				}
 			}
 		}
-	}
 
-	//決定された安全なルートノードからの描画巡回処理
-	for (int node_index : render_root_nodes) 
-	{
-		//巡回するインデックスがノード配列の有効範囲に収まっているか最終確認
-		if (node_index >= 0 && static_cast<size_t>(node_index) < nodes_to_render.size())
+		immediate_context->IASetVertexBuffers(SHADER_SLOT_0, _countof(vertex_buffers), vertex_buffers, strides, offsets);
+
+		if (primitive->index_buffer_view.buffer > -1)
 		{
-			TraverseNodeForRender(node_index, immediate_context, data, nodes_to_render, world, sampler_states);
+			immediate_context->IASetIndexBuffer(data.buffers.at(primitive->index_buffer_view.buffer).Get(),
+				primitive->index_buffer_view.format, static_cast<UINT>(primitive->index_buffer_view.byte_offset));
+			immediate_context->DrawIndexed(static_cast<UINT>(primitive->index_buffer_view.count), OFFSET_ZERO, OFFSET_ZERO);
+		}
+		else
+		{
+			auto pos_it = primitive->vertex_buffer_views.find("POSITION");
+			if (pos_it != primitive->vertex_buffer_views.end())
+			{
+				immediate_context->Draw(static_cast<UINT>(pos_it->second.count), OFFSET_ZERO);
+			}
 		}
 	}
 }
@@ -304,5 +425,46 @@ void GltfModelRenderer::TraverseNodeForRender
 	for (int child_index : current_node.children)																			// 描画が完了したノードの全ての子ノードをループ
 	{
 		TraverseNodeForRender(child_index, immediate_context, data, nodes, world, sampler_states);											// 子ノードのインデックスを渡し自身を再帰呼び出し
+	}
+}
+
+//描画対象のノードを巡回し、プリミティブ情報をフラットな配列に集める
+void GltfModelRenderer::GetherRenderCommands
+(
+	int node_index,									//現在のノード番号
+	const GltfModelData& data,						//実体情報
+	const std::vector<GltfModelData::node>&nodes,	//モデル情報
+	const DirectX::XMFLOAT4X4& world,				//ワールド行列
+	std::vector<RenderCommand>& commands			//描画情報
+)
+{
+	const GltfModelData::node& current_node = nodes.at(node_index);	//現在のモデル情報
+
+	//メッシュが存在する場合、プリミティブ情報を配列に格納
+	if (current_node.mesh > -1)
+	{
+		const GltfModelData::mesh& mesh = data.meshes.at(current_node.mesh);	//現在のメッシュ情報
+
+		for (const GltfModelData::mesh::primitive& primitive : mesh.primitives)
+		{
+			RenderCommand cmd = {};	//現在のメッシュ描画に必要な情報格納先
+
+			//プリミティブごとの最終的なワールド行列を計算して格納
+			DirectX::XMStoreFloat4x4(&cmd.world_matrix,
+				DirectX::XMLoadFloat4x4(&current_node.global_transform) *
+				DirectX::XMLoadFloat4x4(&world));
+
+			cmd.primitive = &primitive;
+			cmd.skin_index = current_node.skin;
+			cmd.node_global_matrix = current_node.global_transform;
+
+			commands.push_back(cmd);
+		}
+	}
+
+	//子ノードに対する再帰呼び出し
+	for (int child_index : current_node.children)
+	{
+		GetherRenderCommands(child_index, data, nodes, world, commands);
 	}
 }

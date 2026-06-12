@@ -37,7 +37,7 @@ public:
 	{
 		std::string name;	//名前
 		int skin = -1;		//スキンのインデックス
-		int mesh = -1;		//マッシュのイデックス
+		int mesh = -1;		//メッシュのイデックス
 		std::vector<int> children;	//子ノードのインデックス一覧
 		DirectX::XMFLOAT4 rotation = { 0.0f,0.0f,0.0f,1.0f };	//回転情報
 		DirectX::XMFLOAT3 scale = { 1.0f,1.0f,1.0f };			//スケール情報

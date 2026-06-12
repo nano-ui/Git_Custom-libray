@@ -1,6 +1,5 @@
 #include "GltfModel.h"
 
-#include "GltfModelData.h"
 #include "GltfModelAnimation.h"
 #include "GltfModelRenderer.h"
 #include "Model.h"
@@ -55,7 +54,7 @@ void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XM
 	if (renderer && data && animation)	//要な3つのコンポーネントがすべて揃っているか確認
 	{
 		//自身の共有データ、指定された位置（ワールド行列）、自身の計算済みノード配列を渡して描画を実行
-		renderer->Render(immediate_context, *data, world_matrix, animation->GetAnimationNodes());
+		renderer->Render(immediate_context, *this, world_matrix, nullptr);
 	}
 }
 
@@ -71,4 +70,10 @@ void GltfModel::PlayAnimation(const std::string& animation_name, bool is_loop)
 	{
 		animation->PlayAniamtion(animation_name, is_loop);	//名前とループ設定をそのまま中継
 	}
+}
+
+//アニメーション情報取得
+const std::vector<GltfModelData::node>& GltfModel::GetAnimatedNodes() const
+{
+	return animation->GetAnimationNodes();
 }

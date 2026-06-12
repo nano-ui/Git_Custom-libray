@@ -2,9 +2,11 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 #include <DirectXMath.h>
 
-class GltfModelData;
+#include "../GltfModel/GltfModelData.h"
+
 class GltfModelAnimation;
 class GltfModelRenderer;
 struct ID3D11DeviceContext;
@@ -26,6 +28,12 @@ public:
 
 	//アニメーション切り替え
 	void PlayAnimation(const std::string& animation_name, bool is_loop);
+
+	//モデル情報取得
+	std::shared_ptr<GltfModelData> GetData()const { return data; }
+
+	//アニメーション情報取得
+	const std::vector<GltfModelData::node>& GetAnimatedNodes() const;
 
 private:
 	std::shared_ptr<GltfModelData> data;			//リソースデータ
