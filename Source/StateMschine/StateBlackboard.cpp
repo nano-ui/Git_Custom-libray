@@ -1,4 +1,5 @@
 #include "StateBlackboard.h"
+#include "VariableTransition.h"
 
 //コンストラクタ
 StateBlackboard::StateBlackboard()
@@ -12,12 +13,14 @@ StateBlackboard::StateBlackboard()
 
 	is_grounded = false;
 	current_velocity = { 0.0f,0.0f,0.0f };
+
+	generic_parameters.clear();
 }
 
 //デストラクタ
 StateBlackboard::~StateBlackboard()
 {
-
+	generic_parameters.clear();
 }
 
 //汎用アクセス関数

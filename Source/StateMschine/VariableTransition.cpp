@@ -37,7 +37,7 @@ bool VariableTransition::IsTriggered(StateBlackboard* blackboard)
 	switch (condition_type)
 	{
 	case ConditionType::InputLength:
-		current_param_value = blackboard->move_input.x + blackboard->move_input.x + blackboard->move_input.z * blackboard->move_input.z;
+		current_param_value = blackboard->move_input.x * blackboard->move_input.x + blackboard->move_input.z * blackboard->move_input.z;
 		return CompareValues(current_param_value, compare_value, operator_type);
 		break;
 	case ConditionType::ButtonCommand:

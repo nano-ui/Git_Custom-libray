@@ -15,14 +15,13 @@ enum class ConditionType
 //比較演算子の種類
 enum class ConditionOp
 {
-	Equal,			//==
-	NotEqual,		//!=
-	GreaterThan,	//>
-	LessThen,		//<
-	GreaterEqual,	//>=
-	LessEqual,		//<=
+	Equal,			//イコール
+	NotEqual,		//ノットイコール
+	GreaterThan,	//より大きい
+	LessThen,		//未満
+	GreaterEqual,	//以上
+	LessEqual,		//以下
 };
-
 
 class VariableTransition : public Transition
 {
