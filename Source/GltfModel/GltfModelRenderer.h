@@ -28,6 +28,14 @@ private:
 	void TraverseNodeForRender(int node_index, ID3D11DeviceContext* immediate_context, const GltfModelData& data, const std::vector<GltfModelData::node>& nodes, const DirectX::XMFLOAT4X4& world, ID3D11SamplerState** sampler_states);
 
 private:
+	struct RenderCommand
+	{
+		DirectX::XMFLOAT4X4 world_matrix;					//プリミティブごとのワールド行列
+		const GltfModelData::mesh::primitive* primitive;	//描画するプリミティブのポインタ
+		int skin_index;										//スキン情報の番号
+	};
+
+private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_cbuffer;				//プリミティブの情報を送るための定数バッファ
 	Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_joint_cbuffer;		//スキン（ボーン）行列を送るための定数バッファ
 	std::unique_ptr<CustomShader> custom_shader;
