@@ -25,6 +25,9 @@ public:
 	//アニメーション再生
 	virtual void PlayAnimation(const std::string& animation_name, bool is_loop) = 0;
 
+	//アニメーション名取得
+	virtual std::vector<std::string> GetAnimationNames() const = 0;
+
 	//頂点座標リストの取得
 	virtual std::vector<DirectX::XMFLOAT3> GetVertices()const = 0;
 
@@ -64,6 +67,15 @@ public:
 	void PlayAnimation(const std::string& animation_name, bool is_loop)override
 	{
 		model->PlayAnimation(animation_name, is_loop);
+	}
+
+	//FBX側のアニメーション名取得
+	std::vector<std::string> GetAnimationNames() const override
+	{
+		std::vector<std::string> names;
+		names.push_back("Idle");
+		names.push_back("Run");
+		return names;
 	}
 
 	//頂点座標リストの取得
@@ -139,6 +151,20 @@ public:
 	void PlayAnimation(const std::string& animation_nama, bool is_loop)override
 	{
 		model->PlayAnimation(animation_nama, is_loop);
+	}
+
+	//アニメーション名取得
+	std::vector<std::string> GetAnimationNames() const override
+	{
+		std::vector<std::string> names;
+		if (data)
+		{
+			for (const auto& pair : data->animation_index_map)
+			{
+				names.push_back(pair.first); // アニメーション名（キー）を追加
+			}
+		}
+		return names;
 	}
 
 	//頂点座標リストの取得
@@ -285,6 +311,17 @@ void Model::Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& worl
 void Model::PlayAnimation(const std::string& animation_name, bool is_loop)
 {
 	if (model_impl)model_impl->PlayAnimation(animation_name, is_loop);
+}
+
+//登録されているすべてのアニメーション名の一覧を取得
+std::vector<std::string> Model::GetAnimationNames() const
+{
+	std::vector<std::string> names;
+	if (model_impl)
+	{
+		names = model_impl->GetAnimationNames();
+	}
+	return names;
 }
 
 //頂点座標リストの取得

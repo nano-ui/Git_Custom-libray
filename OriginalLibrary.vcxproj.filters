@@ -285,11 +285,14 @@
     <ClCompile Include="Source\StateMschine\IdleState.cpp">
       <Filter>Source\StateMachine\IdleState</Filter>
     </ClCompile>
-    <ClCompile Include="Source\StateMschine\ToLocomotionTransition.cpp">
-      <Filter>Source\StateMachine\ToLocomotionTransition</Filter>
+    <ClCompile Include="Source\StateMschine\VariableTransition.cpp">
+      <Filter>Source\StateMachine\VariableTransition</Filter>
     </ClCompile>
-    <ClCompile Include="Source\StateMschine\ToIdleTransition.cpp">
-      <Filter>Source\StateMachine\ToIdleTransition</Filter>
+    <ClCompile Include="Source\Editor\StateNodeData.cpp">
+      <Filter>Source\Editor\StateMachineEditor\StateNodeData</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor.cpp">
+      <Filter>Source\Editor\StateMachineEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -545,11 +548,14 @@
     <ClInclude Include="Source\StateMschine\IdleState.h">
       <Filter>Source\StateMachine\IdleState</Filter>
     </ClInclude>
-    <ClInclude Include="Source\StateMschine\ToLocomotionTransition.h">
-      <Filter>Source\StateMachine\ToLocomotionTransition</Filter>
+    <ClInclude Include="Source\StateMschine\VariableTransition.h">
+      <Filter>Source\StateMachine\VariableTransition</Filter>
     </ClInclude>
-    <ClInclude Include="Source\StateMschine\ToIdleTransition.h">
-      <Filter>Source\StateMachine\ToIdleTransition</Filter>
+    <ClInclude Include="Source\Editor\StateNodeData.h">
+      <Filter>Source\Editor\StateMachineEditor\StateNodeData</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor.h">
+      <Filter>Source\Editor\StateMachineEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -858,11 +864,14 @@
     <Filter Include="Source\StateMachine\IdleState">
       <UniqueIdentifier>{311da080-7517-4b6a-bbf4-e670f679d8e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\StateMachine\ToLocomotionTransition">
-      <UniqueIdentifier>{27cdaac0-b269-47d9-9ffe-545ea65d49cf}</UniqueIdentifier>
+    <Filter Include="Source\StateMachine\VariableTransition">
+      <UniqueIdentifier>{b914a651-65fb-4d0d-9b8d-231d4d977b61}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\StateMachine\ToIdleTransition">
-      <UniqueIdentifier>{50817c6e-d14a-4a9a-a4e2-b3e6dce5211d}</UniqueIdentifier>
+    <Filter Include="Source\Editor\StateMachineEditor">
+      <UniqueIdentifier>{28fd7187-a23c-4d40-aa70-ae8392bde4c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineEditor\StateNodeData">
+      <UniqueIdentifier>{a458a689-e262-44d9-b0fc-e850613dd463}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

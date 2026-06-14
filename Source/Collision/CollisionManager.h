@@ -90,6 +90,9 @@ private:
 	//スフィア同士の総当たり判定
 	void CheckSphereVsSphere();
 
+	//スフィア同士の総当たり判定（比較用）
+	void CheckSphereVsSphereBruteForce();
+
 	//グリッド登録用の補助関数
 	void AddColluderToGrid(Collider* collider);
 
@@ -98,6 +101,9 @@ private:
 
 	//現在のコライダー密度から最適なセルサイズを計算して適用
 	void OptimizeCellSize();
+
+	//処理負荷が最も軽いマージン倍率を自動評価
+	void EvaluateMarginMultiplier();
 
 private:
 	struct GridElement
@@ -122,4 +128,18 @@ private:
 	bool is_auto_optimize_grid;		//オートリサイズ機能を有効にするかどうかのフラグ	
 	float grid_margin_multiplier;	//セルサイズを決定する際の、平均直径に対する余裕を持たせるための倍率
 	size_t previous_collider_count = 0;	//前フレームのコライダー総数を記憶
+
+	bool is_use_spatial_hash;		//当たり判定切り替えフラグ
+
+private:
+	static constexpr int max_multiplier_patterns = 3;           //評価する倍率のパターンの総数
+	static constexpr int evaluation_frames_per_pattern = 10;    //1つの倍率をテストするフレーム数
+	static constexpr int evaluation_interval_frames = 300;      //次の評価を行うまでの待機フレーム数(約10秒)
+
+	float test_multipliers[max_multiplier_patterns];            //テストする倍率の配列
+	float accumulated_times[max_multiplier_patterns];           //各倍率での累積処理時間
+	int current_test_index;                                     //現在テスト中の配列インデックス
+	int evaluation_frame_counter;                               //評価中の経過フレームカウンター
+	int interval_frame_counter;                                 //評価待機中の経過フレームカウンター
+	bool is_evaluating_multipliers;                             //現在倍率の評価テスト中かどうかのフラグ
 };

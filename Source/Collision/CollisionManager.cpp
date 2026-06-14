@@ -17,11 +17,25 @@ CollisionManager::CollisionManager()
 	is_enable_collision = true;
     is_draw_grid = false;
     is_auto_optimize_grid = true;
-    constexpr float default_margin = 1.5f;
+    constexpr float default_margin = 3.0f;
     grid_margin_multiplier = default_margin;
 	constexpr float default_cell_size = 5.0f;
 	cell_size = default_cell_size;
 	collision_logic = std::make_unique<CollisionLogic>();
+
+    test_multipliers[0] = 1.5f;
+    test_multipliers[1] = 3.0f;
+    test_multipliers[2] = 5.0f;
+
+    accumulated_times[0] = 0.0f;
+    accumulated_times[1] = 0.0f;
+    accumulated_times[2] = 0.0f;
+
+    current_test_index = 0;
+    evaluation_frame_counter = 0;
+    interval_frame_counter = 0;
+    is_evaluating_multipliers = false;
+    is_use_spatial_hash = true;
 }
 
 //デストラクタ
@@ -119,28 +133,39 @@ void CollisionManager::ExecuteCollision()
     //計測開始
     auto start_time = std::chrono::high_resolution_clock::now();
 
-    OptimizeCellSize();
-
-    //共通グリッドの構築
-    grid_heads.clear();
-    grid_elements.clear();
-    grid_elements.reserve(dynamic_colliders.size() * 4);
-    spatial_grid.clear();
-    for (size_t i = 0; i < dynamic_colliders.size(); i++)
-    {
-        Collider* col = dynamic_colliders.at(i);
-        if (!col || !col->is_active) continue;
-        AddColluderToGrid(col);
-    }
-
     //各判定の呼び出し
+    if (is_use_spatial_hash)
+    {
+        OptimizeCellSize();
+
+        //グリッドのクリアと構築
+        grid_heads.clear();
+        grid_elements.clear();
+        grid_elements.reserve(dynamic_colliders.size() * 4);
+        spatial_grid.clear();
+
+        for (size_t i = 0; i < dynamic_colliders.size(); i++)
+        {
+            Collider* col = dynamic_colliders.at(i);
+            if (!col || !col->is_active) continue;
+            AddColluderToGrid(col);
+        }
+
+        CheckSphereVsSphere();
+    }
+    else
+    {
+        CheckSphereVsSphereBruteForce();
+    }
     CheckDynamicVsSpace();
-    CheckSphereVsSphere();
 
     //計測終了と時間算出
     auto end_time = std::chrono::high_resolution_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
     execution_time_ms = static_cast<float>(elapsed.count()) / 1000.0f;
+
+    //自動評価の呼び出し
+    EvaluateMarginMultiplier();
 }
 
 //ImGuiデバッグ描画
@@ -150,6 +175,20 @@ void CollisionManager::RenderGui()
     {
         if (ImGui::CollapsingHeader("CollisionManagerInfo", ImGuiTreeNodeFlags_DefaultOpen))
         {
+            //判定方式の切り替えUI
+            ImGui::Text("Collision Algorithm:");
+            //空間ハッシュを選択するボタン
+            if (ImGui::RadioButton("Spatial Hash (O(N))", is_use_spatial_hash == true))
+            {
+                is_use_spatial_hash = true;
+            }
+            ImGui::SameLine(); 
+            //総当たりを選択するボタン
+            if (ImGui::RadioButton("Brute Force (O(N^2))", is_use_spatial_hash == false))
+            {
+                is_use_spatial_hash = false;
+            }
+
             ImGui::Checkbox("Enable Global Collision", &is_enable_collision);
             ImGui::Checkbox("Draw Spatial Grid", &is_draw_grid);
             ImGui::Checkbox("Auto Optimize Grid Size", &is_auto_optimize_grid);
@@ -171,6 +210,16 @@ void CollisionManager::RenderGui()
             {
                 ImGui::SliderFloat("Optimization Multiplier", &grid_margin_multiplier, 1.0f, 5.0f);
                 ImGui::Text("Current Optimal Cell Size: %.3f", cell_size);
+
+                //評価ステータスの描画
+                if (is_evaluating_multipliers)
+                {
+                    ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Evaluating... (Testing: %.1f)", test_multipliers[current_test_index]);
+                }
+                else
+                {
+                    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Best Multiplier Applied: %.1f", grid_margin_multiplier);
+                }
             }
             else
             {
@@ -435,6 +484,54 @@ void CollisionManager::CheckSphereVsSphere()
     }
 }
 
+//スフィア同士の総当たり判定（比較用）
+void CollisionManager::CheckSphereVsSphereBruteForce()
+{
+    if (sphere_colliders.size() < 2)return;
+
+    //総当たりループの開始
+    for (size_t i = 0; i < sphere_colliders.size(); i++)
+    {
+        SphereCollider* sphere_a = sphere_colliders[i];
+
+        if (!sphere_a || !sphere_a->is_active)continue;
+
+        //重複判定を防ぐための i+1 からの内部ループ
+        for (size_t j = i + 1; j < sphere_colliders.size(); j++)
+        {
+            SphereCollider* sphere_b = sphere_colliders[j];
+            if (!sphere_b || !sphere_b->is_active) continue;
+
+            //実際の当たり判定ロジックの呼び出し
+            CollisionResult result_a;
+            bool is_hit = collision_logic->IsSphereSphereCollision(sphere_a, sphere_b, result_a);
+
+            //衝突時の通知処理
+            if (is_hit)
+            {
+                if (sphere_a->listener)
+                {
+                    result_a.hit_attribute = sphere_b->attribute;
+                    sphere_a->listener->OnCollisionHit(result_a);
+                }
+                if (sphere_b->listener)
+                {
+                    CollisionResult result_b = result_a;
+                    // B向けの押し戻し方向と法線を反転させる
+                    result_b.hit_normal.x = -result_a.hit_normal.x;
+                    result_b.hit_normal.y = -result_a.hit_normal.y;
+                    result_b.hit_normal.z = -result_a.hit_normal.z;
+                    result_b.penetration_vector.x = -result_a.penetration_vector.x;
+                    result_b.penetration_vector.y = -result_a.penetration_vector.y;
+                    result_b.penetration_vector.z = -result_a.penetration_vector.z;
+                    result_b.hit_attribute = sphere_a->attribute;
+                    sphere_b->listener->OnCollisionHit(result_b);
+                }
+            }
+        }
+    }
+}
+
 //グリッド登録用の補助関数
 void CollisionManager::AddColluderToGrid(Collider* collider)
 {
@@ -566,4 +663,78 @@ void CollisionManager::OptimizeCellSize()
         cell_size = std::clamp(optimal_size, min_limit, max_limit);
     }
     previous_collider_count = dynamic_colliders.size();
+}
+
+//処理負荷が最も軽いマージン倍率を自動評価
+void CollisionManager::EvaluateMarginMultiplier()
+{
+    if (!is_auto_optimize_grid)return;
+
+    //評価待機フェーズ
+    if (!is_evaluating_multipliers)
+    {
+        interval_frame_counter++;
+        if (interval_frame_counter >= evaluation_interval_frames)
+        {
+            //インターバルを満たしたら評価モードへ移行
+            is_evaluating_multipliers = true;
+            interval_frame_counter = 0;
+            current_test_index = 0;
+            evaluation_frame_counter = 0;
+
+            //過去の計測時間をリセット
+            for (int i = 0; i < max_multiplier_patterns; i++)
+            {
+                accumulated_times[i] = 0.0f;
+            }
+
+            //最初のテスト倍率を適用
+            grid_margin_multiplier = test_multipliers[current_test_index];
+        }
+        return;
+    }
+
+    //評価実行フェーズ
+
+    //前の行で計測された今フレームの処理時間を累積
+    accumulated_times[current_test_index] += execution_time_ms;
+    evaluation_frame_counter++;
+
+    //指定フレーム数計測したら次の倍率へ
+    if (evaluation_frame_counter >= evaluation_frames_per_pattern)
+    {
+        current_test_index++;
+        evaluation_frame_counter = 0;
+
+        //全パターンの計測が完了したか判定
+        if (current_test_index >= max_multiplier_patterns)
+        {
+            //最適な倍率の決定フェーズ
+            int best_index = 0;
+            float min_time = accumulated_times[0];
+
+            //累積時間が最も短い(処理が軽い)インデックスを探索
+            for (int i = 0; i < max_multiplier_patterns; i++)
+            {
+                if (accumulated_times[i] < min_time)
+                {
+                    min_time = accumulated_times[i];
+                    best_index = i;
+                }
+            }
+            //最も軽かった倍率を最終決定して適用
+            grid_margin_multiplier = test_multipliers[best_index];
+            is_evaluating_multipliers = false;
+
+            //意図しない挙動がないか確認用のデバッグ
+            float average_best_time = min_time / static_cast<float>(evaluation_frames_per_pattern);
+            if (average_best_time > 16.0f)
+            {
+                
+            }
+        }
+    }
+
+
+
 }

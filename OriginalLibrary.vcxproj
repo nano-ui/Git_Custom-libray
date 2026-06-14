@@ -235,6 +235,8 @@
     <ClCompile Include="Source\Collision\SpaceDivisionCast.cpp" />
     <ClCompile Include="Source\Common\main.cpp" />
     <ClCompile Include="Source\Editor\ObjectEditor.cpp" />
+    <ClCompile Include="Source\Editor\StateMachineEditor.cpp" />
+    <ClCompile Include="Source\Editor\StateNodeData.cpp" />
     <ClCompile Include="Source\FbxModel\FbxAnimation.cpp" />
     <ClCompile Include="Source\FbxModel\FbxBone.cpp" />
     <ClCompile Include="Source\FbxModel\FbxLoader.cpp" />
@@ -291,8 +293,7 @@
     <ClCompile Include="Source\StateMschine\State.cpp" />
     <ClCompile Include="Source\StateMschine\StateBlackboard.cpp" />
     <ClCompile Include="Source\StateMschine\StateMachine.cpp" />
-    <ClCompile Include="Source\StateMschine\ToIdleTransition.cpp" />
-    <ClCompile Include="Source\StateMschine\ToLocomotionTransition.cpp" />
+    <ClCompile Include="Source\StateMschine\VariableTransition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imconfig.h" />
@@ -320,6 +321,8 @@
     <ClInclude Include="Source\Common\misc.h" />
     <ClInclude Include="Source\Common\ModelData.h" />
     <ClInclude Include="Source\Editor\ObjectEditor.h" />
+    <ClInclude Include="Source\Editor\StateMachineEditor.h" />
+    <ClInclude Include="Source\Editor\StateNodeData.h" />
     <ClInclude Include="Source\FbxModel\FbxAnimation.h" />
     <ClInclude Include="Source\FbxModel\FbxBone.h" />
     <ClInclude Include="Source\FbxModel\FbxLoader.h" />
@@ -379,8 +382,7 @@
     <ClInclude Include="Source\StateMschine\State.h" />
     <ClInclude Include="Source\StateMschine\StateBlackboard.h" />
     <ClInclude Include="Source\StateMschine\StateMachine.h" />
-    <ClInclude Include="Source\StateMschine\ToIdleTransition.h" />
-    <ClInclude Include="Source\StateMschine\ToLocomotionTransition.h" />
+    <ClInclude Include="Source\StateMschine\VariableTransition.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli" />

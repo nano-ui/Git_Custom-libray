@@ -5,6 +5,7 @@
 #include <imgui.h>
 #include <cassert>
 #include <fstream>
+#include <commdlg.h>
 
 //コンストラクタ
 StateMachineEditor::StateMachineEditor()
@@ -12,6 +13,7 @@ StateMachineEditor::StateMachineEditor()
 	,initial_state_name("")
 {
 	json_serializer = std::make_unique<JsonSerializer>();
+	available_animations.clear();
 }
 
 //デストラクタ
@@ -26,6 +28,7 @@ void StateMachineEditor::Initialize()
 	editor_states.clear();
 	selected_state_index = -1;
 	initial_state_name = "";
+	current_project_file_path = "";
 }
 
 //描画
@@ -63,14 +66,43 @@ void StateMachineEditor::DrawMenuBar()
 		Initialize();
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Load JSON"))
+	if (ImGui::Button("Open File...")) 
 	{
-		LoadEditorData("Data/Script/StateMachine/Player.json");
+		std::string selected_path = OpenFileDialog(false);
+		if (!selected_path.empty())
+		{
+			LoadEditorData(selected_path);
+		}
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Save"))
+	{
+		//編集中のファイルパスが空なら、名前を付けて保存させる
+		if (current_project_file_path.empty())
+		{
+			std::string new_save_path = OpenFileDialog(true);
+			if (!new_save_path.empty())
+			{
+				SaveEditorData(new_save_path);
+			}
+		}
+		else
+		{
+			//既に開いているパスがあるならそのまま上書き保存
+			SaveEditorData(current_project_file_path);
+		}
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Save JSON"))
+	if (ImGui::Button("Save As...")) 
 	{
-		SaveEditorData("Data/Script/StateMachine/Player.json");
+		std::string save_path = OpenFileDialog(true);
+
+		if (!save_path.empty())
+		{
+			SaveEditorData(save_path);
+		}
 	}
 	ImGui::Separator();
 }
@@ -243,6 +275,39 @@ void StateMachineEditor::DrawInspectorPane()
 	}
 }
 
+//ファイルダイアログを開いてパスを取得
+std::string StateMachineEditor::OpenFileDialog(bool is_save_mode)
+{
+	char file_buffer[MAX_PATH] = "";
+
+	OPENFILENAMEA ofn = {};
+	ofn.lStructSize = sizeof(OPENFILENAMEA);
+	ofn.hwndOwner = nullptr; // メインウィンドウハンドルがあれば指定
+	ofn.lpstrFilter = "State Machine Configuration (*.json)\0*.json\0All Files (*.*)\0*.*\0";
+	ofn.lpstrFile = file_buffer;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrInitialDir = "Data//Json"; // デフォルトを開くフォルダに指定
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
+	if (is_save_mode)
+	{
+		ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
+		if (GetSaveFileNameA(&ofn))
+		{
+			return std::string(file_buffer);
+		}
+	}
+	else
+	{
+		if (GetOpenFileNameA(&ofn))
+		{
+			return std::string(file_buffer);
+		}
+	}
+
+	return "";
+}
+
 //JSONに書き出す
 void StateMachineEditor::SaveEditorData(const std::string& file_path)
 {
@@ -282,6 +347,7 @@ void StateMachineEditor::SaveEditorData(const std::string& file_path)
 		constexpr int json_indent_space = 4;
 		output_file << root_json.dump(json_indent_space);
 		output_file.close();
+		current_project_file_path = file_path;
 	}
 	else
 	{
@@ -338,4 +404,5 @@ void StateMachineEditor::LoadEditorData(const std::string& file_path)
 			editor_states.push_back(node);
 		}
 	}
+	current_project_file_path = file_path;
 }

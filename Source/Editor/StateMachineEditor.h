@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <windows.h>
 
 #include "StateNodeData.h"
 
@@ -36,6 +37,9 @@ private:
 	//選択中のステート・遷移条件のプロパティ編集
 	void DrawInspectorPane();
 
+	//ファイルダイアログを開いてパスを取得
+	std::string OpenFileDialog(bool is_save_mode);
+
 	//JSONに書き出す
 	void SaveEditorData(const std::string& file_path);
 
@@ -48,5 +52,6 @@ private:
 	std::string initial_state_name;						//ゲーム開始時に最初に有効にする初期ステート名
 	std::unique_ptr<JsonSerializer> json_serializer;	//変数の自動シリアライズ/ImGui描画を任せる
 	std::vector<std::string> available_animations;		//エディタ内で選択肢として使用するアニメーション名の一覧配列
+	std::string current_project_file_path;				//現在開いている、または保存対象のファイルパス
 };
 

@@ -2,6 +2,12 @@
 #include "Character.h"
 #include "../Collision/Collider.h"
 
+#include <memory>
+#include <string>
+#include <unordered_map>
+
+class StateMachine;
+
 class Player : public Character, public ICollisionListener
 {
 public:
