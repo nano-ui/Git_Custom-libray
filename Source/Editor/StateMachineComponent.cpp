@@ -11,6 +11,44 @@
 #include <cassert>
 #include "StateNodeData.h"
 
+//共通条件と個別条件を組み合わせる複合遷移クラス
+class CombinedAndTransition : public Transition
+{
+public:
+	//コンストラクタ
+	CombinedAndTransition(const std::string& next_state_name,
+		std::unique_ptr<VariableTransition> first_cond,
+		std::unique_ptr<VariableTransition> second_cond)
+		: Transition(next_state_name)
+		, condition_first(std::move(first_cond))
+		, condition_second(std::move(second_cond))
+	{
+	}
+
+	//デストラクタ
+	~CombinedAndTransition() override = default;
+
+	//両方の条件を満たしているかチェック）
+	bool IsTriggered(StateBlackboard* blackboard) override
+	{
+		//エラーが起きる可能性のある個所へのデバッグ出力とガード
+		if (!condition_first || !condition_second)
+		{
+#ifdef _DEBUG
+			OutputDebugStringA("[Error] CombinedAndTransition::IsTriggered - Sub-condition is null.\n");
+#endif
+			return false;
+		}
+
+		//2つの条件がどちらも真（true）である場合のみ遷移を許可する
+		return condition_first->IsTriggered(blackboard) && condition_second->IsTriggered(blackboard);
+	}
+
+private:
+	std::unique_ptr<VariableTransition> condition_first;  //1つ目の判定条件（共通条件など）
+	std::unique_ptr<VariableTransition> condition_second; //2つ目の判定条件（個別条件など）
+};
+
 //実行時に動的にステートを生成
 class DynamicCustomState : public State
 {
@@ -156,6 +194,8 @@ void StateMachineComponent::BuildStateMachineFronJson(const std::string& file_pa
 
 	if (root_json.contains("states") && root_json["states"].is_array())
 	{
+		//JSON内に記録されている各ステート情報を走査してマップに一時登録するための準備
+		std::unordered_map<std::string, const nlohmann::json*> json_state_lookups;
 		for (const auto& node_json : root_json["state"])
 		{
 			std::string name = node_json["name"].get<std::string>();
@@ -194,17 +234,50 @@ void StateMachineComponent::BuildStateMachineFronJson(const std::string& file_pa
 						individual_trans = std::make_unique<VariableTransition>(next_state, type, op, comp_value);
 					}
 
-					//組み合わせ（AND）モード、かつノード側に共通条件が設定されている場合
-					if (blend == TransitionBlendMode::CombineWithCommon && node_json["has_common_condition"].get<bool>())
-					{
-						//共通条件パラメータの取得
-						ConditionType c_type = static_cast<ConditionType>(node_json["common_condition_type"].get<int>());
-						ConditionOp c_op = static_cast<ConditionOp>(node_json["common_operator_type"].get<int>());
-						float c_value = node_json["common_compare_value"].get<float>();
-						std::string c_act_name = node_json["common_target_action_name"].get<std::string>();
-					}
+					bool is_combined_successful = false;
 
-					state_ptr->AddTransition(std::move(individual_trans));
+					//組み合わせ（AND）モード、かつノード側に共通条件が設定されている場合
+					if (blend == TransitionBlendMode::CombineWithCommon) 
+					{
+						//遷移先（ターゲット）のステートノード情報を検索
+						auto target_it = json_state_lookups.find(next_state);
+						if (target_it != json_state_lookups.end())
+						{
+							const nlohmann::json& target_node_json = *(target_it->second);
+
+							//接続先のステートノード側で「共通条件を強制する」が有効になっているか確認
+							if (target_node_json.contains("has_common_condition") && target_node_json["has_common_condition"].get<bool>())
+							{
+								//接続先ノードが持つ共通の条件パラメータを動的に取得
+								ConditionType c_type = static_cast<ConditionType>(target_node_json["common_condition_type"].get<int>());
+								ConditionOp c_op = static_cast<ConditionOp>(target_node_json["common_operator_type"].get<int>());
+								float c_value = target_node_json["common_compare_value"].get<float>();
+								std::string c_act_name = target_node_json["common_target_action_name"].get<std::string>();
+
+								//共通条件を評価するためのVariableTransitionを生成
+								std::unique_ptr<VariableTransition> common_trans;
+								if (c_type == ConditionType::ActionPressed)
+								{
+									common_trans = std::make_unique<VariableTransition>(next_state, c_type, c_op, c_act_name);
+								}
+								else
+								{
+									common_trans = std::make_unique<VariableTransition>(next_state, c_type, c_op, c_value);
+								}
+
+								//共通条件と個別条件を内包した複合遷移（AND）として登録
+								auto combined_ptr = std::make_unique<CombinedAndTransition>(
+									next_state, std::move(common_trans), std::move(individual_trans)
+								);
+								state_ptr->AddTransition(std::move(combined_ptr));
+								is_combined_successful = true;
+							}
+						}
+					}
+					if (!is_combined_successful)
+					{
+						state_ptr->AddTransition(std::move(individual_trans));
+					}
 				}
 			}
 			state_machine->AddState(std::move(state_ptr));

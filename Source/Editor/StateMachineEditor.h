@@ -75,5 +75,8 @@ private:
 	std::vector<std::string> scannable_class_names;		//シーン内から見つかった、適用可能なクラス名一覧
 	int selected_target_class_index;					//適用先のクラス番号
 	ImVec2 scrolling_offset = ImVec2(0.0f, 0.0f);		//キャンバスのスクロール位置（マウス中クリックドラッグで画面移動）
+	float zoom_factor = 1.0f;							//キャンバスの拡大縮小倍率
 	int link_source_node_index = -1;					//新しい矢印線を引っ張る際の「開始ノード」の番号
+	int selected_transition_src_index = -1;				//現在選択されている矢印の出発元ノード番号
+	int selected_transition_idx = -1;					//現在選択されている矢印の配列内インデックス
 };
