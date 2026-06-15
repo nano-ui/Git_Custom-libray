@@ -9,6 +9,7 @@
 #include "../Collision/CollisionManager.h"
 #include "../Collision/CollisionExperiment.h"
 #include "../Editor/ObjectEditor.h"
+#include "../Editor/StateMachineEditor.h"
 #include "../Shaders/SkyBox.h"
 #include "SceneManager.h"
 
@@ -54,6 +55,8 @@ void SceneGame::Initialize()
 
 	object_editor = std::make_unique<ObjectEditor>();
 	object_editor->Initialize();
+	state_machine_editor = std::make_unique<StateMachineEditor>();
+	state_machine_editor->Initialize();
 }
 
 //I—¹‰»
@@ -77,6 +80,7 @@ void SceneGame::Finalize()
 		light.reset();
 	}
 	object_editor.reset();
+	state_machine_editor.reset();
 }
 
 //XVˆ—
@@ -388,6 +392,10 @@ void SceneGame::RenderGui()
 	if (object_editor)
 	{
 		object_editor->RenderUi(camera.get(), collision_manager.get());
+	}
+	if (state_machine_editor)
+	{
+		state_machine_editor->RenderGui(object_manager.get());
 	}
 #endif // USE_IMGUI
 }

@@ -28,6 +28,9 @@ public:
 	//ブラックボードへのアクセス
 	StateBlackboard* GetBlackboard()const { return blackboard.get(); }
 
+	//現在のステートを取得
+	State* GetCurrentState()const { return current_state; }
+
 private:
 	//実際の遷移処理
 	void DoTransition(const std::string& name);

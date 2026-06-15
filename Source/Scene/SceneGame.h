@@ -12,6 +12,7 @@ class CollisionManager;
 class SkyBox;
 class CollisionExperiment;
 class ObjectEditor;
+class StateMachineEditor;
 
 class SceneGame : public Scene
 {
@@ -69,5 +70,6 @@ private:
 
 	std::unique_ptr<CollisionExperiment> collision_experiment;	//当たり判定実験クラス
 	std::unique_ptr<ObjectEditor> object_editor;				//オブジェクトエディタクラス
+	std::unique_ptr<StateMachineEditor> state_machine_editor;	//ステートマシンエディタクラス
 };
 

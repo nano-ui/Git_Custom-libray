@@ -9,6 +9,7 @@
 #include "../Serialization/JsonSerializer.h"
 
 struct Collider;
+class EditorConponents;
 
 class GameObject
 {
@@ -48,6 +49,31 @@ public:
 
 	//JSONファイルからパラメータを復元
 	void LoadFromJson();
+
+	//コンポーネントを新しく追加
+	template<class T,class... Args>
+	T* AddComponent(Args&... args)
+	{
+		auto new_component = std::make_unique<T>(this, std::forward<Args>(args)...);
+		T* raw_pointer = new_component.get();
+		components.push_back(std::move(new_component));
+		return raw_pointer;
+	}
+
+	//登録されているコンポーネントを型をキーにして検索・取得
+	template <class T>
+	T* GetComponent() const
+	{
+		for (const auto& comp : components)
+		{
+			T* target = dynamic_cast<T*>(comp.get());
+			if (target) return target;
+		}
+		return nullptr;
+	}
+
+	//エディタから呼び出される汎用対応窓口
+	virtual void LoadStateMachineConfig(const std::string& file_path);
 
 	//削除要求
 	void Destory() { is_active = false; }
@@ -98,5 +124,6 @@ protected:
 	std::vector<Collider*> collideres;	//コライダーのリスト
 	std::string class_name;				//クラス名
 	std::unique_ptr<JsonSerializer> serializer;	//自身専用のシリアライザ
+	std::vector<std::unique_ptr<EditorConponents>> components;	//拡張機能を一括管理するコンテナ
 };
 

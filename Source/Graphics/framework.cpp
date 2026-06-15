@@ -7,6 +7,7 @@
 #include <sstream>
 #include <memory>
 #include <ImGuizmo.h>
+#include <fstream>
 
 namespace
 {
@@ -92,6 +93,30 @@ int framework::run()
 	{
 		return 0;
 	}
+	//ImGuiの日本語フォント自動アロケート処理
+	//ImGuiIO& io = ImGui::GetIO();
+	const char* japanese_font_path = "C:\\Windows\\Fonts\\msgothic.ttc";
+	constexpr float default_font_size = 18.0f;
+
+	//フォントファイルがOS内に実在するかをストリームでセーフチェック
+	std::ifstream font_file_check(japanese_font_path);
+	if (font_file_check.is_open())
+	{
+		font_file_check.close();
+
+		//日本語の文字コード全範囲（ひらがな、カタカナ、漢字）のグリフデータをアトラスへ登録
+		const ImWchar* font_glyph_ranges = io.Fonts->GetGlyphRangesJapanese();
+		ImFont* loaded_japanese_font = io.Fonts->AddFontFromFileTTF(japanese_font_path, default_font_size, nullptr, font_glyph_ranges);
+
+		//意図しない挙動（フォントのロード不良）が起きたら困るためデバッグ出力を仕込む
+		assert(loaded_japanese_font != nullptr && "framework::run - Failed to generate ImGui Japanese font texture.");
+	}
+	else
+	{
+		// 学校のPCや特定の動作環境でフォントが見つからない場合のセーフガードデバッグ出力
+		OutputDebugStringA("[Warning] framework::run - Japanese font file path is invalid. Using default fallback font.\n");
+	}
+
 	ImGui::StyleColorsDark();
 #endif
 	//初期シーンの登録

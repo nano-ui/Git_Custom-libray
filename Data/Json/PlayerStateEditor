@@ -1,0 +1,35 @@
+{
+    "initial_state": "Idle",
+    "states": [
+        {
+            "clip_name": "Idle",
+            "common_compare_value": 1.0,
+            "common_condition_type": 2,
+            "common_operator_type": 0,
+            "common_target_action_name": "",
+            "has_common_condition": false,
+            "is_loop": true,
+            "name": "Idle",
+            "transitions": [
+                {
+                    "compare_value": 0.0,
+                    "condition_type": 2,
+                    "next_state": "Walk_F",
+                    "operator_type": 0,
+                    "target_action_name": "W"
+                }
+            ]
+        },
+        {
+            "clip_name": "Walk_F",
+            "common_compare_value": 1.0,
+            "common_condition_type": 2,
+            "common_operator_type": 0,
+            "common_target_action_name": "W",
+            "has_common_condition": true,
+            "is_loop": true,
+            "name": "Walk_F",
+            "transitions": []
+        }
+    ]
+}

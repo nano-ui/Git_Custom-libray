@@ -1,5 +1,11 @@
 #include "GameObject.h"
 
+#include "../Editor/EditorConponents.h"
+#include "../Editor/StateMachineComponent.h"
+
+#include <fstream>
+#include <cassert>
+
 //コンストラクタ
 GameObject::GameObject()
 {
@@ -53,6 +59,11 @@ void GameObject::SetupSerialization()
 	serializer->RegisterVariable("Position", &position);
 	serializer->RegisterVariable("Rotation", &rotation);
 	serializer->RegisterVariable("Scale", &scale);
+
+	for (const auto& comp : components)
+	{
+		if (comp) comp->SetupSerialization(serializer.get());
+	}
 }
 
 //指定されたJSONオブジェクトへ自身のデータを書き込む
@@ -70,6 +81,14 @@ void GameObject::LoadFromJObject(const nlohmann::json& object_json)
 	if (serializer)
 	{
 		serializer->LoadFromObject(object_json);
+
+		for (const auto& comp : components)
+		{
+			if (comp)
+			{
+				comp->OnPostLoad();
+			}
+		}
 	}
 }
 
@@ -91,5 +110,20 @@ void GameObject::LoadFromJson()
 	if (!is_loading)
 	{
 		serializer->SaveToFile(file_path);
+	}
+}
+
+//エディタから呼び出される汎用対応窓口
+void GameObject::LoadStateMachineConfig(const std::string& file_path)
+{
+	StateMachineComponent* sm_comp = GetComponent<StateMachineComponent>();
+
+	if (!sm_comp)
+	{
+		sm_comp = AddComponent<StateMachineComponent>();
+	}
+	if (sm_comp)
+	{
+		sm_comp->LoadStateMachineConfig(file_path);
 	}
 }

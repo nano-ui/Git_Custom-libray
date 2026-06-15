@@ -294,6 +294,12 @@
     <ClCompile Include="Source\Editor\StateMachineEditor.cpp">
       <Filter>Source\Editor\StateMachineEditor</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\EditorConponents.cpp">
+      <Filter>Source\Editor\EditorComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineComponent.cpp">
+      <Filter>Source\Editor\StateMachineComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui.h">
@@ -556,6 +562,12 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor.h">
       <Filter>Source\Editor\StateMachineEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\EditorConponents.h">
+      <Filter>Source\Editor\EditorComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineComponent.h">
+      <Filter>Source\Editor\StateMachineComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -872,6 +884,12 @@
     </Filter>
     <Filter Include="Source\Editor\StateMachineEditor\StateNodeData">
       <UniqueIdentifier>{a458a689-e262-44d9-b0fc-e850613dd463}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\EditorComponent">
+      <UniqueIdentifier>{77bcd5a5-5ad3-4927-90b7-113707b1cd81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineComponent">
+      <UniqueIdentifier>{a8b7d6f0-85c1-4ba6-95c0-f86b8e01a7d9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
