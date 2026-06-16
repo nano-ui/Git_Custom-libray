@@ -73,7 +73,7 @@ public:
 	{
 		//ハッシュ値でのデータ検索
 		uint32_t hash_key = CalculateHash(variable_name);				//検索用の32ビットハッシュ値
-		auto iterator = data_map.find(CalculateHash(variable_name));	//検索した値
+		auto iterator = data_map.find(hash_key);	//検索した値
 
 		//変数名が登録されていない際のエラー処理
 		if (iterator == data_map.end())
@@ -98,6 +98,19 @@ public:
 		return *target_value;
 	}
 
+	//コンパイル時のハッシュ
+	static constexpr uint32_t CalculateHash(const std::string_view& target_string)
+	{
+		uint32_t hash_value = 2166136261u;
+
+		for (char c : target_string)
+		{
+			hash_value ^= static_cast<uint32_t>(c);
+			hash_value *= 16777619u;
+		}
+		return hash_value;
+	}
+
 	//ハッシュキーからデータの値を取得
 	const BlackboardData& GetAttributeValue(uint32_t hash_key)const;
 
@@ -114,19 +127,6 @@ private:
 		float speed = 0.1f;			//移動時の変化感度
 		std::string tooltip = "";	//変数の説明文
 	};
-
-	//コンパイル時のハッシュ
-	static constexpr uint32_t CalculateHash(const std::string_view& target_string)
-	{
-		uint32_t hash_value = 2166136261u;
-
-		for (char c : target_string)
-		{
-			hash_value ^= static_cast<uint32_t>(c);
-			hash_value *= 16777619u;
-		}
-		return hash_value;
-	}
 
 	//ImGuiの型分岐描画を担当する関数オブジェクト
 	struct GuiVisitor

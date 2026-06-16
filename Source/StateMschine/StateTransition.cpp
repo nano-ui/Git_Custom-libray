@@ -1,5 +1,6 @@
 #include "StateTransition.h"
 
+
 //ğŒ‚ª–‚½‚³‚ê‚Ä‚¢‚é‚©”»’è
 bool StateTransition::CanTransition(const StateBlackboard& blackboard) const
 {

@@ -27,9 +27,9 @@ void StateMachine::Update(float elapsed_time)
 		if (!transition)continue;
 
 		//ğŒ‚ª–‚½‚³‚ê‚½uŠÔA‚»‚Ì‘JˆÚæ‚ÖØ‚è‘Ö‚¦‚é
-		if (transition->IsTriggered())
+		if (transition->CanTransition(*blackboard))
 		{
-			DoTransition(transition->GetNextState());
+			DoTransition(transition->GetNextStateHash());
 			break;
 		}
 	}
@@ -41,27 +41,27 @@ void StateMachine::AddState(std::unique_ptr<State> state)
 {
 	if (!state)return;
 
-	std::string name = state->GetName();
-	state_map[name] = std::move(state);
+	uint32_t state_hash = StateBlackboard::CalculateHash(state->GetName());
+	state_map[state_hash] = std::move(state);
 
 	if (!current_state)
 	{
-		current_state = state_map[name].get();
+		current_state = state_map[state_hash].get();
 		current_state->Enter();
 	}
 }
 
 //ŠO•”‚©‚ç‚Ìó‘Ô‚ÌØ‚è‘Ö‚¦
-void StateMachine::ChangeState(const std::string& name)
+void StateMachine::ChangeState(const uint32_t hash)
 {
-	DoTransition(name);
+	DoTransition(hash);
 }
 
 //ÀÛ‚Ì‘JˆÚˆ—
-void StateMachine::DoTransition(const std::string& name)
+void StateMachine::DoTransition(const uint32_t hash)
 {
 	//–Ú“I‚Ìó‘Ô‚ª«‘‚É“o˜^‚³‚ê‚Ä‚¢‚é‚©ŒŸõ
-	auto iterator = state_map.find(name);
+	auto iterator = state_map.find(hash);
 	if (iterator == state_map.end())
 	{
 		return;

@@ -279,8 +279,8 @@
     <ClCompile Include="Source\StateMschine\StateMachine.cpp">
       <Filter>Source\StateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\StateMschine\LocamotionState.cpp">
-      <Filter>Source\StateMachine\LocomotionState</Filter>
+    <ClCompile Include="Source\StateMschine\StateTransition.cpp">
+      <Filter>Source\StateMachine\StateTransition</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -530,8 +530,8 @@
     <ClInclude Include="Source\StateMschine\StateMachine.h">
       <Filter>Source\StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\StateMschine\LocamotionState.h">
-      <Filter>Source\StateMachine\LocomotionState</Filter>
+    <ClInclude Include="Source\StateMschine\StateTransition.h">
+      <Filter>Source\StateMachine\StateTransition</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -836,6 +836,9 @@
     </Filter>
     <Filter Include="Source\StateMachine\LocomotionState">
       <UniqueIdentifier>{acd8e128-1ea6-4d36-902f-211b383d9148}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\StateMachine\StateTransition">
+      <UniqueIdentifier>{d2e6bb6b-1d8e-424c-a783-9f40734a8a3c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
