@@ -92,6 +92,10 @@ int framework::run()
 	{
 		return 0;
 	}
+
+	const ImWchar* glyph_ranges = io.Fonts->GetGlyphRangesJapanese();
+	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msgothic.ttc", 18.0f, nullptr, glyph_ranges);
+	
 	ImGui::StyleColorsDark();
 #endif
 	//初期シーンの登録
