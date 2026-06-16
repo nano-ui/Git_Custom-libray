@@ -570,114 +570,195 @@ void StateMachineEditor::DrawGraphTransitions(ImDrawList* draw_list, ImVec2 canv
 	}
 }
 
-//プロ/ティインスペクター詳細パネルの描画 --
+//インスペクター詳細パネルの描画 --
 void StateMachineEditor::DrawInspectorPane() 
 {
+	//各コンボボックスの項目名
 	const char* type_names[] = { _U8("移動入力の長さ (InputLength)"), _U8("ボタンビットフラグ判定 (ButtonCommand)"), _U8("個別アクション入力検知 (ActionPressed)"), _U8("接地状態フラグ (IsGrounded)"), _U8("目標移動速度 (TargetMoveSpeed)") }; 
 	const char* op_names[] = { _U8("一致 (==)"), _U8("不一致 (!=)"), _U8("より大きい (>)"), _U8("未満 (<)"), _U8("以上 (>=)"), _U8("以下 (<=)") }; 
 	const char* blend_names[] = { _U8("共通条件と組み合わせる (AND)"), _U8("個別条件のみを適用する (Override)") }; 
 
-	 //矢印が選択されている場合
-	if (selected_transition_src_index >= 0 && selected_transition_idx >= 0) 
+	//矢印が選択されている場合は遷移用inspectorを描画
+	if (selected_transition_src_index >= 0 && selected_transition_idx >= 0)
 	{
-		ImGui::Text(_U8("【選択中の接続矢印 プロパティ設定】")); 
-		TransitionNodeData& trans = editor_states[selected_transition_src_index].transitions[selected_transition_idx]; 
+		DrawTransitionInspector(type_names, op_names, blend_names);
+	}
 
-		ImGui::Text(_U8("出発元: %s"), editor_states[selected_transition_src_index].state_name.c_str()); 
-		ImGui::Text(_U8("遷移先ターゲット: %s"), trans.next_state_name.c_str()); 
-		ImGui::Separator(); 
+	//それ以外はステートノード用のinspector描画
+	DrawStateInspector(type_names, op_names);
+}
 
-		int current_blend = static_cast<int>(trans.blend_mode); 
-		if (ImGui::Combo(_U8("評価ブレンドモード"), &current_blend, blend_names, IM_ARRAYSIZE(blend_names))) 
-		{
-			trans.blend_mode = static_cast<TransitionBlendMode>(current_blend); 
-		}
+//個別の条件データを描画
+void StateMachineEditor::DrawConditionEditorElements(ConditionData& cond, const char** type_names, const char** op_names)
+{
+	//比較用のコンボボックス
+	int trans_type = static_cast<int>(cond.condition_type);
+	if (ImGui::Combo(_U8("比較対象"), &trans_type, type_names, 5))
+	{
+		cond.condition_type = static_cast<ConditionType>(trans_type);
+	}
 
-		int trans_type = static_cast<int>(trans.condition_type); 
-		if (ImGui::Combo(_U8("個別比較対象"), &trans_type, type_names, IM_ARRAYSIZE(type_names))) 
-		{
-			trans.condition_type = static_cast<ConditionType>(trans_type); 
-		}
+	//条件演算子のコンボボックス
+	int trans_op = static_cast<int>(cond.operator_type);
+	if (ImGui::Combo(_U8("条件演算子"), &trans_op, op_names, 6));
+	{
+		cond.operator_type = static_cast<ConditionOp>(trans_op);
+	}
 
-		int trans_op = static_cast<int>(trans.operator_type); 
-		if (ImGui::Combo(_U8("条件演算子"), &trans_op, op_names, IM_ARRAYSIZE(op_names))) 
+	//条件タイプに応じた入力コントロールの切り替え
+	if (cond.condition_type == ConditionType::ActionPressed)
+	{
+		char action_name_buf[64];
+		strncpy_s(action_name_buf, sizeof(action_name_buf), cond.target_action_name.c_str(), _TRUNCATE);
+		if (ImGui::InputText(_U8("登録アクション名"), action_name_buf, sizeof(action_name_buf)))
 		{
-			trans.operator_type = static_cast<ConditionOp>(trans_op); 
+			cond.target_action_name = action_name_buf;
 		}
+	}
+	else
+	{
+		constexpr float DRAG_SPEED = 0.01f;
+		ImGui::DragFloat(_U8("比較基準値"), &cond.compare_value, DRAG_SPEED);
+	}
 
-		if (trans.condition_type == ConditionType::ActionPressed) 
-		{
-			char action_name_buf[64]; 
-			strncpy_s(action_name_buf, sizeof(action_name_buf), trans.target_action_name.c_str(), _TRUNCATE); 
-			if (ImGui::InputText(_U8("登録アクション名"), action_name_buf, sizeof(action_name_buf))) 
-			{
-				trans.target_action_name = action_name_buf; 
-			}
-		}
-		else 
-		{
-			ImGui::DragFloat(_U8("比較基準値"), &trans.compare_value, 0.01f); 
-		}
+}
 
-		if (ImGui::Button(_U8("この接続パス（矢印）を削除"), ImVec2(-1, 0))) 
-		{
-			editor_states[selected_transition_src_index].transitions.erase(editor_states[selected_transition_src_index].transitions.begin() + selected_transition_idx); 
-			selected_transition_src_index = -1; 
-			selected_transition_idx = -1; 
-		}
+//接続矢印専用のinspector描画
+void StateMachineEditor::DrawTransitionInspector(const char** type_names, const char** op_nemes, const char** blend_names)
+{
+	ImGui::Text(_U8("【選択中の接続矢印　プロパティ設定】"));
+
+	if (selected_transition_src_index < 0 || selected_transition_src_index >= static_cast<int>(editor_states.size()))
+	{
+#ifdef _DEBUG
+		OutputDebugStringA("[Editor Error] selected_transition_src_index out of bounds.\n"); // 不具合検知用のデバッグ出力 [cite: 2026-06-11]
+#endif
+		assert(false && "selected_transition_src_index is out of range.");
 		return;
 	}
 
-	//ステートが選択されている場合
-	ImGui::Text(_U8("【詳細プロパティ設定インスペクター】")); 
+	StateNodeData& src_node = editor_states[selected_transition_src_index];
 
-	if (selected_state_index < 0 || selected_state_index >= static_cast<int>(editor_states.size())) 
+	if (selected_transition_idx < 0 || selected_transition_idx >= static_cast<int>(src_node.transitions.size()))
 	{
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), _U8("グラフからノード、または接続矢印を選択すると編集できます。")); 
+#ifdef _DEBUG
+		OutputDebugStringA("[Editor Error] selected_transition_idx out of bounds.\n"); // 不具合検知用のデバッグ出力 [cite: 2026-06-11]
+#endif
+		assert(false && "selected_transition_idx is out of range.");
 		return;
 	}
 
-	StateNodeData& target_node = editor_states[selected_state_index]; 
+	TransitionNodeData& trans = src_node.transitions[selected_transition_idx];
 
-	char name_buf[64]; 
-	strncpy_s(name_buf, sizeof(name_buf), target_node.state_name.c_str(), _TRUNCATE); 
-	if (ImGui::InputText(_U8("ステート名"), name_buf, sizeof(name_buf))) 
+	ImGui::Text(_U8("出発元：%s"), src_node.state_name.c_str());
+	ImGui::Text(_U8("遷移先対象：%s"), trans.next_state_name.c_str());
+
+	ImGui::Separator();
+
+	int current_blend = static_cast<int>(trans.blend_mode);
+	if (ImGui::Combo(_U8("評価ブレンドモード"), &current_blend, blend_names, 2))
 	{
-		target_node.state_name = name_buf; 
+		trans.blend_mode = static_cast<TransitionBlendMode>(current_blend);
 	}
 
-	if (!available_animations.empty()) 
+	ImGui::Spacing();
+	ImGui::Separator();
+
+	ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), _U8("【遷移条件リスト】"));
+	if (ImGui::Button(_U8("新しい条件を追加"), ImVec2(-1.0f, 0.0f)))
 	{
-		int current_anim_index = 0; 
-		for (int i = 0; i < static_cast<int>(available_animations.size()); ++i) 
-		{
-			if (available_animations[i] == target_node.animation_clip_name) 
-			{
-				current_anim_index = i; 
-				break; 
-			}
-		}
-
-		std::vector<const char*> combo_items; 
-		for (const auto& name : available_animations) 
-		{
-			combo_items.push_back(name.c_str()); 
-		}
-
-		if (ImGui::Combo(_U8("再生アニメーション"), &current_anim_index, combo_items.data(), static_cast<int>(combo_items.size()))) 
-		{
-			target_node.animation_clip_name = available_animations[current_anim_index]; 
-		}
+		trans.conditions.push_back(ConditionData());
 	}
 
-	if (ImGui::Button(_U8("この状態をゲーム開始時の初期ステートに設定"))) 
+	for (int c = 0; c < static_cast<int>(trans.conditions.size()); c++)
 	{
-		initial_state_name = target_node.state_name; 
+		ImGui::PushID(c);
+		ConditionData& cond = trans.conditions[c];
+
+		ImGui::Text(_U8("条件%d"), c + 1);
+		ImGui::SameLine();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.6f, 0.1f, 0.1f, 1.0f));
+		if (ImGui::Button(_U8("条件削除")))
+		{
+#ifdef _DEBUG
+			OutputDebugStringA("[Editor Debug] Condition removed from transition list.\n");
+#endif // _DEBUG
+			trans.conditions.erase(trans.conditions.begin() + c);
+			ImGui::PopStyleColor();
+			ImGui::PopID();
+			break;
+		}
+		ImGui::PopStyleColor();
+
+		DrawConditionEditorElements(cond, type_names, op_nemes);
+		ImGui::Separator();
+		ImGui::PopID();
 	}
 
 	ImGui::Spacing();
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.1f, 1.0f));
-	if (ImGui::Button(_U8("ステートを削除する"), ImVec2(-1, 30.0f)))
+	if (ImGui::Button(_U8("この接続パス（矢印）を削除"), ImVec2(-1.0f, 30.0f)))
+	{
+		editor_states[selected_transition_src_index].transitions.erase(editor_states[selected_transition_src_index].transitions.begin() + selected_transition_idx);
+		selected_transition_src_index = -1;
+		selected_transition_idx = -1;
+	}
+	ImGui::PopStyleColor();
+}
+
+//ステート専用のinspector描画
+void StateMachineEditor::DrawStateInspector(const char** type_names, const char** op_names)
+{
+	ImGui::Text(_U8("【詳細プロパティ設定インスペクター】"));
+
+	if (selected_state_index < 0 || selected_state_index >= static_cast<int>(editor_states.size()))
+	{
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), _U8("グラフからノード、または接続矢印を選択すると編集できます。"));
+		return;
+	}
+
+	StateNodeData& target_node = editor_states[selected_state_index];
+
+	char name_buf[64];
+	strncpy_s(name_buf, sizeof(name_buf), target_node.state_name.c_str(), _TRUNCATE);
+	if (ImGui::InputText(_U8("ステート名"), name_buf, sizeof(name_buf)))
+	{
+		target_node.state_name = name_buf;
+	}
+
+	if (!available_animations.empty())
+	{
+		int current_anim_index = 0;
+		for (int i = 0; i < static_cast<int>(available_animations.size()); ++i)
+		{
+			if (available_animations[i] == target_node.animation_clip_name)
+			{
+				current_anim_index = i;
+				break;
+			}
+		}
+
+		std::vector<const char*> combo_items;
+		for (const auto& name : available_animations)
+		{
+			combo_items.push_back(name.c_str());
+		}
+
+		if (ImGui::Combo(_U8("再生アニメーション"), &current_anim_index, combo_items.data(), static_cast<int>(combo_items.size())))
+		{
+			target_node.animation_clip_name = available_animations[current_anim_index];
+		}
+	}
+
+	if (ImGui::Button(_U8("この状態をゲーム開始時の初期ステートに設定")))
+	{
+		initial_state_name = target_node.state_name;
+	}
+
+	ImGui::Spacing();
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.1f, 1.0f));
+	if (ImGui::Button(_U8("ステートを削除する"), ImVec2(-1.0f, 30.0f)))
 	{
 		std::string delete_target_name = target_node.state_name;
 		for (auto& state : editor_states)
@@ -695,48 +776,59 @@ void StateMachineEditor::DrawInspectorPane()
 			}
 		}
 		editor_states.erase(editor_states.begin() + selected_state_index);
-		selected_state_index = -1; 
+		selected_state_index = -1;
 		ImGui::PopStyleColor();
 		return;
 	}
 	ImGui::PopStyleColor();
 
-	ImGui::Separator(); 
+	ImGui::Separator();
 
-	//共通遷移条件（グループ設定）のエディタ描画
-	ImGui::TextColored(ImVec4(0.3f, 1.0f, 1.0f, 1.0f), _U8("【 ステート共通の出力遷移条件グループ 】")); 
-	ImGui::Checkbox(_U8("このステートからの出力に共通条件を強制する"), &target_node.has_common_condition); 
+	ImGui::TextColored(ImVec4(0.3f, 1.0f, 1.0f, 1.0f), _U8("【 ステート共通の出力遷移条件グループ 】"));
+	ImGui::Checkbox(_U8("このステートからの出力に共通条件を強制する"), &target_node.has_common_condition);
 
-	if (target_node.has_common_condition) 
+	if (target_node.has_common_condition)
 	{
-		ImGui::Indent(); 
+		ImGui::Indent();
 
-		int c_type = static_cast<int>(target_node.common_condition_type); 
-		if (ImGui::Combo(_U8("共通比較対象"), &c_type, type_names, IM_ARRAYSIZE(type_names))) 
+		if (ImGui::Button(_U8("新しい共通条件を追加 (AND)"), ImVec2(-1.0f, 0.0f)))
 		{
-			target_node.common_condition_type = static_cast<ConditionType>(c_type); 
+			target_node.common_conditions.push_back(ConditionData());
 		}
 
-		int c_op = static_cast<int>(target_node.common_operator_type); 
-		if (ImGui::Combo(_U8("共通条件演算子"), &c_op, op_names, IM_ARRAYSIZE(op_names))) 
+		for (int c = 0; c < static_cast<int>(target_node.common_conditions.size()); ++c)
 		{
-			target_node.common_operator_type = static_cast<ConditionOp>(c_op); 
-		}
+			ImGui::PushID(c);
+			ConditionData& cond = target_node.common_conditions[c];
 
-		if (target_node.common_condition_type == ConditionType::ActionPressed) 
-		{
-			char act_buf[64]; 
-			strncpy_s(act_buf, sizeof(act_buf), target_node.common_target_action_name.c_str(), _TRUNCATE); 
-			if (ImGui::InputText(_U8("共通登録アクション名"), act_buf, sizeof(act_buf))) 
+			ImGui::Text(_U8("● 共通条件 %d"), c + 1);
+			ImGui::SameLine();
+
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.6f, 0.1f, 0.1f, 1.0f));
+			bool is_deleted = false;
+			if (ImGui::Button(_U8("条件削除")))
 			{
-				target_node.common_target_action_name = act_buf; 
+#ifdef _DEBUG
+				OutputDebugStringA("[Editor Debug] Common condition removed from state node.\n");
+#endif
+				target_node.common_conditions.erase(target_node.common_conditions.begin() + c);
+				is_deleted = true;
 			}
+			ImGui::PopStyleColor();
+
+			if (is_deleted)
+			{
+				ImGui::PopID();
+				break;
+			}
+
+			// 共通化した関数を呼び出し
+			DrawConditionEditorElements(cond, type_names, op_names);
+
+			ImGui::Separator();
+			ImGui::PopID();
 		}
-		else 
-		{
-			ImGui::DragFloat(_U8("共通比較基準値"), &target_node.common_compare_value, 0.01f); 
-		}
-		ImGui::Unindent(); 
+		ImGui::Unindent();
 	}
 }
 
@@ -790,6 +882,19 @@ void StateMachineEditor::SaveEditorData(const std::string& file_path)
 			trans_json["compare_value"] = trans.compare_value; 
 			trans_json["target_action_name"] = trans.target_action_name; 
 			trans_json["blend_mode"] = static_cast<int>(trans.blend_mode); 
+
+			nlohmann::json cond_array = nlohmann::json::array();
+			for (const auto& cond : trans.conditions)
+			{
+				nlohmann::json cond_json;
+				cond_json["condition_type"] = static_cast<int>(cond.condition_type);
+				cond_json["operator_type"] = static_cast<int>(cond.operator_type);
+				cond_json["compare_value"] = cond.compare_value;
+				cond_json["target_action_name"] = cond.target_action_name;
+				cond_array.push_back(cond_json);
+			}
+			trans_json["conditions"] = cond_array;
+
 			trans_array.push_back(trans_json); 
 		}
 		node_json["transitions"] = trans_array; 
@@ -852,6 +957,22 @@ void StateMachineEditor::LoadEditorData(const std::string& file_path)
 					{
 						trans.blend_mode = static_cast<TransitionBlendMode>(trans_json["blend_mode"].get<int>());
 					}
+
+					//JSONファイルからの複数条件配列（conditions）の復元ロード処理
+					trans.conditions.clear();
+					if (trans_json.contains("conditions") && trans_json["conditions"].is_array())
+					{
+						for (const auto& cond_json : trans_json["conditions"])
+						{
+							ConditionData cond;
+							cond.condition_type = static_cast<ConditionType>(cond_json["condition_type"].get<int>());
+							cond.operator_type = static_cast<ConditionOp>(cond_json["operator_type"].get<int>());
+							cond.compare_value = cond_json["compare_value"].get<float>();
+							cond.target_action_name = cond_json["target_action_name"].get<std::string>();
+							trans.conditions.push_back(cond);
+						}
+					}
+
 					node.transitions.push_back(trans); 
 				}
 			}

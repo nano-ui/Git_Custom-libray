@@ -1,11 +1,19 @@
 #pragma once
 
 #include "EditorConponents.h"
+#include "../Editor/StateNodeData.h"
 
 #include <memory>
 #include <string>
 
 class StateMachine;
+
+struct ResolvedModifier
+{
+	float* target_variable_ptr = nullptr;
+	ParameterOp operator_type = ParameterOp::Assign;
+	float value = 0.0f;
+};
 
 class StateMachineComponent :public EditorConponents
 {
@@ -50,5 +58,6 @@ private:
 private:
 	std::unique_ptr<StateMachine> state_machine;	//ステートマシンクラス
 	std::string state_machine_config_path;			//設定ファイルの保存パス
+	std::string privious_clip_name;					//前回のアニメーション名
 };
 

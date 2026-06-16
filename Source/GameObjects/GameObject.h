@@ -111,6 +111,9 @@ public:
 	//クラス名取得
 	const std::string& GetClassName()const { return class_name; }
 
+	//モデル取得
+	virtual class Model* GetModel() const { return nullptr; };
+
 protected:
 	//コライダーを登録
 	void AddCollider(Collider* collider) { collideres.push_back(collider); }

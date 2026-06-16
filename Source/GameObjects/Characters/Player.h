@@ -7,6 +7,7 @@
 #include <unordered_map>
 
 class StateMachine;
+class StateMachineComponent;
 
 class Player : public Character, public ICollisionListener
 {
@@ -35,11 +36,18 @@ public:
 	//衝突処理
 	void OnCollisionHit(const CollisionResult& result)override;
 
+	//エディタからの設定読み込み通知を受け取る
+	void LoadStateMachineConfig(const std::string& file_path)override;
+
+	//モデル取得
+	class Model* GetModel()const { return character.get(); }
+
 private:
 	//入力更新処理
 	void UpdateInput(float elapsed_time);
 
 private:
 	CapsuleCollider capsule_collider;	//カプセルの当たり判定
+	std::unique_ptr<StateMachineComponent> state_machine_component;
 };
 

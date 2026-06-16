@@ -34,6 +34,12 @@ void Player::Initialize()
 {
 	Character::Initialize();
 	position = { 0.0f,0.0f,0.0f };
+	
+	state_machine_component = std::make_unique<StateMachineComponent>(this);
+	if (state_machine_component)
+	{
+		state_machine_component->Initialize();
+	}
 
 	//当たり判定の初期設定
 	capsule_collider.radius = radius;
@@ -75,35 +81,12 @@ void Player::Update(float elapsed_time)
 
 	UpdateInput(elapsed_time);
 
-	//所有している全コンポーネントのUpdateを一括実行
-	for (const auto& comp : components)
+	if (state_machine_component)
 	{
-		if (comp && comp->IsActive()) comp->Update(elapsed_time);
-	}
-
-	//要求移動速度を元に移動実行
-	if (blackboard)
-	{
-		Character::Move(elapsed_time, blackboard->move_input.x, blackboard->move_input.z, blackboard->target_move_speed); //
-		Character::Tuen(elapsed_time, blackboard->move_input.x, blackboard->move_input.z, blackboard->target_move_speed); //
+		state_machine_component->Update(elapsed_time);
 	}
 
 	Character::Update(elapsed_time);
-	character->Update(elapsed_time);
-
-	//アニメーション再生
-	if (sm_comp)
-	{
-		std::string target_clip = sm_comp->GetCurrentStateAnimationClip();
-		bool is_loop = sm_comp->IsCurrentStateAnimLoop();
-
-		static std::string current_playing_clip = "";
-		if (target_clip != current_playing_clip)
-		{
-			character->PlayAnimation(target_clip, is_loop);
-			current_playing_clip = target_clip;
-		}
-	}
 
 	capsule_collider.start_center = position;
 	capsule_collider.start_center.y = position.y + offset_y;
@@ -157,6 +140,29 @@ void Player::OnCollisionHit(const CollisionResult& result)
 	}
 }
 
+//エディタからの設定読み込み通知を受け取る
+void Player::LoadStateMachineConfig(const std::string& file_path)
+{
+	if (file_path.empty())
+	{
+#ifdef _DEBUG
+		// 意図しない空パスが渡ってきた困る箇所へのデバッグ出力
+		OutputDebugStringA("[Player Error] State machine configuration path is empty.\n");
+#endif
+		return;
+	}
+
+	if (state_machine_component)
+	{
+#ifdef _DEBUG
+		std::string debug_msg = "[Player] Loading state machine config: " + file_path + "\n";
+		OutputDebugStringA(debug_msg.c_str());
+#endif
+		//エディタで保存されたJSONファイルをコンポーネント経由で再ロード（ホットリロード）
+		state_machine_component->LoadStateMachineConfig(file_path);
+	}
+}
+
 //入力更新処理
 void Player::UpdateInput(float elapsed_time)
 {
@@ -182,7 +188,19 @@ void Player::UpdateInput(float elapsed_time)
 		move_x += 1.0f;
 	}
 
-	//移動・旋回処理
-	Character::Move(elapsed_time, move_x, move_z, move_speed);
-	Character::Tuen(elapsed_time, move_x, move_z, move_speed);
+	//登録されているコンポーネントを型検索で取得し、ブラックボードに入力を書き込む
+	StateMachineComponent* sm_comp = GetComponent<StateMachineComponent>();
+	if (sm_comp)
+	{
+		StateMachine* state_machine = sm_comp->GetStateMachine();
+		if (state_machine)
+		{
+			StateBlackboard* blackboard = state_machine->GetBlackboard();
+			if (blackboard)
+			{
+				blackboard->move_input = { move_x,0.0f,move_z };
+			}
+		}
+	}
+
 }

@@ -15,6 +15,7 @@
                     "blend_mode": 0,
                     "compare_value": 0.0,
                     "condition_type": 0,
+                    "conditions": [],
                     "next_state": "NewState_1",
                     "operator_type": 0,
                     "target_action_name": ""
@@ -23,6 +24,7 @@
                     "blend_mode": 0,
                     "compare_value": 0.0,
                     "condition_type": 0,
+                    "conditions": [],
                     "next_state": "前に歩く",
                     "operator_type": 0,
                     "target_action_name": ""
@@ -31,14 +33,31 @@
         },
         {
             "clip_name": "Walk_F",
-            "common_compare_value": 0.009999999776482582,
-            "common_condition_type": 4,
-            "common_operator_type": 4,
+            "common_compare_value": 1.0,
+            "common_condition_type": 3,
+            "common_operator_type": 0,
             "common_target_action_name": "",
-            "has_common_condition": true,
+            "has_common_condition": false,
             "is_loop": true,
             "name": "前に歩く",
-            "transitions": []
+            "transitions": [
+                {
+                    "blend_mode": 0,
+                    "compare_value": 0.0,
+                    "condition_type": 0,
+                    "conditions": [
+                        {
+                            "compare_value": 0.0010000000474974513,
+                            "condition_type": 0,
+                            "operator_type": 5,
+                            "target_action_name": ""
+                        }
+                    ],
+                    "next_state": "待機",
+                    "operator_type": 0,
+                    "target_action_name": ""
+                }
+            ]
         }
     ]
 }

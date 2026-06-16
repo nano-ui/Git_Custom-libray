@@ -48,6 +48,15 @@ private:
 	//選択中のステート・遷移条件のプロパティ編集
 	void DrawInspectorPane();
 
+	//個別の条件データを描画
+	void DrawConditionEditorElements(ConditionData& cond, const char** type_names, const char** op_names);
+
+	//接続矢印専用のinspector描画
+	void DrawTransitionInspector(const char** type_names, const char** op_nemes, const char** blend_names);
+
+	//ステート専用のinspector描画
+	void DrawStateInspector(const char** type_names, const char** op_names);
+
 	//ファイルダイアログを開いてパスを取得
 	std::string OpenFileDialog(bool is_save_mode, const char* filter);
 

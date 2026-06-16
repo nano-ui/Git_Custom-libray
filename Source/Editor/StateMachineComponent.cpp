@@ -110,10 +110,25 @@ void StateMachineComponent::Initialize()
 //更新
 void StateMachineComponent::Update(float elapsed_time)
 {
-	//自身の所有するステートマシンを更新
-	if (state_machine && is_active)
+	if (!state_machine || !is_active)return;
+
+	state_machine->Update(elapsed_time);
+
+	if (owner)
 	{
-		state_machine->Update(elapsed_time);
+		Model* target_model = owner->GetModel();
+		if (target_model)
+		{
+			target_model->Update(elapsed_time);
+			std::string current_clip = GetCurrentStateAnimationClip();
+			bool is_loop = IsCurrentStateAnimLoop();
+
+			if (!current_clip.empty() && current_clip != privious_clip_name)
+			{
+				target_model->PlayAnimation(current_clip, is_loop);
+				privious_clip_name = current_clip;
+			}
+		}
 	}
 }
 
