@@ -126,6 +126,7 @@
       <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;$(ProjectDir)External\cereal-master\include;$(ProjectDir)External\DirectXTK-main\DirectXTK-main\Inc;$(ProjectDir)External\DirectXTex;$(ProjectDir)External\imgui-docking\imgui-docking;$(ProjectDir)External\imgui-docking\imgui-docking\backends;$(ProjectDir)External\imgui-node-editor-master\imgui-node-editor-master;$(ProjectDir)External\ImGuizmo-master\ImGuizmo-master\src;$(ProjectDir)External\imguizmo;$(ProjectDir)External\json-develop;.\External\imgui;.\External\json-develop;.\External\tinygltf-release;%(AdditionalIncludeDirectories);.\External\DirectXTe;.\External\DirectXTex</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/Zc:char8_t- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -191,6 +192,7 @@
       <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;$(ProjectDir)External\cereal-master\include;$(ProjectDir)External\DirectXTK-main\DirectXTK-main\Inc;$(ProjectDir)External\DirectXTex;$(ProjectDir)External\imgui-docking\imgui-docking;$(ProjectDir)External\imgui-docking\imgui-docking\backends;$(ProjectDir)External\imgui-node-editor-master\imgui-node-editor-master;$(ProjectDir)External\ImGuizmo-master\ImGuizmo-master\src;$(ProjectDir)External\imguizmo;$(ProjectDir)External\json-develop;.\External\tinygltf-release;.\External\DirectXTe;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/Zc:char8_t- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

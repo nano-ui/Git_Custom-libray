@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <cstdint>
+#include <imgui.h>
 
 class StateMachine;
 class StateBlackboard;
@@ -66,6 +67,13 @@ public:
 	void DrawEditor(StateBlackboard* blackboard);
 
 private:
+	//ノードの生成
+	void AddNode(GraphData* current_graph, const ImVec2& click_pos);
+
+	//ノードの削除
+	void DeleteNode(GraphData* current_graph);
+
+private:
 	//カスタムデリータ
 	struct EditorContexDeleter
 	{
@@ -75,6 +83,7 @@ private:
 private:
 	std::vector<GraphData> layer_datas;	//全ての階層データのリスト
 	uint32_t current_graph_id;			//現在の階層のグラフID
+	uint32_t next_node_id;				//次に作成するノード用の割り当てIDカウンター
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 };
 
