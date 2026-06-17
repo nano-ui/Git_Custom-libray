@@ -25,6 +25,9 @@ public:
 	//アニメーションの再生
 	void PlayAnimation(const std::string& animation_name, bool is_loop);
 
+	//登録されているすべてのアニメーション名の一覧を取得
+	std::vector<std::string> GetAnimationNames() const;
+
 	//頂点座標リストの取得
 	std::vector<DirectX::XMFLOAT3> GetVertices()const;
 
