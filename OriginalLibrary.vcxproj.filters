@@ -282,6 +282,9 @@
     <ClCompile Include="Source\StateMschine\StateTransition.cpp">
       <Filter>Source\StateMachine\StateTransition</Filter>
     </ClCompile>
+    <ClCompile Include="Source\StateMschine\ActionState.cpp">
+      <Filter>Source\StateMachine\ActionState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui.h">
@@ -532,6 +535,9 @@
     </ClInclude>
     <ClInclude Include="Source\StateMschine\StateTransition.h">
       <Filter>Source\StateMachine\StateTransition</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMschine\ActionState.h">
+      <Filter>Source\StateMachine\ActionState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -839,6 +845,9 @@
     </Filter>
     <Filter Include="Source\StateMachine\StateTransition">
       <UniqueIdentifier>{d2e6bb6b-1d8e-424c-a783-9f40734a8a3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\StateMachine\ActionState">
+      <UniqueIdentifier>{a88f0d5b-74ba-47ea-9f2e-0bde746cf3b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

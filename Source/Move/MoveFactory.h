@@ -1,20 +1,20 @@
-#pragma once
-
-#include <memory>
-#include "MoveBase.h"
-
-//移動の種類
-enum class MoveType
-{
-	Linear,		//直線移動
-	Circular,	//円移動
-	Repulsive	//斥力移動
-};
-
-class MoveFactory
-{
-public:
-	//移動クラスを生成
-	static std::unique_ptr<MoveBase> Create(MoveType move_type);
-};
-
+//#pragma once
+//
+//#include <memory>
+//#include "MoveBase.h"
+//
+////移動の種類
+//enum class MoveType
+//{
+//	Linear,		//直線移動
+//	Circular,	//円移動
+//	Repulsive	//斥力移動
+//};
+//
+//class MoveFactory
+//{
+//public:
+//	//移動クラスを生成
+//	static std::unique_ptr<MoveBase> Create(MoveType move_type);
+//};
+//

@@ -1,4 +1,24 @@
 #include "LinearMove.h"
+#include "../StateMschine/StateBlackboard.h"
+
+//コンストラクタ
+LinearMove::LinearMove(uint32_t key)
+{
+	speed_key = key;
+}
+
+//更新処理
+DirectX::XMFLOAT3 LinearMove::Update(const DirectX::XMFLOAT3& current_pos, const DirectX::XMFLOAT3& target_pos, const StateBlackboard* blackboard)
+{
+	if (!blackboard)
+	{
+		assert(false && "LinearMove: blackboard がヌルポインタです");
+		return current_pos;
+	}
+
+	float speed = std::get<float>(blackboard->GetAttributeValue(speed_key));	//速度
+	return 	UpdateLiner(current_pos, target_pos, speed);
+}
 
 //=====================
 //直線移動更新処理
