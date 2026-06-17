@@ -34,8 +34,8 @@ struct GraphNode
 	std::string name;				//ステート名
 	float position_x;				//X座標
 	float position_y;				//Y座標
-	std::vector<GraphPin> input;	//入力ピンのリスト
-	std::vector<GraphPin> output;	//出力ピンのリスト
+	std::vector<GraphPin> inputs;	//入力ピンのリスト
+	std::vector<GraphPin> outputs;	//出力ピンのリスト
 	bool is_sub_graph;				//階層型ステートマシンのグラフ
 	uint32_t sub_graph_id;			//下位階層のグラフID
 };
@@ -73,8 +73,14 @@ private:
 	//ノードの削除
 	void DeleteNode(GraphData* current_graph);
 
+	//接続線の削除
+	void DeleteLink(GraphData* current_graph);
+
 	//ノードの詳細情報を描画
 	void DrawPropertyWindow(GraphData* current_graph);
+
+	//接続線の作成を検知してデータに追加
+	void CreateNewLink(GraphData* current_graph);
 
 private:
 	//カスタムデリータ
@@ -86,7 +92,7 @@ private:
 private:
 	std::vector<GraphData> layer_datas;	//全ての階層データのリスト
 	uint32_t current_graph_id;			//現在の階層のグラフID
-	uint32_t next_node_id;				//次に作成するノード用の割り当てIDカウンター
+	uint32_t next_id;					//全ての要素の割り当てIDカウンター
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 };
 

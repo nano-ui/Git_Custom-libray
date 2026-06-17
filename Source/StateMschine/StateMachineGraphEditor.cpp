@@ -33,10 +33,26 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	test_node.is_sub_graph = false;
 	test_node.sub_graph_id = 0;
 
+	//テストノード用の入力ピンを設定
+	GraphPin test_input;	//テストノード用入力ピン
+	test_input.id = 2;
+	test_input.name = u8"入力";
+	test_input.kind = PinKind::Input;
+	test_input.node_id = test_node_id;
+	test_node.inputs.push_back(test_input);
+
+	//テストノード用の出力ピンを設定
+	GraphPin test_output;	//テストノード用出力ピン
+	test_output.id = 3;
+	test_output.name = u8"出力";
+	test_output.kind = PinKind::Output;
+	test_output.node_id = test_node_id;
+	test_node.outputs.push_back(test_output);
+
 	root_graph.nodes.push_back(test_node);
 	layer_datas.push_back(root_graph);
 
-	next_node_id = 2;
+	next_id = 4;
 }
 
 //エディタ描画
@@ -73,13 +89,60 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		const GraphNode& node = current_graph->nodes[i];
 		ed::BeginNode(node.id);
 		ImGui::Text("%s", node.name.c_str());
+		ImGui::Spacing();
+
+		//入力ピンのグループ配置
+		ImGui::BeginGroup();
+
+		//ノードが持っている全ての入力ピンを走査
+		for (size_t in_idx = 0; in_idx < node.inputs.size(); in_idx++)
+		{
+			const GraphPin& pin = node.inputs[in_idx];	//入力ピン情報
+			ed::BeginPin(pin.id, ed::PinKind::Input);
+			ImGui::Text("->%s", pin.name.c_str());
+			ed::EndPin();
+		}
+
+		ImGui::EndGroup();	//入力ピンのグループ終了
+		ImGui::SameLine();
+		ImGui::Dummy(ImVec2(40.0f, 0.0f));
+		ImGui::SameLine();
+
+		//出力ピンのグループ配置
+		ImGui::BeginGroup();
+
+		//ノードが持っているすべての出力ピンを走査
+		for (size_t out_idx = 0; out_idx < node.outputs.size(); out_idx++)
+		{
+			const GraphPin& pin = node.outputs[out_idx];	//出力ピンの情報
+			ed::BeginPin(pin.id, ed::PinKind::Output);
+			ImGui::Text("%s ->", pin.name.c_str());
+			ed::EndPin();
+		}
+		ImGui::EndGroup();	//出力ピングループ終了
+
 		ed::EndNode();
 	}
+
+	//グラフに存在する全ての接続線を描画
+	for (size_t i = 0; i < current_graph->links.size(); i++)
+	{
+		const GraphLink& link = current_graph->links[i];		//接続データ
+		ed::Link(link.id, link.start_pin_id, link.end_pin_id);
+	}
+
+	//ピン同士のドラッグ操作による接続線の作成判定
+	if (ed::BeginCreate())
+	{
+		CreateNewLink(current_graph);
+	}
+	ed::EndCreate();
 
 	//削除操作をしたか確認
 	if (ed::BeginDelete())
 	{
 		DeleteNode(current_graph);
+		DeleteLink(current_graph);
 	}
 	ed::EndDelete();
 
@@ -91,11 +154,11 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	//背景がクリックされたか
 	if (ed::ShowBackgroundContextMenu())
 	{
-		ImGui::OpenPopup("Create New Nodo Context Menu");
+		ImGui::OpenPopup("Create New Node Context Menu");
 		popup_click_pos = ed::ScreenToCanvas(ImGui::GetMousePos());
 	}
 
-	if (ImGui::BeginPopup("Create New Nodo Context Menu"))
+	if (ImGui::BeginPopup("Create New Node Context Menu"))
 	{
 		//項目がクリックされたか判定
 		if (ImGui::MenuItem(u8"ステート追加"))
@@ -127,17 +190,33 @@ void StateMachineGraphEditor::AddNode(GraphData* current_graph, const ImVec2& cl
 	GraphNode new_node;	//新しいノード情報
 
 	//ノードのパラメータ設定
-	new_node.id = next_node_id;
+	new_node.id = next_id++;
 	new_node.name = u8"新規ステート";
 	new_node.position_x = click_pos.x;
 	new_node.position_y = click_pos.y;
 	new_node.is_sub_graph = false;
 	new_node.sub_graph_id = 0;
+	
+	//新しい入力ピンのデータ作成
+	GraphPin new_input;		//新しい入力ピン
+	new_input.id = next_id++;
+	new_input.name = u8"入力";
+	new_input.kind = PinKind::Input;
+	new_input.node_id = new_node.id;
+	new_node.inputs.push_back(new_input);
+
+	//新しい出力ピンのデータ作成
+	GraphPin new_output;	//新しい出力ピン
+	new_output.id = next_id++;
+	new_output.name = u8"出力";
+	new_output.kind = PinKind::Output;
+	new_output.node_id = new_node.id;
+	new_node.outputs.push_back(new_output);
+
 	current_graph->nodes.push_back(new_node);
 	ed::SetNodePosition(new_node.id, click_pos);	//ノードの初期座標を設定
-	printf("StateMachineGraphEditor:ノードを追加しました。ID：%d,名前：%s\n", new_node.id, new_node.name.c_str());
-	next_node_id++;
-
+	printf("StateMachineGraphEditor: ノードを追加しました。ID: %d, 入力ピンID: %d, 出力ピンID: %d\n",
+		new_node.id, new_input.id, new_output.id);
 }
 
 //ノードの削除
@@ -187,6 +266,45 @@ void StateMachineGraphEditor::DeleteNode(GraphData* current_graph)
 		}
 	}
 
+}
+
+//接続線の削除
+void StateMachineGraphEditor::DeleteLink(GraphData* current_graph)
+{
+	//グラフデータが渡されているか確認
+	if (!current_graph)
+	{
+		printf("Error: StateMachineGraphEditor::DeleteLink - current_graph が nullptr です。\n");
+		return;
+	}
+
+	ed::LinkId delete_link_id;	//削除対象のリンクID
+
+	//削除対象として要求されているリンクをループで取得
+	while (ed::QueryDeletedLink(&delete_link_id))
+	{
+		//削除承認が出たか判定
+		if (ed::AcceptDeletedItem())
+		{
+			uint32_t target_id = static_cast<uint32_t>(delete_link_id.Get());	//取得したID
+
+			//一致するリンクを検索して走査
+			for (auto it = current_graph->links.begin(); it != current_graph->links.end(); ) 
+			{
+				//削除対象のIDと一致するか確認
+				if (it->id == target_id)
+				{
+					it = current_graph->links.erase(it);
+					printf("StateMachineGraphEditor: リンクを削除しました。ID: %d\n", target_id);
+					break;
+				}
+				else
+				{
+					it++;
+				}
+			}
+		}
+	}
 }
 
 //ノードの詳細情報を描画
@@ -241,6 +359,37 @@ void StateMachineGraphEditor::DrawPropertyWindow(GraphData* current_graph)
 		target_node->name = name_input_buffer;
 	}
 	ImGui::End();
+}
+
+//接続線の作成を検知してデータに追加
+void StateMachineGraphEditor::CreateNewLink(GraphData* current_graph)
+{
+	//グラフデータが渡されているか確認
+	if (!current_graph)
+	{
+		printf("Error: StateMachineGraphEditor::CreateNewLink - current_graph が nullptr です。\n");
+		return;
+	}
+
+	ed::PinId start_pin_id;	//接続元のピンID
+	ed::PinId end_pin_id;	//接続先のピンID
+
+	//接続線の作成要求されているか確認
+	if (ed::QueryNewLink(&start_pin_id, &end_pin_id)) 
+	{
+		//接続を確定してか判定
+		if (ed::AcceptNewItem())
+		{
+			GraphLink new_link;	//新しいリンク情報
+			new_link.id = next_id++;
+			new_link.start_pin_id = static_cast<uint32_t>(start_pin_id.Get());
+			new_link.end_pin_id = static_cast<uint32_t>(end_pin_id.Get());
+			current_graph->links.push_back(new_link);
+
+			printf("StateMachineGraphEditor: リンクを作成しました。ID: %d, 出力ピン: %d -> 入力ピン: %d\n",
+				new_link.id, new_link.start_pin_id, new_link.end_pin_id);
+		}
+	}
 }
 
 //カスタムデリータ
