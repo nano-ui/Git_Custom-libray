@@ -73,6 +73,9 @@ private:
 	//ノードの削除
 	void DeleteNode(GraphData* current_graph);
 
+	//ノードの詳細情報を描画
+	void DrawPropertyWindow(GraphData* current_graph);
+
 private:
 	//カスタムデリータ
 	struct EditorContexDeleter

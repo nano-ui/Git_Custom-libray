@@ -108,6 +108,8 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	ed::Resume();
 	ed::End();
 
+	DrawPropertyWindow(current_graph);
+
 	ed::SetCurrentEditor(nullptr);
 	ImGui::End();
 }
@@ -185,6 +187,60 @@ void StateMachineGraphEditor::DeleteNode(GraphData* current_graph)
 		}
 	}
 
+}
+
+//ノードの詳細情報を描画
+void StateMachineGraphEditor::DrawPropertyWindow(GraphData* current_graph)
+{
+	//グラフデータが渡されているか確認
+	if (!current_graph)
+	{
+		printf("Error: StateMachineGraphEditor::DrawPropertyWindow - current_graph が nullptr です。\n");
+		return;
+	}
+
+	const int max_count = 1;	//取得要求の最大ノード数
+	ed::NodeId selected_nodes[max_count];	//ノードのID格納コンテナ
+	int select_count = ed::GetSelectedNodes(selected_nodes, max_count);	//取得数
+
+	//選択されているノードがあるか確認
+	if (select_count <= 0)
+	{
+		return;
+	}
+
+	uint32_t selected_id = static_cast<uint32_t>(selected_nodes[0].Get());	//取得したノードID
+	GraphNode* target_node = nullptr;	//選択されたIDのノードデータコンテナ
+
+	//現在のグラフ内の全ノードを走査
+	for (size_t i = 0; i < current_graph->nodes.size(); i++)
+	{
+		//ノードIDが選択されたIDを検索
+		if (current_graph->nodes[i].id == selected_id)
+		{
+			target_node = &current_graph->nodes[i];
+			break;
+		}
+	}
+
+	//一致するノードが見つからなかったか判定
+	if (!target_node)
+	{
+		printf("Warning: 選択されたノードID: %d がデータ内に見つかりません。\n", selected_id);
+		return;
+	}
+
+	ImGui::Begin(u8"ステートプロパティ");
+
+	const size_t name_buffer_size = 128;	//バッファサイズ
+	char name_input_buffer[name_buffer_size] = {};	//ノードの名前
+	strcpy_s(name_input_buffer, name_buffer_size, target_node->name.c_str());
+
+	if (ImGui::InputText(u8"ステート名", name_input_buffer, name_buffer_size))
+	{
+		target_node->name = name_input_buffer;
+	}
+	ImGui::End();
 }
 
 //カスタムデリータ
