@@ -8,6 +8,8 @@
 class StateMachine;
 class StateBlackboard;
 
+namespace ax { namespace NodeEditor { struct EditorContext; } }
+
 //ピンの種類
 enum class PinKind
 {
@@ -64,7 +66,15 @@ public:
 	void DrawEditor(StateBlackboard* blackboard);
 
 private:
+	//カスタムデリータ
+	struct EditorContexDeleter
+	{
+		void operator()(ax::NodeEditor::EditorContext* context)const noexcept;
+	};
+
+private:
 	std::vector<GraphData> layer_datas;	//全ての階層データのリスト
 	uint32_t current_graph_id;			//現在の階層のグラフID
+	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 };
 

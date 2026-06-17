@@ -1,7 +1,7 @@
 [Project Structure] 
  
 Folder PATH listing for volume Windows
-Volume serial number is 0000003B 0255:C8DA
+Volume serial number is 000000A4 0255:C8DA
 C:.
 Да   structure.txt
 Да   _dump_structure.bat
@@ -308,15 +308,57 @@ C:.
 Да   Да   DirectXTex_Windows10_2022.vcxproj.filters
 Да   Да   filters.h
 Да   Да   scoped.h
+Да   Да   structure.txt
+Да   Да   _dump_structure.bat
 Да   Да   
 Да   ДеДЯДЯДЯBin
 Да   Да   ДдДЯДЯДЯDesktop_2022
 Да   Да       ДдДЯДЯДЯx64
-Да   Да           ДдДЯДЯДЯDebug
+Да   Да           ДеДЯДЯДЯDebug
+Да   Да           Да   Да   BC.obj
+Да   Да           Да   Да   BC4BC5.obj
+Да   Да           Да   Да   BC6HBC7.obj
+Да   Да           Да   Да   BCDirectCompute.obj
+Да   Да           Да   Да   DirectXTex.Build.CppClean.log
+Да   Да           Да   Да   DirectXTex.lib
+Да   Да           Да   Да   DirectXTex.lib.recipe
+Да   Да           Да   Да   DirectXTex.pch
+Да   Да           Да   Да   DirectXTex.pdb
+Да   Да           Да   Да   DirectXTexCompress.obj
+Да   Да           Да   Да   DirectXTexCompressGPU.obj
+Да   Да           Да   Да   DirectXTexConvert.obj
+Да   Да           Да   Да   DirectXTexD3D11.obj
+Да   Да           Да   Да   DirectXTexDDS.obj
+Да   Да           Да   Да   DirectXTexFlipRotate.obj
+Да   Да           Да   Да   DirectXTexHDR.obj
+Да   Да           Да   Да   DirectXTexImage.obj
+Да   Да           Да   Да   DirectXTexMipMaps.obj
+Да   Да           Да   Да   DirectXTexMisc.obj
+Да   Да           Да   Да   DirectXTexNormalMaps.obj
+Да   Да           Да   Да   DirectXTexPMAlpha.obj
+Да   Да           Да   Да   DirectXTexResize.obj
+Да   Да           Да   Да   DirectXTexTGA.obj
+Да   Да           Да   Да   DirectXTexUtil.obj
+Да   Да           Да   Да   DirectXTexWIC.obj
+Да   Да           Да   Да   DirectXTex_Desktop_2022.log
+Да   Да           Да   Да   DirectXTex_Desktop_2022.vcxproj.FileListAbsolute.txt
+Да   Да           Да   Да   
+Да   Да           Да   ДдДЯДЯДЯDirectXTex.tlog
+Да   Да           Да           CL.command.1.tlog
+Да   Да           Да           Cl.items.tlog
+Да   Да           Да           CL.read.1.tlog
+Да   Да           Да           CL.write.1.tlog
+Да   Да           Да           DirectXTex.lastbuildstate
+Да   Да           Да           Lib-link.read.1.tlog
+Да   Да           Да           Lib-link.write.1.tlog
+Да   Да           Да           Lib.command.1.tlog
+Да   Да           Да           
+Да   Да           ДдДЯДЯДЯRelease
 Да   Да               Да   BC.obj
 Да   Да               Да   BC4BC5.obj
 Да   Да               Да   BC6HBC7.obj
 Да   Да               Да   BCDirectCompute.obj
+Да   Да               Да   DirectXTex.Build.CppClean.log
 Да   Да               Да   DirectXTex.lib
 Да   Да               Да   DirectXTex.lib.recipe
 Да   Да               Да   DirectXTex.pch
@@ -1151,160 +1193,2439 @@ C:.
 Да               xwbtool_Desktop_2022.vcxproj
 Да               xwbtool_Desktop_2022.vcxproj.filters
 Да               
-ДеДЯДЯДЯimgui
-Да       imconfig.h
-Да       imgui.cpp
-Да       imgui.h
-Да       imgui_draw.cpp
-Да       imgui_impl_dx11.cpp
-Да       imgui_impl_dx11.h
-Да       imgui_impl_win32.cpp
-Да       imgui_impl_win32.h
-Да       imgui_internal.h
-Да       imgui_ja_gryph_ranges.cpp
-Да       imgui_widgets.cpp
-Да       imstb_rectpack.h
-Да       imstb_textedit.h
-Да       imstb_truetype.h
-Да       
 ДеДЯДЯДЯimgui-docking
-Да       imconfig.h
-Да       imgui.cpp
-Да       imgui.h
-Да       imgui_demo.cpp
-Да       imgui_draw.cpp
-Да       imgui_impl_dx11.cpp
-Да       imgui_impl_dx11.h
-Да       imgui_impl_win32.cpp
-Да       imgui_impl_win32.h
-Да       imgui_internal.h
-Да       imgui_widgets.cpp
-Да       imstb_rectpack.h
-Да       imstb_textedit.h
-Да       imstb_truetype.h
-Да       
-ДеДЯДЯДЯImGuizmo
-Да       ImCurveEdit.cpp
-Да       ImCurveEdit.h
-Да       ImGradient.cpp
-Да       ImGradient.h
-Да       ImGuizmo.cpp
-Да       ImGuizmo.h
-Да       ImSequencer.cpp
-Да       ImSequencer.h
-Да       
+Да   Да   imconfig.h
+Да   Да   
+Да   ДдДЯДЯДЯimgui-docking
+Да       Да   .editorconfig
+Да       Да   .gitattributes
+Да       Да   .gitignore
+Да       Да   imconfig.h
+Да       Да   imgui.cpp
+Да       Да   imgui.h
+Да       Да   imgui_demo.cpp
+Да       Да   imgui_draw.cpp
+Да       Да   imgui_internal.h
+Да       Да   imgui_tables.cpp
+Да       Да   imgui_widgets.cpp
+Да       Да   imstb_rectpack.h
+Да       Да   imstb_textedit.h
+Да       Да   imstb_truetype.h
+Да       Да   LICENSE.txt
+Да       Да   
+Да       ДеДЯДЯДЯ.github
+Да       Да   Да   FUNDING.yml
+Да       Да   Да   pull_request_template.md
+Да       Да   Да   
+Да       Да   ДеДЯДЯДЯISSUE_TEMPLATE
+Да       Да   Да       config.yml
+Да       Да   Да       issue_template.yml
+Да       Да   Да       
+Да       Да   ДдДЯДЯДЯworkflows
+Да       Да           build.yml
+Да       Да           build_windows_vulkan_libs.ps1
+Да       Да           manual.yml
+Да       Да           scheduled.yml
+Да       Да           static-analysis.yml
+Да       Да           
+Да       ДеДЯДЯДЯbackends
+Да       Да   Да   imgui_impl_allegro5.cpp
+Да       Да   Да   imgui_impl_allegro5.h
+Да       Да   Да   imgui_impl_android.cpp
+Да       Да   Да   imgui_impl_android.h
+Да       Да   Да   imgui_impl_dx10.cpp
+Да       Да   Да   imgui_impl_dx10.h
+Да       Да   Да   imgui_impl_dx11.cpp
+Да       Да   Да   imgui_impl_dx11.h
+Да       Да   Да   imgui_impl_dx12.cpp
+Да       Да   Да   imgui_impl_dx12.h
+Да       Да   Да   imgui_impl_dx9.cpp
+Да       Да   Да   imgui_impl_dx9.h
+Да       Да   Да   imgui_impl_glfw.cpp
+Да       Да   Да   imgui_impl_glfw.h
+Да       Да   Да   imgui_impl_glut.cpp
+Да       Да   Да   imgui_impl_glut.h
+Да       Да   Да   imgui_impl_metal.h
+Да       Да   Да   imgui_impl_metal.mm
+Да       Да   Да   imgui_impl_null.cpp
+Да       Да   Да   imgui_impl_null.h
+Да       Да   Да   imgui_impl_opengl2.cpp
+Да       Да   Да   imgui_impl_opengl2.h
+Да       Да   Да   imgui_impl_opengl3.cpp
+Да       Да   Да   imgui_impl_opengl3.h
+Да       Да   Да   imgui_impl_opengl3_loader.h
+Да       Да   Да   imgui_impl_osx.h
+Да       Да   Да   imgui_impl_osx.mm
+Да       Да   Да   imgui_impl_sdl2.cpp
+Да       Да   Да   imgui_impl_sdl2.h
+Да       Да   Да   imgui_impl_sdl3.cpp
+Да       Да   Да   imgui_impl_sdl3.h
+Да       Да   Да   imgui_impl_sdlgpu3.cpp
+Да       Да   Да   imgui_impl_sdlgpu3.h
+Да       Да   Да   imgui_impl_sdlgpu3_shaders.h
+Да       Да   Да   imgui_impl_sdlrenderer2.cpp
+Да       Да   Да   imgui_impl_sdlrenderer2.h
+Да       Да   Да   imgui_impl_sdlrenderer3.cpp
+Да       Да   Да   imgui_impl_sdlrenderer3.h
+Да       Да   Да   imgui_impl_vulkan.cpp
+Да       Да   Да   imgui_impl_vulkan.h
+Да       Да   Да   imgui_impl_wgpu.cpp
+Да       Да   Да   imgui_impl_wgpu.h
+Да       Да   Да   imgui_impl_win32.cpp
+Да       Да   Да   imgui_impl_win32.h
+Да       Да   Да   
+Да       Да   ДеДЯДЯДЯsdlgpu3
+Да       Да   Да       build_instructions.txt
+Да       Да   Да       shader.frag
+Да       Да   Да       shader.vert
+Да       Да   Да       
+Да       Да   ДдДЯДЯДЯvulkan
+Да       Да           build_instructions.txt
+Да       Да           generate_spv.sh
+Да       Да           glsl_shader.frag
+Да       Да           glsl_shader.vert
+Да       Да           
+Да       ДеДЯДЯДЯdocs
+Да       Да       BACKENDS.md
+Да       Да       CHANGELOG.txt
+Да       Да       CONTRIBUTING.md
+Да       Да       EXAMPLES.md
+Да       Да       FAQ.md
+Да       Да       FONTS.md
+Да       Да       README.md
+Да       Да       SECURITY.md
+Да       Да       TODO.txt
+Да       Да       
+Да       ДеДЯДЯДЯexamples
+Да       Да   Да   imgui_examples.sln
+Да       Да   Да   README.txt
+Да       Да   Да   
+Да       Да   ДеДЯДЯДЯexample_allegro5
+Да       Да   Да       example_allegro5.vcxproj
+Да       Да   Да       example_allegro5.vcxproj.filters
+Да       Да   Да       imconfig_allegro5.h
+Да       Да   Да       main.cpp
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_android_opengl3
+Да       Да   Да   Да   CMakeLists.txt
+Да       Да   Да   Да   main.cpp
+Да       Да   Да   Да   
+Да       Да   Да   ДдДЯДЯДЯandroid
+Да       Да   Да       Да   .gitignore
+Да       Да   Да       Да   build.gradle
+Да       Да   Да       Да   settings.gradle
+Да       Да   Да       Да   
+Да       Да   Да       ДеДЯДЯДЯapp
+Да       Да   Да       Да   Да   build.gradle
+Да       Да   Да       Да   Да   
+Да       Да   Да       Да   ДдДЯДЯДЯsrc
+Да       Да   Да       Да       ДдДЯДЯДЯmain
+Да       Да   Да       Да           Да   AndroidManifest.xml
+Да       Да   Да       Да           Да   
+Да       Да   Да       Да           ДдДЯДЯДЯjava
+Да       Да   Да       Да                   MainActivity.kt
+Да       Да   Да       Да                   
+Да       Да   Да       ДдДЯДЯДЯgradle
+Да       Да   Да               libs.versions.toml
+Да       Да   Да               
+Да       Да   ДеДЯДЯДЯexample_apple_metal
+Да       Да   Да   Да   main.mm
+Да       Да   Да   Да   Makefile
+Да       Да   Да   Да   README.md
+Да       Да   Да   Да   
+Да       Да   Да   ДеДЯДЯДЯexample_apple_metal.xcodeproj
+Да       Да   Да   Да       project.pbxproj
+Да       Да   Да   Да       
+Да       Да   Да   ДеДЯДЯДЯiOS
+Да       Да   Да   Да       Info-iOS.plist
+Да       Да   Да   Да       LaunchScreen.storyboard
+Да       Да   Да   Да       
+Да       Да   Да   ДдДЯДЯДЯmacOS
+Да       Да   Да           Info-macOS.plist
+Да       Да   Да           MainMenu.storyboard
+Да       Да   Да           
+Да       Да   ДеДЯДЯДЯexample_apple_opengl2
+Да       Да   Да   Да   main.mm
+Да       Да   Да   Да   Makefile
+Да       Да   Да   Да   
+Да       Да   Да   ДдДЯДЯДЯexample_apple_opengl2.xcodeproj
+Да       Да   Да           project.pbxproj
+Да       Да   Да           
+Да       Да   ДеДЯДЯДЯexample_glfw_metal
+Да       Да   Да       main.mm
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_glfw_opengl2
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_glfw_opengl2.vcxproj
+Да       Да   Да       example_glfw_opengl2.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_glfw_opengl3
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_glfw_opengl3.vcxproj
+Да       Да   Да       example_glfw_opengl3.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       Makefile.emscripten
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_glfw_vulkan
+Да       Да   Да       build_win32.bat
+Да       Да   Да       build_win64.bat
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       example_glfw_vulkan.vcxproj
+Да       Да   Да       example_glfw_vulkan.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_glfw_wgpu
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile.emscripten
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_glut_opengl2
+Да       Да   Да       example_glut_opengl2.vcxproj
+Да       Да   Да       example_glut_opengl2.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_null
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_null.vcxproj
+Да       Да   Да       example_null.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl2_directx11
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_sdl2_directx11.vcxproj
+Да       Да   Да       example_sdl2_directx11.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl2_metal
+Да       Да   Да       main.mm
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl2_opengl2
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_sdl2_opengl2.vcxproj
+Да       Да   Да       example_sdl2_opengl2.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl2_opengl3
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_sdl2_opengl3.vcxproj
+Да       Да   Да       example_sdl2_opengl3.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       Makefile.emscripten
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl2_sdlrenderer2
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_sdl2_sdlrenderer2.vcxproj
+Да       Да   Да       example_sdl2_sdlrenderer2.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl2_vulkan
+Да       Да   Да       build_win32.bat
+Да       Да   Да       build_win64.bat
+Да       Да   Да       example_sdl2_vulkan.vcxproj
+Да       Да   Да       example_sdl2_vulkan.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl2_wgpu
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile.emscripten
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl3_directx11
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_sdl3_directx11.vcxproj
+Да       Да   Да       example_sdl3_directx11.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl3_metal
+Да       Да   Да       main.mm
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl3_opengl3
+Да       Да   Да       build_win32.bat
+Да       Да   Да       build_win64.bat
+Да       Да   Да       example_sdl3_opengl3.vcxproj
+Да       Да   Да       example_sdl3_opengl3.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       Makefile.emscripten
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl3_sdlgpu3
+Да       Да   Да       build_win64.bat
+Да       Да   Да       example_sdl3_sdlgpu3.vcxproj
+Да       Да   Да       example_sdl3_sdlgpu3.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl3_sdlrenderer3
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_sdl3_sdlrenderer3.vcxproj
+Да       Да   Да       example_sdl3_sdlrenderer3.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl3_vulkan
+Да       Да   Да       build_win32.bat
+Да       Да   Да       build_win64.bat
+Да       Да   Да       example_sdl3_vulkan.vcxproj
+Да       Да   Да       example_sdl3_vulkan.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl3_wgpu
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile.emscripten
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_win32_directx10
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_win32_directx10.vcxproj
+Да       Да   Да       example_win32_directx10.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_win32_directx11
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_win32_directx11.vcxproj
+Да       Да   Да       example_win32_directx11.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_win32_directx12
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_win32_directx12.vcxproj
+Да       Да   Да       example_win32_directx12.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_win32_directx9
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_win32_directx9.vcxproj
+Да       Да   Да       example_win32_directx9.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_win32_opengl3
+Да       Да   Да       build_mingw.bat
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_win32_opengl3.vcxproj
+Да       Да   Да       example_win32_opengl3.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_win32_vulkan
+Да       Да   Да       build_win32.bat
+Да       Да   Да       build_win64.bat
+Да       Да   Да       example_win32_vulkan.vcxproj
+Да       Да   Да       example_win32_vulkan.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДдДЯДЯДЯlibs
+Да       Да       ДеДЯДЯДЯemscripten
+Да       Да       Да       emscripten_mainloop_stub.h
+Да       Да       Да       shell_minimal.html
+Да       Да       Да       
+Да       Да       ДеДЯДЯДЯglfw
+Да       Да       Да   Да   COPYING.txt
+Да       Да       Да   Да   
+Да       Да       Да   ДеДЯДЯДЯinclude
+Да       Да       Да   Да   ДдДЯДЯДЯGLFW
+Да       Да       Да   Да           glfw3.h
+Да       Да       Да   Да           glfw3native.h
+Да       Да       Да   Да           
+Да       Да       Да   ДеДЯДЯДЯlib-vc2010-32
+Да       Да       Да   Да       glfw3.lib
+Да       Да       Да   Да       
+Да       Да       Да   ДдДЯДЯДЯlib-vc2010-64
+Да       Да       Да           glfw3.lib
+Да       Да       Да           
+Да       Да       ДдДЯДЯДЯusynergy
+Да       Да               README.txt
+Да       Да               uSynergy.c
+Да       Да               uSynergy.h
+Да       Да               
+Да       ДдДЯДЯДЯmisc
+Да           Да   README.txt
+Да           Да   
+Да           ДеДЯДЯДЯcpp
+Да           Да       imgui_stdlib.cpp
+Да           Да       imgui_stdlib.h
+Да           Да       README.txt
+Да           Да       
+Да           ДеДЯДЯДЯdebuggers
+Да           Да       imgui.gdb
+Да           Да       imgui.natstepfilter
+Да           Да       imgui.natvis
+Да           Да       imgui_lldb.py
+Да           Да       README.txt
+Да           Да       
+Да           ДеДЯДЯДЯfonts
+Да           Да       binary_to_compressed_c.cpp
+Да           Да       Cousine-Regular.ttf
+Да           Да       DroidSans.ttf
+Да           Да       Karla-Regular.ttf
+Да           Да       ProggyClean.ttf
+Да           Да       ProggyTiny.ttf
+Да           Да       Roboto-Medium.ttf
+Да           Да       
+Да           ДеДЯДЯДЯfreetype
+Да           Да       imgui_freetype.cpp
+Да           Да       imgui_freetype.h
+Да           Да       README.md
+Да           Да       
+Да           ДдДЯДЯДЯsingle_file
+Да                   imgui_single_file.h
+Да                   
+ДеДЯДЯДЯimgui-master
+Да   ДдДЯДЯДЯimgui-master
+Да       Да   .editorconfig
+Да       Да   .gitattributes
+Да       Да   .gitignore
+Да       Да   imconfig.h
+Да       Да   imgui.cpp
+Да       Да   imgui.h
+Да       Да   imgui_demo.cpp
+Да       Да   imgui_draw.cpp
+Да       Да   imgui_internal.h
+Да       Да   imgui_tables.cpp
+Да       Да   imgui_widgets.cpp
+Да       Да   imstb_rectpack.h
+Да       Да   imstb_textedit.h
+Да       Да   imstb_truetype.h
+Да       Да   LICENSE.txt
+Да       Да   
+Да       ДеДЯДЯДЯ.github
+Да       Да   Да   FUNDING.yml
+Да       Да   Да   pull_request_template.md
+Да       Да   Да   
+Да       Да   ДеДЯДЯДЯISSUE_TEMPLATE
+Да       Да   Да       config.yml
+Да       Да   Да       issue_template.yml
+Да       Да   Да       
+Да       Да   ДдДЯДЯДЯworkflows
+Да       Да           build.yml
+Да       Да           build_windows_vulkan_libs.ps1
+Да       Да           manual.yml
+Да       Да           scheduled.yml
+Да       Да           static-analysis.yml
+Да       Да           
+Да       ДеДЯДЯДЯbackends
+Да       Да   Да   imgui_impl_allegro5.cpp
+Да       Да   Да   imgui_impl_allegro5.h
+Да       Да   Да   imgui_impl_android.cpp
+Да       Да   Да   imgui_impl_android.h
+Да       Да   Да   imgui_impl_dx10.cpp
+Да       Да   Да   imgui_impl_dx10.h
+Да       Да   Да   imgui_impl_dx11.cpp
+Да       Да   Да   imgui_impl_dx11.h
+Да       Да   Да   imgui_impl_dx12.cpp
+Да       Да   Да   imgui_impl_dx12.h
+Да       Да   Да   imgui_impl_dx9.cpp
+Да       Да   Да   imgui_impl_dx9.h
+Да       Да   Да   imgui_impl_glfw.cpp
+Да       Да   Да   imgui_impl_glfw.h
+Да       Да   Да   imgui_impl_glut.cpp
+Да       Да   Да   imgui_impl_glut.h
+Да       Да   Да   imgui_impl_metal.h
+Да       Да   Да   imgui_impl_metal.mm
+Да       Да   Да   imgui_impl_null.cpp
+Да       Да   Да   imgui_impl_null.h
+Да       Да   Да   imgui_impl_opengl2.cpp
+Да       Да   Да   imgui_impl_opengl2.h
+Да       Да   Да   imgui_impl_opengl3.cpp
+Да       Да   Да   imgui_impl_opengl3.h
+Да       Да   Да   imgui_impl_opengl3_loader.h
+Да       Да   Да   imgui_impl_osx.h
+Да       Да   Да   imgui_impl_osx.mm
+Да       Да   Да   imgui_impl_sdl2.cpp
+Да       Да   Да   imgui_impl_sdl2.h
+Да       Да   Да   imgui_impl_sdl3.cpp
+Да       Да   Да   imgui_impl_sdl3.h
+Да       Да   Да   imgui_impl_sdlgpu3.cpp
+Да       Да   Да   imgui_impl_sdlgpu3.h
+Да       Да   Да   imgui_impl_sdlgpu3_shaders.h
+Да       Да   Да   imgui_impl_sdlrenderer2.cpp
+Да       Да   Да   imgui_impl_sdlrenderer2.h
+Да       Да   Да   imgui_impl_sdlrenderer3.cpp
+Да       Да   Да   imgui_impl_sdlrenderer3.h
+Да       Да   Да   imgui_impl_vulkan.cpp
+Да       Да   Да   imgui_impl_vulkan.h
+Да       Да   Да   imgui_impl_wgpu.cpp
+Да       Да   Да   imgui_impl_wgpu.h
+Да       Да   Да   imgui_impl_win32.cpp
+Да       Да   Да   imgui_impl_win32.h
+Да       Да   Да   
+Да       Да   ДеДЯДЯДЯsdlgpu3
+Да       Да   Да       build_instructions.txt
+Да       Да   Да       shader.frag
+Да       Да   Да       shader.vert
+Да       Да   Да       
+Да       Да   ДдДЯДЯДЯvulkan
+Да       Да           build_instructions.txt
+Да       Да           generate_spv.sh
+Да       Да           glsl_shader.frag
+Да       Да           glsl_shader.vert
+Да       Да           
+Да       ДеДЯДЯДЯdocs
+Да       Да       BACKENDS.md
+Да       Да       CHANGELOG.txt
+Да       Да       CONTRIBUTING.md
+Да       Да       EXAMPLES.md
+Да       Да       FAQ.md
+Да       Да       FONTS.md
+Да       Да       README.md
+Да       Да       SECURITY.md
+Да       Да       TODO.txt
+Да       Да       
+Да       ДеДЯДЯДЯexamples
+Да       Да   Да   imgui_examples.sln
+Да       Да   Да   README.txt
+Да       Да   Да   
+Да       Да   ДеДЯДЯДЯexample_allegro5
+Да       Да   Да       example_allegro5.vcxproj
+Да       Да   Да       example_allegro5.vcxproj.filters
+Да       Да   Да       imconfig_allegro5.h
+Да       Да   Да       main.cpp
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_android_opengl3
+Да       Да   Да   Да   CMakeLists.txt
+Да       Да   Да   Да   main.cpp
+Да       Да   Да   Да   
+Да       Да   Да   ДдДЯДЯДЯandroid
+Да       Да   Да       Да   .gitignore
+Да       Да   Да       Да   build.gradle
+Да       Да   Да       Да   settings.gradle
+Да       Да   Да       Да   
+Да       Да   Да       ДеДЯДЯДЯapp
+Да       Да   Да       Да   Да   build.gradle
+Да       Да   Да       Да   Да   
+Да       Да   Да       Да   ДдДЯДЯДЯsrc
+Да       Да   Да       Да       ДдДЯДЯДЯmain
+Да       Да   Да       Да           Да   AndroidManifest.xml
+Да       Да   Да       Да           Да   
+Да       Да   Да       Да           ДдДЯДЯДЯjava
+Да       Да   Да       Да                   MainActivity.kt
+Да       Да   Да       Да                   
+Да       Да   Да       ДдДЯДЯДЯgradle
+Да       Да   Да               libs.versions.toml
+Да       Да   Да               
+Да       Да   ДеДЯДЯДЯexample_apple_metal
+Да       Да   Да   Да   main.mm
+Да       Да   Да   Да   Makefile
+Да       Да   Да   Да   README.md
+Да       Да   Да   Да   
+Да       Да   Да   ДеДЯДЯДЯexample_apple_metal.xcodeproj
+Да       Да   Да   Да       project.pbxproj
+Да       Да   Да   Да       
+Да       Да   Да   ДеДЯДЯДЯiOS
+Да       Да   Да   Да       Info-iOS.plist
+Да       Да   Да   Да       LaunchScreen.storyboard
+Да       Да   Да   Да       
+Да       Да   Да   ДдДЯДЯДЯmacOS
+Да       Да   Да           Info-macOS.plist
+Да       Да   Да           MainMenu.storyboard
+Да       Да   Да           
+Да       Да   ДеДЯДЯДЯexample_apple_opengl2
+Да       Да   Да   Да   main.mm
+Да       Да   Да   Да   Makefile
+Да       Да   Да   Да   
+Да       Да   Да   ДдДЯДЯДЯexample_apple_opengl2.xcodeproj
+Да       Да   Да           project.pbxproj
+Да       Да   Да           
+Да       Да   ДеДЯДЯДЯexample_glfw_metal
+Да       Да   Да       main.mm
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_glfw_opengl2
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_glfw_opengl2.vcxproj
+Да       Да   Да       example_glfw_opengl2.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_glfw_opengl3
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_glfw_opengl3.vcxproj
+Да       Да   Да       example_glfw_opengl3.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       Makefile.emscripten
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_glfw_vulkan
+Да       Да   Да       build_win32.bat
+Да       Да   Да       build_win64.bat
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       example_glfw_vulkan.vcxproj
+Да       Да   Да       example_glfw_vulkan.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_glfw_wgpu
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile.emscripten
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_glut_opengl2
+Да       Да   Да       example_glut_opengl2.vcxproj
+Да       Да   Да       example_glut_opengl2.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_null
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_null.vcxproj
+Да       Да   Да       example_null.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl2_directx11
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_sdl2_directx11.vcxproj
+Да       Да   Да       example_sdl2_directx11.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl2_metal
+Да       Да   Да       main.mm
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl2_opengl2
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_sdl2_opengl2.vcxproj
+Да       Да   Да       example_sdl2_opengl2.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl2_opengl3
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_sdl2_opengl3.vcxproj
+Да       Да   Да       example_sdl2_opengl3.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       Makefile.emscripten
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl2_sdlrenderer2
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_sdl2_sdlrenderer2.vcxproj
+Да       Да   Да       example_sdl2_sdlrenderer2.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl2_vulkan
+Да       Да   Да       build_win32.bat
+Да       Да   Да       build_win64.bat
+Да       Да   Да       example_sdl2_vulkan.vcxproj
+Да       Да   Да       example_sdl2_vulkan.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl2_wgpu
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile.emscripten
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl3_directx11
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_sdl3_directx11.vcxproj
+Да       Да   Да       example_sdl3_directx11.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl3_metal
+Да       Да   Да       main.mm
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl3_opengl3
+Да       Да   Да       build_win32.bat
+Да       Да   Да       build_win64.bat
+Да       Да   Да       example_sdl3_opengl3.vcxproj
+Да       Да   Да       example_sdl3_opengl3.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       Makefile.emscripten
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl3_sdlgpu3
+Да       Да   Да       build_win64.bat
+Да       Да   Да       example_sdl3_sdlgpu3.vcxproj
+Да       Да   Да       example_sdl3_sdlgpu3.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl3_sdlrenderer3
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_sdl3_sdlrenderer3.vcxproj
+Да       Да   Да       example_sdl3_sdlrenderer3.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl3_vulkan
+Да       Да   Да       build_win32.bat
+Да       Да   Да       build_win64.bat
+Да       Да   Да       example_sdl3_vulkan.vcxproj
+Да       Да   Да       example_sdl3_vulkan.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_sdl3_wgpu
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       main.cpp
+Да       Да   Да       Makefile.emscripten
+Да       Да   Да       README.md
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_win32_directx10
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_win32_directx10.vcxproj
+Да       Да   Да       example_win32_directx10.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_win32_directx11
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_win32_directx11.vcxproj
+Да       Да   Да       example_win32_directx11.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_win32_directx12
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_win32_directx12.vcxproj
+Да       Да   Да       example_win32_directx12.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_win32_directx9
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_win32_directx9.vcxproj
+Да       Да   Да       example_win32_directx9.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_win32_opengl3
+Да       Да   Да       build_mingw.bat
+Да       Да   Да       build_win32.bat
+Да       Да   Да       example_win32_opengl3.vcxproj
+Да       Да   Да       example_win32_opengl3.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯexample_win32_vulkan
+Да       Да   Да       build_win32.bat
+Да       Да   Да       build_win64.bat
+Да       Да   Да       example_win32_vulkan.vcxproj
+Да       Да   Да       example_win32_vulkan.vcxproj.filters
+Да       Да   Да       main.cpp
+Да       Да   Да       
+Да       Да   ДдДЯДЯДЯlibs
+Да       Да       ДеДЯДЯДЯemscripten
+Да       Да       Да       emscripten_mainloop_stub.h
+Да       Да       Да       shell_minimal.html
+Да       Да       Да       
+Да       Да       ДеДЯДЯДЯglfw
+Да       Да       Да   Да   COPYING.txt
+Да       Да       Да   Да   
+Да       Да       Да   ДеДЯДЯДЯinclude
+Да       Да       Да   Да   ДдДЯДЯДЯGLFW
+Да       Да       Да   Да           glfw3.h
+Да       Да       Да   Да           glfw3native.h
+Да       Да       Да   Да           
+Да       Да       Да   ДеДЯДЯДЯlib-vc2010-32
+Да       Да       Да   Да       glfw3.lib
+Да       Да       Да   Да       
+Да       Да       Да   ДдДЯДЯДЯlib-vc2010-64
+Да       Да       Да           glfw3.lib
+Да       Да       Да           
+Да       Да       ДдДЯДЯДЯusynergy
+Да       Да               README.txt
+Да       Да               uSynergy.c
+Да       Да               uSynergy.h
+Да       Да               
+Да       ДдДЯДЯДЯmisc
+Да           Да   README.txt
+Да           Да   
+Да           ДеДЯДЯДЯcpp
+Да           Да       imgui_stdlib.cpp
+Да           Да       imgui_stdlib.h
+Да           Да       README.txt
+Да           Да       
+Да           ДеДЯДЯДЯdebuggers
+Да           Да       imgui.gdb
+Да           Да       imgui.natstepfilter
+Да           Да       imgui.natvis
+Да           Да       imgui_lldb.py
+Да           Да       README.txt
+Да           Да       
+Да           ДеДЯДЯДЯfonts
+Да           Да       binary_to_compressed_c.cpp
+Да           Да       Cousine-Regular.ttf
+Да           Да       DroidSans.ttf
+Да           Да       Karla-Regular.ttf
+Да           Да       ProggyClean.ttf
+Да           Да       ProggyTiny.ttf
+Да           Да       Roboto-Medium.ttf
+Да           Да       
+Да           ДеДЯДЯДЯfreetype
+Да           Да       imgui_freetype.cpp
+Да           Да       imgui_freetype.h
+Да           Да       README.md
+Да           Да       
+Да           ДдДЯДЯДЯsingle_file
+Да                   imgui_single_file.h
+Да                   
+ДеДЯДЯДЯimgui-node-editor-master
+Да   ДдДЯДЯДЯimgui-node-editor-master
+Да       Да   .gitignore
+Да       Да   crude_json.cpp
+Да       Да   crude_json.h
+Да       Да   imgui_bezier_math.h
+Да       Да   imgui_bezier_math.inl
+Да       Да   imgui_canvas.cpp
+Да       Да   imgui_canvas.h
+Да       Да   imgui_extra_math.h
+Да       Да   imgui_extra_math.inl
+Да       Да   imgui_node_editor.cpp
+Да       Да   imgui_node_editor.h
+Да       Да   imgui_node_editor_api.cpp
+Да       Да   imgui_node_editor_internal.h
+Да       Да   imgui_node_editor_internal.inl
+Да       Да   LICENSE
+Да       Да   
+Да       ДеДЯДЯДЯ.github
+Да       Да   ДдДЯДЯДЯworkflows
+Да       Да           build.yml
+Да       Да           
+Да       ДеДЯДЯДЯdocs
+Да       Да       CHANGELOG.txt
+Да       Да       README.md
+Да       Да       TODO.md
+Да       Да       
+Да       ДеДЯДЯДЯexamples
+Да       Да   Да   CMakeLists.txt
+Да       Да   Да   
+Да       Да   ДеДЯДЯДЯapplication
+Да       Да   Да   Да   CMakeLists.txt
+Да       Да   Да   Да   
+Да       Да   Да   ДеДЯДЯДЯinclude
+Да       Да   Да   Да       application.h
+Да       Да   Да   Да       
+Да       Да   Да   ДеДЯДЯДЯsource
+Да       Да   Да   Да       application.cpp
+Да       Да   Да   Да       config.h.in
+Да       Да   Да   Да       entry_point.cpp
+Да       Да   Да   Да       imgui_extra_keys.h
+Да       Да   Да   Да       imgui_impl_dx11.cpp
+Да       Да   Да   Да       imgui_impl_dx11.h
+Да       Да   Да   Да       imgui_impl_glfw.cpp
+Да       Да   Да   Да       imgui_impl_glfw.h
+Да       Да   Да   Да       imgui_impl_opengl3.cpp
+Да       Да   Да   Да       imgui_impl_opengl3.h
+Да       Да   Да   Да       imgui_impl_opengl3_loader.h
+Да       Да   Да   Да       imgui_impl_win32.cpp
+Да       Да   Да   Да       imgui_impl_win32.h
+Да       Да   Да   Да       platform.h
+Да       Да   Да   Да       platform_glfw.cpp
+Да       Да   Да   Да       platform_win32.cpp
+Да       Да   Да   Да       renderer.h
+Да       Да   Да   Да       renderer_dx11.cpp
+Да       Да   Да   Да       renderer_ogl3.cpp
+Да       Да   Да   Да       setup.h
+Да       Да   Да   Да       
+Да       Да   Да   ДдДЯДЯДЯsupport
+Да       Да   Да           Icon.icns
+Да       Да   Да           Icon.ico
+Да       Да   Да           Icon.png
+Да       Да   Да           Info.plist.in
+Да       Да   Да           Resource.rc.in
+Да       Да   Да           
+Да       Да   ДеДЯДЯДЯbasic-interaction-example
+Да       Да   Да       basic-interaction-example.cpp
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯblueprints-example
+Да       Да   Да   Да   blueprints-example.cpp
+Да       Да   Да   Да   CMakeLists.txt
+Да       Да   Да   Да   
+Да       Да   Да   ДеДЯДЯДЯdata
+Да       Да   Да   Да       BlueprintBackground.png
+Да       Да   Да   Да       ic_restore_white_24dp.png
+Да       Да   Да   Да       ic_save_white_24dp.png
+Да       Да   Да   Да       
+Да       Да   Да   ДдДЯДЯДЯutilities
+Да       Да   Да           builders.cpp
+Да       Да   Да           builders.h
+Да       Да   Да           drawing.cpp
+Да       Да   Да           drawing.h
+Да       Да   Да           widgets.cpp
+Да       Да   Да           widgets.h
+Да       Да   Да           
+Да       Да   ДеДЯДЯДЯcanvas-example
+Да       Да   Да       canvas-example.cpp
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯdata
+Да       Да   Да       Cuprum-Bold.ttf
+Да       Да   Да       Cuprum-OFL.txt
+Да       Да   Да       Oswald-OFL.txt
+Да       Да   Да       Oswald-Regular.ttf
+Да       Да   Да       Play-OFL.txt
+Да       Да   Да       Play-Regular.ttf
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯsimple-example
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       simple-example.cpp
+Да       Да   Да       
+Да       Да   ДдДЯДЯДЯwidgets-example
+Да       Да           CMakeLists.txt
+Да       Да           widgets-example.cpp
+Да       Да           
+Да       ДеДЯДЯДЯexternal
+Да       Да   ДеДЯДЯДЯDXSDK
+Да       Да   Да   ДеДЯДЯДЯinclude
+Да       Да   Да   Да       D3DX11.h
+Да       Да   Да   Да       D3DX11async.h
+Да       Да   Да   Да       D3DX11core.h
+Да       Да   Да   Да       D3DX11tex.h
+Да       Да   Да   Да       dxerr.h
+Да       Да   Да   Да       
+Да       Да   Да   ДеДЯДЯДЯlib
+Да       Да   Да   Да   ДеДЯДЯДЯx64
+Да       Да   Да   Да   Да       d3dx11.lib
+Да       Да   Да   Да   Да       d3dx11d.lib
+Да       Да   Да   Да   Да       
+Да       Да   Да   Да   ДдДЯДЯДЯx86
+Да       Да   Да   Да           d3dx11.lib
+Да       Да   Да   Да           d3dx11d.lib
+Да       Да   Да   Да           
+Да       Да   Да   ДдДЯДЯДЯsrc
+Да       Да   Да           dxerr.cpp
+Да       Да   Да           
+Да       Да   ДеДЯДЯДЯimgui
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       imconfig.h
+Да       Да   Да       imgui.cpp
+Да       Да   Да       imgui.h
+Да       Да   Да       imgui.natvis
+Да       Да   Да       imgui_demo.cpp
+Да       Да   Да       imgui_draw.cpp
+Да       Да   Да       imgui_internal.h
+Да       Да   Да       imgui_tables.cpp
+Да       Да   Да       imgui_widgets.cpp
+Да       Да   Да       imstb_rectpack.h
+Да       Да   Да       imstb_textedit.h
+Да       Да   Да       imstb_truetype.h
+Да       Да   Да       LICENSE.txt
+Да       Да   Да       
+Да       Да   ДеДЯДЯДЯScopeGuard
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       ScopeGuard.h
+Да       Да   Да       
+Да       Да   ДдДЯДЯДЯstb_image
+Да       Да           CMakeLists.txt
+Да       Да           stb_image.h
+Да       Да           
+Да       ДдДЯДЯДЯmisc
+Да           Да   crude_json.natvis
+Да           Да   imgui_node_editor.natvis
+Да           Да   
+Да           ДдДЯДЯДЯcmake-modules
+Да                   Findgl3w.cmake
+Да                   Findimgui.cmake
+Да                   Findimgui_node_editor.cmake
+Да                   FindScopeGuard.cmake
+Да                   Findstb_image.cmake
+Да                   
+ДеДЯДЯДЯImGuizmo-master
+Да   ДдДЯДЯДЯImGuizmo-master
+Да       Да   .gitignore
+Да       Да   CMakeLists.txt
+Да       Да   LICENSE
+Да       Да   Makefile
+Да       Да   README.md
+Да       Да   
+Да       ДеДЯДЯДЯ.github
+Да       Да   Да   FUNDING.yml
+Да       Да   Да   
+Да       Да   ДдДЯДЯДЯworkflows
+Да       Да           build.yml
+Да       Да           release.yml
+Да       Да           
+Да       ДеДЯДЯДЯdocs
+Да       Да       documentation.md
+Да       Да       
+Да       ДеДЯДЯДЯexample
+Да       Да       CMakeLists.txt
+Да       Да       ImApp.h
+Да       Да       main.cpp
+Да       Да       
+Да       ДеДЯДЯДЯimages
+Да       Да       bounds.gif
+Да       Да       dialog.png
+Да       Да       ImViewGizmo.gif
+Да       Да       nodeeditor.jpg
+Да       Да       rotation.gif
+Да       Да       sample.png
+Да       Да       sequencer.png
+Да       Да       translation.gif
+Да       Да       vectoreditor.png
+Да       Да       
+Да       ДеДЯДЯДЯsrc
+Да       Да       GraphEditor.cpp
+Да       Да       GraphEditor.h
+Да       Да       ImCurveEdit.cpp
+Да       Да       ImCurveEdit.h
+Да       Да       ImGradient.cpp
+Да       Да       ImGradient.h
+Да       Да       ImGuizmo.cpp
+Да       Да       ImGuizmo.h
+Да       Да       ImLightRig.h
+Да       Да       ImSequencer.cpp
+Да       Да       ImSequencer.h
+Да       Да       ImVectorEditor.cpp
+Да       Да       ImVectorEditor.h
+Да       Да       ImZoomSlider.h
+Да       Да       
+Да       ДдДЯДЯДЯvcpkg-example
+Да               CMakeLists.txt
+Да               imgui.ini
+Да               main.cpp
+Да               README.md
+Да               vcpkg.json
+Да               
 ДеДЯДЯДЯjson-develop
 Да   ДдДЯДЯДЯjson-develop
+Да       Да   .cirrus.yml
+Да       Да   .clang-tidy
+Да       Да   .gitignore
+Да       Да   BUILD.bazel
+Да       Да   ChangeLog.md
+Да       Да   CITATION.cff
+Да       Да   CMakeLists.txt
+Да       Да   FILES.md
+Да       Да   LICENSE.MIT
+Да       Да   Makefile
+Да       Да   meson.build
+Да       Да   MODULE.bazel
+Да       Да   nlohmann_json.natvis
+Да       Да   Package.swift
+Да       Да   README.md
+Да       Да   
 Да       ДеДЯДЯДЯ.github
+Да       Да   Да   CODEOWNERS
+Да       Да   Да   CODE_OF_CONDUCT.md
+Да       Да   Да   config.yml
+Да       Да   Да   CONTRIBUTING.md
+Да       Да   Да   dependabot.yml
+Да       Да   Да   FUNDING.yml
+Да       Да   Да   labeler.yml
+Да       Да   Да   PULL_REQUEST_TEMPLATE.md
+Да       Да   Да   SECURITY.md
+Да       Да   Да   
 Да       Да   ДеДЯДЯДЯexternal_ci
+Да       Да   Да       appveyor.yml
+Да       Да   Да       
 Да       Да   ДеДЯДЯДЯISSUE_TEMPLATE
+Да       Да   Да       bug.yaml
+Да       Да   Да       config.yml
+Да       Да   Да       
 Да       Да   ДдДЯДЯДЯworkflows
+Да       Да           check_amalgamation.yml
+Да       Да           cifuzz.yml
+Да       Да           codeql-analysis.yml
+Да       Да           comment_check_amalgamation.yml
+Да       Да           dependency-review.yml
+Да       Да           flawfinder.yml
+Да       Да           labeler.yml
+Да       Да           macos.yml
+Да       Да           publish_documentation.yml
+Да       Да           scorecards.yml
+Да       Да           semgrep.yml
+Да       Да           stale.yml
+Да       Да           ubuntu.yml
+Да       Да           windows.yml
+Да       Да           
 Да       ДеДЯДЯДЯ.reuse
+Да       Да   Да   dep5
+Да       Да   Да   
 Да       Да   ДдДЯДЯДЯtemplates
+Да       Да           json.jinja2
+Да       Да           json_support.jinja2
+Да       Да           
 Да       ДеДЯДЯДЯcmake
+Да       Да   Да   ci.cmake
+Да       Да   Да   clang_flags.cmake
+Да       Да   Да   config.cmake.in
+Да       Да   Да   detect_libcpp_version.cpp
+Да       Да   Да   download_test_data.cmake
+Да       Да   Да   gcc_flags.cmake
+Да       Да   Да   nlohmann_jsonConfigVersion.cmake.in
+Да       Да   Да   pkg-config.pc.in
+Да       Да   Да   test.cmake
+Да       Да   Да   
 Да       Да   ДеДЯДЯДЯrequirements
+Да       Да   Да       requirements-cppcheck.txt
+Да       Да   Да       requirements-cpplint.txt
+Да       Да   Да       requirements-reuse.txt
+Да       Да   Да       
 Да       Да   ДдДЯДЯДЯscripts
+Да       Да           gen_bazel_build_file.cmake
+Да       Да           
 Да       ДеДЯДЯДЯdocs
+Да       Да   Да   avatars.png
+Да       Да   Да   json.gif
+Да       Да   Да   Makefile
+Да       Да   Да   README.md
+Да       Да   Да   
 Да       Да   ДеДЯДЯДЯdocset
+Да       Да   Да       docset.json
+Да       Да   Да       docSet.sql
+Да       Да   Да       icon.png
+Да       Да   Да       icon@2x.png
+Да       Да   Да       Info.plist
+Да       Да   Да       Makefile
+Да       Да   Да       README.md
+Да       Да   Да       
 Да       Да   ДдДЯДЯДЯmkdocs
+Да       Да       Да   Makefile
+Да       Да       Да   mkdocs.yml
+Да       Да       Да   requirements.txt
+Да       Да       Да   
 Да       Да       ДеДЯДЯДЯdocs
+Да       Да       Да   Да   index.md
+Да       Да       Да   Да   
 Да       Да       Да   ДеДЯДЯДЯapi
+Да       Да       Да   Да   Да   json.md
+Да       Да       Да   Да   Да   operator_gtgt.md
+Да       Да       Да   Да   Да   operator_literal_json.md
+Да       Да       Да   Да   Да   operator_literal_json_pointer.md
+Да       Да       Да   Да   Да   operator_ltlt.md
+Да       Да       Да   Да   Да   ordered_json.md
+Да       Да       Да   Да   Да   ordered_map.md
+Да       Да       Да   Да   Да   
 Да       Да       Да   Да   ДеДЯДЯДЯadl_serializer
+Да       Да       Да   Да   Да       from_json.md
+Да       Да       Да   Да   Да       index.md
+Да       Да       Да   Да   Да       to_json.md
+Да       Да       Да   Да   Да       
 Да       Да       Да   Да   ДеДЯДЯДЯbasic_json
+Да       Да       Да   Да   Да       accept.md
+Да       Да       Да   Да   Да       array.md
+Да       Да       Да   Да   Да       array_t.md
+Да       Да       Да   Да   Да       at.md
+Да       Да       Да   Да   Да       back.md
+Да       Да       Да   Да   Да       basic_json.md
+Да       Да       Да   Да   Да       begin.md
+Да       Да       Да   Да   Да       binary.md
+Да       Да       Да   Да   Да       binary_t.md
+Да       Да       Да   Да   Да       boolean_t.md
+Да       Да       Да   Да   Да       cbegin.md
+Да       Да       Да   Да   Да       cbor_tag_handler_t.md
+Да       Да       Да   Да   Да       cend.md
+Да       Да       Да   Да   Да       clear.md
+Да       Да       Да   Да   Да       contains.md
+Да       Да       Да   Да   Да       count.md
+Да       Да       Да   Да   Да       crbegin.md
+Да       Да       Да   Да   Да       crend.md
+Да       Да       Да   Да   Да       default_object_comparator_t.md
+Да       Да       Да   Да   Да       diff.md
+Да       Да       Да   Да   Да       dump.md
+Да       Да       Да   Да   Да       emplace.md
+Да       Да       Да   Да   Да       emplace_back.md
+Да       Да       Да   Да   Да       empty.md
+Да       Да       Да   Да   Да       end.md
+Да       Да       Да   Да   Да       end_pos.md
+Да       Да       Да   Да   Да       erase.md
+Да       Да       Да   Да   Да       error_handler_t.md
+Да       Да       Да   Да   Да       exception.md
+Да       Да       Да   Да   Да       find.md
+Да       Да       Да   Да   Да       flatten.md
+Да       Да       Да   Да   Да       from_bjdata.md
+Да       Да       Да   Да   Да       from_bson.md
+Да       Да       Да   Да   Да       from_cbor.md
+Да       Да       Да   Да   Да       from_msgpack.md
+Да       Да       Да   Да   Да       from_ubjson.md
+Да       Да       Да   Да   Да       front.md
+Да       Да       Да   Да   Да       get.md
+Да       Да       Да   Да   Да       get_allocator.md
+Да       Да       Да   Да   Да       get_binary.md
+Да       Да       Да   Да   Да       get_ptr.md
+Да       Да       Да   Да   Да       get_ref.md
+Да       Да       Да   Да   Да       get_to.md
+Да       Да       Да   Да   Да       index.md
+Да       Да       Да   Да   Да       input_format_t.md
+Да       Да       Да   Да   Да       insert.md
+Да       Да       Да   Да   Да       invalid_iterator.md
+Да       Да       Да   Да   Да       is_array.md
+Да       Да       Да   Да   Да       is_binary.md
+Да       Да       Да   Да   Да       is_boolean.md
+Да       Да       Да   Да   Да       is_discarded.md
+Да       Да       Да   Да   Да       is_null.md
+Да       Да       Да   Да   Да       is_number.md
+Да       Да       Да   Да   Да       is_number_float.md
+Да       Да       Да   Да   Да       is_number_integer.md
+Да       Да       Да   Да   Да       is_number_unsigned.md
+Да       Да       Да   Да   Да       is_object.md
+Да       Да       Да   Да   Да       is_primitive.md
+Да       Да       Да   Да   Да       is_string.md
+Да       Да       Да   Да   Да       is_structured.md
+Да       Да       Да   Да   Да       items.md
+Да       Да       Да   Да   Да       json_base_class_t.md
+Да       Да       Да   Да   Да       json_serializer.md
+Да       Да       Да   Да   Да       max_size.md
+Да       Да       Да   Да   Да       merge_patch.md
+Да       Да       Да   Да   Да       meta.md
+Да       Да       Да   Да   Да       number_float_t.md
+Да       Да       Да   Да   Да       number_integer_t.md
+Да       Да       Да   Да   Да       number_unsigned_t.md
+Да       Да       Да   Да   Да       object.md
+Да       Да       Да   Да   Да       object_comparator_t.md
+Да       Да       Да   Да   Да       object_t.md
+Да       Да       Да   Да   Да       operator+=.md
+Да       Да       Да   Да   Да       operator=.md
+Да       Да       Да   Да   Да       operator[].md
+Да       Да       Да   Да   Да       operator_eq.md
+Да       Да       Да   Да   Да       operator_ge.md
+Да       Да       Да   Да   Да       operator_gt.md
+Да       Да       Да   Да   Да       operator_le.md
+Да       Да       Да   Да   Да       operator_lt.md
+Да       Да       Да   Да   Да       operator_ne.md
+Да       Да       Да   Да   Да       operator_spaceship.md
+Да       Да       Да   Да   Да       operator_ValueType.md
+Да       Да       Да   Да   Да       operator_value_t.md
+Да       Да       Да   Да   Да       other_error.md
+Да       Да       Да   Да   Да       out_of_range.md
+Да       Да       Да   Да   Да       parse.md
+Да       Да       Да   Да   Да       parser_callback_t.md
+Да       Да       Да   Да   Да       parse_error.md
+Да       Да       Да   Да   Да       parse_event_t.md
+Да       Да       Да   Да   Да       patch.md
+Да       Да       Да   Да   Да       patch_inplace.md
+Да       Да       Да   Да   Да       push_back.md
+Да       Да       Да   Да   Да       rbegin.md
+Да       Да       Да   Да   Да       rend.md
+Да       Да       Да   Да   Да       sax_parse.md
+Да       Да       Да   Да   Да       size.md
+Да       Да       Да   Да   Да       start_pos.md
+Да       Да       Да   Да   Да       std_hash.md
+Да       Да       Да   Да   Да       std_swap.md
+Да       Да       Да   Да   Да       string_t.md
+Да       Да       Да   Да   Да       swap.md
+Да       Да       Да   Да   Да       to_bjdata.md
+Да       Да       Да   Да   Да       to_bson.md
+Да       Да       Да   Да   Да       to_cbor.md
+Да       Да       Да   Да   Да       to_msgpack.md
+Да       Да       Да   Да   Да       to_string.md
+Да       Да       Да   Да   Да       to_ubjson.md
+Да       Да       Да   Да   Да       type.md
+Да       Да       Да   Да   Да       type_error.md
+Да       Да       Да   Да   Да       type_name.md
+Да       Да       Да   Да   Да       unflatten.md
+Да       Да       Да   Да   Да       update.md
+Да       Да       Да   Да   Да       value.md
+Да       Да       Да   Да   Да       value_t.md
+Да       Да       Да   Да   Да       ~basic_json.md
+Да       Да       Да   Да   Да       
 Да       Да       Да   Да   ДеДЯДЯДЯbyte_container_with_subtype
+Да       Да       Да   Да   Да       byte_container_with_subtype.md
+Да       Да       Да   Да   Да       clear_subtype.md
+Да       Да       Да   Да   Да       has_subtype.md
+Да       Да       Да   Да   Да       index.md
+Да       Да       Да   Да   Да       set_subtype.md
+Да       Да       Да   Да   Да       subtype.md
+Да       Да       Да   Да   Да       
 Да       Да       Да   Да   ДеДЯДЯДЯjson_pointer
+Да       Да       Да   Да   Да       back.md
+Да       Да       Да   Да   Да       empty.md
+Да       Да       Да   Да   Да       front.md
+Да       Да       Да   Да   Да       index.md
+Да       Да       Да   Да   Да       json_pointer.md
+Да       Да       Да   Да   Да       operator_eq.md
+Да       Да       Да   Да   Да       operator_ne.md
+Да       Да       Да   Да   Да       operator_slash.md
+Да       Да       Да   Да   Да       operator_slasheq.md
+Да       Да       Да   Да   Да       operator_string_t.md
+Да       Да       Да   Да   Да       parent_pointer.md
+Да       Да       Да   Да   Да       pop_back.md
+Да       Да       Да   Да   Да       pop_front.md
+Да       Да       Да   Да   Да       push_back.md
+Да       Да       Да   Да   Да       push_front.md
+Да       Да       Да   Да   Да       string_t.md
+Да       Да       Да   Да   Да       to_string.md
+Да       Да       Да   Да   Да       
 Да       Да       Да   Да   ДеДЯДЯДЯjson_sax
+Да       Да       Да   Да   Да       binary.md
+Да       Да       Да   Да   Да       boolean.md
+Да       Да       Да   Да   Да       end_array.md
+Да       Да       Да   Да   Да       end_object.md
+Да       Да       Да   Да   Да       index.md
+Да       Да       Да   Да   Да       key.md
+Да       Да       Да   Да   Да       null.md
+Да       Да       Да   Да   Да       number_float.md
+Да       Да       Да   Да   Да       number_integer.md
+Да       Да       Да   Да   Да       number_unsigned.md
+Да       Да       Да   Да   Да       parse_error.md
+Да       Да       Да   Да   Да       start_array.md
+Да       Да       Да   Да   Да       start_object.md
+Да       Да       Да   Да   Да       string.md
+Да       Да       Да   Да   Да       
 Да       Да       Да   Да   ДдДЯДЯДЯmacros
+Да       Да       Да   Да           index.md
+Да       Да       Да   Да           json_assert.md
+Да       Да       Да   Да           json_brace_init_copy_semantics.md
+Да       Да       Да   Да           json_diagnostics.md
+Да       Да       Да   Да           json_diagnostic_positions.md
+Да       Да       Да   Да           json_disable_enum_serialization.md
+Да       Да       Да   Да           json_has_cpp_11.md
+Да       Да       Да   Да           json_has_filesystem.md
+Да       Да       Да   Да           json_has_ranges.md
+Да       Да       Да   Да           json_has_static_rtti.md
+Да       Да       Да   Да           json_has_three_way_comparison.md
+Да       Да       Да   Да           json_noexception.md
+Да       Да       Да   Да           json_no_io.md
+Да       Да       Да   Да           json_skip_library_version_check.md
+Да       Да       Да   Да           json_skip_unsupported_compiler_check.md
+Да       Да       Да   Да           json_throw_user.md
+Да       Да       Да   Да           json_use_global_udls.md
+Да       Да       Да   Да           json_use_implicit_conversions.md
+Да       Да       Да   Да           json_use_legacy_discarded_value_comparison.md
+Да       Да       Да   Да           nlohmann_define_derived_type.md
+Да       Да       Да   Да           nlohmann_define_type_intrusive.md
+Да       Да       Да   Да           nlohmann_define_type_non_intrusive.md
+Да       Да       Да   Да           nlohmann_define_type_with_names.md
+Да       Да       Да   Да           nlohmann_json_namespace.md
+Да       Да       Да   Да           nlohmann_json_namespace_begin.md
+Да       Да       Да   Да           nlohmann_json_namespace_no_version.md
+Да       Да       Да   Да           nlohmann_json_serialize_enum.md
+Да       Да       Да   Да           nlohmann_json_serialize_enum_strict.md
+Да       Да       Да   Да           nlohmann_json_version_major.md
+Да       Да       Да   Да           
 Да       Да       Да   ДеДЯДЯДЯcommunity
+Да       Да       Да   Да       code_of_conduct.md
+Да       Да       Да   Да       contribution_guidelines.md
+Да       Да       Да   Да       governance.md
+Да       Да       Да   Да       index.md
+Да       Да       Да   Да       quality_assurance.md
+Да       Да       Да   Да       security_policy.md
+Да       Да       Да   Да       
 Да       Да       Да   ДеДЯДЯДЯcss
+Да       Да       Да   Да       custom.css
+Да       Да       Да   Да       
 Да       Да       Да   ДеДЯДЯДЯexamples
+Да       Да       Да   Да       accept__string.cpp
+Да       Да       Да   Да       accept__string.output
+Да       Да       Да   Да       array.cpp
+Да       Да       Да   Да       array.output
+Да       Да       Да   Да       array_t.cpp
+Да       Да       Да   Да       array_t.output
+Да       Да       Да   Да       at__json_pointer.cpp
+Да       Да       Да   Да       at__json_pointer.output
+Да       Да       Да   Да       at__json_pointer_const.cpp
+Да       Да       Да   Да       at__json_pointer_const.output
+Да       Да       Да   Да       at__keytype.c++17.cpp
+Да       Да       Да   Да       at__keytype.c++17.output
+Да       Да       Да   Да       at__keytype_const.c++17.cpp
+Да       Да       Да   Да       at__keytype_const.c++17.output
+Да       Да       Да   Да       at__object_t_key_type.cpp
+Да       Да       Да   Да       at__object_t_key_type.output
+Да       Да       Да   Да       at__object_t_key_type_const.cpp
+Да       Да       Да   Да       at__object_t_key_type_const.output
+Да       Да       Да   Да       at__size_type.cpp
+Да       Да       Да   Да       at__size_type.output
+Да       Да       Да   Да       at__size_type_const.cpp
+Да       Да       Да   Да       at__size_type_const.output
+Да       Да       Да   Да       back.cpp
+Да       Да       Да   Да       back.output
+Да       Да       Да   Да       basic_json__basic_json.cpp
+Да       Да       Да   Да       basic_json__basic_json.output
+Да       Да       Да   Да       basic_json__CompatibleType.cpp
+Да       Да       Да   Да       basic_json__CompatibleType.output
+Да       Да       Да   Да       basic_json__copyassignment.cpp
+Да       Да       Да   Да       basic_json__copyassignment.output
+Да       Да       Да   Да       basic_json__InputIt_InputIt.cpp
+Да       Да       Да   Да       basic_json__InputIt_InputIt.output
+Да       Да       Да   Да       basic_json__list_init_t.cpp
+Да       Да       Да   Да       basic_json__list_init_t.output
+Да       Да       Да   Да       basic_json__moveconstructor.cpp
+Да       Да       Да   Да       basic_json__moveconstructor.output
+Да       Да       Да   Да       basic_json__nullptr_t.cpp
+Да       Да       Да   Да       basic_json__nullptr_t.output
+Да       Да       Да   Да       basic_json__size_type_basic_json.cpp
+Да       Да       Да   Да       basic_json__size_type_basic_json.output
+Да       Да       Да   Да       basic_json__value_t.cpp
+Да       Да       Да   Да       basic_json__value_t.output
+Да       Да       Да   Да       begin.cpp
+Да       Да       Да   Да       begin.output
+Да       Да       Да   Да       binary.cpp
+Да       Да       Да   Да       binary.output
+Да       Да       Да   Да       binary_t.cpp
+Да       Да       Да   Да       binary_t.output
+Да       Да       Да   Да       boolean_t.cpp
+Да       Да       Да   Да       boolean_t.output
+Да       Да       Да   Да       byte_container_with_subtype__byte_container_with_subtype.cpp
+Да       Да       Да   Да       byte_container_with_subtype__byte_container_with_subtype.output
+Да       Да       Да   Да       byte_container_with_subtype__clear_subtype.cpp
+Да       Да       Да   Да       byte_container_with_subtype__clear_subtype.output
+Да       Да       Да   Да       byte_container_with_subtype__has_subtype.cpp
+Да       Да       Да   Да       byte_container_with_subtype__has_subtype.output
+Да       Да       Да   Да       byte_container_with_subtype__set_subtype.cpp
+Да       Да       Да   Да       byte_container_with_subtype__set_subtype.output
+Да       Да       Да   Да       byte_container_with_subtype__subtype.cpp
+Да       Да       Да   Да       byte_container_with_subtype__subtype.output
+Да       Да       Да   Да       cbegin.cpp
+Да       Да       Да   Да       cbegin.output
+Да       Да       Да   Да       cbor_tag_handler_t.cpp
+Да       Да       Да   Да       cbor_tag_handler_t.output
+Да       Да       Да   Да       cend.cpp
+Да       Да       Да   Да       cend.output
+Да       Да       Да   Да       clear.cpp
+Да       Да       Да   Да       clear.output
+Да       Да       Да   Да       comments.cpp
+Да       Да       Да   Да       comments.output
+Да       Да       Да   Да       contains__json_pointer.cpp
+Да       Да       Да   Да       contains__json_pointer.output
+Да       Да       Да   Да       contains__keytype.c++17.cpp
+Да       Да       Да   Да       contains__keytype.c++17.output
+Да       Да       Да   Да       contains__object_t_key_type.cpp
+Да       Да       Да   Да       contains__object_t_key_type.output
+Да       Да       Да   Да       count__keytype.c++17.cpp
+Да       Да       Да   Да       count__keytype.c++17.output
+Да       Да       Да   Да       count__object_t_key_type.cpp
+Да       Да       Да   Да       count__object_t_key_type.output
+Да       Да       Да   Да       crbegin.cpp
+Да       Да       Да   Да       crbegin.output
+Да       Да       Да   Да       crend.cpp
+Да       Да       Да   Да       crend.output
+Да       Да       Да   Да       default_object_comparator_t.cpp
+Да       Да       Да   Да       default_object_comparator_t.output
+Да       Да       Да   Да       diagnostics_extended.cpp
+Да       Да       Да   Да       diagnostics_extended.output
+Да       Да       Да   Да       diagnostics_extended_positions.cpp
+Да       Да       Да   Да       diagnostics_extended_positions.output
+Да       Да       Да   Да       diagnostics_standard.cpp
+Да       Да       Да   Да       diagnostics_standard.output
+Да       Да       Да   Да       diagnostic_positions.cpp
+Да       Да       Да   Да       diagnostic_positions.output
+Да       Да       Да   Да       diagnostic_positions_exception.cpp
+Да       Да       Да   Да       diagnostic_positions_exception.output
+Да       Да       Да   Да       diff.cpp
+Да       Да       Да   Да       diff.output
+Да       Да       Да   Да       dump.cpp
+Да       Да       Да   Да       dump.output
+Да       Да       Да   Да       emplace.cpp
+Да       Да       Да   Да       emplace.output
+Да       Да       Да   Да       emplace_back.cpp
+Да       Да       Да   Да       emplace_back.output
+Да       Да       Да   Да       empty.cpp
+Да       Да       Да   Да       empty.output
+Да       Да       Да   Да       end.cpp
+Да       Да       Да   Да       end.output
+Да       Да       Да   Да       erase__IteratorType.cpp
+Да       Да       Да   Да       erase__IteratorType.output
+Да       Да       Да   Да       erase__IteratorType_IteratorType.cpp
+Да       Да       Да   Да       erase__IteratorType_IteratorType.output
+Да       Да       Да   Да       erase__keytype.c++17.cpp
+Да       Да       Да   Да       erase__keytype.c++17.output
+Да       Да       Да   Да       erase__object_t_key_type.cpp
+Да       Да       Да   Да       erase__object_t_key_type.output
+Да       Да       Да   Да       erase__size_type.cpp
+Да       Да       Да   Да       erase__size_type.output
+Да       Да       Да   Да       error_handler_t.cpp
+Да       Да       Да   Да       error_handler_t.output
+Да       Да       Да   Да       exception.cpp
+Да       Да       Да   Да       exception.output
+Да       Да       Да   Да       find__keytype.c++17.cpp
+Да       Да       Да   Да       find__keytype.c++17.output
+Да       Да       Да   Да       find__object_t_key_type.cpp
+Да       Да       Да   Да       find__object_t_key_type.output
+Да       Да       Да   Да       flatten.cpp
+Да       Да       Да   Да       flatten.output
+Да       Да       Да   Да       from_bjdata.cpp
+Да       Да       Да   Да       from_bjdata.output
+Да       Да       Да   Да       from_bson.cpp
+Да       Да       Да   Да       from_bson.output
+Да       Да       Да   Да       from_cbor.cpp
+Да       Да       Да   Да       from_cbor.output
+Да       Да       Да   Да       from_json__default_constructible.cpp
+Да       Да       Да   Да       from_json__default_constructible.output
+Да       Да       Да   Да       from_json__non_default_constructible.cpp
+Да       Да       Да   Да       from_json__non_default_constructible.output
+Да       Да       Да   Да       from_msgpack.cpp
+Да       Да       Да   Да       from_msgpack.output
+Да       Да       Да   Да       from_ubjson.cpp
+Да       Да       Да   Да       from_ubjson.output
+Да       Да       Да   Да       front.cpp
+Да       Да       Да   Да       front.output
+Да       Да       Да   Да       get_allocator.cpp
+Да       Да       Да   Да       get_allocator.output
+Да       Да       Да   Да       get_binary.cpp
+Да       Да       Да   Да       get_binary.output
+Да       Да       Да   Да       get_ptr.cpp
+Да       Да       Да   Да       get_ptr.output
+Да       Да       Да   Да       get_ref.cpp
+Да       Да       Да   Да       get_ref.output
+Да       Да       Да   Да       get_to.cpp
+Да       Да       Да   Да       get_to.output
+Да       Да       Да   Да       get__PointerType.cpp
+Да       Да       Да   Да       get__PointerType.output
+Да       Да       Да   Да       get__ValueType_const.cpp
+Да       Да       Да   Да       get__ValueType_const.output
+Да       Да       Да   Да       insert.cpp
+Да       Да       Да   Да       insert.output
+Да       Да       Да   Да       insert__count.cpp
+Да       Да       Да   Да       insert__count.output
+Да       Да       Да   Да       insert__ilist.cpp
+Да       Да       Да   Да       insert__ilist.output
+Да       Да       Да   Да       insert__range.cpp
+Да       Да       Да   Да       insert__range.output
+Да       Да       Да   Да       insert__range_object.cpp
+Да       Да       Да   Да       insert__range_object.output
+Да       Да       Да   Да       invalid_iterator.cpp
+Да       Да       Да   Да       invalid_iterator.output
+Да       Да       Да   Да       is_array.cpp
+Да       Да       Да   Да       is_array.output
+Да       Да       Да   Да       is_binary.cpp
+Да       Да       Да   Да       is_binary.output
+Да       Да       Да   Да       is_boolean.cpp
+Да       Да       Да   Да       is_boolean.output
+Да       Да       Да   Да       is_discarded.cpp
+Да       Да       Да   Да       is_discarded.output
+Да       Да       Да   Да       is_null.cpp
+Да       Да       Да   Да       is_null.output
+Да       Да       Да   Да       is_number.cpp
+Да       Да       Да   Да       is_number.output
+Да       Да       Да   Да       is_number_float.cpp
+Да       Да       Да   Да       is_number_float.output
+Да       Да       Да   Да       is_number_integer.cpp
+Да       Да       Да   Да       is_number_integer.output
+Да       Да       Да   Да       is_number_unsigned.cpp
+Да       Да       Да   Да       is_number_unsigned.output
+Да       Да       Да   Да       is_object.cpp
+Да       Да       Да   Да       is_object.output
+Да       Да       Да   Да       is_primitive.cpp
+Да       Да       Да   Да       is_primitive.output
+Да       Да       Да   Да       is_string.cpp
+Да       Да       Да   Да       is_string.output
+Да       Да       Да   Да       is_structured.cpp
+Да       Да       Да   Да       is_structured.output
+Да       Да       Да   Да       items.cpp
+Да       Да       Да   Да       items.output
+Да       Да       Да   Да       json_base_class_t.cpp
+Да       Да       Да   Да       json_base_class_t.output
+Да       Да       Да   Да       json_lines.cpp
+Да       Да       Да   Да       json_lines.output
+Да       Да       Да   Да       json_pointer.cpp
+Да       Да       Да   Да       json_pointer.output
+Да       Да       Да   Да       json_pointer__back.cpp
+Да       Да       Да   Да       json_pointer__back.output
+Да       Да       Да   Да       json_pointer__empty.cpp
+Да       Да       Да   Да       json_pointer__empty.output
+Да       Да       Да   Да       json_pointer__front.cpp
+Да       Да       Да   Да       json_pointer__front.output
+Да       Да       Да   Да       json_pointer__operator_add.cpp
+Да       Да       Да   Да       json_pointer__operator_add.output
+Да       Да       Да   Да       json_pointer__operator_add_binary.cpp
+Да       Да       Да   Да       json_pointer__operator_add_binary.output
+Да       Да       Да   Да       json_pointer__operator_string_t.cpp
+Да       Да       Да   Да       json_pointer__operator_string_t.output
+Да       Да       Да   Да       json_pointer__operator__equal.cpp
+Да       Да       Да   Да       json_pointer__operator__equal.output
+Да       Да       Да   Да       json_pointer__operator__equal_stringtype.cpp
+Да       Да       Да   Да       json_pointer__operator__equal_stringtype.output
+Да       Да       Да   Да       json_pointer__operator__notequal.cpp
+Да       Да       Да   Да       json_pointer__operator__notequal.output
+Да       Да       Да   Да       json_pointer__operator__notequal_stringtype.cpp
+Да       Да       Да   Да       json_pointer__operator__notequal_stringtype.output
+Да       Да       Да   Да       json_pointer__parent_pointer.cpp
+Да       Да       Да   Да       json_pointer__parent_pointer.output
+Да       Да       Да   Да       json_pointer__pop_back.cpp
+Да       Да       Да   Да       json_pointer__pop_back.output
+Да       Да       Да   Да       json_pointer__pop_front.cpp
+Да       Да       Да   Да       json_pointer__pop_front.output
+Да       Да       Да   Да       json_pointer__push_back.cpp
+Да       Да       Да   Да       json_pointer__push_back.output
+Да       Да       Да   Да       json_pointer__push_front.cpp
+Да       Да       Да   Да       json_pointer__push_front.output
+Да       Да       Да   Да       json_pointer__string_t.cpp
+Да       Да       Да   Да       json_pointer__string_t.output
+Да       Да       Да   Да       json_pointer__to_string.cpp
+Да       Да       Да   Да       json_pointer__to_string.output
+Да       Да       Да   Да       max_size.cpp
+Да       Да       Да   Да       max_size.output
+Да       Да       Да   Да       merge_patch.cpp
+Да       Да       Да   Да       merge_patch.output
+Да       Да       Да   Да       meta.cpp
+Да       Да       Да   Да       meta.output
+Да       Да       Да   Да       nlohmann_define_derived_type_intrusive_macro.cpp
+Да       Да       Да   Да       nlohmann_define_derived_type_intrusive_macro.output
+Да       Да       Да   Да       nlohmann_define_type_intrusive_explicit.cpp
+Да       Да       Да   Да       nlohmann_define_type_intrusive_explicit.output
+Да       Да       Да   Да       nlohmann_define_type_intrusive_macro.cpp
+Да       Да       Да   Да       nlohmann_define_type_intrusive_macro.output
+Да       Да       Да   Да       nlohmann_define_type_intrusive_only_serialize_explicit.cpp
+Да       Да       Да   Да       nlohmann_define_type_intrusive_only_serialize_explicit.output
+Да       Да       Да   Да       nlohmann_define_type_intrusive_only_serialize_macro.cpp
+Да       Да       Да   Да       nlohmann_define_type_intrusive_only_serialize_macro.output
+Да       Да       Да   Да       nlohmann_define_type_intrusive_with_default_explicit.cpp
+Да       Да       Да   Да       nlohmann_define_type_intrusive_with_default_explicit.output
+Да       Да       Да   Да       nlohmann_define_type_intrusive_with_default_macro.cpp
+Да       Да       Да   Да       nlohmann_define_type_intrusive_with_default_macro.output
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_explicit.cpp
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_explicit.output
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_macro.cpp
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_macro.output
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_only_serialize_explicit.cpp
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_only_serialize_explicit.output
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_only_serialize_macro.cpp
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_only_serialize_macro.output
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_with_default_explicit.cpp
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_with_default_explicit.output
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_with_default_macro.cpp
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_with_default_macro.output
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_with_names_explicit.cpp
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_with_names_explicit.output
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_with_names_macro.cpp
+Да       Да       Да   Да       nlohmann_define_type_non_intrusive_with_names_macro.output
+Да       Да       Да   Да       nlohmann_json_namespace.cpp
+Да       Да       Да   Да       nlohmann_json_namespace.output
+Да       Да       Да   Да       nlohmann_json_namespace_begin.c++17.cpp
+Да       Да       Да   Да       nlohmann_json_namespace_begin.c++17.output
+Да       Да       Да   Да       nlohmann_json_namespace_no_version.cpp
+Да       Да       Да   Да       nlohmann_json_namespace_no_version.output
+Да       Да       Да   Да       nlohmann_json_serialize_enum.cpp
+Да       Да       Да   Да       nlohmann_json_serialize_enum.output
+Да       Да       Да   Да       nlohmann_json_serialize_enum_2.cpp
+Да       Да       Да   Да       nlohmann_json_serialize_enum_2.output
+Да       Да       Да   Да       nlohmann_json_serialize_enum_strict.cpp
+Да       Да       Да   Да       nlohmann_json_serialize_enum_strict.output
+Да       Да       Да   Да       nlohmann_json_serialize_enum_strict_2.cpp
+Да       Да       Да   Да       nlohmann_json_serialize_enum_strict_2.output
+Да       Да       Да   Да       nlohmann_json_serialize_enum_strict_err.cpp
+Да       Да       Да   Да       nlohmann_json_serialize_enum_strict_err.output
+Да       Да       Да   Да       nlohmann_json_version.cpp
+Да       Да       Да   Да       nlohmann_json_version.output
+Да       Да       Да   Да       number_float_t.cpp
+Да       Да       Да   Да       number_float_t.output
+Да       Да       Да   Да       number_integer_t.cpp
+Да       Да       Да   Да       number_integer_t.output
+Да       Да       Да   Да       number_unsigned_t.cpp
+Да       Да       Да   Да       number_unsigned_t.output
+Да       Да       Да   Да       object.cpp
+Да       Да       Да   Да       object.output
+Да       Да       Да   Да       object_comparator_t.cpp
+Да       Да       Да   Да       object_comparator_t.output
+Да       Да       Да   Да       object_t.cpp
+Да       Да       Да   Да       object_t.output
+Да       Да       Да   Да       operator_array__json_pointer.cpp
+Да       Да       Да   Да       operator_array__json_pointer.output
+Да       Да       Да   Да       operator_array__json_pointer_const.cpp
+Да       Да       Да   Да       operator_array__json_pointer_const.output
+Да       Да       Да   Да       operator_array__keytype.c++17.cpp
+Да       Да       Да   Да       operator_array__keytype.c++17.output
+Да       Да       Да   Да       operator_array__keytype_const.c++17.cpp
+Да       Да       Да   Да       operator_array__keytype_const.c++17.output
+Да       Да       Да   Да       operator_array__object_t_key_type.cpp
+Да       Да       Да   Да       operator_array__object_t_key_type.output
+Да       Да       Да   Да       operator_array__object_t_key_type_const.cpp
+Да       Да       Да   Да       operator_array__object_t_key_type_const.output
+Да       Да       Да   Да       operator_array__size_type.cpp
+Да       Да       Да   Да       operator_array__size_type.output
+Да       Да       Да   Да       operator_array__size_type_const.cpp
+Да       Да       Да   Да       operator_array__size_type_const.output
+Да       Да       Да   Да       operator_deserialize.cpp
+Да       Да       Да   Да       operator_deserialize.output
+Да       Да       Да   Да       operator_literal_json.cpp
+Да       Да       Да   Да       operator_literal_json.output
+Да       Да       Да   Да       operator_literal_json_pointer.cpp
+Да       Да       Да   Да       operator_literal_json_pointer.output
+Да       Да       Да   Да       operator_ltlt__basic_json.cpp
+Да       Да       Да   Да       operator_ltlt__basic_json.output
+Да       Да       Да   Да       operator_ltlt__json_pointer.cpp
+Да       Да       Да   Да       operator_ltlt__json_pointer.output
+Да       Да       Да   Да       operator_spaceship__const_reference.c++20.cpp
+Да       Да       Да   Да       operator_spaceship__const_reference.c++20.output
+Да       Да       Да   Да       operator_spaceship__scalartype.c++20.cpp
+Да       Да       Да   Да       operator_spaceship__scalartype.c++20.output
+Да       Да       Да   Да       operator__equal.cpp
+Да       Да       Да   Да       operator__equal.output
+Да       Да       Да   Да       operator__equal__nullptr_t.cpp
+Да       Да       Да   Да       operator__equal__nullptr_t.output
+Да       Да       Да   Да       operator__equal__specializations.cpp
+Да       Да       Да   Да       operator__equal__specializations.output
+Да       Да       Да   Да       operator__greater.cpp
+Да       Да       Да   Да       operator__greater.output
+Да       Да       Да   Да       operator__greaterequal.cpp
+Да       Да       Да   Да       operator__greaterequal.output
+Да       Да       Да   Да       operator__less.cpp
+Да       Да       Да   Да       operator__less.output
+Да       Да       Да   Да       operator__lessequal.cpp
+Да       Да       Да   Да       operator__lessequal.output
+Да       Да       Да   Да       operator__notequal.cpp
+Да       Да       Да   Да       operator__notequal.output
+Да       Да       Да   Да       operator__notequal__nullptr_t.cpp
+Да       Да       Да   Да       operator__notequal__nullptr_t.output
+Да       Да       Да   Да       operator__ValueType.cpp
+Да       Да       Да   Да       operator__ValueType.output
+Да       Да       Да   Да       operator__value_t.cpp
+Да       Да       Да   Да       operator__value_t.output
+Да       Да       Да   Да       ordered_json.cpp
+Да       Да       Да   Да       ordered_json.output
+Да       Да       Да   Да       ordered_map.cpp
+Да       Да       Да   Да       ordered_map.output
+Да       Да       Да   Да       other_error.cpp
+Да       Да       Да   Да       other_error.output
+Да       Да       Да   Да       out_of_range.cpp
+Да       Да       Да   Да       out_of_range.output
+Да       Да       Да   Да       parse_error.cpp
+Да       Да       Да   Да       parse_error.output
+Да       Да       Да   Да       parse__allow_exceptions.cpp
+Да       Да       Да   Да       parse__allow_exceptions.output
+Да       Да       Да   Да       parse__array__parser_callback_t.cpp
+Да       Да       Да   Да       parse__array__parser_callback_t.output
+Да       Да       Да   Да       parse__contiguouscontainer__parser_callback_t.cpp
+Да       Да       Да   Да       parse__contiguouscontainer__parser_callback_t.output
+Да       Да       Да   Да       parse__istream__parser_callback_t.cpp
+Да       Да       Да   Да       parse__istream__parser_callback_t.output
+Да       Да       Да   Да       parse__iterator_pair.cpp
+Да       Да       Да   Да       parse__iterator_pair.link
+Да       Да       Да   Да       parse__iterator_pair.output
+Да       Да       Да   Да       parse__pointers.cpp
+Да       Да       Да   Да       parse__pointers.link
+Да       Да       Да   Да       parse__pointers.output
+Да       Да       Да   Да       parse__string__parser_callback_t.cpp
+Да       Да       Да   Да       parse__string__parser_callback_t.output
+Да       Да       Да   Да       patch.cpp
+Да       Да       Да   Да       patch.output
+Да       Да       Да   Да       patch_inplace.cpp
+Да       Да       Да   Да       patch_inplace.output
+Да       Да       Да   Да       push_back.cpp
+Да       Да       Да   Да       push_back.output
+Да       Да       Да   Да       push_back__initializer_list.cpp
+Да       Да       Да   Да       push_back__initializer_list.output
+Да       Да       Да   Да       push_back__object_t__value.cpp
+Да       Да       Да   Да       push_back__object_t__value.output
+Да       Да       Да   Да       rbegin.cpp
+Да       Да       Да   Да       rbegin.output
+Да       Да       Да   Да       README.cpp
+Да       Да       Да   Да       README.output
+Да       Да       Да   Да       rend.cpp
+Да       Да       Да   Да       rend.output
+Да       Да       Да   Да       sax_parse.cpp
+Да       Да       Да   Да       sax_parse.output
+Да       Да       Да   Да       sax_parse__binary.cpp
+Да       Да       Да   Да       sax_parse__binary.output
+Да       Да       Да   Да       size.cpp
+Да       Да       Да   Да       size.output
+Да       Да       Да   Да       std_hash.cpp
+Да       Да       Да   Да       std_hash.output
+Да       Да       Да   Да       std_swap.cpp
+Да       Да       Да   Да       std_swap.output
+Да       Да       Да   Да       string_t.cpp
+Да       Да       Да   Да       string_t.output
+Да       Да       Да   Да       swap__array_t.cpp
+Да       Да       Да   Да       swap__array_t.output
+Да       Да       Да   Да       swap__binary_t.cpp
+Да       Да       Да   Да       swap__binary_t.output
+Да       Да       Да   Да       swap__object_t.cpp
+Да       Да       Да   Да       swap__object_t.output
+Да       Да       Да   Да       swap__reference.cpp
+Да       Да       Да   Да       swap__reference.output
+Да       Да       Да   Да       swap__string_t.cpp
+Да       Да       Да   Да       swap__string_t.output
+Да       Да       Да   Да       to_bjdata.cpp
+Да       Да       Да   Да       to_bjdata.output
+Да       Да       Да   Да       to_bson.cpp
+Да       Да       Да   Да       to_bson.output
+Да       Да       Да   Да       to_cbor.cpp
+Да       Да       Да   Да       to_cbor.output
+Да       Да       Да   Да       to_json.cpp
+Да       Да       Да   Да       to_json.output
+Да       Да       Да   Да       to_msgpack.cpp
+Да       Да       Да   Да       to_msgpack.output
+Да       Да       Да   Да       to_string.cpp
+Да       Да       Да   Да       to_string.output
+Да       Да       Да   Да       to_ubjson.cpp
+Да       Да       Да   Да       to_ubjson.output
+Да       Да       Да   Да       trailing_commas.cpp
+Да       Да       Да   Да       trailing_commas.output
+Да       Да       Да   Да       type.cpp
+Да       Да       Да   Да       type.output
+Да       Да       Да   Да       type_error.cpp
+Да       Да       Да   Да       type_error.output
+Да       Да       Да   Да       type_name.cpp
+Да       Да       Да   Да       type_name.output
+Да       Да       Да   Да       unflatten.cpp
+Да       Да       Да   Да       unflatten.output
+Да       Да       Да   Да       update.cpp
+Да       Да       Да   Да       update.output
+Да       Да       Да   Да       update__range.cpp
+Да       Да       Да   Да       update__range.output
+Да       Да       Да   Да       value__json_ptr.cpp
+Да       Да       Да   Да       value__json_ptr.output
+Да       Да       Да   Да       value__keytype.c++17.cpp
+Да       Да       Да   Да       value__keytype.c++17.output
+Да       Да       Да   Да       value__object_t_key_type.cpp
+Да       Да       Да   Да       value__object_t_key_type.output
+Да       Да       Да   Да       value__return_type.cpp
+Да       Да       Да   Да       value__return_type.output
+Да       Да       Да   Да       
 Да       Да       Да   ДеДЯДЯДЯfeatures
+Да       Да       Да   Да   Да   arbitrary_types.md
+Да       Да       Да   Да   Да   assertions.md
+Да       Да       Да   Да   Да   binary_values.md
+Да       Да       Да   Да   Да   comments.md
+Да       Да       Да   Да   Да   enum_conversion.md
+Да       Да       Да   Да   Да   iterators.md
+Да       Да       Да   Да   Да   json_patch.md
+Да       Да       Да   Да   Да   json_pointer.md
+Да       Да       Да   Да   Да   macros.md
+Да       Да       Да   Да   Да   merge_patch.md
+Да       Да       Да   Да   Да   modules.md
+Да       Да       Да   Да   Да   namespace.md
+Да       Да       Да   Да   Да   object_order.md
+Да       Да       Да   Да   Да   trailing_commas.md
+Да       Да       Да   Да   Да   
 Да       Да       Да   Да   ДеДЯДЯДЯbinary_formats
+Да       Да       Да   Да   Да       bjdata.md
+Да       Да       Да   Да   Да       bson.md
+Да       Да       Да   Да   Да       cbor.md
+Да       Да       Да   Да   Да       index.md
+Да       Да       Да   Да   Да       messagepack.md
+Да       Да       Да   Да   Да       ubjson.md
+Да       Да       Да   Да   Да       
 Да       Да       Да   Да   ДеДЯДЯДЯelement_access
+Да       Да       Да   Да   Да       checked_access.md
+Да       Да       Да   Да   Да       default_value.md
+Да       Да       Да   Да   Да       index.md
+Да       Да       Да   Да   Да       unchecked_access.md
+Да       Да       Да   Да   Да       
 Да       Да       Да   Да   ДеДЯДЯДЯparsing
+Да       Да       Да   Да   Да       index.md
+Да       Да       Да   Да   Да       json_lines.md
+Да       Да       Да   Да   Да       parser_callbacks.md
+Да       Да       Да   Да   Да       parse_exceptions.md
+Да       Да       Да   Да   Да       sax_interface.md
+Да       Да       Да   Да   Да       
 Да       Да       Да   Да   ДдДЯДЯДЯtypes
+Да       Да       Да   Да           index.md
+Да       Да       Да   Да           number_handling.md
+Да       Да       Да   Да           
 Да       Да       Да   ДеДЯДЯДЯhome
+Да       Да       Да   Да       architecture.md
+Да       Да       Да   Да       customers.md
+Да       Да       Да   Да       design_goals.md
+Да       Да       Да   Да       exceptions.md
+Да       Да       Да   Да       faq.md
+Да       Да       Да   Да       license.md
+Да       Да       Да   Да       releases.md
+Да       Да       Да   Да       sponsors.md
+Да       Да       Да   Да       
 Да       Да       Да   ДеДЯДЯДЯimages
+Да       Да       Да   Да   Да   callback_events.png
+Да       Да       Да   Да   Да   customers.png
+Да       Да       Да   Да   Да   json.gif
+Да       Да       Да   Да   Да   json_syntax_number.png
+Да       Да       Да   Да   Да   range-begin-end.svg
+Да       Да       Да   Да   Да   range-rbegin-rend.svg
+Да       Да       Да   Да   Да   
 Да       Да       Да   Да   ДдДЯДЯДЯpackage_managers
+Да       Да       Да   Да           bazel.svg
+Да       Да       Да   Да           conan.svg
+Да       Да       Да   Да           conda.svg
+Да       Да       Да   Да           CPM.png
+Да       Да       Да   Да           homebrew.svg
+Да       Да       Да   Да           macports.svg
+Да       Да       Да   Да           meson.svg
+Да       Да       Да   Да           nuget.svg
+Да       Да       Да   Да           spack.svg
+Да       Да       Да   Да           swift.svg
+Да       Да       Да   Да           vcpkg.png
+Да       Да       Да   Да           xmake.svg
+Да       Да       Да   Да           
 Да       Да       Да   ДдДЯДЯДЯintegration
+Да       Да       Да       Да   cmake.md
+Да       Да       Да       Да   example.cpp
+Да       Да       Да       Да   index.md
+Да       Да       Да       Да   migration_guide.md
+Да       Да       Да       Да   package_managers.md
+Да       Да       Да       Да   pkg-config.md
+Да       Да       Да       Да   
 Да       Да       Да       ДеДЯДЯДЯbazel
+Да       Да       Да       Да       BUILD
+Да       Да       Да       Да       example.cpp
+Да       Да       Да       Да       MODULE.bazel
+Да       Да       Да       Да       
+Да       Да       Да       ДеДЯДЯДЯbuild2
+Да       Да       Да       Да       buildfile
+Да       Да       Да       Да       example.cpp
+Да       Да       Да       Да       manifest
+Да       Да       Да       Да       repositories.manifest
+Да       Да       Да       Да       testscript
+Да       Да       Да       Да       
 Да       Да       Да       ДеДЯДЯДЯcget
+Да       Да       Да       Да       CMakeLists.txt
+Да       Да       Да       Да       example.cpp
+Да       Да       Да       Да       
 Да       Да       Да       ДеДЯДЯДЯconan
+Да       Да       Да       Да       CMakeLists.txt
+Да       Да       Да       Да       Conanfile.txt
+Да       Да       Да       Да       example.cpp
+Да       Да       Да       Да       
 Да       Да       Да       ДеДЯДЯДЯconda
+Да       Да       Да       Да       example.cpp
+Да       Да       Да       Да       
 Да       Да       Да       ДеДЯДЯДЯcpm
+Да       Да       Да       Да       CMakeLists.txt
+Да       Да       Да       Да       example.cpp
+Да       Да       Да       Да       
 Да       Да       Да       ДеДЯДЯДЯhomebrew
+Да       Да       Да       Да       CMakeLists.txt
+Да       Да       Да       Да       example.cpp
+Да       Да       Да       Да       
 Да       Да       Да       ДеДЯДЯДЯhunter
+Да       Да       Да       Да       CMakeLists.txt
+Да       Да       Да       Да       example.cpp
+Да       Да       Да       Да       
 Да       Да       Да       ДеДЯДЯДЯmacports
+Да       Да       Да       Да       CMakeLists.txt
+Да       Да       Да       Да       example.cpp
+Да       Да       Да       Да       
 Да       Да       Да       ДеДЯДЯДЯmeson
+Да       Да       Да       Да       example.cpp
+Да       Да       Да       Да       meson.build
+Да       Да       Да       Да       
 Да       Да       Да       ДеДЯДЯДЯnuget
+Да       Да       Да       Да       nuget-package-content.png
+Да       Да       Да       Да       nuget-project-changes.png
+Да       Да       Да       Да       nuget-project-makefile.png
+Да       Да       Да       Да       nuget-search-package.png
+Да       Да       Да       Да       nuget-select-package.png
+Да       Да       Да       Да       
 Да       Да       Да       ДеДЯДЯДЯspack
+Да       Да       Да       Да       CMakeLists.txt
+Да       Да       Да       Да       example.cpp
+Да       Да       Да       Да       
 Да       Да       Да       ДеДЯДЯДЯvcpkg
+Да       Да       Да       Да       CMakeLists.txt
+Да       Да       Да       Да       example.cpp
+Да       Да       Да       Да       
 Да       Да       Да       ДдДЯДЯДЯxmake
+Да       Да       Да               example.cpp
+Да       Да       Да               xmake.lua
+Да       Да       Да               
 Да       Да       ДеДЯДЯДЯincludes
+Да       Да       Да       glossary.md
+Да       Да       Да       
 Да       Да       ДдДЯДЯДЯscripts
+Да       Да               check_structure.py
+Да       Да               
 Да       ДеДЯДЯДЯinclude
 Да       Да   ДдДЯДЯДЯnlohmann
+Да       Да       Да   adl_serializer.hpp
+Да       Да       Да   byte_container_with_subtype.hpp
+Да       Да       Да   json.hpp
+Да       Да       Да   json_fwd.hpp
+Да       Да       Да   ordered_map.hpp
+Да       Да       Да   
 Да       Да       ДеДЯДЯДЯdetail
+Да       Да       Да   Да   abi_macros.hpp
+Да       Да       Да   Да   exceptions.hpp
+Да       Да       Да   Да   hash.hpp
+Да       Да       Да   Да   json_custom_base_class.hpp
+Да       Да       Да   Да   json_pointer.hpp
+Да       Да       Да   Да   json_ref.hpp
+Да       Да       Да   Да   macro_scope.hpp
+Да       Да       Да   Да   macro_unscope.hpp
+Да       Да       Да   Да   string_concat.hpp
+Да       Да       Да   Да   string_escape.hpp
+Да       Да       Да   Да   string_utils.hpp
+Да       Да       Да   Да   value_t.hpp
+Да       Да       Да   Да   
 Да       Да       Да   ДеДЯДЯДЯconversions
+Да       Да       Да   Да       from_json.hpp
+Да       Да       Да   Да       to_chars.hpp
+Да       Да       Да   Да       to_json.hpp
+Да       Да       Да   Да       
 Да       Да       Да   ДеДЯДЯДЯinput
+Да       Да       Да   Да       binary_reader.hpp
+Да       Да       Да   Да       input_adapters.hpp
+Да       Да       Да   Да       json_sax.hpp
+Да       Да       Да   Да       lexer.hpp
+Да       Да       Да   Да       parser.hpp
+Да       Да       Да   Да       position_t.hpp
+Да       Да       Да   Да       
 Да       Да       Да   ДеДЯДЯДЯiterators
+Да       Да       Да   Да       internal_iterator.hpp
+Да       Да       Да   Да       iteration_proxy.hpp
+Да       Да       Да   Да       iterator_traits.hpp
+Да       Да       Да   Да       iter_impl.hpp
+Да       Да       Да   Да       json_reverse_iterator.hpp
+Да       Да       Да   Да       primitive_iterator.hpp
+Да       Да       Да   Да       
 Да       Да       Да   ДеДЯДЯДЯmeta
+Да       Да       Да   Да   Да   cpp_future.hpp
+Да       Да       Да   Да   Да   detected.hpp
+Да       Да       Да   Да   Да   identity_tag.hpp
+Да       Да       Да   Да   Да   is_sax.hpp
+Да       Да       Да   Да   Да   logic.hpp
+Да       Да       Да   Да   Да   std_fs.hpp
+Да       Да       Да   Да   Да   type_traits.hpp
+Да       Да       Да   Да   Да   void_t.hpp
+Да       Да       Да   Да   Да   
 Да       Да       Да   Да   ДдДЯДЯДЯcall_std
+Да       Да       Да   Да           begin.hpp
+Да       Да       Да   Да           end.hpp
+Да       Да       Да   Да           
 Да       Да       Да   ДдДЯДЯДЯoutput
+Да       Да       Да           binary_writer.hpp
+Да       Да       Да           output_adapters.hpp
+Да       Да       Да           serializer.hpp
+Да       Да       Да           
 Да       Да       ДдДЯДЯДЯthirdparty
 Да       Да           ДдДЯДЯДЯhedley
+Да       Да                   hedley.hpp
+Да       Да                   hedley_undef.hpp
+Да       Да                   
 Да       ДеДЯДЯДЯLICENSES
+Да       Да       Apache-2.0.txt
+Да       Да       BSD-3-Clause.txt
+Да       Да       CC0-1.0.txt
+Да       Да       GPL-3.0-only.txt
+Да       Да       MIT.txt
+Да       Да       
 Да       ДеДЯДЯДЯsingle_include
 Да       Да   ДдДЯДЯДЯnlohmann
+Да       Да           json.hpp
+Да       Да           json_fwd.hpp
+Да       Да           
 Да       ДеДЯДЯДЯsrc
 Да       Да   ДдДЯДЯДЯmodules
+Да       Да           CMakeLists.txt
+Да       Да           json.cppm
+Да       Да           
 Да       ДеДЯДЯДЯtests
+Да       Да   Да   CMakeLists.txt
+Да       Да   Да   fuzzing.md
+Да       Да   Да   Makefile
+Да       Да   Да   
 Да       Да   ДеДЯДЯДЯabi
+Да       Да   Да   Да   CMakeLists.txt
+Да       Да   Да   Да   main.cpp
+Да       Да   Да   Да   
 Да       Да   Да   ДеДЯДЯДЯconfig
+Да       Да   Да   Да       CMakeLists.txt
+Да       Да   Да   Да       config.hpp
+Да       Да   Да   Да       custom.cpp
+Да       Да   Да   Да       default.cpp
+Да       Да   Да   Да       noversion.cpp
+Да       Да   Да   Да       
 Да       Да   Да   ДеДЯДЯДЯdiag
+Да       Да   Да   Да       CMakeLists.txt
+Да       Да   Да   Да       diag.cpp
+Да       Да   Да   Да       diag.hpp
+Да       Да   Да   Да       diag_off.cpp
+Да       Да   Да   Да       diag_on.cpp
+Да       Да   Да   Да       
 Да       Да   Да   ДеДЯДЯДЯinclude
 Да       Да   Да   Да   ДдДЯДЯДЯnlohmann
+Да       Да   Да   Да           json_v3_10_5.hpp
+Да       Да   Да   Да           
 Да       Да   Да   ДдДЯДЯДЯinline_ns
+Да       Да   Да           CMakeLists.txt
+Да       Да   Да           use_current.cpp
+Да       Да   Да           use_v3_10_5.cpp
+Да       Да   Да           
 Да       Да   ДеДЯДЯДЯbenchmarks
+Да       Да   Да   Да   CMakeLists.txt
+Да       Да   Да   Да   
 Да       Да   Да   ДдДЯДЯДЯsrc
+Да       Да   Да           benchmarks.cpp
+Да       Да   Да           
 Да       Да   ДеДЯДЯДЯcmake_add_subdirectory
+Да       Да   Да   Да   CMakeLists.txt
+Да       Да   Да   Да   
 Да       Да   Да   ДдДЯДЯДЯproject
+Да       Да   Да           CMakeLists.txt
+Да       Да   Да           main.cpp
+Да       Да   Да           
 Да       Да   ДеДЯДЯДЯcmake_fetch_content
+Да       Да   Да   Да   CMakeLists.txt
+Да       Да   Да   Да   
 Да       Да   Да   ДдДЯДЯДЯproject
+Да       Да   Да           CMakeLists.txt
+Да       Да   Да           main.cpp
+Да       Да   Да           
 Да       Да   ДеДЯДЯДЯcmake_fetch_content2
+Да       Да   Да   Да   CMakeLists.txt
+Да       Да   Да   Да   
 Да       Да   Да   ДдДЯДЯДЯproject
+Да       Да   Да           CMakeLists.txt
+Да       Да   Да           main.cpp
+Да       Да   Да           
 Да       Да   ДеДЯДЯДЯcmake_import
+Да       Да   Да   Да   CMakeLists.txt
+Да       Да   Да   Да   
 Да       Да   Да   ДдДЯДЯДЯproject
+Да       Да   Да           CMakeLists.txt
+Да       Да   Да           main.cpp
+Да       Да   Да           
 Да       Да   ДеДЯДЯДЯcmake_import_minver
+Да       Да   Да   Да   CMakeLists.txt
+Да       Да   Да   Да   
 Да       Да   Да   ДдДЯДЯДЯproject
+Да       Да   Да           CMakeLists.txt
+Да       Да   Да           main.cpp
+Да       Да   Да           
 Да       Да   ДеДЯДЯДЯcmake_target_include_directories
+Да       Да   Да   Да   CMakeLists.txt
+Да       Да   Да   Да   
 Да       Да   Да   ДдДЯДЯДЯproject
+Да       Да   Да           Bar.cpp
+Да       Да   Да           Bar.hpp
+Да       Да   Да           CMakeLists.txt
+Да       Да   Да           Foo.cpp
+Да       Да   Да           Foo.hpp
+Да       Да   Да           main.cpp
+Да       Да   Да           
 Да       Да   ДеДЯДЯДЯcuda_example
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       json_cuda.cu
+Да       Да   Да       
 Да       Да   ДеДЯДЯДЯmodule_cpp20
+Да       Да   Да       CMakeLists.txt
+Да       Да   Да       main.cpp
+Да       Да   Да       
 Да       Да   ДеДЯДЯДЯreports
 Да       Да   Да   ДеДЯДЯДЯ2016-08-29-fuzz
+Да       Да   Да   Да       exec_speed.png
+Да       Да   Да   Да       fuzz.tiff
+Да       Да   Да   Да       high_freq.png
+Да       Да   Да   Да       index.html
+Да       Да   Да   Да       low_freq.png
+Да       Да   Да   Да       
 Да       Да   Да   ДеДЯДЯДЯ2016-09-09-nativejson_benchmark
+Да       Да   Да   Да       conformance_Nlohmann (C++11).md
+Да       Да   Да   Да       conformance_overall_Result.png
+Да       Да   Да   Да       performance_Corei7-4980HQ@2.80GHz_mac64_clang7.0_1._Parse_Memory_(byte).png
+Да       Да   Да   Да       performance_Corei7-4980HQ@2.80GHz_mac64_clang7.0_1._Parse_Time_(ms).png
+Да       Да   Да   Да       performance_Corei7-4980HQ@2.80GHz_mac64_clang7.0_2._Stringify_Time_(ms).png
+Да       Да   Да   Да       performance_Corei7-4980HQ@2.80GHz_mac64_clang7.0_3._Prettify_Time_(ms).png
+Да       Да   Да   Да       performance_Corei7-4980HQ@2.80GHz_mac64_clang7.0_7._Code_size_FileSize_(byte).png
+Да       Да   Да   Да       README.md
+Да       Да   Да   Да       
 Да       Да   Да   ДдДЯДЯДЯ2016-10-02-fuzz
+Да       Да   Да           exec_speed.png
+Да       Да   Да           fuzz.tiff
+Да       Да   Да           high_freq.png
+Да       Да   Да           index.html
+Да       Да   Да           low_freq.png
+Да       Да   Да           
 Да       Да   ДеДЯДЯДЯsrc
+Да       Да   Да       fuzzer-driver_afl.cpp
+Да       Да   Да       fuzzer-parse_bjdata.cpp
+Да       Да   Да       fuzzer-parse_bson.cpp
+Да       Да   Да       fuzzer-parse_cbor.cpp
+Да       Да   Да       fuzzer-parse_json.cpp
+Да       Да   Да       fuzzer-parse_msgpack.cpp
+Да       Да   Да       fuzzer-parse_ubjson.cpp
+Да       Да   Да       make_test_data_available.hpp
+Да       Да   Да       test_utils.hpp
+Да       Да   Да       unit-32bit.cpp
+Да       Да   Да       unit-algorithms.cpp
+Да       Да   Да       unit-allocator.cpp
+Да       Да   Да       unit-alt-string.cpp
+Да       Да   Да       unit-assert_macro.cpp
+Да       Да   Да       unit-binary_formats.cpp
+Да       Да   Да       unit-bjdata.cpp
+Да       Да   Да       unit-bson.cpp
+Да       Да   Да       unit-byte_container_with_subtype.cpp
+Да       Да   Да       unit-capacity.cpp
+Да       Да   Да       unit-cbor.cpp
+Да       Да   Да       unit-class_const_iterator.cpp
+Да       Да   Да       unit-class_iterator.cpp
+Да       Да   Да       unit-class_lexer.cpp
+Да       Да   Да       unit-class_parser.cpp
+Да       Да   Да       unit-class_parser_diagnostic_positions.cpp
+Да       Да   Да       unit-comparison.cpp
+Да       Да   Да       unit-concepts.cpp
+Да       Да   Да       unit-constructor1.cpp
+Да       Да   Да       unit-constructor2.cpp
+Да       Да   Да       unit-convenience.cpp
+Да       Да   Да       unit-conversions.cpp
+Да       Да   Да       unit-custom-base-class.cpp
+Да       Да   Да       unit-deserialization.cpp
+Да       Да   Да       unit-diagnostic-positions-only.cpp
+Да       Да   Да       unit-diagnostic-positions.cpp
+Да       Да   Да       unit-diagnostics.cpp
+Да       Да   Да       unit-disabled_exceptions.cpp
+Да       Да   Да       unit-element_access1.cpp
+Да       Да   Да       unit-element_access2.cpp
+Да       Да   Да       unit-hash.cpp
+Да       Да   Да       unit-inspection.cpp
+Да       Да   Да       unit-items.cpp
+Да       Да   Да       unit-iterators1.cpp
+Да       Да   Да       unit-iterators2.cpp
+Да       Да   Да       unit-iterators3.cpp
+Да       Да   Да       unit-json_patch.cpp
+Да       Да   Да       unit-json_pointer.cpp
+Да       Да   Да       unit-large_json.cpp
+Да       Да   Да       unit-locale-cpp.cpp
+Да       Да   Да       unit-merge_patch.cpp
+Да       Да   Да       unit-meta.cpp
+Да       Да   Да       unit-modifiers.cpp
+Да       Да   Да       unit-msgpack.cpp
+Да       Да   Да       unit-no-mem-leak-on-adl-serialize.cpp
+Да       Да   Да       unit-noexcept.cpp
+Да       Да   Да       unit-ordered_json.cpp
+Да       Да   Да       unit-ordered_map.cpp
+Да       Да   Да       unit-pointer_access.cpp
+Да       Да   Да       unit-readme.cpp
+Да       Да   Да       unit-reference_access.cpp
+Да       Да   Да       unit-regression1.cpp
+Да       Да   Да       unit-regression2.cpp
+Да       Да   Да       unit-serialization.cpp
+Да       Да   Да       unit-testsuites.cpp
+Да       Да   Да       unit-to_chars.cpp
+Да       Да   Да       unit-type_traits.cpp
+Да       Да   Да       unit-ubjson.cpp
+Да       Да   Да       unit-udl.cpp
+Да       Да   Да       unit-udt.cpp
+Да       Да   Да       unit-udt_macro.cpp
+Да       Да   Да       unit-unicode1.cpp
+Да       Да   Да       unit-unicode2.cpp
+Да       Да   Да       unit-unicode3.cpp
+Да       Да   Да       unit-unicode4.cpp
+Да       Да   Да       unit-unicode5.cpp
+Да       Да   Да       unit-user_defined_input.cpp
+Да       Да   Да       unit-windows_h.cpp
+Да       Да   Да       unit-wstring.cpp
+Да       Да   Да       unit.cpp
+Да       Да   Да       
 Да       Да   ДдДЯДЯДЯthirdparty
 Да       Да       ДеДЯДЯДЯdoctest
+Да       Да       Да       doctest.h
+Да       Да       Да       doctest_compatibility.h
+Да       Да       Да       
 Да       Да       ДеДЯДЯДЯfifo_map
+Да       Да       Да       fifo_map.hpp
+Да       Да       Да       
 Да       Да       ДеДЯДЯДЯFuzzer
+Да       Да       Да   Да   build.sh
+Да       Да       Да   Да   CMakeLists.txt
+Да       Да       Да   Да   cxx.dict
+Да       Да       Да   Да   FuzzerCorpus.h
+Да       Да       Да   Да   FuzzerCrossOver.cpp
+Да       Да       Да   Да   FuzzerDefs.h
+Да       Да       Да   Да   FuzzerDictionary.h
+Да       Да       Да   Да   FuzzerDriver.cpp
+Да       Да       Да   Да   FuzzerExtFunctions.def
+Да       Да       Да   Да   FuzzerExtFunctions.h
+Да       Да       Да   Да   FuzzerExtFunctionsDlsym.cpp
+Да       Да       Да   Да   FuzzerExtFunctionsWeak.cpp
+Да       Да       Да   Да   FuzzerExtFunctionsWeakAlias.cpp
+Да       Да       Да   Да   FuzzerFlags.def
+Да       Да       Да   Да   FuzzerInterface.h
+Да       Да       Да   Да   FuzzerInternal.h
+Да       Да       Да   Да   FuzzerIO.cpp
+Да       Да       Да   Да   FuzzerIO.h
+Да       Да       Да   Да   FuzzerIOPosix.cpp
+Да       Да       Да   Да   FuzzerIOWindows.cpp
+Да       Да       Да   Да   FuzzerLoop.cpp
+Да       Да       Да   Да   FuzzerMain.cpp
+Да       Да       Да   Да   FuzzerMerge.cpp
+Да       Да       Да   Да   FuzzerMerge.h
+Да       Да       Да   Да   FuzzerMutate.cpp
+Да       Да       Да   Да   FuzzerMutate.h
+Да       Да       Да   Да   FuzzerOptions.h
+Да       Да       Да   Да   FuzzerRandom.h
+Да       Да       Да   Да   FuzzerSHA1.cpp
+Да       Да       Да   Да   FuzzerSHA1.h
+Да       Да       Да   Да   FuzzerTracePC.cpp
+Да       Да       Да   Да   FuzzerTracePC.h
+Да       Да       Да   Да   FuzzerTraceState.cpp
+Да       Да       Да   Да   FuzzerUtil.cpp
+Да       Да       Да   Да   FuzzerUtil.h
+Да       Да       Да   Да   FuzzerUtilDarwin.cpp
+Да       Да       Да   Да   FuzzerUtilLinux.cpp
+Да       Да       Да   Да   FuzzerUtilPosix.cpp
+Да       Да       Да   Да   FuzzerUtilWindows.cpp
+Да       Да       Да   Да   FuzzerValueBitMap.h
+Да       Да       Да   Да   README.txt
+Да       Да       Да   Да   
 Да       Да       Да   ДеДЯДЯДЯafl
+Да       Да       Да   Да       afl_driver.cpp
+Да       Да       Да   Да       
 Да       Да       Да   ДеДЯДЯДЯstandalone
+Да       Да       Да   Да       StandaloneFuzzTargetMain.c
+Да       Да       Да   Да       
 Да       Да       Да   ДдДЯДЯДЯtest
+Да       Да       Да       Да   AbsNegAndConstant64Test.cpp
+Да       Да       Да       Да   AbsNegAndConstantTest.cpp
+Да       Да       Да       Да   AccumulateAllocationsTest.cpp
+Да       Да       Да       Да   afl-driver-extra-stats.test
+Да       Да       Да       Да   afl-driver-stderr.test
+Да       Да       Да       Да   AFLDriverTest.cpp
+Да       Да       Да       Да   BufferOverflowOnInput.cpp
+Да       Да       Да       Да   caller-callee.test
+Да       Да       Да       Да   CallerCalleeTest.cpp
+Да       Да       Да       Да   CMakeLists.txt
+Да       Да       Да       Да   CounterTest.cpp
+Да       Да       Да       Да   coverage.test
+Да       Да       Да       Да   CustomCrossOverTest.cpp
+Да       Да       Да       Да   CustomMutatorTest.cpp
+Да       Да       Да       Да   dict1.txt
+Да       Да       Да       Да   DivTest.cpp
+Да       Да       Да       Да   DSO1.cpp
+Да       Да       Да       Да   DSO2.cpp
+Да       Да       Да       Да   DSOTestExtra.cpp
+Да       Да       Да       Да   DSOTestMain.cpp
+Да       Да       Да       Да   dump_coverage.test
+Да       Да       Да       Да   EmptyTest.cpp
+Да       Да       Да       Да   FourIndependentBranchesTest.cpp
+Да       Да       Да       Да   FullCoverageSetTest.cpp
+Да       Да       Да       Да   fuzzer-customcrossover.test
+Да       Да       Да       Да   fuzzer-custommutator.test
+Да       Да       Да       Да   fuzzer-dict.test
+Да       Да       Да       Да   fuzzer-dirs.test
+Да       Да       Да       Да   fuzzer-fdmask.test
+Да       Да       Да       Да   fuzzer-finalstats.test
+Да       Да       Да       Да   fuzzer-flags.test
+Да       Да       Да       Да   fuzzer-jobs.test
+Да       Да       Да       Да   fuzzer-leak.test
+Да       Да       Да       Да   fuzzer-oom-with-profile.test
+Да       Да       Да       Да   fuzzer-oom.test
+Да       Да       Да       Да   fuzzer-printcovpcs.test
+Да       Да       Да       Да   fuzzer-runs.test
+Да       Да       Да       Да   fuzzer-seed.test
+Да       Да       Да       Да   fuzzer-segv.test
+Да       Да       Да       Да   fuzzer-singleinputs.test
+Да       Да       Да       Да   fuzzer-threaded.test
+Да       Да       Да       Да   fuzzer-timeout.test
+Да       Да       Да       Да   fuzzer-traces-hooks.test
+Да       Да       Да       Да   fuzzer-ubsan.test
+Да       Да       Да       Да   fuzzer.test
+Да       Да       Да       Да   FuzzerUnittest.cpp
+Да       Да       Да       Да   hi.txt
+Да       Да       Да       Да   InitializeTest.cpp
+Да       Да       Да       Да   LeakTest.cpp
+Да       Да       Да       Да   LeakTimeoutTest.cpp
+Да       Да       Да       Да   lit.cfg
+Да       Да       Да       Да   lit.site.cfg.in
+Да       Да       Да       Да   LoadTest.cpp
+Да       Да       Да       Да   MemcmpTest.cpp
+Да       Да       Да       Да   merge.test
+Да       Да       Да       Да   minimize_crash.test
+Да       Да       Да       Да   NthRunCrashTest.cpp
+Да       Да       Да       Да   NullDerefOnEmptyTest.cpp
+Да       Да       Да       Да   NullDerefTest.cpp
+Да       Да       Да       Да   OneHugeAllocTest.cpp
+Да       Да       Да       Да   OutOfMemorySingleLargeMallocTest.cpp
+Да       Да       Да       Да   OutOfMemoryTest.cpp
+Да       Да       Да       Да   repeated-bytes.test
+Да       Да       Да       Да   RepeatedBytesTest.cpp
+Да       Да       Да       Да   RepeatedMemcmp.cpp
+Да       Да       Да       Да   shrink.test
+Да       Да       Да       Да   ShrinkControlFlowTest.cpp
+Да       Да       Да       Да   ShrinkValueProfileTest.cpp
+Да       Да       Да       Да   SignedIntOverflowTest.cpp
+Да       Да       Да       Да   simple-cmp.test
+Да       Да       Да       Да   SimpleCmpTest.cpp
+Да       Да       Да       Да   SimpleDictionaryTest.cpp
+Да       Да       Да       Да   SimpleHashTest.cpp
+Да       Да       Да       Да   SimpleTest.cpp
+Да       Да       Да       Да   SimpleThreadedTest.cpp
+Да       Да       Да       Да   SingleMemcmpTest.cpp
+Да       Да       Да       Да   SingleStrcmpTest.cpp
+Да       Да       Да       Да   SingleStrncmpTest.cpp
+Да       Да       Да       Да   SpamyTest.cpp
+Да       Да       Да       Да   standalone.test
+Да       Да       Да       Да   StrcmpTest.cpp
+Да       Да       Да       Да   StrncmpOOBTest.cpp
+Да       Да       Да       Да   StrncmpTest.cpp
+Да       Да       Да       Да   StrstrTest.cpp
+Да       Да       Да       Да   swap-cmp.test
+Да       Да       Да       Да   SwapCmpTest.cpp
+Да       Да       Да       Да   Switch2Test.cpp
+Да       Да       Да       Да   SwitchTest.cpp
+Да       Да       Да       Да   ThreadedLeakTest.cpp
+Да       Да       Да       Да   ThreadedTest.cpp
+Да       Да       Да       Да   TimeoutEmptyTest.cpp
+Да       Да       Да       Да   TimeoutTest.cpp
+Да       Да       Да       Да   trace-malloc.test
+Да       Да       Да       Да   TraceMallocTest.cpp
+Да       Да       Да       Да   ulimit.test
+Да       Да       Да       Да   UninstrumentedTest.cpp
+Да       Да       Да       Да   value-profile-cmp.test
+Да       Да       Да       Да   value-profile-cmp2.test
+Да       Да       Да       Да   value-profile-cmp3.test
+Да       Да       Да       Да   value-profile-cmp4.test
+Да       Да       Да       Да   value-profile-div.test
+Да       Да       Да       Да   value-profile-load.test
+Да       Да       Да       Да   value-profile-mem.test
+Да       Да       Да       Да   value-profile-set.test
+Да       Да       Да       Да   value-profile-strcmp.test
+Да       Да       Да       Да   value-profile-strncmp.test
+Да       Да       Да       Да   value-profile-switch.test
+Да       Да       Да       Да   
 Да       Да       Да       ДеДЯДЯДЯno-coverage
+Да       Да       Да       Да       CMakeLists.txt
+Да       Да       Да       Да       
 Да       Да       Да       ДеДЯДЯДЯubsan
+Да       Да       Да       Да       CMakeLists.txt
+Да       Да       Да       Да       
 Да       Да       Да       ДеДЯДЯДЯuninstrumented
+Да       Да       Да       Да       CMakeLists.txt
+Да       Да       Да       Да       
 Да       Да       Да       ДдДЯДЯДЯunit
+Да       Да       Да               lit.cfg
+Да       Да       Да               lit.site.cfg.in
+Да       Да       Да               
 Да       Да       ДдДЯДЯДЯimapdl
+Да       Да               filterbr.py
+Да       Да               
 Да       ДдДЯДЯДЯtools
 Да           ДеДЯДЯДЯamalgamate
+Да           Да       amalgamate.py
+Да           Да       CHANGES.md
+Да           Да       config_json.json
+Да           Да       config_json_fwd.json
+Да           Да       README.md
+Да           Да       
 Да           ДеДЯДЯДЯastyle
+Да           Да       .astylerc
+Да           Да       requirements.txt
+Да           Да       
 Да           ДеДЯДЯДЯgdb_pretty_printer
+Да           Да       nlohmann-json.py
+Да           Да       README.md
+Да           Да       
 Да           ДеДЯДЯДЯgenerate_natvis
+Да           Да       generate_natvis.py
+Да           Да       nlohmann_json.natvis.j2
+Да           Да       README.md
+Да           Да       requirements.txt
+Да           Да       
 Да           ДеДЯДЯДЯmacro_builder
+Да           Да       main.cpp
+Да           Да       
 Да           ДдДЯДЯДЯserve_header
+Да                   demo.png
+Да                   README.md
+Да                   requirements.txt
+Да                   serve_header.py
+Да                   serve_header.yml.example
+Да                   
 ДдДЯДЯДЯtinygltf-release
     ДдДЯДЯДЯtinygltf-release
         Да   .clang-format

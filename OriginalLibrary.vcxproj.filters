@@ -57,24 +57,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="External\imgui-docking\imgui.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\imgui-docking\imgui_demo.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\imgui-docking\imgui_draw.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\imgui-docking\imgui_impl_dx11.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\imgui-docking\imgui_impl_win32.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\imgui-docking\imgui_widgets.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Shaders\BlurShader.cpp">
       <Filter>Source\Shaders\BlurShader</Filter>
     </ClCompile>
@@ -255,18 +237,6 @@
     <ClCompile Include="Source\Editor\ObjectEditor.cpp">
       <Filter>Source\Editor\ObjectEditor</Filter>
     </ClCompile>
-    <ClCompile Include="External\ImGuizmo\ImGuizmo.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\ImGuizmo\ImCurveEdit.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\ImGuizmo\ImGradient.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\ImGuizmo\ImSequencer.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Serialization\JsonSerializer.cpp">
       <Filter>Source\Serializer\JsonSerializer</Filter>
     </ClCompile>
@@ -285,29 +255,47 @@
     <ClCompile Include="Source\StateMschine\ActionState.cpp">
       <Filter>Source\StateMachine\ActionState</Filter>
     </ClCompile>
+    <ClCompile Include="Source\StateMschine\StateMachineGraphEditor.cpp">
+      <Filter>Source\StateMachine\StateMachineGraphEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-docking\imgui-docking\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-docking\imgui-docking\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-docking\imgui-docking\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-docking\imgui-docking\imgui_tables.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-docking\imgui-docking\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\ImGuizmo-master\ImGuizmo-master\src\ImGuizmo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_node_editor.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-docking\imgui-docking\backends\imgui_impl_dx11.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-docking\imgui-docking\backends\imgui_impl_win32.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-node-editor-master\imgui-node-editor-master\crude_json.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_canvas.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_node_editor_api.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="External\imgui-docking\imgui.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\imgui-docking\imgui_impl_dx11.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\imgui-docking\imgui_impl_win32.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\imgui-docking\imgui_internal.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\imgui-docking\imstb_rectpack.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\imgui-docking\imstb_textedit.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\imgui-docking\imstb_truetype.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Shaders\BlurShader.h">
       <Filter>Source\Shaders\BlurShader</Filter>
     </ClInclude>
@@ -509,18 +497,6 @@
     <ClInclude Include="Source\Editor\ObjectEditor.h">
       <Filter>Source\Editor\ObjectEditor</Filter>
     </ClInclude>
-    <ClInclude Include="External\ImGuizmo\ImGuizmo.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\ImGuizmo\ImCurveEdit.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\ImGuizmo\ImGradient.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\ImGuizmo\ImSequencer.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Serialization\JsonSerializer.h">
       <Filter>Source\Serializer\JsonSerializer</Filter>
     </ClInclude>
@@ -538,6 +514,36 @@
     </ClInclude>
     <ClInclude Include="Source\StateMschine\ActionState.h">
       <Filter>Source\StateMachine\ActionState</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMschine\StateMachineGraphEditor.h">
+      <Filter>Source\StateMachine\StateMachineGraphEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-docking\imgui-docking\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-docking\imgui-docking\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\ImGuizmo-master\ImGuizmo-master\src\ImGuizmo.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_node_editor.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-docking\imgui-docking\backends\imgui_impl_dx11.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-docking\imgui-docking\backends\imgui_impl_win32.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-node-editor-master\imgui-node-editor-master\crude_json.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_canvas.h">
+      <Filter>imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -848,6 +854,9 @@
     </Filter>
     <Filter Include="Source\StateMachine\ActionState">
       <UniqueIdentifier>{a88f0d5b-74ba-47ea-9f2e-0bde746cf3b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\StateMachine\StateMachineGraphEditor">
+      <UniqueIdentifier>{b797cbe2-383c-4e6f-90ad-287b62062743}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -61,7 +61,7 @@ void CollisionExperiment::Render(ShapeRenderer* renderer)
 //ImGuiデバッグ描画
 void CollisionExperiment::RenderGui()
 {
-	if (ImGui::CollapsingHeader("CollisionEnperiment", ImGuiDockNodeFlags_None))
+	if (ImGui::CollapsingHeader("CollisionEnperiment", 0))
 	{
 		constexpr int max_experiment_spheres = 10000;
 		ImGui::DragInt("Target Count", &target_count, 1.0f, 0, max_experiment_spheres);

@@ -123,7 +123,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;USE_IMGUI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\External\cereal-master\include;.\External\DirectXTK-main\DirectXTK-main\Inc;.\External\DirectXTex;.\External\imgui-docking;.\External\ImGuizmo;.\External\json-develop;.\External\imgui;.\External\json-develop;.\External\tinygltf-release;%(AdditionalIncludeDirectories);.\External\DirectXTe;.\External\DirectXTex</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;$(ProjectDir)External\cereal-master\include;$(ProjectDir)External\DirectXTK-main\DirectXTK-main\Inc;$(ProjectDir)External\DirectXTex;$(ProjectDir)External\imgui-docking\imgui-docking;$(ProjectDir)External\imgui-docking\imgui-docking\backends;$(ProjectDir)External\imgui-node-editor-master\imgui-node-editor-master;$(ProjectDir)External\ImGuizmo-master\ImGuizmo-master\src;$(ProjectDir)External\imguizmo;$(ProjectDir)External\json-develop;.\External\imgui;.\External\json-develop;.\External\tinygltf-release;%(AdditionalIncludeDirectories);.\External\DirectXTe;.\External\DirectXTex</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -188,7 +188,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;.\External\cereal-master\include;.\External\DirectXTK-main\DirectXTK-main\Inc;.\External\DirectXTex;.\External\imgui-docking;.\External\ImGuizmo;.\External\json-develop;.\External\tinygltf-release;.\External\DirectXTe;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;$(ProjectDir)External\cereal-master\include;$(ProjectDir)External\DirectXTK-main\DirectXTK-main\Inc;$(ProjectDir)External\DirectXTex;$(ProjectDir)External\imgui-docking\imgui-docking;$(ProjectDir)External\imgui-docking\imgui-docking\backends;$(ProjectDir)External\imgui-node-editor-master\imgui-node-editor-master;$(ProjectDir)External\ImGuizmo-master\ImGuizmo-master\src;$(ProjectDir)External\imguizmo;$(ProjectDir)External\json-develop;.\External\tinygltf-release;.\External\DirectXTe;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -215,16 +215,18 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="External\imgui-docking\imgui.cpp" />
-    <ClCompile Include="External\imgui-docking\imgui_demo.cpp" />
-    <ClCompile Include="External\imgui-docking\imgui_draw.cpp" />
-    <ClCompile Include="External\imgui-docking\imgui_impl_dx11.cpp" />
-    <ClCompile Include="External\imgui-docking\imgui_impl_win32.cpp" />
-    <ClCompile Include="External\imgui-docking\imgui_widgets.cpp" />
-    <ClCompile Include="External\ImGuizmo\ImCurveEdit.cpp" />
-    <ClCompile Include="External\ImGuizmo\ImGradient.cpp" />
-    <ClCompile Include="External\ImGuizmo\ImGuizmo.cpp" />
-    <ClCompile Include="External\ImGuizmo\ImSequencer.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui-docking\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui-docking\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui-docking\imgui.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui-docking\imgui_demo.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui-docking\imgui_draw.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui-docking\imgui_tables.cpp" />
+    <ClCompile Include="External\imgui-docking\imgui-docking\imgui_widgets.cpp" />
+    <ClCompile Include="External\imgui-node-editor-master\imgui-node-editor-master\crude_json.cpp" />
+    <ClCompile Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_canvas.cpp" />
+    <ClCompile Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_node_editor.cpp" />
+    <ClCompile Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_node_editor_api.cpp" />
+    <ClCompile Include="External\ImGuizmo-master\ImGuizmo-master\src\ImGuizmo.cpp" />
     <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Camera\FreeCamera.cpp" />
     <ClCompile Include="Source\Camera\StandCamera.cpp" />
@@ -290,21 +292,20 @@
     <ClCompile Include="Source\StateMschine\State.cpp" />
     <ClCompile Include="Source\StateMschine\StateBlackboard.cpp" />
     <ClCompile Include="Source\StateMschine\StateMachine.cpp" />
+    <ClCompile Include="Source\StateMschine\StateMachineGraphEditor.cpp" />
     <ClCompile Include="Source\StateMschine\StateTransition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imconfig.h" />
-    <ClInclude Include="External\imgui-docking\imgui.h" />
-    <ClInclude Include="External\imgui-docking\imgui_impl_dx11.h" />
-    <ClInclude Include="External\imgui-docking\imgui_impl_win32.h" />
-    <ClInclude Include="External\imgui-docking\imgui_internal.h" />
-    <ClInclude Include="External\imgui-docking\imstb_rectpack.h" />
-    <ClInclude Include="External\imgui-docking\imstb_textedit.h" />
-    <ClInclude Include="External\imgui-docking\imstb_truetype.h" />
-    <ClInclude Include="External\ImGuizmo\ImCurveEdit.h" />
-    <ClInclude Include="External\ImGuizmo\ImGradient.h" />
-    <ClInclude Include="External\ImGuizmo\ImGuizmo.h" />
-    <ClInclude Include="External\ImGuizmo\ImSequencer.h" />
+    <ClInclude Include="External\imgui-docking\imgui-docking\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="External\imgui-docking\imgui-docking\backends\imgui_impl_win32.h" />
+    <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h" />
+    <ClInclude Include="External\imgui-docking\imgui-docking\imgui.h" />
+    <ClInclude Include="External\imgui-docking\imgui-docking\imgui_internal.h" />
+    <ClInclude Include="External\imgui-node-editor-master\imgui-node-editor-master\crude_json.h" />
+    <ClInclude Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_canvas.h" />
+    <ClInclude Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_node_editor.h" />
+    <ClInclude Include="External\ImGuizmo-master\ImGuizmo-master\src\ImGuizmo.h" />
     <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Camera\FreeCamera.h" />
     <ClInclude Include="Source\Camera\StandCamera.h" />
@@ -376,6 +377,7 @@
     <ClInclude Include="Source\StateMschine\State.h" />
     <ClInclude Include="Source\StateMschine\StateBlackboard.h" />
     <ClInclude Include="Source\StateMschine\StateMachine.h" />
+    <ClInclude Include="Source\StateMschine\StateMachineGraphEditor.h" />
     <ClInclude Include="Source\StateMschine\StateTransition.h" />
   </ItemGroup>
   <ItemGroup>

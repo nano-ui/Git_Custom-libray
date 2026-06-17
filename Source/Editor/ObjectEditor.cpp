@@ -184,7 +184,7 @@ void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_mana
 		ImGui::Checkbox("Enable Click Placement Mode", &is_placement_mode);
 		ImGui::Dummy(ImVec2(0.0f, dummy_height_value));
 
-		if (ImGui::ListBoxHeader("##ClassList", ImVec2(-1, ImGui::GetContentRegionAvail().y * 0.25f)))
+		if (ImGui::BeginListBox("##ClassList", ImVec2(-1.0f, ImGui::GetWindowHeight() * class_list_height_ratio))) 
 		{
 			for (int i = 0; i < static_cast<int>(cached_class_names.size()); ++i)
 			{
@@ -200,7 +200,7 @@ void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_mana
 					ImGui::SetItemDefaultFocus();
 				}
 			}
-			ImGui::ListBoxFooter();
+			ImGui::EndListBox();
 		}
 	}
 
@@ -227,7 +227,7 @@ void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_mana
 	const auto& active_objects = ObjectManager::Instance().GetGameObjects();
 	frame_class_counters.clear();
 
-	if (ImGui::ListBoxHeader("##ActiveObjects", ImVec2(-1, ImGui::GetContentRegionAvail().y - active_list_height_offset)))
+	if (ImGui::BeginListBox("##ActiveList", ImVec2(-1.0f, ImGui::GetContentRegionAvail().y - active_list_height_offset))) 
 	{
 		for (size_t i = 0; i < active_objects.size(); ++i)
 		{
@@ -254,7 +254,7 @@ void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_mana
 				ImGui::PopID();
 			}
 		}
-		ImGui::ListBoxFooter();
+		ImGui::EndListBox();
 	}
 
 	Update(camera, collision_manager);

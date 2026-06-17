@@ -9,6 +9,7 @@
 #include "../Collision/CollisionManager.h"
 #include "../Collision/CollisionExperiment.h"
 #include "../Editor/ObjectEditor.h"
+#include "../StateMschine/StateMachineGraphEditor.h"
 #include "../Shaders/SkyBox.h"
 #include "SceneManager.h"
 
@@ -54,6 +55,8 @@ void SceneGame::Initialize()
 
 	object_editor = std::make_unique<ObjectEditor>();
 	object_editor->Initialize();
+
+	graph_editor = std::make_unique<StateMachineGraphEditor>();
 }
 
 //I—¹‰»
@@ -287,8 +290,8 @@ void SceneGame::RenderGui()
 {
 #ifdef USE_IMGUI
 	//Scene::ImGuiScaleCorrection();
-	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
-
+	ImGuiID dockspace_id = 0;
+	ImGui::DockSpaceOverViewport(dockspace_id, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 	if (object_manager)
 	{
 		//object_manager->RenderGui();
@@ -388,6 +391,11 @@ void SceneGame::RenderGui()
 	if (object_editor)
 	{
 		object_editor->RenderUi(camera.get(), collision_manager.get());
+	}
+
+	if (graph_editor)
+	{
+		graph_editor->DrawEditor(nullptr);
 	}
 #endif // USE_IMGUI
 }
