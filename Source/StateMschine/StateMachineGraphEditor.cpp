@@ -112,14 +112,6 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	ed::SetCurrentEditor(editor_context.get());
 	ed::Begin("Node Canvas");
 
-	// 左側のボタンから受け取った「移動予約」を、キャンバスが安全なこのタイミング
-	if (g_pending_focus_node_id != 0)
-	{
-		ed::SelectNode(g_pending_focus_node_id, false);
-		ed::NavigateToSelection(false, 0.5f); // 0.5秒かけて移動 
-		g_pending_focus_node_id = 0; // 実行完了として予約をリセット
-	}
-
 	// ファーストフレームの初期化
 	if (current_graph_id == 0 && current_graph->nodes.empty())
 	{
@@ -283,6 +275,17 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	CheckNavigateToSubGraph(current_graph);
 
 	ed::End(); // キャンバス描画終了
+
+	if (g_pending_focus_node_id != 0)
+	{
+		uint32_t focus_target_id = g_pending_focus_node_id;	//対象IDのローカル退避
+		ed::SelectNode(focus_target_id, false);
+		ed::NavigateToSelection(false, 0.5f);
+
+		g_pending_focus_node_id = 0;
+		printf("StateMachineGraphEditor: 安全なタイミングでノード ID:%d へのカメラフォーカスを実行しました。\n", focus_target_id);
+	}
+
 	ImGui::EndChild();
 
 	ImGui::SameLine();
@@ -480,13 +483,13 @@ void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 	{
 		const GraphNode& node = current_graph->nodes[i]; // ノード情報
 		ImGui::Text("ID：%d[%s]", node.id, node.name.c_str());
-		ImGui::SameLine(ImGui::GetWindowWidth() - 95.0f);
+		ImGui::SameLine(ImGui::GetWindowWidth() - 115.0f);
 		std::string button_label = u8"フォーカス##" + std::to_string(node.id); // ボタンラベル
 
 		//ボタンがクリックされたか判定
 		if (ImGui::Button(button_label.c_str()))
 		{
-			// 修正ポイント3：ここでは直接カメラを動かさず、予約だけ行いクラッシュを完全に回避します
+			//ここでは直接カメラを動かさず、予約だけ行いクラッシュを完全に回避します
 			g_pending_focus_node_id = node.id;
 			printf("StateMachineGraphEditor: ノード ID:%d (%s) へのフォーカスを予約しました。\n",
 				node.id, node.name.c_str());
@@ -672,7 +675,7 @@ void StateMachineGraphEditor::CreateNewLink(GraphData* current_graph)
 		{
 			const ImVec4 success_color = ImVec4(0.0f, 1.0f, 0.0f, 1.0f); // 成功色 
 
-			// 修正ポイント4：マウスの判定を独自に行わず、ライブラリの公式な完了判定に委ねることでループバグを防ぐ
+			// 4：マウスの判定を独自に行わず、ライブラリの公式な完了判定に委ねることでループバグを防ぐ
 			if (ed::AcceptNewItem(success_color, 2.0f))
 			{
 				GraphLink new_link;	//新しい接続情報
