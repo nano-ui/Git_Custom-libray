@@ -70,6 +70,21 @@ private:
 	//ノードの生成
 	void AddNode(GraphData* current_graph, const ImVec2& click_pos);
 
+	//サブグラフノードの生成
+	void AddSubGrapNode(GraphData* current_graph, const ImVec2& click_pos);
+
+	//階層データを作成してIDを返す
+	uint32_t CreateNewSubGraph(const std::string& name);
+
+	//既存のノードをサブグラフに変換
+	void ConvertToSubGraph(GraphData* currnet_graph, uint32_t node_id);
+
+	//サブグラフへの階層移動を検知・処理
+	void CheckNavigateToSubGraph(GraphData* current_graph);
+
+	//階層ナビゲーションを描画
+	void DrawHeaderNavigation();
+
 	//ノードの削除
 	void DeleteNode(GraphData* current_graph);
 
@@ -81,6 +96,9 @@ private:
 
 	//接続線の作成を検知してデータに追加
 	void CreateNewLink(GraphData* current_graph);
+
+	//リンクの接続ルールを判定
+	bool CheckCanConnect(GraphData* current_graph, uint32_t start_id, uint32_t end_id);
 
 private:
 	//カスタムデリータ
