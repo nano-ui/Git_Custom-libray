@@ -791,6 +791,8 @@ void StateMachineGraphEditor::CreateNewLink(GraphData* current_graph)
 				new_link.end_pin_id = static_cast<uint32_t>(end_pin_id.Get());
 				current_graph->links.push_back(new_link);
 
+				OnLinkCreated(current_graph, new_link);
+
 				printf("StateMachineGraphEditor: リンクを作成しました。ID: %d, 出力ピン: %d -> 入力ピン: %d\n",
 					new_link.id, new_link.start_pin_id, new_link.end_pin_id);
 			}
@@ -859,6 +861,59 @@ bool StateMachineGraphEditor::CheckCanConnect(GraphData* current_graph, uint32_t
 	}
 
 	return true;
+}
+
+//遷移条件を構築
+void StateMachineGraphEditor::OnLinkCreated(GraphData* current_graph, const GraphLink& new_link)
+{
+	//グラフポインタの安全性を確認
+	if (!current_graph)
+	{
+		return;
+	}
+
+	uint32_t source_node_id = 0;	//遷移元のID
+	uint32_t target_node_id = 0;	//遷移先のID
+
+	//現在の階層にいるすべてのノードを検索し、ピンの所属先を特定
+	for (size_t i = 0; i < current_graph->nodes.size(); i++)
+	{
+		const GraphNode& node = current_graph->nodes[i];	//検索対象のノード
+
+		//出力ピンのリストから、リンクの開始ピンIDを検索
+		for (size_t p = 0; p < node.outputs.size(); p++)
+		{
+			//ピンIDが一致しているか確認
+			if (node.outputs[p].id == new_link.start_pin_id)
+			{
+				source_node_id = node.id;
+				break;
+			}
+		}
+
+		//入力ピンのリストから、リンクの終了ピンIDを検索
+		for (size_t p = 0; p < node.inputs.size(); p++)
+		{
+			//ピンIDが一致したか確認
+			if (node.inputs[p].id == new_link.end_pin_id)
+			{
+				target_node_id = node.id;
+				break;
+			}
+		}
+	}
+
+	//意図しない挙動を検出
+	if (source_node_id == 0 || target_node_id == 0)
+	{
+		printf("Error: OnLinkCreated - 接続されたピンに対応するノードが見つかりませんでした。\n");
+		return;
+	}
+
+	//どのステートからどのステートへ矢印が生成されたかをログ出力
+	printf("StateMachineGraphEditor: 遷移関係を構築しました。[ステートID:%d] ==(遷移)==> [ステートID:%d]\n",
+		source_node_id, target_node_id);
+
 }
 
 //カスタムデリータ

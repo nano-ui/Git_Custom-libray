@@ -103,6 +103,9 @@ private:
 	//リンクの接続ルールを判定
 	bool CheckCanConnect(GraphData* current_graph, uint32_t start_id, uint32_t end_id);
 
+	//遷移条件を構築
+	void OnLinkCreated(GraphData* current_graph, const GraphLink& new_link);
+
 private:
 	//カスタムデリータ
 	struct EditorContexDeleter
