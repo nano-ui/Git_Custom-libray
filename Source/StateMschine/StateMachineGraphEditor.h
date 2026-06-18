@@ -29,15 +29,6 @@ public:
 
 private:
 
-	//サブグラフノードの生成
-	void AddSubGrapNode(GraphData* current_graph, const ImVec2& click_pos);
-
-	//階層データを作成してIDを返す
-	uint32_t CreateNewSubGraph(const std::string& name);
-
-	//既存のノードをサブグラフに変換
-	void ConvertToSubGraph(GraphData* currnet_graph, uint32_t node_id);
-
 	//サブグラフへの階層移動を検知・処理
 	void CheckNavigateToSubGraph(GraphData* current_graph);
 

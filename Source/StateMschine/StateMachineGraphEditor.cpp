@@ -218,12 +218,24 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	}
 	if (trigger_add_subgraph)
 	{
-		AddSubGrapNode(current_graph, popup_click_pos);
+		data_manager->AddSubGrapNode(current_graph_id, popup_click_pos.x, popup_click_pos.y);
+
+		//current_graph ポインタを最新の正しいアドレスへ再取得
+		for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
+		{
+			if (data_manager->GetLayerDatas()[i].id == current_graph_id)
+			{
+				current_graph = &data_manager->GetLayerDatas()[i];
+				break;
+			}
+		}
+		uint32_t new_node_id = current_graph->nodes.back().id;
+		ed::SetNodePosition(new_node_id, popup_click_pos);
 	}
 	if (trigger_convert_subgraph)
 	{
 		uint32_t raw_node_id = static_cast<uint32_t>(context_node_id.Get());
-		ConvertToSubGraph(current_graph, raw_node_id);
+		data_manager->ConvertToSubGraph(current_graph_id, raw_node_id);
 	}
 
 	// 削除操作の確定受付
@@ -246,123 +258,6 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 	ed::SetCurrentEditor(nullptr);
 	ImGui::End();
-}
-
-//サブグラフノードの生成
-void StateMachineGraphEditor::AddSubGrapNode(GraphData* current_graph, const ImVec2& click_pos)
-{
-	//グラフに情報が渡されているか確認
-	if (!current_graph)
-	{
-		printf("Error: StateMachineGraphEditor::AddSubGraphNode - current_graph が nullptr です。\n");
-		return;
-	}
-
-	std::string sub_graph_name = u8"新規サブグラフ";	//サブグラフの名前
-	uint32_t real_sub_graph_id = CreateNewSubGraph(sub_graph_name);
-
-	//layer_datas が引っ越した可能性を考慮し、現在の表示階層ポインタをs再取得
-	for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
-	{
-		if (data_manager->GetLayerDatas()[i].id == current_graph_id)
-		{
-			current_graph = &data_manager->GetLayerDatas()[i];
-			break;
-		}
-	}
-
-	GraphNode new_node;	//新しいノード情報
-
-	//パラメータ設定
-	new_node.id = data_manager->FetchAndIncrementId();
-	new_node.name = sub_graph_name;
-	new_node.position_x = click_pos.x;
-	new_node.position_y = click_pos.y;
-	new_node.is_sub_graph = true;
-	uint32_t assigned_sub_graph_id = real_sub_graph_id;
-	new_node.sub_graph_id = assigned_sub_graph_id;
-
-	//サブグラフ用の入力ピン
-	GraphPin new_input;	//新しい入力ピン情報
-	new_input.id = data_manager->FetchAndIncrementId();
-	new_input.name = u8"入力";
-	new_input.kind = PinKind::Input;
-	new_input.node_id = new_node.id;
-	new_node.inputs.push_back(new_input);
-	
-	//サブグラフ用の出力ピン
-	GraphPin new_output;	//新しい出力ピン情報
-	new_output.id = data_manager->FetchAndIncrementId();
-	new_output.name = u8"出力";
-	new_output.kind = PinKind::Output;
-	new_output.node_id = new_node.id;
-	new_node.outputs.push_back(new_output);
-
-	//現在のグラフにノードを追加
-	current_graph->nodes.push_back(new_node);
-	ed::SetNodePosition(new_node.id, click_pos);
-
-	if (assigned_sub_graph_id != real_sub_graph_id)
-	{
-		printf("Warning: サブグラフIDの予測が一致しませんでした。データを確認してください。\n");
-	}
-
-	printf("StateMachineGraphEditor: サブグラフノードを追加しました。ID: %d, 下位階層ID: %d\n",
-		new_node.id, new_node.sub_graph_id);
-}
-
-//階層データを作成してIDを返す
-uint32_t StateMachineGraphEditor::CreateNewSubGraph(const std::string& name)
-{
-	GraphData new_graph;	//新しい階層情報
-
-	//パラメータ設定
-	new_graph.id = data_manager->FetchAndIncrementId();
-	new_graph.name = name;
-	data_manager->GetLayerDatas().push_back(new_graph);
-
-	printf("StateMachineGraphEditor: 新しい階層データを作成しました。階層ID: %d, 名前: %s\n", new_graph.id, name.c_str());
-
-	return new_graph.id;
-}
-
-//既存のノードをサブグラフに変換
-void StateMachineGraphEditor::ConvertToSubGraph(GraphData* currnet_graph, uint32_t node_id)
-{
-	//グラフデータが渡されているか確認
-	if (!currnet_graph)
-	{
-		printf("Error: StateMachineGraphEditor::ConvertToSubGraph - current_graph が nullptr です。\n");
-		return;
-	}
-
-	//現在のグラフ内の全ノードを走査して対象のノードを検索
-	for (size_t i = 0; i < currnet_graph->nodes.size(); i++)
-	{
-		GraphNode& target_node = currnet_graph->nodes[i];	//対象のノード
-		
-		//変換対象のノードIDを一致するか確認
-		if (target_node.id == node_id)
-		{
-			//サブグラフ化されていないか確認
-			if (target_node.is_sub_graph)
-			{
-				printf("StateMachineGraphEditor: ノード ID:%d は既にサブグラフです。\n", node_id);
-				return;
-			}
-
-			//ノードのフラグ書き換えと階層生成
-			target_node.is_sub_graph = true;
-			target_node.sub_graph_id = CreateNewSubGraph(target_node.name);
-
-			target_node.name += u8" サブステート";
-
-			printf("StateMachineGraphEditor: ノード「%s」(ID:%d) をサブグラフ(階層ID:%d)へ変換しました。\n",
-				target_node.name.c_str(), target_node.id, target_node.sub_graph_id);
-
-			break;
-		}
-	}
 }
 
 //サブグラフへの階層移動を検知・処理
