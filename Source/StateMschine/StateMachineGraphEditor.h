@@ -33,7 +33,7 @@ private:
 	void CheckNavigateToSubGraph(GraphData* current_graph);
 
 	//階層ナビゲーションを描画
-	void DrawHeaderNavigation();
+	bool DrawHeaderNavigation();
 
 	//ステート一覧リストを描画して、その位置に移動
 	void DrawStateListWindow(GraphData* current_graph);
@@ -47,11 +47,14 @@ private:
 	//ノードの詳細情報を描画
 	void DrawPropertyWindow(GraphData* current_graph);
 
+	//リンク選択時の詳細プロパティ描画
+	void DrawLinkProperty(GraphData* current_graph, uint32_t link_id);
+
+	//ノード選択時の詳細プロパティ描画
+	void DrawNodeProperty(GraphData* current_graph, uint32_t node_id);
+
 	//接続線の作成を検知してデータに追加
 	void CreateNewLink(GraphData* current_graph);
-
-	//リンクの接続ルールを判定
-	bool CheckCanConnect(GraphData* current_graph, uint32_t start_id, uint32_t end_id);
 
 	//遷移条件を構築
 	void OnLinkCreated(GraphData* current_graph, const GraphLink& new_link);

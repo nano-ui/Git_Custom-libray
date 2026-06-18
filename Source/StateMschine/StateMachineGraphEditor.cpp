@@ -9,16 +9,18 @@
 
 namespace ed = ax::NodeEditor;
 
+static uint32_t g_pending_focus_node_id = 0;
+
 //コンストラクタ
 StateMachineGraphEditor::StateMachineGraphEditor()
 {
 	//ライブラリ初期化
-	ed::Config config;
+	ed::Config config; // 設定データ
 	config.SettingsFile = "Data/Json/NodeEditor_State.json";
-	editor_context.reset(ed::CreateEditor());
+	editor_context.reset(ed::CreateEditor(&config));
 
 	//初期グラフ生成
-	const uint32_t root_id = 0;
+	const uint32_t root_id = 0; // ルート階層の固定ID
 	current_graph_id = root_id;
 
 	data_manager = std::make_unique<StateGraphDataManager>();
@@ -50,7 +52,6 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		return;
 	}
 
-	// 無限生成バグを防ぐため、毎フレームの冒頭で必ずフラグを false に初期化する
 	bool trigger_add_node = false;			// ノード追加の実行トリガー
 	bool trigger_add_subgraph = false;		// サブグラフ追加の実行トリガー
 	bool trigger_convert_subgraph = false;	// サブグラフ変換の実行トリガー
@@ -59,49 +60,79 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	ImGui::Begin(u8"ステートマシンエディタ");
 
 	// 階層ナビゲーションを描画
-	DrawHeaderNavigation();
+	if (DrawHeaderNavigation())
+	{
+		ImGui::End();
+		return;
+	}
 
+	static float dynamic_left_width = 290.0f;	// マウスで変更可能な左サイドバー横幅
+	static float dynamic_right_width = 300.0f;	// マウスで変更可能な右サイドバー横幅
+
+	const float min_pane_width = 100.0f;		// 各ペインの最小横幅制限 
+	const float min_pane_height = 100.0f;		// 各ペインの最小縦幅制限 
+	const float separator_line_width = 6.0f;	// セパレーターの見かけの掴み幅 
+
+	float total_available_width = ImGui::GetContentRegionAvail().x;	// ウィンドウ全体の有効横幅
+
+	float canvas_width = total_available_width - dynamic_left_width - dynamic_right_width - (separator_line_width * 2.0f);	// キャンバスの動的横幅
+
+	// ウィンドウが小さくなりすぎた場合に中央が潰れないよう安全ガード
+	if (canvas_width < min_pane_width)
+	{
+		canvas_width = min_pane_width;
+	}
+
+	float canvas_height = ImGui::GetContentRegionAvail().y;	// ウィンドウ全体の有効縦幅
+	if (canvas_height < min_pane_height)
+	{
+		canvas_height = min_pane_height;
+	}
+
+	// 左ペイン・ステート一覧の描画
+	ImGui::BeginChild("LeftSidebarZone##Child", ImVec2(dynamic_left_width, canvas_height), true);
+	DrawStateListWindow(current_graph);
+	ImGui::EndChild();
+
+	ImGui::SameLine();
+
+	// 見えない透明なボタンを配置して、マウスでドラッグ可能にする
+	ImGui::Button("##LeftSplitter", ImVec2(separator_line_width, canvas_height));
+	if (ImGui::IsItemActive())
+	{
+		dynamic_left_width += ImGui::GetIO().MouseDelta.x;
+		if (dynamic_left_width < min_pane_width) dynamic_left_width = min_pane_width;
+	}
+
+	ImGui::SameLine();
+
+	// 中央ペイン・ノードキャンバスの描画
+	ImGui::BeginChild("CenterCanvasZone##Child", ImVec2(canvas_width, canvas_height), false);
 
 	ed::SetCurrentEditor(editor_context.get());
 	ed::Begin("Node Canvas");
 
+	// 左側のボタンから受け取った「移動予約」を、キャンバスが安全なこのタイミング
+	if (g_pending_focus_node_id != 0)
+	{
+		ed::SelectNode(g_pending_focus_node_id, false);
+		ed::NavigateToSelection(false, 0.5f); // 0.5秒かけて移動 
+		g_pending_focus_node_id = 0; // 実行完了として予約をリセット
+	}
+
 	// ファーストフレームの初期化
 	if (current_graph_id == 0 && current_graph->nodes.empty())
 	{
-		GraphNode test_node;
-		test_node.id = data_manager->FetchAndIncrementId();
-		test_node.name = u8"待機状態";
-		test_node.position_x = 100.0f;
-		test_node.position_y = 100.0f;
-		test_node.is_sub_graph = false;
-		test_node.sub_graph_id = 0;
+		data_manager->CheckAndInitDefaultNode(current_graph_id);
 
-		// 入力ピン設定
-		GraphPin test_input;
-		test_input.id = data_manager->FetchAndIncrementId();
-		test_input.name = u8"入力";
-		test_input.kind = PinKind::Input;
-		test_input.node_id = test_node.id;
-		test_node.inputs.push_back(test_input);
-
-		// 出力ピン設定
-		GraphPin test_output;
-		test_output.id = data_manager->FetchAndIncrementId();
-		test_output.name = u8"出力";
-		test_output.kind = PinKind::Output;
-		test_output.node_id = test_node.id;
-		test_node.outputs.push_back(test_output);
-
-		current_graph->nodes.push_back(test_node);
-
-		//IDが100番台になったことで、古いキャッシュに邪魔されず座標が確実に適用されます
-		ed::SetNodePosition(test_node.id, ImVec2(100.0f, 100.0f));
+		uint32_t default_node_id = current_graph->nodes.front().id; // 待機ノードID
+		ed::SetNodePosition(default_node_id, ImVec2(100.0f, 100.0f));
 	}
 
 	// 階層内のすべてのノードを描画
 	for (size_t i = 0; i < current_graph->nodes.size(); i++)
 	{
-		const GraphNode& node = current_graph->nodes[i];
+		const GraphNode& node = current_graph->nodes[i]; // ノード参照
 
 		// サブグラフノードの場合は色を変更するスタイルをプッシュ
 		int pushed_style_count = 0;	// スタイル変更を適用した数
@@ -109,7 +140,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		{
 			ed::PushStyleColor(ed::StyleColor_NodeBg, ImVec4(0.1f, 0.2f, 0.4f, 0.85f));
 			ed::PushStyleColor(ed::StyleColor_SelNodeBorder, ImVec4(0.3f, 0.6f, 1.0f, 1.0f));
-			pushed_style_count = 2;
+			pushed_style_count = 2; // 2色追加 
 		}
 
 		ed::BeginNode(node.id);
@@ -120,7 +151,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		ImGui::BeginGroup();
 		for (size_t in_idx = 0; in_idx < node.inputs.size(); in_idx++)
 		{
-			const GraphPin& pin = node.inputs[in_idx];
+			const GraphPin& pin = node.inputs[in_idx]; // 入力ピン
 			ed::BeginPin(pin.id, ed::PinKind::Input);
 			ImGui::Text("->%s", pin.name.c_str());
 			ed::EndPin();
@@ -135,7 +166,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		ImGui::BeginGroup();
 		for (size_t out_idx = 0; out_idx < node.outputs.size(); out_idx++)
 		{
-			const GraphPin& pin = node.outputs[out_idx];
+			const GraphPin& pin = node.outputs[out_idx]; // 出力ピン
 			ed::BeginPin(pin.id, ed::PinKind::Output);
 			ImGui::Text("%s ->", pin.name.c_str());
 			ed::EndPin();
@@ -154,7 +185,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	// 接続線の描画
 	for (size_t i = 0; i < current_graph->links.size(); i++)
 	{
-		const GraphLink& link = current_graph->links[i];
+		const GraphLink& link = current_graph->links[i]; // リンク参照
 		ed::Link(link.id, link.start_pin_id, link.end_pin_id);
 	}
 
@@ -211,10 +242,12 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 	ed::Resume(); // エディタの描画を再開
 
-	//安全な区間でのデータ操作実行 --
+	//安全な区間でのデータ操作実行 
 	if (trigger_add_node)
 	{
-		data_manager->AddNode(current_graph,popup_click_pos.x,popup_click_pos.y);
+		data_manager->AddNode(current_graph, popup_click_pos.x, popup_click_pos.y);
+		uint32_t new_state_id = current_graph->nodes.back().id; // 追加ノードID
+		ed::SetNodePosition(new_state_id, popup_click_pos);
 	}
 	if (trigger_add_subgraph)
 	{
@@ -229,12 +262,12 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 				break;
 			}
 		}
-		uint32_t new_node_id = current_graph->nodes.back().id;
+		uint32_t new_node_id = current_graph->nodes.back().id; // サブグラフノードID
 		ed::SetNodePosition(new_node_id, popup_click_pos);
 	}
 	if (trigger_convert_subgraph)
 	{
-		uint32_t raw_node_id = static_cast<uint32_t>(context_node_id.Get());
+		uint32_t raw_node_id = static_cast<uint32_t>(context_node_id.Get()); // キャストID
 		data_manager->ConvertToSubGraph(current_graph_id, raw_node_id);
 	}
 
@@ -250,11 +283,24 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	CheckNavigateToSubGraph(current_graph);
 
 	ed::End(); // キャンバス描画終了
+	ImGui::EndChild();
 
-	DrawStateListWindow(current_graph);
+	ImGui::SameLine();
 
-	// プロパティウィンドウ描画
+	// 右側ドラッグセパレーター
+	ImGui::Button("##RightSplitter", ImVec2(separator_line_width, canvas_height));
+	if (ImGui::IsItemActive())
+	{
+		dynamic_right_width -= ImGui::GetIO().MouseDelta.x;
+		if (dynamic_right_width < min_pane_width) dynamic_right_width = min_pane_width;
+	}
+
+	ImGui::SameLine();
+
+	//右ペイン・詳細プロパティの描画
+	ImGui::BeginChild("RightSidebarZone##Child", ImVec2(dynamic_right_width, canvas_height), true);
 	DrawPropertyWindow(current_graph);
+	ImGui::EndChild();
 
 	ed::SetCurrentEditor(nullptr);
 	ImGui::End();
@@ -299,15 +345,15 @@ void StateMachineGraphEditor::CheckNavigateToSubGraph(GraphData* current_graph)
 }
 
 //階層ナビゲーションを描画
-void StateMachineGraphEditor::DrawHeaderNavigation()
+bool StateMachineGraphEditor::DrawHeaderNavigation()
 {
 	//ナビゲーションバーの背景色の描画
-	ImVec2 window_pos = ImGui::GetWindowPos();
-	float title_bar_height = ImGui::GetCursorPos().y;
-	ImVec2 bar_pos = ImVec2(window_pos.x, window_pos.y + title_bar_height);
-	ImVec2 bar_size = ImVec2(ImGui::GetWindowWidth(), 35.0f);
+	ImVec2 window_pos = ImGui::GetWindowPos(); // 描画位置
+	float title_bar_height = ImGui::GetFrameHeight(); // タイトルバーの高さ
+	ImVec2 bar_pos = ImVec2(window_pos.x, window_pos.y + title_bar_height); // バーの座標
+	ImVec2 bar_size = ImVec2(ImGui::GetWindowWidth(), 35.0f); // バーのサイズ
 
-	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+	ImDrawList* draw_list = ImGui::GetWindowDrawList(); // 描画リスト取得
 	draw_list->AddRectFilled(bar_pos, ImVec2(bar_pos.x + bar_size.x, bar_pos.y + bar_size.y), IM_COL32(35, 35, 35, 255));
 
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -319,8 +365,8 @@ void StateMachineGraphEditor::DrawHeaderNavigation()
 
 	uint32_t target_navigate_id = current_graph_id;	//IDを一時保存
 
-	//ルート改装にいる場合はルートの文字だけ描画
-	if (ImGui::Selectable(u8" / ルート", current_graph_id == 0, ImGuiSelectableFlags_None, ImGui::CalcTextSize(u8" / ルート"))) 
+	//ルート階層にいる場合はルートの文字だけ描画
+	if (ImGui::Selectable(u8" / ルート", current_graph_id == 0, ImGuiSelectableFlags_None, ImGui::CalcTextSize(u8" / ルート")))
 	{
 		target_navigate_id = 0;																		// 階層IDをルートへ変更
 		printf("StateMachineGraphEditor: ナビゲーションバーの文字クリックによりルート階層へ復帰しました。\n");
@@ -399,12 +445,16 @@ void StateMachineGraphEditor::DrawHeaderNavigation()
 			}
 		}
 	}
+	bool is_navigated = (current_graph_id != target_navigate_id); // 移動検知フラグ
 	current_graph_id = target_navigate_id;
 
 	ImGui::PopStyleColor();
 	ImGui::SetWindowFontScale(1.0f);
 
 	ImGui::SetCursorPos(ImVec2(0.0f, title_bar_height + bar_size.y + 5.0f));
+	ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+	return is_navigated;
 }
 
 //ステート一覧リストを描画して、その位置に移動
@@ -417,49 +467,43 @@ void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 		return;
 	}
 
-	ImGui::Begin(u8"【ステート一覧】");
-
 	ImGui::Spacing();
 	ImGui::Text(u8"【現在の階層のステート一覧】");
 	ImGui::Spacing();
 
-	//レイアウト用の小窓を作成してステートをリストに描画
-	if (ImGui::BeginChild("LeftStateListChild"), ImVec2(0.0f, 200.0f), true)
+	const float list_box_height = 200.0f;	//リストボックスの固定立幅
+
+	ImGui::BeginChild("LeftStateListChild", ImVec2(0.0f, list_box_height), true);
+
+	//現在の階層内の全ノードを走査してリストアップ
+	for (size_t i = 0; i < current_graph->nodes.size(); i++)
 	{
-		//現在の階層内の全ノードを走査してリストアップ
-		for (size_t i = 0; i < current_graph->nodes.size(); i++)
+		const GraphNode& node = current_graph->nodes[i]; // ノード情報
+		ImGui::Text("ID：%d[%s]", node.id, node.name.c_str());
+		ImGui::SameLine(ImGui::GetWindowWidth() - 95.0f);
+		std::string button_label = u8"フォーカス##" + std::to_string(node.id); // ボタンラベル
+
+		//ボタンがクリックされたか判定
+		if (ImGui::Button(button_label.c_str()))
 		{
-			const GraphNode& node = current_graph->nodes[i];
-			ImGui::Text("ID：%d[%s]", node.id, node.name.c_str());
-			ImGui::SameLine(ImGui::GetWindowWidth() - 120.0f);
-			std::string button_label = u8"フォーカス##" + std::to_string(node.id);
-
-			//ボタンがクリックされたか判定
-			if (ImGui::Button(button_label.c_str()))
-			{
-				ed::SelectNode(node.id, false);
-				ed::NavigateToSelection(false, 0.5f);
-
-				printf("StateMachineGraphEditor: ノード ID:%d (%s) へカメラを強制ジャンプしました。\n",
-					node.id, node.name.c_str());
-			}
+			// 修正ポイント3：ここでは直接カメラを動かさず、予約だけ行いクラッシュを完全に回避します
+			g_pending_focus_node_id = node.id;
+			printf("StateMachineGraphEditor: ノード ID:%d (%s) へのフォーカスを予約しました。\n",
+				node.id, node.name.c_str());
 		}
-		ImGui::EndChild();
 	}
-	ImGui::End();
+	ImGui::EndChild();
 }
 
 //ノードの削除
 void StateMachineGraphEditor::DeleteNode(GraphData* current_graph)
 {
-	//グラフデータが渡されているか確認
-	ed::NodeId delete_node_id;
-
+	ed::NodeId delete_node_id; // 対象ノードID
 	while (ed::QueryDeletedNode(&delete_node_id))
 	{
 		if (ed::AcceptDeletedItem())
 		{
-			uint32_t target_id = static_cast<uint32_t>(delete_node_id.Get());
+			uint32_t target_id = static_cast<uint32_t>(delete_node_id.Get()); // キャストID
 			data_manager->DeleteNode(current_graph_id, target_id);
 		}
 	}
@@ -468,13 +512,12 @@ void StateMachineGraphEditor::DeleteNode(GraphData* current_graph)
 //接続線の削除
 void StateMachineGraphEditor::DeleteLink(GraphData* current_graph)
 {
-	ed::LinkId delete_link_id;
-
+	ed::LinkId delete_link_id; // 対象リンクID
 	while (ed::QueryDeletedLink(&delete_link_id))
 	{
 		if (ed::AcceptDeletedItem())
 		{
-			uint32_t target_id = static_cast<uint32_t>(delete_link_id.Get());
+			uint32_t target_id = static_cast<uint32_t>(delete_link_id.Get()); // キャストID
 			data_manager->DeleteLink(current_graph_id, target_id);
 		}
 	}
@@ -490,57 +533,72 @@ void StateMachineGraphEditor::DrawPropertyWindow(GraphData* current_graph)
 		return;
 	}
 
-	ImGui::Begin(u8"ステートプロパティ");
+	ImGui::Text(u8"【ステートプロパティ】");
+	ImGui::Spacing();
 
 	const int max_count = 1;	//取得要求の最大ノード数
 	ed::NodeId selected_nodes[max_count];	//ノードのID格納コンテナ
 	int select_count = ed::GetSelectedNodes(selected_nodes, max_count);	//取得数
 
+	ed::LinkId selected_links[max_count];	//選択中のリンクID配列
+	int select_link_count = ed::GetSelectedLinks(selected_links, max_count); // 取得数
+
 	//選択されているノードがあるか確認
-	if (select_count <= 0)
+	if (select_count > 0)
 	{
-		ImGui::Text(u8"ノードを選択すると詳細が表示されます");
-		ImGui::End();
-		return;
+		uint32_t selected_node_id = static_cast<uint32_t>(selected_nodes[0].Get()); // キャストID
+		DrawNodeProperty(current_graph, selected_node_id);
 	}
+	else if (select_link_count > 0)
+	{
+		uint32_t selected_link_id = static_cast<uint32_t>(selected_links[0].Get()); // キャストID
+		DrawLinkProperty(current_graph, selected_link_id);
+	}
+	else
+	{
+		ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), u8"キャンバス上の要素を\n選択すると詳細が表示されます");
+	}
+}
 
-	uint32_t selected_id = static_cast<uint32_t>(selected_nodes[0].Get());	//取得したノードID
-	GraphNode* target_node = nullptr;	//選択されたIDのノードデータコンテナ
+//ノード選択時の詳細プロパティ描画
+void StateMachineGraphEditor::DrawNodeProperty(GraphData* current_graph, uint32_t node_id)
+{
+	GraphNode* target_node = nullptr;	//編集対象ノード
 
-	//現在のグラフ内の全ノードを走査
+	//階層データ内から該当ノードを検索
 	for (size_t i = 0; i < current_graph->nodes.size(); i++)
 	{
-		//ノードIDが選択されたIDを検索
-		if (current_graph->nodes[i].id == selected_id)
+		if (current_graph->nodes[i].id == node_id)
 		{
 			target_node = &current_graph->nodes[i];
 			break;
 		}
 	}
 
-	//一致するノードが見つからなかったか判定
 	if (!target_node)
 	{
-		printf("Warning: 選択されたノードID: %d がデータ内に見つかりません。\n", selected_id);
-		ImGui::End();
+		printf("Warning: 選択されたノードID: %d がデータ内に見つかりません。\n", node_id);
 		return;
 	}
 
+	ImGui::Text(u8"【ステート設定(ID：%d)】", target_node->id);
+	ImGui::Spacing();
+
 	const size_t name_buffer_size = 128;	//バッファサイズ
-	char name_input_buffer[name_buffer_size] = {};	//ノードの名前
+	char name_input_buffer[name_buffer_size] = {};	//入力バッファ
+
 	strcpy_s(name_input_buffer, name_buffer_size, target_node->name.c_str());
 
-	if (ImGui::InputText(u8"ステート名", name_input_buffer, name_buffer_size))
+	ImGui::SetNextItemWidth(-1.0f);
+	if (ImGui::InputText(u8"##StateNameInput", name_input_buffer, name_buffer_size))
 	{
 		target_node->name = name_input_buffer;
 
-		//ノードがサブグラフを持っている場合
+		//サブグラフ名との同期
 		if (target_node->is_sub_graph)
 		{
-			//全ての階層データを走査して、紐づいている階層データを検索
 			for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
 			{
-				//階層IDがノードのサブグラフIDと一致するか確認
 				if (data_manager->GetLayerDatas()[i].id == target_node->sub_graph_id)
 				{
 					data_manager->GetLayerDatas()[i].name = target_node->name;
@@ -549,7 +607,45 @@ void StateMachineGraphEditor::DrawPropertyWindow(GraphData* current_graph)
 			}
 		}
 	}
-	ImGui::End();
+}
+
+//リンク選択時の詳細プロパティ描画
+void StateMachineGraphEditor::DrawLinkProperty(GraphData* current_graph, uint32_t link_id)
+{
+	GraphLink* target_link = nullptr;	//編集対象リンク
+
+	//階層データ内から該当リンクを検索
+	for (size_t i = 0; i < current_graph->links.size(); i++)
+	{
+		if (current_graph->links[i].id == link_id)
+		{
+			target_link = &current_graph->links[i];
+			break;
+		}
+	}
+
+	if (!target_link)
+	{
+		printf("Warning: 選択されたリンクID: %d がデータ内に見つかりません。\n", link_id);
+		return;
+	}
+
+	//遷移条件プロパティのUI描画
+	ImGui::Text(u8"遷移線設定(ID：%d)", target_link->id);
+	ImGui::Spacing();
+
+	if (ImGui::Button(u8"遷移条件を追加"))
+	{
+		printf("StateMachineGraphEditor: リンク ID:%d に条件を追加するトリガーが引かれました。\n", link_id);
+	}
+
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+
+	ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.2f, 1.0f), u8"※ここにブラックボード変数を用いた");
+	ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.2f, 1.0f), u8"  条件式(==, !=, >, <)の設定項目が");
+	ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.2f, 1.0f), u8"  並ぶようになります。");
 }
 
 //接続線の作成を検知してデータに追加
@@ -572,13 +668,12 @@ void StateMachineGraphEditor::CreateNewLink(GraphData* current_graph)
 		uint32_t end_id = static_cast<uint32_t>(end_pin_id.Get());		//接続先のID
 
 		//ルールチェック関数を呼び出し、接続可能か判定
-		if (data_manager->CheckCanConnect(current_graph_id, start_id, end_id)) 
+		if (data_manager->CheckCanConnect(current_graph_id, start_id, end_id))
 		{
-			const ImVec4 success_color = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
-			ed::AcceptNewItem(success_color, 2.0f);
+			const ImVec4 success_color = ImVec4(0.0f, 1.0f, 0.0f, 1.0f); // 成功色 
 
-			//マウスを離して接続を確定したか判定
-			if (ed::AcceptNewItem())
+			// 修正ポイント4：マウスの判定を独自に行わず、ライブラリの公式な完了判定に委ねることでループバグを防ぐ
+			if (ed::AcceptNewItem(success_color, 2.0f))
 			{
 				GraphLink new_link;	//新しい接続情報
 				new_link.id = data_manager->FetchAndIncrementId();
@@ -595,67 +690,10 @@ void StateMachineGraphEditor::CreateNewLink(GraphData* current_graph)
 		}
 		else
 		{
-			ed::RejectNewItem(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), 2.0f);
+			const ImVec4 reject_color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); // 失敗色 
+			ed::RejectNewItem(reject_color, 2.0f);
 		}
 	}
-}
-
-//リンクの接続ルールを判定
-bool StateMachineGraphEditor::CheckCanConnect(GraphData* current_graph, uint32_t start_id, uint32_t end_id)
-{
-	//念のためポインタの安全性を確認
-	if (!current_graph)
-	{
-		return false;
-	}
-
-	const GraphPin* start_pin = nullptr;	//接続元のピン
-	const GraphPin* end_pin = nullptr;		//接続先のピン
-
-	//現在の全ノードを走査して対象のピンデータを検索
-	for (size_t i = 0; i < current_graph->nodes.size(); i++)
-	{
-		const GraphNode& node = current_graph->nodes[i];
-
-		//入力ピンから検索
-		for (size_t p = 0; p < node.inputs.size(); p++)
-		{
-			if (node.inputs[p].id == start_id) start_pin = &node.inputs[p];
-			if (node.inputs[p].id == end_id) end_pin = &node.inputs[p];
-		}
-		
-		//出力ピンから検索
-		for (size_t p = 0; p < node.outputs.size(); p++)
-		{
-			if (node.outputs[p].id == start_id) start_pin = &node.outputs[p];
-			if (node.outputs[p].id == end_id) end_pin = &node.outputs[p];
-		}
-	}
-	//両方のピンがデータ内に存在するか安全性のチェック
-	if (!start_pin || !end_pin)
-	{
-		return false;
-	}
-
-	//同じノード内のピン同士の接続は禁止
-	if (start_pin->node_id == end_pin->node_id)
-	{
-		return false;
-	}
-
-	//同じ種類のピン同士（入力から入力、出力から出力）の接続は禁止
-	if (start_pin->kind == end_pin->kind)
-	{
-		return false;
-	}
-
-	//入力ピンからドラッグして出力ピンへ繋ぐ逆方向の操作を禁止
-	if (start_pin->kind == PinKind::Input && end_pin->kind == PinKind::Output)
-	{
-		return false;
-	}
-
-	return true;
 }
 
 //遷移条件を構築
