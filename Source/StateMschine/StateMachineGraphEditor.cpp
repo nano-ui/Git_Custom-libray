@@ -535,12 +535,13 @@ void StateMachineGraphEditor::DrawHeaderNavigation()
 			}
 
 			std::string display_text = " / " + path_name;	//表示するテキスト名
+			std::string selectable_label = display_text + "##" + std::to_string(path_id);
 			ImVec2 text_size = ImGui::CalcTextSize(display_text.c_str());	//文字の大きさ
 
 			ImGui::SameLine();
 
 			//中間階層の要素をすべて描画してクリック可能にする
-			if (ImGui::Selectable(display_text.c_str(), path_id == current_graph_id, ImGuiSelectableFlags_None, text_size))
+			if (ImGui::Selectable(selectable_label.c_str(), path_id == current_graph_id, ImGuiSelectableFlags_None, text_size))
 			{
 				target_navigate_id = path_id;
 				printf("StateMachineGraphEditor: ナビゲーションパスにより階層ID: %d へ移動しました。\n", target_navigate_id);
@@ -738,6 +739,21 @@ void StateMachineGraphEditor::DrawPropertyWindow(GraphData* current_graph)
 	if (ImGui::InputText(u8"ステート名", name_input_buffer, name_buffer_size))
 	{
 		target_node->name = name_input_buffer;
+
+		//ノードがサブグラフを持っている場合
+		if (target_node->is_sub_graph)
+		{
+			//全ての階層データを走査して、紐づいている階層データを検索
+			for (size_t i = 0; i < layer_datas.size(); i++)
+			{
+				//階層IDがノードのサブグラフIDと一致するか確認
+				if (layer_datas[i].id == target_node->sub_graph_id)
+				{
+					layer_datas[i].name = target_node->name;
+					break;
+				}
+			}
+		}
 	}
 	ImGui::End();
 }
