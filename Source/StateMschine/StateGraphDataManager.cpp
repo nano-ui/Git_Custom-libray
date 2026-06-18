@@ -5,6 +5,7 @@
 //コンストラクタ
 StateGraphDataManager::StateGraphDataManager()
 {
+	next_id = 100;
 	GraphData root_graph;	//ルート階層情報
 	root_graph.id = 0;
 	root_graph.name = u8"ルート";

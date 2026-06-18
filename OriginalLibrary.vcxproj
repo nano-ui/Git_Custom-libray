@@ -293,6 +293,7 @@
     <ClCompile Include="Source\StateMschine\ActionState.cpp" />
     <ClCompile Include="Source\StateMschine\State.cpp" />
     <ClCompile Include="Source\StateMschine\StateBlackboard.cpp" />
+    <ClCompile Include="Source\StateMschine\StateGraphDataManager.cpp" />
     <ClCompile Include="Source\StateMschine\StateMachine.cpp" />
     <ClCompile Include="Source\StateMschine\StateMachineGraphEditor.cpp" />
     <ClCompile Include="Source\StateMschine\StateTransition.cpp" />
@@ -378,6 +379,7 @@
     <ClInclude Include="Source\StateMschine\ActionState.h" />
     <ClInclude Include="Source\StateMschine\State.h" />
     <ClInclude Include="Source\StateMschine\StateBlackboard.h" />
+    <ClInclude Include="Source\StateMschine\StateGraphDataManager.h" />
     <ClInclude Include="Source\StateMschine\StateMachine.h" />
     <ClInclude Include="Source\StateMschine\StateMachineGraphEditor.h" />
     <ClInclude Include="Source\StateMschine\StateTransition.h" />

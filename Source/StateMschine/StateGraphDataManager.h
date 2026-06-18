@@ -63,6 +63,12 @@ public:
 	//ノードの生成
 	void AddNode(GraphData* current_graph, float click_x, float click_y);
 
+	//下位階層データを生成してIDを返す
+	uint32_t CreateNewSubGraph(const std::string& name);
+
+	//サブグラフノードの生成
+	void AddSubGrapNode(GraphData* current_graph, float click_x, float click_y);
+
 	//全ての階層リストを取得
 	std::vector<GraphData>& GetLayerDatas() { return layer_datas; }
 

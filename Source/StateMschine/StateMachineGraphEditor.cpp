@@ -2,6 +2,7 @@
 
 #include "StateMachineGraphEditor.h"
 #include "../StateMschine/StateBlackboard.h"
+#include "../StateMschine/StateGraphDataManager.h"
 
 #include <imgui_node_editor_internal.h>
 #include <cassert>
@@ -20,14 +21,11 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	const uint32_t root_id = 0;
 	current_graph_id = root_id;
 
-	GraphData root_graph;
-	root_graph.id = root_id;
-	root_graph.name = "ルート";
-
-	layer_datas.push_back(root_graph);
-
-	next_id = 100;
+	data_manager = std::make_unique<StateGraphDataManager>();
 }
+
+//デストラクタ
+StateMachineGraphEditor::~StateMachineGraphEditor() = default;
 
 //エディタ描画
 void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
@@ -36,11 +34,11 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	GraphData* current_graph = nullptr;	// 現在の階層情報
 
 	// 全ての階層データから現在のグラフIDに一致するものを探す
-	for (size_t i = 0; i < layer_datas.size(); i++)
+	for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
 	{
-		if (layer_datas[i].id == current_graph_id)
+		if (data_manager->GetLayerDatas()[i].id == current_graph_id)
 		{
-			current_graph = &layer_datas[i];
+			current_graph = &data_manager->GetLayerDatas()[i];
 			break;
 		}
 	}
@@ -71,7 +69,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	if (current_graph_id == 0 && current_graph->nodes.empty())
 	{
 		GraphNode test_node;
-		test_node.id = next_id++;
+		test_node.id = data_manager->FetchAndIncrementId();
 		test_node.name = u8"待機状態";
 		test_node.position_x = 100.0f;
 		test_node.position_y = 100.0f;
@@ -80,7 +78,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 		// 入力ピン設定
 		GraphPin test_input;
-		test_input.id = next_id++;
+		test_input.id = data_manager->FetchAndIncrementId();
 		test_input.name = u8"入力";
 		test_input.kind = PinKind::Input;
 		test_input.node_id = test_node.id;
@@ -88,7 +86,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 		// 出力ピン設定
 		GraphPin test_output;
-		test_output.id = next_id++;
+		test_output.id = data_manager->FetchAndIncrementId();
 		test_output.name = u8"出力";
 		test_output.kind = PinKind::Output;
 		test_output.node_id = test_node.id;
@@ -216,7 +214,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	//安全な区間でのデータ操作実行 --
 	if (trigger_add_node)
 	{
-		AddNode(current_graph, popup_click_pos);
+		data_manager->AddNode(current_graph,popup_click_pos.x,popup_click_pos.y);
 	}
 	if (trigger_add_subgraph)
 	{
@@ -250,48 +248,6 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	ImGui::End();
 }
 
-//ノードの生成
-void StateMachineGraphEditor::AddNode(GraphData* current_graph, const ImVec2& click_pos)
-{
-	//グラフデータが渡されているか確認
-	if (!current_graph)
-	{
-		printf("Error: StateMachineGraphEditor::AddNewNode - current_graph が nullptr です。\n");
-		return;
-	}
-
-	GraphNode new_node;	//新しいノード情報
-
-	//ノードのパラメータ設定
-	new_node.id = next_id++;
-	new_node.name = u8"新規ステート";
-	new_node.position_x = click_pos.x;
-	new_node.position_y = click_pos.y;
-	new_node.is_sub_graph = false;
-	new_node.sub_graph_id = 0;
-	
-	//新しい入力ピンのデータ作成
-	GraphPin new_input;		//新しい入力ピン
-	new_input.id = next_id++;
-	new_input.name = u8"入力";
-	new_input.kind = PinKind::Input;
-	new_input.node_id = new_node.id;
-	new_node.inputs.push_back(new_input);
-
-	//新しい出力ピンのデータ作成
-	GraphPin new_output;	//新しい出力ピン
-	new_output.id = next_id++;
-	new_output.name = u8"出力";
-	new_output.kind = PinKind::Output;
-	new_output.node_id = new_node.id;
-	new_node.outputs.push_back(new_output);
-
-	current_graph->nodes.push_back(new_node);
-	ed::SetNodePosition(new_node.id, click_pos);	//ノードの初期座標を設定
-	printf("StateMachineGraphEditor: ノードを追加しました。ID: %d, 入力ピンID: %d, 出力ピンID: %d\n",
-		new_node.id, new_input.id, new_output.id);
-}
-
 //サブグラフノードの生成
 void StateMachineGraphEditor::AddSubGrapNode(GraphData* current_graph, const ImVec2& click_pos)
 {
@@ -306,11 +262,11 @@ void StateMachineGraphEditor::AddSubGrapNode(GraphData* current_graph, const ImV
 	uint32_t real_sub_graph_id = CreateNewSubGraph(sub_graph_name);
 
 	//layer_datas が引っ越した可能性を考慮し、現在の表示階層ポインタをs再取得
-	for (size_t i = 0; i < layer_datas.size(); i++)
+	for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
 	{
-		if (layer_datas[i].id == current_graph_id)
+		if (data_manager->GetLayerDatas()[i].id == current_graph_id)
 		{
-			current_graph = &layer_datas[i];
+			current_graph = &data_manager->GetLayerDatas()[i];
 			break;
 		}
 	}
@@ -318,7 +274,7 @@ void StateMachineGraphEditor::AddSubGrapNode(GraphData* current_graph, const ImV
 	GraphNode new_node;	//新しいノード情報
 
 	//パラメータ設定
-	new_node.id = next_id++;
+	new_node.id = data_manager->FetchAndIncrementId();
 	new_node.name = sub_graph_name;
 	new_node.position_x = click_pos.x;
 	new_node.position_y = click_pos.y;
@@ -328,7 +284,7 @@ void StateMachineGraphEditor::AddSubGrapNode(GraphData* current_graph, const ImV
 
 	//サブグラフ用の入力ピン
 	GraphPin new_input;	//新しい入力ピン情報
-	new_input.id = next_id++;
+	new_input.id = data_manager->FetchAndIncrementId();
 	new_input.name = u8"入力";
 	new_input.kind = PinKind::Input;
 	new_input.node_id = new_node.id;
@@ -336,7 +292,7 @@ void StateMachineGraphEditor::AddSubGrapNode(GraphData* current_graph, const ImV
 	
 	//サブグラフ用の出力ピン
 	GraphPin new_output;	//新しい出力ピン情報
-	new_output.id = next_id++;
+	new_output.id = data_manager->FetchAndIncrementId();
 	new_output.name = u8"出力";
 	new_output.kind = PinKind::Output;
 	new_output.node_id = new_node.id;
@@ -361,9 +317,9 @@ uint32_t StateMachineGraphEditor::CreateNewSubGraph(const std::string& name)
 	GraphData new_graph;	//新しい階層情報
 
 	//パラメータ設定
-	new_graph.id = next_id++;
+	new_graph.id = data_manager->FetchAndIncrementId();
 	new_graph.name = name;
-	layer_datas.push_back(new_graph);
+	data_manager->GetLayerDatas().push_back(new_graph);
 
 	printf("StateMachineGraphEditor: 新しい階層データを作成しました。階層ID: %d, 名前: %s\n", new_graph.id, name.c_str());
 
@@ -490,14 +446,14 @@ void StateMachineGraphEditor::DrawHeaderNavigation()
 			bool found_parent = false;		//親が見つかったかのフラグ
 
 			//全ての階層データを走査して親を探す
-			for (size_t g = 0; g < layer_datas.size(); g++)
+			for (size_t g = 0; g < data_manager->GetLayerDatas().size(); g++)
 			{
-				for (size_t n = 0; n < layer_datas[g].nodes.size(); n++)
+				for (size_t n = 0; n < data_manager->GetLayerDatas()[g].nodes.size(); n++)
 				{
 					//ノードがサブグラフであり、行き先が探索用のIDを一致するか確認
-					if (layer_datas[g].nodes[n].is_sub_graph && layer_datas[g].nodes[n].sub_graph_id == trace_id)
+					if (data_manager->GetLayerDatas()[g].nodes[n].is_sub_graph && data_manager->GetLayerDatas()[g].nodes[n].sub_graph_id == trace_id)
 					{
-						parent_id = layer_datas[g].id;
+						parent_id = data_manager->GetLayerDatas()[g].id;
 						found_parent = true;
 						break;
 					}
@@ -525,11 +481,11 @@ void StateMachineGraphEditor::DrawHeaderNavigation()
 		{
 			uint32_t path_id = breadcurmbs[i];	//描画する階層ID
 			std::string path_name = "Unknown";	//階層名
-			for (size_t g = 0; g < layer_datas.size(); g++)
+			for (size_t g = 0; g < data_manager->GetLayerDatas().size(); g++)
 			{
-				if (layer_datas[g].id == path_id)
+				if (data_manager->GetLayerDatas()[g].id == path_id)
 				{
-					path_name = layer_datas[g].name;
+					path_name = data_manager->GetLayerDatas()[g].name;
 					break;
 				}
 			}
@@ -744,12 +700,12 @@ void StateMachineGraphEditor::DrawPropertyWindow(GraphData* current_graph)
 		if (target_node->is_sub_graph)
 		{
 			//全ての階層データを走査して、紐づいている階層データを検索
-			for (size_t i = 0; i < layer_datas.size(); i++)
+			for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
 			{
 				//階層IDがノードのサブグラフIDと一致するか確認
-				if (layer_datas[i].id == target_node->sub_graph_id)
+				if (data_manager->GetLayerDatas()[i].id == target_node->sub_graph_id)
 				{
-					layer_datas[i].name = target_node->name;
+					data_manager->GetLayerDatas()[i].name = target_node->name;
 					break;
 				}
 			}
@@ -786,7 +742,7 @@ void StateMachineGraphEditor::CreateNewLink(GraphData* current_graph)
 			if (ed::AcceptNewItem())
 			{
 				GraphLink new_link;	//新しい接続情報
-				new_link.id = next_id++;
+				new_link.id = data_manager->FetchAndIncrementId();
 				new_link.start_pin_id = static_cast<uint32_t>(start_pin_id.Get());
 				new_link.end_pin_id = static_cast<uint32_t>(end_pin_id.Get());
 				current_graph->links.push_back(new_link);

@@ -294,6 +294,9 @@
     <ClCompile Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_node_editor_api.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Source\StateMschine\StateGraphDataManager.cpp">
+      <Filter>Source\StateMachine\StateGraphDataManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Shaders\BlurShader.h">
@@ -544,6 +547,9 @@
     </ClInclude>
     <ClInclude Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_canvas.h">
       <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMschine\StateGraphDataManager.h">
+      <Filter>Source\StateMachine\StateGraphDataManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -846,9 +852,6 @@
     <Filter Include="Source\StateMachine\State">
       <UniqueIdentifier>{ed3e84eb-3ce5-4f86-91e6-a25c86690109}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\StateMachine\LocomotionState">
-      <UniqueIdentifier>{acd8e128-1ea6-4d36-902f-211b383d9148}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\StateMachine\StateTransition">
       <UniqueIdentifier>{d2e6bb6b-1d8e-424c-a783-9f40734a8a3c}</UniqueIdentifier>
     </Filter>
@@ -857,6 +860,9 @@
     </Filter>
     <Filter Include="Source\StateMachine\StateMachineGraphEditor">
       <UniqueIdentifier>{b797cbe2-383c-4e6f-90ad-287b62062743}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\StateMachine\StateGraphDataManager">
+      <UniqueIdentifier>{fce49822-be3b-43de-bb49-69517f5f40d8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
