@@ -72,6 +72,18 @@ public:
 	//下位階層データを生成してIDを返す
 	uint32_t CreateNewSubGraph(const std::string& name);
 
+	//階層が空の場合に初期ノードを構築
+	void CheckAndInitDefaultNode(uint32_t graph_id);
+
+	//ピンIDを受け取り、接続ルールに準拠しているか判定
+	bool CheckCanConnect(uint32_t graph_id, uint32_t start_pin_id, uint32_t end_pin_id);
+
+	//ノード削除
+	void DeleteNode(uint32_t graph_id, uint32_t target_node_id);
+
+	//リンクの削除
+	void DeleteLink(uint32_t graph_id, uint32_t target_link_id);
+
 	//全ての階層リストを取得
 	std::vector<GraphData>& GetLayerDatas() { return layer_datas; }
 

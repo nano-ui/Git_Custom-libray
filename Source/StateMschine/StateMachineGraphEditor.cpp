@@ -453,86 +453,29 @@ void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 void StateMachineGraphEditor::DeleteNode(GraphData* current_graph)
 {
 	//グラフデータが渡されているか確認
-	if (!current_graph)
-	{
-		printf("Error: StateMachineGraphEditor::DeleteSelectedObjects - current_graph が nullptr です。\n");
-		return;
-	}
+	ed::NodeId delete_node_id;
 
-	ed::NodeId delete_node_id;	//削除対象のID格納先
-
-	//削除要求されているノードをループで取得
 	while (ed::QueryDeletedNode(&delete_node_id))
 	{
-		//削除してよいかの最終確認済みか判定
 		if (ed::AcceptDeletedItem())
 		{
-			uint32_t target_id = static_cast<uint32_t>(delete_node_id.Get());	//削除対象のID
-			bool is_removed = false;	//一致するノードを階層データから検索して削除するフラグ
-
-			//現在のグラフ内の全ノードを走査
-			for (auto it = current_graph->nodes.begin(); it != current_graph->nodes.end();)
-			{
-				//削除対象のIDと一致するか確認
-				if (it->id == target_id)
-				{
-					std::string debug_name = it->name;	//デバッグ出力用の名前
-					it = current_graph->nodes.erase(it);
-					printf("StateMachineGraphEditor: ノードを削除しました。ID: %d, 名前: %s\n", target_id, debug_name.c_str());
-					is_removed = true;
-					break;
-				}
-				else
-				{
-					it++;
-				}
-			}
-
-			//エディタ側で消したのにデータリストに見つからなかった場合
-			if (!is_removed)
-			{
-				printf("Warning: 削除要求されたノードID: %d が layer_datas 内に見つかりませんでした。\n", target_id);
-			}
+			uint32_t target_id = static_cast<uint32_t>(delete_node_id.Get());
+			data_manager->DeleteNode(current_graph_id, target_id);
 		}
 	}
-
 }
 
 //接続線の削除
 void StateMachineGraphEditor::DeleteLink(GraphData* current_graph)
 {
-	//グラフデータが渡されているか確認
-	if (!current_graph)
-	{
-		printf("Error: StateMachineGraphEditor::DeleteLink - current_graph が nullptr です。\n");
-		return;
-	}
+	ed::LinkId delete_link_id;
 
-	ed::LinkId delete_link_id;	//削除対象のリンクID
-
-	//削除対象として要求されているリンクをループで取得
 	while (ed::QueryDeletedLink(&delete_link_id))
 	{
-		//削除承認が出たか判定
 		if (ed::AcceptDeletedItem())
 		{
-			uint32_t target_id = static_cast<uint32_t>(delete_link_id.Get());	//取得したID
-
-			//一致するリンクを検索して走査
-			for (auto it = current_graph->links.begin(); it != current_graph->links.end(); ) 
-			{
-				//削除対象のIDと一致するか確認
-				if (it->id == target_id)
-				{
-					it = current_graph->links.erase(it);
-					printf("StateMachineGraphEditor: リンクを削除しました。ID: %d\n", target_id);
-					break;
-				}
-				else
-				{
-					it++;
-				}
-			}
+			uint32_t target_id = static_cast<uint32_t>(delete_link_id.Get());
+			data_manager->DeleteLink(current_graph_id, target_id);
 		}
 	}
 }
@@ -629,9 +572,10 @@ void StateMachineGraphEditor::CreateNewLink(GraphData* current_graph)
 		uint32_t end_id = static_cast<uint32_t>(end_pin_id.Get());		//接続先のID
 
 		//ルールチェック関数を呼び出し、接続可能か判定
-		if (CheckCanConnect(current_graph, start_id, end_id))
+		if (data_manager->CheckCanConnect(current_graph_id, start_id, end_id)) 
 		{
-			ed::RejectNewItem(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), 2.0f);
+			const ImVec4 success_color = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
+			ed::AcceptNewItem(success_color, 2.0f);
 
 			//マウスを離して接続を確定したか判定
 			if (ed::AcceptNewItem())
