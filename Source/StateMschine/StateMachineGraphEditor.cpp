@@ -241,6 +241,8 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 	ed::End(); // キャンバス描画終了
 
+	DrawStateListWindow(current_graph);
+
 	// プロパティウィンドウ描画
 	DrawPropertyWindow(current_graph);
 
@@ -487,6 +489,48 @@ void StateMachineGraphEditor::DrawHeaderNavigation()
 		}
 	}
 	ImGui::SetCursorPos(ImVec2(0.0f, title_bar_height + bar_size.y + 5.0f));
+}
+
+//ステート一覧リストを描画して、その位置に移動
+void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
+{
+	//グラフデータが渡されているか確認
+	if (!current_graph)
+	{
+		printf("Error: StateMachineGraphEditor::DrawStateListInProperty - current_graph が nullptr です。\n");
+		return;
+	}
+
+	ImGui::Begin(u8"【ステート一覧】");
+
+	ImGui::Spacing();
+	ImGui::Text(u8"【現在の階層のステート一覧】");
+	ImGui::Spacing();
+
+	//レイアウト用の小窓を作成してステートをリストに描画
+	if (ImGui::BeginChild("LeftStateListChild"), ImVec2(0.0f, 200.0f), true)
+	{
+		//現在の階層内の全ノードを走査してリストアップ
+		for (size_t i = 0; i < current_graph->nodes.size(); i++)
+		{
+			const GraphNode& node = current_graph->nodes[i];
+			ImGui::Text("ID：%d[%s]", node.id, node.name.c_str());
+			ImGui::SameLine(ImGui::GetWindowWidth() - 120.0f);
+			std::string button_label = u8"フォーカス##" + std::to_string(node.id);
+
+			//ボタンがクリックされたか判定
+			if (ImGui::Button(button_label.c_str()))
+			{
+				ed::SelectNode(node.id, false);
+				ed::NavigateToSelection(false, 0.5f);
+
+				printf("StateMachineGraphEditor: ノード ID:%d (%s) へカメラを強制ジャンプしました。\n",
+					node.id, node.name.c_str());
+			}
+		}
+		ImGui::EndChild();
+	}
+	ImGui::End();
 }
 
 //ノードの削除

@@ -85,6 +85,9 @@ private:
 	//階層ナビゲーションを描画
 	void DrawHeaderNavigation();
 
+	//ステート一覧リストを描画して、その位置に移動
+	void DrawStateListWindow(GraphData* current_graph);
+
 	//ノードの削除
 	void DeleteNode(GraphData* current_graph);
 
