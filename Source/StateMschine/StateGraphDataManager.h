@@ -34,12 +34,21 @@ struct GraphNode
 	uint32_t sub_graph_id;			//下位階層のグラフID
 };
 
+//遷移条件の編集・保持
+struct GraphTransitionCondition
+{
+	uint32_t hash_key = 0;			//対象のキー
+	float reference_value = 0.0f;	//基準値
+	int compare_operator = 0;		//比較演算子識別番号
+};
+
 //ノードを繋ぐ線の情報
 struct GraphLink
 {
 	uint32_t id;			//線の固有ID
 	uint32_t start_pin_id;	//接続元の出力ピンID
 	uint32_t end_pin_id;	//接続先の入力ピンID
+	std::vector<GraphTransitionCondition> conditions;	//遷移条件リスト
 };
 
 //階層の情報
@@ -84,6 +93,12 @@ public:
 
 	//リンクの削除
 	void DeleteLink(uint32_t graph_id, uint32_t target_link_id);
+
+	//遷移条件を追加
+	void AddConditionToLink(uint32_t graph_id, uint32_t link_id);
+
+	//遷移条件を削除
+	void DeleteConditionFromLink(uint32_t graph_id, uint32_t link_id, size_t condition_index);
 
 	//全ての階層リストを取得
 	std::vector<GraphData>& GetLayerDatas() { return layer_datas; }

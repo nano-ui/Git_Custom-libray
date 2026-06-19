@@ -230,6 +230,68 @@ void StateGraphDataManager::DeleteLink(uint32_t graph_id, uint32_t target_link_i
 	}
 }
 
+//遷移条件を追加
+void StateGraphDataManager::AddConditionToLink(uint32_t graph_id, uint32_t link_id)
+{
+	//全ての階層情報を巡回して指定の階層を特定
+	for (size_t g = 0; g < layer_datas.size(); g++)
+	{
+		//階層IDが一致しているか確認
+		if (layer_datas[g].id == graph_id)
+		{
+			//階層内の全ての接続線を走査
+			for (size_t l = 0; l < layer_datas[g].links.size(); l++)
+			{
+				//リンクIDが対象と一致したか判定
+				if (layer_datas[g].links[l].id == link_id)
+				{
+					GraphTransitionCondition new_condition;	//新しい条件情報
+					new_condition.hash_key = 0;
+					new_condition.reference_value = 0.0f;
+					new_condition.compare_operator = 0;
+
+					layer_datas[g].links[l].conditions.push_back(new_condition);
+					printf("StateGraphDataManager: 階層ID %d のリンクID %d に新しい遷移条件を追加しました。\n", graph_id, link_id);
+					return;
+				}
+			}
+		}
+	}
+	printf("Error: AddConditionToLink - 指定された階層ID %d またはリンクID %d が見つかりませんでした。\n", graph_id, link_id);
+}
+
+//遷移条件を削除
+void StateGraphDataManager::DeleteConditionFromLink(uint32_t graph_id, uint32_t link_id, size_t condition_index)
+{
+	//全ての階層情報を巡回して指定の階層を特定
+	for (size_t g = 0; g < layer_datas.size(); g++)
+	{
+		//階層IDが一致しているか確認
+		if (layer_datas[g].id == graph_id)
+		{
+			//階層内の全ての接続線を走査
+			for (size_t l = 0; l < layer_datas[g].links.size(); l++)
+			{
+				//リンクIDが対象と一致したか判定
+				if (layer_datas[g].links[l].id == link_id)
+				{
+					//配列の範囲外か判定
+					if (condition_index >= layer_datas[g].links[l].conditions.size())
+					{
+						printf("Error: DeleteConditionFromLink - インデックス %zu が範囲外です。\n", condition_index); // デバッグ出力 [cite: 2026-01-11]
+						return;
+					}
+					auto target_iterator = layer_datas[g].links[l].conditions.begin() + condition_index;	//削除対象のイテレーター
+					layer_datas[g].links[l].conditions.erase(target_iterator);
+					printf("StateGraphDataManager: 階層ID %d のリンクID %d から条件インデックス %zu を削除しました。\n", graph_id, link_id, condition_index);
+					return;
+				}
+			}
+		}
+	}
+	printf("Error: DeleteConditionFromLink - 指定された階層ID %d またはリンクID %d が見つかりませんでした。\n", graph_id, link_id);
+}
+
 //サブグラフノードの生成
 void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, float click_y, const std::string& name)
 {
