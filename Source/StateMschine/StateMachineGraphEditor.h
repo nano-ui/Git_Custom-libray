@@ -59,8 +59,14 @@ private:
 	//遷移条件を構築
 	void OnLinkCreated(GraphData* current_graph, const GraphLink& new_link);
 
-	//実在するノード名の一覧を全データから動的に集計して取得
+	//ノード名の一覧を全データから取得
 	std::vector<std::string> GetExistingStateNames();
+
+	//通常ノード名を全データから取得
+	std::vector<std::string> GetExistingNormalStateNames();
+
+	//サブグラフ名を全データから取得
+	std::vector<std::string> GetExistingSubGraphNames();
 
 private:
 	//カスタムデリータ
@@ -70,11 +76,21 @@ private:
 	};
 
 private:
+	//パレットの表示切り替え状態
+	enum class PaletteFilter
+	{
+		ALL,		//すべて描画
+		SubGraph,	//サブグラフのみ描画
+		Normal		//通常ステートのみ描画
+	};
+
+private:
 	std::unique_ptr<StateGraphDataManager> data_manager;		//データを専門的に扱うマネージャー
 	uint32_t current_graph_id;									//現在の階層のグラフID
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::vector<std::string> available_state_palette;	//追加可能な全てのステートリスト
 	std::string pending_add_palette_node_name;			//パレットから追加予約されたステート名
 	bool pending_add_is_sub_graph;						//サブグラフかのフラグ
+	PaletteFilter current_filter = PaletteFilter::ALL;	//現在のパレットフィルター
 };
 

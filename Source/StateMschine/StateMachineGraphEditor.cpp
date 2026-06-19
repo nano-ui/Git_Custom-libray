@@ -494,39 +494,38 @@ bool StateMachineGraphEditor::DrawHeaderNavigation()
 //ステート一覧リストを描画して、その位置に移動
 void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 {
-	//グラフデータが渡されているか確認
+	// グラフデータが渡されているか確認
 	if (!current_graph)
 	{
-		printf("Error: StateMachineGraphEditor::DrawStateListInProperty - current_graph が nullptr です。\n");
+		printf("Error: StateMachineGraphEditor::DrawStateListWindow - current_graph が nullptr です。\n"); // エラーデバッグ出力 [cite: 2026-06-11]
 		return;
 	}
 
 	ImGui::Spacing();
 
-	//左ペインをタブで分割し、機能を行き来できるようにする
+	// 左ペインをタブで分割し、機能を行き来できるようにする
 	if (ImGui::BeginTabBar("LeftSidebarTabBar"))
 	{
-		//現在の階層ステート一覧
+		// 現在の階層ステート一覧
 		if (ImGui::BeginTabItem(u8"階層ノード"))
 		{
 			ImGui::Spacing();
-			const float list_box_height = ImGui::GetContentRegionAvail().y;	//残りの縦幅全てを使う
+			const float list_box_height = ImGui::GetContentRegionAvail().y;	// 残りの縦幅全てを使う 
 
 			ImGui::BeginChild("LeftStateListChild", ImVec2(0.0f, list_box_height), true);
 
-			//現在の階層内の全ノードを走査してリストアップ
+			// 現在の階層内の全ノードを走査してリストアップ
 			for (size_t i = 0; i < current_graph->nodes.size(); i++)
 			{
-				const GraphNode& node = current_graph->nodes[i]; // ノード情報
+				const GraphNode& node = current_graph->nodes[i]; // ノード情報 
 				ImGui::Text("ID：%d[%s]", node.id, node.name.c_str());
 				ImGui::SameLine(ImGui::GetWindowWidth() - 115.0f);
-				std::string button_label = u8"フォーカス##" + std::to_string(node.id); // ボタンラベル
+				std::string button_label = u8"フォーカス##" + std::to_string(node.id); // ボタンラベル 
 
-				//ボタンがクリックされたか判定
+				// ボタンがクリックされたか判定
 				if (ImGui::Button(button_label.c_str()))
 				{
-					//ここでは直接カメラを動かさず、予約だけ行いクラッシュを完全に回避します
-					g_pending_focus_node_id = node.id;
+					g_pending_focus_node_id = node.id; // フォーカス要求を安全に予約
 					printf("StateMachineGraphEditor: ノード ID:%d (%s) へのフォーカスを予約しました。\n",
 						node.id, node.name.c_str());
 				}
@@ -535,51 +534,129 @@ void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 			ImGui::EndTabItem();
 		}
 
-		//全てのステートからのポップ追加
+		// 全てのステートからのポップ追加
 		if (ImGui::BeginTabItem(u8"ステート追加"))
 		{
 			ImGui::Spacing();
-			ImGui::TextColored(ImVec4(0.6f, 0.8f, 0.6f, 1.0f), u8"追加したいステートを選択");
+
+			// ボタン判定が終わるまで次の状態を一時保存しておく変数を定義 
+			PaletteFilter next_filter = current_filter; // 次フレームから適用するフィルター状態 
+
+			const ImVec4 active_color = ImVec4(0.2f, 0.6f, 0.4f, 1.0f); // 選択中のハイライト緑色（マジックナンバー回避） [cite: 2026-05-11, 2026-06-12]
+
+
+			// -- 手順の始まり：安全な色スタック維持を施したフィルターボタンの描画 --
+
+			// 「すべて表示」ボタンの処理
+			if (current_filter == PaletteFilter::ALL)
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, active_color); // 選択中は緑色にハイライト
+			}
+			if (ImGui::Button(u8"全て適用"))
+			{
+				next_filter = PaletteFilter::ALL; // その場では変えず、予約のみ
+			}
+			if (current_filter == PaletteFilter::ALL)
+			{
+				ImGui::PopStyleColor(); // 最初の状態に基づいて100%安全にPop
+			}
+
+			ImGui::SameLine();
+
+			// 「サブグラフのみ」ボタンの処理
+			if (current_filter == PaletteFilter::SubGraph)
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, active_color); // 選択中は緑色にハイライト
+			}
+			if (ImGui::Button(u8"サブグラフのみ適用"))
+			{
+				next_filter = PaletteFilter::SubGraph; //  その場では変えず、予約のみ
+			}
+			if (current_filter == PaletteFilter::SubGraph)
+			{
+				ImGui::PopStyleColor(); // 最初の状態に基づいて100%安全にPop
+			}
+
+			ImGui::SameLine();
+
+			// 「サブグラフ以外（通常）」ボタンの処理
+			if (current_filter == PaletteFilter::Normal)
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, active_color); // 選択中は緑色にハイライト
+			}
+			if (ImGui::Button(u8"サブグラフ以外適用"))
+			{
+				next_filter = PaletteFilter::Normal; //  その場では変えず、予約のみ
+			}
+			if (current_filter == PaletteFilter::Normal)
+			{
+				ImGui::PopStyleColor(); // 最初の状態に基づいて100%安全にPop
+			}
+
+			//  すべてのボタンのPush/Popが安全に終了した「ここ」で、初めて状態を確定反映します！
+			current_filter = next_filter;
+
+			ImGui::Spacing();
+			ImGui::Separator();
 			ImGui::Spacing();
 
-			const float list_box_height = ImGui::GetContentRegionAvail().y;	//残りの縦幅全てを使う
+
+			const float list_box_height = ImGui::GetContentRegionAvail().y;	// 残りの縦幅全てを使う 
 			ImGui::BeginChild("PeletteListChild", ImVec2(0.0f, list_box_height), true);
 
-			std::vector<std::string> existing_name = GetExistingStateNames();	//エディタ内の全ステートリスト
+			const float button_offset_x = 65.0f;	// 右端からボタンを引き算するオフセット幅 
 
-			for (size_t i = 0; i < existing_name.size(); i++)
+			// 通常ステートの描画判定
+			if (current_filter == PaletteFilter::ALL || current_filter == PaletteFilter::Normal)
 			{
-				ImGui::Text(existing_name[i].c_str());
-
-				ImGui::SameLine(ImGui::GetWindowWidth() - 65.0f);
-				std::string add_btn_label = u8"追加##Pal" + std::to_string(i);
-
-				//追加ボタンが押されたら
-				if (ImGui::Button(add_btn_label.c_str()))
-				{
-					pending_add_palette_node_name = existing_name[i];
-
-					//コピー元ノードの性質の動的判定
-					pending_add_is_sub_graph = false;
-
-					//全階層情報の全ノードから、対象の名前を持つノードの性質を検索
-					for (size_t g = 0; g < data_manager->GetLayerDatas().size(); g++)
-					{
-						for (size_t n = 0; n < data_manager->GetLayerDatas()[g].nodes.size(); n++)
-						{
-							if (data_manager->GetLayerDatas()[g].nodes[n].name == existing_name[i])
-							{
-								if (data_manager->GetLayerDatas()[g].nodes[n].is_sub_graph)
-								{
-									pending_add_is_sub_graph = true;
-								}
-								break;
-							}
-						}
-					}
-					printf("StateMachineGraphEditor: パレットから「%s」の追加を予約しました。\n", pending_add_palette_node_name.c_str());
-				}
+				ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), u8"▼ 通常ステート");
 				ImGui::Separator();
+
+				std::vector<std::string> normal_names = GetExistingNormalStateNames(); // 通常ステートリスト 
+
+				for (size_t i = 0; i < normal_names.size(); i++)
+				{
+					ImGui::Text("・%s", normal_names[i].c_str());
+
+					ImGui::SameLine(ImGui::GetWindowWidth() - button_offset_x);
+					std::string add_btn_label = u8"追加##Normal" + std::to_string(i); // 通常用固有IDラベル 
+
+					if (ImGui::Button(add_btn_label.c_str()))
+					{
+						pending_add_palette_node_name = normal_names[i];
+						pending_add_is_sub_graph = false; // 通常ステート属性として予約
+						printf("StateMachineGraphEditor: パレットから通常「%s」の追加を予約しました。\n", pending_add_palette_node_name.c_str());
+					}
+					ImGui::Separator();
+				}
+				ImGui::Spacing();
+			}
+
+			// サブグラフの描画判定
+			if (current_filter == PaletteFilter::ALL || current_filter == PaletteFilter::SubGraph)
+			{
+				ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.3f, 1.0f), u8"▼ サブステート"); // 色とテキストを見やすく変更
+				ImGui::Separator();
+
+				std::vector<std::string> sub_graph_names = GetExistingSubGraphNames(); // サブステートリスト 
+
+				for (size_t i = 0; i < sub_graph_names.size(); i++)
+				{
+					ImGui::Text("・%s", sub_graph_names[i].c_str());
+
+					ImGui::SameLine(ImGui::GetWindowWidth() - button_offset_x);
+
+					std::string add_btn_label = u8"追加##Sub" + std::to_string(i); // サブステート用固有IDラベル 
+
+					if (ImGui::Button(add_btn_label.c_str()))
+					{
+						pending_add_palette_node_name = sub_graph_names[i];
+						pending_add_is_sub_graph = true;
+						printf("StateMachineGraphEditor: パレットから「%s」サブグラフの追加を予約しました。\n", pending_add_palette_node_name.c_str());
+					}
+					ImGui::Separator();
+				}
+				ImGui::Spacing();
 			}
 			ImGui::EndChild();
 			ImGui::EndTabItem();
@@ -870,6 +947,88 @@ std::vector<std::string> StateMachineGraphEditor::GetExistingStateNames()
 			if (!is_duplicate)
 			{
 				unique_names.push_back(node_name);
+			}
+		}
+	}
+	return unique_names;
+}
+
+//通常ノード名を全データから取得
+std::vector<std::string> StateMachineGraphEditor::GetExistingNormalStateNames()
+{
+	std::vector<std::string> unique_names;	//通常ステート用コンテナ
+
+	//全ての階層情報を巡回して通常ノード名を収集
+	for (size_t g = 0; g < data_manager->GetLayerDatas().size(); g++)
+	{
+		const GraphData& graph = data_manager->GetLayerDatas()[g];	//対象の階層
+
+		//階層内のすべてのノードを巡回
+		for (size_t n = 0; n < graph.nodes.size(); n++)
+		{
+			//通常ステートのみを抽出
+			if (!graph.nodes[n].is_sub_graph)
+			{
+				const std::string& node_name = graph.nodes[n].name;	//ノード名
+				bool is_duplicate = false;	//重複管理グラフ
+
+				//コンテナを巡回
+				for (size_t i = 0; i < unique_names.size(); i++)
+				{
+					//名前が一致しているか確認
+					if (unique_names[i] == node_name)
+					{
+						is_duplicate = true;
+						break;
+					}
+				}
+
+				//重複していないか確認
+				if (!is_duplicate)
+				{
+					unique_names.push_back(node_name);
+				}
+			}
+		}
+	}
+	return unique_names;
+}
+
+//サブグラフ名を全データから取得
+std::vector<std::string> StateMachineGraphEditor::GetExistingSubGraphNames()
+{
+	std::vector<std::string> unique_names;	//サブグラフ用コンテナ
+
+	//全ての階層情報を巡回してサブグラフノード名を収集
+	for (size_t g = 0; g < data_manager->GetLayerDatas().size(); g++)
+	{
+		const GraphData& graph = data_manager->GetLayerDatas()[g];	//対象の階層
+
+		//階層内のすべてのノードを巡回
+		for (size_t n = 0; n < graph.nodes.size(); n++)
+		{
+			//サブグラフステートのみを抽出
+			if (graph.nodes[n].is_sub_graph)
+			{
+				const std::string& node_name = graph.nodes[n].name;	//ノード名
+				bool is_duplicate = false;	//重複管理グラフ
+
+				//コンテナを巡回
+				for (size_t i = 0; i < unique_names.size(); i++)
+				{
+					//名前が一致しているか確認
+					if (unique_names[i] == node_name)
+					{
+						is_duplicate = true;
+						break;
+					}
+				}
+
+				//重複していないか確認
+				if (!is_duplicate)
+				{
+					unique_names.push_back(node_name);
+				}
 			}
 		}
 	}
