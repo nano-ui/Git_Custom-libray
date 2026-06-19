@@ -860,6 +860,25 @@ void StateMachineGraphEditor::DrawNodeProperty(GraphData* current_graph, uint32_
 			}
 		}
 	}
+
+	//削除ボタン
+	ImGui::Spacing();
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+
+	const ImVec4 red_button_color = ImVec4(0.6f, 0.2f, 0.2f, 1.0f); // 削除ボタン用の赤色
+	ImGui::PushStyleColor(ImGuiCol_Button, red_button_color);
+
+	//プロパティウィンドウ内に配置する削除実行ボタン
+	if (ImGui::Button(u8"ステートを削除する", ImVec2(-1.0f, 30.0f)))
+	{
+		uint32_t remove_node_id = target_node->id;	//削除対象の確定ID
+		ed::DeleteNode(remove_node_id);
+		printf("StateMachineGraphEditor: プロパティ画面からノード ID:%d (%s) の削除要求を発行しました。\n",
+			remove_node_id, target_node->name.c_str());
+	}
+	ImGui::PopStyleColor();
 }
 
 //リンク選択時の詳細プロパティ描画
@@ -899,6 +918,23 @@ void StateMachineGraphEditor::DrawLinkProperty(GraphData* current_graph, uint32_
 	ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.2f, 1.0f), u8"※ここにブラックボード変数を用いた");
 	ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.2f, 1.0f), u8"  条件式(==, !=, >, <)の設定項目が");
 	ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.2f, 1.0f), u8"  並ぶようになります。");
+
+	ImGui::Spacing();
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+
+	const ImVec4 red_button_color = ImVec4(0.6f, 0.2f, 0.2f, 1.0f); // 削除ボタン用の赤色
+	ImGui::PushStyleColor(ImGuiCol_Button, red_button_color);
+
+	//プロパティウィンドウ内に配置するリンクの削除実行ボタン
+	if (ImGui::Button(u8"遷移線を削除する", ImVec2(-1.0f, 30.0f)))
+	{
+		uint32_t remove_link_id = target_link->id; // 削除対象となる確定リンクID
+		ed::DeleteLink(remove_link_id);
+		printf("StateMachineGraphEditor: プロパティ画面からリンク ID:%d の削除要求を発行しました。\n", remove_link_id);
+	}
+	ImGui::PopStyleColor();
 }
 
 //接続線の作成を検知してデータに追加
