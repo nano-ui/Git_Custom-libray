@@ -10,6 +10,7 @@
 #include "../Collision/CollisionExperiment.h"
 #include "../Editor/ObjectEditor.h"
 #include "../StateMschine/StateMachineGraphEditor.h"
+#include "../GameObjects/Characters/Character.h"
 #include "../Shaders/SkyBox.h"
 #include "SceneManager.h"
 
@@ -395,7 +396,26 @@ void SceneGame::RenderGui()
 
 	if (graph_editor)
 	{
-		graph_editor->DrawEditor(nullptr);
+		StateBlackboard* target_blackboard = nullptr;
+		const std::vector<std::unique_ptr<GameObject>>& objects = object_manager->GetGameObjects();
+
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			Character* check_character = dynamic_cast<Character*>(objects[i].get());
+
+			if (check_character)
+			{
+				target_blackboard = check_character->GetBlackboard();
+				break;
+			}
+		}
+
+		if (!target_blackboard)
+		{
+			printf("Warning: SceneGame::RenderGui - シーン内から有効な Character のブラックボードを発見できませんでした。\n");
+		}
+
+		graph_editor->DrawEditor(target_blackboard);
 	}
 #endif // USE_IMGUI
 }

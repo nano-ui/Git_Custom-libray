@@ -1,4 +1,5 @@
 #include "Character.h"
+#include "../StateMschine/StateBlackboard.h"
 
 #include <imgui.h>
 #include <cmath>
@@ -24,6 +25,8 @@ Character::Character()
 	weight = 10.0f;
 	health = 100.0f;
 	move_speed = 0.0f;
+
+	blackboard = std::make_unique<StateBlackboard>();
 }
 
 //デストラクタ
@@ -36,6 +39,7 @@ void Character::Initialize()
 {
 	is_active = true;
 	SetupSerialization();
+	SetupBlackboard();
 }
 
 //更新処理
@@ -46,6 +50,11 @@ void Character::Update(float elapsed_time)
 
 	DirectX::XMVECTOR q = DirectX::XMQuaternionRotationRollPitchYaw(angle.x, angle.y, angle.z);
 	DirectX::XMStoreFloat4(&rotation, q);
+
+		blackboard->SetValue(u8"体力", health);
+	blackboard->SetValue(u8"速度", max_speed);
+	blackboard->SetValue(u8"接地フラグ", is_ground);
+
 }
 
 //描画処理
@@ -101,6 +110,20 @@ bool Character::ApplyDamage(float damage, float invincible_time)
 	}
 
 	return true;
+}
+
+//ブラックボードに登録・初期化
+void Character::SetupBlackboard()
+{
+	blackboard->RegisterVariable(u8"体力");
+	blackboard->RegisterVariable(u8"速度");
+	blackboard->RegisterVariable(u8"接地フラグ");
+
+	blackboard->SetValue(u8"体力", health);
+	blackboard->SetValue(u8"速度", max_speed);
+	blackboard->SetValue(u8"接地フラグ", is_ground);
+
+	printf("Character: 共有ブラックボードに変数を登録しました。\n");
 }
 
 //移動方向の設定

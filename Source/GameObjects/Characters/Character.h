@@ -3,6 +3,10 @@
 #include "../GameObjects/GameObject.h"
 #include "../Collision/Collider.h"
 
+#include <memory>
+
+class StateBlackboard;
+
 class Character : public GameObject
 {
 public:
@@ -29,6 +33,12 @@ public:
 
 	//ダメージ処理
 	bool ApplyDamage(float damage, float invincible_time);
+
+	//ブラックボードを取得
+	StateBlackboard* GetBlackboard()const { return blackboard.get(); }
+
+	//ブラックボードに登録・初期化
+	virtual void SetupBlackboard();
 
 protected:
 	//移動方向の設定
@@ -76,6 +86,7 @@ private:
 
 protected:
 	std::unique_ptr<Model> character;	//キャラクターモデル
+	std::unique_ptr<StateBlackboard> blackboard;
 
 	DirectX::XMFLOAT3 angle;	//角度
 	float radius;				//半径
