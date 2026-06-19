@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <cstdint>
+#include <unordered_map>
 
 //ピンの種類
 enum class PinKind
@@ -64,7 +65,7 @@ public:
 	void AddNode(GraphData* current_graph, float click_x, float click_y, const std::string& node_name = u8"新規ステート");
 
 	//サブグラフノードの生成
-	void AddSubGrapNode(uint32_t graph_id, float click_x, float click_y);
+	void AddSubGrapNode(uint32_t graph_id, float click_x, float click_y, const std::string& name = u8"新規サブグラフ");
 
 	//既存のノードをサブグラフに変換
 	void ConvertToSubGraph(uint32_t graph_id, uint32_t node_id);

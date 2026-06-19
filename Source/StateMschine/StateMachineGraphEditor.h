@@ -75,5 +75,6 @@ private:
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::vector<std::string> available_state_palette;	//追加可能な全てのステートリスト
 	std::string pending_add_palette_node_name;			//パレットから追加予約されたステート名
+	bool pending_add_is_sub_graph;						//サブグラフかのフラグ
 };
 

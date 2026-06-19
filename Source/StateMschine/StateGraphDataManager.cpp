@@ -231,46 +231,149 @@ void StateGraphDataManager::DeleteLink(uint32_t graph_id, uint32_t target_link_i
 }
 
 //サブグラフノードの生成
-void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, float click_y)
+void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, float click_y, const std::string& name)
 {
-	std::string sub_graph_name = u8"新規サブグラフ";	//サブグラフの名前
-	uint32_t real_sub_graph_id = CreateNewSubGraph(sub_graph_name);
+	std::string sub_graph_name = name;	//サブグラフの名前
+	uint32_t real_sub_graph_id = CreateNewSubGraph(sub_graph_name);	//新しい下位階層グラフ
 
-	GraphNode new_node;	//新しいノード情報
+	const GraphData* src_graph = nullptr;	//コピー元の階層ポインタ
 
-	//パラメータ設定
-	new_node.id = FetchAndIncrementId();
-	new_node.name = sub_graph_name;
-	new_node.position_x = click_x;
-	new_node.position_y = click_y;
-	new_node.is_sub_graph = true;
-	uint32_t assigned_sub_graph_id = real_sub_graph_id;
-	new_node.sub_graph_id = assigned_sub_graph_id;
+	//全階層情報を走査して、名前が一致する既存のコピー元階層を検索
+	for (size_t g = 0; g < layer_datas.size(); g++)
+	{
+		if (layer_datas[g].id != real_sub_graph_id && layer_datas[g].name == sub_graph_name)
+		{
+			src_graph = &layer_datas[g];
+			break;
+		}
+	}
 
-	//サブグラフ用の入力ピン
-	GraphPin new_input;	//新しい入力ピン情報
+	//コピー元階層が見つかったか判定
+	if (src_graph)
+	{
+		GraphData* dst_graph = &layer_datas.back();	//コピー先となる階層ポインタ
+		std::unordered_map<uint32_t, uint32_t> pin_id_map;	//古いピンIDと新しいピンIDのハッシュマップ
+
+		// コピー元のすべてのノードをループして複製
+		for (size_t n = 0; n < src_graph->nodes.size(); n++)
+		{
+			const GraphNode& src_node = src_graph->nodes[n]; // コピー元のノード
+			GraphNode copied_node;	// 複製先の新しいノード 
+
+			// 基本情報のコピーとIDの割り当て
+			copied_node.id = FetchAndIncrementId(); // 新しいノードIDを一意に発行
+			copied_node.name = src_node.name;
+			copied_node.position_x = src_node.position_x;
+			copied_node.position_y = src_node.position_y;
+			copied_node.is_sub_graph = src_node.is_sub_graph;
+
+			// 内部ノードがさらにサブグラフを持っているか判定
+			if (src_node.is_sub_graph)
+			{
+				copied_node.sub_graph_id = CreateNewSubGraph(src_node.name); // ネスト階層の新設
+			}
+			else
+			{
+				const uint32_t default_sub_id = 0; // 下位階層なし時の判定値 
+				copied_node.sub_graph_id = default_sub_id;
+			}
+
+			// 入力ピンの複製とID登録
+			for (size_t pin_idx = 0; pin_idx < src_node.inputs.size(); pin_idx++)
+			{
+				const GraphPin& src_pin = src_node.inputs[pin_idx];	// コピー元のピン
+				GraphPin new_pin;	// 新しいピン 
+
+				new_pin.id = FetchAndIncrementId(); // 新しいピンIDを発行
+				new_pin.name = src_pin.name;
+				new_pin.kind = src_pin.kind;
+				new_pin.node_id = copied_node.id; // 新しい親ノードIDを紐付け
+
+				copied_node.inputs.push_back(new_pin);
+				pin_id_map[src_pin.id] = new_pin.id; // ハッシュマップへ即時登録
+			}
+
+			// 出力ピンの複製とID登録
+			for (size_t pin_idx = 0; pin_idx < src_node.outputs.size(); pin_idx++)
+			{
+				const GraphPin& src_pin = src_node.outputs[pin_idx];	// コピー元のピン
+				GraphPin new_pin;	// 新しいピン 
+
+				new_pin.id = FetchAndIncrementId(); // 新しいピンIDを発行
+				new_pin.name = src_pin.name;
+				new_pin.kind = src_pin.kind;
+				new_pin.node_id = copied_node.id; // 新しい親ノードIDを紐付け
+
+				copied_node.outputs.push_back(new_pin);
+				pin_id_map[src_pin.id] = new_pin.id; // ハッシュマップへ即時登録
+			}
+			dst_graph->nodes.push_back(copied_node); // ノードの複製を登録
+		}
+
+		// ハッシュマップ参照による接続線リンクの複製
+		for (size_t l = 0; l < src_graph->links.size(); l++)
+		{
+			const GraphLink& src_link = src_graph->links[l];	// コピー元のリンク
+			GraphLink copied_link;	// 新しいリンク 
+			copied_link.id = FetchAndIncrementId(); // 新しいリンクIDを発行
+
+			const uint32_t invalid_id = 0;	// ID未発見・無効時の判定値 
+			copied_link.start_pin_id = invalid_id;
+			copied_link.end_pin_id = invalid_id;
+
+			auto start_it = pin_id_map.find(src_link.start_pin_id);	// 開始ピンの参照イテレーター 
+			if (start_it != pin_id_map.end())
+			{
+				copied_link.start_pin_id = start_it->second; // 新しい開始ピンIDを取得
+			}
+
+			auto end_it = pin_id_map.find(src_link.end_pin_id);	// 終了ピンの参照イテレーター 
+			if (end_it != pin_id_map.end())
+			{
+				copied_link.end_pin_id = end_it->second; // 新しい終了ピンIDを取得
+			}
+
+			// 両方のピンが新しいIDにマッピングされたか判定
+			if (copied_link.start_pin_id != invalid_id && copied_link.end_pin_id != invalid_id)
+			{
+				dst_graph->links.push_back(copied_link); // リンクの複製を登録
+			}
+		}
+	}
+
+	//現在の階層へのサブグラフ親ノードの生成と登録
+	GraphNode new_node;	//サブグラフの親ノードデータ
+	// パラメータ設定
+	new_node.id = FetchAndIncrementId(); // ノード自体のIDを発行
+	new_node.name = sub_graph_name;      // 指定されたステート名を設定
+	new_node.position_x = click_x;       // 配置初期X座標
+	new_node.position_y = click_y;       // 配置初期Y座標
+	new_node.is_sub_graph = true;        // サブグラフ属性を有効化
+	new_node.sub_graph_id = real_sub_graph_id; // 完全コピーが完了した内部の階層IDをリンク紐付け
+
+	// キャンバスに表示される親ノード用の入力ピン設定
+	GraphPin new_input;	// 新しい入力ピン情報 
 	new_input.id = FetchAndIncrementId();
 	new_input.name = u8"入力";
 	new_input.kind = PinKind::Input;
 	new_input.node_id = new_node.id;
 	new_node.inputs.push_back(new_input);
 
-	//サブグラフ用の出力ピン
-	GraphPin new_output;	//新しい出力ピン情報
-	new_output.id =FetchAndIncrementId();
+	// キャンバスに表示される親ノード用の出力ピン設定
+	GraphPin new_output;	// 新しい出力ピン情報 
+	new_output.id = FetchAndIncrementId();
 	new_output.name = u8"出力";
 	new_output.kind = PinKind::Output;
 	new_output.node_id = new_node.id;
 	new_node.outputs.push_back(new_output);
 
-	//全ての階層情報から、指定されたグラフIDと一致するものを検索
+	// 全ての階層情報から、指定された現在のグラフIDと一致するものを検索してノードを追加
 	for (size_t g = 0; g < layer_datas.size(); g++)
 	{
 		if (layer_datas[g].id == graph_id)
 		{
-			layer_datas[g].nodes.push_back(new_node);
-			printf("StateGraphDataManager: サブグラフノードをデータに追加しました。ID: %d, 対応下位階層ID: %d\n",
-				new_node.id, new_node.sub_graph_id);
+			layer_datas[g].nodes.push_back(new_node); // 現在の階層に登録してキャンバスに可視化させる
+			printf("StateGraphDataManager: サブグラフノードを内部データごと完全複製して配置しました。ID: %d\n", new_node.id);
 			return;
 		}
 	}

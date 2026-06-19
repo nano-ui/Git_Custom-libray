@@ -26,6 +26,7 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	data_manager = std::make_unique<StateGraphDataManager>();
 
 	pending_add_palette_node_name = "";
+	pending_add_is_sub_graph = false;
 }
 
 //デストラクタ
@@ -243,7 +244,21 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		ImVec2 center_pos = ImGui::GetMainViewport()->GetCenter();
 		ImVec2 canvas_pos = ed::ScreenToCanvas(center_pos);
 
-		data_manager->AddNode(current_graph, canvas_pos.x, canvas_pos.y, pending_add_palette_node_name);
+		if (pending_add_is_sub_graph)
+		{
+			data_manager->AddSubGrapNode(current_graph_id, canvas_pos.x, canvas_pos.y, pending_add_palette_node_name);
+		
+			for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
+			{
+				current_graph = &data_manager->GetLayerDatas()[i];
+				break;
+			}
+		}
+		else
+		{
+			data_manager->AddNode(current_graph, canvas_pos.x, canvas_pos.y, pending_add_palette_node_name);
+		}
+
 		uint32_t new_state_id = current_graph->nodes.back().id;
 		ed::SetNodePosition(new_state_id, canvas_pos);
 
@@ -543,6 +558,25 @@ void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 				if (ImGui::Button(add_btn_label.c_str()))
 				{
 					pending_add_palette_node_name = existing_name[i];
+
+					//コピー元ノードの性質の動的判定
+					pending_add_is_sub_graph = false;
+
+					//全階層情報の全ノードから、対象の名前を持つノードの性質を検索
+					for (size_t g = 0; g < data_manager->GetLayerDatas().size(); g++)
+					{
+						for (size_t n = 0; n < data_manager->GetLayerDatas()[g].nodes.size(); n++)
+						{
+							if (data_manager->GetLayerDatas()[g].nodes[n].name == existing_name[i])
+							{
+								if (data_manager->GetLayerDatas()[g].nodes[n].is_sub_graph)
+								{
+									pending_add_is_sub_graph = true;
+								}
+								break;
+							}
+						}
+					}
 					printf("StateMachineGraphEditor: パレットから「%s」の追加を予約しました。\n", pending_add_palette_node_name.c_str());
 				}
 				ImGui::Separator();
