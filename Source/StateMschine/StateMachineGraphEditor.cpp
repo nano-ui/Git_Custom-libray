@@ -307,6 +307,51 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 	ed::End(); // キャンバス描画終了
 
+	//キャンバス領域へのドラッグ＆ドロップ受け入れ
+	if (ImGui::BeginDragDropTarget())
+	{
+		//通常ステートがドロップされた瞬間の判定
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_PAYLOAD_NORMAL"))
+		{
+			const char* dropped_node_name = static_cast<const char*>(payload->Data);	//ノード名
+			ImVec2 drap_mouse_screen_pos = ImGui::GetMousePos();	//離した瞬間のマウス座標
+			ImVec2 drop_mouse_canvas_pos = ed::ScreenToCanvas(drap_mouse_screen_pos);	//キャンバス座標
+
+			data_manager->AddNode(current_graph, drop_mouse_canvas_pos.x, drop_mouse_canvas_pos.y, dropped_node_name);
+		
+			uint32_t new_node_id = current_graph->nodes.back().id;	//新しいノードID
+			ed::SetNodePosition(new_node_id, drop_mouse_canvas_pos);
+
+			printf("StateMachineGraphEditor: 通常ステート「%s」をドラッグ＆ドロップで配置しました。\n", dropped_node_name);
+		}
+
+		//サブグラフがドロップされた瞬間の判定
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_PAYLOAD_SUB"))
+		{
+			const char* dropped_sub_name = static_cast<const char*>(payload->Data);	//ノード名
+			ImVec2 drap_mouse_screen_pos = ImGui::GetMousePos();	//離した瞬間のマウス座標
+			ImVec2 drop_mouse_canvas_pos = ed::ScreenToCanvas(drap_mouse_screen_pos);	//キャンバス座標
+
+			data_manager->AddSubGrapNode(current_graph_id, drop_mouse_canvas_pos.x, drop_mouse_canvas_pos.y, dropped_sub_name);
+
+			//ポインタのアドレスを再取得
+			for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
+			{
+				if (data_manager->GetLayerDatas()[i].id == current_graph_id)
+				{
+					current_graph = &data_manager->GetLayerDatas()[i];
+					break;
+				}
+			}
+
+			uint32_t new_node_id = current_graph->nodes.back().id;	//新しいノードID
+			ed::SetNodePosition(new_node_id, drop_mouse_canvas_pos);
+
+			printf("StateMachineGraphEditor: サブグラフ「%s」をドラッグ＆ドロップで完全複製配置しました。\n", dropped_sub_name);
+		}
+		ImGui::EndDragDropTarget();
+	}
+
 	if (g_pending_focus_node_id != 0)
 	{
 		uint32_t focus_target_id = g_pending_focus_node_id;	//対象IDのローカル退避
@@ -539,13 +584,11 @@ void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 		{
 			ImGui::Spacing();
 
-			// ボタン判定が終わるまで次の状態を一時保存しておく変数を定義 
 			PaletteFilter next_filter = current_filter; // 次フレームから適用するフィルター状態 
 
 			const ImVec4 active_color = ImVec4(0.2f, 0.6f, 0.4f, 1.0f); // 選択中のハイライト緑色（マジックナンバー回避） [cite: 2026-05-11, 2026-06-12]
 
 
-			// -- 手順の始まり：安全な色スタック維持を施したフィルターボタンの描画 --
 
 			// 「すべて表示」ボタンの処理
 			if (current_filter == PaletteFilter::ALL)
@@ -558,7 +601,7 @@ void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 			}
 			if (current_filter == PaletteFilter::ALL)
 			{
-				ImGui::PopStyleColor(); // 最初の状態に基づいて100%安全にPop
+				ImGui::PopStyleColor(); // 最初の状態に基づいてPop
 			}
 
 			ImGui::SameLine();
@@ -574,7 +617,7 @@ void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 			}
 			if (current_filter == PaletteFilter::SubGraph)
 			{
-				ImGui::PopStyleColor(); // 最初の状態に基づいて100%安全にPop
+				ImGui::PopStyleColor(); // 最初の状態に基づいてPop
 			}
 
 			ImGui::SameLine();
@@ -590,7 +633,7 @@ void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 			}
 			if (current_filter == PaletteFilter::Normal)
 			{
-				ImGui::PopStyleColor(); // 最初の状態に基づいて100%安全にPop
+				ImGui::PopStyleColor(); // 最初の状態に基づいてPop
 			}
 
 			//  すべてのボタンのPush/Popが安全に終了した「ここ」で、初めて状態を確定反映します！
@@ -618,6 +661,15 @@ void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 				{
 					ImGui::Text("・%s", normal_names[i].c_str());
 
+					//直前に描画したTextアイテムをマウスで掴んで引っ張れるように設定
+					if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+					{
+						ImGui::Text(u8"移動中：%s", normal_names[i].c_str());
+						size_t payload_size = normal_names[i].size() + 1;	//ヌル終端文字を含めた送信バイトサイズ
+						ImGui::SetDragDropPayload("DND_PAYLOAD_NORMAL", normal_names[i].c_str(), payload_size);
+						ImGui::EndDragDropSource();
+					}
+
 					ImGui::SameLine(ImGui::GetWindowWidth() - button_offset_x);
 					std::string add_btn_label = u8"追加##Normal" + std::to_string(i); // 通常用固有IDラベル 
 
@@ -643,6 +695,15 @@ void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 				for (size_t i = 0; i < sub_graph_names.size(); i++)
 				{
 					ImGui::Text("・%s", sub_graph_names[i].c_str());
+
+					//直前に描画したTextアイテムをマウスで掴んで引っ張れるように設定
+					if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+					{
+						ImGui::Text(u8"移動中：%s", sub_graph_names[i].c_str());
+						size_t payload_size = sub_graph_names[i].size() + 1;	//ヌル終端文字を含めた送信バイトサイズ
+						ImGui::SetDragDropPayload("DND_PAYLOAD_SUB", sub_graph_names[i].c_str(), payload_size);
+						ImGui::EndDragDropSource();
+					}
 
 					ImGui::SameLine(ImGui::GetWindowWidth() - button_offset_x);
 
