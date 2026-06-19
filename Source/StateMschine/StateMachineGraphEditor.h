@@ -59,6 +59,9 @@ private:
 	//遷移条件を構築
 	void OnLinkCreated(GraphData* current_graph, const GraphLink& new_link);
 
+	//実在するノード名の一覧を全データから動的に集計して取得
+	std::vector<std::string> GetExistingStateNames();
+
 private:
 	//カスタムデリータ
 	struct EditorContexDeleter
@@ -70,5 +73,7 @@ private:
 	std::unique_ptr<StateGraphDataManager> data_manager;		//データを専門的に扱うマネージャー
 	uint32_t current_graph_id;									//現在の階層のグラフID
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
+	std::vector<std::string> available_state_palette;	//追加可能な全てのステートリスト
+	std::string pending_add_palette_node_name;			//パレットから追加予約されたステート名
 };
 

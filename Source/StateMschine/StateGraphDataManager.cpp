@@ -13,7 +13,7 @@ StateGraphDataManager::StateGraphDataManager()
 }
 
 //ノードの生成
-void StateGraphDataManager::AddNode(GraphData* current_graph, float click_x, float click_y)
+void StateGraphDataManager::AddNode(GraphData* current_graph, float click_x, float click_y, const std::string& node_name)
 {
 	//渡されたポインタが安全か確認
 	if (!current_graph)
@@ -26,7 +26,7 @@ void StateGraphDataManager::AddNode(GraphData* current_graph, float click_x, flo
 
 	//ノードのパラメータ設定
 	new_node.id = next_id++;
-	new_node.name = u8"新規ステート";
+	new_node.name = node_name;
 	new_node.position_x = click_x;
 	new_node.position_y = click_y;
 	new_node.is_sub_graph = false;

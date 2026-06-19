@@ -24,6 +24,8 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	current_graph_id = root_id;
 
 	data_manager = std::make_unique<StateGraphDataManager>();
+
+	pending_add_palette_node_name = "";
 }
 
 //デストラクタ
@@ -233,6 +235,20 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	}
 
 	ed::Resume(); // エディタの描画を再開
+
+	//パレットから予約されたノードの追加
+	if (!pending_add_palette_node_name.empty())
+	{
+		//画面の中心からキャンバスの座標を逆算してポップ位置を設定
+		ImVec2 center_pos = ImGui::GetMainViewport()->GetCenter();
+		ImVec2 canvas_pos = ed::ScreenToCanvas(center_pos);
+
+		data_manager->AddNode(current_graph, canvas_pos.x, canvas_pos.y, pending_add_palette_node_name);
+		uint32_t new_state_id = current_graph->nodes.back().id;
+		ed::SetNodePosition(new_state_id, canvas_pos);
+
+		pending_add_palette_node_name = "";
+	}
 
 	//安全な区間でのデータ操作実行 
 	if (trigger_add_node)
@@ -471,31 +487,71 @@ void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 	}
 
 	ImGui::Spacing();
-	ImGui::Text(u8"【現在の階層のステート一覧】");
-	ImGui::Spacing();
 
-	const float list_box_height = 200.0f;	//リストボックスの固定立幅
-
-	ImGui::BeginChild("LeftStateListChild", ImVec2(0.0f, list_box_height), true);
-
-	//現在の階層内の全ノードを走査してリストアップ
-	for (size_t i = 0; i < current_graph->nodes.size(); i++)
+	//左ペインをタブで分割し、機能を行き来できるようにする
+	if (ImGui::BeginTabBar("LeftSidebarTabBar"))
 	{
-		const GraphNode& node = current_graph->nodes[i]; // ノード情報
-		ImGui::Text("ID：%d[%s]", node.id, node.name.c_str());
-		ImGui::SameLine(ImGui::GetWindowWidth() - 115.0f);
-		std::string button_label = u8"フォーカス##" + std::to_string(node.id); // ボタンラベル
-
-		//ボタンがクリックされたか判定
-		if (ImGui::Button(button_label.c_str()))
+		//現在の階層ステート一覧
+		if (ImGui::BeginTabItem(u8"階層ノード"))
 		{
-			//ここでは直接カメラを動かさず、予約だけ行いクラッシュを完全に回避します
-			g_pending_focus_node_id = node.id;
-			printf("StateMachineGraphEditor: ノード ID:%d (%s) へのフォーカスを予約しました。\n",
-				node.id, node.name.c_str());
+			ImGui::Spacing();
+			const float list_box_height = ImGui::GetContentRegionAvail().y;	//残りの縦幅全てを使う
+
+			ImGui::BeginChild("LeftStateListChild", ImVec2(0.0f, list_box_height), true);
+
+			//現在の階層内の全ノードを走査してリストアップ
+			for (size_t i = 0; i < current_graph->nodes.size(); i++)
+			{
+				const GraphNode& node = current_graph->nodes[i]; // ノード情報
+				ImGui::Text("ID：%d[%s]", node.id, node.name.c_str());
+				ImGui::SameLine(ImGui::GetWindowWidth() - 115.0f);
+				std::string button_label = u8"フォーカス##" + std::to_string(node.id); // ボタンラベル
+
+				//ボタンがクリックされたか判定
+				if (ImGui::Button(button_label.c_str()))
+				{
+					//ここでは直接カメラを動かさず、予約だけ行いクラッシュを完全に回避します
+					g_pending_focus_node_id = node.id;
+					printf("StateMachineGraphEditor: ノード ID:%d (%s) へのフォーカスを予約しました。\n",
+						node.id, node.name.c_str());
+				}
+			}
+			ImGui::EndChild();
+			ImGui::EndTabItem();
 		}
+
+		//全てのステートからのポップ追加
+		if (ImGui::BeginTabItem(u8"ステート追加"))
+		{
+			ImGui::Spacing();
+			ImGui::TextColored(ImVec4(0.6f, 0.8f, 0.6f, 1.0f), u8"追加したいステートを選択");
+			ImGui::Spacing();
+
+			const float list_box_height = ImGui::GetContentRegionAvail().y;	//残りの縦幅全てを使う
+			ImGui::BeginChild("PeletteListChild", ImVec2(0.0f, list_box_height), true);
+
+			std::vector<std::string> existing_name = GetExistingStateNames();	//エディタ内の全ステートリスト
+
+			for (size_t i = 0; i < existing_name.size(); i++)
+			{
+				ImGui::Text(existing_name[i].c_str());
+
+				ImGui::SameLine(ImGui::GetWindowWidth() - 65.0f);
+				std::string add_btn_label = u8"追加##Pal" + std::to_string(i);
+
+				//追加ボタンが押されたら
+				if (ImGui::Button(add_btn_label.c_str()))
+				{
+					pending_add_palette_node_name = existing_name[i];
+					printf("StateMachineGraphEditor: パレットから「%s」の追加を予約しました。\n", pending_add_palette_node_name.c_str());
+				}
+				ImGui::Separator();
+			}
+			ImGui::EndChild();
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
 	}
-	ImGui::EndChild();
 }
 
 //ノードの削除
@@ -750,6 +806,40 @@ void StateMachineGraphEditor::OnLinkCreated(GraphData* current_graph, const Grap
 	printf("StateMachineGraphEditor: 遷移関係を構築しました。[ステートID:%d] ==(遷移)==> [ステートID:%d]\n",
 		source_node_id, target_node_id);
 
+}
+
+//実在するノード名の一覧を全データから動的に集計して取得
+std::vector<std::string> StateMachineGraphEditor::GetExistingStateNames()
+{
+	std::vector<std::string> unique_names;	//返却用の一覧コンテナ
+
+	//全ての階層情報を巡回して名前を収集
+	for (size_t g = 0; g < data_manager->GetLayerDatas().size(); g++)
+	{
+		const GraphData& graph = data_manager->GetLayerDatas()[g];	//対象階層
+
+		//階層にいるすべてのノードを走査
+		for (size_t n = 0; n < graph.nodes.size(); n++)
+		{
+			const std::string& node_name = graph.nodes[n].name;	//ノード名
+			bool is_duplicate = false;	//収集済みかのフラグ
+
+			for (size_t i = 0; i < unique_names.size(); i++)
+			{
+				if (unique_names[i] == node_name)
+				{
+					is_duplicate = true;
+					break;
+				}
+			}
+
+			if (!is_duplicate)
+			{
+				unique_names.push_back(node_name);
+			}
+		}
+	}
+	return unique_names;
 }
 
 //カスタムデリータ

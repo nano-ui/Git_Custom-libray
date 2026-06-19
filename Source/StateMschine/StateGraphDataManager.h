@@ -61,7 +61,7 @@ public:
 	~StateGraphDataManager() = default;
 
 	//ノードの生成
-	void AddNode(GraphData* current_graph, float click_x, float click_y);
+	void AddNode(GraphData* current_graph, float click_x, float click_y, const std::string& node_name = u8"新規ステート");
 
 	//サブグラフノードの生成
 	void AddSubGrapNode(uint32_t graph_id, float click_x, float click_y);
