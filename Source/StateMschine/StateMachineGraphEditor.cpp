@@ -554,28 +554,7 @@ void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 		// 現在の階層ステート一覧
 		if (ImGui::BeginTabItem(u8"階層ノード"))
 		{
-			ImGui::Spacing();
-			const float list_box_height = ImGui::GetContentRegionAvail().y;	// 残りの縦幅全てを使う 
-
-			ImGui::BeginChild("LeftStateListChild", ImVec2(0.0f, list_box_height), true);
-
-			// 現在の階層内の全ノードを走査してリストアップ
-			for (size_t i = 0; i < current_graph->nodes.size(); i++)
-			{
-				const GraphNode& node = current_graph->nodes[i]; // ノード情報 
-				ImGui::Text("ID：%d[%s]", node.id, node.name.c_str());
-				ImGui::SameLine(ImGui::GetWindowWidth() - 115.0f);
-				std::string button_label = u8"フォーカス##" + std::to_string(node.id); // ボタンラベル 
-
-				// ボタンがクリックされたか判定
-				if (ImGui::Button(button_label.c_str()))
-				{
-					g_pending_focus_node_id = node.id; // フォーカス要求を安全に予約
-					printf("StateMachineGraphEditor: ノード ID:%d (%s) へのフォーカスを予約しました。\n",
-						node.id, node.name.c_str());
-				}
-			}
-			ImGui::EndChild();
+			DrawHierarchyNodeList(current_graph);
 			ImGui::EndTabItem();
 		}
 
@@ -584,145 +563,188 @@ void StateMachineGraphEditor::DrawStateListWindow(GraphData* current_graph)
 		{
 			ImGui::Spacing();
 
-			PaletteFilter next_filter = current_filter; // 次フレームから適用するフィルター状態 
-
-			const ImVec4 active_color = ImVec4(0.2f, 0.6f, 0.4f, 1.0f); // 選択中のハイライト緑色（マジックナンバー回避） [cite: 2026-05-11, 2026-06-12]
-
-
-
-			// 「すべて表示」ボタンの処理
-			if (current_filter == PaletteFilter::ALL)
-			{
-				ImGui::PushStyleColor(ImGuiCol_Button, active_color); // 選択中は緑色にハイライト
-			}
-			if (ImGui::Button(u8"全て適用"))
-			{
-				next_filter = PaletteFilter::ALL; // その場では変えず、予約のみ
-			}
-			if (current_filter == PaletteFilter::ALL)
-			{
-				ImGui::PopStyleColor(); // 最初の状態に基づいてPop
-			}
-
-			ImGui::SameLine();
-
-			// 「サブグラフのみ」ボタンの処理
-			if (current_filter == PaletteFilter::SubGraph)
-			{
-				ImGui::PushStyleColor(ImGuiCol_Button, active_color); // 選択中は緑色にハイライト
-			}
-			if (ImGui::Button(u8"サブグラフのみ適用"))
-			{
-				next_filter = PaletteFilter::SubGraph; //  その場では変えず、予約のみ
-			}
-			if (current_filter == PaletteFilter::SubGraph)
-			{
-				ImGui::PopStyleColor(); // 最初の状態に基づいてPop
-			}
-
-			ImGui::SameLine();
-
-			// 「サブグラフ以外（通常）」ボタンの処理
-			if (current_filter == PaletteFilter::Normal)
-			{
-				ImGui::PushStyleColor(ImGuiCol_Button, active_color); // 選択中は緑色にハイライト
-			}
-			if (ImGui::Button(u8"サブグラフ以外適用"))
-			{
-				next_filter = PaletteFilter::Normal; //  その場では変えず、予約のみ
-			}
-			if (current_filter == PaletteFilter::Normal)
-			{
-				ImGui::PopStyleColor(); // 最初の状態に基づいてPop
-			}
-
-			//  すべてのボタンのPush/Popが安全に終了した「ここ」で、初めて状態を確定反映します！
-			current_filter = next_filter;
-
-			ImGui::Spacing();
-			ImGui::Separator();
-			ImGui::Spacing();
-
+			DrawPaletterFilterButtons();
 
 			const float list_box_height = ImGui::GetContentRegionAvail().y;	// 残りの縦幅全てを使う 
 			ImGui::BeginChild("PeletteListChild", ImVec2(0.0f, list_box_height), true);
 
 			const float button_offset_x = 65.0f;	// 右端からボタンを引き算するオフセット幅 
 
-			// 通常ステートの描画判定
-			if (current_filter == PaletteFilter::ALL || current_filter == PaletteFilter::Normal)
-			{
-				ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), u8"▼ 通常ステート");
-				ImGui::Separator();
+			DrawNormalStatePalette(button_offset_x);
 
-				std::vector<std::string> normal_names = GetExistingNormalStateNames(); // 通常ステートリスト 
+			DrawSubGraphPalette(button_offset_x);
 
-				for (size_t i = 0; i < normal_names.size(); i++)
-				{
-					ImGui::Text("・%s", normal_names[i].c_str());
-
-					//直前に描画したTextアイテムをマウスで掴んで引っ張れるように設定
-					if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
-					{
-						ImGui::Text(u8"移動中：%s", normal_names[i].c_str());
-						size_t payload_size = normal_names[i].size() + 1;	//ヌル終端文字を含めた送信バイトサイズ
-						ImGui::SetDragDropPayload("DND_PAYLOAD_NORMAL", normal_names[i].c_str(), payload_size);
-						ImGui::EndDragDropSource();
-					}
-
-					ImGui::SameLine(ImGui::GetWindowWidth() - button_offset_x);
-					std::string add_btn_label = u8"追加##Normal" + std::to_string(i); // 通常用固有IDラベル 
-
-					if (ImGui::Button(add_btn_label.c_str()))
-					{
-						pending_add_palette_node_name = normal_names[i];
-						pending_add_is_sub_graph = false; // 通常ステート属性として予約
-						printf("StateMachineGraphEditor: パレットから通常「%s」の追加を予約しました。\n", pending_add_palette_node_name.c_str());
-					}
-					ImGui::Separator();
-				}
-				ImGui::Spacing();
-			}
-
-			// サブグラフの描画判定
-			if (current_filter == PaletteFilter::ALL || current_filter == PaletteFilter::SubGraph)
-			{
-				ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.3f, 1.0f), u8"▼ サブステート"); // 色とテキストを見やすく変更
-				ImGui::Separator();
-
-				std::vector<std::string> sub_graph_names = GetExistingSubGraphNames(); // サブステートリスト 
-
-				for (size_t i = 0; i < sub_graph_names.size(); i++)
-				{
-					ImGui::Text("・%s", sub_graph_names[i].c_str());
-
-					//直前に描画したTextアイテムをマウスで掴んで引っ張れるように設定
-					if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
-					{
-						ImGui::Text(u8"移動中：%s", sub_graph_names[i].c_str());
-						size_t payload_size = sub_graph_names[i].size() + 1;	//ヌル終端文字を含めた送信バイトサイズ
-						ImGui::SetDragDropPayload("DND_PAYLOAD_SUB", sub_graph_names[i].c_str(), payload_size);
-						ImGui::EndDragDropSource();
-					}
-
-					ImGui::SameLine(ImGui::GetWindowWidth() - button_offset_x);
-
-					std::string add_btn_label = u8"追加##Sub" + std::to_string(i); // サブステート用固有IDラベル 
-
-					if (ImGui::Button(add_btn_label.c_str()))
-					{
-						pending_add_palette_node_name = sub_graph_names[i];
-						pending_add_is_sub_graph = true;
-						printf("StateMachineGraphEditor: パレットから「%s」サブグラフの追加を予約しました。\n", pending_add_palette_node_name.c_str());
-					}
-					ImGui::Separator();
-				}
-				ImGui::Spacing();
-			}
 			ImGui::EndChild();
 			ImGui::EndTabItem();
 		}
 		ImGui::EndTabBar();
+	}
+}
+
+//階層ノードタブを描画
+void StateMachineGraphEditor::DrawHierarchyNodeList(GraphData* current_graph)
+{
+	ImGui::Spacing();
+	const float list_box_height = ImGui::GetContentRegionAvail().y;	// 残りの縦幅全てを使う 
+
+	ImGui::BeginChild("LeftStateListChild", ImVec2(0.0f, list_box_height), true);
+
+	// 現在の階層内の全ノードを走査してリストアップ
+	for (size_t i = 0; i < current_graph->nodes.size(); i++)
+	{
+		const GraphNode& node = current_graph->nodes[i]; // ノード情報 
+		ImGui::Text("ID：%d[%s]", node.id, node.name.c_str());
+		ImGui::SameLine(ImGui::GetWindowWidth() - 115.0f);
+		std::string button_label = u8"フォーカス##" + std::to_string(node.id); // ボタンラベル 
+
+		// ボタンがクリックされたか判定
+		if (ImGui::Button(button_label.c_str()))
+		{
+			g_pending_focus_node_id = node.id; // フォーカス要求を安全に予約
+			printf("StateMachineGraphEditor: ノード ID:%d (%s) へのフォーカスを予約しました。\n",
+				node.id, node.name.c_str());
+		}
+	}
+	ImGui::EndChild();
+}
+
+//パレットの切り替えフィルターボタン描画
+void StateMachineGraphEditor::DrawPaletterFilterButtons()
+{
+	PaletteFilter next_filter = current_filter; // 次フレームから適用するフィルター状態 
+
+	const ImVec4 active_color = ImVec4(0.2f, 0.6f, 0.4f, 1.0f); // 選択中のハイライト緑色（マジックナンバー回避） [cite: 2026-05-11, 2026-06-12]
+
+	// 「すべて表示」ボタンの処理
+	if (current_filter == PaletteFilter::ALL)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Button, active_color); // 選択中は緑色にハイライト
+	}
+	if (ImGui::Button(u8"全て適用"))
+	{
+		next_filter = PaletteFilter::ALL; // その場では変えず、予約のみ
+	}
+	if (current_filter == PaletteFilter::ALL)
+	{
+		ImGui::PopStyleColor(); // 最初の状態に基づいてPop
+	}
+
+	ImGui::SameLine();
+
+	// 「サブグラフのみ」ボタンの処理
+	if (current_filter == PaletteFilter::SubGraph)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Button, active_color); // 選択中は緑色にハイライト
+	}
+	if (ImGui::Button(u8"サブグラフのみ適用"))
+	{
+		next_filter = PaletteFilter::SubGraph; //  その場では変えず、予約のみ
+	}
+	if (current_filter == PaletteFilter::SubGraph)
+	{
+		ImGui::PopStyleColor(); // 最初の状態に基づいてPop
+	}
+
+	ImGui::SameLine();
+
+	// 「サブグラフ以外（通常）」ボタンの処理
+	if (current_filter == PaletteFilter::Normal)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Button, active_color); // 選択中は緑色にハイライト
+	}
+	if (ImGui::Button(u8"サブグラフ以外適用"))
+	{
+		next_filter = PaletteFilter::Normal; //  その場では変えず、予約のみ
+	}
+	if (current_filter == PaletteFilter::Normal)
+	{
+		ImGui::PopStyleColor(); // 最初の状態に基づいてPop
+	}
+
+	//  すべてのボタンのPush/Popが安全に終了した「ここ」で、初めて状態を確定反映します！
+	current_filter = next_filter;
+
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+}
+
+//通常ステートのパレット項目描画
+void StateMachineGraphEditor::DrawNormalStatePalette(float button_offset_x)
+{
+	// 通常ステートの描画判定
+	if (current_filter == PaletteFilter::ALL || current_filter == PaletteFilter::Normal)
+	{
+		ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), u8"▼ 通常ステート");
+		ImGui::Separator();
+
+		std::vector<std::string> normal_names = GetExistingNormalStateNames(); // 通常ステートリスト 
+
+		for (size_t i = 0; i < normal_names.size(); i++)
+		{
+			ImGui::Text("・%s", normal_names[i].c_str());
+
+			//直前に描画したTextアイテムをマウスで掴んで引っ張れるように設定
+			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+			{
+				ImGui::Text(u8"移動中：%s", normal_names[i].c_str());
+				size_t payload_size = normal_names[i].size() + 1;	//ヌル終端文字を含めた送信バイトサイズ
+				ImGui::SetDragDropPayload("DND_PAYLOAD_NORMAL", normal_names[i].c_str(), payload_size);
+				ImGui::EndDragDropSource();
+			}
+
+			ImGui::SameLine(ImGui::GetWindowWidth() - button_offset_x);
+			std::string add_btn_label = u8"追加##Normal" + std::to_string(i); // 通常用固有IDラベル 
+
+			if (ImGui::Button(add_btn_label.c_str()))
+			{
+				pending_add_palette_node_name = normal_names[i];
+				pending_add_is_sub_graph = false; // 通常ステート属性として予約
+				printf("StateMachineGraphEditor: パレットから通常「%s」の追加を予約しました。\n", pending_add_palette_node_name.c_str());
+			}
+			ImGui::Separator();
+		}
+		ImGui::Spacing();
+	}
+}
+
+//サブグラフのパレット項目を描画
+void StateMachineGraphEditor::DrawSubGraphPalette(float button_offset_x)
+{
+	// サブグラフの描画判定
+	if (current_filter == PaletteFilter::ALL || current_filter == PaletteFilter::SubGraph)
+	{
+		ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.3f, 1.0f), u8"▼ サブステート"); // 色とテキストを見やすく変更
+		ImGui::Separator();
+
+		std::vector<std::string> sub_graph_names = GetExistingSubGraphNames(); // サブステートリスト 
+
+		for (size_t i = 0; i < sub_graph_names.size(); i++)
+		{
+			ImGui::Text("・%s", sub_graph_names[i].c_str());
+
+			//直前に描画したTextアイテムをマウスで掴んで引っ張れるように設定
+			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+			{
+				ImGui::Text(u8"移動中：%s", sub_graph_names[i].c_str());
+				size_t payload_size = sub_graph_names[i].size() + 1;	//ヌル終端文字を含めた送信バイトサイズ
+				ImGui::SetDragDropPayload("DND_PAYLOAD_SUB", sub_graph_names[i].c_str(), payload_size);
+				ImGui::EndDragDropSource();
+			}
+
+			ImGui::SameLine(ImGui::GetWindowWidth() - button_offset_x);
+
+			std::string add_btn_label = u8"追加##Sub" + std::to_string(i); // サブステート用固有IDラベル 
+
+			if (ImGui::Button(add_btn_label.c_str()))
+			{
+				pending_add_palette_node_name = sub_graph_names[i];
+				pending_add_is_sub_graph = true;
+				printf("StateMachineGraphEditor: パレットから「%s」サブグラフの追加を予約しました。\n", pending_add_palette_node_name.c_str());
+			}
+			ImGui::Separator();
+		}
+		ImGui::Spacing();
 	}
 }
 

@@ -38,6 +38,18 @@ private:
 	//ステート一覧リストを描画して、その位置に移動
 	void DrawStateListWindow(GraphData* current_graph);
 
+	//階層ノードタブを描画
+	void DrawHierarchyNodeList(GraphData* current_graph);
+
+	//パレットの切り替えフィルターボタン描画
+	void DrawPaletterFilterButtons();
+
+	//通常ステートのパレット項目描画
+	void DrawNormalStatePalette(float button_offset_x);
+
+	//サブグラフのパレット項目を描画
+	void DrawSubGraphPalette(float button_offset_x);
+
 	//ノードの削除
 	void DeleteNode(GraphData* current_graph);
 
