@@ -117,6 +117,15 @@ public:
 	//変数の事前登録
 	void RegisterVariable(const std::string& variable_name) { allowed_variables.insert(variable_name); }
 
+	//変数名リストを取得
+	std::vector<std::string> GetRegisteredVariableNames()const;
+
+	//ハッシュキーから変数名を取得
+	std::string GetVariableNameFromHash(uint32_t hash_key) const;
+
+	//変数名からハッシュキーを取得
+	uint32_t GetVariableHash(const std::string& variable_name)const;
+
 private:
 	//ブラックボードのデータとその属性を管理
 	struct BlackboardAttribute

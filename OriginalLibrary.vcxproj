@@ -297,6 +297,7 @@
     <ClCompile Include="Source\StateMschine\StateMachine.cpp" />
     <ClCompile Include="Source\StateMschine\StateMachineGraphEditor.cpp" />
     <ClCompile Include="Source\StateMschine\StateTransition.cpp" />
+    <ClCompile Include="Source\StateMschine\TransitionConditionEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imconfig.h" />
@@ -383,6 +384,7 @@
     <ClInclude Include="Source\StateMschine\StateMachine.h" />
     <ClInclude Include="Source\StateMschine\StateMachineGraphEditor.h" />
     <ClInclude Include="Source\StateMschine\StateTransition.h" />
+    <ClInclude Include="Source\StateMschine\TransitionConditionEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli" />

@@ -3,6 +3,7 @@
 #include "StateMachineGraphEditor.h"
 #include "../StateMschine/StateBlackboard.h"
 #include "../StateMschine/StateGraphDataManager.h"
+#include "../StateMschine/TransitionConditionEditor.h"
 
 #include <imgui_node_editor_internal.h>
 #include <cassert>
@@ -24,6 +25,7 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	current_graph_id = root_id;
 
 	data_manager = std::make_unique<StateGraphDataManager>();
+	conditon_editor = std::make_unique<TransitionConditionEditor>();
 
 	pending_add_palette_node_name = "";
 	pending_add_is_sub_graph = false;
@@ -378,7 +380,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 	//右ペイン・詳細プロパティの描画
 	ImGui::BeginChild("RightSidebarZone##Child", ImVec2(dynamic_right_width, canvas_height), true);
-	DrawPropertyWindow(current_graph);
+	DrawPropertyWindow(current_graph, blackboard);
 	ImGui::EndChild();
 
 	ed::SetCurrentEditor(nullptr);
@@ -777,7 +779,7 @@ void StateMachineGraphEditor::DeleteLink(GraphData* current_graph)
 }
 
 //ノードの詳細情報を描画
-void StateMachineGraphEditor::DrawPropertyWindow(GraphData* current_graph)
+void StateMachineGraphEditor::DrawPropertyWindow(GraphData* current_graph, StateBlackboard* blackboard)
 {
 	//グラフデータが渡されているか確認
 	if (!current_graph)
@@ -805,7 +807,7 @@ void StateMachineGraphEditor::DrawPropertyWindow(GraphData* current_graph)
 	else if (select_link_count > 0)
 	{
 		uint32_t selected_link_id = static_cast<uint32_t>(selected_links[0].Get()); // キャストID
-		DrawLinkProperty(current_graph, selected_link_id);
+		DrawLinkProperty(current_graph, selected_link_id, blackboard);
 	}
 	else
 	{
@@ -882,7 +884,7 @@ void StateMachineGraphEditor::DrawNodeProperty(GraphData* current_graph, uint32_
 }
 
 //リンク選択時の詳細プロパティ描画
-void StateMachineGraphEditor::DrawLinkProperty(GraphData* current_graph, uint32_t link_id)
+void StateMachineGraphEditor::DrawLinkProperty(GraphData* current_graph, uint32_t link_id, StateBlackboard* blackboard)
 {
 	GraphLink* target_link = nullptr;	//編集対象リンク
 
@@ -906,10 +908,7 @@ void StateMachineGraphEditor::DrawLinkProperty(GraphData* current_graph, uint32_
 	ImGui::Text(u8"遷移線設定(ID：%d)", target_link->id);
 	ImGui::Spacing();
 
-	if (ImGui::Button(u8"遷移条件を追加"))
-	{
-		printf("StateMachineGraphEditor: リンク ID:%d に条件を追加するトリガーが引かれました。\n", link_id);
-	}
+	conditon_editor->DrawConditonSettings(data_manager.get(), blackboard, current_graph_id, target_link);
 
 	ImGui::Spacing();
 	ImGui::Separator();

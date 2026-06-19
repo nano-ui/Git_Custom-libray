@@ -9,6 +9,7 @@
 class StateMachine;
 class StateBlackboard;
 class StateGraphDataManager;
+class TransitionConditionEditor;
 
 struct GraphData;
 struct GraphLink;
@@ -57,10 +58,10 @@ private:
 	void DeleteLink(GraphData* current_graph);
 
 	//ノードの詳細情報を描画
-	void DrawPropertyWindow(GraphData* current_graph);
+	void DrawPropertyWindow(GraphData* current_graph, StateBlackboard* blackboard);
 
 	//リンク選択時の詳細プロパティ描画
-	void DrawLinkProperty(GraphData* current_graph, uint32_t link_id);
+	void DrawLinkProperty(GraphData* current_graph, uint32_t link_id, StateBlackboard* blackboard);
 
 	//ノード選択時の詳細プロパティ描画
 	void DrawNodeProperty(GraphData* current_graph, uint32_t node_id);
@@ -98,6 +99,7 @@ private:
 
 private:
 	std::unique_ptr<StateGraphDataManager> data_manager;		//データを専門的に扱うマネージャー
+	std::unique_ptr<TransitionConditionEditor> conditon_editor;	//遷移条件UI専用エディタ
 	uint32_t current_graph_id;									//現在の階層のグラフID
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::vector<std::string> available_state_palette;	//追加可能な全てのステートリスト

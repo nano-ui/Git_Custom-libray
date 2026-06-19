@@ -297,6 +297,9 @@
     <ClCompile Include="Source\StateMschine\StateGraphDataManager.cpp">
       <Filter>Source\StateMachine\StateGraphDataManager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\StateMschine\TransitionConditionEditor.cpp">
+      <Filter>Source\StateMachine\TransitionConditionEditor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Shaders\BlurShader.h">
@@ -550,6 +553,9 @@
     </ClInclude>
     <ClInclude Include="Source\StateMschine\StateGraphDataManager.h">
       <Filter>Source\StateMachine\StateGraphDataManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMschine\TransitionConditionEditor.h">
+      <Filter>Source\StateMachine\TransitionConditionEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -863,6 +869,9 @@
     </Filter>
     <Filter Include="Source\StateMachine\StateGraphDataManager">
       <UniqueIdentifier>{fce49822-be3b-43de-bb49-69517f5f40d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\StateMachine\TransitionConditionEditor">
+      <UniqueIdentifier>{20325e81-ebc6-416d-89d9-f68a8f44f9c4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
