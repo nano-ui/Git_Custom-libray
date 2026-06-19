@@ -398,6 +398,7 @@ void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, flo
 			// 両方のピンが新しいIDにマッピングされたか判定
 			if (copied_link.start_pin_id != invalid_id && copied_link.end_pin_id != invalid_id)
 			{
+				copied_link.conditions = src_link.conditions;
 				dst_graph->links.push_back(copied_link); // リンクの複製を登録
 			}
 		}

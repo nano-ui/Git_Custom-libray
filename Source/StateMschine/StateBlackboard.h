@@ -126,6 +126,15 @@ public:
 	//変数名からハッシュキーを取得
 	uint32_t GetVariableHash(const std::string& variable_name)const;
 
+	//変数の最小値制限を取得
+	float GetMinLimit(uint32_t hash_key) const { auto it = data_map.find(hash_key); return (it != data_map.end()) ? it->second.min_value : 0.0f; }
+
+	//変数の最大値制限を取得
+	float GetMaxLimit(uint32_t hash_key) const { auto it = data_map.find(hash_key); return (it != data_map.end()) ? it->second.max_value : 100.0f; }
+
+	//指定された変数の変化スピード（感度）を取得
+	float GetChangeSpeed(uint32_t hash_key) const { auto it = data_map.find(hash_key); return (it != data_map.end()) ? it->second.speed : 0.1f; }
+
 private:
 	//ブラックボードのデータとその属性を管理
 	struct BlackboardAttribute
