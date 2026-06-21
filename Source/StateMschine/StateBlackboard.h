@@ -10,6 +10,8 @@
 #include <string_view>
 #include <imgui.h>
 
+#include "StateGraphDataManager.h"
+
 //キャラクターのアクションカテゴリー
 enum class ActionCategory
 {
@@ -269,9 +271,12 @@ struct CompareVisitor
 //遷移条件
 struct TransitionCondition
 {
+	ConditionNodeType type = ConditionNodeType::NormalCompare;	//判定タイプ
 	uint32_t hash_key;				//対象のハッシュ値
 	BlackboardData reference_value;	//基準値
 	CompareOperator compart_op = CompareOperator::Equal;	//比較演算子
+	float param_second = 0.0f;		//第２引数パラメータ
+	uint32_t secondary_hash = 0;	//比較対象のハッシュキー
 
 	//条件を満たしているか判定
 	bool IsJudgment(const StateBlackboard& blackboard)const;

@@ -59,54 +59,70 @@ void TransitionConditionEditor::DrawConditonSettings(StateGraphDataManager* data
 		ImGui::PopStyleColor();
 		GraphTransitionCondition& condition = target_link->conditions[i];	//編集対象の条件情報
 
-		//ブラックボード変数選択コンボボックス描画
-		if (blackboard)
-		{
-			std::string current_var_name = blackboard->GetVariableNameFromHash(condition.hash_key);
+		//判定タイプを選択するコンボボックス
+		const char* type_ui_names[] = { u8"通常比較", u8"確率(Random)", u8"距離(Distance)", u8"割合(Ratio)" };
+		const int total_type_count = 4;
+		int selected_type_index = static_cast<int>(condition.type);
 
-			//変数選択用のコンボボックスを開始
-			if (ImGui::BeginCombo(u8"対象変数", current_var_name.c_str()))
+		ImGui::SetNextItemWidth(150.0f);
+		if (ImGui::Combo(u8"判定タイプ", &selected_type_index, type_ui_names, total_type_count))
+		{
+			condition.type = static_cast<ConditionNodeType>(selected_type_index);
+		}
+		ImGui::Spacing();
+
+		//選択されたタイプに応じた関数の呼び出し
+		switch (condition.type)
+		{
+		case ConditionNodeType::NormalCompare: DrawNormalCompareUI(blackboard, condition);	break;
+		case ConditionNodeType::Random:        DrawRandomUI(condition);						break;
+		case ConditionNodeType::Distance:      DrawDistanceUI(blackboard, condition);		break;
+		case ConditionNodeType::Ratio:         DrawRatioUI(blackboard, condition);			break;
+		}
+
+		ImGui::Separator();
+		ImGui::PopID();
+		i++;
+	}
+
+}
+
+//通常比較用のImGui入力UI描画
+void TransitionConditionEditor::DrawNormalCompareUI(StateBlackboard* blackboard, GraphTransitionCondition& condition)
+{
+	const char* all_operators[] = { "==","!=",">","<",">=","<=" };	//全ての演算子
+	const char* bool_operators[] = { "==","!=" };					//bool型専用の演算子
+	const int op_total_count = 6;	//全演算子の総数
+	const int op_bool_count = 2;	//bool用演算子の総数
+
+	//ブラックボードが有効か判定
+	if (blackboard)
+	{
+		std::string current_var_name = blackboard->GetVariableNameFromHash(condition.hash_key);	//現在の変数名
+		ImGui::SetNextItemWidth(150.0f);
+
+		//コンボボックス描画
+		if (ImGui::BeginCombo(u8"対象変数", current_var_name.c_str()))
+		{
+			std::vector<std::string> var_names = blackboard->GetRegisteredVariableNames();	//登録された変数名リスト
+
+			//全ての登録変数をループ
+			for (size_t n = 0; n < var_names.size(); n++)
 			{
-				std::vector<std::string> var_names = blackboard->GetRegisteredVariableNames();
-
-				//取得した変数名の数だけ選択肢をループ生成
-				for (size_t n = 0; n < var_names.size(); n++)
+				if (ImGui::Selectable(var_names[n].c_str(), current_var_name == var_names[n]))
 				{
-					bool is_selected = (current_var_name == var_names[n]);	//現在の項目が選択中かどうか判定
-
-					//選択しアイテムがクリックされたか判定
-					if (ImGui::Selectable(var_names[n].c_str(), is_selected))
-					{
-						condition.hash_key = blackboard->GetVariableHash(var_names[n]);
-						printf("TransitionConditionEditor: 変数「%s」が選択されました。\n", var_names[n].c_str());
-					}
-					if (is_selected)
-					{
-						ImGui::SetItemDefaultFocus();
-					}
+					condition.hash_key = blackboard->GetVariableHash(var_names[n]);
 				}
-				ImGui::EndCombo();
 			}
+			ImGui::EndCombo();
 		}
-		else
+
+		if (condition.hash_key != 0)
 		{
-			ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), u8"ブラックボードがリンクされていません");
-		}
-		//比較演算子と基準値の設定UI描画
-		const char* all_operators[] = { "==","!=",">","<",">=","<=" };	//全ての演算子
-		const char* bool_operators[] = { "==","!=" };					//bool型専用の演算子
-
-		const int op_total_count = 6;	//全演算子の総数
-		const int op_bool_count = 2;	//bool用演算子の総数
-
-		//ブラックボードが紐づいており、変数が選択されている場合
-		if (blackboard && condition.hash_key != 0)
-		{
-			const BlackboardData& raw_data = blackboard->GetAttributeValue(condition.hash_key);	//variantデータ参照
-
-			float val_speed = blackboard->GetChangeSpeed(condition.hash_key);	//変化感度
-			float val_min = blackboard->GetMinLimit(condition.hash_key);		//最小値制限
-			float val_max = blackboard->GetMaxLimit(condition.hash_key);		//最大値制限
+			const BlackboardData& raw_data = blackboard->GetAttributeValue(condition.hash_key);//読み込み情報
+			float val_speed = blackboard->GetChangeSpeed(condition.hash_key);	//感度
+			float val_min = blackboard->GetMinLimit(condition.hash_key);		//最小値
+			float val_max = blackboard->GetMaxLimit(condition.hash_key);		//最大値
 
 			//変数がboolだった場合
 			if (std::holds_alternative<bool>(raw_data))
@@ -152,30 +168,120 @@ void TransitionConditionEditor::DrawConditonSettings(StateGraphDataManager* data
 
 				ImGui::DragFloat(u8"基準値", &condition.reference_value, val_speed, val_min, val_max, "%.3f");
 			}
-			else
-			{
-				ImGui::SetNextItemWidth(80.0f);
-				ImGui::Combo(u8"演算子", &condition.compare_operator, bool_operators, op_bool_count);
-
-				ImGui::SameLine();
-				ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), u8"(ベクトル型変数は現在プレビューのみ)");
-			}
 		}
-		else
-		{
-			ImGui::SetNextItemWidth(80.0f);
-			ImGui::Combo(u8"演算子", &condition.compare_operator, all_operators, op_total_count);
-
-			ImGui::SameLine();
-			ImGui::SetNextItemWidth(100.0f);
-			ImGui::InputFloat(u8"基準値", &condition.reference_value);
-		}
-
-
-		ImGui::Separator();
-		ImGui::PopID();
-
-		i++;
 	}
 }
+
+//確率判定用のImGui入力UI描画
+void TransitionConditionEditor::DrawRandomUI(GraphTransitionCondition& condition)
+{
+	ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), u8"メルセンヌ・ツイスタによる確率中世んを行います");
+	int percent_value = static_cast<int>(condition.reference_value);
+	const int min_percent = 0;
+	const int max_percent = 100;
+
+	ImGui::SetNextItemWidth(150.0f);
+	if (ImGui::DragInt(u8"成功確率(0～100)", &percent_value, 1.0f, min_percent, max_percent))
+	{
+		condition.reference_value = static_cast<float>(percent_value);
+	}
+}
+
+//距離判定用のImGui入力UI描画
+void TransitionConditionEditor::DrawDistanceUI(StateBlackboard* blackboard, GraphTransitionCondition& condition)
+{
+	if (blackboard)
+	{
+		ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), u8"2つの3D座標ベクトル間の直線距離を測定");
+
+		std::string my_pos_name = blackboard->GetVariableNameFromHash(condition.hash_key);
+		ImGui::SetNextItemWidth(150.0f);
+		if (ImGui::BeginCombo(u8"自身の座標", my_pos_name.c_str()))
+		{
+			std::vector<std::string> var_names = blackboard->GetRegisteredVariableNames();
+			for (size_t n = 0; n < var_names.size(); n++)
+			{
+				if (ImGui::Selectable(var_names[n].c_str(), my_pos_name == var_names[n]))
+				{
+					condition.hash_key = blackboard->GetVariableHash(var_names[n]);
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		ImGui::SameLine();
+
+		std::string target_pos_name = blackboard->GetVariableNameFromHash(condition.hash_key);
+		ImGui::SetNextItemWidth(150.0f);
+		if (ImGui::BeginCombo(u8"対象の座標", target_pos_name.c_str()))
+		{
+			std::vector<std::string> var_names = blackboard->GetRegisteredVariableNames();
+			for (size_t n = 0; n < var_names.size(); n++)
+			{
+				if (ImGui::Selectable(var_names[n].c_str(), my_pos_name == var_names[n]))
+				{
+					condition.hash_key = blackboard->GetVariableHash(var_names[n]);
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		ImGui::SetNextItemWidth(120.0f);
+		ImGui::DragFloat(u8"最小距離制限", &condition.reference_value, 0.1f, 0.0f, 1000.0f, "%.2f");
+		ImGui::SameLine();
+		ImGui::SetNextItemWidth(120.0f);
+		ImGui::DragFloat(u8"最大距離制限", &condition.param_second, 0.1f, 0.0f, 1000.0f, "%.2f");
+	}
+}
+
+//割合判定用のImGui入力UI描画
+void TransitionConditionEditor::DrawRatioUI(StateBlackboard* blackboard, GraphTransitionCondition& condition)
+{
+	const char* all_operators[] = { "==","!=",">","<",">=","<=" };
+	const int op_total_count = 6;
+
+	if (blackboard)
+	{
+		ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), u8"現在地/最大値から現在の割合(0.0f～1.0f)を算出して判定");
+
+		std::string cur_name = blackboard->GetVariableNameFromHash(condition.hash_key);
+		ImGui::SetNextItemWidth(150.0f);
+		if (ImGui::BeginCombo(u8"現在値", cur_name.c_str()))
+		{
+			std::vector<std::string> var_names = blackboard->GetRegisteredVariableNames();
+			for (size_t n = 0; n < var_names.size(); n++)
+			{
+				if (ImGui::Selectable(var_names[n].c_str(), cur_name == var_names[n]))
+				{
+					condition.hash_key = blackboard->GetVariableHash(var_names[n]);
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		ImGui::SameLine();
+
+		std::string max_name = blackboard->GetVariableNameFromHash(condition.hash_key);
+		ImGui::SetNextItemWidth(150.0f);
+		if (ImGui::BeginCombo(u8"最大値", max_name.c_str()))
+		{
+			std::vector<std::string> var_names = blackboard->GetRegisteredVariableNames();
+			for (size_t n = 0; n < var_names.size(); n++)
+			{
+				if (ImGui::Selectable(var_names[n].c_str(), cur_name == var_names[n]))
+				{
+					condition.hash_key = blackboard->GetVariableHash(var_names[n]);
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		ImGui::SetNextItemWidth(80.0f);
+		ImGui::Combo(u8"演算子", &condition.compare_operator, all_operators, op_total_count);
+		ImGui::SameLine();
+		ImGui::SetNextItemWidth(150.0f);
+		ImGui::DragFloat(u8"基準割合", &condition.reference_value, 0.1f);
+	}
+}
+
 

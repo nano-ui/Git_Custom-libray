@@ -6,6 +6,7 @@ class StateGraphDataManager;
 class StateBlackboard;
 struct GraphData;
 struct GraphLink;
+struct GraphTransitionCondition;
 
 class TransitionConditionEditor
 {
@@ -20,6 +21,16 @@ public:
 	void DrawConditonSettings(StateGraphDataManager* data_manager, StateBlackboard* blackboard, uint32_t grap_id, GraphLink* target_link);
 
 private:
+	//’Êí”äŠr—p‚ÌImGui“ü—ÍUI•`‰æ
+	void DrawNormalCompareUI(StateBlackboard* blackboard, GraphTransitionCondition& condition);
 
+	//Šm—¦”»’è—p‚ÌImGui“ü—ÍUI•`‰æ
+	void DrawRandomUI(GraphTransitionCondition& condition);
+
+	//‹——£”»’è—p‚ÌImGui“ü—ÍUI•`‰æ
+	void DrawDistanceUI(StateBlackboard* blackboard, GraphTransitionCondition& condition);
+
+	//Š„‡”»’è—p‚ÌImGui“ü—ÍUI•`‰æ
+	void DrawRatioUI(StateBlackboard* blackboard, GraphTransitionCondition& condition);
 };
 

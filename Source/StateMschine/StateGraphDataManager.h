@@ -34,12 +34,24 @@ struct GraphNode
 	uint32_t sub_graph_id;			//下位階層のグラフID
 };
 
+//判定ノードの種類
+enum class ConditionNodeType
+{
+	NormalCompare,	//通常の比較
+	Random,			//ランダム判定
+	Distance,		//距離判定
+	Ratio,			//割合判定
+};
+
 //遷移条件の編集・保持
 struct GraphTransitionCondition
 {
+	ConditionNodeType type = ConditionNodeType::NormalCompare;	//判定の種類
 	uint32_t hash_key = 0;			//対象のキー
 	float reference_value = 0.0f;	//基準値
 	int compare_operator = 0;		//比較演算子識別番号
+	float param_second = 0.0f;		//第2引数パラメータ
+	uint32_t secondary_hash = 0;	//比較対象のハッシュキー
 };
 
 //ノードを繋ぐ線の情報
@@ -59,7 +71,6 @@ struct GraphData
 	std::vector<GraphNode> nodes;	//階層に存在するノード群
 	std::vector<GraphLink> links;	//階層に存在する接続線群
 };
-
 
 class StateGraphDataManager
 {
