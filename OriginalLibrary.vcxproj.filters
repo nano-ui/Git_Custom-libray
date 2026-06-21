@@ -300,6 +300,36 @@
     <ClCompile Include="Source\StateMschine\TransitionConditionEditor.cpp">
       <Filter>Source\StateMachine\TransitionConditionEditor</Filter>
     </ClCompile>
+    <ClCompile Include="Source\BehaviorTree\BehaviorNode.cpp">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorTree\BehaviorTree.cpp">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorTree\ComboJugment.cpp">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorTree\CooldownJudgment.cpp">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorTree\DirectionJudgment.cpp">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorTree\DistanceJugment.cpp">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorTree\RandomJugment.cpp">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorTree\RatioJudgment.cpp">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorTree\SelectorNode.cpp">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorTree\WeightedNode.cpp">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Shaders\BlurShader.h">
@@ -556,6 +586,45 @@
     </ClInclude>
     <ClInclude Include="Source\StateMschine\TransitionConditionEditor.h">
       <Filter>Source\StateMachine\TransitionConditionEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorTree\ActionNode.h">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorTree\BehaviorNode.h">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorTree\BehaviorTree.h">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorTree\ComboJugment.h">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorTree\CooldownJudgment.h">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorTree\DirectionJudgment.h">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorTree\DistanceJugment.h">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorTree\JudgmentNode.h">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorTree\RandomJugment.h">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorTree\RatioJudgment.h">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorTree\SelectorNode.h">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorTree\StateActionNode.h">
+      <Filter>Source\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorTree\WeightedNode.h">
+      <Filter>Source\BehaviorTree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -872,6 +941,9 @@
     </Filter>
     <Filter Include="Source\StateMachine\TransitionConditionEditor">
       <UniqueIdentifier>{20325e81-ebc6-416d-89d9-f68a8f44f9c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\BehaviorTree">
+      <UniqueIdentifier>{b010fc17-9f2a-49e4-911d-5448d3138c23}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
