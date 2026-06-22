@@ -76,6 +76,8 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		return;
 	}
 
+	uint32_t& current_active_node_id = graph_active_nodes[current_graph_id];	//階層固有のID
+
 	//ブラックボードとリンクの条件式から現在アクティブなノードを完全自動特定
 	if (current_active_node_id == 0 && !current_graph->nodes.empty())
 	{
@@ -269,7 +271,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 		int pushed_style_count = 0;	//復元のためにこのノードでPushしたスタイルカラーの総数をカウント
 
-		bool is_active_now = (node.id == current_active_node_id); // アクティブ状態フラグ
+		bool is_active_now = (node.id == graph_active_nodes[current_graph_id]); // アクティブ状態フラグ
 		if (is_active_now)
 		{
 			const ImVec4 gold_glow_color = ImVec4(0.0f, 1.0f, 0.3f, 1.0f); // ライムグリーン

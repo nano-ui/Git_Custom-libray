@@ -5,6 +5,7 @@
 #include <memory>
 #include <cstdint>
 #include <imgui.h>
+#include <unordered_map>
 
 class StateMachine;
 class StateBlackboard;
@@ -107,6 +108,7 @@ private:
 	std::unique_ptr<StateGraphDataManager> data_manager;		//データを専門的に扱うマネージャー
 	std::unique_ptr<TransitionConditionEditor> conditon_editor;	//遷移条件UI専用エディタ
 	uint32_t current_graph_id;									//現在の階層のグラフID
+	std::unordered_map<uint32_t, uint32_t> graph_active_nodes;	//各階層ごとのアクティブノードIDを個別に保持
 	uint32_t previous_active_node_id = 0;;						//前フレームのステート名
 	uint32_t current_active_node_id = 0;						//現在のステート名
 	uint32_t auto_flowing_link_id = 0;							//アニメーションを実行するリンクID
