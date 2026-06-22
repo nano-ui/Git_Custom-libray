@@ -8,6 +8,7 @@
 
 #include <imgui_node_editor_internal.h>
 #include <cassert>
+#include <fstream>
 
 namespace ed = ax::NodeEditor;
 
@@ -30,6 +31,23 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 
 	pending_add_palette_node_name = "";
 	pending_add_is_sub_graph = false;
+	
+	LoadEditorCondig();
+
+	bool is_success = false;
+
+	if (!current_loaded_file_path.empty())
+	{
+		is_success = data_manager->LoadFromFile(current_loaded_file_path);
+	}
+	else
+	{
+		current_loaded_file_path = "Data/Json/NodeEditor_State.json";
+		if (!data_manager->LoadFromFile(current_loaded_file_path))
+		{
+			data_manager->CheckAndInitDefaultNode(current_graph_id);
+		}
+	}
 }
 
 //デストラクタ
@@ -144,6 +162,8 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		if (!selected_save_path.empty())
 		{
 			data_manager->SaveToFile(selected_save_path); 
+			current_loaded_file_path = selected_save_path;
+			SaveEditorCondig();
 		}
 	}
 	ImGui::PopStyleColor();
@@ -163,6 +183,8 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 			{
 				const uint32_t reset_root_id = 0;
 				current_graph_id = reset_root_id;
+				current_loaded_file_path = selected_load_path;
+				SaveEditorCondig();
 				printf("StateMachineGraphEditor: 「%s」から正常読込したため階層をリセットしました。\n", selected_load_path.c_str());
 			}
 		}
@@ -1283,6 +1305,52 @@ std::vector<std::string> StateMachineGraphEditor::GetExistingSubGraphNames()
 		}
 	}
 	return unique_names;
+}
+
+//最後に使用したファイルパスを設定ファイルへ保存
+void StateMachineGraphEditor::SaveEditorCondig()
+{
+	nlohmann::json config_json;
+	config_json["LastOpenedFilePath"] = current_loaded_file_path;
+	const std::string config_file_path = "Data/Json/StateEditorConfig.json";
+	std::ofstream file_out(config_file_path);
+	if (file_out.is_open())
+	{
+		const int indent_space_size = 4;
+		file_out << std::setw(indent_space_size) << config_json << std::endl;
+		printf("StateMachineGraphEditor: 環境設定ファイルへ最後に開いたパスを記憶しました。\n");
+	}
+	else
+	{
+		printf("Error: SaveEditorConfig - 環境設定ファイル「%s」を開けませんでした。\n", config_file_path.c_str());
+	}
+}
+
+//設定ファイルから最後に使用したファイルパスを読み込む
+void StateMachineGraphEditor::LoadEditorCondig()
+{
+	const std::string config_file_path = "Data/Json/StateEditorConfig.json";
+	std::ifstream file_in(config_file_path);
+
+	if (!file_in.is_open())
+	{
+		printf("StateMachineGraphEditor: 環境設定ファイルがないため、初回デフォルト設定で起動します。\n");
+		current_loaded_file_path = "";
+		return;
+	}
+	nlohmann::json config_json;
+	file_in >> config_json;
+
+	if (config_json.find("LastOpenedFilePath") != config_json.end())
+	{
+		current_loaded_file_path = config_json["LastOpenedFilePath"].get<std::string>();
+		printf("StateMachineGraphEditor: 前回の終了ファイルパス「%s」を自動検出しました。\n", current_loaded_file_path.c_str());
+	}
+	else
+	{
+		printf("Warning: LoadEditorConfig - 設定ファイルのキー構造が不正です。パスを初期化します。\n");
+		current_loaded_file_path = "";
+	}
 }
 
 //カスタムデリータ

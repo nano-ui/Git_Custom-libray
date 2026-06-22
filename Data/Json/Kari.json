@@ -16,23 +16,8 @@
                         }
                     ],
                     "EndPinID": 104,
-                    "ID": 106,
+                    "ID": 109,
                     "StartPinID": 102
-                },
-                {
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
-                            "HashKey": 0,
-                            "ParamSecond": 0.0,
-                            "RefValue": 1.0,
-                            "SecondaryHash": 0,
-                            "Type": 1
-                        }
-                    ],
-                    "EndPinID": 101,
-                    "ID": 107,
-                    "StartPinID": 105
                 }
             ],
             "Nodes": [
@@ -67,8 +52,8 @@
                             "Name": "入力"
                         }
                     ],
-                    "IsSubGraph": false,
-                    "Name": "新規ステート",
+                    "IsSubGraph": true,
+                    "Name": "新規ステートサブステート",
                     "Output": [
                         {
                             "ID": 105,
@@ -78,10 +63,92 @@
                     ],
                     "PosX": -18.621337890625,
                     "PosY": 151.908935546875,
+                    "SubGraphID": 108
+                }
+            ]
+        },
+        {
+            "GraphID": 108,
+            "GraphName": "新規ステート",
+            "Links": [
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 1.0,
+                            "SecondaryHash": 0,
+                            "Type": 1
+                        }
+                    ],
+                    "EndPinID": 114,
+                    "ID": 116,
+                    "StartPinID": 112
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 1.0,
+                            "SecondaryHash": 0,
+                            "Type": 1
+                        }
+                    ],
+                    "EndPinID": 111,
+                    "ID": 117,
+                    "StartPinID": 115
+                }
+            ],
+            "Nodes": [
+                {
+                    "ID": 110,
+                    "Input": [
+                        {
+                            "ID": 111,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsSubGraph": false,
+                    "Name": "新規ステート",
+                    "Output": [
+                        {
+                            "ID": 112,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -41.100250244140625,
+                    "PosY": -90.20006561279297,
+                    "SubGraphID": 0
+                },
+                {
+                    "ID": 113,
+                    "Input": [
+                        {
+                            "ID": 114,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsSubGraph": false,
+                    "Name": "新規ステート",
+                    "Output": [
+                        {
+                            "ID": 115,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 28.235111236572266,
+                    "PosY": 137.11505126953125,
                     "SubGraphID": 0
                 }
             ]
         }
     ],
-    "NextID": 108
+    "NextID": 119
 }

@@ -81,6 +81,12 @@ private:
 	//サブグラフ名を全データから取得
 	std::vector<std::string> GetExistingSubGraphNames();
 
+	//最後に使用したファイルパスを設定ファイルへ保存
+	void SaveEditorCondig();
+
+	//設定ファイルから最後に使用したファイルパスを読み込む
+	void LoadEditorCondig();
+
 private:
 	//カスタムデリータ
 	struct EditorContexDeleter
@@ -110,5 +116,6 @@ private:
 	std::string pending_add_palette_node_name;			//パレットから追加予約されたステート名
 	bool pending_add_is_sub_graph;						//サブグラフかのフラグ
 	PaletteFilter current_filter = PaletteFilter::ALL;	//現在のパレットフィルター
+	std::string current_loaded_file_path = "";			//現在エディタで開いているファイルのパス名
 };
 
