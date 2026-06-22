@@ -4,6 +4,7 @@
 #include <string>
 #include <cstdint>
 #include <unordered_map>
+#include <../Serialization/json.hpp>
 
 //ピンの種類
 enum class PinKind
@@ -81,6 +82,12 @@ public:
 
 	//デストラクタ
 	~StateGraphDataManager() = default;
+
+	//ファイルに保存
+	void SaveToFile(const std::string& file_path);
+
+	//ファイル読み込み
+	bool LoadFromFile(const std::string& file_path);
 
 	//ノードの生成
 	void AddNode(GraphData* current_graph, float click_x, float click_y, const std::string& node_name = u8"新規ステート");

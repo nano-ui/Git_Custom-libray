@@ -1,0 +1,87 @@
+{
+    "Layers": [
+        {
+            "GraphID": 0,
+            "GraphName": "ルート",
+            "Links": [
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 1.0,
+                            "SecondaryHash": 0,
+                            "Type": 1
+                        }
+                    ],
+                    "EndPinID": 104,
+                    "ID": 106,
+                    "StartPinID": 102
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 1.0,
+                            "SecondaryHash": 0,
+                            "Type": 1
+                        }
+                    ],
+                    "EndPinID": 101,
+                    "ID": 107,
+                    "StartPinID": 105
+                }
+            ],
+            "Nodes": [
+                {
+                    "ID": 100,
+                    "Input": [
+                        {
+                            "ID": 101,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsSubGraph": false,
+                    "Name": "待機状態",
+                    "Output": [
+                        {
+                            "ID": 102,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 100.0,
+                    "PosY": 100.0,
+                    "SubGraphID": 0
+                },
+                {
+                    "ID": 103,
+                    "Input": [
+                        {
+                            "ID": 104,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsSubGraph": false,
+                    "Name": "新規ステート",
+                    "Output": [
+                        {
+                            "ID": 105,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -18.621337890625,
+                    "PosY": 151.908935546875,
+                    "SubGraphID": 0
+                }
+            ]
+        }
+    ],
+    "NextID": 108
+}

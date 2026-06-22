@@ -1,6 +1,8 @@
 #include "StateGraphDataManager.h"
 
 #include <cstdio>
+#include <fstream>
+#include <iomanip>
 
 //コンストラクタ
 StateGraphDataManager::StateGraphDataManager()
@@ -10,6 +12,209 @@ StateGraphDataManager::StateGraphDataManager()
 	root_graph.id = 0;
 	root_graph.name = u8"ルート";
 	layer_datas.push_back(root_graph);
+}
+
+//ファイルに保存
+void StateGraphDataManager::SaveToFile(const std::string& file_path)
+{
+	nlohmann::json root_json;	//JSONのルートオブジェクト
+	root_json["NextID"] = next_id; // IDカウンターの保存
+	nlohmann::json layers_array = nlohmann::json::array();	//全階層情報を格納する配列オブジェクト
+
+	//全階層情報を走査してパッキング
+	for (size_t g = 0; g < layer_datas.size(); g++)
+	{
+		const GraphData& graph = layer_datas[g];	//現在の階層データ
+		nlohmann::json graph_json;	//一つの階層情報を格納するJSONオブジェクト
+		graph_json["GraphID"] = graph.id; // 階層IDの保存
+		graph_json["GraphName"] = graph.name; // 階層名の保存
+
+		nlohmann::json nodes_array = nlohmann::json::array();	//ノードデータを格納する一時配列
+
+		//現在の階層のすべてのノードを走査
+		for (size_t n = 0; n < graph.nodes.size(); n++)
+		{
+			const GraphNode& node = graph.nodes[n];	//ループ対象のノードデータ
+			nlohmann::json node_json;	//単一ノード格納用のJSON
+
+			node_json["ID"] = node.id; // ノードID
+			node_json["Name"] = node.name; // ステート名
+			node_json["PosX"] = node.position_x; // 座標X
+			node_json["PosY"] = node.position_y; // 座標Y
+			node_json["IsSubGraph"] = node.is_sub_graph; // サブグラフフラグ
+			node_json["SubGraphID"] = node.sub_graph_id; // 紐付く下位階層ID
+
+			//入力ピンのシリアライズ
+			nlohmann::json inputs_array = nlohmann::json::array(); // 入力ピン用の一時配列
+			for (const auto& pin : node.inputs)
+			{
+				inputs_array.push_back({ {"ID", pin.id}, {"Name", pin.name}, {"Kind", static_cast<int>(pin.kind)} });
+			}
+			node_json["Input"] = inputs_array; // ノードデータにバインド
+
+			//出力ピンのシリアライズ
+			nlohmann::json output_array = nlohmann::json::array(); // 出力ピン用の一時配列
+			for (const auto& pin : node.outputs)
+			{
+				output_array.push_back({ {"ID", pin.id}, {"Name", pin.name}, {"Kind", static_cast<int>(pin.kind)} });
+			}
+			node_json["Output"] = output_array; // ノードデータにバインド
+
+			nodes_array.push_back(node_json); // 階層用ノード配列へプッシュ
+		}
+		graph_json["Nodes"] = nodes_array;
+		nlohmann::json links_array = nlohmann::json::array();	//接続線を格納する一時配列
+
+		//現在の階層の全てのリンクを走査
+		for (size_t l = 0; l < graph.links.size(); l++)
+		{
+			const GraphLink& link = graph.links[l];	//ループ対象のリンクデータ
+			nlohmann::json link_json;	//単一リンク格納用のJSON
+
+			link_json["ID"] = link.id; // リンク固有ID
+			link_json["StartPinID"] = link.start_pin_id; // 開始ピンID
+			link_json["EndPinID"] = link.end_pin_id; // 終了ピンID
+
+			//リンクが抱える全ての遷移条件をパッキング
+			nlohmann::json conds_array = nlohmann::json::array();	//条件式格納用の配列
+			for (const auto& cond : link.conditions)
+			{
+				nlohmann::json cond_json;	//単一条件格納用のJSON
+				cond_json["Type"] = static_cast<int>(cond.type); // 判定ノードの種類
+				cond_json["HashKey"] = cond.hash_key; // 主変数ハッシュキー
+				cond_json["RefValue"] = cond.reference_value; // 基準値
+				cond_json["CompOp"] = cond.compare_operator; // 演算子
+				cond_json["ParamSecond"] = cond.param_second; // 第2数値引数
+				cond_json["SecondaryHash"] = cond.secondary_hash; //副変数ハッシュキーを保存
+				conds_array.push_back(cond_json); // 配列へ追加
+			}
+			link_json["Conditions"] = conds_array; // リンクにバインド
+			links_array.push_back(link_json); // 階層用リンク配列へプッシュ
+		}
+		graph_json["Links"] = links_array;
+		layers_array.push_back(graph_json);
+	}
+	root_json["Layers"] = layers_array; // 大元に階層リストを格納
+
+	//物理ファイルへの書き出し処理
+	std::ofstream file_stream(file_path); // 保存用ファイルストリーム
+	if (file_stream.is_open()) // オープン成功判定
+	{
+		const int indent_space_count = 4; // インデント用のスペース幅定数
+		file_stream << std::setw(indent_space_count) << root_json << std::endl; 
+		printf("StateGraphDataManager: グラフデータをファイル「%s」へ正常に保存しました。\n", file_path.c_str());
+	}
+	else
+	{
+		// 意図しない挙動（ファイルが開けない）が発生した場合のエラーログ
+		printf("Error: SaveToFile - ファイル「%s」を開けませんでした。\n", file_path.c_str());
+	}
+}
+
+//ファイル読み込み
+bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
+{
+	std::ifstream file_stream(file_path);	//ロード用ファイルストリーム
+
+	//ファイルが存在しない、または開けないか判定
+	if (!file_stream.is_open())
+	{
+		printf("Warning: LoadFromFile - 「%s」が存在しないため新規作成用の状態を維持します。\n", file_path.c_str());
+		return false; // 読み込み処理のスキップ
+	}
+
+	nlohmann::json root_json;	//パース用ルートオブジェクト
+	file_stream >> root_json; // JSONの一括パース
+
+	//データ破損チェック
+	if (root_json.find("NextID") == root_json.end() || root_json.find("Layers") == root_json.end())
+	{
+		printf("Error: LoadFromFile - 「%s」のデータ構造が不正です。\n", file_path.c_str());
+		return false; // 読み込み中断
+	}
+
+	layer_datas.clear(); // 既存のコンテナのクリア
+	next_id = root_json["NextID"]; // IDカウンターの復元
+
+	//階層情報の展開・復元
+	for (const auto& graph_json : root_json["Layers"])
+	{
+		// Layers の中に Nodes キーが正しく書き込まれているか事前精査 
+		if (graph_json.find("Nodes") == graph_json.end() || graph_json.find("Links") == graph_json.end())
+		{
+			printf("Error: LoadFromFile - 階層データのキー構造が壊れているため復元をスキップします。\n"); // 原因の可視化 [cite: 2026-01-06]
+			return false;
+		}
+
+		GraphData graph;	//復元先の階層インスタンス
+		graph.id = graph_json["GraphID"]; // 階層ID
+		graph.name = graph_json["GraphName"]; // 階層名
+
+		//ノード群の復元展開
+		for (const auto& node_json : graph_json["Nodes"])
+		{
+			GraphNode node;	//復元先のノードインスタンス
+			node.id = node_json["ID"]; // ID
+			node.name = node_json["Name"]; // 名前
+			node.position_x = node_json["PosX"]; // 座標X
+			node_json["PosY"].get_to(node.position_y); // 座標Y
+			node.is_sub_graph = node_json["IsSubGraph"]; // フラグ
+			node.sub_graph_id = node_json["SubGraphID"]; // 下位ID
+
+			//入力ピンの復元
+			for (const auto& pin_json : node_json["Input"])
+			{
+				GraphPin pin; // ピン構造体 
+				pin.id = pin_json["ID"];
+				pin.name = pin_json["Name"];
+				pin.kind = static_cast<PinKind>(pin_json["Kind"].get<int>());
+				pin.node_id = node.id;
+				node.inputs.push_back(pin); // コンテナへ追加
+			}
+
+			//出力ピンの復元
+			for (const auto& pin_json : node_json["Output"])
+			{
+				GraphPin pin; // ピン構造体 
+				pin.id = pin_json["ID"];
+				pin.name = pin_json["Name"];
+				pin.kind = static_cast<PinKind>(pin_json["Kind"].get<int>());
+				pin.node_id = node.id;
+				node.outputs.push_back(pin); // コンテナへ追加
+			}
+			graph.nodes.push_back(node); // 階層データにノードを追加
+		}
+
+		//接続線リンク及び遷移条件の復元展開
+		for (const auto& link_json : graph_json["Links"])
+		{
+			GraphLink link;	//復元先のリンクインスタンス
+			link.id = link_json["ID"]; // リンクID
+			link.start_pin_id = link_json["StartPinID"]; // 開始ピン
+			link.end_pin_id = link_json["EndPinID"]; // 終了ピン
+
+			//各条件式の復元
+			for (const auto& cond_json : link_json["Conditions"])
+			{
+				GraphTransitionCondition cond; // 条件式構造体 
+				cond.type = static_cast<ConditionNodeType>(cond_json["Type"].get<int>());
+				cond.hash_key = cond_json["HashKey"];
+				cond.reference_value = cond_json["RefValue"];
+				cond.compare_operator = cond_json["CompOp"];
+				cond.param_second = cond_json["ParamSecond"];
+
+				if (cond_json.find("SecondaryHash") != cond_json.end())
+				{
+					cond.secondary_hash = cond_json["SecondaryHash"];
+				}
+				link.conditions.push_back(cond); // リンクに条件を追加
+			}
+			graph.links.push_back(link); // 階層データにリンクを追加
+		}
+		layer_datas.push_back(graph); // マネージャーに階層を追加
+	}
+	printf("StateGraphDataManager: ファイル「%s」から全階層データを正常に復元ロードしました。\n", file_path.c_str());
+	return true; // 読込成功
 }
 
 //ノードの生成
@@ -278,7 +483,7 @@ void StateGraphDataManager::DeleteConditionFromLink(uint32_t graph_id, uint32_t 
 					//配列の範囲外か判定
 					if (condition_index >= layer_datas[g].links[l].conditions.size())
 					{
-						printf("Error: DeleteConditionFromLink - インデックス %zu が範囲外です。\n", condition_index); // デバッグ出力 [cite: 2026-01-11]
+						printf("Error: DeleteConditionFromLink - インデックス %zu が範囲外です。\n", condition_index); // デバッグ出力
 						return;
 					}
 					auto target_iterator = layer_datas[g].links[l].conditions.begin() + condition_index;	//削除対象のイテレーター

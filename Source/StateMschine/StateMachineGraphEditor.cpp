@@ -4,6 +4,7 @@
 #include "../StateMschine/StateBlackboard.h"
 #include "../StateMschine/StateGraphDataManager.h"
 #include "../StateMschine/TransitionConditionEditor.h"
+#include "../Common/FileDialogHelper.h"
 
 #include <imgui_node_editor_internal.h>
 #include <cassert>
@@ -131,12 +132,58 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	// 画面描画
 	ImGui::Begin(u8"ステートマシンエディタ");
 
+	const ImVec4 save_btn_color = ImVec4(0.2f, 0.5f, 0.2f, 1.0f);
+	ImGui::PushStyleColor(ImGuiCol_Button, save_btn_color);
+
+	const float upper_btn_width = 200.0f;
+	const float upper_btn_height = 25.0f;
+
+	if (ImGui::Button(u8"グラフデータを保存", ImVec2(upper_btn_width, upper_btn_height)))
+	{
+		std::string selected_save_path = FileDialogHelper::SaveFileDialog(); 
+		if (!selected_save_path.empty())
+		{
+			data_manager->SaveToFile(selected_save_path); 
+		}
+	}
+	ImGui::PopStyleColor();
+
+	ImGui::SameLine();
+
+	const ImVec4 load_btn_color = ImVec4(0.2f, 0.4f, 0.6f, 1.0f);
+	ImGui::PushStyleColor(ImGuiCol_Button, load_btn_color);
+
+	if (ImGui::Button(u8"グラフデータを読込", ImVec2(upper_btn_width, upper_btn_height)))
+	{
+		std::string selected_load_path = FileDialogHelper::OpenFileDialog();
+		if (!selected_load_path.empty())
+		{
+			bool load_result = data_manager->LoadFromFile(selected_load_path);
+			if (load_result)
+			{
+				const uint32_t reset_root_id = 0;
+				current_graph_id = reset_root_id;
+				printf("StateMachineGraphEditor: 「%s」から正常読込したため階層をリセットしました。\n", selected_load_path.c_str());
+			}
+		}
+	}
+	ImGui::PopStyleColor();
+
+	ImGui::Spacing();
+
 	// 階層ナビゲーションを描画
 	if (DrawHeaderNavigation())
 	{
 		ImGui::End();
 		return;
 	}
+
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+
+	const float pane_top_margin_y = 10.0f;
+	ImGui::Dummy(ImVec2(0.0f, pane_top_margin_y));
 
 	static float dynamic_left_width = 290.0f;	// マウスで変更可能な左サイドバー横幅
 	static float dynamic_right_width = 300.0f;	// マウスで変更可能な右サイドバー横幅
@@ -514,8 +561,10 @@ bool StateMachineGraphEditor::DrawHeaderNavigation()
 	//ナビゲーションバーの背景色の描画
 	ImVec2 window_pos = ImGui::GetWindowPos(); // 描画位置
 	float title_bar_height = ImGui::GetFrameHeight(); // タイトルバーの高さ
-	ImVec2 bar_pos = ImVec2(window_pos.x, window_pos.y + title_bar_height); // バーの座標
-	ImVec2 bar_size = ImVec2(ImGui::GetWindowWidth(), 35.0f); // バーのサイズ
+	const float button_margin_y = 35.0f;
+	ImVec2 bar_pos = ImVec2(window_pos.x, window_pos.y + title_bar_height + button_margin_y);
+	const float bar_height_size = 35.0f;
+	ImVec2 bar_size = ImVec2(ImGui::GetWindowWidth(), bar_height_size);
 
 	ImDrawList* draw_list = ImGui::GetWindowDrawList(); // 描画リスト取得
 	draw_list->AddRectFilled(bar_pos, ImVec2(bar_pos.x + bar_size.x, bar_pos.y + bar_size.y), IM_COL32(35, 35, 35, 255));

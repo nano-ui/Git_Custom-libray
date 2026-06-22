@@ -330,6 +330,9 @@
     <ClCompile Include="Source\BehaviorTree\WeightedNode.cpp">
       <Filter>Source\BehaviorTree</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Common\FileDialogHelper.cpp">
+      <Filter>Source\Common\FileDialogHelper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Shaders\BlurShader.h">
@@ -625,6 +628,9 @@
     </ClInclude>
     <ClInclude Include="Source\BehaviorTree\WeightedNode.h">
       <Filter>Source\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileDialogHelper.h">
+      <Filter>Source\Common\FileDialogHelper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -944,6 +950,9 @@
     </Filter>
     <Filter Include="Source\BehaviorTree">
       <UniqueIdentifier>{b010fc17-9f2a-49e4-911d-5448d3138c23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\FileDialogHelper">
+      <UniqueIdentifier>{8488f91c-b44a-47e3-baaf-c403d93ecbb9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
