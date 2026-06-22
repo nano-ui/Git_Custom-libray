@@ -292,6 +292,39 @@ void StateGraphDataManager::DeleteConditionFromLink(uint32_t graph_id, uint32_t 
 	printf("Error: DeleteConditionFromLink - 指定された階層ID %d またはリンクID %d が見つかりませんでした。\n", graph_id, link_id);
 }
 
+//指定されたピンIDが所属している親ノードのIDを逆引き取得
+uint32_t StateGraphDataManager::GetNodeIdFromPinId(uint32_t graph_id, uint32_t pin_id)
+{
+	for (size_t g = 0; g < layer_datas.size(); g++)
+	{
+		if (layer_datas[g].id != graph_id)
+		{
+			continue;
+		}
+
+		for (size_t n = 0; n < layer_datas[g].nodes.size(); n++)
+		{
+			const GraphNode& node = layer_datas[g].nodes[n];
+			for (size_t p = 0; p < node.inputs.size(); p++)
+			{
+				if (node.inputs[p].id == pin_id)
+				{
+					return node.id;
+				}
+			}
+
+			for (size_t p = 0; p < node.outputs.size(); p++)
+			{
+				if (node.outputs[p].id == pin_id)
+				{
+					return node.id;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
 //サブグラフノードの生成
 void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, float click_y, const std::string& name)
 {

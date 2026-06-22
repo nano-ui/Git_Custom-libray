@@ -32,6 +32,7 @@ struct GraphNode
 	std::vector<GraphPin> outputs;	//出力ピンのリスト
 	bool is_sub_graph;				//階層型ステートマシンのグラフ
 	uint32_t sub_graph_id;			//下位階層のグラフID
+	uintptr_t state_runtime_address = 0;	//ステートのメモリ番地
 };
 
 //判定ノードの種類
@@ -113,6 +114,9 @@ public:
 
 	//全ての階層リストを取得
 	std::vector<GraphData>& GetLayerDatas() { return layer_datas; }
+
+	//指定されたピンIDが所属している親ノードのIDを逆引き取得
+	uint32_t GetNodeIdFromPinId(uint32_t graph_id, uint32_t pin_id);
 
 	//IDカウンターの参照と更新
 	uint32_t FetchAndIncrementId() { return next_id++; }

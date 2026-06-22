@@ -101,6 +101,10 @@ private:
 	std::unique_ptr<StateGraphDataManager> data_manager;		//データを専門的に扱うマネージャー
 	std::unique_ptr<TransitionConditionEditor> conditon_editor;	//遷移条件UI専用エディタ
 	uint32_t current_graph_id;									//現在の階層のグラフID
+	uint32_t previous_active_node_id = 0;;						//前フレームのステート名
+	uint32_t current_active_node_id = 0;						//現在のステート名
+	uint32_t auto_flowing_link_id = 0;							//アニメーションを実行するリンクID
+	float auto_flow_timer = 0.0f;								//エフェクトの有効時間
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::vector<std::string> available_state_palette;	//追加可能な全てのステートリスト
 	std::string pending_add_palette_node_name;			//パレットから追加予約されたステート名

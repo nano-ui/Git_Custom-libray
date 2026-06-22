@@ -57,6 +57,73 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		return;
 	}
 
+	//ブラックボードとリンクの条件式から現在アクティブなノードを完全自動特定
+	if (current_active_node_id == 0 && !current_graph->nodes.empty())
+	{
+		current_active_node_id = current_graph->nodes.front().id;
+	}
+
+	if (blackboard)
+	{
+		// 階層内のすべてのリンクを走査
+		for (size_t i = 0; i < current_graph->links.size(); i++)
+		{
+			const GraphLink& link = current_graph->links[i]; // 精査対象のリンク
+
+			// リンクの開始ピンが、現在アクティブなノードの出力ピンであるか逆引き判定
+			uint32_t src_node_id = data_manager->GetNodeIdFromPinId(current_graph_id, link.start_pin_id); // リンク元のノードID
+
+			if (src_node_id == current_active_node_id)
+			{
+				bool is_all_conditions_met = !link.conditions.empty(); // 条件が1つ以上あり、すべて満たされているかフラグ
+
+				// リンク内に登録されているすべての条件式（Health <= 0 など）をループ評価
+				for (size_t c = 0; c < link.conditions.size(); c++)
+				{
+					const GraphTransitionCondition& graph_cond = link.conditions[c]; // 編集データ側の条件
+
+					// 実行時判定用の構造体へ安全にデータをテンポラリ変換マッピング
+					TransitionCondition runtime_cond; // 実行時判定用の構造体インスタンス
+					runtime_cond.type = graph_cond.type; // 判定タイプのコピー
+					runtime_cond.hash_key = graph_cond.hash_key; // 変数ハッシュのコピー
+					runtime_cond.reference_value = graph_cond.reference_value; // 基準値のコピー
+					runtime_cond.compart_op = static_cast<CompareOperator>(graph_cond.compare_operator); // 演算子のキャストコピー
+					runtime_cond.param_second = graph_cond.param_second; // 第2引数パラメータのコピー
+					runtime_cond.secondary_hash = graph_cond.secondary_hash; // 対象ハッシュのコピー
+
+					// ブラックボードの実数値を元に、条件が満たされているか自律判定
+					if (!runtime_cond.IsJudgment(*blackboard))
+					{
+						is_all_conditions_met = false; // 1つでも満たしていなければ不成立
+						break;
+					}
+				}
+
+				// すべての遷移条件が完全に満たされた場合、自動的にアクティブノードを切り替えます！
+				if (is_all_conditions_met)
+				{
+					uint32_t dst_node_id = data_manager->GetNodeIdFromPinId(current_graph_id, link.end_pin_id); // 遷移先のノードID
+
+					previous_active_node_id = current_active_node_id; // 前フレームのIDを退避
+					current_active_node_id = dst_node_id;             // 新しいアクティブノードIDを確定登録
+
+					auto_flowing_link_id = link.id;     // 流光エフェクトを走らせる対象のリンクIDをロック
+					const float flow_duration = 0.5f;    // アニメーション表示時間（0.5秒） 
+					auto_flow_timer = flow_duration;     // 残り時間タイマーをリセット
+					break;
+				}
+			}
+		}
+	}
+
+	// アニメーションタイマーが作動している場合は毎フレーム自動で減算 
+	if (auto_flow_timer > 0.0f)
+	{
+		auto_flow_timer -= ImGui::GetIO().DeltaTime; // デルタタイム分引き算
+	}
+
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
+
 	bool trigger_add_node = false;			// ノード追加の実行トリガー
 	bool trigger_add_subgraph = false;		// サブグラフ追加の実行トリガー
 	bool trigger_convert_subgraph = false;	// サブグラフ変換の実行トリガー
@@ -129,53 +196,65 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	// 階層内のすべてのノードを描画
 	for (size_t i = 0; i < current_graph->nodes.size(); i++)
 	{
-		const GraphNode& node = current_graph->nodes[i]; // ノード参照
+		const GraphNode& node = current_graph->nodes[i]; // 現在描画対象となっているノードデータの参照
 
-		// サブグラフノードの場合は色を変更するスタイルをプッシュ
-		int pushed_style_count = 0;	// スタイル変更を適用した数
-		if (node.is_sub_graph)
+		int pushed_style_count = 0;	//復元のためにこのノードでPushしたスタイルカラーの総数をカウント
+
+		bool is_active_now = (node.id == current_active_node_id); // アクティブ状態フラグ
+		if (is_active_now)
 		{
-			ed::PushStyleColor(ed::StyleColor_NodeBg, ImVec4(0.1f, 0.2f, 0.4f, 0.85f));
-			ed::PushStyleColor(ed::StyleColor_SelNodeBorder, ImVec4(0.3f, 0.6f, 1.0f, 1.0f));
-			pushed_style_count = 2; // 2色追加 
+			const ImVec4 gold_glow_color = ImVec4(0.0f, 1.0f, 0.3f, 1.0f); // ライムグリーン
+			ed::PushStyleColor(ed::StyleColor_NodeBorder, gold_glow_color); // ノードの枠線を発光色に上書き
+			pushed_style_count++; // プッシュ数をインクリメント
 		}
 
-		ed::BeginNode(node.id);
-		ImGui::Text("%s", node.name.c_str());
-		ImGui::Spacing();
+		// サブグラフノード（下位階層持ち）であるか判定
+		if (node.is_sub_graph)
+		{
+			const ImVec4 sub_bg_color = ImVec4(0.1f, 0.2f, 0.4f, 0.85f); // サブグラフ用の深みのある背景色
+			const ImVec4 sub_sel_color = ImVec4(0.3f, 0.6f, 1.0f, 1.0f); // サブグラフ選択時の境界線カラー
 
-		// 入力ピンのグループ配置
+			ed::PushStyleColor(ed::StyleColor_NodeBg, sub_bg_color); // ノードの背景色を変更
+			ed::PushStyleColor(ed::StyleColor_SelNodeBorder, sub_sel_color); // 選択時の枠線色を変更
+			pushed_style_count += 2; // 2つのスタイルが追加されたことを記録
+		}
+		ed::BeginNode(node.id); // ノードの描画スコープを開始
+
+		ImGui::Text("%s", node.name.c_str()); // 上部にステート名を表示
+		ImGui::Spacing(); // 縦方向に少し隙間を空ける
+
+		// 入力ピン群を左側にまとめるためのグループ配置を開始
 		ImGui::BeginGroup();
 		for (size_t in_idx = 0; in_idx < node.inputs.size(); in_idx++)
 		{
-			const GraphPin& pin = node.inputs[in_idx]; // 入力ピン
-			ed::BeginPin(pin.id, ed::PinKind::Input);
-			ImGui::Text("->%s", pin.name.c_str());
-			ed::EndPin();
+			const GraphPin& pin = node.inputs[in_idx]; // 入力ピンデータの参照
+			ed::BeginPin(pin.id, ed::PinKind::Input); // ピンの磁着範囲スコープ開始
+			ImGui::Text("->%s", pin.name.c_str()); // 入力ピン名を描画
+			ed::EndPin(); // ピンのスコープ終了
 		}
-		ImGui::EndGroup();
+		ImGui::EndGroup(); // 入力グループを終了
 
-		ImGui::SameLine();
-		ImGui::Dummy(ImVec2(40.0f, 0.0f));
-		ImGui::SameLine();
+		ImGui::SameLine(); // 横並びにするため改行を抑制
+		const float middle_spacer_width = 40.0f; // 入出力ピンの間に挟む空間の横幅定数
+		ImGui::Dummy(ImVec2(middle_spacer_width, 0.0f)); // 中央に固定の余白を生成
+		ImGui::SameLine(); // 横並びを継続
 
-		// 出力ピンのグループ配置
+		// 出力ピン群を右側にまとめるためのグループ配置を開始
 		ImGui::BeginGroup();
 		for (size_t out_idx = 0; out_idx < node.outputs.size(); out_idx++)
 		{
-			const GraphPin& pin = node.outputs[out_idx]; // 出力ピン
-			ed::BeginPin(pin.id, ed::PinKind::Output);
-			ImGui::Text("%s ->", pin.name.c_str());
-			ed::EndPin();
+			const GraphPin& pin = node.outputs[out_idx]; // 出力ピンデータの参照
+			ed::BeginPin(pin.id, ed::PinKind::Output); // ピンの磁着範囲スコープ開始
+			ImGui::Text("%s ->", pin.name.c_str()); // 出力ピン名を描画
+			ed::EndPin(); // ピンのスコープ終了
 		}
-		ImGui::EndGroup();
+		ImGui::EndGroup(); // 出力グループを終了
 
-		ed::EndNode();
-
-		// スタイルカラーの復元
+		ed::EndNode(); // 統合されたノードの描画スコープを終了
+		// ループ内でプッシュされた数だけ正確にポップを回してスタックのズレを完全に防ぐ
 		for (int color_idx = 0; color_idx < pushed_style_count; color_idx++)
 		{
-			ed::PopStyleColor();
+			ed::PopStyleColor(); // スタイルカラーを1つポップして復元
 		}
 	}
 
@@ -184,6 +263,10 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	{
 		const GraphLink& link = current_graph->links[i]; // リンク参照
 		ed::Link(link.id, link.start_pin_id, link.end_pin_id);
+		if (link.id == auto_flowing_link_id && auto_flow_timer > 0.0f)
+		{
+			ed::Flow(link.id);
+		}
 	}
 
 	// 接続線の作成判定
@@ -615,7 +698,7 @@ void StateMachineGraphEditor::DrawPaletterFilterButtons()
 {
 	PaletteFilter next_filter = current_filter; // 次フレームから適用するフィルター状態 
 
-	const ImVec4 active_color = ImVec4(0.2f, 0.6f, 0.4f, 1.0f); // 選択中のハイライト緑色（マジックナンバー回避） [cite: 2026-05-11, 2026-06-12]
+	const ImVec4 active_color = ImVec4(0.2f, 0.6f, 0.4f, 1.0f); // 選択中のハイライト緑色（マジックナンバー回避） 
 
 	// 「すべて表示」ボタンの処理
 	if (current_filter == PaletteFilter::ALL)

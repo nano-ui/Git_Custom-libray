@@ -84,7 +84,6 @@ void TransitionConditionEditor::DrawConditonSettings(StateGraphDataManager* data
 		ImGui::PopID();
 		i++;
 	}
-
 }
 
 //’Êí”äŠr—p‚ÌImGui“ü—ÍUI•`‰æ
