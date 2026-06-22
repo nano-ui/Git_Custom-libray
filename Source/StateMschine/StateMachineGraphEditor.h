@@ -65,7 +65,7 @@ private:
 	void DrawLinkProperty(GraphData* current_graph, uint32_t link_id, StateBlackboard* blackboard);
 
 	//ノード選択時の詳細プロパティ描画
-	void DrawNodeProperty(GraphData* current_graph, uint32_t node_id);
+	void DrawNodeProperty(GraphData* current_graph, uint32_t node_id, StateBlackboard* blackboard);
 
 	//接続線の作成を検知してデータに追加
 	void CreateNewLink(GraphData* current_graph);

@@ -3,6 +3,7 @@
 #include "../Input/Input.h"
 #include "../Graphics/Graphics.h"
 #include "../GameObjects/ObjectFactory.h"
+#include "../StateMschine/StateBlackboard.h"
 
 #include <imgui.h>
 
@@ -39,6 +40,8 @@ void Player::Initialize()
 	capsule_collider.is_active = true;
 	AddCollider(&capsule_collider);
 	character->PlayAnimation("Idle", true);
+	blackboard->RegisterVariable("AnimationList");
+	blackboard->SetValue("AnimationList", character->GetAnimationNames());
 }
 
 //XVˆ—

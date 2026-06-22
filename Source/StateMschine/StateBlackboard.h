@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <string_view>
 #include <imgui.h>
+#include <vector>
 
 #include "StateGraphDataManager.h"
 
@@ -37,7 +38,7 @@ enum class CompareOperator
 struct TransitionCondition;
 
 //登録可能な型
-using BlackboardData = std::variant<bool, int, float, DirectX::XMFLOAT3>;
+using BlackboardData = std::variant<bool, int, float, DirectX::XMFLOAT3, std::vector<std::string>>;
 
 class StateBlackboard
 {
@@ -80,7 +81,8 @@ public:
 		//変数名が登録されていない際のエラー処理
 		if (iterator == data_map.end())
 		{
-			std::string original_name = name_map[hash_key];	//出力用の文字列
+			auto name_it = name_map.find(hash_key);
+			std::string original_name = (name_it != name_map.end()) ? name_it->second : variable_name;	//出力用の文字列
 
 			std::cerr << "Error : 指定された変数名［" << original_name << "]は登録されていません。\n";
 			return default_value;
@@ -92,7 +94,8 @@ public:
 		//型が一致しなかった場合
 		if (!target_value)
 		{
-			std::string original_name = name_map[hash_key];	//出力用の文字列
+			auto name_it = name_map.find(hash_key);
+			std::string original_name = (name_it != name_map.end()) ? name_it->second : variable_name;	//出力用の文字列
 
 			std::cerr << "Error: 変数 [" << original_name << "] の型が一致しません。\n";
 			return default_value;
@@ -173,6 +176,19 @@ private:
 
 		//bool型用の描画・編集処理
 		void operator()(bool& val) { ImGui::Checkbox(name.c_str(), &val); }
+
+		void operator()(std::vector<std::string>& val)
+		{
+			//ツリーを展開してリストの中にを見えるようにする
+			if (ImGui::TreeNode(name.c_str()))
+			{
+				for (size_t i = 0; i < val.size(); i++)
+				{
+					ImGui::Text("[%zn] : %s", i, val[i].c_str());
+				}
+				ImGui::TreePop();
+			}
+		}
 	};
 
 private:
@@ -265,6 +281,12 @@ struct CompareVisitor
 		case CompareOperator::NotEqual:		return (val.x != ref->x) || (val.y != ref->y) || (val.z != ref->z); break;
 		default:							return false;		break;
 		}
+	}
+
+	//比較を行わないためfalseを返す
+	bool operator()(std::vector<std::string>& val)
+	{
+		return false;
 	}
 };
 

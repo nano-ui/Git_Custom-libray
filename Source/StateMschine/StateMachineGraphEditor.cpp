@@ -958,7 +958,7 @@ void StateMachineGraphEditor::DrawPropertyWindow(GraphData* current_graph, State
 	if (select_count > 0)
 	{
 		uint32_t selected_node_id = static_cast<uint32_t>(selected_nodes[0].Get()); // キャストID
-		DrawNodeProperty(current_graph, selected_node_id);
+		DrawNodeProperty(current_graph, selected_node_id, blackboard);
 	}
 	else if (select_link_count > 0)
 	{
@@ -972,7 +972,7 @@ void StateMachineGraphEditor::DrawPropertyWindow(GraphData* current_graph, State
 }
 
 //ノード選択時の詳細プロパティ描画
-void StateMachineGraphEditor::DrawNodeProperty(GraphData* current_graph, uint32_t node_id)
+void StateMachineGraphEditor::DrawNodeProperty(GraphData* current_graph, uint32_t node_id, StateBlackboard* blackboard)
 {
 	GraphNode* target_node = nullptr;	//編集対象ノード
 
@@ -1017,6 +1017,86 @@ void StateMachineGraphEditor::DrawNodeProperty(GraphData* current_graph, uint32_
 				}
 			}
 		}
+	}
+
+	ImGui::SetNextItemWidth(-1.0f);
+	if (ImGui::InputText(u8"##StateNameInput", name_input_buffer, name_buffer_size))
+	{
+		target_node->name = name_input_buffer;
+
+		//サブグラフ名との同期
+		if (target_node->is_sub_graph)
+		{
+			for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
+			{
+				if (data_manager->GetLayerDatas()[i].id == target_node->sub_graph_id)
+				{
+					data_manager->GetLayerDatas()[i].name = target_node->name;
+				}
+			}
+		}
+	}
+
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+
+	ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), u8"[アクションとアニメーション");
+
+	const char* action_ui_names[] = { u8"待機",u8"移動",u8"空中",u8"攻撃",u8"回避",u8"固有技" };	//UIリスト
+	const int total_action_count = 6;	//アクション総数
+
+	ImGui::Text(u8"アクション");
+	ImGui::SetNextItemWidth(-1.0f);
+	ImGui::Combo(u8"ActionCategoryCombo", &target_node->action_category, action_ui_names, total_action_count);
+
+	ImGui::Spacing();
+
+	ImGui::Text(u8"再生アニメーション");
+	ImGui::SetNextItemWidth(-1.0f);
+
+	std::vector<std::string> anim_list;	//アニメーションリストコンテナ
+	const std::string anim_list_key = "AnimationList";
+
+	if (blackboard)
+	{
+		std::vector<std::string> empty_fallback = {};	//取得失敗時の空リスト
+		anim_list = blackboard->GetValue<std::vector<std::string>>(anim_list_key, empty_fallback);
+	}
+
+	//取得したリストに中身が存在するか判定
+	if (!anim_list.empty())
+	{
+		//モデルから取得したアニメーション名をドロップダウンリストで描画
+		if (ImGui::BeginCombo(u8"##AnimNameCombo", target_node->animation_name.c_str()))
+		{
+			for (size_t i = 0; i < anim_list.size(); i++)
+			{
+				bool is_selected = (target_node->animation_name == anim_list[i]);	//現在選択されているかフラグ
+
+				if (ImGui::Selectable(anim_list[i].c_str(), is_selected))
+				{
+					target_node->animation_name = anim_list[i];
+				}
+				if (is_selected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+	else
+	{
+		const size_t anim_buffer_size = 128;	//バッファサイズ
+		char anim_input_buffer[anim_buffer_size] = {};	//入力バッファ
+		strcpy_s(anim_input_buffer, anim_buffer_size, target_node->animation_name.c_str());
+
+		if (ImGui::InputText(u8"##AnimNameInput", anim_input_buffer, anim_buffer_size))
+		{
+			target_node->animation_name = anim_input_buffer;
+		}
+		ImGui::TextColored(ImVec4(0.8f, 0.4f, 0.4f, 1.0f), u8"※ブラックボードに AnimationList がありません");
 	}
 
 	//削除ボタン

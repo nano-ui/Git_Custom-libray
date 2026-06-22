@@ -34,6 +34,8 @@ struct GraphNode
 	bool is_sub_graph;				//階層型ステートマシンのグラフ
 	uint32_t sub_graph_id;			//下位階層のグラフID
 	uintptr_t state_runtime_address = 0;	//ステートのメモリ番地
+	int action_category = 0;				//固有アクション
+	std::string animation_name = "";		//アニメーション名
 };
 
 //判定ノードの種類

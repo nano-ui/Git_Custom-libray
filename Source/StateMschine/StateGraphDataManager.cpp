@@ -43,6 +43,8 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 			node_json["PosY"] = node.position_y; // 座標Y
 			node_json["IsSubGraph"] = node.is_sub_graph; // サブグラフフラグ
 			node_json["SubGraphID"] = node.sub_graph_id; // 紐付く下位階層ID
+			node_json["ActionCategory"] = node.action_category;	// アクション値
+			node_json["AnimationName"] = node.animation_name;	// アニメ名
 
 			//入力ピンのシリアライズ
 			nlohmann::json inputs_array = nlohmann::json::array(); // 入力ピン用の一時配列
@@ -160,6 +162,15 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 			node_json["PosY"].get_to(node.position_y); // 座標Y
 			node.is_sub_graph = node_json["IsSubGraph"]; // フラグ
 			node.sub_graph_id = node_json["SubGraphID"]; // 下位ID
+			
+			if (node_json.find("ActionCategory") != node_json.end())
+			{
+				node.action_category = node_json["ActionCategory"];
+			}
+			if (node_json.find("AnimationName") != node_json.end())
+			{
+				node.animation_name = node_json["AnimationName"];
+			}
 
 			//入力ピンの復元
 			for (const auto& pin_json : node_json["Input"])
@@ -566,6 +577,8 @@ void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, flo
 			copied_node.position_x = src_node.position_x;
 			copied_node.position_y = src_node.position_y;
 			copied_node.is_sub_graph = src_node.is_sub_graph;
+			copied_node.action_category = src_node.action_category;
+			copied_node.animation_name = src_node.animation_name;
 
 			// 内部ノードがさらにサブグラフを持っているか判定
 			if (src_node.is_sub_graph)
@@ -651,6 +664,7 @@ void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, flo
 	new_node.position_y = click_y;       // 配置初期Y座標
 	new_node.is_sub_graph = true;        // サブグラフ属性を有効化
 	new_node.sub_graph_id = real_sub_graph_id; // 完全コピーが完了した内部の階層IDをリンク紐付け
+	
 
 	// キャンバスに表示される親ノード用の入力ピン設定
 	GraphPin new_input;	// 新しい入力ピン情報 
