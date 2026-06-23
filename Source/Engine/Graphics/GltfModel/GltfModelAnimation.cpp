@@ -17,6 +17,7 @@ void GltfModelAnimation::Initialize(const std::shared_ptr<const GltfModelData>& 
 		animated_nodes = model_data->nodes;	//初期状態のノード構造をアニメーション用の可変配列にコピー
 		CumulateTransforms();				//初期姿勢のグローバル行列を一度計算して確定
 	}
+	is_animation_finished = false;
 }
 
 //====================================================
@@ -90,6 +91,7 @@ void GltfModelAnimation::PlayAniamtion(const std::string& animation_name, bool i
 	current_animation_time = 0.0f;				//再生時間をリセット
 	current_animation_duration = CalculateAnimationDuration(current_animation_index);	//アニメーション終了時間を取得
 	is_playing = true;							//再生フラグを起動
+	is_animation_finished = false;
 }
 
 //============================
@@ -105,6 +107,7 @@ void GltfModelAnimation::UpdateAnimation(float delta_time)
 	current_animation_time += delta_time;						//経過時間を加算してアニメーションを進める
 	if (current_animation_time > current_animation_duration)	//現在の時間がアニメーションの終了時間を超過した場合
 	{
+		is_animation_finished = true;
 		if (is_loop_enabled)	//ループ再生が有効な場合
 		{
 			current_animation_time = fmod(current_animation_time, current_animation_duration);	//超過した余りの時間を計算し、最初からループ

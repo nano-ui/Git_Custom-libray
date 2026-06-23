@@ -2,11 +2,11 @@
 #include <filesystem>
 #include <stdexcept>
 
-#include "../FbxModel/FbxSkinnedResource.h"
-#include "../FbxModel/FbxSkinnedModel.h"
-#include "../GltfModel/GltfModelData.h"
-#include "../GltfModel/GltfModelRenderer.h"
-#include "../GltfModel/GltfModel.h"
+#include "../Engine/Graphics/FbxModel/FbxSkinnedResource.h"
+#include "../Graphics/FbxModel/FbxSkinnedModel.h"
+#include "../Engine/Graphics/GltfModel/GltfModelData.h"
+#include "../Graphics/GltfModel/GltfModelRenderer.h"
+#include "../Engine/Graphics/GltfModel/GltfModel.h"
 
 
 //各モデルコンポーネントの共通インターフェース
@@ -34,6 +34,8 @@ public:
 	//インデックスリストの取得
 	virtual std::vector<uint32_t> GetIndices()const = 0;
 
+	//アニメーションの終了判定取得
+	virtual bool IsAnimationFinished() const = 0;
 };
 
 //FBXモデルを扱うための実装クラス
@@ -118,6 +120,10 @@ public:
 		return indeices_data;
 	}
 
+	bool IsAnimationFinished() const override
+	{
+		return true;
+	}
 };
 
 class GltfModelImpl :public Model::ModelImpl
@@ -250,6 +256,17 @@ public:
 		}
 		return indices_data;
 	}
+
+	//アニメーション終了判定
+	bool IsAnimationFinished() const override
+	{
+		// glTFモデル実体の有効チェック
+		if (model)
+		{
+			return model->IsAnimationFinished(); // 実体側の終了判定を呼び出す
+		}
+		return true;
+	}
 };
 
 //===================
@@ -344,4 +361,14 @@ std::vector<uint32_t> Model::GetIndices()const
 		indices = model_impl->GetIndices();
 	}
 	return indices;
+}
+
+//アニメーションが終了したか取得
+bool Model::IsAnimationFinished() const
+{
+	if (model_impl)
+	{
+		return model_impl->IsAnimationFinished();
+	}
+	return true;
 }

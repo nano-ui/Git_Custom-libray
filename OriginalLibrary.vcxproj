@@ -287,6 +287,7 @@
     <ClCompile Include="Source\Gameplay\AI\RatioJudgment.cpp" />
     <ClCompile Include="Source\Gameplay\AI\SelectorNode.cpp" />
     <ClCompile Include="Source\Gameplay\AI\WeightedNode.cpp" />
+    <ClCompile Include="Source\Gameplay\Components\AnimationComponent.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Character.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Player.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\GameObject.cpp" />
@@ -388,6 +389,7 @@
     <ClInclude Include="Source\Gameplay\AI\SelectorNode.h" />
     <ClInclude Include="Source\Gameplay\AI\StateActionNode.h" />
     <ClInclude Include="Source\Gameplay\AI\WeightedNode.h" />
+    <ClInclude Include="Source\Gameplay\Components\AnimationComponent.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Character.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Player.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\GameObject.h" />

@@ -1,6 +1,6 @@
 #include "Stage.h"
 #include "../Engine/Graphics/Model.h"
-#include "../Graphics/../Engine/Graphics/Graphics.h"
+#include "../Engine/Graphics/Graphics.h"
 #include "../Engine/Collision/SpaceDivisionCast.h"
 #include "../Gameplay/GameObjects/ObjectFactory.h"
 

@@ -2,12 +2,13 @@
 
 #include "../Gameplay/GameObjects/GameObject.h"
 #include "../Engine/Collision/Collider.h"
+#include "../Gameplay/Components/AnimationComponent.h"
 
 #include <memory>
 
 class StateBlackboard;
 
-class Character : public GameObject
+class Character : public GameObject, public IAnimationListener
 {
 public:
 	//コンストラクタ
@@ -39,6 +40,9 @@ public:
 
 	//ブラックボードに登録・初期化
 	virtual void SetupBlackboard();
+
+	//アニメーション終了イベント
+	virtual void OnAnimationEnd();
 
 protected:
 	//移動方向の設定
@@ -87,6 +91,7 @@ private:
 protected:
 	std::unique_ptr<Model> character;	//キャラクターモデル
 	std::unique_ptr<StateBlackboard> blackboard;
+	std::unique_ptr<AnimationComponent> animation_component;	//アニメーション制御
 
 	DirectX::XMFLOAT3 angle;	//角度
 	float radius;				//半径

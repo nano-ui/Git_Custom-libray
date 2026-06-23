@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Graphics/../Engine/Graphics/Graphics.h"
+#include "../Engine/Graphics/Graphics.h"
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"

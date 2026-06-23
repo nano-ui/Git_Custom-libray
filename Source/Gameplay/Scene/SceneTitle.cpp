@@ -2,7 +2,7 @@
 #include "SceneManager.h"
 #include "SceneGame.h"
 #include "../Engine/Graphics/sprite_batch.h"
-#include "../Graphics/../Engine/Graphics/Graphics.h"
+#include "../Engine/Graphics/Graphics.h"
 #include "../Common/../Engine/Core/misc.h"
 #include "../Engine/Camera/StandCamera.h"
 

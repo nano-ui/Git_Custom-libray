@@ -1,231 +1,220 @@
 [Project Structure] 
  
 Folder PATH listing for volume Windows
-Volume serial number is 00000046 0255:C8DA
+Volume serial number is 0000002B 0255:C8DA
 C:.
 „    structure.txt
 „    _dump_structure.bat
 „    
-„¥„Ÿ„Ÿ„ŸBehaviorTree
-„        ActionNode.h
-„        BehaviorNode.cpp
-„        BehaviorNode.h
-„        BehaviorTree.cpp
-„        BehaviorTree.h
-„        ComboJugment.cpp
-„        ComboJugment.h
-„        CooldownJudgment.cpp
-„        CooldownJudgment.h
-„        DirectionJudgment.cpp
-„        DirectionJudgment.h
-„        DistanceJugment.cpp
-„        DistanceJugment.h
-„        JudgmentNode.h
-„        NodeStateJugment.cpp
-„        NodeStateJugment.h
-„        RandomJugment.cpp
-„        RandomJugment.h
-„        RatioJudgment.cpp
-„        RatioJudgment.h
-„        SelectorNode.cpp
-„        SelectorNode.h
-„        StateActionNode.h
-„        WeightedNode.cpp
-„        WeightedNode.h
-„        
-„¥„Ÿ„Ÿ„ŸCamera
-„        Camera.cpp
-„        Camera.h
-„        FreeCamera.cpp
-„        FreeCamera.h
-„        StandCamera.cpp
-„        StandCamera.h
-„        
-„¥„Ÿ„Ÿ„ŸCollision
-„        Collider.h
-„        CollisionExperiment.cpp
-„        CollisionExperiment.h
-„        CollisionLogic.cpp
-„        CollisionLogic.h
-„        CollisionManager.cpp
-„        CollisionManager.h
-„        CollisionSphere.cpp
-„        CollisionSphere.h
-„        SpaceDivisionCast.cpp
-„        SpaceDivisionCast.h
-„        
-„¥„Ÿ„Ÿ„ŸCommon
+„¥„Ÿ„Ÿ„ŸEditor
 „        FileDialogHelper.cpp
 „        FileDialogHelper.h
-„        high_resolution_timer.h
-„        main.cpp
-„        misc.h
-„        ModelData.h
-„        
-„¥„Ÿ„Ÿ„ŸEditor
 „        ObjectEditor.cpp
 „        ObjectEditor.h
+„        StateMachineGraphEditor.cpp
+„        StateMachineGraphEditor.h
+„        TransitionConditionEditor.cpp
+„        TransitionConditionEditor.h
 „        
-„¥„Ÿ„Ÿ„ŸFbxModel
-„        FbxAnimation.cpp
-„        FbxAnimation.h
-„        FbxBone.cpp
-„        FbxBone.h
-„        FbxLoader.cpp
-„        FbxLoader.h
-„        FbxMaterial.cpp
-„        FbxMaterial.h
-„        FbxSkinnedMesh.cpp
-„        FbxSkinnedMesh.h
-„        FbxSkinnedModel.cpp
-„        FbxSkinnedModel.h
-„        FbxSkinnedResource.cpp
-„        FbxSkinnedResource.h
-„        
-„¥„Ÿ„Ÿ„ŸGameObjects
-„    „    GameObject.cpp
-„    „    GameObject.h
-„    „    ObjectFactory.cpp
-„    „    ObjectFactory.h
-„    „    ObjectManager.cpp
-„    „    ObjectManager.h
-„    „    
-„    „¥„Ÿ„Ÿ„ŸCharacters
-„    „        Character.cpp
-„    „        Character.h
-„    „        Player.cpp
-„    „        Player.h
+„¥„Ÿ„Ÿ„ŸEngine
+„    „¥„Ÿ„Ÿ„ŸCamera
+„    „        Camera.cpp
+„    „        Camera.h
+„    „        FreeCamera.cpp
+„    „        FreeCamera.h
+„    „        StandCamera.cpp
+„    „        StandCamera.h
 „    „        
-„    „¤„Ÿ„Ÿ„ŸObjects
-„            Stage.cpp
-„            Stage.h
+„    „¥„Ÿ„Ÿ„ŸCollision
+„    „        Collider.h
+„    „        CollisionExperiment.cpp
+„    „        CollisionExperiment.h
+„    „        CollisionLogic.cpp
+„    „        CollisionLogic.h
+„    „        CollisionManager.cpp
+„    „        CollisionManager.h
+„    „        CollisionSphere.cpp
+„    „        CollisionSphere.h
+„    „        SpaceDivisionCast.cpp
+„    „        SpaceDivisionCast.h
+„    „        
+„    „¥„Ÿ„Ÿ„ŸCore
+„    „        high_resolution_timer.h
+„    „        Input.cpp
+„    „        Input.h
+„    „        main.cpp
+„    „        misc.h
+„    „        
+„    „¤„Ÿ„Ÿ„ŸGraphics
+„        „    DirectXDevice.cpp
+„        „    DirectXDevice.h
+„        „    fbx_utility.h
+„        „    framebuffer.cpp
+„        „    framebuffer.h
+„        „    framework.cpp
+„        „    framework.h
+„        „    fullscreen_quad.cpp
+„        „    fullscreen_quad.h
+„        „    geometric_primitive.cpp
+„        „    geometric_primitive.h
+„        „    GpuResourceUtils.cpp
+„        „    GpuResourceUtils.h
+„        „    Graphics.cpp
+„        „    Graphics.h
+„        „    Light.cpp
+„        „    Light.h
+„        „    Model.cpp
+„        „    Model.h
+„        „    ModelRenderer.h
+„        „    PipelineStates.cpp
+„        „    PipelineStates.h
+„        „    Renderer.cpp
+„        „    Renderer.h
+„        „    SceneConstantBuffers.cpp
+„        „    SceneConstantBuffers.h
+„        „    ShapeRenderer.cpp
+„        „    ShapeRenderer.h
+„        „    sprite.cpp
+„        „    sprite.h
+„        „    sprite_batch.cpp
+„        „    sprite_batch.h
+„        „    texture.cpp
+„        „    texture.h
+„        „    
+„        „¥„Ÿ„Ÿ„ŸFbxModel
+„        „        FbxAnimation.cpp
+„        „        FbxAnimation.h
+„        „        FbxBone.cpp
+„        „        FbxBone.h
+„        „        FbxLoader.cpp
+„        „        FbxLoader.h
+„        „        FbxMaterial.cpp
+„        „        FbxMaterial.h
+„        „        FbxModelData.h
+„        „        FbxSkinnedMesh.cpp
+„        „        FbxSkinnedMesh.h
+„        „        FbxSkinnedModel.cpp
+„        „        FbxSkinnedModel.h
+„        „        FbxSkinnedResource.cpp
+„        „        FbxSkinnedResource.h
+„        „        
+„        „¥„Ÿ„Ÿ„ŸGltfModel
+„        „        GltfModel.cpp
+„        „        GltfModel.h
+„        „        GltfModelAnimation.cpp
+„        „        GltfModelAnimation.h
+„        „        GltfModelData.cpp
+„        „        GltfModelData.h
+„        „        GltfModelRenderer.cpp
+„        „        GltfModelRenderer.h
+„        „        TinygltfImpl.cpp
+„        „        
+„        „¤„Ÿ„Ÿ„ŸShaders
+„                BlurShader.cpp
+„                BlurShader.h
+„                CustomShader.cpp
+„                CustomShader.h
+„                LuminanceExtractionShader.cpp
+„                LuminanceExtractionShader.h
+„                shader.cpp
+„                shader.h
+„                SkyBox.cpp
+„                SkyBox.h
+„                
+„¥„Ÿ„Ÿ„ŸGameplay
+„    „¥„Ÿ„Ÿ„ŸAI
+„    „        ActionNode.h
+„    „        BehaviorNode.cpp
+„    „        BehaviorNode.h
+„    „        BehaviorTree.cpp
+„    „        BehaviorTree.h
+„    „        ComboJugment.cpp
+„    „        ComboJugment.h
+„    „        CooldownJudgment.cpp
+„    „        CooldownJudgment.h
+„    „        DirectionJudgment.cpp
+„    „        DirectionJudgment.h
+„    „        DistanceJugment.cpp
+„    „        DistanceJugment.h
+„    „        JudgmentNode.h
+„    „        NodeStateJugment.cpp
+„    „        NodeStateJugment.h
+„    „        RandomJugment.cpp
+„    „        RandomJugment.h
+„    „        RatioJudgment.cpp
+„    „        RatioJudgment.h
+„    „        SelectorNode.cpp
+„    „        SelectorNode.h
+„    „        StateActionNode.h
+„    „        WeightedNode.cpp
+„    „        WeightedNode.h
+„    „        
+„    „¥„Ÿ„Ÿ„ŸGameObjects
+„    „    „    GameObject.cpp
+„    „    „    GameObject.h
+„    „    „    ObjectFactory.cpp
+„    „    „    ObjectFactory.h
+„    „    „    ObjectManager.cpp
+„    „    „    ObjectManager.h
+„    „    „    
+„    „    „¥„Ÿ„Ÿ„ŸCharacter
+„    „    „        Character.cpp
+„    „    „        Character.h
+„    „    „        Player.cpp
+„    „    „        Player.h
+„    „    „        
+„    „    „¤„Ÿ„Ÿ„ŸObject
+„    „            Stage.cpp
+„    „            Stage.h
+„    „            
+„    „¥„Ÿ„Ÿ„ŸMovement
+„    „        CircularMove.cpp
+„    „        CircularMove.h
+„    „        LinearMove.cpp
+„    „        LinearMove.h
+„    „        LockAtRotation.cpp
+„    „        LockAtRotation.h
+„    „        MoveBase.h
+„    „        MoveFactory.cpp
+„    „        MoveFactory.h
+„    „        RepulsiveMove.cpp
+„    „        RepulsiveMove.h
+„    „        RotationBase.h
+„    „        RotationFactory.cpp
+„    „        RotationFactory.h
+„    „        
+„    „¥„Ÿ„Ÿ„ŸScene
+„    „        Scene.cpp
+„    „        Scene.h
+„    „        SceneGame.cpp
+„    „        SceneGame.h
+„    „        SceneManager.cpp
+„    „        SceneManager.h
+„    „        SceneTitle.cpp
+„    „        SceneTitle.h
+„    „        
+„    „¤„Ÿ„Ÿ„ŸStateMachine
+„            ActionState.cpp
+„            ActionState.h
+„            State.cpp
+„            State.h
+„            StateBlackboard.cpp
+„            StateBlackboard.h
+„            StateGraphDataManager.cpp
+„            StateGraphDataManager.h
+„            StateMachine.cpp
+„            StateMachine.h
+„            StateTransition.cpp
+„            StateTransition.h
 „            
-„¥„Ÿ„Ÿ„ŸGltfModel
-„        GltfModel.cpp
-„        GltfModel.h
-„        GltfModelAnimation.cpp
-„        GltfModelAnimation.h
-„        GltfModelData.cpp
-„        GltfModelData.h
-„        GltfModelRenderer.cpp
-„        GltfModelRenderer.h
-„        TinygltfImpl.cpp
-„        
-„¥„Ÿ„Ÿ„ŸGraphics
-„        DirectXDevice.cpp
-„        DirectXDevice.h
-„        fbx_utility.h
-„        framebuffer.cpp
-„        framebuffer.h
-„        framework.cpp
-„        framework.h
-„        fullscreen_quad.cpp
-„        fullscreen_quad.h
-„        Graphics.cpp
-„        Graphics.h
-„        PipelineStates.cpp
-„        PipelineStates.h
-„        Renderer.cpp
-„        Renderer.h
-„        SceneConstantBuffers.cpp
-„        SceneConstantBuffers.h
-„        shader.cpp
-„        shader.h
-„        ShapeRenderer.cpp
-„        ShapeRenderer.h
-„        sprite.cpp
-„        sprite.h
-„        sprite_batch.cpp
-„        sprite_batch.h
-„        
-„¥„Ÿ„Ÿ„ŸInput
-„        Input.cpp
-„        Input.h
-„        
-„¥„Ÿ„Ÿ„ŸLight
-„        Light.cpp
-„        Light.h
-„        
-„¥„Ÿ„Ÿ„ŸMove
-„        CircularMove.cpp
-„        CircularMove.h
-„        LinearMove.cpp
-„        LinearMove.h
-„        MoveBase.h
-„        MoveFactory.cpp
-„        MoveFactory.h
-„        RepulsiveMove.cpp
-„        RepulsiveMove.h
-„        
-„¥„Ÿ„Ÿ„ŸObjectsRender
-„        geometric_primitive.cpp
-„        geometric_primitive.h
-„        GpuResourceUtils.cpp
-„        GpuResourceUtils.h
-„        Model.cpp
-„        Model.h
-„        ModelRenderer.h
-„        sprite.cpp
-„        sprite.h
-„        sprite_batch.cpp
-„        sprite_batch.h
-„        texture.cpp
-„        texture.h
-„        
-„¥„Ÿ„Ÿ„ŸRotation
-„        LockAtRotation.cpp
-„        LockAtRotation.h
-„        RotationBase.h
-„        RotationFactory.cpp
-„        RotationFactory.h
-„        
-„¥„Ÿ„Ÿ„ŸScene
-„        Scene.cpp
-„        Scene.h
-„        SceneGame.cpp
-„        SceneGame.h
-„        SceneManager.cpp
-„        SceneManager.h
-„        SceneTitle.cpp
-„        SceneTitle.h
-„        
 „¥„Ÿ„Ÿ„ŸSerialization
 „        GltfModelSerializer.cpp
 „        GltfModelSerializer.h
-„        json.hpp
 „        JsonSerializer.cpp
 „        JsonSerializer.h
 „        SkinnedMeshSerializer.cpp
 „        SkinnedMeshSerializer.h
 „        
-„¥„Ÿ„Ÿ„ŸShaders
-„        BlurShader.cpp
-„        BlurShader.h
-„        CustomShader.cpp
-„        CustomShader.h
-„        LuminanceExtractionShader.cpp
-„        LuminanceExtractionShader.h
-„        SkyBox.cpp
-„        SkyBox.h
-„        
-„¥„Ÿ„Ÿ„ŸStateMschine
-„        ActionState.cpp
-„        ActionState.h
-„        LocamotionState.cpp
-„        LocamotionState.h
-„        State.cpp
-„        State.h
-„        StateBlackboard.cpp
-„        StateBlackboard.h
-„        StateGraphDataManager.cpp
-„        StateGraphDataManager.h
-„        StateMachine.cpp
-„        StateMachine.h
-„        StateMachineGraphEditor.cpp
-„        StateMachineGraphEditor.h
-„        StateTransition.cpp
-„        StateTransition.h
-„        TransitionConditionEditor.cpp
-„        TransitionConditionEditor.h
-„        
-„¤„Ÿ„Ÿ„ŸUniqueSystem
+„¤„Ÿ„Ÿ„ŸThiedParty
+        json.hpp
+        

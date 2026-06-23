@@ -55,6 +55,11 @@ void Character::Update(float elapsed_time)
 	blackboard->SetValue(u8"速度", max_speed);
 	blackboard->SetValue(u8"接地フラグ", is_ground);
 
+	if (animation_component)
+	{
+		animation_component->Update(elapsed_time, blackboard.get());
+	}
+
 }
 
 //描画処理
@@ -124,6 +129,14 @@ void Character::SetupBlackboard()
 	blackboard->SetValue(u8"接地フラグ", is_ground);
 
 	printf("Character: 共有ブラックボードに変数を登録しました。\n");
+}
+
+//アニメーション終了イベント
+void Character::OnAnimationEnd()
+{
+#ifdef _DEBUG
+	std::cout << "Debug: Character::OnAnimationEnd - アニメーション再生終了を検知しました。StateKey: " << state_key << "\n";
+#endif
 }
 
 //移動方向の設定

@@ -5,7 +5,7 @@
 #include <vector>
 #include <DirectXMath.h>
 
-#include "../GltfModel/GltfModelData.h"
+#include "../Engine/Graphics/GltfModel/GltfModelData.h"
 
 class GltfModelAnimation;
 class GltfModelRenderer;
@@ -28,6 +28,9 @@ public:
 
 	//アニメーション切り替え
 	void PlayAnimation(const std::string& animation_name, bool is_loop);
+
+	//アニメーションの終了したか取得
+	bool IsAnimationFinished()const;
 
 	//モデル情報取得
 	std::shared_ptr<GltfModelData> GetData()const { return data; }

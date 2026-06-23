@@ -1,6 +1,6 @@
 #include "SceneGame.h"
 #include "../Gameplay/GameObjects/ObjectManager.h"
-#include "../Graphics/../Engine/Graphics/Graphics.h"
+#include "../Engine/Graphics/Graphics.h"
 #include "../Engine/Graphics/framebuffer.h"
 #include "../Engine/Camera/Camera.h"
 #include "../Engine/Camera/FreeCamera.h"

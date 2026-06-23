@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 
-//拡張子に応じて適切なモデルを管理する統合クラス
 class Model
 {
 public:
@@ -33,6 +32,9 @@ public:
 
 	//インデックスリストの取得
 	std::vector<uint32_t> GetIndices()const;
+
+	//アニメーションが終了したか取得
+	bool IsAnimationFinished() const;
 
 public:
 	class ModelImpl;						//実際の処理を行う内部クラス

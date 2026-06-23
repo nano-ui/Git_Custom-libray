@@ -5,7 +5,7 @@
 #include "../FbxModel/FbxMaterial.h"
 #include "../FbxModel/FbxSkinnedMesh.h"
 
-#include "../FbxModel/FbxSkinnedResource.h"
+#include "../Engine/Graphics/FbxModel/FbxSkinnedResource.h"
 #include "../Serialization/SkinnedMeshSerializer.h"
 #include "../Engine/Graphics/texture.h"
 

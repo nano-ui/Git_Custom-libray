@@ -6,7 +6,7 @@
 #include "../Engine/Graphics/Shaders/shader.h"
 #include "../Common/../Engine/Core/misc.h"
 #include "../Engine/Graphics/Shaders/shader.h"
-#include "../Graphics/../Engine/Graphics/Graphics.h"
+#include "../Engine/Graphics/Graphics.h"
 
 namespace
 {

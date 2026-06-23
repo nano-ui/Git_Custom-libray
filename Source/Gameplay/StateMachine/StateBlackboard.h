@@ -38,8 +38,7 @@ enum class CompareOperator
 struct TransitionCondition;
 
 //登録可能な型
-using BlackboardData = std::variant<bool, int, float, DirectX::XMFLOAT3, std::vector<std::string>>;
-
+using BlackboardData = std::variant<bool, int, float, DirectX::XMFLOAT3, std::vector<std::string>, uint32_t>;
 class StateBlackboard
 {
 public:
@@ -98,6 +97,28 @@ public:
 			std::string original_name = (name_it != name_map.end()) ? name_it->second : variable_name;	//出力用の文字列
 
 			std::cerr << "Error: 変数 [" << original_name << "] の型が一致しません。\n";
+			return default_value;
+		}
+		return *target_value;
+	}
+
+	//値の取得(ハッシュキー指定)
+	template<typename T>
+	T GetValue(uint32_t hash_key, const T& default_value)const
+	{
+		auto iterator = data_map.find(hash_key);	//ハッシュからデータを検索
+
+		//データが存在しない場合の安全処理
+		if (iterator == data_map.end())
+		{
+			return default_value;
+		}
+
+		const T* target_value = std::get_if<T>(&(iterator->second.value));	//ポインタキャスト
+
+		//型が不一致の場合の安全処理
+		if (!target_value)
+		{
 			return default_value;
 		}
 		return *target_value;
@@ -189,6 +210,9 @@ private:
 				ImGui::TreePop();
 			}
 		}
+
+		//uint32_t型用の描画・編集
+		void operator()(uint32_t& val) { ImGui::Text("%s (Hash) : %u", name.c_str(), val); }
 	};
 
 private:
@@ -288,6 +312,20 @@ struct CompareVisitor
 	{
 		return false;
 	}
+
+	//uint32_t用の比較評価処理
+	bool operator()(uint32_t& val)
+	{
+		const uint32_t* ref = std::get_if<uint32_t>(&ref_val);
+		if (!ref) { return false; }
+		switch (op)
+		{
+		case CompareOperator::Equal:		return val == *ref; break;
+		case CompareOperator::NotEqual:		return val != *ref; break;
+		default:							return false;		break;
+		}
+	}
+
 };
 
 //遷移条件

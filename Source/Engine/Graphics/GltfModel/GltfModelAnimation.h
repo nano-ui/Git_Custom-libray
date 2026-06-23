@@ -23,6 +23,9 @@ public:
 	//計算済みノード配列を取得
 	const std::vector<GltfModelData::node>& GetAnimationNodes()const { return animated_nodes; }
 
+	//アニメーションの終了したか取得
+	bool IsFinished()const { return is_animation_finished; }
+
 private:
 	//指定した時間のアニメーションを適用しノード情報を更新
 	void Animate(size_t animation_index, float time);
@@ -45,5 +48,6 @@ private:
 	float current_animation_duration = 0.0f;	//アニメーション終了時間
 	bool is_loop_enabled = true;				//ループ再生の有効フラグ
 	bool is_playing = false;					//アニメーション再生中判定フラグ
+	bool is_animation_finished = false;			//アニメーションの終了フラグ
 };
 
