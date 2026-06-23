@@ -1,10 +1,11 @@
 #include "ObjectEditor.h"
-#include "../GameObjects/ObjectFactory.h"
-#include "../GameObjects/GameObject.h"
-#include "../GameObjects/ObjectManager.h"
-#include "../Collision/CollisionManager.h"
-#include "../Camera/Camera.h"
-#include "../Input/Input.h"
+#include "../Gameplay/GameObjects/ObjectFactory.h"
+#include "../Gameplay/GameObjects/GameObject.h"
+#include "../Gameplay/GameObjects/ObjectManager.h"
+#include "../Engine/Collision/CollisionManager.h"
+#include "../Engine/Camera/Camera.h"
+#include "../Engine/Core/Input.h"
+#include "../ThiedParty/json.hpp"
 
 #include <imgui.h>
 #include <ImGuizmo.h>

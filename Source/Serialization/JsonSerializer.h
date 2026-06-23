@@ -6,7 +6,7 @@
 #include <DirectXMath.h>
 #include <type_traits>
 #include <imgui.h>
-#include "json.hpp"
+#include "../ThiedParty/json.hpp"
 
 //DirectXMath‚ÌŒ^‚ðJSON‚ÅŽ©“®•ÏŠ·‚·‚é‚½‚ß‚Ì’è‹`
 namespace nlohmann
