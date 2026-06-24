@@ -9,6 +9,7 @@
 #include <imgui_node_editor_internal.h>
 #include <cassert>
 #include <fstream>
+#include "StateGraphPaletteWindow.h"
 
 namespace ed = ax::NodeEditor;
 

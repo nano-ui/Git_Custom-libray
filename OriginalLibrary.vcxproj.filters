@@ -345,6 +345,12 @@
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Player.cpp">
       <Filter>Source\Gameplay\GameObjects\Character\Player</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\StateGraphPaletteWindow.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPaletteWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateGraphPropertyWindow.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -652,6 +658,12 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Player.h">
       <Filter>Source\Gameplay\GameObjects\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateGraphPaletteWindow.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPaletteWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateGraphPropertyWindow.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1022,6 +1034,12 @@
     </Filter>
     <Filter Include="Source\Gameplay\GameObjects\Character\Player">
       <UniqueIdentifier>{d157c02a-a75f-451b-825d-7a3bf1003046}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphPaletteWindow">
+      <UniqueIdentifier>{c006caec-1341-4dfe-9f09-d669570f632b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow">
+      <UniqueIdentifier>{aabe0601-df02-464c-8504-67c6fe465159}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

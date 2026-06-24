@@ -231,6 +231,8 @@
     <ClCompile Include="External\ImGuizmo-master\ImGuizmo-master\src\ImGuizmo.cpp" />
     <ClCompile Include="Source\Editor\FileDialogHelper.cpp" />
     <ClCompile Include="Source\Editor\ObjectEditor.cpp" />
+    <ClCompile Include="Source\Editor\StateGraphPaletteWindow.cpp" />
+    <ClCompile Include="Source\Editor\StateGraphPropertyWindow.cpp" />
     <ClCompile Include="Source\Editor\StateMachineGraphEditor.cpp" />
     <ClCompile Include="Source\Editor\TransitionConditionEditor.cpp" />
     <ClCompile Include="Source\Engine\Camera\Camera.cpp" />
@@ -326,6 +328,8 @@
     <ClInclude Include="External\ImGuizmo-master\ImGuizmo-master\src\ImGuizmo.h" />
     <ClInclude Include="Source\Editor\FileDialogHelper.h" />
     <ClInclude Include="Source\Editor\ObjectEditor.h" />
+    <ClInclude Include="Source\Editor\StateGraphPaletteWindow.h" />
+    <ClInclude Include="Source\Editor\StateGraphPropertyWindow.h" />
     <ClInclude Include="Source\Editor\StateMachineGraphEditor.h" />
     <ClInclude Include="Source\Editor\TransitionConditionEditor.h" />
     <ClInclude Include="Source\Engine\Camera\Camera.h" />
