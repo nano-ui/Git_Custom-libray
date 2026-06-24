@@ -85,6 +85,12 @@ public:
 	//クラス名取得
 	const std::string& GetClassName()const { return class_name; }
 
+	//モデル識別ハッシュ値を取得
+	virtual uint32_t GetModelHash()const { return model_hash; }
+
+	//モデル識別ハッシュ値の設定
+	void SetModelHash(uint32_t hash) { model_hash = hash; }
+
 protected:
 	//コライダーを登録
 	void AddCollider(Collider* collider) { collideres.push_back(collider); }
@@ -97,6 +103,7 @@ protected:
 	bool is_active;				//生存フラグ
 	std::vector<Collider*> collideres;	//コライダーのリスト
 	std::string class_name;				//クラス名
+	uint32_t model_hash = 0;			//モデル識別ハッシュ値
 	std::unique_ptr<JsonSerializer> serializer;	//自身専用のシリアライザ
 };
 

@@ -5,6 +5,7 @@
 #include "../Gameplay/Components/AnimationComponent.h"
 
 #include <memory>
+#include <unordered_map>
 
 class StateBlackboard;
 
@@ -42,7 +43,10 @@ public:
 	virtual void SetupBlackboard();
 
 	//アニメーション終了イベント
-	virtual void OnAnimationEnd();
+	virtual void OnAnimationEnd(uint32_t stake_key);
+
+	//アニメーションコンポーネント取得
+	AnimationComponent* GetAnimationComponent()const { return animation_component.get(); }
 
 protected:
 	//移動方向の設定

@@ -42,6 +42,7 @@ void Player::Initialize()
 	character->PlayAnimation("Idle", true);
 	blackboard->RegisterVariable("AnimationList");
 	blackboard->SetValue("AnimationList", character->GetAnimationNames());
+	SetModelHash(StateBlackboard::CalculateHash("RPG-Character"));
 }
 
 //更新処理
@@ -106,6 +107,12 @@ void Player::OnCollisionHit(const CollisionResult& result)
 	{
 		ResolveDynamicCollision(result, capsule_collider, height, offset_y);
 	}
+}
+
+//アニメーション終了イベント
+void Player::OnAnimationEnd(uint32_t state_key)
+{
+
 }
 
 //入力更新処理

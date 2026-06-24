@@ -33,8 +33,8 @@ public:
 	//更新
 	void Update(float elapsed_time, StateBlackboard* blackboard);
 
-	//アニメーションマップ読み込み
-	bool LoadFromJson(const std::string& file_path);
+	//アニメーションマップの設定
+	void SetAnimationMap(const std::unordered_map<uint32_t, std::string>& new_map);
 
 private:
 	std::unordered_map<uint32_t, std::string> animaton_map;	//ハッシュキーとアニメーション名の対応表

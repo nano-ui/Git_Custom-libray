@@ -29,6 +29,9 @@ public:
 	//衝突処理
 	void OnCollisionHit(const CollisionResult& result)override;
 
+	//アニメーション終了イベント
+	void OnAnimationEnd(uint32_t state_key)override;
+
 private:
 	//入力更新処理
 	void UpdateInput(float elapsed_time);

@@ -2,6 +2,8 @@
 
 #include <vector>
 #include <memory>
+#include <string>
+#include <unordered_map>
 
 #include "../Engine/Collision/CollisionManager.h"
 
@@ -75,6 +77,9 @@ public:
 
 	//全ゲームオブジェクトのリストへの参照を取得
 	const std::vector<std::unique_ptr<GameObject>>& GetGameObjects()const { return game_objects; }
+
+	//アニメーションマップの更新
+	void RefreshAnimationMap(uint32_t target_model_hash, const std::unordered_map<uint32_t, std::string>& new_map);
 
 private:
 	//無効になったオブジェクトの削除処理

@@ -132,7 +132,7 @@ void Character::SetupBlackboard()
 }
 
 //アニメーション終了イベント
-void Character::OnAnimationEnd()
+void Character::OnAnimationEnd(uint32_t state_key)
 {
 #ifdef _DEBUG
 	std::cout << "Debug: Character::OnAnimationEnd - アニメーション再生終了を検知しました。StateKey: " << state_key << "\n";

@@ -90,29 +90,36 @@ void AnimationComponent::Update(float elapsed_time, StateBlackboard* blackboard)
 	}
 }
 
-//アニメーションマップ読み込み
-bool AnimationComponent::LoadFromJson(const std::string& file_path)
+//アニメーションマップの設定
+void AnimationComponent::SetAnimationMap(const std::unordered_map<uint32_t, std::string>& new_map)
 {
-	std::ifstream file_in(file_path);	//ファイル読み込みストリーム
+	std::string current_anim_name = "";	//現在のアニメーション名
+	auto current_iterator = animaton_map.find(current_state_key);	//現在の状態
 
-	//ファイルが開けるか確認
-	if (!file_in.is_open())
+	//現在のアニメーション名が存在するか確認
+	if (current_iterator != animaton_map.end())
 	{
-		std::cerr << "Error: AnimationComponent::LoadFromJson - ファイルが開けません: " << file_path << "\n";
-		return false;
+		current_anim_name = current_iterator->second;
 	}
 
-	nlohmann::json json_data;	//JSON情報格納先
-	file_in >> json_data;
+	animaton_map = new_map;
 
-	//JSON内の要素をイテレーターで走査
-	for (auto iterator = json_data.begin(); iterator != json_data.end(); iterator++)
+	auto new_iterator = animaton_map.find(current_state_key);	//更新後の状態
+
+	//新しいマップに状態が存在し、アニメーション名が変化していないか確認
+	if (new_iterator != animaton_map.end() && current_anim_name == new_iterator->second)
 	{
-		std::string state_name = iterator.key();		//状態キー
-		std::string animation_name = iterator.value();	//アニメーション名
 
-		uint32_t state_hash = StateBlackboard::CalculateHash(state_name);	//状態キーのハッシュ
-		animaton_map[state_hash] = animation_name;
 	}
-	return true;
+	else if (new_iterator != animaton_map.end())
+	{
+		std::shared_ptr<Model> shared_model = target_model.lock();	//モデルのポインタ
+
+		//モデルが有効か確認
+		if (shared_model)
+		{
+			bool is_loop = true;
+			shared_model->PlayAnimation(new_iterator->second, is_loop);
+		}
+	}
 }

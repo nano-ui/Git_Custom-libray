@@ -1,5 +1,7 @@
 #include "ObjectManager.h"
 #include "GameObject.h"
+#include "Character/Character.h"
+#include "../Gameplay/Components/AnimationComponent.h"
 
 //静的変数の実体定義
 ObjectManager* ObjectManager::instance_ptr = nullptr;
@@ -99,6 +101,33 @@ void ObjectManager::RenderDebug(ShapeRenderer* renderer)
 			object->RenderDebug(renderer);
 		}
 	}
+}
+
+//アニメーションマップの更新
+void ObjectManager::RefreshAnimationMap(uint32_t target_model_hash, const std::unordered_map<uint32_t, std::string>& new_map)
+{
+	//全てのオブジェクトを走査
+	for (auto iterator = game_objects.begin(); iterator != game_objects.end(); iterator++)
+	{
+		//モデルハッシュが一致するか確認
+		if ((*iterator)->GetModelHash() == target_model_hash)
+		{
+			Character* character_obj = dynamic_cast<Character*>(iterator->get());	//キャラクターのモデル
+
+			//キャスト成功確認
+			if (character_obj)
+			{
+				AnimationComponent* anim_component = character_obj->GetAnimationComponent();	//キャラクターのアニメーション
+				
+				//コンポーネント有効確認
+				if (anim_component)
+				{
+					anim_component->SetAnimationMap(new_map);
+				}
+			}
+		}
+	}
+
 }
 
 //無効になったオブジェクトの削除処理
