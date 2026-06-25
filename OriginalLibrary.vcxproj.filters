@@ -351,6 +351,9 @@
     <ClCompile Include="Source\Editor\StateGraphPropertyWindow.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\StateGraphSimulator.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphsSimulator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -664,6 +667,9 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\StateGraphPropertyWindow.h">
       <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateGraphSimulator.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphsSimulator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1040,6 +1046,9 @@
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow">
       <UniqueIdentifier>{aabe0601-df02-464c-8504-67c6fe465159}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphsSimulator">
+      <UniqueIdentifier>{d580b4f5-5d4d-4482-9a82-32f60e9f5081}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

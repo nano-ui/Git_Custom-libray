@@ -12,6 +12,7 @@ class StateBlackboard;
 class StateGraphDataManager;
 class StateGraphPaletteWindow;
 class StateGraphPropertyWindow;
+class StateGraphSimulator;
 
 struct GraphData;
 struct GraphLink;
@@ -68,6 +69,7 @@ private:
 	std::unique_ptr<StateGraphPaletteWindow> palette_window;			//左ペイン：パレット描画クラス
 	std::unique_ptr<StateGraphPropertyWindow> property_window;			//右ペイン：プロパティ描画クラス
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
+	std::unique_ptr<StateGraphSimulator> graph_simulator;	//実行遷移シュミレーター
 
 	uint32_t current_graph_id;									//現在の階層のグラフID
 	std::unordered_map<uint32_t, uint32_t> graph_active_nodes;	//各階層ごとのアクティブノードIDを個別に保持

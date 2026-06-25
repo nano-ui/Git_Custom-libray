@@ -7,6 +7,7 @@
 
 #include "StateGraphPaletteWindow.h"
 #include "StateGraphPropertyWindow.h"
+#include "StateGraphSimulator.h"
 
 #include <imgui_node_editor_internal.h>
 #include <cassert>
@@ -31,6 +32,7 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 
 	palette_window = std::make_unique<StateGraphPaletteWindow>();
 	property_window = std::make_unique<StateGraphPropertyWindow>();
+	graph_simulator = std::make_unique<StateGraphSimulator>();
 
 	LoadEditorCondig();
 
@@ -75,58 +77,29 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 	uint32_t& current_active_node_id = graph_active_nodes[current_graph_id];	//階層固有のID
 
+	//アクティブノードが未設定かつノードが空でないか確認
 	if (current_active_node_id == 0 && !current_graph->nodes.empty())
 	{
 		current_active_node_id = current_graph->nodes.front().id;
 	}
 
-	if (blackboard)
+	uint32_t target_flow_link_id = 0;	//エフェクトを走らせるリンクID
+
+	//シミュレータを呼び出してステート遷移を評価
+	if (graph_simulator->UpdateSimulation(
+		data_manager.get(), 
+		blackboard,
+		current_graph,
+		current_active_node_id,
+		target_flow_link_id))
 	{
-		for (size_t i = 0; i < current_graph->links.size(); i++)
-		{
-			const GraphLink& link = current_graph->links[i]; // 精査対象のリンク
-
-			uint32_t src_node_id = data_manager->GetNodeIdFromPinId(current_graph_id, link.start_pin_id); // リンク元のノードID
-
-			if (src_node_id == current_active_node_id)
-			{
-				bool is_all_conditions_met = !link.conditions.empty(); // 条件が1つ以上あり、すべて満たされているかフラグ
-
-				for (size_t c = 0; c < link.conditions.size(); c++)
-				{
-					const GraphTransitionCondition& graph_cond = link.conditions[c]; // 編集データ側の条件
-
-					TransitionCondition runtime_cond; // 実行時判定用の構造体インスタンス
-					runtime_cond.type = graph_cond.type; // 判定タイプのコピー
-					runtime_cond.hash_key = graph_cond.hash_key; // 変数ハッシュのコピー
-					runtime_cond.reference_value = graph_cond.reference_value; // 基準値のコピー
-					runtime_cond.compart_op = static_cast<CompareOperator>(graph_cond.compare_operator); // 演算子のキャストコピー
-					runtime_cond.param_second = graph_cond.param_second; // 第2引数パラメータのコピー
-					runtime_cond.secondary_hash = graph_cond.secondary_hash; // 対象ハッシュのコピー
-
-					if (!runtime_cond.IsJudgment(*blackboard))
-					{
-						is_all_conditions_met = false; // 1つでも満たしていなければ不成立
-						break;
-					}
-				}
-
-				if (is_all_conditions_met)
-				{
-					uint32_t dst_node_id = data_manager->GetNodeIdFromPinId(current_graph_id, link.end_pin_id); // 遷移先のノードID
-
-					previous_active_node_id = current_active_node_id; // 前フレームのIDを退避
-					current_active_node_id = dst_node_id;             // 新しいアクティブノードIDを確定登録
-
-					auto_flowing_link_id = link.id;     // 流光エフェクトを走らせる対象のリンクIDをロック
-					const float flow_duration = 0.5f;    // アニメーション表示時間（0.5秒） 
-					auto_flow_timer = flow_duration;     // 残り時間タイマーをリセット
-					break;
-				}
-			}
-		}
+		previous_active_node_id = current_active_node_id;
+		auto_flowing_link_id = target_flow_link_id;
+		const float flow_duration = 0.5f;	//エフェクトの表示時間
+		auto_flow_timer = flow_duration;
 	}
 
+	//タイマーが有効か判定
 	if (auto_flow_timer > 0.0f)
 	{
 		auto_flow_timer -= ImGui::GetIO().DeltaTime; // デルタタイム分引き算
