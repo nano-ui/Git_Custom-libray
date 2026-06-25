@@ -60,7 +60,7 @@ void StateGraphPaletteWindow::DrawHierarchyNodeList(GraphData* current_graph, ui
 	for (size_t i = 0; i < current_graph->nodes.size(); i++)
 	{
 		const GraphNode& node = current_graph->nodes[i];	//ノード情報
-		ImGui::Text("ID : %[%s]", node.id, node.name.c_str());
+		ImGui::Text("ID : %d[%s]", node.id, node.name.c_str());
 		ImGui::SameLine(ImGui::GetWindowWidth() - 115.0f);
 		std::string button_label = u8"フォーカス##" + std::to_string(node.id);	//ボタンラベル
 
@@ -137,23 +137,23 @@ void StateGraphPaletteWindow::DrawPaletterFilterButtons()
 void StateGraphPaletteWindow::DrawNormalStatePalette(StateGraphDataManager* data_manager, float button_offset_x)
 {
 	//サブグラフの描画判定
-	if (current_filter == PaletteFilter::ALL || current_filter == PaletteFilter::SubGraph)
+	if (current_filter == PaletteFilter::ALL || current_filter == PaletteFilter::Normal)
 	{
-		ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.3f, 1.0f), u8"▼ サブステート");
+		ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.3f, 1.0f), u8"▼ 通常ステート");
 		ImGui::Separator();
 
-		std::vector<std::string> sub_graph_names = GetExistingSubGraphNames(data_manager); // サブステートリスト 
+		std::vector<std::string> normal_names = GetExistingNormalStateNames(data_manager); // サブステートリスト 
 
-		for (size_t i = 0; i < sub_graph_names.size(); i++)
+		for (size_t i = 0; i < normal_names.size(); i++)
 		{
-			ImGui::Text("・%s", sub_graph_names[i].c_str());
+			ImGui::Text("・%s", normal_names[i].c_str());
 
 			//直前に描画したTextアイテムをマウスで掴んで引っ張れるように設定
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 			{
-				ImGui::Text(u8"移動中：%s", sub_graph_names[i].c_str());
-				size_t payload_size = sub_graph_names[i].size() + 1;	//ヌル終端文字を含めた送信バイトサイズ
-				ImGui::SetDragDropPayload("DND_PAYLOAD_SUB", sub_graph_names[i].c_str(), payload_size);
+				ImGui::Text(u8"移動中：%s", normal_names[i].c_str());
+				size_t payload_size = normal_names[i].size() + 1;	//ヌル終端文字を含めた送信バイトサイズ
+				ImGui::SetDragDropPayload("DND_PAYLOAD_SUB", normal_names[i].c_str(), payload_size);
 				ImGui::EndDragDropSource();
 			}
 
@@ -163,9 +163,9 @@ void StateGraphPaletteWindow::DrawNormalStatePalette(StateGraphDataManager* data
 
 			if (ImGui::Button(add_btn_label.c_str()))
 			{
-				pending_add_palette_node_name = sub_graph_names[i];
+				pending_add_palette_node_name = normal_names[i];
 				pending_add_is_sub_graph = true;
-				printf("StateGraphPaletteWindow: パレットから「%s」サブグラフの追加を予約しました。\n", pending_add_palette_node_name.c_str());
+				printf("StateGraphPaletteWindow: パレットから通常「%s」の追加を予約しました。\n", pending_add_palette_node_name.c_str());
 			}
 			ImGui::Separator();
 		}

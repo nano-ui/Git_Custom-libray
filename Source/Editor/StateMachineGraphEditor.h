@@ -10,7 +10,8 @@
 class StateMachine;
 class StateBlackboard;
 class StateGraphDataManager;
-class TransitionConditionEditor;
+class StateGraphPaletteWindow;
+class StateGraphPropertyWindow;
 
 struct GraphData;
 struct GraphLink;
@@ -37,50 +38,17 @@ private:
 	//階層ナビゲーションを描画
 	bool DrawHeaderNavigation();
 
-	//ステート一覧リストを描画して、その位置に移動
-	void DrawStateListWindow(GraphData* current_graph);
-
-	//階層ノードタブを描画
-	void DrawHierarchyNodeList(GraphData* current_graph);
-
-	//パレットの切り替えフィルターボタン描画
-	void DrawPaletterFilterButtons();
-
-	//通常ステートのパレット項目描画
-	void DrawNormalStatePalette(float button_offset_x);
-
-	//サブグラフのパレット項目を描画
-	void DrawSubGraphPalette(float button_offset_x);
-
 	//ノードの削除
 	void DeleteNode(GraphData* current_graph);
 
 	//接続線の削除
 	void DeleteLink(GraphData* current_graph);
 
-	//ノードの詳細情報を描画
-	void DrawPropertyWindow(GraphData* current_graph, StateBlackboard* blackboard);
-
-	//リンク選択時の詳細プロパティ描画
-	void DrawLinkProperty(GraphData* current_graph, uint32_t link_id, StateBlackboard* blackboard);
-
-	//ノード選択時の詳細プロパティ描画
-	void DrawNodeProperty(GraphData* current_graph, uint32_t node_id, StateBlackboard* blackboard);
-
 	//接続線の作成を検知してデータに追加
 	void CreateNewLink(GraphData* current_graph);
 
 	//遷移条件を構築
 	void OnLinkCreated(GraphData* current_graph, const GraphLink& new_link);
-
-	//ノード名の一覧を全データから取得
-	std::vector<std::string> GetExistingStateNames();
-
-	//通常ノード名を全データから取得
-	std::vector<std::string> GetExistingNormalStateNames();
-
-	//サブグラフ名を全データから取得
-	std::vector<std::string> GetExistingSubGraphNames();
 
 	//最後に使用したファイルパスを設定ファイルへ保存
 	void SaveEditorCondig();
@@ -96,28 +64,16 @@ private:
 	};
 
 private:
-	//パレットの表示切り替え状態
-	enum class PaletteFilter
-	{
-		ALL,		//すべて描画
-		SubGraph,	//サブグラフのみ描画
-		Normal		//通常ステートのみ描画
-	};
+	std::unique_ptr<StateGraphDataManager> data_manager;				//データを専門的に扱うマネージャー
+	std::unique_ptr<StateGraphPaletteWindow> palette_window;			//左ペイン：パレット描画クラス
+	std::unique_ptr<StateGraphPropertyWindow> property_window;			//右ペイン：プロパティ描画クラス
+	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 
-private:
-	std::unique_ptr<StateGraphDataManager> data_manager;		//データを専門的に扱うマネージャー
-	std::unique_ptr<TransitionConditionEditor> conditon_editor;	//遷移条件UI専用エディタ
 	uint32_t current_graph_id;									//現在の階層のグラフID
 	std::unordered_map<uint32_t, uint32_t> graph_active_nodes;	//各階層ごとのアクティブノードIDを個別に保持
-	uint32_t previous_active_node_id = 0;;						//前フレームのステート名
-	uint32_t current_active_node_id = 0;						//現在のステート名
+	uint32_t previous_active_node_id = 0;						//前フレームのアクティブノードID
+	uint32_t current_active_node_id = 0;						//現在のアクティブノードID
 	uint32_t auto_flowing_link_id = 0;							//アニメーションを実行するリンクID
 	float auto_flow_timer = 0.0f;								//エフェクトの有効時間
-	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
-	std::vector<std::string> available_state_palette;	//追加可能な全てのステートリスト
-	std::string pending_add_palette_node_name;			//パレットから追加予約されたステート名
-	bool pending_add_is_sub_graph;						//サブグラフかのフラグ
-	PaletteFilter current_filter = PaletteFilter::ALL;	//現在のパレットフィルター
-	std::string current_loaded_file_path = "";			//現在エディタで開いているファイルのパス名
+	std::string current_loaded_file_path = "";					//現在エディタで開いているファイルのパス名
 };
-

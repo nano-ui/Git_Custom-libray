@@ -219,15 +219,6 @@ void StateGraphPropertyWindow::DrawLinkProperty(StateGraphDataManager* data_mana
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.2f, 1.0f), u8"※ここにブラックボード変数を用いた");
-	ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.2f, 1.0f), u8"  条件式(==, !=, >, <)の設定項目が");
-	ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.2f, 1.0f), u8"  並ぶようになります。");
-
-	ImGui::Spacing();
-	ImGui::Spacing();
-	ImGui::Separator();
-	ImGui::Spacing();
-
 	const ImVec4 red_button_color = ImVec4(0.6f, 0.2f, 0.2f, 1.0f); // 削除ボタン用の赤色
 	ImGui::PushStyleColor(ImGuiCol_Button, red_button_color);
 
