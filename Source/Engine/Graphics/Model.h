@@ -36,8 +36,12 @@ public:
 	//アニメーションが終了したか取得
 	bool IsAnimationFinished() const;
 
+	//モデルパスの取得
+	const std::string& GetModelPath()const { return model_path; }
+
 public:
 	class ModelImpl;						//実際の処理を行う内部クラス
 private:
 	std::unique_ptr<ModelImpl> model_impl;	//モデルの実体を保持
+	std::string model_path = "";			//読み込んだモデルのパス
 };

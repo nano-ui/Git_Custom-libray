@@ -13,7 +13,7 @@ static AutoRegister<Player> auto_register_player("Player");
 Player::Player()
 {
 	auto device = Graphics::Instance().GetDevice();
-	character = std::make_unique<Model>(device, "Data/Model/Character/RPG-Character.glb");
+	character = std::make_shared<Model>(device, "Data/Model/Character/RPG-Character.glb");
 	move_speed = 5.0f;
 	height = 0.8f;
 	radius = 0.4f;
@@ -39,8 +39,19 @@ void Player::Initialize()
 	capsule_collider.listener = this;
 	capsule_collider.is_active = true;
 	AddCollider(&capsule_collider);
-	character->PlayAnimation("Idle", true);
-	SetModelHash(StateBlackboard::CalculateHash("RPG-Character"));
+
+	std::weak_ptr<IAnimationListener> null_listener;
+	animation_component = std::make_unique<AnimationComponent>(character, null_listener);
+	animation_component->Initialize();
+	std::string current_model_path = character->GetModelPath();
+
+	//パスが取得できているか確認
+	if (!current_model_path.empty())
+	{
+		std::filesystem::path path_obj(current_model_path);
+		std::string model_name = path_obj.stem().string();
+		SetModelHash(StateBlackboard::CalculateHash(model_name));
+	}
 }
 
 //更新処理
@@ -53,7 +64,6 @@ void Player::Update(float elapsed_time)
 
 	UpdateInput(elapsed_time);
 	Character::Update(elapsed_time);
-	character->Update(elapsed_time);
 
 	capsule_collider.start_center = position;
 	capsule_collider.start_center.y = position.y + offset_y;

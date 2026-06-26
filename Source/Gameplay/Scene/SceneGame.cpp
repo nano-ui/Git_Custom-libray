@@ -397,25 +397,32 @@ void SceneGame::RenderGui()
 	if (graph_editor)
 	{
 		StateBlackboard* target_blackboard = nullptr;
-		const std::vector<std::unique_ptr<GameObject>>& objects = object_manager->GetGameObjects();
+		GameObject* selected_obj = object_editor->GetCurrentSelectObject();
 
-		for (size_t i = 0; i < objects.size(); i++)
+		// オブジェクトが選択されているか判定
+		if (selected_obj)
 		{
-			Character* check_character = dynamic_cast<Character*>(objects[i].get());
+			// 選択中のオブジェクトがキャラクター型（または派生クラス）か判定
+			Character* selected_character = dynamic_cast<Character*>(selected_obj);
 
-			if (check_character)
+			if (selected_character)
 			{
-				target_blackboard = check_character->GetBlackboard();
-				break;
+				target_blackboard = selected_character->GetBlackboard();
 			}
 		}
 
-		if (!target_blackboard)
+		// 有効なブラックボードが見つかった場合のみエディタを描画・シミュレーション
+		if (target_blackboard)
 		{
-			printf("Warning: SceneGame::RenderGui - シーン内から有効な Character のブラックボードを発見できませんでした。\n");
+			graph_editor->DrawEditor(target_blackboard);
 		}
-
-		graph_editor->DrawEditor(target_blackboard);
+		else
+		{
+			// 画面上に「編集対象のキャラクターを選択してください」等のプレースホルダーを出したい場合はここに記述可能
+			ImGui::Begin(u8"ステートマシンエディタ");
+			ImGui::TextColored(ImVec4(1.0f, 0.6f, 0.2f, 1.0f), u8"※Hierarchy または画面上で編集したいキャラクターを選択してください");
+			ImGui::End();
+		}
 	}
 #endif // USE_IMGUI
 }

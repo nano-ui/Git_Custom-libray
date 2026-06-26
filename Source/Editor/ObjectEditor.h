@@ -26,6 +26,9 @@ public:
 	//描画
 	void RenderUi(Camera* camera, CollisionManager* collision_manager);
 
+	//選択中のオブジェクトを取得
+	GameObject* GetCurrentSelectObject()const { return current_selected_object; }
+
 private:
 	//オブジェクト生成UI描画
 	void DrawLeftPane(Camera* camera, CollisionManager* collision_manager);

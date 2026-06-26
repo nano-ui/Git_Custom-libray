@@ -274,6 +274,7 @@ public:
 //===================
 Model::Model(ID3D11Device* device, const std::string& file_path)
 {
+	model_path = file_path;
 	std::string extension = std::filesystem::path(file_path).extension().string();	//Šg’£q‚ğ’Šo
 
 	//----------------------

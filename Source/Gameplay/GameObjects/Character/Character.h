@@ -93,7 +93,7 @@ private:
 	void UpdateHorizontalMove(float elapsed_time);
 
 protected:
-	std::unique_ptr<Model> character;	//キャラクターモデル
+	std::shared_ptr<Model> character;	//キャラクターモデル
 	std::unique_ptr<StateBlackboard> blackboard;
 	std::unique_ptr<AnimationComponent> animation_component;	//アニメーション制御
 
