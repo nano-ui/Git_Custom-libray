@@ -76,6 +76,8 @@ void AnimationComponent::Update(float elapsed_time, StateBlackboard* blackboard)
 	//モデルが有効か確認
 	if (shared_model)
 	{
+		shared_model->Update(elapsed_time);
+
 		//アニメーションの終了判定
 		if (shared_model->IsAnimationFinished())
 		{

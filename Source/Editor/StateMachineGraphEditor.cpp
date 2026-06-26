@@ -3,11 +3,13 @@
 #include "StateMachineGraphEditor.h"
 #include "../Gameplay/StateMachine/StateBlackboard.h"
 #include "../Gameplay/StateMachine/StateGraphDataManager.h"
+#include "../Gameplay/GameObjects/ObjectManager.h"
 #include "../Editor/FileDialogHelper.h"
 
 #include "StateGraphPaletteWindow.h"
 #include "StateGraphPropertyWindow.h"
 #include "StateGraphSimulator.h"
+#include "StateGraphConfigManager.h"
 
 #include <imgui_node_editor_internal.h>
 #include <cassert>
@@ -33,6 +35,9 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	palette_window = std::make_unique<StateGraphPaletteWindow>();
 	property_window = std::make_unique<StateGraphPropertyWindow>();
 	graph_simulator = std::make_unique<StateGraphSimulator>();
+	config_manager = std::make_unique<StateGraphConfigManager>();
+
+	target_model_hash = StateBlackboard::CalculateHash("RPG_Character");
 
 	LoadEditorCondig();
 
@@ -50,6 +55,8 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 			data_manager->CheckAndInitDefaultNode(current_graph_id);
 		}
 	}
+
+	TriggerHotReload();
 }
 
 //デストラクタ
@@ -473,7 +480,13 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	ImGui::SameLine();
 
 	ImGui::BeginChild("RightSidebarZone##Child", ImVec2(dynamic_right_width, canvas_height), true);
-	property_window->DrawProperty(data_manager.get(), current_graph, blackboard);
+	bool is_changed = property_window->DrawProperty(data_manager.get(), current_graph, blackboard);
+	
+	if (is_changed)
+	{
+		TriggerHotReload();
+	}
+	
 	ImGui::EndChild();
 
 	ed::SetCurrentEditor(nullptr);
@@ -779,6 +792,32 @@ void StateMachineGraphEditor::LoadEditorCondig()
 		printf("Warning: LoadEditorConfig - 設定ファイルのキー構造が不正です。パスを初期化します。\n");
 		current_loaded_file_path = "";
 	}
+}
+
+//アニメーションマップを構築して送信
+void StateMachineGraphEditor::TriggerHotReload()
+{
+	std::unordered_map<uint32_t, std::string> new_anim_map;	//新しいアニメーションマップ
+
+	//全階層情報を走査
+	for (size_t g = 0; g < data_manager->GetLayerDatas().size(); g++)
+	{
+		const GraphData& graph = data_manager->GetLayerDatas()[g];	//対象の階層
+
+		//階層内の全ノードを走査
+		for (size_t n = 0; n < graph.nodes.size(); n++)
+		{
+			const GraphNode& node = graph.nodes[n];	//対象のノード
+
+			//通常ステートかつ、アニメーション名が設定されているか確認
+			if (!node.is_sub_graph && !node.animation_name.empty())
+			{
+				uint32_t state_hash = StateBlackboard::CalculateHash(node.name);	//ノーノ名のハッシュ
+				new_anim_map[state_hash] = node.animation_name;
+			}
+		}
+	}
+	ObjectManager::Instance().RefreshAnimationMap(target_model_hash, new_anim_map);
 }
 
 //カスタムデリータ

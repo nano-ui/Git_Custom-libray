@@ -19,14 +19,16 @@ StateGraphPropertyWindow::StateGraphPropertyWindow()
 StateGraphPropertyWindow::~StateGraphPropertyWindow() = default;
 
 //プロパティウィンドウの全体描画
-void StateGraphPropertyWindow::DrawProperty(StateGraphDataManager* data_manager, GraphData* current_graph, StateBlackboard* blackboard)
+bool StateGraphPropertyWindow::DrawProperty(StateGraphDataManager* data_manager, GraphData* current_graph, StateBlackboard* blackboard)
 {
 	//グラフデータが渡されているか確認
 	if (!current_graph)
 	{
 		printf("Error: StateGraphPropertyWindow::DrawProperty - current_graph が nullptr です。\n");
-		return;
+		return false;
 	}
+
+	bool is_changed = false;	//変更検知フラグ
 
 	ImGui::Text(u8"【ステートプロパティ】");
 	ImGui::Spacing();
@@ -42,21 +44,23 @@ void StateGraphPropertyWindow::DrawProperty(StateGraphDataManager* data_manager,
 	if (select_count > 0)
 	{
 		uint32_t selected_node_id = static_cast<uint32_t>(selected_nodes[0].Get()); //キャストID
-		DrawNodeProperty(data_manager, current_graph, selected_node_id, blackboard);
+		is_changed = DrawNodeProperty(data_manager, current_graph, selected_node_id, blackboard);
 	}
 	else if (select_link_count > 0)
 	{
 		uint32_t selected_link_id = static_cast<uint32_t>(selected_links[0].Get()); //キャストID
-		DrawLinkProperty(data_manager, current_graph, selected_link_id, blackboard);
+		is_changed = DrawLinkProperty(data_manager, current_graph, selected_link_id, blackboard);
 	}
 	else
 	{
 		ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), u8"キャンバス上の要素を\n選択すると詳細が表示されます");
 	}
+
+	return is_changed;
 }
 
 //ノード選択時の詳細プロパティ描画
-void StateGraphPropertyWindow::DrawNodeProperty(StateGraphDataManager* data_manager, GraphData* current_graph, uint32_t node_id, StateBlackboard* blackboard)
+bool StateGraphPropertyWindow::DrawNodeProperty(StateGraphDataManager* data_manager, GraphData* current_graph, uint32_t node_id, StateBlackboard* blackboard)
 {
 	GraphNode* target_node = nullptr;	//編集対象ノード
 
@@ -73,8 +77,10 @@ void StateGraphPropertyWindow::DrawNodeProperty(StateGraphDataManager* data_mana
 	if (!target_node)
 	{
 		printf("Warning: 選択されたノードID: %d がデータ内に見つかりません。\n", node_id);
-		return;
+		return false;
 	}
+
+	bool is_changed = false;	//値変更フラグ
 
 	ImGui::Text(u8"【ステート設定(ID：%d)】", target_node->id);
 	ImGui::Spacing();
@@ -88,6 +94,7 @@ void StateGraphPropertyWindow::DrawNodeProperty(StateGraphDataManager* data_mana
 	if (ImGui::InputText(u8"##StateNameInput1", name_input_buffer, name_buffer_size))
 	{
 		target_node->name = name_input_buffer;
+		is_changed = true;
 
 		//サブグラフ名との同期
 		if (target_node->is_sub_graph && data_manager)
@@ -114,7 +121,10 @@ void StateGraphPropertyWindow::DrawNodeProperty(StateGraphDataManager* data_mana
 
 	ImGui::Text(u8"アクション");
 	ImGui::SetNextItemWidth(-1.0f);
-	ImGui::Combo(u8"ActionCategoryCombo", &target_node->action_category, action_ui_names, total_action_count);
+	if (ImGui::Combo(u8"ActionCategoryCombo", &target_node->action_category, action_ui_names, total_action_count))
+	{
+		is_changed = true;
+	}
 
 	ImGui::Spacing();
 
@@ -143,6 +153,7 @@ void StateGraphPropertyWindow::DrawNodeProperty(StateGraphDataManager* data_mana
 				if (ImGui::Selectable(anim_list[i].c_str(), is_selected))
 				{
 					target_node->animation_name = anim_list[i];
+					is_changed = true;
 				}
 				if (is_selected)
 				{
@@ -161,6 +172,7 @@ void StateGraphPropertyWindow::DrawNodeProperty(StateGraphDataManager* data_mana
 		if (ImGui::InputText(u8"##AnimNameInput", anim_input_buffer, anim_buffer_size))
 		{
 			target_node->animation_name = anim_input_buffer;
+			is_changed = true;
 		}
 		ImGui::TextColored(ImVec4(0.8f, 0.4f, 0.4f, 1.0f), u8"※ブラックボードに AnimationList がありません");
 	}
@@ -183,10 +195,12 @@ void StateGraphPropertyWindow::DrawNodeProperty(StateGraphDataManager* data_mana
 			remove_node_id, target_node->name.c_str());
 	}
 	ImGui::PopStyleColor();
+
+	return is_changed;
 }
 
 //リンク選択時の詳細プロパティ
-void StateGraphPropertyWindow::DrawLinkProperty(StateGraphDataManager* data_manager, GraphData* current_graph, uint32_t link_id, StateBlackboard* blackboard)
+bool StateGraphPropertyWindow::DrawLinkProperty(StateGraphDataManager* data_manager, GraphData* current_graph, uint32_t link_id, StateBlackboard* blackboard)
 {
 	GraphLink* target_link = nullptr;	//編集対象リンク
 
@@ -203,7 +217,7 @@ void StateGraphPropertyWindow::DrawLinkProperty(StateGraphDataManager* data_mana
 	if (!target_link)
 	{
 		printf("Warning: 選択されたリンクID: %d がデータ内に見つかりません。\n", link_id);
-		return;
+		return false;
 	}
 
 	//遷移条件プロパティのUI描画
@@ -222,12 +236,17 @@ void StateGraphPropertyWindow::DrawLinkProperty(StateGraphDataManager* data_mana
 	const ImVec4 red_button_color = ImVec4(0.6f, 0.2f, 0.2f, 1.0f); // 削除ボタン用の赤色
 	ImGui::PushStyleColor(ImGuiCol_Button, red_button_color);
 
+	bool is_changed = false;	//変更確認フラグ
+
 	//プロパティウィンドウ内に配置するリンクの削除実行ボタン
 	if (ImGui::Button(u8"遷移線を削除する", ImVec2(-1.0f, 30.0f)))
 	{
 		uint32_t remove_link_id = target_link->id; // 削除対象となる確定リンクID
 		ed::DeleteLink(remove_link_id);
 		printf("StateGraphPropertyWindow: プロパティ画面からリンク ID:%d の削除要求を発行しました。\n", remove_link_id);
+		is_changed = true;
 	}
 	ImGui::PopStyleColor();
+
+	return is_changed;
 }

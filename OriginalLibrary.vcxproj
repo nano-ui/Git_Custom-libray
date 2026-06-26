@@ -231,6 +231,7 @@
     <ClCompile Include="External\ImGuizmo-master\ImGuizmo-master\src\ImGuizmo.cpp" />
     <ClCompile Include="Source\Editor\FileDialogHelper.cpp" />
     <ClCompile Include="Source\Editor\ObjectEditor.cpp" />
+    <ClCompile Include="Source\Editor\StateGraphConfigManager.cpp" />
     <ClCompile Include="Source\Editor\StateGraphPaletteWindow.cpp" />
     <ClCompile Include="Source\Editor\StateGraphPropertyWindow.cpp" />
     <ClCompile Include="Source\Editor\StateGraphSimulator.cpp" />
@@ -329,6 +330,7 @@
     <ClInclude Include="External\ImGuizmo-master\ImGuizmo-master\src\ImGuizmo.h" />
     <ClInclude Include="Source\Editor\FileDialogHelper.h" />
     <ClInclude Include="Source\Editor\ObjectEditor.h" />
+    <ClInclude Include="Source\Editor\StateGraphConfigManager.h" />
     <ClInclude Include="Source\Editor\StateGraphPaletteWindow.h" />
     <ClInclude Include="Source\Editor\StateGraphPropertyWindow.h" />
     <ClInclude Include="Source\Editor\StateGraphSimulator.h" />

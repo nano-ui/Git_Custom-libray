@@ -18,11 +18,11 @@ public:
 	~StateGraphPropertyWindow();
 
 	//プロパティウィンドウの全体描画
-	void DrawProperty(StateGraphDataManager* data_manager, GraphData* current_graph, StateBlackboard* blackboard);
+	bool DrawProperty(StateGraphDataManager* data_manager, GraphData* current_graph, StateBlackboard* blackboard);
 
 private:
 	//ノード選択時の詳細プロパティ描画
-	void DrawNodeProperty(StateGraphDataManager* data_manager, GraphData* current_graph, uint32_t node_id, StateBlackboard* blackboard);
+	bool DrawNodeProperty(StateGraphDataManager* data_manager, GraphData* current_graph, uint32_t node_id, StateBlackboard* blackboard);
 
 	//リンク選択時の詳細プロパティ
 	void DrawLinkProperty(StateGraphDataManager* data_manager, GraphData* current_graph, uint32_t node_id, StateBlackboard* blackboard);

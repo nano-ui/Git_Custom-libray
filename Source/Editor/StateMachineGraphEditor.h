@@ -13,6 +13,7 @@ class StateGraphDataManager;
 class StateGraphPaletteWindow;
 class StateGraphPropertyWindow;
 class StateGraphSimulator;
+class StateGraphConfigManager;
 
 struct GraphData;
 struct GraphLink;
@@ -57,6 +58,9 @@ private:
 	//設定ファイルから最後に使用したファイルパスを読み込む
 	void LoadEditorCondig();
 
+	//アニメーションマップを構築して送信
+	void TriggerHotReload();
+
 private:
 	//カスタムデリータ
 	struct EditorContexDeleter
@@ -70,6 +74,7 @@ private:
 	std::unique_ptr<StateGraphPropertyWindow> property_window;			//右ペイン：プロパティ描画クラス
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::unique_ptr<StateGraphSimulator> graph_simulator;	//実行遷移シュミレーター
+	std::unique_ptr<StateGraphConfigManager> config_manager;
 
 	uint32_t current_graph_id;									//現在の階層のグラフID
 	std::unordered_map<uint32_t, uint32_t> graph_active_nodes;	//各階層ごとのアクティブノードIDを個別に保持
@@ -78,4 +83,5 @@ private:
 	uint32_t auto_flowing_link_id = 0;							//アニメーションを実行するリンクID
 	float auto_flow_timer = 0.0f;								//エフェクトの有効時間
 	std::string current_loaded_file_path = "";					//現在エディタで開いているファイルのパス名
+	uint32_t target_model_hash = 0;								//対象モデルのハッシュ値
 };

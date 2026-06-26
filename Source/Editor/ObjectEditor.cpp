@@ -15,6 +15,7 @@
 #include <filesystem>
 #include <windows.h>
 #include <commdlg.h>
+#include "StateGraphConfigManager.h"
 
 static const std::string editor_config_path = "Data/System/EditorConfig.json";
 static const std::string config_key_scene_path = "last_opened_scene";
