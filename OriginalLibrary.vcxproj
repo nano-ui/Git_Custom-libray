@@ -229,6 +229,7 @@
     <ClCompile Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_node_editor.cpp" />
     <ClCompile Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_node_editor_api.cpp" />
     <ClCompile Include="External\ImGuizmo-master\ImGuizmo-master\src\ImGuizmo.cpp" />
+    <ClCompile Include="Source\Editor\AssetLoader.cpp" />
     <ClCompile Include="Source\Editor\FileDialogHelper.cpp" />
     <ClCompile Include="Source\Editor\ObjectEditor.cpp" />
     <ClCompile Include="Source\Editor\StateGraphConfigManager.cpp" />
@@ -328,6 +329,7 @@
     <ClInclude Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_canvas.h" />
     <ClInclude Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_node_editor.h" />
     <ClInclude Include="External\ImGuizmo-master\ImGuizmo-master\src\ImGuizmo.h" />
+    <ClInclude Include="Source\Editor\AssetLoader.h" />
     <ClInclude Include="Source\Editor\FileDialogHelper.h" />
     <ClInclude Include="Source\Editor\ObjectEditor.h" />
     <ClInclude Include="Source\Editor\StateGraphConfigManager.h" />

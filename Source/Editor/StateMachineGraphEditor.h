@@ -14,6 +14,7 @@ class StateGraphPaletteWindow;
 class StateGraphPropertyWindow;
 class StateGraphSimulator;
 class StateGraphConfigManager;
+class AssetLoader;
 
 struct GraphData;
 struct GraphLink;
@@ -75,6 +76,7 @@ private:
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::unique_ptr<StateGraphSimulator> graph_simulator;	//実行遷移シュミレーター
 	std::unique_ptr<StateGraphConfigManager> config_manager;
+	std::unique_ptr<AssetLoader> asset_loader;					//モデル読み込みクラス
 
 	uint32_t current_graph_id;									//現在の階層のグラフID
 	std::unordered_map<uint32_t, uint32_t> graph_active_nodes;	//各階層ごとのアクティブノードIDを個別に保持

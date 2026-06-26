@@ -19,7 +19,11 @@ StateGraphPropertyWindow::StateGraphPropertyWindow()
 StateGraphPropertyWindow::~StateGraphPropertyWindow() = default;
 
 //プロパティウィンドウの全体描画
-bool StateGraphPropertyWindow::DrawProperty(StateGraphDataManager* data_manager, GraphData* current_graph, StateBlackboard* blackboard)
+bool StateGraphPropertyWindow::DrawProperty(
+	StateGraphDataManager* data_manager,
+	GraphData* current_graph, 
+	StateBlackboard* blackboard,
+	const std::vector<std::string>& anim_names)
 {
 	//グラフデータが渡されているか確認
 	if (!current_graph)
@@ -44,7 +48,7 @@ bool StateGraphPropertyWindow::DrawProperty(StateGraphDataManager* data_manager,
 	if (select_count > 0)
 	{
 		uint32_t selected_node_id = static_cast<uint32_t>(selected_nodes[0].Get()); //キャストID
-		is_changed = DrawNodeProperty(data_manager, current_graph, selected_node_id, blackboard);
+		is_changed = DrawNodeProperty(data_manager, current_graph, selected_node_id, blackboard, anim_names);
 	}
 	else if (select_link_count > 0)
 	{
@@ -60,7 +64,12 @@ bool StateGraphPropertyWindow::DrawProperty(StateGraphDataManager* data_manager,
 }
 
 //ノード選択時の詳細プロパティ描画
-bool StateGraphPropertyWindow::DrawNodeProperty(StateGraphDataManager* data_manager, GraphData* current_graph, uint32_t node_id, StateBlackboard* blackboard)
+bool StateGraphPropertyWindow::DrawNodeProperty(
+	StateGraphDataManager* data_manager,
+	GraphData* current_graph,
+	uint32_t node_id,
+	StateBlackboard* blackboard,
+	const std::vector<std::string>& anim_names)
 {
 	GraphNode* target_node = nullptr;	//編集対象ノード
 
@@ -131,30 +140,24 @@ bool StateGraphPropertyWindow::DrawNodeProperty(StateGraphDataManager* data_mana
 	ImGui::Text(u8"再生アニメーション");
 	ImGui::SetNextItemWidth(-1.0f);
 
-	std::vector<std::string> anim_list;	//アニメーションリストコンテナ
-	const std::string anim_list_key = "AnimationList";
-
-	if (blackboard)
+	if (!anim_names.empty())
 	{
-		std::vector<std::string> empty_fallback = {};	//取得失敗時の空リスト
-		anim_list = blackboard->GetValue<std::vector<std::string>>(anim_list_key, empty_fallback);
-	}
-
-	//取得したリストに中身が存在するか判定
-	if (!anim_list.empty())
-	{
-		//モデルから取得したアニメーション名をドロップダウンリストで描画
+		// モデルから直接抽出されたアニメーション名をドロップダウンリストで描画
 		if (ImGui::BeginCombo(u8"##AnimNameCombo", target_node->animation_name.c_str()))
 		{
-			for (size_t i = 0; i < anim_list.size(); i++)
+			// リストに含まれる全アニメーション名をループ走査
+			for (size_t i = 0; i < anim_names.size(); i++)
 			{
-				bool is_selected = (target_node->animation_name == anim_list[i]);	//現在選択されているかフラグ
+				bool is_selected = (target_node->animation_name == anim_names[i]);	// 現在選択されている項目か判定
 
-				if (ImGui::Selectable(anim_list[i].c_str(), is_selected))
+				// ドロップダウン内の項目が選択されたか判定
+				if (ImGui::Selectable(anim_names[i].c_str(), is_selected))
 				{
-					target_node->animation_name = anim_list[i];
+					target_node->animation_name = anim_names[i];
 					is_changed = true;
 				}
+
+				// 現在選択中の項目に初期フォーカスを合わせるか判定
 				if (is_selected)
 				{
 					ImGui::SetItemDefaultFocus();
@@ -165,8 +168,8 @@ bool StateGraphPropertyWindow::DrawNodeProperty(StateGraphDataManager* data_mana
 	}
 	else
 	{
-		const size_t anim_buffer_size = 128;	//バッファサイズ
-		char anim_input_buffer[anim_buffer_size] = {};	//入力バッファ
+		const size_t anim_buffer_size = 128;
+		char anim_input_buffer[anim_buffer_size] = {};
 		strcpy_s(anim_input_buffer, anim_buffer_size, target_node->animation_name.c_str());
 
 		if (ImGui::InputText(u8"##AnimNameInput", anim_input_buffer, anim_buffer_size))
@@ -174,7 +177,7 @@ bool StateGraphPropertyWindow::DrawNodeProperty(StateGraphDataManager* data_mana
 			target_node->animation_name = anim_input_buffer;
 			is_changed = true;
 		}
-		ImGui::TextColored(ImVec4(0.8f, 0.4f, 0.4f, 1.0f), u8"※ブラックボードに AnimationList がありません");
+		ImGui::TextColored(ImVec4(1.0f, 0.6f, 0.2f, 1.0f), u8"※モデルが未選択です。上部メニューからモデルを選択してください");
 	}
 
 	//削除ボタン

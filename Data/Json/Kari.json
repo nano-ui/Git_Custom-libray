@@ -173,5 +173,6 @@
             ]
         }
     ],
-    "NextID": 120
+    "NextID": 120,
+    "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }

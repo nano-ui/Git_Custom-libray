@@ -40,8 +40,6 @@ void Player::Initialize()
 	capsule_collider.is_active = true;
 	AddCollider(&capsule_collider);
 	character->PlayAnimation("Idle", true);
-	blackboard->RegisterVariable("AnimationList");
-	blackboard->SetValue("AnimationList", character->GetAnimationNames());
 	SetModelHash(StateBlackboard::CalculateHash("RPG-Character"));
 }
 

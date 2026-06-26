@@ -10,6 +10,7 @@
 #include "StateGraphPropertyWindow.h"
 #include "StateGraphSimulator.h"
 #include "StateGraphConfigManager.h"
+#include "AssetLoader.h"
 
 #include <imgui_node_editor_internal.h>
 #include <cassert>
@@ -36,8 +37,9 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	property_window = std::make_unique<StateGraphPropertyWindow>();
 	graph_simulator = std::make_unique<StateGraphSimulator>();
 	config_manager = std::make_unique<StateGraphConfigManager>();
+	asset_loader = std::make_unique<AssetLoader>();
 
-	target_model_hash = StateBlackboard::CalculateHash("RPG_Character");
+	target_model_hash = 0;
 
 	LoadEditorCondig();
 
@@ -53,6 +55,25 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 		if (!data_manager->LoadFromFile(current_loaded_file_path))
 		{
 			data_manager->CheckAndInitDefaultNode(current_graph_id);
+		}
+	}
+
+	//グラフの読み込みに成功し、データにモデルパスが記録されているか判定
+	if (is_success && !data_manager->GetTargetModelPath().empty())
+	{
+		asset_loader->LoadModelAnimations(data_manager->GetTargetModelPath());
+	}
+
+	// 起動時の自動復元に成功し、かつモデルパスがデータに存在するか判定
+	if (is_success && !data_manager->GetTargetModelPath().empty())
+	{
+		// 既存の関数でモデルとアニメーションリストをロード
+		if (asset_loader->LoadModelAnimations(data_manager->GetTargetModelPath()))
+		{
+			std::filesystem::path path_obj(data_manager->GetTargetModelPath());
+			std::string model_name = path_obj.stem().string(); //拡張子を除いたファイル名を抽出
+
+			target_model_hash = StateBlackboard::CalculateHash(model_name);
 		}
 	}
 
@@ -155,11 +176,58 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 				current_graph_id = reset_root_id;
 				current_loaded_file_path = selected_load_path;
 				SaveEditorCondig();
+
+				//読み込んだ情報にモデルパスが記録されているか判定
+				if (!data_manager->GetTargetModelPath().empty())
+				{
+					if (asset_loader->LoadModelAnimations(data_manager->GetTargetModelPath()))
+					{
+						std::filesystem::path path_obj(data_manager->GetTargetModelPath());
+						std::string model_name = path_obj.stem().string(); //拡張子を除いたファイル名を抽出
+
+						target_model_hash = StateBlackboard::CalculateHash(model_name);
+					}
+				}
+				else
+				{
+					asset_loader->LoadModelAnimations("");
+				}
+				TriggerHotReload();
 				printf("StateMachineGraphEditor: 「%s」から正常読込したため階層をリセットしました。\n", selected_load_path.c_str());
 			}
 		}
 	}
 	ImGui::PopStyleColor();
+	ImGui::SameLine();
+
+	//モデル選択ボタンが押されたか判定
+	if (ImGui::Button(u8"モデル選択"))
+	{
+		PathResult path_result = FileDialogHelper::OpenGenericFileDialog();
+
+		//ファイルが選択されたか判定
+		if (!path_result.absolute_path.empty())
+		{
+			//モデルのロードとアニメーション名抽出
+			if (asset_loader->LoadModelAnimations(path_result.relative_path))
+			{
+				data_manager->SetTargetModelPath(path_result.relative_path);
+				std::filesystem::path path_obj(path_result.relative_path);
+				std::string model_name = path_obj.stem().string(); // 拡張子を除いたファイル名を抽出
+				target_model_hash = StateBlackboard::CalculateHash(model_name);
+				printf("StateMachineGraphEditor: モデル「%s」からアニメーションリストを取得しました。\n", path_result.relative_path.c_str());
+				TriggerHotReload();
+			}
+		}
+	}
+
+	//モデル読み込みの成否を判定
+	if (!asset_loader->GetLoadedModelPath().empty())
+	{
+		ImGui::SameLine();
+		ImGui::Text(u8" 紐付けモデル: %s", asset_loader->GetLoadedModelPath().c_str());
+	}
+
 
 	ImGui::Spacing();
 
@@ -480,7 +548,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	ImGui::SameLine();
 
 	ImGui::BeginChild("RightSidebarZone##Child", ImVec2(dynamic_right_width, canvas_height), true);
-	bool is_changed = property_window->DrawProperty(data_manager.get(), current_graph, blackboard);
+	bool is_changed = property_window->DrawProperty(data_manager.get(), current_graph, blackboard, asset_loader->GetAnimationNames());
 	
 	if (is_changed)
 	{
@@ -627,6 +695,11 @@ bool StateMachineGraphEditor::DrawHeaderNavigation()
 	ImGui::PopStyleColor();
 	ImGui::SetWindowFontScale(1.0f);
 
+	ImGui::SameLine();
+	const float offset_position_x = 400.0f;	//ボタンを右側に寄せるためのオフセット値
+	ImGui::SetCursorScreenPos(ImVec2(bar_pos.x + offset_position_x, bar_pos.y + 5.0f));
+
+	ImGui::SetWindowFontScale(1.0f);
 	ImGui::SetCursorPos(ImVec2(0.0f, title_bar_height + bar_size.y + 5.0f));
 	ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
@@ -817,25 +890,16 @@ void StateMachineGraphEditor::TriggerHotReload()
 		}
 	}
 
-	std::string file_path = config_manager->GetCurrentLoadedFilePath();
+	std::string model_path = asset_loader->GetLoadedModelPath();
 
 	//ファイルパスが空でないか確認
-	if (!file_path.empty())
+	if (!model_path.empty())
 	{
-		std::filesystem::path path_obj(file_path);
-		std::string file_name = path_obj.stem().string();	//拡張子を除いたファイル名
+		std::filesystem::path path_obj(model_path);
+		std::string model_name = path_obj.stem().string();	//拡張子を除いたファイル名
 
-		const std::string suffix = "State";	//除外する末尾の文字列
-		size_t pos = file_name.rfind(suffix);	//末尾の文字列の開始位置を検索
-
-		//ファイル名の末尾がStateで終わっているか判定
-		if (pos != std::string::npos && pos + suffix.length() == file_name.length())
-		{
-			file_name.erase(pos);
-		}
-
-		uint32_t target_model_hash = StateBlackboard::CalculateHash(file_name);	//対象モデルのハッシュ値
-		ObjectManager::Instance().RefreshAnimationMap(target_model_hash, new_anim_map);
+		uint32_t computed_model_hash = StateBlackboard::CalculateHash(model_name);	//正確なモデル名からハッシュ値を計算
+		ObjectManager::Instance().RefreshAnimationMap(computed_model_hash, new_anim_map);
 	}
 }
 

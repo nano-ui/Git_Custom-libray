@@ -69,7 +69,7 @@ void StateGraphPaletteWindow::DrawHierarchyNodeList(GraphData* current_graph, ui
 		{
 			out_focus_node_id = node.id;
 			printf("StateGraphPaletteWindow: ノード ID:%d (%s) へのフォーカスを予約しました。\n",
-				node.id, node.name.c_str());
+			node.id, node.name.c_str());
 		}
 	}
 	ImGui::EndChild();
