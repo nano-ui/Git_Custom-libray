@@ -61,7 +61,7 @@
                     "SubGraphID": 0
                 },
                 {
-                    "ActionCategory": 1,
+                    "ActionCategory": 0,
                     "AnimationName": "",
                     "ID": 103,
                     "Input": [
@@ -72,7 +72,7 @@
                         }
                     ],
                     "IsSubGraph": true,
-                    "Name": "移動ステート",
+                    "Name": "新規ステートサブステート",
                     "Output": [
                         {
                             "ID": 105,
@@ -88,7 +88,7 @@
         },
         {
             "GraphID": 108,
-            "GraphName": "移動ステート",
+            "GraphName": "新規ステート",
             "Links": [
                 {
                     "Conditions": [
@@ -123,7 +123,7 @@
             ],
             "Nodes": [
                 {
-                    "ActionCategory": 1,
+                    "ActionCategory": 0,
                     "AnimationName": "",
                     "ID": 110,
                     "Input": [
@@ -134,7 +134,7 @@
                         }
                     ],
                     "IsSubGraph": false,
-                    "Name": "後ろ移動",
+                    "Name": "新規ステート",
                     "Output": [
                         {
                             "ID": 112,
@@ -147,7 +147,7 @@
                     "SubGraphID": 0
                 },
                 {
-                    "ActionCategory": 1,
+                    "ActionCategory": 0,
                     "AnimationName": "",
                     "ID": 113,
                     "Input": [
@@ -158,7 +158,7 @@
                         }
                     ],
                     "IsSubGraph": false,
-                    "Name": "前移動",
+                    "Name": "新規ステート",
                     "Output": [
                         {
                             "ID": 115,

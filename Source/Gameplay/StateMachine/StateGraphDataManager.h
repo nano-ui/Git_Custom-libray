@@ -130,8 +130,15 @@ public:
 	//IDカウンターの参照と更新
 	uint32_t FetchAndIncrementId() { return next_id++; }
 
+	//モデルパスを取得
+	const std::string& GetTargetModelPath()const { return target_model_path; }
+
+	//モデルパスの設定
+	void SetTargetModelPath(const std::string& path) { target_model_path = path; }
+
 private:
 	std::vector<GraphData> layer_datas;	//全ての階層データのリスト
 	uint32_t next_id;					//全ての要素の割り当てIDカウンター
+	std::string target_model_path = "";	//紐づけ対象のパス
 };
 

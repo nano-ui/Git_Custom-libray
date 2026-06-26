@@ -31,7 +31,7 @@ void StateGraphConfigManager::SaveEditorConfig(const std::string& current_path)
 }
 
 //設定ファイルから最後に使用したファイルパスを読み込む
-std::string StateGraphConfigManager::LoadEditorConfig()
+void StateGraphConfigManager::LoadEditorConfig()
 {
 	const std::string config_file_path = "Data/Json/StateEditorConfig.json";
 	std::ifstream file_in(config_file_path);
@@ -60,11 +60,27 @@ std::string StateGraphConfigManager::LoadEditorConfig()
 //ファイルを開くダイアログを実行してパスを更新・取得
 std::string StateGraphConfigManager::OpenGraphFileDialog()
 {
-	return FileDialogHelper::OpenFileDialog();
+	PathResult path_result = FileDialogHelper::OpenGenericFileDialog();
+
+	//ファイルが選択されたか判定
+	if (!path_result.absolute_path.empty())
+	{
+		current_loaded_file_path = path_result.relative_path;
+	}
+
+	return current_loaded_file_path;
 }
 
 //ファイルを保存ダイアログを実行してパスを更新・取得
 std::string StateGraphConfigManager::SaveGraphFileDialog()
 {
-	return FileDialogHelper::SaveFileDialog();
+	PathResult path_result = FileDialogHelper::OpenGenericFileDialog();
+
+	//ファイルが選択されたか判定
+	if (!path_result.absolute_path.empty())
+	{
+		current_loaded_file_path = path_result.relative_path;
+	}
+
+	return current_loaded_file_path;
 }

@@ -19,6 +19,7 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 {
 	nlohmann::json root_json;	//JSONのルートオブジェクト
 	root_json["NextID"] = next_id; // IDカウンターの保存
+	root_json["TargetModelPath"] = target_model_path;	//モデルパスを保存
 	nlohmann::json layers_array = nlohmann::json::array();	//全階層情報を格納する配列オブジェクト
 
 	//全階層情報を走査してパッキング
@@ -137,6 +138,16 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 
 	layer_datas.clear(); // 既存のコンテナのクリア
 	next_id = root_json["NextID"]; // IDカウンターの復元
+
+	//JSON内にモデルパスのキーが存在するか確認
+	if (root_json.find("TargetModelPath") != root_json.end())
+	{
+		target_model_path = root_json["TargetModelPath"].get<std::string>();
+	}
+	else
+	{
+		target_model_path = "";
+	}
 
 	//階層情報の展開・復元
 	for (const auto& graph_json : root_json["Layers"])

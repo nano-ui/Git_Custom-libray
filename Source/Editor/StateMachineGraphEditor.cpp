@@ -812,12 +812,31 @@ void StateMachineGraphEditor::TriggerHotReload()
 			//通常ステートかつ、アニメーション名が設定されているか確認
 			if (!node.is_sub_graph && !node.animation_name.empty())
 			{
-				uint32_t state_hash = StateBlackboard::CalculateHash(node.name);	//ノーノ名のハッシュ
-				new_anim_map[state_hash] = node.animation_name;
+				new_anim_map[node.id] = node.animation_name;
 			}
 		}
 	}
-	ObjectManager::Instance().RefreshAnimationMap(target_model_hash, new_anim_map);
+
+	std::string file_path = config_manager->GetCurrentLoadedFilePath();
+
+	//ファイルパスが空でないか確認
+	if (!file_path.empty())
+	{
+		std::filesystem::path path_obj(file_path);
+		std::string file_name = path_obj.stem().string();	//拡張子を除いたファイル名
+
+		const std::string suffix = "State";	//除外する末尾の文字列
+		size_t pos = file_name.rfind(suffix);	//末尾の文字列の開始位置を検索
+
+		//ファイル名の末尾がStateで終わっているか判定
+		if (pos != std::string::npos && pos + suffix.length() == file_name.length())
+		{
+			file_name.erase(pos);
+		}
+
+		uint32_t target_model_hash = StateBlackboard::CalculateHash(file_name);	//対象モデルのハッシュ値
+		ObjectManager::Instance().RefreshAnimationMap(target_model_hash, new_anim_map);
+	}
 }
 
 //カスタムデリータ

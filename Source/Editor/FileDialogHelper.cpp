@@ -2,7 +2,62 @@
 
 #include <windows.h>
 #include <commdlg.h>
+#include <filesystem>
+#include <algorithm>
 #include <cstdio>
+
+//各種パス情報を返す
+PathResult FileDialogHelper::OpenGenericFileDialog()
+{
+    PathResult result_path;
+    OPENFILENAMEA ofn;
+    char file_path_buffer[MAX_PATH] = "";
+    const char* all_files_filter = "All Files (*.*)\0*.*\0";
+
+    ZeroMemory(&ofn, sizeof(ofn));
+
+    ofn.lStructSize = sizeof(ofn);
+    ofn.hwndOwner = NULL;
+    ofn.lpstrFile = file_path_buffer;
+    ofn.nMaxFile = sizeof(file_path_buffer);
+    ofn.lpstrFilter = all_files_filter;
+
+    const int default_filter_idx = 1;
+    ofn.nFilterIndex = default_filter_idx;
+    ofn.lpstrFileTitle = NULL;
+    ofn.lpstrInitialDir = NULL;
+
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
+    //ダイアログを表示し、ファイルを選択したか判定
+    if (GetOpenFileNameA(&ofn) == TRUE)
+    {
+        std::filesystem::path absolute_path_obj(file_path_buffer);
+
+        result_path.absolute_path = absolute_path_obj.string();
+
+        std::filesystem::path current_work_dir = std::filesystem::current_path();
+        std::filesystem::path relative_path_obj = std::filesystem::relative(absolute_path_obj, current_work_dir);
+
+        result_path.relative_path = relative_path_obj.string();
+
+        std::string ext_str = absolute_path_obj.extension().string();
+
+        //拡張子が存在し、先頭にドットが含まれているか確認
+        if (!ext_str.empty() && ext_str.front() == '.')
+        {
+            ext_str.erase(ext_str.begin());
+        }
+
+        //拡張子の大文字小文字を区別せず扱いやすくするため小文字化を行う
+        for (size_t i = 0; i < ext_str.length(); i++)
+        {
+            ext_str[i] = static_cast<char>(std::tolower(ext_str[i]));
+        }
+        result_path.extension = ext_str;
+    }
+    return result_path;
+}
 
 //ファイルを開くダイアログを表示して絶対パスを返す
 std::string FileDialogHelper::OpenFileDialog(const std::string& default_dir, const std::string& filter)
