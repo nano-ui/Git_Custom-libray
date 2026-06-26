@@ -360,6 +360,9 @@
     <ClCompile Include="Source\Editor\AssetLoader.cpp">
       <Filter>Source\Editor\AssetLoader</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\StateMachineComponent.cpp">
+      <Filter>Source\Gameplay\Components\StateMachineComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -682,6 +685,9 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\AssetLoader.h">
       <Filter>Source\Editor\AssetLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\StateMachineComponent.h">
+      <Filter>Source\Gameplay\Components\StateMachineComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1067,6 +1073,9 @@
     </Filter>
     <Filter Include="Source\Editor\AssetLoader">
       <UniqueIdentifier>{2ce713aa-1b04-437f-9f70-10e9a227942b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\StateMachineComponent">
+      <UniqueIdentifier>{570fef4c-14db-4477-b4b0-cd964f62568e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -8,6 +8,7 @@
 #include <unordered_map>
 
 class StateBlackboard;
+class StateMachineComponent;
 
 class Character : public GameObject, public IAnimationListener
 {
@@ -47,6 +48,9 @@ public:
 
 	//アニメーションコンポーネント取得
 	AnimationComponent* GetAnimationComponent()const { return animation_component.get(); }
+
+	//ステートマシンコンポーネントクラス取得
+	StateMachineComponent* GetStateMachineComponent()const { return state_machine_component.get(); }
 
 protected:
 	//移動方向の設定
@@ -96,6 +100,7 @@ protected:
 	std::shared_ptr<Model> character;	//キャラクターモデル
 	std::unique_ptr<StateBlackboard> blackboard;
 	std::unique_ptr<AnimationComponent> animation_component;	//アニメーション制御
+	std::unique_ptr<StateMachineComponent> state_machine_component;	//ステートマシン制御
 
 	DirectX::XMFLOAT3 angle;	//角度
 	float radius;				//半径

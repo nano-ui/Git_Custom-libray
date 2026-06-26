@@ -142,10 +142,11 @@ public:
 
 	//セーブ・ロードの自動処理対象にしたい変数名とポインタをシステムに登録
 	template<typename T>
-	void RegisterVariable(const std::string& property_name, T* target_variable)
+	void RegisterVariable(const std::string& property_name, T* target_variable, const std::string& category_name = "Default")
 	{
 		PropertyData new_data;
 		new_data.name = property_name;
+		new_data.category = category_name;
 		new_data.property_interface = std::make_unique<TypedProperty<T>>(target_variable);
 		registered_properties.push_back(std::move(new_data));
 	}
@@ -169,7 +170,8 @@ private:
 	//個別のプロパティ情報をまとめる内部構造体
 	struct PropertyData
 	{
-		std::string name;	//変数名
+		std::string name;		//変数名
+		std::string category;	//所属するグループ
 		std::unique_ptr<IProperty> property_interface;	//変数操作ポインタ
 	};
 

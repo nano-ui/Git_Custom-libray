@@ -4,6 +4,7 @@
 #include "../Engine/Graphics/Graphics.h"
 #include "../Gameplay/GameObjects/ObjectFactory.h"
 #include "../Gameplay/StateMachine/StateBlackboard.h"
+#include "../Gameplay/Components/StateMachineComponent.h"
 
 #include <imgui.h>
 
@@ -30,6 +31,10 @@ Player::~Player()
 void Player::Initialize()
 {
 	Character::Initialize();
+	if (state_machine_component)
+	{
+		state_machine_component->Initialize("Data/Json/NodeEditor_State.json");
+	}
 	SetupSerialization();
 	position = { 0.0f,0.0f,0.0f };
 
@@ -50,7 +55,9 @@ void Player::Initialize()
 	{
 		std::filesystem::path path_obj(current_model_path);
 		std::string model_name = path_obj.stem().string();
-		SetModelHash(StateBlackboard::CalculateHash(model_name));
+		uint32_t calculated_hash = StateBlackboard::CalculateHash(model_name);
+		SetModelHash(calculated_hash);
+		if (state_machine_component)state_machine_component->SetModelHash(calculated_hash);
 	}
 }
 
@@ -102,6 +109,10 @@ void Player::RenderDebug(ShapeRenderer* renderer)
 void Player::SetupSerialization()
 {
 	Character::SetupSerialization();
+	if (state_machine_component && serializer)
+	{
+		state_machine_component->SetupSerialization(serializer.get());
+	}
 }
 
 //Õ“Ëˆ—

@@ -1,5 +1,6 @@
 #include "Character.h"
 #include "../Gameplay/StateMachine/StateBlackboard.h"
+#include "../Gameplay/Components/StateMachineComponent.h"
 
 #include <imgui.h>
 #include <cmath>
@@ -27,6 +28,7 @@ Character::Character()
 	move_speed = 0.0f;
 
 	blackboard = std::make_unique<StateBlackboard>();
+	state_machine_component = std::make_unique<StateMachineComponent>();
 }
 
 //デストラクタ
@@ -55,6 +57,8 @@ void Character::Update(float elapsed_time)
 	blackboard->SetValue(u8"速度", max_speed);
 	blackboard->SetValue(u8"接地フラグ", is_ground);
 
+	if (state_machine_component)state_machine_component->Update(elapsed_time, blackboard.get());
+
 	if (animation_component)
 	{
 		animation_component->Update(elapsed_time, blackboard.get());
@@ -81,17 +85,22 @@ void Character::RenderDebug(ShapeRenderer* renderer)
 void Character::SetupSerialization()
 {
 	GameObject::SetupSerialization();
-	serializer->RegisterVariable("Heilth", &height);
-	serializer->RegisterVariable("Radius", &radius);
-	serializer->RegisterVariable("MaxSpeed", &max_speed);
-	serializer->RegisterVariable("MoveSpeed", &move_speed);
-	serializer->RegisterVariable("Health", &health);
-	serializer->RegisterVariable("AttackPower", &attack_power);
-	serializer->RegisterVariable("Offset_Y", &offset_y);
-	serializer->RegisterVariable("Weight", &weight);
-	serializer->RegisterVariable("Gravity", &gravity);
-	serializer->RegisterVariable("Friction", &friction);
-	serializer->RegisterVariable("Acceleration", &acceleration);
+	//カテゴリ「基本ステータス」への登録
+	serializer->RegisterVariable(u8"体力", &health, u8"基本ステータス");
+	serializer->RegisterVariable(u8"攻撃力", &attack_power, u8"基本ステータス");
+
+	//カテゴリ「移動・物理パラメータ」への登録
+	serializer->RegisterVariable(u8"最高速度", &max_speed, u8"移動・物理パラメータ");
+	serializer->RegisterVariable(u8"現在の移動速度", &move_speed, u8"移動・物理パラメータ");
+	serializer->RegisterVariable(u8"加速度", &acceleration, u8"移動・物理パラメータ");
+	serializer->RegisterVariable(u8"摩擦力", &friction, u8"移動・物理パラメータ");
+	serializer->RegisterVariable(u8"重力", &gravity, u8"移動・物理パラメータ");
+	serializer->RegisterVariable(u8"重量", &weight, u8"移動・物理パラメータ");
+
+	//カテゴリ「当たり判定設定」への登録
+	serializer->RegisterVariable(u8"コライダー半径", &radius, u8"当たり判定設定");
+	serializer->RegisterVariable(u8"コライダー高さ", &height, u8"当たり判定設定");
+	serializer->RegisterVariable(u8"コライダーY軸オフセット", &offset_y, u8"当たり判定設定");
 }
 
 //ダメージ処理
