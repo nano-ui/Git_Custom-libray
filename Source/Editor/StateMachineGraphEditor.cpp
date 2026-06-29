@@ -5,6 +5,7 @@
 #include "../Gameplay/StateMachine/StateGraphDataManager.h"
 #include "../Gameplay/GameObjects/ObjectManager.h"
 #include "../Editor/FileDialogHelper.h"
+#include "../Editor/EditorMediator.h"
 
 #include "StateGraphPaletteWindow.h"
 #include "StateGraphPropertyWindow.h"
@@ -78,6 +79,8 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	}
 
 	TriggerHotReload();
+
+	EditorMediator::Instance().RegisterStateMachineGraphEditor(this);
 }
 
 //デストラクタ

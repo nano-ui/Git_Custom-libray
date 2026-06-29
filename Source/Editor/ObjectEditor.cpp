@@ -6,6 +6,7 @@
 #include "../Engine/Camera/Camera.h"
 #include "../Engine/Core/Input.h"
 #include "../ThiedParty/json.hpp"
+#include "../Editor/EditorMediator.h"
 
 #include <imgui.h>
 #include <ImGuizmo.h>
@@ -170,6 +171,8 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 	ImGui::Begin("Inspector");
 	DrawRightPane();
 	ImGui::End();
+
+	EditorMediator::Instance().OnObjectSelected(current_selected_object);
 
 	DrawGizmo(camera);
 }

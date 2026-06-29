@@ -363,6 +363,9 @@
     <ClCompile Include="Source\Gameplay\Components\StateMachineComponent.cpp">
       <Filter>Source\Gameplay\Components\StateMachineComponent</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\EditorMediator.cpp">
+      <Filter>Source\Editor\EditorMediator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -688,6 +691,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\StateMachineComponent.h">
       <Filter>Source\Gameplay\Components\StateMachineComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\EditorMediator.h">
+      <Filter>Source\Editor\EditorMediator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1076,6 +1082,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\StateMachineComponent">
       <UniqueIdentifier>{570fef4c-14db-4477-b4b0-cd964f62568e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\EditorMediator">
+      <UniqueIdentifier>{8f615b74-2187-4561-bbe4-f46cdeb5c2ac}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
