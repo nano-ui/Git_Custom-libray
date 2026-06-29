@@ -33,7 +33,7 @@ void Player::Initialize()
 	Character::Initialize();
 	if (state_machine_component)
 	{
-		state_machine_component->Initialize("Data/Json/NodeEditor_State.json");
+		state_machine_component->Initialize();
 	}
 	SetupSerialization();
 	position = { 0.0f,0.0f,0.0f };
@@ -48,6 +48,12 @@ void Player::Initialize()
 	std::weak_ptr<IAnimationListener> null_listener;
 	animation_component = std::make_unique<AnimationComponent>(character, null_listener);
 	animation_component->Initialize();
+	
+	if (state_machine_component && animation_component)
+	{
+		animation_component->SetAnimationMap(state_machine_component->GetAnimationMap());
+	}
+
 	std::string current_model_path = character->GetModelPath();
 
 	//パスが取得できているか確認

@@ -28,7 +28,7 @@ AnimationComponent::~AnimationComponent()
 //‰Šú‰»
 void AnimationComponent::Initialize()
 {
-	current_state_key = 0;
+	current_state_key = UINT32_MAX;
 }
 
 //XV

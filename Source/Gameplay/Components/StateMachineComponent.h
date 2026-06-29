@@ -2,6 +2,7 @@
 
 #include <string>
 #include <cstdint>
+#include <unordered_map>
 
 class StateBlackboard;
 class JsonSerializer;
@@ -16,7 +17,7 @@ public:
 	~StateMachineComponent();
 
 	//初期化
-	void Initialize(const std::string& default_path);
+	void Initialize();
 
 	//更新
 	void Update(float elapsed_time, StateBlackboard* blackboard);
@@ -33,8 +34,16 @@ public:
 	//ステートマシンJSONパス取得
 	const std::string& GetStateMachinePath()const { return state_machine_path; }
 
+	//アニメーション対応表を取得
+	const std::unordered_map<uint32_t, std::string>& GetAnimationMap()const { return animation_map; }
+
+private:
+	//ステートマシンJSONからアニメーション対応表を抽出
+	void LoadAnimationMap();
+
 private:
 	std::string state_machine_path = "";	//Jsonパス
 	uint32_t model_hash = 0;				//モデルのハッシュ値
+	std::unordered_map<uint32_t, std::string> animation_map;	//ステートIDとアニメーション名の対応表
 };
 
