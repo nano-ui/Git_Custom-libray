@@ -33,6 +33,9 @@ public:
 	//エディタ描画
 	void DrawEditor(StateBlackboard* blackboard);
 
+	//ファイルパスのグラフ情報をリロード
+	bool LoadGraphFromFile(const std::string& file_path);
+
 private:
 
 	//サブグラフへの階層移動を検知・処理

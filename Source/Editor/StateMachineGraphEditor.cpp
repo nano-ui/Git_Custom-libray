@@ -169,32 +169,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		std::string selected_load_path = FileDialogHelper::OpenFileDialog();
 		if (!selected_load_path.empty())
 		{
-			bool load_result = data_manager->LoadFromFile(selected_load_path);
-			if (load_result)
-			{
-				const uint32_t reset_root_id = 0;
-				current_graph_id = reset_root_id;
-				current_loaded_file_path = selected_load_path;
-				SaveEditorCondig();
-
-				//読み込んだ情報にモデルパスが記録されているか判定
-				if (!data_manager->GetTargetModelPath().empty())
-				{
-					if (asset_loader->LoadModelAnimations(data_manager->GetTargetModelPath()))
-					{
-						std::filesystem::path path_obj(data_manager->GetTargetModelPath());
-						std::string model_name = path_obj.stem().string(); //拡張子を除いたファイル名を抽出
-
-						target_model_hash = StateBlackboard::CalculateHash(model_name);
-					}
-				}
-				else
-				{
-					asset_loader->LoadModelAnimations("");
-				}
-				TriggerHotReload();
-				printf("StateMachineGraphEditor: 「%s」から正常読込したため階層をリセットしました。\n", selected_load_path.c_str());
-			}
+			LoadGraphFromFile(selected_load_path);
 		}
 	}
 	ImGui::PopStyleColor();
@@ -559,6 +534,54 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 	ed::SetCurrentEditor(nullptr);
 	ImGui::End();
+}
+
+//ファイルパスのグラフ情報をリロード
+bool StateMachineGraphEditor::LoadGraphFromFile(const std::string& file_path)
+{
+	//パスが空文字か判定
+	if (file_path.empty())
+	{
+		printf("[Warning] StateMachineGraphEditor::LoadGraphFromFile - 渡されたパスが空です。\n");
+		return false;
+	}
+
+	bool load_result = data_manager->LoadFromFile(file_path);	//読み込みフラグ
+
+	//読み込みの成否を判定
+	if (load_result)
+	{
+		const uint32_t reset_root_id = 0;
+		current_graph_id = reset_root_id;
+		current_loaded_file_path = file_path;
+		SaveEditorCondig();
+
+		//読み込んだデータにモデルパスが記録されているか判定
+		if (!data_manager->GetTargetModelPath().empty())
+		{
+			//モデルからアニメーションの読込が成功したか判定
+			if (asset_loader->LoadModelAnimations(data_manager->GetTargetModelPath()))
+			{
+				std::filesystem::path path_obj(data_manager->GetTargetModelPath());
+				std::string model_name = path_obj.stem().string();	//拡張子を除いたファイル名
+				target_model_hash = StateBlackboard::CalculateHash(model_name);
+			}
+		}
+		else
+		{
+			asset_loader->LoadModelAnimations("");
+			target_model_hash = 0;
+		}
+
+		TriggerHotReload();
+		printf("StateMachineGraphEditor: 「%s」から正常読込したため階層をリセットしました。\n", file_path.c_str());
+		return true;
+	}
+	else
+	{
+		printf("[Error] StateMachineGraphEditor::LoadGraphFromFile - ファイルの読込に失敗しました。ファイルが破損しているか、パスが不正です。対象パス: %s\n", file_path.c_str());
+	}
+	return false;
 }
 
 //サブグラフへの階層移動を検知・処理
