@@ -47,6 +47,7 @@
                             "Name": "入力"
                         }
                     ],
+                    "IsLoop": true,
                     "IsSubGraph": false,
                     "Name": "待機状態",
                     "Output": [
@@ -71,6 +72,7 @@
                             "Name": "入力"
                         }
                     ],
+                    "IsLoop": true,
                     "IsSubGraph": true,
                     "Name": "移動ステート",
                     "Output": [
@@ -133,6 +135,7 @@
                             "Name": "入力"
                         }
                     ],
+                    "IsLoop": false,
                     "IsSubGraph": false,
                     "Name": "後ろ移動",
                     "Output": [
@@ -148,7 +151,7 @@
                 },
                 {
                     "ActionCategory": 1,
-                    "AnimationName": "Evade_F",
+                    "AnimationName": "Walk_F",
                     "ID": 113,
                     "Input": [
                         {
@@ -157,6 +160,7 @@
                             "Name": "入力"
                         }
                     ],
+                    "IsLoop": false,
                     "IsSubGraph": false,
                     "Name": "前移動",
                     "Output": [

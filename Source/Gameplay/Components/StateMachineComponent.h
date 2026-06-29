@@ -28,6 +28,7 @@ struct RuntimeNode
 	std::vector<uint32_t> outputs;	//出力ピンのID配列
 	bool is_sub_graph = false;		//サブグラフノードのフラグ
 	uint32_t sub_graph_id = 0;		//紐づく位階階層のグラフID
+	bool is_loop;					//ループ再生フラグ
 };
 
 
@@ -67,6 +68,9 @@ public:
 	//アニメーションを抽出
 	const std::string& GetCurrentAnimationName()const { return current_animation_name; }
 
+	//アニメーションループを取得
+	bool GetAnimationLoop()const { return current_animation_loop; }
+
 private:
 	//ステートマシンJSONからアニメーション対応表を抽出
 	void LoadAnimationMap(StateBlackboard* blackboard);
@@ -79,6 +83,7 @@ private:
 	uint32_t model_hash = 0;				//モデルのハッシュ値
 	uint32_t current_node_id = UINT32_MAX;	//アクティブノード
 	std::string current_animation_name = "";	//アニメーション名
+	bool current_animation_loop;				//アニメーション再生フラグ
 	std::unordered_map<uint32_t, std::string> animation_map;	//ステートIDとアニメーション名の対応表
 	std::vector<RuntimeNode> runtime_nodes;	//ノード配列
 	std::vector<RuntimeLink> runtime_links;	//リンク配列

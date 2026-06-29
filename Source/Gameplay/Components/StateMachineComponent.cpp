@@ -13,6 +13,7 @@ StateMachineComponent::StateMachineComponent()
 	state_machine_path = "";
 	model_hash = 0;
 	current_node_id = UINT32_MAX;
+	current_animation_loop = true;
 }
 
 //デストラクタ
@@ -78,8 +79,19 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 		// 正しくノードが展開されたか確認判定
 		if (!runtime_nodes.empty())
 		{
-			current_node_id = runtime_nodes.front().id; // 先頭の有効なノードIDをセット
-			current_animation_name = runtime_nodes.front().animation_name;
+			const uint32_t root_layer_id = 0;
+			auto entry_it = layer_entry_nodes.find(root_layer_id);
+			current_node_id = (entry_it != layer_entry_nodes.end()) ? entry_it->second : runtime_nodes.front().id;
+
+			for (size_t n = 0; n < runtime_nodes.size(); n++)
+			{
+				if (runtime_nodes[n].id == current_node_id)
+				{
+					current_animation_name = runtime_nodes[n].animation_name;
+					current_animation_loop = runtime_nodes[n].is_loop;
+					break;
+				}
+			}
 		}
 		else
 		{
@@ -152,6 +164,7 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 			if (node.id == current_node_id)
 			{
 				current_animation_name = node.animation_name;
+				current_animation_loop = node.is_loop;
 				break;
 			}
 		}
@@ -208,6 +221,7 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 						node.animation_name = node_json.contains("AnimationName") ? node_json["AnimationName"].get<std::string>() : "";
 						node.is_sub_graph = node_json["IsSubGraph"].get<bool>();
 						node.sub_graph_id = node_json["SubGraphID"].get<uint32_t>();
+						node.is_loop = node_json.contains("IsLoop") ? node_json["IsLoop"].get<bool>() : true;
 
 						if (node_json.contains("Input") && node_json["Input"].is_array())
 						{

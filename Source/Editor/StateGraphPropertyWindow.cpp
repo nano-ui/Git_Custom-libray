@@ -180,6 +180,13 @@ bool StateGraphPropertyWindow::DrawNodeProperty(
 		ImGui::TextColored(ImVec4(1.0f, 0.6f, 0.2f, 1.0f), u8"※モデルが未選択です。上部メニューからモデルを選択してください");
 	}
 
+	ImGui::Spacing();
+
+	if (ImGui::Checkbox(u8"アニメーションをループ再生する", &target_node->is_loop))
+	{
+		is_changed = true;
+	}
+
 	//削除ボタン
 	ImGui::Spacing();
 	ImGui::Spacing();

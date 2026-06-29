@@ -36,6 +36,7 @@ struct GraphNode
 	uintptr_t state_runtime_address = 0;	//ステートのメモリ番地
 	int action_category = 0;				//固有アクション
 	std::string animation_name = "";		//アニメーション名
+	bool is_loop = true;					//再生フラグ
 };
 
 //判定ノードの種類

@@ -17,6 +17,7 @@ AnimationComponent::AnimationComponent(
 {
 	current_state_key = 0;
 	current_animation_name = "";
+	current_animation_loop = true;
 }
 
 //デストラクタ
@@ -54,9 +55,9 @@ void AnimationComponent::Update(float elapsed_time)
 }
 
 //アニメーション名で直接再生命令を出
-void AnimationComponent::PlayAnimationByName(const std::string& anim_name, uint32_t state_key)
+void AnimationComponent::PlayAnimationByName(const std::string& anim_name, uint32_t state_key, bool is_loop)
 {
-	if (anim_name.empty() || current_animation_name == anim_name)
+	if (anim_name.empty() || (current_animation_name == anim_name && current_animation_loop == is_loop))
 	{
 		return;
 	}
@@ -65,10 +66,10 @@ void AnimationComponent::PlayAnimationByName(const std::string& anim_name, uint3
 
 	if (shared_model)
 	{
-		bool is_loop = true; // ループ再生フラグ変数
 		shared_model->PlayAnimation(anim_name, is_loop);
 		current_animation_name = anim_name;
 		current_state_key = state_key;
+		current_animation_loop = is_loop;
 	}
 }
 

@@ -46,6 +46,7 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 			node_json["SubGraphID"] = node.sub_graph_id; // 紐付く下位階層ID
 			node_json["ActionCategory"] = node.action_category;	// アクション値
 			node_json["AnimationName"] = node.animation_name;	// アニメ名
+			node_json["IsLoop"] = node.is_loop;					// 再生フラグ
 
 			//入力ピンのシリアライズ
 			nlohmann::json inputs_array = nlohmann::json::array(); // 入力ピン用の一時配列
@@ -173,6 +174,7 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 			node_json["PosY"].get_to(node.position_y); // 座標Y
 			node.is_sub_graph = node_json["IsSubGraph"]; // フラグ
 			node.sub_graph_id = node_json["SubGraphID"]; // 下位ID
+			node.is_loop = node_json.contains("IsLoop") ? node_json["IsLoop"].get<bool>() : true;
 			
 			if (node_json.find("ActionCategory") != node_json.end())
 			{

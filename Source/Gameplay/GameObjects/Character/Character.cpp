@@ -63,7 +63,9 @@ void Character::Update(float elapsed_time)
 	{
 		std::string target_anim_name = state_machine_component->GetCurrentAnimationName(); // 最新のアニメーション名
 		uint32_t current_state_id = state_machine_component->GetCurrentNodeId(); // 最新のステートID
-		animation_component->PlayAnimationByName(target_anim_name, current_state_id);
+		bool target_anim_loop = state_machine_component->GetAnimationLoop();
+	
+		animation_component->PlayAnimationByName(target_anim_name, current_state_id, target_anim_loop);
 	}
 
 	if (animation_component)
