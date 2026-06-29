@@ -31,7 +31,10 @@ public:
 	void Initialize();
 
 	//更新
-	void Update(float elapsed_time, StateBlackboard* blackboard);
+	void Update(float elapsed_time);
+
+	//アニメーション名で直接再生命令を出
+	void PlayAnimationByName(const std::string& anim_name, uint32_t state_key);
 
 	//アニメーションマップの設定
 	void SetAnimationMap(const std::unordered_map<uint32_t, std::string>& new_map);
@@ -41,6 +44,6 @@ private:
 	std::weak_ptr<Model> target_model;						//対象のモデル
 	std::weak_ptr<IAnimationListener> event_listener;		//イベント通知先
 	uint32_t current_state_key;								//現在再生中の状態ハッシュキー
-	uint32_t active_anim_key;								//検索用のハッシュキー
+	std::string current_animation_name;						//再生中のアニメーション名
 };
 

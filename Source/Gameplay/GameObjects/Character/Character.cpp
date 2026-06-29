@@ -59,9 +59,16 @@ void Character::Update(float elapsed_time)
 
 	if (state_machine_component)state_machine_component->Update(elapsed_time, blackboard.get());
 
+	if (state_machine_component && animation_component)
+	{
+		std::string target_anim_name = state_machine_component->GetCurrentAnimationName(); // 最新のアニメーション名
+		uint32_t current_state_id = state_machine_component->GetCurrentNodeId(); // 最新のステートID
+		animation_component->PlayAnimationByName(target_anim_name, current_state_id);
+	}
+
 	if (animation_component)
 	{
-		animation_component->Update(elapsed_time, blackboard.get());
+		animation_component->Update(elapsed_time);
 	}
 
 }
