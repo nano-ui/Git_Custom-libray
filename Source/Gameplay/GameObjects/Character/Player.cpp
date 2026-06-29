@@ -33,7 +33,7 @@ void Player::Initialize()
 	Character::Initialize();
 	if (state_machine_component)
 	{
-		state_machine_component->Initialize();
+		state_machine_component->Initialize(blackboard.get());
 	}
 	SetupSerialization();
 	position = { 0.0f,0.0f,0.0f };

@@ -36,6 +36,9 @@ public:
 	//ファイルパスのグラフ情報をリロード
 	bool LoadGraphFromFile(const std::string& file_path);
 
+	//アクティブノードID設定
+	void SetRuntimeActiveNodeId(uint32_t node_id) { runtime_active_node_id = node_id; }
+
 private:
 
 	//サブグラフへの階層移動を検知・処理
@@ -77,7 +80,6 @@ private:
 	std::unique_ptr<StateGraphPaletteWindow> palette_window;			//左ペイン：パレット描画クラス
 	std::unique_ptr<StateGraphPropertyWindow> property_window;			//右ペイン：プロパティ描画クラス
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
-	std::unique_ptr<StateGraphSimulator> graph_simulator;	//実行遷移シュミレーター
 	std::unique_ptr<StateGraphConfigManager> config_manager;
 	std::unique_ptr<AssetLoader> asset_loader;					//モデル読み込みクラス
 
@@ -89,4 +91,6 @@ private:
 	float auto_flow_timer = 0.0f;								//エフェクトの有効時間
 	std::string current_loaded_file_path = "";					//現在エディタで開いているファイルのパス名
 	uint32_t target_model_hash = 0;								//対象モデルのハッシュ値
+	uint32_t runtime_active_node_id = UINT32_MAX;				//実行中のステートID
+	uint32_t previous_runtime_active_node_id = UINT32_MAX;		//前回の実行ステートID
 };

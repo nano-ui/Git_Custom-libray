@@ -3,6 +3,7 @@
 #include <string>
 #include <cstdint>
 #include <unordered_map>
+#include "../Gameplay/StateMachine/StateBlackboard.h"
 
 class StateBlackboard;
 class JsonSerializer;
@@ -45,7 +46,7 @@ struct RuntimeLink
 	uint32_t id;                                //接続線の固有ID
 	uint32_t start_pin_id;                      //開始ピンのID
 	uint32_t end_pin_id;                        //終了ピンのID
-	std::vector<RuntimeCondition> conditions;   //このリンクに属する遷移条件配列
+	std::vector<TransitionCondition> conditions;   //このリンクに属する遷移条件配列
 };
 
 //実行時ノード
@@ -69,7 +70,7 @@ public:
 	~StateMachineComponent();
 
 	//初期化
-	void Initialize();
+	void Initialize(StateBlackboard* blackboard);
 
 	//更新
 	void Update(float elapsed_time, StateBlackboard* blackboard);
@@ -97,7 +98,7 @@ public:
 
 private:
 	//ステートマシンJSONからアニメーション対応表を抽出
-	void LoadAnimationMap();
+	void LoadAnimationMap(StateBlackboard* blackboard);
 
 	//ピンIDから所属するノードIDを逆引き検索
 	uint32_t GetNodeIdFromPinId(uint32_t pin_id)const;

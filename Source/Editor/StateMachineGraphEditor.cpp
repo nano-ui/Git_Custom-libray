@@ -36,7 +36,6 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 
 	palette_window = std::make_unique<StateGraphPaletteWindow>();
 	property_window = std::make_unique<StateGraphPropertyWindow>();
-	graph_simulator = std::make_unique<StateGraphSimulator>();
 	config_manager = std::make_unique<StateGraphConfigManager>();
 	asset_loader = std::make_unique<AssetLoader>();
 
@@ -108,26 +107,38 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 	uint32_t& current_active_node_id = graph_active_nodes[current_graph_id];	//階層固有のID
 
-	//アクティブノードが未設定かつノードが空でないか確認
-	if (current_active_node_id == 0 && !current_graph->nodes.empty())
+	//ゲーム側から正しい実行中IDが届いているか判定
+	if (runtime_active_node_id != UINT32_MAX)
 	{
-		current_active_node_id = current_graph->nodes.front().id;
+		current_active_node_id = runtime_active_node_id;
+
+		//ゲーム内で状態の遷移が発生したか判定
+		if (runtime_active_node_id != previous_runtime_active_node_id && previous_runtime_active_node_id != UINT_MAX)
+		{
+			//どのリンクを通過してここに来たのか全リンクを走査
+			for (size_t i = 0; i < current_graph->links.size(); i++)
+			{
+				const GraphLink& link = current_graph->links[i];	//走査対象のリンク
+				uint32_t src_id = data_manager->GetNodeIdFromPinId(current_graph->id, link.start_pin_id);	//リンク元ノードID
+				uint32_t dst_id = data_manager->GetNodeIdFromPinId(current_graph->id, link.end_pin_id);		//遷移先ノードID
+			
+				if (src_id == previous_runtime_active_node_id && dst_id == runtime_active_node_id)
+				{
+					auto_flowing_link_id = link.id;
+					const float flow_duration = 0.5f;
+					auto_flow_timer = flow_duration;
+					break;
+				}
+			}
+		}
+		previous_runtime_active_node_id = runtime_active_node_id;
 	}
-
-	uint32_t target_flow_link_id = 0;	//エフェクトを走らせるリンクID
-
-	//シミュレータを呼び出してステート遷移を評価
-	if (graph_simulator->UpdateSimulation(
-		data_manager.get(), 
-		blackboard,
-		current_graph,
-		current_active_node_id,
-		target_flow_link_id))
+	else
 	{
-		previous_active_node_id = current_active_node_id;
-		auto_flowing_link_id = target_flow_link_id;
-		const float flow_duration = 0.5f;	//エフェクトの表示時間
-		auto_flow_timer = flow_duration;
+		if (current_active_node_id == 0 && !current_graph->nodes.empty())
+		{
+			current_active_node_id = current_graph->nodes.front().id;
+		}
 	}
 
 	//タイマーが有効か判定

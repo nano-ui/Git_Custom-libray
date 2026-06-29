@@ -19,17 +19,17 @@ StateMachineComponent::StateMachineComponent()
 StateMachineComponent::~StateMachineComponent() = default;
 
 //初期化
-void StateMachineComponent::Initialize()
+void StateMachineComponent::Initialize(StateBlackboard* blackboard)
 {
 	//プレハブJSONからパスが正しく読み込まれているか判定
 	if (!state_machine_path.empty())
 	{
-		LoadAnimationMap();
+		LoadAnimationMap(blackboard);
 	}
 	else
 	{
 		state_machine_path = "Data/Json/Kari.json";
-		LoadAnimationMap();
+		LoadAnimationMap(blackboard);
 	}
 
 	if (!runtime_nodes.empty())
@@ -61,9 +61,7 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 
 			for (size_t c = 0; c < link.conditions.size(); c++)
 			{
-				const RuntimeCondition& cond = link.conditions[c]; // 評価対象の遷移条件
-
-				if (!EvaluateCondition(cond, blackboard))
+				if (!link.conditions[c].IsJudgment(*blackboard))
 				{
 					is_all_conditions_met = false;
 					break;
@@ -107,7 +105,7 @@ void StateMachineComponent::SetupSerialization(JsonSerializer* serializer)
 }
 
 //ステートマシンJSONからアニメーション対応表を抽出
-void StateMachineComponent::LoadAnimationMap()
+void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 {
 	std::ifstream input_file(state_machine_path); // ファイルのストリーム変数
 
@@ -187,13 +185,36 @@ void StateMachineComponent::LoadAnimationMap()
 						{
 							const auto& cond_json = link_json["Conditions"][c]; // 遷移条件JSON
 
-							RuntimeCondition cond; //メモリに登録するランタイム条件変数
-							cond.type = static_cast<RuntimeConditionType>(cond_json["Type"].get<int>());
+							TransitionCondition cond; //メモリに登録するランタイム条件変数
+							cond.type = static_cast<ConditionNodeType>(cond_json["Type"].get<int>());
 							cond.hash_key = cond_json["HashKey"].get<uint32_t>();
-							cond.reference_value = cond_json["RefValue"].get<float>();
-							cond.compare_op = static_cast<RuntimeCompareOp>(cond_json["CompOp"].get<int>());
+							cond.compart_op = static_cast<CompareOperator>(cond_json["CompOp"].get<int>());
 							cond.param_second = cond_json["ParamSecond"].get<float>();
 							cond.secondary_hash = cond_json["SecondaryHash"].get<uint32_t>();
+
+							float raw_ref_value = cond_json["RefValue"].get<float>();
+
+							if (blackboard && cond.type == ConditionNodeType::NormalCompare && cond.hash_key != 0)
+							{
+								const BlackboardData& raw_data = blackboard->GetAttributeValue(cond.hash_key);
+
+								if (std::holds_alternative<bool>(raw_data))
+								{
+									cond.reference_value = (raw_ref_value != 0.0f);
+								}
+								else if (std::holds_alternative<int>(raw_data))
+								{
+									cond.reference_value = static_cast<int>(raw_ref_value);
+								}
+								else
+								{
+									cond.reference_value = raw_ref_value;
+								}
+							}
+							else
+							{
+								cond.reference_value = raw_ref_value;
+							}
 
 							link.conditions.push_back(cond);
 						}

@@ -15,6 +15,9 @@ public:
 	//中継通知イベント
 	void OnObjectSelected(GameObject* object);
 
+	//アクティブノードIDをエディタに同期
+	void UpdateViewerSynchronization(GameObject* object);
+
 private:
 	//外部での生成を禁止
 	EditorMediator();

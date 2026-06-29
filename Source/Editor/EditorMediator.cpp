@@ -55,6 +55,28 @@ void EditorMediator::OnObjectSelected(GameObject* object)
 	}
 }
 
+//アクティブノードIDをエディタに同期
+void EditorMediator::UpdateViewerSynchronization(GameObject* object)
+{
+	if (!object || !state_machine_graph_editor)
+	{
+		return;
+	}
+
+	Character* character_ptr = dynamic_cast<Character*>(object);
+
+	if (character_ptr)
+	{
+		StateMachineComponent* sm_comp = character_ptr->GetStateMachineComponent();
+		if (sm_comp)
+		{
+			uint32_t active_node_id = sm_comp->GetCurrentNodeId();
+			state_machine_graph_editor->SetRuntimeActiveNodeId(active_node_id);
+		}
+	}
+
+}
+
 //コンストラクタ
 EditorMediator::EditorMediator()
 {
