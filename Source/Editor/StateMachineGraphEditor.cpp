@@ -907,36 +907,10 @@ void StateMachineGraphEditor::LoadEditorCondig()
 //アニメーションマップを構築して送信
 void StateMachineGraphEditor::TriggerHotReload()
 {
-	std::unordered_map<uint32_t, std::string> new_anim_map;	//新しいアニメーションマップ
-
-	//全階層情報を走査
-	for (size_t g = 0; g < data_manager->GetLayerDatas().size(); g++)
+	if (!current_loaded_file_path.empty())
 	{
-		const GraphData& graph = data_manager->GetLayerDatas()[g];	//対象の階層
-
-		//階層内の全ノードを走査
-		for (size_t n = 0; n < graph.nodes.size(); n++)
-		{
-			const GraphNode& node = graph.nodes[n];	//対象のノード
-
-			//通常ステートかつ、アニメーション名が設定されているか確認
-			if (!node.is_sub_graph && !node.animation_name.empty())
-			{
-				new_anim_map[node.id] = node.animation_name;
-			}
-		}
-	}
-
-	std::string model_path = asset_loader->GetLoadedModelPath();
-
-	//ファイルパスが空でないか確認
-	if (!model_path.empty())
-	{
-		std::filesystem::path path_obj(model_path);
-		std::string model_name = path_obj.stem().string();	//拡張子を除いたファイル名
-
-		uint32_t computed_model_hash = StateBlackboard::CalculateHash(model_name);	//正確なモデル名からハッシュ値を計算
-		ObjectManager::Instance().RefreshAnimationMap(computed_model_hash, new_anim_map);
+		data_manager->SaveToFile(current_loaded_file_path);
+		EditorMediator::Instance().NotifyGraphChanged(current_loaded_file_path);
 	}
 }
 

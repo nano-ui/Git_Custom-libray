@@ -71,6 +71,9 @@ public:
 	//アニメーションループを取得
 	bool GetAnimationLoop()const { return current_animation_loop; }
 
+	//リフレッシュ要求
+	void RequestReload() { is_pending_reload = true; }
+
 private:
 	//ステートマシンJSONからアニメーション対応表を抽出
 	void LoadAnimationMap(StateBlackboard* blackboard);
@@ -84,6 +87,7 @@ private:
 	uint32_t current_node_id = UINT32_MAX;	//アクティブノード
 	std::string current_animation_name = "";	//アニメーション名
 	bool current_animation_loop;				//アニメーション再生フラグ
+	bool is_pending_reload = false;				//リロード予約フラグ
 	std::unordered_map<uint32_t, std::string> animation_map;	//ステートIDとアニメーション名の対応表
 	std::vector<RuntimeNode> runtime_nodes;	//ノード配列
 	std::vector<RuntimeLink> runtime_links;	//リンク配列

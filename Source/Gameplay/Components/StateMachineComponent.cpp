@@ -66,8 +66,10 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 		return;
 	}
 
-	if (current_node_id == UINT32_MAX)
+	if (current_node_id == UINT32_MAX || is_pending_reload)
 	{
+		is_pending_reload = false;
+
 		// パスが完全に空っぽか判定
 		if (state_machine_path.empty())
 		{
@@ -190,6 +192,47 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 	{
 		std::cerr << "Warning: StateMachineComponent - ファイルを開けませんでした: " << state_machine_path << std::endl;
 		return;
+	}
+
+	if (current_node_id == UINT32_MAX || is_pending_reload)
+	{
+		is_pending_reload = false;
+
+		if (!runtime_nodes.empty())
+		{
+			bool is_current_node_valid = false;	//現在の滞在IDが新グラフにも生存しているかの確認フラグ
+
+			//現在のノードIDが、新しく読み直したグラフ内にもまだ存在するか走査
+			for (size_t n = 0; n < runtime_nodes.size(); n++)
+			{
+				if (runtime_nodes[n].id == current_node_id)
+				{
+					is_current_node_valid = true;
+					current_animation_name = runtime_nodes[n].animation_name;
+					break;
+				}
+			}
+			//ノードが削除されるなどして現在のIDが消失していた場合は、初期エントリーノードへフォールバック
+			if (!is_current_node_valid)
+			{
+				const uint32_t root_layer_id = 0;	//ルートレイヤーID
+				auto entry_it = layer_entry_nodes.find(root_layer_id);	//先頭ノード検索
+				current_node_id = (entry_it != layer_entry_nodes.end()) ? entry_it->second : runtime_nodes.front().id;
+			
+				for (size_t n = 0; n < runtime_nodes.size(); n++)
+				{
+					if (runtime_nodes[n].id == current_node_id)
+					{
+						current_animation_name = runtime_nodes[n].animation_name;
+						break;
+					}
+				}
+			}
+			else
+			{
+				return;
+			}
+		}
 	}
 
 	nlohmann::json root_json; //パース用オブジェクト変数

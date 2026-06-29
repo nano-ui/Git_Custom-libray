@@ -91,38 +91,7 @@
         {
             "GraphID": 108,
             "GraphName": "移動ステート",
-            "Links": [
-                {
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
-                            "HashKey": 0,
-                            "ParamSecond": 0.0,
-                            "RefValue": 1.0,
-                            "SecondaryHash": 0,
-                            "Type": 1
-                        }
-                    ],
-                    "EndPinID": 114,
-                    "ID": 116,
-                    "StartPinID": 112
-                },
-                {
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
-                            "HashKey": 0,
-                            "ParamSecond": 0.0,
-                            "RefValue": 1.0,
-                            "SecondaryHash": 0,
-                            "Type": 1
-                        }
-                    ],
-                    "EndPinID": 111,
-                    "ID": 117,
-                    "StartPinID": 115
-                }
-            ],
+            "Links": [],
             "Nodes": [
                 {
                     "ActionCategory": 1,
@@ -135,7 +104,7 @@
                             "Name": "入力"
                         }
                     ],
-                    "IsLoop": false,
+                    "IsLoop": true,
                     "IsSubGraph": false,
                     "Name": "後ろ移動",
                     "Output": [
@@ -160,7 +129,7 @@
                             "Name": "入力"
                         }
                     ],
-                    "IsLoop": false,
+                    "IsLoop": true,
                     "IsSubGraph": false,
                     "Name": "前移動",
                     "Output": [
@@ -177,6 +146,6 @@
             ]
         }
     ],
-    "NextID": 120,
+    "NextID": 122,
     "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }

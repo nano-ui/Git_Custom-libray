@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 class GameObject;
 class StateMachineGraphEditor;
 
@@ -17,6 +19,9 @@ public:
 
 	//アクティブノードIDをエディタに同期
 	void UpdateViewerSynchronization(GameObject* object);
+
+	//対象コンポーネントへリロード命令を仲介
+	void NotifyGraphChanged(const std::string& file_path);
 
 private:
 	//外部での生成を禁止

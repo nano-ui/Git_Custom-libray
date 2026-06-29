@@ -77,6 +77,25 @@ void EditorMediator::UpdateViewerSynchronization(GameObject* object)
 
 }
 
+//対象コンポーネントへリロード命令を仲介
+void EditorMediator::NotifyGraphChanged(const std::string& file_path)
+{
+	if (file_path.empty() || !last_selected_object)
+	{
+		return;
+	}
+
+	Character* character_ptr = dynamic_cast<Character*>(last_selected_object);
+	if (character_ptr)
+	{
+		StateMachineComponent* sm_comp = character_ptr->GetStateMachineComponent();
+		if (sm_comp)
+		{
+			sm_comp->RequestReload();
+		}
+	}
+}
+
 //コンストラクタ
 EditorMediator::EditorMediator()
 {
