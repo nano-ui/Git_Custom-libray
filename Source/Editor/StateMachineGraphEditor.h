@@ -87,10 +87,7 @@ private:
 	std::unordered_map<uint32_t, uint32_t> graph_active_nodes;	//各階層ごとのアクティブノードIDを個別に保持
 	uint32_t previous_active_node_id = 0;						//前フレームのアクティブノードID
 	uint32_t current_active_node_id = 0;						//現在のアクティブノードID
-	uint32_t auto_flowing_link_id = 0;							//アニメーションを実行するリンクID
-	float auto_flow_timer = 0.0f;								//エフェクトの有効時間
 	std::string current_loaded_file_path = "";					//現在エディタで開いているファイルのパス名
 	uint32_t target_model_hash = 0;								//対象モデルのハッシュ値
 	uint32_t runtime_active_node_id = UINT32_MAX;				//実行中のステートID
-	uint32_t previous_runtime_active_node_id = UINT32_MAX;		//前回の実行ステートID
 };

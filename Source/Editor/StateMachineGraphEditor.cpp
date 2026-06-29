@@ -111,27 +111,6 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	if (runtime_active_node_id != UINT32_MAX)
 	{
 		current_active_node_id = runtime_active_node_id;
-
-		//ゲーム内で状態の遷移が発生したか判定
-		if (runtime_active_node_id != previous_runtime_active_node_id && previous_runtime_active_node_id != UINT_MAX)
-		{
-			//どのリンクを通過してここに来たのか全リンクを走査
-			for (size_t i = 0; i < current_graph->links.size(); i++)
-			{
-				const GraphLink& link = current_graph->links[i];	//走査対象のリンク
-				uint32_t src_id = data_manager->GetNodeIdFromPinId(current_graph->id, link.start_pin_id);	//リンク元ノードID
-				uint32_t dst_id = data_manager->GetNodeIdFromPinId(current_graph->id, link.end_pin_id);		//遷移先ノードID
-			
-				if (src_id == previous_runtime_active_node_id && dst_id == runtime_active_node_id)
-				{
-					auto_flowing_link_id = link.id;
-					const float flow_duration = 0.5f;
-					auto_flow_timer = flow_duration;
-					break;
-				}
-			}
-		}
-		previous_runtime_active_node_id = runtime_active_node_id;
 	}
 	else
 	{
@@ -139,12 +118,6 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		{
 			current_active_node_id = current_graph->nodes.front().id;
 		}
-	}
-
-	//タイマーが有効か判定
-	if (auto_flow_timer > 0.0f)
-	{
-		auto_flow_timer -= ImGui::GetIO().DeltaTime; // デルタタイム分引き算
 	}
 
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
@@ -352,7 +325,9 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	{
 		const GraphLink& link = current_graph->links[i]; // リンク参照
 		ed::Link(link.id, link.start_pin_id, link.end_pin_id);
-		if (link.id == auto_flowing_link_id && auto_flow_timer > 0.0f)
+		uint32_t src_node_id = data_manager->GetNodeIdFromPinId(current_graph->id, link.start_pin_id);
+
+		if (src_node_id == current_active_node_id && runtime_active_node_id != UINT32_MAX)
 		{
 			ed::Flow(link.id);
 		}

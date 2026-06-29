@@ -29,6 +29,7 @@ struct RuntimeNode
 	bool is_sub_graph = false;		//サブグラフノードのフラグ
 	uint32_t sub_graph_id = 0;		//紐づく位階階層のグラフID
 	bool is_loop;					//ループ再生フラグ
+	uint32_t parent_node_id;		//親サブグラフノードのID
 };
 
 
@@ -80,6 +81,9 @@ private:
 
 	//ピンIDから所属するノードIDを逆引き検索
 	uint32_t GetNodeIdFromPinId(uint32_t pin_id)const;
+
+	//指定されたノードIDの親サブグラフノードIDを逆引き
+	uint32_t GetParentNodeId(uint32_t node_id)const;
 
 private:
 	std::string state_machine_path = "";	//Jsonパス

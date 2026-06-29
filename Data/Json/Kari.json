@@ -91,7 +91,38 @@
         {
             "GraphID": 108,
             "GraphName": "移動ステート",
-            "Links": [],
+            "Links": [
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 1.0,
+                            "SecondaryHash": 0,
+                            "Type": 1
+                        }
+                    ],
+                    "EndPinID": 114,
+                    "ID": 122,
+                    "StartPinID": 112
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 1.0,
+                            "SecondaryHash": 0,
+                            "Type": 1
+                        }
+                    ],
+                    "EndPinID": 111,
+                    "ID": 123,
+                    "StartPinID": 115
+                }
+            ],
             "Nodes": [
                 {
                     "ActionCategory": 1,
@@ -146,6 +177,6 @@
             ]
         }
     ],
-    "NextID": 122,
+    "NextID": 124,
     "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }
