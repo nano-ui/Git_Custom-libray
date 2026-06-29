@@ -8,7 +8,7 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 0,
+                            "HashKey": 1528076108,
                             "ParamSecond": 0.0,
                             "RefValue": 1.0,
                             "SecondaryHash": 0,
@@ -124,7 +124,7 @@
             "Nodes": [
                 {
                     "ActionCategory": 1,
-                    "AnimationName": "",
+                    "AnimationName": "Walk_B",
                     "ID": 110,
                     "Input": [
                         {
@@ -148,7 +148,7 @@
                 },
                 {
                     "ActionCategory": 1,
-                    "AnimationName": "",
+                    "AnimationName": "Evade_F",
                     "ID": 113,
                     "Input": [
                         {

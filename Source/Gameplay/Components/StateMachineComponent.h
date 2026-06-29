@@ -9,37 +9,6 @@ class StateBlackboard;
 class JsonSerializer;
 class AnimationComponent;
 
-//実行時条件タイプ
-enum class RuntimeConditionType
-{
-	Normal,		//通常比較
-	Random,		//確率
-	Distance,	//距離
-	Ratio,		//割合
-};
-
-//比較演算子
-enum class RuntimeCompareOp
-{
-	Equal,        //==
-	NotEqual,     //!=
-	Greater,      //>
-	Less,         //<
-	GreaterEqual, //>=
-	LessEqual     //<=
-};
-
-//実行時遷移条件
-struct RuntimeCondition
-{
-	RuntimeConditionType type;    //判定タイプ
-	uint32_t hash_key;            //対象変数のハッシュキー
-	float reference_value;        //判定基準値
-	RuntimeCompareOp compare_op;  //比較演算子
-	float param_second;           //拡張用第2パラメータ
-	uint32_t secondary_hash;      //拡張用ハッシュキー
-};
-
 //実行時リンク
 struct RuntimeLink
 {
@@ -57,6 +26,8 @@ struct RuntimeNode
 	std::string animation_name;		//再生するアニメーション名
 	std::vector<uint32_t> inputs;	//入力ピンのID配列
 	std::vector<uint32_t> outputs;	//出力ピンのID配列
+	bool is_sub_graph = false;		//サブグラフノードのフラグ
+	uint32_t sub_graph_id = 0;		//紐づく位階階層のグラフID
 };
 
 
@@ -103,9 +74,6 @@ private:
 	//ピンIDから所属するノードIDを逆引き検索
 	uint32_t GetNodeIdFromPinId(uint32_t pin_id)const;
 
-	//条件判定を実行
-	bool EvaluateCondition(const RuntimeCondition& condition, StateBlackboard* blackboard) const;
-
 private:
 	std::string state_machine_path = "";	//Jsonパス
 	uint32_t model_hash = 0;				//モデルのハッシュ値
@@ -114,5 +82,6 @@ private:
 	std::unordered_map<uint32_t, std::string> animation_map;	//ステートIDとアニメーション名の対応表
 	std::vector<RuntimeNode> runtime_nodes;	//ノード配列
 	std::vector<RuntimeLink> runtime_links;	//リンク配列
+	std::unordered_map<uint32_t, uint32_t> layer_entry_nodes;	//各階層ごとの先頭エントリーIDマップ
 };
 

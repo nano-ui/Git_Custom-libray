@@ -173,6 +173,7 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 	ImGui::End();
 
 	EditorMediator::Instance().OnObjectSelected(current_selected_object);
+	EditorMediator::Instance().UpdateViewerSynchronization(current_selected_object);
 
 	DrawGizmo(camera);
 }

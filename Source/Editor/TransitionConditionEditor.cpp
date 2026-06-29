@@ -210,16 +210,16 @@ void TransitionConditionEditor::DrawDistanceUI(StateBlackboard* blackboard, Grap
 
 		ImGui::SameLine();
 
-		std::string target_pos_name = blackboard->GetVariableNameFromHash(condition.hash_key);
+		std::string target_pos_name = blackboard->GetVariableNameFromHash(condition.secondary_hash);
 		ImGui::SetNextItemWidth(150.0f);
 		if (ImGui::BeginCombo(u8"ëŒè€ÇÃç¿ïW", target_pos_name.c_str()))
 		{
 			std::vector<std::string> var_names = blackboard->GetRegisteredVariableNames();
 			for (size_t n = 0; n < var_names.size(); n++)
 			{
-				if (ImGui::Selectable(var_names[n].c_str(), my_pos_name == var_names[n]))
+				if (ImGui::Selectable(var_names[n].c_str(), target_pos_name == var_names[n]))
 				{
-					condition.hash_key = blackboard->GetVariableHash(var_names[n]);
+					condition.secondary_hash = blackboard->GetVariableHash(var_names[n]);
 				}
 			}
 			ImGui::EndCombo();
@@ -260,16 +260,16 @@ void TransitionConditionEditor::DrawRatioUI(StateBlackboard* blackboard, GraphTr
 
 		ImGui::SameLine();
 
-		std::string max_name = blackboard->GetVariableNameFromHash(condition.hash_key);
+		std::string max_name = blackboard->GetVariableNameFromHash(condition.secondary_hash);
 		ImGui::SetNextItemWidth(150.0f);
 		if (ImGui::BeginCombo(u8"ç≈ëÂíl", max_name.c_str()))
 		{
 			std::vector<std::string> var_names = blackboard->GetRegisteredVariableNames();
 			for (size_t n = 0; n < var_names.size(); n++)
 			{
-				if (ImGui::Selectable(var_names[n].c_str(), cur_name == var_names[n]))
+				if (ImGui::Selectable(var_names[n].c_str(), max_name == var_names[n]))
 				{
-					condition.hash_key = blackboard->GetVariableHash(var_names[n]);
+					condition.secondary_hash = blackboard->GetVariableHash(var_names[n]);
 				}
 			}
 			ImGui::EndCombo();

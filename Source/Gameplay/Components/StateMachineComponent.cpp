@@ -34,8 +34,26 @@ void StateMachineComponent::Initialize(StateBlackboard* blackboard)
 
 	if (!runtime_nodes.empty())
 	{
-		current_node_id = runtime_nodes.front().id;
-		current_animation_name = runtime_nodes.front().animation_name;
+		const uint32_t root_layer_id = 0; // ルートレイヤーのID定数
+		auto entry_it = layer_entry_nodes.find(root_layer_id); // ルートの先頭ステートを検索
+
+		if (entry_it != layer_entry_nodes.end())
+		{
+			current_node_id = entry_it->second; // 初期ステートを設定
+		}
+		else
+		{
+			current_node_id = runtime_nodes.front().id;
+		}
+
+		for (size_t n = 0; n < runtime_nodes.size(); n++)
+		{
+			if (runtime_nodes[n].id == current_node_id)
+			{
+				current_animation_name = runtime_nodes[n].animation_name;
+				break;
+			}
+		}
 	}
 }
 
@@ -45,6 +63,28 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 	if (!blackboard)
 	{
 		return;
+	}
+
+	if (current_node_id == UINT32_MAX)
+	{
+		// パスが完全に空っぽか判定
+		if (state_machine_path.empty())
+		{
+			state_machine_path = "Data/Json/Kari.json"; // 最低限のフォールバックパスを設定
+		}
+
+		LoadAnimationMap(blackboard); // グラフ構造を再ロードしてメモリに展開
+
+		// 正しくノードが展開されたか確認判定
+		if (!runtime_nodes.empty())
+		{
+			current_node_id = runtime_nodes.front().id; // 先頭の有効なノードIDをセット
+			current_animation_name = runtime_nodes.front().animation_name;
+		}
+		else
+		{
+			return;
+		}
 	}
 
 	uint32_t next_node_id = current_node_id; // 次の遷移先候補ノードIDの初期化変数
@@ -81,9 +121,33 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 	{
 		current_node_id = next_node_id; // 現在のステートIDを更新
 
+		bool check_sub_graph = true; // ループ制御フラグ
+
+		while (check_sub_graph)
+		{
+			check_sub_graph = false;
+			for (size_t n = 0; n < runtime_nodes.size(); n++)
+			{
+				if (runtime_nodes[n].id == current_node_id)
+				{
+					if (runtime_nodes[n].is_sub_graph)
+					{
+						uint32_t sub_layer_id = runtime_nodes[n].sub_graph_id; // 下位レイヤーのID
+						auto entry_it = layer_entry_nodes.find(sub_layer_id); // その階層の先頭ステートを検索
+
+						if (entry_it != layer_entry_nodes.end())
+						{
+							current_node_id = entry_it->second; // 内部の初期ステートIDへ差し替え
+							check_sub_graph = true; // 潜った先がさらにサブグラフだった場合に備えてループを継続
+						}
+					}
+					break;
+				}
+			}
+		}
 		for (size_t n = 0; n < runtime_nodes.size(); n++)
 		{
-			const RuntimeNode& node = runtime_nodes[n]; // 対象ノードデータ
+			const RuntimeNode& node = runtime_nodes[n]; // 精査対象ノード
 
 			if (node.id == current_node_id)
 			{
@@ -128,6 +192,7 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 		for (size_t i = 0; i < root_json["Layers"].size(); i++)
 		{
 			const auto& layer = root_json["Layers"][i]; //現在走査中のレイヤーデータ
+			uint32_t layer_graph_id = layer["GraphID"].get<uint32_t>(); //レイヤー自体の識別ID
 
 			if (layer.contains("Nodes") && layer["Nodes"].is_array())
 			{
@@ -135,12 +200,14 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 				{
 					const auto& node_json = layer["Nodes"][j]; // 現在走査中のノードJSON
 
-					if (node_json.contains("IsSubGraph") && !node_json["IsSubGraph"].get<bool>())
+					if (node_json.is_object())
 					{
-						RuntimeNode node; //メモリに登録するランタイムノード変数
+						RuntimeNode node; // メモリに登録するランタイムノード変数
 						node.id = node_json["ID"].get<uint32_t>();
 						node.name = node_json["Name"].get<std::string>();
-						node.animation_name = node_json["AnimationName"].get<std::string>();
+						node.animation_name = node_json.contains("AnimationName") ? node_json["AnimationName"].get<std::string>() : "";
+						node.is_sub_graph = node_json["IsSubGraph"].get<bool>();
+						node.sub_graph_id = node_json["SubGraphID"].get<uint32_t>();
 
 						if (node_json.contains("Input") && node_json["Input"].is_array())
 						{
@@ -156,6 +223,12 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 							{
 								node.outputs.push_back(node_json["Output"][p]["ID"].get<uint32_t>());
 							}
+						}
+
+						// 各階層のj番目（最初）のノードを、そのレイヤーの初期エントリーノードとして記憶
+						if (j == 0)
+						{
+							layer_entry_nodes[layer_graph_id] = node.id;
 						}
 
 						if (!node.animation_name.empty())
@@ -262,41 +335,4 @@ uint32_t StateMachineComponent::GetNodeIdFromPinId(uint32_t pin_id) const
 	}
 
 	return UINT32_MAX;
-}
-
-//条件判定を実行
-bool StateMachineComponent::EvaluateCondition(const RuntimeCondition& condition, StateBlackboard* blackboard) const
-{
-	if (condition.type == RuntimeConditionType::Normal)
-	{
-		const BlackboardData& raw_data = blackboard->GetAttributeValue(condition.hash_key); // ブラックボードから生の型データ構造を取得
-
-		float current_value = 0.0f; //比較用に数値をfloatへ統一する変換用変数
-
-		if (std::holds_alternative<bool>(raw_data))
-		{
-			current_value = std::get<bool>(raw_data) ? 1.0f : 0.0f;
-		}
-		else if (std::holds_alternative<int>(raw_data))
-		{
-			current_value = static_cast<float>(std::get<int>(raw_data));
-		}
-		else if (std::holds_alternative<float>(raw_data))
-		{
-			current_value = std::get<float>(raw_data);
-		}
-		else
-		{
-			return false;
-		}
-
-		if (condition.compare_op == RuntimeCompareOp::Equal)        return (current_value == condition.reference_value);
-		if (condition.compare_op == RuntimeCompareOp::NotEqual)     return (current_value != condition.reference_value);
-		if (condition.compare_op == RuntimeCompareOp::Greater)      return (current_value > condition.reference_value);
-		if (condition.compare_op == RuntimeCompareOp::Less)         return (current_value < condition.reference_value);
-		if (condition.compare_op == RuntimeCompareOp::GreaterEqual) return (current_value >= condition.reference_value);
-		if (condition.compare_op == RuntimeCompareOp::LessEqual)    return (current_value <= condition.reference_value);
-	}
-
-	return false;
 }
