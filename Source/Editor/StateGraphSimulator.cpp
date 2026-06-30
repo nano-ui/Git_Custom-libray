@@ -6,63 +6,98 @@
 
 //現在の階層におけるステートの遷移をブラックボードをもとに評価・更新
 bool StateGraphSimulator::UpdateSimulation(
-    StateGraphDataManager* data_manager,
-    StateBlackboard* blackboard,
-    GraphData* current_graph,
-    uint32_t& in_out_active_node_id,
-    uint32_t& out_flowing_link_id)
+	StateGraphDataManager* data_manager,
+	StateBlackboard* blackboard,
+	GraphData* current_graph,
+	uint32_t& in_out_active_node_id,
+	uint32_t& out_flowing_link_id
+)
 {
-    //ブラックボードとグラフエディタ、マネージャーの有効チェック
-    if (!blackboard || !current_graph || !data_manager)
-    {
-        return false;
-    }
+	if (!data_manager || !current_graph)	//必要なデータポインタが安全であるかを判定する条件分岐
+	{
+		return false;
+	}
 
-    bool is_state_changed = false;  //状態遷移フラグ
+	std::unordered_map<uint32_t, uint32_t> pin_cache_map;	//ピンIDから所属ノードIDを逆引き
 
-    //現在の階層の全リンクを走査して遷移条件を評価
-    for (size_t i = 0; i < current_graph->links.size(); i++)
-    {
-        const GraphLink& link = current_graph->links[i];    //精査対象のリンク
-        uint32_t src_node_id = data_manager->GetNodeIdFromPinId(current_graph->id, link.start_pin_id);  //リンク元のノードID
+	//階層内の全ノードを1回だけ巡回してピンと親ノードのペアをキャッシュするループ処理
+	for (size_t n = 0; n < current_graph->nodes.size(); n++)	
+	{
+		const GraphNode& node = current_graph->nodes[n];	//走査対象ノードのデータ
 
-        //リンク元が現在実行中ノードか判定
-        if (src_node_id == in_out_active_node_id)
-        {
-            bool is_all_condition_met = !link.conditions.empty();   //条件が満たされたかのフラグ
+		//入力ピンのIDをハッシュマップへ登録するループ処理
+		for (size_t p = 0; p < node.inputs.size(); p++)	
+		{
+			pin_cache_map[node.inputs[p].id] = node.id;
+		}
 
-            //リンクに設定されたすべての条件を評価
-            for (size_t c = 0; c < link.conditions.size(); c++)
-            {
-                const GraphTransitionCondition& graph_cond = link.conditions[c];    //評価先の条件
+		//出力ピンのIDをハッシュマップへ登録するループ処理
+		for (size_t p = 0; p < node.outputs.size(); p++)	
+		{
+			pin_cache_map[node.outputs[p].id] = node.id;
+		}
+	}
 
-                TransitionCondition runtime_cond;   //実行時判定
-                runtime_cond.type = graph_cond.type;
-                runtime_cond.hash_key = graph_cond.hash_key;
-                runtime_cond.reference_value = graph_cond.reference_value;
-                runtime_cond.compart_op = static_cast<CompareOperator>(graph_cond.compare_operator);
-                runtime_cond.param_second = graph_cond.param_second;
-                runtime_cond.secondary_hash = graph_cond.secondary_hash;
+	bool is_state_changed = false;	//ステートが遷移したかを表すフラグ
 
-                //条件を満たしていないか判定
-                if (!runtime_cond.IsJudgment(*blackboard))
-                {
-                    is_all_condition_met = false;
-                    break;
-                }
-            }
+	//現在の階層に存在するすべてのリンク条件を走査
+	for (size_t i = 0; i < current_graph->links.size(); i++)	
+	{
+		const GraphLink& link = current_graph->links[i];	//対象のリンク情報の参照を格納
+		uint32_t src_node_id = 0;	//リンクの出発元ノードIDを保持
 
-            //全ての遷移条件が満たされたか判定
-            if (is_all_condition_met)
-            {
-                uint32_t dst_node_id = data_manager->GetNodeIdFromPinId(current_graph->id, link.end_pin_id);    //遷移先のノードID
-                in_out_active_node_id = dst_node_id;
-                out_flowing_link_id = link.id;
-                is_state_changed = true;
-                break;
-            }
+		auto start_it = pin_cache_map.find(link.start_pin_id);	//開始ピンIDからキャッシュを探索した結果イテレーター
 
-        }
-    }
-    return is_state_changed;
+		//開始ピンのキャッシュ情報がマップ内に存在するかを判定
+		if (start_it != pin_cache_map.end())	
+		{
+			src_node_id = start_it->second;
+		}
+
+		//リンクの出発元が現在の実行中アクティブノードと一致するかを判定する条件分岐
+		if (src_node_id != in_out_active_node_id)	
+		{
+			continue;
+		}
+
+		bool is_all_condition_met = true;	//すべての条件を満たしたかを表す判定フラグ変数
+
+		for (size_t c = 0; i < link.conditions.size(); c++)	//リンクが持つすべての遷移条件を個別に精査するループ処理
+		{
+			const GraphTransitionCondition& graph_cond = link.conditions[c];    //評価先の条件
+
+			TransitionCondition runtime_cond;   //実行時判定
+			runtime_cond.type = graph_cond.type;
+			runtime_cond.hash_key = graph_cond.hash_key;
+			runtime_cond.reference_value = graph_cond.reference_value;
+			runtime_cond.compart_op = static_cast<CompareOperator>(graph_cond.compare_operator);
+			runtime_cond.param_second = graph_cond.param_second;
+			runtime_cond.secondary_hash = graph_cond.secondary_hash;
+
+			//条件を満たしていないか判定
+			if (!runtime_cond.IsJudgment(*blackboard))
+			{
+				is_all_condition_met = false;
+				break;
+			}
+		}
+
+		if (is_all_condition_met)	//すべての遷移条件を完全にクリアしたかを判定する条件分岐
+		{
+			uint32_t dst_node_id = 0;	//遷移先となるノードIDを保持する変数
+			auto end_it = pin_cache_map.find(link.end_pin_id);	//終了ピンIDからキャッシュを探索した結果イテレーター変数
+
+			if (end_it != pin_cache_map.end())	//終了ピンのキャッシュ情報がマップ内に存在するかを判定する条件分岐
+			{
+				dst_node_id = end_it->second;
+			}
+
+			in_out_active_node_id = dst_node_id;
+			out_flowing_link_id = link.id;
+			is_state_changed = true;
+			break;
+		}
+	}
+
+	return is_state_changed;
 }

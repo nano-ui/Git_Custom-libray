@@ -232,6 +232,26 @@ bool StateGraphPropertyWindow::DeawNodeActionSettings(GraphNode* target_node, co
 	{
 		is_changed = true;
 	}
+
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+
+	constexpr size_t color_element_count = 3;	//カラーバッファの要素数
+	float imgui_color_buffer[color_element_count] = { target_node->link_color_r, target_node->link_color_g, target_node->link_color_b };	//色編集用のバッファ配列
+
+	ImGui::Text(u8"出発リンクの色設定");
+	ImGui::SetNextItemWidth(-1.0f);
+
+	//カラーピッカーで色が変更されたかを判定する条件分岐
+	if (ImGui::ColorEdit3(u8"##NodeLinkColorPicker", imgui_color_buffer))	
+	{
+		target_node->link_color_r = imgui_color_buffer[0];
+		target_node->link_color_g = imgui_color_buffer[1];
+		target_node->link_color_b = imgui_color_buffer[2];
+		is_changed = true;
+	}
+
 	return is_changed;
 }
 

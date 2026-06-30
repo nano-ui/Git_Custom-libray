@@ -6,7 +6,6 @@
 #include "../Gameplay/GameObjects/ObjectManager.h"
 #include "../Editor/FileDialogHelper.h"
 #include "../Editor/EditorMediator.h"
-
 #include "StateGraphPaletteWindow.h"
 #include "StateGraphPropertyWindow.h"
 #include "StateGraphSimulator.h"
@@ -91,14 +90,23 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	//追尾機能が有効かつ実行中のアクティブノードIDが有効かを判定
 	if (is_tracking_active_node && runtime_active_node_id != UINT32_MAX)
 	{
-		uint32_t target_graph_id = data_manager->GetGraphIdFromNodeId(runtime_active_node_id);	//所属している階層IDを逆引き
-		
-		//所属階層が現在の表示階層と異なっているかを判定
-		if (target_graph_id != UINT32_MAX && target_graph_id != current_graph_id)
+		//実行中のアクティブノードIDが前フレームから変化したかを判定
+		if (runtime_active_node_id != last_tracked_runtime_node_id)
 		{
-			current_graph_id = target_graph_id;
-			printf("StateMachineGraphEditor: 追尾機能により表示階層を自動切り替えしました。階層ID: %d\n", current_graph_id);
+			uint32_t target_graph_id = data_manager->GetGraphIdFromNodeId(runtime_active_node_id);	//所属している階層IDを逆引き
+
+			//所属階層が現在の表示階層と異なっているかを判定
+			if (target_graph_id != UINT32_MAX && target_graph_id != current_graph_id)
+			{
+				current_graph_id = target_graph_id;
+				printf("StateMachineGraphEditor: 追尾機能により表示階層を自動切り替えしました。階層ID: %d\n", current_graph_id);
+			}
+			last_tracked_runtime_node_id = runtime_active_node_id;
 		}
+	}
+	else
+	{
+		last_tracked_runtime_node_id = UINT32_MAX;
 	}
 
 	GraphData* current_graph = nullptr;	// 現在の階層情報
@@ -380,17 +388,69 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		}
 	}
 
-	for (size_t i = 0; i < current_graph->links.size(); i++)
+	// ノード同士を結ぶリンク（遷移線）の描画処理
+	struct PinCacheData
 	{
-		const GraphLink& link = current_graph->links[i]; // リンク参照
-		ed::Link(link.id, link.start_pin_id, link.end_pin_id);
+		uint32_t node_id;	//所属するノードのID
+		float color_r;		//線の赤色成分
+		float color_g;		//線の緑色成分
+		float color_b;		//線の青色成分
+	};
 
-		if (flow_effect_timer > 0.0f)
+	std::unordered_map<uint32_t, PinCacheData> pin_cache_map;	//ピンIDからノード情報とリンク色を高速に引くためのハッシュマップ変数
+
+	for (size_t n = 0; n < current_graph->nodes.size(); n++)	//階層内の全ノードを巡回してピン情報をキャッシュするループ処理
+	{
+		const GraphNode& node = current_graph->nodes[n];	//ループ対象のノードデータを保持する変数
+		PinCacheData cache;	//キャッシュ用の一時構造体変数
+		cache.node_id = node.id;
+		cache.color_r = node.link_color_r;
+		cache.color_g = node.link_color_g;
+		cache.color_b = node.link_color_b;
+
+		for (size_t p = 0; p < node.inputs.size(); p++)	//入力ピンのIDをハッシュマップへ登録するループ処理
 		{
-			uint32_t src_node_id = data_manager->GetNodeIdFromPinId(current_graph->id, link.start_pin_id);	//リンクの出発元ノードIDを逆引き
-			uint32_t dst_node_id = data_manager->GetNodeIdFromPinId(current_graph->id, link.end_pin_id);	//リンクの接続先ノードIDを逆引き
+			pin_cache_map[node.inputs[p].id] = cache;
+		}
 
-			if (src_node_id == flow_src_node_id && dst_node_id == flow_dst_node_id)	//このリンクが直近で遷移したノード間を結ぶものかを判定
+		for (size_t p = 0; p < node.outputs.size(); p++)	//出力ピンのIDをハッシュマップへ登録するループ処理
+		{
+			pin_cache_map[node.outputs[p].id] = cache;
+		}
+	}
+
+	for (size_t i = 0; i < current_graph->links.size(); i++)	//階層内の全リンクを巡回するループ処理
+	{
+		const GraphLink& link = current_graph->links[i];	//リンク参照を格納する変数
+
+		float r = 1.0f;	//リンクカラーの赤色成分を保持する変数
+		float g = 1.0f;	//リンクカラーの緑色成分を保持する変数
+		float b = 1.0f;	//リンクカラーの青色成分を保持する変数
+		uint32_t src_node_id = 0;	//リンクの出発元ノードIDを保持する変数
+
+		auto start_it = pin_cache_map.find(link.start_pin_id);	//開始ピンの検索結果イテレーター変数
+
+		if (start_it != pin_cache_map.end())	//開始ピンがハッシュマップ内に存在するかを判定する条件分岐
+		{
+			src_node_id = start_it->second.node_id;
+			r = start_it->second.color_r;
+			g = start_it->second.color_g;
+			b = start_it->second.color_b;
+		}
+
+		ed::Link(link.id, link.start_pin_id, link.end_pin_id, ImVec4(r, g, b, 1.0f));
+
+		if (flow_effect_timer > 0.0f)	//遷移エフェクトの表示期間中であるかを判定する条件分岐
+		{
+			uint32_t dst_node_id = 0;	//リンクの接続先ノードIDを保持する変数
+			auto end_it = pin_cache_map.find(link.end_pin_id);	//終了ピンの検索結果イテレーター変数
+
+			if (end_it != pin_cache_map.end())	//終了ピンがハッシュマップ内に存在するかを判定する条件分岐
+			{
+				dst_node_id = end_it->second.node_id;
+			}
+
+			if (src_node_id == flow_src_node_id && dst_node_id == flow_dst_node_id)	//このリンクが直近で遷移したノード間を結ぶものかを判定する条件分岐
 			{
 				ed::Flow(link.id);
 			}
@@ -629,6 +689,7 @@ bool StateMachineGraphEditor::LoadGraphFromFile(const std::string& file_path)
 		}
 
 		TriggerHotReload();
+		last_tracked_runtime_node_id = UINT32_MAX;
 		printf("StateMachineGraphEditor: 「%s」から正常読込したため階層をリセットしました。\n", file_path.c_str());
 		return true;
 	}

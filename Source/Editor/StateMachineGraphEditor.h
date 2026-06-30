@@ -96,4 +96,5 @@ private:
 	float flow_effect_timer = 0.0f;								//遷移エフェクトの残り表示時間（秒）
 	bool is_tracking_active_node = false;						//実行中のアクティブノードを自動で追尾する状態フラグ
 	bool is_zoom_correction_enabled = false;					//追尾カメラ移動時にズーム倍率を最適化する状態フラグ
+	uint32_t last_tracked_runtime_node_id = UINT32_MAX;			//直前に追尾処理を行ったゲーム側のアクティブノードID
 };

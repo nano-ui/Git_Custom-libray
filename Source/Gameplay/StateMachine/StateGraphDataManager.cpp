@@ -47,6 +47,9 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 			node_json["ActionCategory"] = node.action_category;	// アクション値
 			node_json["AnimationName"] = node.animation_name;	// アニメ名
 			node_json["IsLoop"] = node.is_loop;					// 再生フラグ
+			node_json["LinkColorR"] = node.link_color_r;
+			node_json["LinkColorG"] = node.link_color_g;
+			node_json["LinkColorB"] = node.link_color_b;
 
 			//入力ピンのシリアライズ
 			nlohmann::json inputs_array = nlohmann::json::array(); // 入力ピン用の一時配列
@@ -175,6 +178,9 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 			node.is_sub_graph = node_json["IsSubGraph"]; // フラグ
 			node.sub_graph_id = node_json["SubGraphID"]; // 下位ID
 			node.is_loop = node_json.contains("IsLoop") ? node_json["IsLoop"].get<bool>() : true;
+			node.link_color_r = node_json.contains("LinkColorR") ? node_json["LinkColorR"].get<float>() : 1.0f;
+			node.link_color_g = node_json.contains("LinkColorG") ? node_json["LinkColorG"].get<float>() : 1.0f;
+			node.link_color_b = node_json.contains("LinkColorB") ? node_json["LinkColorB"].get<float>() : 1.0f;
 			
 			if (node_json.find("ActionCategory") != node_json.end())
 			{
@@ -579,7 +585,7 @@ uint32_t StateGraphDataManager::GetGraphIdFromNodeId(uint32_t node_id)
 		printf("Warning: StateGraphDataManager::GetGraphIdFromNodeId - ノードID:%d が見つかりませんでした。\n", node_id);
 	}
 
-	return 0;
+	return UINT_MAX;
 }
 
 //指定されたノードIDを出発基とする全てのリンクのポインタを取得
@@ -648,6 +654,9 @@ void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, flo
 			copied_node.is_sub_graph = src_node.is_sub_graph;
 			copied_node.action_category = src_node.action_category;
 			copied_node.animation_name = src_node.animation_name;
+			copied_node.link_color_r = src_node.link_color_r;
+			copied_node.link_color_g = src_node.link_color_g;
+			copied_node.link_color_b = src_node.link_color_b;
 
 			// 内部ノードがさらにサブグラフを持っているか判定
 			if (src_node.is_sub_graph)

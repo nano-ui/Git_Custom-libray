@@ -94,6 +94,9 @@
                     ],
                     "IsLoop": true,
                     "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
                     "Name": "待機状態",
                     "Output": [
                         {
@@ -119,6 +122,9 @@
                     ],
                     "IsLoop": true,
                     "IsSubGraph": true,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
                     "Name": "移動ステート",
                     "Output": [
                         {
@@ -141,51 +147,6 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 87,
-                            "ParamSecond": 0.0,
-                            "RefValue": 1.0,
-                            "SecondaryHash": 0,
-                            "Type": 4
-                        }
-                    ],
-                    "EndPinID": 114,
-                    "ID": 122,
-                    "StartPinID": 112
-                },
-                {
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
-                            "HashKey": 83,
-                            "ParamSecond": 0.0,
-                            "RefValue": 1.0,
-                            "SecondaryHash": 0,
-                            "Type": 4
-                        }
-                    ],
-                    "EndPinID": 111,
-                    "ID": 123,
-                    "StartPinID": 115
-                },
-                {
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
-                            "HashKey": 68,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 4
-                        }
-                    ],
-                    "EndPinID": 125,
-                    "ID": 127,
-                    "StartPinID": 115
-                },
-                {
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
                             "HashKey": 83,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
@@ -195,21 +156,6 @@
                     ],
                     "EndPinID": 111,
                     "ID": 128,
-                    "StartPinID": 126
-                },
-                {
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
-                            "HashKey": 87,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 4
-                        }
-                    ],
-                    "EndPinID": 114,
-                    "ID": 129,
                     "StartPinID": 126
                 },
                 {
@@ -226,21 +172,6 @@
                     "EndPinID": 125,
                     "ID": 130,
                     "StartPinID": 112
-                },
-                {
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
-                            "HashKey": 65,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 4
-                        }
-                    ],
-                    "EndPinID": 132,
-                    "ID": 134,
-                    "StartPinID": 115
                 },
                 {
                     "Conditions": [
@@ -306,6 +237,51 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 125,
+                    "ID": 150,
+                    "StartPinID": 149
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 65,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 132,
+                    "ID": 151,
+                    "StartPinID": 149
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 83,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 111,
+                    "ID": 152,
+                    "StartPinID": 149
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
                             "HashKey": 87,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
@@ -313,8 +289,38 @@
                             "Type": 4
                         }
                     ],
-                    "EndPinID": 114,
-                    "ID": 139,
+                    "EndPinID": 148,
+                    "ID": 153,
+                    "StartPinID": 112
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 87,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 148,
+                    "ID": 154,
+                    "StartPinID": 126
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 148,
+                    "ID": 155,
                     "StartPinID": 133
                 }
             ],
@@ -332,6 +338,9 @@
                     ],
                     "IsLoop": true,
                     "IsSubGraph": false,
+                    "LinkColorB": 0.8571428656578064,
+                    "LinkColorG": 0.20518480241298676,
+                    "LinkColorR": 0.7841434478759766,
                     "Name": "後ろ移動",
                     "Output": [
                         {
@@ -342,31 +351,6 @@
                     ],
                     "PosX": -41.100250244140625,
                     "PosY": -90.20006561279297,
-                    "SubGraphID": 0
-                },
-                {
-                    "ActionCategory": 1,
-                    "AnimationName": "Walk_F",
-                    "ID": 113,
-                    "Input": [
-                        {
-                            "ID": 114,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": true,
-                    "IsSubGraph": false,
-                    "Name": "前移動",
-                    "Output": [
-                        {
-                            "ID": 115,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": 28.235111236572266,
-                    "PosY": 137.11505126953125,
                     "SubGraphID": 0
                 },
                 {
@@ -382,6 +366,9 @@
                     ],
                     "IsLoop": true,
                     "IsSubGraph": false,
+                    "LinkColorB": 0.32487064599990845,
+                    "LinkColorG": 0.8339768648147583,
+                    "LinkColorR": 0.15777941048145294,
                     "Name": "右移動",
                     "Output": [
                         {
@@ -407,6 +394,9 @@
                     ],
                     "IsLoop": true,
                     "IsSubGraph": false,
+                    "LinkColorB": 0.13197477161884308,
+                    "LinkColorG": 0.13197477161884308,
+                    "LinkColorR": 0.876447856426239,
                     "Name": "左移動",
                     "Output": [
                         {
@@ -418,10 +408,38 @@
                     "PosX": -207.30029296875,
                     "PosY": -97.06673431396484,
                     "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 1,
+                    "AnimationName": "Walk_F",
+                    "ID": 147,
+                    "Input": [
+                        {
+                            "ID": 148,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsSubGraph": false,
+                    "LinkColorB": 0.876447856426239,
+                    "LinkColorG": 0.1398664116859436,
+                    "LinkColorR": 0.09136714041233063,
+                    "Name": "前に移動",
+                    "Output": [
+                        {
+                            "ID": 149,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 128.49986267089844,
+                    "PosY": -218.3333740234375,
+                    "SubGraphID": 0
                 }
             ]
         }
     ],
-    "NextID": 143,
+    "NextID": 160,
     "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }

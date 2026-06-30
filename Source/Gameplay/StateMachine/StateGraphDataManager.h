@@ -37,6 +37,9 @@ struct GraphNode
 	int action_category = 0;				//固有アクション
 	std::string animation_name = "";		//アニメーション名
 	bool is_loop = true;					//再生フラグ
+	float link_color_r = 1.0f;				//ノードから出るリンクの色（赤成分）
+	float link_color_g = 1.0f;				//ノードから出るリンクの色（緑成分）
+	float link_color_b = 1.0f;				//ノードから出るリンクの色（青成分）
 };
 
 //判定ノードの種類
