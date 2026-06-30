@@ -120,6 +120,30 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		}
 	}
 
+	//前フレームからアクティブノードが切り替わったかを検知
+	if (previous_active_node_id != 0 && previous_active_node_id != current_active_node_id)
+	{
+		flow_src_node_id = previous_active_node_id;
+		flow_dst_node_id = current_active_node_id;
+		constexpr float max_flow_time = 0.1f;
+		flow_effect_timer = max_flow_time;
+		printf("StateMachineGraphEditor: ステート遷移を検知しました。ノードID: %d -> %d (エフェクト開始)\n", flow_src_node_id, flow_dst_node_id);
+	}
+	previous_active_node_id = current_active_node_id;
+
+	//エフェクトのタイマーが動いているかを判定
+	if (flow_effect_timer > 0.0f)
+	{
+		float delta_time = ImGui::GetIO().DeltaTime;
+		flow_effect_timer -= delta_time;
+
+		//タイマーが負の値になったかを判定
+		if (flow_effect_timer < 0.0f)
+		{
+			flow_effect_timer = 0.0f;
+		}
+	}
+
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 
 	bool trigger_add_node = false;			// ノード追加の実行トリガー
@@ -325,11 +349,16 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	{
 		const GraphLink& link = current_graph->links[i]; // リンク参照
 		ed::Link(link.id, link.start_pin_id, link.end_pin_id);
-		uint32_t src_node_id = data_manager->GetNodeIdFromPinId(current_graph->id, link.start_pin_id);
 
-		if (src_node_id == current_active_node_id && runtime_active_node_id != UINT32_MAX)
+		if (flow_effect_timer > 0.0f)
 		{
-			ed::Flow(link.id);
+			uint32_t src_node_id = data_manager->GetNodeIdFromPinId(current_graph->id, link.start_pin_id);	//リンクの出発元ノードIDを逆引き
+			uint32_t dst_node_id = data_manager->GetNodeIdFromPinId(current_graph->id, link.end_pin_id);	//リンクの接続先ノードIDを逆引き
+
+			if (src_node_id == flow_src_node_id && dst_node_id == flow_dst_node_id)	//このリンクが直近で遷移したノード間を結ぶものかを判定
+			{
+				ed::Flow(link.id);
+			}
 		}
 	}
 

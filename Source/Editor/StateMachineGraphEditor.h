@@ -90,4 +90,8 @@ private:
 	std::string current_loaded_file_path = "";					//現在エディタで開いているファイルのパス名
 	uint32_t target_model_hash = 0;								//対象モデルのハッシュ値
 	uint32_t runtime_active_node_id = UINT32_MAX;				//実行中のステートID
+
+	uint32_t flow_src_node_id = 0;								//遷移エフェクトの発生元となったノードID
+	uint32_t flow_dst_node_id = 0;								//遷移エフェクトの遷移先となったノードID
+	float flow_effect_timer = 0.0f;								//遷移エフェクトの残り表示時間（秒）
 };
