@@ -54,7 +54,7 @@ void Character::Update(float elapsed_time)
 	DirectX::XMStoreFloat4(&rotation, q);
 
 		blackboard->SetValue(u8"体力", health);
-	blackboard->SetValue(u8"速度", max_speed);
+	blackboard->SetValue(u8"速度", move_speed);
 	blackboard->SetValue(u8"接地フラグ", is_ground);
 
 	if (state_machine_component)state_machine_component->Update(elapsed_time, blackboard.get());

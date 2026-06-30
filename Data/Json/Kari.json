@@ -8,11 +8,35 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 1528076108,
+                            "HashKey": 87,
                             "ParamSecond": 0.0,
-                            "RefValue": 1.0,
+                            "RefValue": 0.0,
                             "SecondaryHash": 0,
-                            "Type": 1
+                            "Type": 4
+                        },
+                        {
+                            "CompOp": 0,
+                            "HashKey": 65,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        },
+                        {
+                            "CompOp": 0,
+                            "HashKey": 83,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        },
+                        {
+                            "CompOp": 0,
+                            "HashKey": 68,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
                         }
                     ],
                     "EndPinID": 104,
@@ -22,12 +46,12 @@
                 {
                     "Conditions": [
                         {
-                            "CompOp": 0,
-                            "HashKey": 0,
+                            "CompOp": 5,
+                            "HashKey": 3019011796,
                             "ParamSecond": 0.0,
-                            "RefValue": 1.0,
+                            "RefValue": 0.10000000149011612,
                             "SecondaryHash": 0,
-                            "Type": 1
+                            "Type": 0
                         }
                     ],
                     "EndPinID": 101,
@@ -96,11 +120,11 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 0,
+                            "HashKey": 87,
                             "ParamSecond": 0.0,
                             "RefValue": 1.0,
                             "SecondaryHash": 0,
-                            "Type": 1
+                            "Type": 4
                         }
                     ],
                     "EndPinID": 114,
@@ -111,16 +135,166 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 0,
+                            "HashKey": 83,
                             "ParamSecond": 0.0,
                             "RefValue": 1.0,
                             "SecondaryHash": 0,
-                            "Type": 1
+                            "Type": 4
                         }
                     ],
                     "EndPinID": 111,
                     "ID": 123,
                     "StartPinID": 115
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 68,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 125,
+                    "ID": 127,
+                    "StartPinID": 115
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 83,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 111,
+                    "ID": 128,
+                    "StartPinID": 126
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 87,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 114,
+                    "ID": 129,
+                    "StartPinID": 126
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 68,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 125,
+                    "ID": 130,
+                    "StartPinID": 112
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 65,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 132,
+                    "ID": 134,
+                    "StartPinID": 115
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 65,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 132,
+                    "ID": 135,
+                    "StartPinID": 112
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 65,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 132,
+                    "ID": 136,
+                    "StartPinID": 126
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 68,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 125,
+                    "ID": 137,
+                    "StartPinID": 133
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 83,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 111,
+                    "ID": 138,
+                    "StartPinID": 133
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 87,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 114,
+                    "ID": 139,
+                    "StartPinID": 133
                 }
             ],
             "Nodes": [
@@ -173,10 +347,60 @@
                     "PosX": 28.235111236572266,
                     "PosY": 137.11505126953125,
                     "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 1,
+                    "AnimationName": "Walk_L",
+                    "ID": 124,
+                    "Input": [
+                        {
+                            "ID": 125,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsSubGraph": false,
+                    "Name": "右移動",
+                    "Output": [
+                        {
+                            "ID": 126,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 201.69970703125,
+                    "PosY": -98.40007019042969,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 1,
+                    "AnimationName": "Walk_R",
+                    "ID": 131,
+                    "Input": [
+                        {
+                            "ID": 132,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsSubGraph": false,
+                    "Name": "左移動",
+                    "Output": [
+                        {
+                            "ID": 133,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -207.30029296875,
+                    "PosY": -97.06673431396484,
+                    "SubGraphID": 0
                 }
             ]
         }
     ],
-    "NextID": 124,
+    "NextID": 140,
     "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }

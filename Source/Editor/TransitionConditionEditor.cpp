@@ -2,9 +2,11 @@
 
 #include "../Gameplay/StateMachine/StateBlackboard.h"
 #include "../Gameplay/StateMachine/StateGraphDataManager.h"
+#include "../Engine/Core/Input.h"
 
 #include <imgui.h>
 #include <cstdio>
+#include <winuser.h>
 
 //コンストラクタ
 TransitionConditionEditor::TransitionConditionEditor()
@@ -16,20 +18,23 @@ TransitionConditionEditor::TransitionConditionEditor()
 TransitionConditionEditor::~TransitionConditionEditor() = default;
 
 //リンクの遷移条件設定を描画
-void TransitionConditionEditor::DrawConditonSettings(StateGraphDataManager* data_manager, StateBlackboard* blackboard, uint32_t grap_id, GraphLink* target_link)
+bool TransitionConditionEditor::DrawConditonSettings(StateGraphDataManager* data_manager, StateBlackboard* blackboard, uint32_t grap_id, GraphLink* target_link)
 {
 	//ポインタの安全チェック
 	if (!data_manager || !target_link)
 	{
 		printf("Error: TransitionConditionEditor::DrawConditionSettings - 必要なポインタが nullptr です。\n");
-		return;
+		return false;
 	}
+
+	bool is_changed = false;	//変更検知フラグ
 
 	//リンクに新しい条件を追加
 	if (ImGui::Button(u8"遷移条件を追加"))
 	{
 		data_manager->AddConditionToLink(grap_id, target_link->id);
 		printf("TransitionConditionEditor: リンク ID:%d に新しい遷移条件枠を追加しました。\n", target_link->id);
+		is_changed = true;
 	}
 
 	ImGui::Spacing();
@@ -54,20 +59,20 @@ void TransitionConditionEditor::DrawConditonSettings(StateGraphDataManager* data
 
 			ImGui::PopStyleColor();
 			ImGui::PopID();
+			is_changed = true;
 			continue;
 		}
 		ImGui::PopStyleColor();
 		GraphTransitionCondition& condition = target_link->conditions[i];	//編集対象の条件情報
 
 		//判定タイプを選択するコンボボックス
-		const char* type_ui_names[] = { u8"通常比較", u8"確率(Random)", u8"距離(Distance)", u8"割合(Ratio)" };
-		const int total_type_count = 4;
-		int selected_type_index = static_cast<int>(condition.type);
-
-		ImGui::SetNextItemWidth(150.0f);
-		if (ImGui::Combo(u8"判定タイプ", &selected_type_index, type_ui_names, total_type_count))
+		const char* condition_types[] = { u8"通常変数比較", u8"確率抽選 (Random)", u8"距離判定 (Distance)", u8"割合判定 (Ratio)", u8"入力チェック (InputCheck)" };		const int total_type_count = 4;
+		int current_type = static_cast<int>(condition.type);
+		ImGui::SetNextItemWidth(180.0f);
+		if (ImGui::Combo(u8"条件判定のタイプ", &current_type, condition_types, 5)) 
 		{
-			condition.type = static_cast<ConditionNodeType>(selected_type_index);
+			condition.type = static_cast<ConditionNodeType>(current_type);
+			is_changed = true;
 		}
 		ImGui::Spacing();
 
@@ -78,12 +83,14 @@ void TransitionConditionEditor::DrawConditonSettings(StateGraphDataManager* data
 		case ConditionNodeType::Random:        DrawRandomUI(condition);						break;
 		case ConditionNodeType::Distance:      DrawDistanceUI(blackboard, condition);		break;
 		case ConditionNodeType::Ratio:         DrawRatioUI(blackboard, condition);			break;
+		case ConditionNodeType::InputCheck:	   DrawInputCheckUI(condition);					break;
 		}
 
 		ImGui::Separator();
 		ImGui::PopID();
 		i++;
 	}
+	return is_changed;
 }
 
 //通常比較用のImGui入力UI描画
@@ -280,6 +287,80 @@ void TransitionConditionEditor::DrawRatioUI(StateBlackboard* blackboard, GraphTr
 		ImGui::SameLine();
 		ImGui::SetNextItemWidth(150.0f);
 		ImGui::DragFloat(u8"基準割合", &condition.reference_value, 0.1f);
+	}
+}
+
+//キーボードの入力を設定するUI描画
+void TransitionConditionEditor::DrawInputCheckUI(GraphTransitionCondition& condition)
+{
+	ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.9f, 1.0f), u8"指定されたキーボード入力を検知してステートを遷移");
+
+	//現在この条件項目がユーザーからのキー入力待ち状態であるか判定
+	if (waiting_for_key_condition == &condition)
+	{
+		ImGui::Button(u8"任意のキーを押してください...(待機中)", ImVec2(-1.0f, 30.0f));
+
+		//Win32の全仮想キーコード(1～255)の入力状態を走査チェック
+		for (int key_idx = 1; key_idx < 256; key_idx++)
+		{
+			//マウスボタン(左・右・中クリック)の誤作動による登録を除外判定
+			if (key_idx == VK_LBUTTON || key_idx == VK_RBUTTON || key_idx == VK_MBUTTON)
+			{
+				continue;
+			}
+
+			//ユーザーが何かキーをポンと叩いた瞬間をInputクラスから検知したか判定
+			if (Input::Instance().IsKeyTrigger(key_idx))
+			{
+				condition.hash_key = static_cast<uint32_t>(key_idx);
+				waiting_for_key_condition = nullptr;
+				break;
+			}
+		}
+	}
+	else
+	{
+		char key_name_buffer[64] = u8"未設定(クリックして割り当て)";	//表示名バッファ
+		int saved_v_key = static_cast<int>(condition.hash_key);			//保存されている仮想キーコード
+
+		//有効なキーコードが既に登録されているか判定
+		if (saved_v_key > 0)
+		{
+			unsigned int scan_code = MapVirtualKeyA(saved_v_key, MAPVK_VK_TO_VSC);	//スキャンコード
+			LONG long_scan_code = static_cast<LONG>(scan_code << 16);	//ビットシフト
+
+			if (GetKeyNameTextA(long_scan_code, key_name_buffer, sizeof(key_name_buffer)) == 0)
+			{
+				sprintf_s(key_name_buffer, "KeyCord: %d", saved_v_key);
+			}
+		}
+
+		ImGui::Text(u8"割り当てられたキー");
+		ImGui::SameLine();
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
+
+		if (ImGui::Button(key_name_buffer, ImVec2(-1.0f, 25.0f)))
+		{
+			waiting_for_key_condition = &condition;
+		}
+		ImGui::PopStyleColor();
+		ImGui::Spacing();
+
+		int current_behavior = static_cast<int>(condition.param_second);	//現在の入力形式
+		static constexpr int mode_press = 0;	//押されている間
+		static constexpr int mode_trigger = 1;	//押された瞬間
+
+		ImGui::Text(u8"入力の検知形式:");
+		ImGui::SameLine();
+		if (ImGui::RadioButton(u8"押されている間(Press)", &current_behavior, mode_press))
+		{
+			condition.param_second = static_cast<float>(mode_press);
+		}
+		ImGui::SameLine();
+		if (ImGui::RadioButton(u8"押された瞬間(Trigger)", &current_behavior, mode_trigger))
+		{
+			condition.param_second = static_cast<float>(mode_trigger);
+		}
 	}
 }
 

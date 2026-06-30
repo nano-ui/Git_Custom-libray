@@ -46,6 +46,7 @@ enum class ConditionNodeType
 	Random,			//ƒ‰ƒ“ƒ_ƒ€”»’è
 	Distance,		//‹——£”»’è
 	Ratio,			//Š„‡”»’è
+	InputCheck,		//“ü—Í”»’è
 };
 
 //‘JˆÚğŒ‚Ì•ÒWE•Û

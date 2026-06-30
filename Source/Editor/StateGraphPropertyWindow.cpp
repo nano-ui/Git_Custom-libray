@@ -1,6 +1,7 @@
 #include "StateGraphPropertyWindow.h"
 #include "../Gameplay/StateMachine/StateGraphDataManager.h"
 #include "../Gameplay/StateMachine/StateBlackboard.h"
+#include "../Engine/Core/Input.h"
 #include "TransitionConditionEditor.h"
 
 #include <imgui.h>
@@ -13,6 +14,7 @@ namespace ed = ax::NodeEditor;
 StateGraphPropertyWindow::StateGraphPropertyWindow()
 {
 	condition_editor = std::make_unique<TransitionConditionEditor>();
+	waiting_for_key_conditon = nullptr;
 }
 
 //デストラクタ
@@ -229,6 +231,7 @@ bool StateGraphPropertyWindow::DrawLinkProperty(StateGraphDataManager* data_mana
 		printf("Warning: 選択されたリンクID: %d がデータ内に見つかりません。\n", link_id);
 		return false;
 	}
+	bool is_changed = false;	//変更検知フラグ
 
 	//遷移条件プロパティのUI描画
 	ImGui::Text(u8"遷移線設定(ID：%d)", target_link->id);
@@ -236,7 +239,7 @@ bool StateGraphPropertyWindow::DrawLinkProperty(StateGraphDataManager* data_mana
 
 	if (condition_editor && data_manager)
 	{
-		condition_editor->DrawConditonSettings(data_manager, blackboard, current_graph->id, target_link);
+		is_changed |= condition_editor->DrawConditonSettings(data_manager, blackboard, current_graph->id, target_link);
 	}
 
 	ImGui::Spacing();
@@ -245,8 +248,6 @@ bool StateGraphPropertyWindow::DrawLinkProperty(StateGraphDataManager* data_mana
 
 	const ImVec4 red_button_color = ImVec4(0.6f, 0.2f, 0.2f, 1.0f); // 削除ボタン用の赤色
 	ImGui::PushStyleColor(ImGuiCol_Button, red_button_color);
-
-	bool is_changed = false;	//変更確認フラグ
 
 	//プロパティウィンドウ内に配置するリンクの削除実行ボタン
 	if (ImGui::Button(u8"遷移線を削除する", ImVec2(-1.0f, 30.0f)))
@@ -259,4 +260,10 @@ bool StateGraphPropertyWindow::DrawLinkProperty(StateGraphDataManager* data_mana
 	ImGui::PopStyleColor();
 
 	return is_changed;
+}
+
+//入力チェック条件専用のImGui入力UI描画
+void StateGraphPropertyWindow::DrawInputCompareUI(GraphTransitionCondition& conditon)
+{
+
 }

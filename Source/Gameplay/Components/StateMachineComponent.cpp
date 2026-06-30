@@ -3,6 +3,8 @@
 #include "../Gameplay/StateMachine/StateBlackboard.h"
 #include "../ThiedParty/json.hpp"
 #include "../Gameplay/Components/AnimationComponent.h"
+#include "../Engine/Core/Input.h"
+
 
 #include <fstream>
 #include <iostream>
@@ -142,10 +144,37 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 
 			for (size_t c = 0; c < link.conditions.size(); c++)
 			{
-				if (!link.conditions[c].IsJudgment(*blackboard))
+				const auto& cond = link.conditions[c];	//現在の評価条件
+
+				//条件が入力か判定
+				if (static_cast<int>(cond.type) == static_cast<int>(ConditionNodeType::InputCheck))
 				{
-					is_all_conditions_met = false;
-					break;
+					int v_key = static_cast<int>(cond.hash_key);	//仮想キーコード
+					int input_behavior = static_cast<int>(cond.param_second);	//入力形式
+					bool is_key_ok = false;	//入力条件クリアフラグ
+
+					if (input_behavior == 1)
+					{
+						is_key_ok = Input::Instance().IsKeyTrigger(v_key);
+					}
+					else
+					{
+						is_key_ok = Input::Instance().IsKeyPress(v_key);
+					}
+
+					if (!is_key_ok)
+					{
+						is_all_conditions_met = false;
+						break;
+					}
+				}
+				else
+				{
+					if (!link.conditions[c].IsJudgment(*blackboard))
+					{
+						is_all_conditions_met = false;
+						break;
+					}
 				}
 			}
 
