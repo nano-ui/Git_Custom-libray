@@ -136,7 +136,7 @@ void StateGraphPaletteWindow::DrawPaletterFilterButtons()
 //通常ステートのパレット項目描画
 void StateGraphPaletteWindow::DrawNormalStatePalette(StateGraphDataManager* data_manager, float button_offset_x)
 {
-	//サブグラフの描画判定
+	//サブグラフ以外の通常描画判定を行う条件分岐
 	if (current_filter == PaletteFilter::ALL || current_filter == PaletteFilter::Normal)
 	{
 		ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.3f, 1.0f), u8"▼ 通常ステート");
@@ -153,7 +153,7 @@ void StateGraphPaletteWindow::DrawNormalStatePalette(StateGraphDataManager* data
 			{
 				ImGui::Text(u8"移動中：%s", normal_names[i].c_str());
 				size_t payload_size = normal_names[i].size() + 1;	//ヌル終端文字を含めた送信バイトサイズ
-				ImGui::SetDragDropPayload("DND_PAYLOAD_SUB", normal_names[i].c_str(), payload_size);
+				ImGui::SetDragDropPayload("DND_PAYLOAD_NORMAL", normal_names[i].c_str(), payload_size);
 				ImGui::EndDragDropSource();
 			}
 
@@ -164,7 +164,7 @@ void StateGraphPaletteWindow::DrawNormalStatePalette(StateGraphDataManager* data
 			if (ImGui::Button(add_btn_label.c_str()))
 			{
 				pending_add_palette_node_name = normal_names[i];
-				pending_add_is_sub_graph = true;
+				pending_add_is_sub_graph = false;
 				printf("StateGraphPaletteWindow: パレットから通常「%s」の追加を予約しました。\n", pending_add_palette_node_name.c_str());
 			}
 			ImGui::Separator();
