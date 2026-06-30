@@ -138,6 +138,9 @@ public:
 	//モデルパスの設定
 	void SetTargetModelPath(const std::string& path) { target_model_path = path; }
 
+	//指定されたノードIDを出発基とする全てのリンクのポインタを取得
+	std::vector<GraphLink*> GetLinkesFromNode(uint32_t graph_id, uint32_t node_id);
+
 private:
 	std::vector<GraphData> layer_datas;	//全ての階層データのリスト
 	uint32_t next_id;					//全ての要素の割り当てIDカウンター

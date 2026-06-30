@@ -15,6 +15,7 @@ StateGraphPropertyWindow::StateGraphPropertyWindow()
 {
 	condition_editor = std::make_unique<TransitionConditionEditor>();
 	waiting_for_key_conditon = nullptr;
+	selected_output_link_index = 0;
 }
 
 //デストラクタ
@@ -125,6 +126,49 @@ bool StateGraphPropertyWindow::DrawNodeProperty(
 	ImGui::Separator();
 	ImGui::Spacing();
 
+	if (ImGui::BeginTabBar("NodePropertyTabBar"))
+	{
+		if (ImGui::BeginTabItem(u8"アクション・アニメーション"))
+		{
+			is_changed |= DeawNodeActionSettings(target_node, anim_names);
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem(u8"遷移条件"))
+		{
+			is_changed |= DrawNodeTransitionSettings(data_manager, current_graph, target_node, blackboard);
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
+	}
+
+
+	//削除ボタン
+	ImGui::Spacing();
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+
+	const ImVec4 red_button_color = ImVec4(0.6f, 0.2f, 0.2f, 1.0f); // 削除ボタン用の赤色
+	ImGui::PushStyleColor(ImGuiCol_Button, red_button_color);
+
+	//プロパティウィンドウ内に配置する削除実行ボタン
+	if (ImGui::Button(u8"ステートを削除する", ImVec2(-1.0f, 30.0f)))
+	{
+		uint32_t remove_node_id = target_node->id;	//削除対象の確定ID
+		ed::DeleteNode(remove_node_id);
+		printf("StateGraphPropertyWindow: プロパティ画面からノード ID:%d (%s) の削除要求を発行しました。\n",
+			remove_node_id, target_node->name.c_str());
+	}
+	ImGui::PopStyleColor();
+
+	return is_changed;
+}
+
+//ノードのアクションとアニメーション設定に関するUI描画
+bool StateGraphPropertyWindow::DeawNodeActionSettings(GraphNode* target_node, const std::vector<std::string>& anim_names)
+{
+	bool is_changed = false;	//値変更フラグ
+
 	ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), u8"[アクションとアニメーション]");
 
 	const char* action_ui_names[] = { u8"待機",u8"移動",u8"空中",u8"攻撃",u8"回避",u8"固有技" };	//UIリスト
@@ -188,26 +232,97 @@ bool StateGraphPropertyWindow::DrawNodeProperty(
 	{
 		is_changed = true;
 	}
+	return is_changed;
+}
 
-	//削除ボタン
-	ImGui::Spacing();
+//ノードから出発する遷移線とその条件に関するUI描画
+bool StateGraphPropertyWindow::DrawNodeTransitionSettings(StateGraphDataManager* data_manager, GraphData* current_graph, GraphNode* target_node, StateBlackboard* blackboard)
+{
+	bool is_changed = false;	//値変更フラグ
+
+	static uint32_t last_node_id = 0;	//前回処理したノードのID
+
+	//ノードの新規選択切り替えを検知
+	if (last_node_id != target_node->id)
+	{
+		selected_output_link_index = 0;
+		last_node_id = target_node->id;
+	}
+
 	ImGui::Spacing();
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	const ImVec4 red_button_color = ImVec4(0.6f, 0.2f, 0.2f, 1.0f); // 削除ボタン用の赤色
-	ImGui::PushStyleColor(ImGuiCol_Button, red_button_color);
+	ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.9f, 1.0f), u8"【出発する遷移線の条件設定】");
 
-	//プロパティウィンドウ内に配置する削除実行ボタン
-	if (ImGui::Button(u8"ステートを削除する", ImVec2(-1.0f, 30.0f)))
+	//データマネージャーの有効性を確認
+	if (data_manager)
 	{
-		uint32_t remove_node_id = target_node->id;	//削除対象の確定ID
-		ed::DeleteNode(remove_node_id);
-		printf("StateGraphPropertyWindow: プロパティ画面からノード ID:%d (%s) の削除要求を発行しました。\n",
-			remove_node_id, target_node->name.c_str());
-	}
-	ImGui::PopStyleColor();
+		std::vector<GraphLink*> departure_links = data_manager->GetLinkesFromNode(current_graph->id, target_node->id); //出発元のリンクポインタを格納
 
+		//リンクが1つ以上存在するかを確認
+		if (!departure_links.empty())
+		{
+			//インデックスの最大範囲外をチェック
+			if (selected_output_link_index >= static_cast<int>(departure_links.size()))
+			{
+				selected_output_link_index = 0;
+			}
+			//インデックスが負の範囲外かをチェック
+			if (selected_output_link_index < 0)
+			{
+				selected_output_link_index = 0;
+			}
+
+			constexpr float list_box_height_size = 80.0f;	//リストボックスの縦幅
+
+			//リストボックスの描画スコープが有効かをチェック
+			if (ImGui::BeginListBox(u8"##DepartureLinksList", ImVec2(-1.0f, list_box_height_size)))
+			{
+				//取得したリンクの数だけループ
+				for (int link_idx = 0; link_idx < static_cast<int>(departure_links.size()); link_idx++)
+				{
+					bool is_link_selected = (selected_output_link_index == link_idx);	//在選択中の項目かどうかの判定フラグ
+					uint32_t dest_node_id = data_manager->GetNodeIdFromPinId(current_graph->id, departure_links[link_idx]->end_pin_id);	//遷移先のノードIDを逆引き
+					std::string dest_node_name = u8"不明なステート";	//遷移先のステート名
+
+					//階層内の全ノードを走査
+					for (size_t node_idx = 0; node_idx < current_graph->nodes.size(); node_idx++)
+					{
+						//目的の遷移先IDと一致したかを判定
+						if (current_graph->nodes[node_idx].id == dest_node_id)
+						{
+							dest_node_name = current_graph->nodes[node_idx].name;
+							break;
+						}
+					}
+					constexpr size_t text_buffer_capacity = 128;	//文字バッファの容量
+					char item_label_buffer[text_buffer_capacity];	//表示文字を格納
+					sprintf_s(item_label_buffer, sizeof(item_label_buffer), u8"遷移線 [%d] -> %s (ID:%d)", link_idx, dest_node_name.c_str(), departure_links[link_idx]->id);
+
+					//項目がクリックされたかを判定
+					if (ImGui::Selectable(item_label_buffer, is_link_selected))
+					{
+						selected_output_link_index = link_idx;
+					}
+				}
+				ImGui::EndListBox();
+			}
+			ImGui::Spacing();
+			ImGui::Text(u8"選択中の遷移線の条件編集:");
+
+			//条件エディターインスタンスの有効性を確認
+			if (condition_editor)
+			{
+				is_changed |= condition_editor->DrawConditonSettings(data_manager, blackboard, current_graph->id, departure_links[selected_output_link_index]);
+			}
+		}
+		else
+		{
+			ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), u8"このステートから出発する遷移線はありません。\nキャンバス上で出力ピンから次のノードへ線を引いてください。");
+			selected_output_link_index = -1;
+		}
+	}
 	return is_changed;
 }
 

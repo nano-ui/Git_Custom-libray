@@ -13,7 +13,29 @@
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
                             "Type": 4
-                        },
+                        }
+                    ],
+                    "EndPinID": 104,
+                    "ID": 109,
+                    "StartPinID": 102
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 1
+                        }
+                    ],
+                    "EndPinID": 101,
+                    "ID": 119,
+                    "StartPinID": 105
+                },
+                {
+                    "Conditions": [
                         {
                             "CompOp": 0,
                             "HashKey": 65,
@@ -21,7 +43,14 @@
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
                             "Type": 4
-                        },
+                        }
+                    ],
+                    "EndPinID": 104,
+                    "ID": 140,
+                    "StartPinID": 102
+                },
+                {
+                    "Conditions": [
                         {
                             "CompOp": 0,
                             "HashKey": 83,
@@ -29,7 +58,14 @@
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
                             "Type": 4
-                        },
+                        }
+                    ],
+                    "EndPinID": 104,
+                    "ID": 141,
+                    "StartPinID": 102
+                },
+                {
+                    "Conditions": [
                         {
                             "CompOp": 0,
                             "HashKey": 68,
@@ -40,23 +76,8 @@
                         }
                     ],
                     "EndPinID": 104,
-                    "ID": 109,
+                    "ID": 142,
                     "StartPinID": 102
-                },
-                {
-                    "Conditions": [
-                        {
-                            "CompOp": 5,
-                            "HashKey": 3019011796,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.10000000149011612,
-                            "SecondaryHash": 0,
-                            "Type": 0
-                        }
-                    ],
-                    "EndPinID": 101,
-                    "ID": 119,
-                    "StartPinID": 105
                 }
             ],
             "Nodes": [
@@ -401,6 +422,6 @@
             ]
         }
     ],
-    "NextID": 140,
+    "NextID": 143,
     "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }
