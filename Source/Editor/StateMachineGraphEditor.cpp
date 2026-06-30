@@ -88,6 +88,19 @@ StateMachineGraphEditor::~StateMachineGraphEditor() = default;
 //エディタ描画
 void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 {
+	//追尾機能が有効かつ実行中のアクティブノードIDが有効かを判定
+	if (is_tracking_active_node && runtime_active_node_id != UINT32_MAX)
+	{
+		uint32_t target_graph_id = data_manager->GetGraphIdFromNodeId(runtime_active_node_id);	//所属している階層IDを逆引き
+		
+		//所属階層が現在の表示階層と異なっているかを判定
+		if (target_graph_id != UINT32_MAX && target_graph_id != current_graph_id)
+		{
+			current_graph_id = target_graph_id;
+			printf("StateMachineGraphEditor: 追尾機能により表示階層を自動切り替えしました。階層ID: %d\n", current_graph_id);
+		}
+	}
+
 	GraphData* current_graph = nullptr;	// 現在の階層情報
 
 	for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
@@ -128,6 +141,12 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		constexpr float max_flow_time = 0.1f;
 		flow_effect_timer = max_flow_time;
 		printf("StateMachineGraphEditor: ステート遷移を検知しました。ノードID: %d -> %d (エフェクト開始)\n", flow_src_node_id, flow_dst_node_id);
+		
+		//リアルタイム追尾機能が有効であるかを判定
+		if (is_tracking_active_node)
+		{
+			g_pending_focus_node_id = current_active_node_id;
+		}
 	}
 	previous_active_node_id = current_active_node_id;
 
@@ -212,6 +231,22 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	{
 		ImGui::SameLine();
 		ImGui::Text(u8" 紐付けモデル: %s", asset_loader->GetLoadedModelPath().c_str());
+	}
+
+	ImGui::SameLine();
+
+	//追尾設定チェックボックスが変更されたかを判定
+	if (ImGui::Checkbox(u8"実行中ノードを追尾", &is_tracking_active_node))
+	{
+		printf("StateMachineGraphEditor: 追尾モードが %s に切り替わりました。\n", is_tracking_active_node ? "ON" : "OFF");
+	}
+
+	ImGui::SameLine();
+
+	//ズーム補正チェックボックスが変更されたかを判定
+	if (ImGui::Checkbox(u8"ズーム自動補正", &is_zoom_correction_enabled))
+	{
+		printf("StateMachineGraphEditor: ズーム自動補正が %s に切り替わりました。\n", is_zoom_correction_enabled ? "ON" : "OFF");
 	}
 
 
@@ -521,7 +556,9 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	{
 		uint32_t focus_target_id = g_pending_focus_node_id;	//対象IDのローカル退避
 		ed::SelectNode(focus_target_id, false);
-		ed::NavigateToSelection(false, 0.5f);
+
+		constexpr float focus_duration_time = 0.5f;
+		ed::NavigateToSelection(is_zoom_correction_enabled, focus_duration_time);
 
 		g_pending_focus_node_id = 0;
 		printf("StateMachineGraphEditor: 安全なタイミングでノード ID:%d へのカメラフォーカスを実行しました。\n", focus_target_id);

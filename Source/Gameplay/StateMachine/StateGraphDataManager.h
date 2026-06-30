@@ -129,6 +129,9 @@ public:
 	//指定されたピンIDが所属している親ノードのIDを逆引き取得
 	uint32_t GetNodeIdFromPinId(uint32_t graph_id, uint32_t pin_id);
 
+	//指定されたノードIDが所属する階層のIDを検索して取得
+	uint32_t GetGraphIdFromNodeId(uint32_t node_id);
+
 	//IDカウンターの参照と更新
 	uint32_t FetchAndIncrementId() { return next_id++; }
 

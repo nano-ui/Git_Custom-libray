@@ -554,6 +554,34 @@ uint32_t StateGraphDataManager::GetNodeIdFromPinId(uint32_t graph_id, uint32_t p
 	return 0;
 }
 
+//指定されたノードIDが所属する階層のIDを検索して取得
+uint32_t StateGraphDataManager::GetGraphIdFromNodeId(uint32_t node_id)
+{
+	uint32_t target_graph_id = UINT32_MAX;	//検索結果のグラフID
+
+	//全ての階層データを巡回
+	for (size_t g = 0; g < layer_datas.size(); g++)
+	{
+		//階層内の全ノードを走査
+		for (size_t n = 0; n < layer_datas[g].nodes.size(); n++)
+		{
+			//目的のノードIDと一致したかを判定
+			if (layer_datas[g].nodes[n].id == node_id)
+			{
+				target_graph_id = layer_datas[g].id;
+				return target_graph_id;
+			}
+		}
+	}
+
+	if (target_graph_id == UINT32_MAX)
+	{
+		printf("Warning: StateGraphDataManager::GetGraphIdFromNodeId - ノードID:%d が見つかりませんでした。\n", node_id);
+	}
+
+	return 0;
+}
+
 //指定されたノードIDを出発基とする全てのリンクのポインタを取得
 std::vector<GraphLink*> StateGraphDataManager::GetLinkesFromNode(uint32_t graph_id, uint32_t node_id)
 {

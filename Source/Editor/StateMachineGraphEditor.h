@@ -94,4 +94,6 @@ private:
 	uint32_t flow_src_node_id = 0;								//遷移エフェクトの発生元となったノードID
 	uint32_t flow_dst_node_id = 0;								//遷移エフェクトの遷移先となったノードID
 	float flow_effect_timer = 0.0f;								//遷移エフェクトの残り表示時間（秒）
+	bool is_tracking_active_node = false;						//実行中のアクティブノードを自動で追尾する状態フラグ
+	bool is_zoom_correction_enabled = false;					//追尾カメラ移動時にズーム倍率を最適化する状態フラグ
 };
