@@ -4,7 +4,7 @@
 #include <dxgi1_2.h>
 #include <algorithm>
 
-////ウィンドウハンドルを受け取り、メンバ変数に保持
+////ウィンドウハンドルを受け取り、メンバに保持
 DirectXDevice::DirectXDevice(HWND window_handle)
 	:window_handle_(window_handle)
 {
@@ -15,7 +15,7 @@ bool DirectXDevice::Initialize()
 {
 	HRESULT hr{ S_OK };//DirectXの関数の実行結果を格納
 
-	UINT create_device_flags{ 0 };//デバイス作成時のオプション（デバッグ機能など）を設定する変数
+	UINT create_device_flags{ 0 };//デバイス作成時のオプション（デバッグ機能など）を設定する
 
 #ifdef _DEBUG//デバッグビルド（開発中）の場合に限り、以下の処理を行う
 	create_device_flags |= D3D11_CREATE_DEVICE_DEBUG;//デバッグビルドの場合、デバッグレイヤーを有効

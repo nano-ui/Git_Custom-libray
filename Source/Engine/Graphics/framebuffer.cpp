@@ -5,7 +5,7 @@ framebuffer::framebuffer(ID3D11Device* device, uint32_t width, uint32_t height)
 {
 	HRESULT hr{ S_OK };
 
-	//テクスチャ用の変数を用意
+	//テクスチャ用のを用意
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> render_target_buffer;
 
 	//テクスチャの仕様を設定

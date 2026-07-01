@@ -66,7 +66,7 @@ bool TransitionConditionEditor::DrawConditonSettings(StateGraphDataManager* data
 		GraphTransitionCondition& condition = target_link->conditions[i];	//編集対象の条件情報
 
 		//判定タイプを選択するコンボボックス
-		const char* condition_types[] = { u8"通常変数比較", u8"確率抽選 (Random)", u8"距離判定 (Distance)", u8"割合判定 (Ratio)", u8"入力チェック (InputCheck)" };		const int total_type_count = 4;
+		const char* condition_types[] = { u8"通常比較", u8"確率抽選 (Random)", u8"距離判定 (Distance)", u8"割合判定 (Ratio)", u8"入力チェック (InputCheck)" };		const int total_type_count = 4;
 		int current_type = static_cast<int>(condition.type);
 		ImGui::SetNextItemWidth(180.0f);
 		if (ImGui::Combo(u8"条件判定のタイプ", &current_type, condition_types, 5)) 
@@ -104,15 +104,15 @@ void TransitionConditionEditor::DrawNormalCompareUI(StateBlackboard* blackboard,
 	//ブラックボードが有効か判定
 	if (blackboard)
 	{
-		std::string current_var_name = blackboard->GetVariableNameFromHash(condition.hash_key);	//現在の変数名
+		std::string current_var_name = blackboard->GetVariableNameFromHash(condition.hash_key);	//現在の名
 		ImGui::SetNextItemWidth(150.0f);
 
 		//コンボボックス描画
-		if (ImGui::BeginCombo(u8"対象変数", current_var_name.c_str()))
+		if (ImGui::BeginCombo(u8"対象", current_var_name.c_str()))
 		{
-			std::vector<std::string> var_names = blackboard->GetRegisteredVariableNames();	//登録された変数名リスト
+			std::vector<std::string> var_names = blackboard->GetRegisteredVariableNames();	//登録された名リスト
 
-			//全ての登録変数をループ
+			//全ての登録をループ
 			for (size_t n = 0; n < var_names.size(); n++)
 			{
 				if (ImGui::Selectable(var_names[n].c_str(), current_var_name == var_names[n]))
@@ -130,7 +130,7 @@ void TransitionConditionEditor::DrawNormalCompareUI(StateBlackboard* blackboard,
 			float val_min = blackboard->GetMinLimit(condition.hash_key);		//最小値
 			float val_max = blackboard->GetMaxLimit(condition.hash_key);		//最大値
 
-			//変数がboolだった場合
+			//がboolだった場合
 			if (std::holds_alternative<bool>(raw_data))
 			{
 				ImGui::SetNextItemWidth(80.0f);

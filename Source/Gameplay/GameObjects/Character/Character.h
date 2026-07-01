@@ -31,7 +31,7 @@ public:
 	//デバッグ描画
 	void RenderDebug(ShapeRenderer* renderer)override;
 
-	//変数をシリアライザに登録
+	//をシリアライザに登録
 	void SetupSerialization()override;
 
 	//ダメージ処理

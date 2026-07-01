@@ -57,7 +57,7 @@ void StandCamera::Update(float elapsed_time)
 void StandCamera::RenderGui()
 {
 #ifdef USE_IMGUI
-	//デバッグウィンドウの描画と変数編集
+	//デバッグウィンドウの描画と編集
 	ImGui::Begin("Stand Camera Debug");
 	ImGui::Checkbox("Auto Rotation", &is_rotation);
 	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.1f);

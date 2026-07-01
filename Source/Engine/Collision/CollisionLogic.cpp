@@ -161,7 +161,7 @@ void CollisionLogic::CalculaterClosestPointsBetweenSegments(
     DirectX::XMVECTOR dir_b = DirectX::XMVectorSubtract(end_b, start_b);
     DirectX::XMVECTOR start_diff = DirectX::XMVectorSubtract(start_a, start_b);
 
-    //“àÏ‚ğ—p‚¢‚½”}‰î•Ï”—p‚ÌŒW”‚ğŒvZ
+    //“àÏ‚ğ—p‚¢‚½”}‰î—p‚ÌŒW”‚ğŒvZ
     float len_sq_a = DirectX::XMVectorGetX(DirectX::XMVector3Dot(dir_a, dir_a));
     float len_sq_b = DirectX::XMVectorGetX(DirectX::XMVector3Dot(dir_b, dir_b));
     float dot_b_diff = DirectX::XMVectorGetX(DirectX::XMVector3Dot(dir_b, start_diff));
@@ -171,7 +171,7 @@ void CollisionLogic::CalculaterClosestPointsBetweenSegments(
     float ratio_b = 0.0f;
     constexpr float epsilon = 0.0001f;
 
-    //ü•ª‚Ì’·‚³‚É‚æ‚éğŒ•ªŠò‚Æ”}‰î•Ï”‚ÌZo
+    //ü•ª‚Ì’·‚³‚É‚æ‚éğŒ•ªŠò‚Æ”}‰î‚ÌZo
     if (len_sq_a <= epsilon && len_sq_b <= epsilon)
     {
         ratio_a = 0.0f;

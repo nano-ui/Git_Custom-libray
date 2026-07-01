@@ -53,7 +53,7 @@ RelativeDirection DirectionJudgment::GetRelativeDirection()
     //“àÏ‚ğ—p‚¢‚½‘OŒã”»’è
     //-------------------------
     DirectX::XMVECTOR dot_v = DirectX::XMVector3Dot(front, to_target);  //“àÏ‚ÌŒvZ
-    float dot;  //“àÏ‚ğŠi”[—p•Ï”
+    float dot;  //“àÏ‚ğŠi”[—p
     DirectX::XMStoreFloat(&dot, dot_v); //“àÏ‚ÌŒ‹‰Ê‚ğŠi”[
 
     //------------------------

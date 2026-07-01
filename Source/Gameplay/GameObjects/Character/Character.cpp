@@ -90,7 +90,7 @@ void Character::RenderDebug(ShapeRenderer* renderer)
 
 }
 
-//変数をシリアライザに登録
+//をシリアライザに登録
 void Character::SetupSerialization()
 {
 	GameObject::SetupSerialization();
@@ -146,7 +146,7 @@ void Character::SetupBlackboard()
 	blackboard->SetValue(u8"速度", max_speed);
 	blackboard->SetValue(u8"接地フラグ", is_ground);
 
-	printf("Character: 共有ブラックボードに変数を登録しました。\n");
+	printf("Character: 共有ブラックボードにを登録しました。\n");
 }
 
 //アニメーション終了イベント

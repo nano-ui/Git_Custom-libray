@@ -60,7 +60,7 @@ bool StateGraphSimulator::UpdateSimulation(
 			continue;
 		}
 
-		bool is_all_condition_met = true;	//すべての条件を満たしたかを表す判定フラグ変数
+		bool is_all_condition_met = true;	//すべての条件を満たしたかを表す判定フラグ
 
 		for (size_t c = 0; i < link.conditions.size(); c++)	//リンクが持つすべての遷移条件を個別に精査するループ処理
 		{
@@ -84,8 +84,8 @@ bool StateGraphSimulator::UpdateSimulation(
 
 		if (is_all_condition_met)	//すべての遷移条件を完全にクリアしたかを判定する条件分岐
 		{
-			uint32_t dst_node_id = 0;	//遷移先となるノードIDを保持する変数
-			auto end_it = pin_cache_map.find(link.end_pin_id);	//終了ピンIDからキャッシュを探索した結果イテレーター変数
+			uint32_t dst_node_id = 0;	//遷移先となるノードIDを保持する
+			auto end_it = pin_cache_map.find(link.end_pin_id);	//終了ピンIDからキャッシュを探索した結果イテレーター
 
 			if (end_it != pin_cache_map.end())	//終了ピンのキャッシュ情報がマップ内に存在するかを判定する条件分岐
 			{

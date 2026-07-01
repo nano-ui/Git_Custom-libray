@@ -46,7 +46,7 @@ void GameObject::RenderGui()
 	}
 }
 
-//変数をシリアライザに登録
+//をシリアライザに登録
 void GameObject::SetupSerialization()
 {
 	serializer = std::make_unique<JsonSerializer>();

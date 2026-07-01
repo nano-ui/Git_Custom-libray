@@ -34,7 +34,7 @@ public:
 	//ImGuiデバッグ描画
 	virtual void RenderGui();
 
-	//変数をシリアライザに登録
+	//をシリアライザに登録
 	virtual void SetupSerialization();
 
 	//指定されたJSONオブジェクトへ自身のデータを書き込む

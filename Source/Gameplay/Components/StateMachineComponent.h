@@ -48,7 +48,7 @@ public:
 	//更新
 	void Update(float elapsed_time, StateBlackboard* blackboard);
 
-	//シリアライズ変数登録
+	//シリアライズ登録
 	void SetupSerialization(JsonSerializer* serializer);
 
 	//モデルハッシュの設定

@@ -3,7 +3,7 @@
 #include "Character/Character.h"
 #include "../Gameplay/Components/AnimationComponent.h"
 
-//静的変数の実体定義
+//静的の実体定義
 ObjectManager* ObjectManager::instance_ptr = nullptr;
 
 //コンストラクタ

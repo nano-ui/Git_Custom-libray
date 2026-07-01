@@ -173,7 +173,7 @@ void Graphics::Resize(UINT width, UINT height)
         context->Flush();
     }
 
-    //横幅と縦幅のメンバ変数の更新
+    //横幅と縦幅のメンバの更新
     current_width = width;
     current_height = height;
 

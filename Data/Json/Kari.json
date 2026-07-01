@@ -338,9 +338,9 @@
                     ],
                     "IsLoop": true,
                     "IsSubGraph": false,
-                    "LinkColorB": 0.8571428656578064,
-                    "LinkColorG": 0.20518480241298676,
-                    "LinkColorR": 0.7841434478759766,
+                    "LinkColorB": 0.9575289487838745,
+                    "LinkColorG": 0.340126097202301,
+                    "LinkColorR": 0.8883984088897705,
                     "Name": "後ろ移動",
                     "Output": [
                         {

@@ -28,7 +28,7 @@ private:
 	//頂点シェーダーを読み込み、リフレクションで入力レイアウトを自動生成
 	bool CreateVertexShaderWithReflection(const std::string& vs_name);
 
-	//シェーダーの変数型とマスク情報からDXGI_FORMATを判定
+	//シェーダーの型とマスク情報からDXGI_FORMATを判定
 	DXGI_FORMAT DetermineDxgiFormat(D3D_REGISTER_COMPONENT_TYPE type, BYTE mask);
 
 private:

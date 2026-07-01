@@ -111,7 +111,7 @@ void Player::RenderDebug(ShapeRenderer* renderer)
 	);
 }
 
-//変数をシリアライザに登録
+//をシリアライザに登録
 void Player::SetupSerialization()
 {
 	Character::SetupSerialization();

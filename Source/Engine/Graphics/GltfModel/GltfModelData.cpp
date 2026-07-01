@@ -123,7 +123,7 @@ void GltfModelData::CreateGpuResources(ID3D11Device* device)
 	//---------------------------------------------
 	//マテリアルのシェーダーリソースビューを生成
 	//---------------------------------------------
-	HRESULT hr;	//DirectXの関数実行結果を格納する変数
+	HRESULT hr;	//DirectXの関数実行結果を格納する
 	Microsoft::WRL::ComPtr<ID3D11Buffer> material_buffer;	//バッファ本体を保存
 	if (!material_data.empty())
 	{
@@ -348,7 +348,7 @@ void GltfModelData::FetchNodes(const tinygltf::Model& gltf_model)
 		//--------------------------------
 		if (!gltf_node.matrix.empty())	//ノードに行列が直接定義されている場合
 		{
-			DirectX::XMFLOAT4X4 matrix;	//一時的な行列格納変数
+			DirectX::XMFLOAT4X4 matrix;	//一時的な行列格納
 			for (size_t row = 0; row < MATRIX_DIMENSION; row++)	//行ループを行う
 			{
 				for (size_t column = 0; column < 4; column++)	//列ループを行う

@@ -88,11 +88,11 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 			{
 				nlohmann::json cond_json;	//単一条件格納用のJSON
 				cond_json["Type"] = static_cast<int>(cond.type); // 判定ノードの種類
-				cond_json["HashKey"] = cond.hash_key; // 主変数ハッシュキー
+				cond_json["HashKey"] = cond.hash_key; // 主ハッシュキー
 				cond_json["RefValue"] = cond.reference_value; // 基準値
 				cond_json["CompOp"] = cond.compare_operator; // 演算子
 				cond_json["ParamSecond"] = cond.param_second; // 第2数値引数
-				cond_json["SecondaryHash"] = cond.secondary_hash; //副変数ハッシュキーを保存
+				cond_json["SecondaryHash"] = cond.secondary_hash; //副ハッシュキーを保存
 				conds_array.push_back(cond_json); // 配列へ追加
 			}
 			link_json["Conditions"] = conds_array; // リンクにバインド

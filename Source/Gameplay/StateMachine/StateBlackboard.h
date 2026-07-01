@@ -56,10 +56,10 @@ public:
 	void SetValue(const std::string& variable_name, const T& variable_value)
 	{
 #ifdef _DEBUG
-		//事前登録リストに指定された変数名が存在するか検索
+		//事前登録リストに指定された名が存在するか検索
 		if (allowed_variables.find(variable_name) == allowed_variables.end())
 		{
-			std::cerr << "Error : 変数名 [" << variable_name << "] は事前登録されていません。\n";
+			std::cerr << "Error : 名 [" << variable_name << "] は事前登録されていません。\n";
 			return;
 		}
 #endif // _DEBUG
@@ -77,17 +77,17 @@ public:
 		uint32_t hash_key = CalculateHash(variable_name);				//検索用の32ビットハッシュ値
 		auto iterator = data_map.find(hash_key);	//検索した値
 
-		//変数名が登録されていない際のエラー処理
+		//名が登録されていない際のエラー処理
 		if (iterator == data_map.end())
 		{
 			auto name_it = name_map.find(hash_key);
 			std::string original_name = (name_it != name_map.end()) ? name_it->second : variable_name;	//出力用の文字列
 
-			std::cerr << "Error : 指定された変数名［" << original_name << "]は登録されていません。\n";
+			std::cerr << "Error : 指定された名［" << original_name << "]は登録されていません。\n";
 			return default_value;
 		}
 
-		//取得した変数の型が要求された方と一致するか確認
+		//取得したの型が要求された方と一致するか確認
 		const T* target_value = std::get_if<T>(&(iterator->second.value));	//対象の値
 
 		//型が一致しなかった場合
@@ -96,7 +96,7 @@ public:
 			auto name_it = name_map.find(hash_key);
 			std::string original_name = (name_it != name_map.end()) ? name_it->second : variable_name;	//出力用の文字列
 
-			std::cerr << "Error: 変数 [" << original_name << "] の型が一致しません。\n";
+			std::cerr << "Error:  [" << original_name << "] の型が一致しません。\n";
 			return default_value;
 		}
 		return *target_value;
@@ -140,25 +140,25 @@ public:
 	//ハッシュキーからデータの値を取得
 	const BlackboardData& GetAttributeValue(uint32_t hash_key)const;
 
-	//変数の事前登録
+	//の事前登録
 	void RegisterVariable(const std::string& variable_name) { allowed_variables.insert(variable_name); }
 
-	//変数名リストを取得
+	//名リストを取得
 	std::vector<std::string> GetRegisteredVariableNames()const;
 
-	//ハッシュキーから変数名を取得
+	//ハッシュキーから名を取得
 	std::string GetVariableNameFromHash(uint32_t hash_key) const;
 
-	//変数名からハッシュキーを取得
+	//名からハッシュキーを取得
 	uint32_t GetVariableHash(const std::string& variable_name)const;
 
-	//変数の最小値制限を取得
+	//の最小値制限を取得
 	float GetMinLimit(uint32_t hash_key) const { auto it = data_map.find(hash_key); return (it != data_map.end()) ? it->second.min_value : 0.0f; }
 
-	//変数の最大値制限を取得
+	//の最大値制限を取得
 	float GetMaxLimit(uint32_t hash_key) const { auto it = data_map.find(hash_key); return (it != data_map.end()) ? it->second.max_value : 100.0f; }
 
-	//指定された変数の変化スピード（感度）を取得
+	//指定されたの変化スピード（感度）を取得
 	float GetChangeSpeed(uint32_t hash_key) const { auto it = data_map.find(hash_key); return (it != data_map.end()) ? it->second.speed : 0.1f; }
 
 private:
@@ -169,13 +169,13 @@ private:
 		float min_value = 0.0f;		//最小値制限
 		float max_value = 100.0f;	//最大値制限
 		float speed = 0.1f;			//移動時の変化感度
-		std::string tooltip = "";	//変数の説明文
+		std::string tooltip = "";	//の説明文
 	};
 
 	//ImGuiの型分岐描画を担当する関数オブジェクト
 	struct GuiVisitor
 	{
-		std::string name;	//変数名
+		std::string name;	//名
 		float min_val;		//最小値制限
 		float max_val;		//最大値制限
 		float speed_val;	//移動時の感度
@@ -216,9 +216,9 @@ private:
 	};
 
 private:
-	std::unordered_map<uint32_t, BlackboardAttribute> data_map;	//変数名とデータを保存する辞書
+	std::unordered_map<uint32_t, BlackboardAttribute> data_map;	//名とデータを保存する辞書
 	std::unordered_map<uint32_t,std::string> name_map;			//デバッグ出力用の辞書
-	std::unordered_set<std::string> allowed_variables;			//事前登録された変数名リスト
+	std::unordered_set<std::string> allowed_variables;			//事前登録された名リスト
 };
 
 struct CompareVisitor

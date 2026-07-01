@@ -40,6 +40,20 @@ public:
 	void SetRuntimeActiveNodeId(uint32_t node_id) { runtime_active_node_id = node_id; }
 
 private:
+	//追従ロジックとタイマー更新
+	void UpdateRuntimeTracking();
+
+	//上部メニューとナビゲーション
+	bool DrawTopMenuBar();
+
+	//左パレットとノードリスト
+	void DrawLeftSidebar(GraphData* current_graph, float width, float height);
+
+	//メインのノードエディタキャンバス
+	void DrawCenterCanvas(GraphData* current_graph, float width, float height);
+
+	//右プロパティウインドウ
+	void DrawRightSidebar(GraphData* current_graph, StateBlackboard* blackboard, float width, float height);
 
 	//サブグラフへの階層移動を検知・処理
 	void CheckNavigateToSubGraph(GraphData* current_graph);
@@ -98,4 +112,5 @@ private:
 	bool is_zoom_correction_enabled = false;					//追尾カメラ移動時にズーム倍率を最適化する状態フラグ
 	uint32_t last_tracked_runtime_node_id = UINT32_MAX;			//直前に追尾処理を行ったゲーム側のアクティブノードID
 	float focus_duration_time = 0;								//カメラフォーカス時の補間アニメーション時間
+	float focus_margin = 50.0f;									//ノードの画面内判定に用いる安全マージン
 };

@@ -54,8 +54,8 @@ void GltfModelAnimation::CumulateTransforms()
 	// ルートノードからの巡回処理
 	//--------------------------------------------------
 	std::stack<DirectX::XMFLOAT4X4> parent_global_transforms;							//親ノードの行列情報を順次保持するためのスタックを作成
-	DirectX::XMFLOAT4X4 identity_matrix;												//処理の起点となる単位行列用の変数を宣言
-	DirectX::XMStoreFloat4x4(&identity_matrix, DirectX::XMMatrixIdentity());			//DirectXの関数を利用して変数に単位行列を格納
+	DirectX::XMFLOAT4X4 identity_matrix;												//処理の起点となる単位行列用のを宣言
+	DirectX::XMStoreFloat4x4(&identity_matrix, DirectX::XMMatrixIdentity());			//DirectXの関数を利用してに単位行列を格納
 
 	for (int node_index : root_nodes)		//現在のデフォルトシーンに登録されている全てのルートノードをループ
 	{
@@ -171,7 +171,7 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 			continue;                                                                             // 処理ができないためスキップし次のチャンネルへ進む
 		}
 
-		float interpolation_factor = 0.0f;                                                        // 関数から受け取るための補間係数変数を初期化
+		float interpolation_factor = 0.0f;                                                        // 関数から受け取るための補間係数を初期化
 		size_t keyframe_index = GetAnimationKeyframeIndex(timeline, time, interpolation_factor);  // 現在の時間に対応するキーフレーム番号と補間割合を取得
 
 		//--------------------------------------------------
@@ -335,7 +335,7 @@ float GltfModelAnimation::CalculateAnimationDuration(size_t animation_index)
 		return 0.0f;
 	}
 
-	float max_time = 0.0f;	//記録用の最大時間変数
+	float max_time = 0.0f;	//記録用の最大時間
 	const GltfModelData::animation& animation = model_data->animations.at(animation_index);	//指定されたアニメーションデータを取得
 	for (const GltfModelData::animation::channel& channel : animation.channels)			//アニメーションが持つ全チャンネルをループ
 	{

@@ -36,7 +36,7 @@ void AnimationComponent::Initialize()
 //更新
 void AnimationComponent::Update(float elapsed_time)
 {
-	std::shared_ptr<Model> shared_model = target_model.lock(); // スマートポインタの昇格確認変数
+	std::shared_ptr<Model> shared_model = target_model.lock(); // スマートポインタの昇格確認
 
 	if (shared_model)
 	{
@@ -44,7 +44,7 @@ void AnimationComponent::Update(float elapsed_time)
 
 		if (shared_model->IsAnimationFinished())
 		{
-			std::shared_ptr<IAnimationListener> shared_listener = event_listener.lock(); // リスナーの昇格確認変数
+			std::shared_ptr<IAnimationListener> shared_listener = event_listener.lock(); // リスナーの昇格確認
 
 			if (shared_listener)
 			{
@@ -62,7 +62,7 @@ void AnimationComponent::PlayAnimationByName(const std::string& anim_name, uint3
 		return;
 	}
 
-	std::shared_ptr<Model> shared_model = target_model.lock(); // スマートポインタの昇格確認変数
+	std::shared_ptr<Model> shared_model = target_model.lock(); // スマートポインタの昇格確認
 
 	if (shared_model)
 	{

@@ -152,7 +152,7 @@ bool CustomShader::CreateVertexShaderWithReflection(const std::string& vs_name)
 }
 
 //====================================================
-//シェーダーの変数型とマスク情報からDXGI_FORMATを判定
+//シェーダーの型とマスク情報からDXGI_FORMATを判定
 //====================================================
 DXGI_FORMAT CustomShader::DetermineDxgiFormat(D3D_REGISTER_COMPONENT_TYPE type, BYTE mask)
 {

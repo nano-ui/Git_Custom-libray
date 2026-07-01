@@ -181,7 +181,7 @@ float4 main(VS_OUT pin, bool is_front_face : SV_IsFrontFace) : SV_TARGET
     //ラフネスの二乗をalpha_roughnessとして使用
     float alpha_roughness = roughness * roughness;
     
-    //最終的な出力用の色変数を初期化
+    //最終的な出力用の色を初期化
     float3 total_diffuse = float3(0.0f, 0.0f, 0.0f);
     float3 total_specular = float3(0.0f, 0.0f, 0.0f);
     

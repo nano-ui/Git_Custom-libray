@@ -34,7 +34,7 @@ public:
 	void deactivate(ID3D11DeviceContext* immediate_context);
 
 private:
-	//activate 時に「元々の設定」をキャッシュしておくための変数
+	//activate 時に「元々の設定」をキャッシュしておくための
 
 	//最大いくつまでビューポート数を保存するかの設定
 	UINT viewport_count{ D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE };

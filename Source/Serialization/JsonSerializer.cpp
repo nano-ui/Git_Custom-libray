@@ -17,7 +17,7 @@ void JsonSerializer::SaveToFile(const std::string& file_path)
 {
 	nlohmann::json root_json;	//JSONデータのルート階層オブジェクト
 
-	//登録変数の一括セーブパース
+	//登録の一括セーブパース
 	for (size_t i = 0; i < registered_properties.size(); i++)
 	{
 		const PropertyData& current_data = registered_properties[i];	//要素の参照
@@ -38,7 +38,7 @@ void JsonSerializer::SaveToFile(const std::string& file_path)
 	}
 }
 
-//JSONファイルからデータを変数群へ読み込む
+//JSONファイルからデータを群へ読み込む
 bool JsonSerializer::LoadFromFile(const std::string& file_path)
 {
 	std::ifstream input_file(file_path);
@@ -51,7 +51,7 @@ bool JsonSerializer::LoadFromFile(const std::string& file_path)
 	input_file >> root_json;
 	input_file.close();
 
-	//JSONデータから各登録変数への自動復元
+	//JSONデータから各登録への自動復元
 	for (size_t i = 0; i < registered_properties.size(); i++)
 	{
 		const PropertyData& current_data = registered_properties[i];	//要素の参照
@@ -94,12 +94,12 @@ void JsonSerializer::LoadFromObject(const nlohmann::json& root_json)
 	}
 }
 
-//登録された全変数のUIを一括描画
+//登録された全のUIを一括描画
 void JsonSerializer::RenderGui()
 {
 	std::vector<std::string> unique_categories;	//カテゴリ名コンテナ
 
-	//登録変数の一括UI描画ループ
+	//登録の一括UI描画ループ
 	for (size_t i = 0; i < registered_properties.size(); i++)
 	{
 		const PropertyData& current_data = registered_properties[i];

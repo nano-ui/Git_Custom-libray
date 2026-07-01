@@ -125,8 +125,8 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 		const RuntimeLink& link = runtime_links[i];
 		uint32_t src_node_id = GetNodeIdFromPinId(link.start_pin_id);
 
-		bool is_src_node_active = false; //出発地有効フラグ変数
-		uint32_t trace_id = current_node_id; //親を遡るための探索用追跡変数
+		bool is_src_node_active = false; //出発地有効フラグ
+		uint32_t trace_id = current_node_id; //親を遡るための探索用追跡
 
 		while (trace_id != UINT32_MAX)
 		{
@@ -230,7 +230,7 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 	}
 }
 
-//シリアライズ変数登録
+//シリアライズ登録
 void StateMachineComponent::SetupSerialization(JsonSerializer* serializer)
 {
 	//シリアライザのポインタが有効か確認
@@ -289,7 +289,7 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 			const auto& layer = root_json["Layers"][i];
 			uint32_t layer_graph_id = layer["GraphID"].get<uint32_t>();
 
-			uint32_t parent_id = UINT32_MAX; // 所属する親サブグラフノードIDの初期化変数
+			uint32_t parent_id = UINT32_MAX; // 所属する親サブグラフノードIDの初期化
 			auto parent_it = sub_graph_to_parent_map.find(layer_graph_id); // 自分のレイヤーの親を検索
 
 			if (parent_it != sub_graph_to_parent_map.end())

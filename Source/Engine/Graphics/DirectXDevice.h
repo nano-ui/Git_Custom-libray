@@ -10,7 +10,7 @@
 class DirectXDevice
 {
 public:
-	//ウィンドウハンドルを受け取り、メンバ変数に保持
+	//ウィンドウハンドルを受け取り、メンバに保持
 	DirectXDevice(HWND window_handle);
 
 	//DirectX 11デバイス、即時コンテキスト、スワップチェーンを初期化

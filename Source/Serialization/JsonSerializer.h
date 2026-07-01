@@ -128,7 +128,7 @@ public:
 	}
 
 private:
-	T* data_pointer;	//対象の変数
+	T* data_pointer;	//対象の
 };
 
 class JsonSerializer
@@ -140,7 +140,7 @@ public:
 	//デストラクタ
 	~JsonSerializer();
 
-	//セーブ・ロードの自動処理対象にしたい変数名とポインタをシステムに登録
+	//セーブ・ロードの自動処理対象にしたい名とポインタをシステムに登録
 	template<typename T>
 	void RegisterVariable(const std::string& property_name, T* target_variable, const std::string& category_name = "Default")
 	{
@@ -154,7 +154,7 @@ public:
 	//JSON形式でデータをファイルへ書き出す
 	void SaveToFile(const std::string& file_path);
 
-	//JSONファイルからデータを変数群へ読み込む
+	//JSONファイルからデータを群へ読み込む
 	bool LoadFromFile(const std::string& file_path);
 
 	//JSONオブジェクトへ登録データを直接書き出す
@@ -163,18 +163,18 @@ public:
 	//JSONオブジェクトからデータを直接読み込む
 	void LoadFromObject(const nlohmann::json& root_json);
 
-	//登録された全変数のUIを一括描画
+	//登録された全のUIを一括描画
 	void RenderGui();
 
 private:
 	//個別のプロパティ情報をまとめる内部構造体
 	struct PropertyData
 	{
-		std::string name;		//変数名
+		std::string name;		//名
 		std::string category;	//所属するグループ
-		std::unique_ptr<IProperty> property_interface;	//変数操作ポインタ
+		std::unique_ptr<IProperty> property_interface;	//操作ポインタ
 	};
 
 private:
-	std::vector<PropertyData> registered_properties;	//登録されたすべての変数データ
+	std::vector<PropertyData> registered_properties;	//登録されたすべてのデータ
 };
