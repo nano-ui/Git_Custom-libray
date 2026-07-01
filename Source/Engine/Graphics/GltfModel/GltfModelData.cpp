@@ -3,8 +3,8 @@
 #include "../Engine/Graphics/GpuResourceUtils.h"
 #include <stack>
 #include "../Engine/Graphics/texture.h"
-#include <../Engine/Core/misc.h>
-#include <shader.h>
+#include "../Engine/Core/misc.h"
+#include "../Engine\Graphics\Shaders\shader.h"
 
 
 //==============================================
