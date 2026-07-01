@@ -99,14 +99,10 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 			if (target_graph_id != UINT32_MAX && target_graph_id != current_graph_id)
 			{
 				current_graph_id = target_graph_id;
-				printf("StateMachineGraphEditor: 追尾機能により表示階層を自動切り替えしました。階層ID: %d\n", current_graph_id);
 			}
+			printf("StateMachineGraphEditor: 追尾機能により表示階層を自動切り替えしました。階層ID: %d\n", current_graph_id);
 			last_tracked_runtime_node_id = runtime_active_node_id;
 		}
-	}
-	else
-	{
-		last_tracked_runtime_node_id = UINT32_MAX;
 	}
 
 	GraphData* current_graph = nullptr;	// 現在の階層情報
@@ -257,6 +253,10 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		printf("StateMachineGraphEditor: ズーム自動補正が %s に切り替わりました。\n", is_zoom_correction_enabled ? "ON" : "OFF");
 	}
 
+	ImGui::SameLine();
+
+	ImGui::SetNextItemWidth(100.0f);
+	ImGui::SliderFloat(u8"フォーカス時間", &focus_duration_time, 0.0f, 1.0f, "%.2f");
 
 	ImGui::Spacing();
 
@@ -617,11 +617,14 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		uint32_t focus_target_id = g_pending_focus_node_id;	//対象IDのローカル退避
 		ed::SelectNode(focus_target_id, false);
 
-		constexpr float focus_duration_time = 0.5f;
 		ed::NavigateToSelection(is_zoom_correction_enabled, focus_duration_time);
 
 		g_pending_focus_node_id = 0;
-		printf("StateMachineGraphEditor: 安全なタイミングでノード ID:%d へのカメラフォーカスを実行しました。\n", focus_target_id);
+
+		if (focus_duration_time > 0.0f)
+		{
+			printf("StateMachineGraphEditor: 安全なタイミングでノード ID:%d へのカメラフォーカスを実行しました。\n", focus_target_id);
+		}
 	}
 
 	ImGui::EndChild();
