@@ -13,7 +13,7 @@ bool StateGraphSimulator::UpdateSimulation(
 	uint32_t& out_flowing_link_id
 )
 {
-	if (!data_manager || !current_graph)	//必要なデータポインタが安全であるかを判定する条件分岐
+	if (!data_manager || !current_graph)	//必要なデータポインタが安全であるかを判定する条件
 	{
 		return false;
 	}
@@ -54,7 +54,7 @@ bool StateGraphSimulator::UpdateSimulation(
 			src_node_id = start_it->second;
 		}
 
-		//リンクの出発元が現在の実行中アクティブノードと一致するかを判定する条件分岐
+		//リンクの出発元が現在の実行中アクティブノードと一致するかを判定する条件
 		if (src_node_id != in_out_active_node_id)	
 		{
 			continue;
@@ -82,12 +82,12 @@ bool StateGraphSimulator::UpdateSimulation(
 			}
 		}
 
-		if (is_all_condition_met)	//すべての遷移条件を完全にクリアしたかを判定する条件分岐
+		if (is_all_condition_met)	//すべての遷移条件を完全にクリアしたかを判定する条件
 		{
 			uint32_t dst_node_id = 0;	//遷移先となるノードIDを保持する
 			auto end_it = pin_cache_map.find(link.end_pin_id);	//終了ピンIDからキャッシュを探索した結果イテレーター
 
-			if (end_it != pin_cache_map.end())	//終了ピンのキャッシュ情報がマップ内に存在するかを判定する条件分岐
+			if (end_it != pin_cache_map.end())	//終了ピンのキャッシュ情報がマップ内に存在するかを判定する条件
 			{
 				dst_node_id = end_it->second;
 			}

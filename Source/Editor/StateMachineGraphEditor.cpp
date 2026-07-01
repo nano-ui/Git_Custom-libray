@@ -120,20 +120,26 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		}
 	}
 
-	if (previous_active_node_id != 0 && previous_active_node_id != current_active_node_id)
+	// ゲーム側の実行ノードIDが前フレームから変化した瞬間を直接検知する条件
+	if (runtime_active_node_id != UINT32_MAX && previous_active_node_id != 0 && previous_active_node_id != runtime_active_node_id)
 	{
 		flow_src_node_id = previous_active_node_id;
-		flow_dst_node_id = current_active_node_id;
-		constexpr float max_flow_time = 0.1f; // 最大エフェクト時間
-		flow_effect_timer = max_flow_time;
-		printf("StateMachineGraphEditor: ステート遷移を検知しました。ノードID: %d -> %d (エフェクト開始)\n", flow_src_node_id, flow_dst_node_id);
+		flow_dst_node_id = runtime_active_node_id;
+		has_flow_requsted = true;
+		printf("StateMachineGraphEditor: 純粋なステート遷移を検知しました。ノードID: %d -> %d\n", flow_src_node_id, flow_dst_node_id);
 
+		// リアルタイム追尾機能が有効であるかを判定する条件
 		if (is_tracking_active_node)
 		{
-			g_pending_focus_node_id = current_active_node_id;
+			g_pending_focus_node_id = runtime_active_node_id;
 		}
 	}
-	previous_active_node_id = current_active_node_id;
+
+	// 有効な実行中IDが届いている場合のみ、次フレーム用の比較元として保存する条件
+	if (runtime_active_node_id != UINT32_MAX)
+	{
+		previous_active_node_id = runtime_active_node_id;
+	}
 
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 
@@ -378,6 +384,7 @@ bool StateMachineGraphEditor::DrawTopMenuBar()
 
 	}
 
+	ImGui::SameLine();
 
 	ImGui::Spacing();
 
@@ -514,17 +521,23 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 		}
 	}
 
+	constexpr float FIXED_FLOW_COLOR_R = 0.2f;
+	constexpr float FIXED_FLOW_COLOR_G = 0.6f;
+	constexpr float FIXED_FLOW_COLOR_B = 0.4f;
+
+	// 階層内の全リンクを巡回するループ処理
 	for (size_t i = 0; i < current_graph->links.size(); i++)
 	{
 		const GraphLink& link = current_graph->links[i]; // リンク参照
 
-		float r = 1.0f; // 赤
-		float g = 1.0f; // 緑
-		float b = 1.0f; // 青
-		uint32_t src_node_id = 0; // 出発ノードID
+		float r = 1.0f; // 通常時赤成分用変数
+		float g = 1.0f; // 通常時緑成分用変数
+		float b = 1.0f; // 通常時青成分用変数
+		uint32_t src_node_id = 0; // 出発ノードID用変数
 
 		auto start_it = pin_cache_map.find(link.start_pin_id); // 検索イテレーター
 
+		// 開始ピンがハッシュマップ内に存在するかを判定する条件分岐
 		if (start_it != pin_cache_map.end())
 		{
 			src_node_id = start_it->second.node_id;
@@ -533,22 +546,36 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 			b = start_it->second.color_b;
 		}
 
+		bool is_last_transition_link = false; // 直近の遷移リンクであるかを保持するフラグ変数
+		uint32_t dst_node_id = 0; // 接続先ノードID用変数
+		auto end_it = pin_cache_map.find(link.end_pin_id); // 検索イテレーター
+
+		// 終了ピンがハッシュマップ内に存在するかを判定する条件分岐
+		if (end_it != pin_cache_map.end())
+		{
+			dst_node_id = end_it->second.node_id;
+		}
+
+		// このリンクが直近で遷移したノード間を結ぶものかを判定する条件分岐
+		if (src_node_id == flow_src_node_id && dst_node_id == flow_dst_node_id)
+		{
+			is_last_transition_link = true;
+		}
+
+		// エディタ標準のキャッシュカラーを優先させるため、色は元の色のまま描画を実行
 		ed::Link(link.id, link.start_pin_id, link.end_pin_id, ImVec4(r, g, b, 1.0f));
 
-		if (flow_effect_timer > 0.0f)
+		// 直近の遷移経路として選ばれているリンクであるかを判定する条件分岐（常時エフェクト維持方式へ変更）
+		if (is_last_transition_link)
 		{
-			uint32_t dst_node_id = 0; // 接続先ノードID
-			auto end_it = pin_cache_map.find(link.end_pin_id); // 検索イテレーター
+			// 画像から存在が確認できた StyleColor_Flow を用いて、パルスの光の色を上品な緑色に上書きする処理
+			ed::PushStyleColor(ed::StyleColor_Flow, ImVec4(FIXED_FLOW_COLOR_R, FIXED_FLOW_COLOR_G, FIXED_FLOW_COLOR_B, 1.0f));
 
-			if (end_it != pin_cache_map.end())
-			{
-				dst_node_id = end_it->second.node_id;
-			}
+			// 次の遷移が起きるまで毎フレームエフェクトを流し続けるために、無条件でFlowを実行
+			ed::Flow(link.id);
 
-			if (src_node_id == flow_src_node_id && dst_node_id == flow_dst_node_id)
-			{
-				ed::Flow(link.id);
-			}
+			// 上書きしたエフェクトの色を安全に復元するポップ処理
+			ed::PopStyleColor();
 		}
 	}
 
@@ -745,6 +772,11 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 		}
 
 		g_pending_focus_node_id = 0;
+	}
+
+	if (has_flow_requsted)
+	{
+		has_flow_requsted = false;
 	}
 
 	ImGui::EndChild();

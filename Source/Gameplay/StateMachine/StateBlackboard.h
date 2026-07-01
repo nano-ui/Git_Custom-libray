@@ -172,7 +172,7 @@ private:
 		std::string tooltip = "";	//の説明文
 	};
 
-	//ImGuiの型分岐描画を担当する関数オブジェクト
+	//ImGuiの型描画を担当する関数オブジェクト
 	struct GuiVisitor
 	{
 		std::string name;	//名

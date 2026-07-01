@@ -113,4 +113,5 @@ private:
 	uint32_t last_tracked_runtime_node_id = UINT32_MAX;			//直前に追尾処理を行ったゲーム側のアクティブノードID
 	float focus_duration_time = 0;								//カメラフォーカス時の補間アニメーション時間
 	float focus_margin = 50.0f;									//ノードの画面内判定に用いる安全マージン
+	bool has_flow_requsted = false;								//エフェクトリクエスト
 };

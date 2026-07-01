@@ -28,7 +28,7 @@ bool RatioJudgment::Check()
 	//------------------------------------------
 	// 条件に応じた判定の実行
 	//------------------------------------------
-	switch (compare_type)							//設定された比較方法に応じて処理を分岐させる
+	switch (compare_type)							//設定された比較方法に応じて処理をさせる
 	{
 	case CompareType::LessEqual:					//閾値「以下」か判定するモードの場合
 		return current_ratio <= threshold_ratio;	//現在の割合が基準値以下であればtrueを返す

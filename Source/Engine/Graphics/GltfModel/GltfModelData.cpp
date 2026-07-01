@@ -222,7 +222,7 @@ std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const s
 //=================================================
 DXGI_FORMAT GltfModelData::ConvertFormat(const tinygltf::Accessor& accessor)
 {
-	switch (accessor.type)	//gltfの型(スカラー、ベクトル等)で分岐
+	switch (accessor.type)	//gltfの型(スカラー、ベクトル等)で
 	{
 	case TINYGLTF_TYPE_SCALAR:	//スカラー値の場合
 		switch (accessor.componentType)

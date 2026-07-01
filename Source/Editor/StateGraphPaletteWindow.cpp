@@ -136,7 +136,7 @@ void StateGraphPaletteWindow::DrawPaletterFilterButtons()
 //通常ステートのパレット項目描画
 void StateGraphPaletteWindow::DrawNormalStatePalette(StateGraphDataManager* data_manager, float button_offset_x)
 {
-	//サブグラフ以外の通常描画判定を行う条件分岐
+	//サブグラフ以外の通常描画判定を行う条件
 	if (current_filter == PaletteFilter::ALL || current_filter == PaletteFilter::Normal)
 	{
 		ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.3f, 1.0f), u8"▼ 通常ステート");
