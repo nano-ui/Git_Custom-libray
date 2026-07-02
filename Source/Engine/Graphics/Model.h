@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+class GltfModelData;
+
 class Model
 {
 public:
@@ -38,6 +40,18 @@ public:
 
 	//モデルパスの取得
 	const std::string& GetModelPath()const { return model_path; }
+
+	//アニメーション再生時間取得
+	float GetAnimationTime()const;
+
+	//アニメーションの総時間を取得
+	float GetAnimationDuration() const;
+
+	//アニメーション名からインデックス番号を取得
+	int GetAnimationIndex(const char* name) const;
+
+	//glTFモデルのデータ本体を取得
+	std::shared_ptr<const GltfModelData> GetGltfModelData() const;
 
 public:
 	class ModelImpl;						//実際の処理を行う内部クラス

@@ -70,3 +70,15 @@ const std::vector<GltfModelData::node>& GltfModel::GetAnimatedNodes() const
 {
 	return animation->GetAnimationNodes();
 }
+
+//現在の再生経過時間を取得
+float GltfModel::GetAnimationCurrentTime() const
+{
+	return animation->GetCurrentAnimationTime();
+}
+
+//アニメーションの総時間を取得
+float GltfModel::GetAnimationDuration() const
+{
+	return animation->GetAnimationDuration();
+}

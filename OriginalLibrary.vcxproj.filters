@@ -369,6 +369,9 @@
     <ClCompile Include="Source\Engine\Graphics\GltfModel\GltfRootMotion.cpp">
       <Filter>Source\Engine\Graphics\Model\GltfModel\GltfRootMotion</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\RootMotionComponent.cpp">
+      <Filter>Source\Gameplay\Components\RootMotionComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -700,6 +703,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\GltfModel\GltfRootMotion.h">
       <Filter>Source\Engine\Graphics\Model\GltfModel\GltfRootMotion</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\RootMotionComponent.h">
+      <Filter>Source\Gameplay\Components\RootMotionComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1094,6 +1100,9 @@
     </Filter>
     <Filter Include="Source\Engine\Graphics\Model\GltfModel\GltfRootMotion">
       <UniqueIdentifier>{add93751-853e-497e-a50d-2fbf3cc921d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\RootMotionComponent">
+      <UniqueIdentifier>{a248dffe-bb94-4423-ad9f-8e9eab46f8fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

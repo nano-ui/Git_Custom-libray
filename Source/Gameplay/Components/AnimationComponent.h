@@ -39,6 +39,12 @@ public:
 	//アニメーションマップの設定
 	void SetAnimationMap(const std::unordered_map<uint32_t, std::string>& new_map);
 
+	//再生時間を取得
+	float GetCurrentAnimationTime()const;
+
+	//再生中のアニメーション名を取得
+	const std::string& GetCurrentAnimationName()const { return current_animation_name; }
+
 private:
 	std::unordered_map<uint32_t, std::string> animaton_map;	//ハッシュキーとアニメーション名の対応表
 	std::weak_ptr<Model> target_model;						//対象のモデル

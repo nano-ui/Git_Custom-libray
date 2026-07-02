@@ -2,6 +2,7 @@
 
 #include "../Gameplay/GameObjects/GameObject.h"
 #include "../Engine/Collision/Collider.h"
+#include "Gameplay\Components\RootMotionComponent.h"
 #include "../Gameplay/Components/AnimationComponent.h"
 
 #include <memory>
@@ -49,6 +50,9 @@ public:
 	//アニメーションコンポーネント取得
 	AnimationComponent* GetAnimationComponent()const { return animation_component.get(); }
 
+	//ルートモーションコンポーネントクラス取得
+	RootMotionComponent* GetRootMotionComponent()const { return root_motion_component.get(); }
+
 	//ステートマシンコンポーネントクラス取得
 	StateMachineComponent* GetStateMachineComponent()const { return state_machine_component.get(); }
 
@@ -67,6 +71,9 @@ protected:
 
 	//無敵時間更新処理
 	void UpdateInvincibleTimer(float elapsed_time);
+
+	//ルートモーション更新
+	void UpdateRootMotion();
 
 	//接地時イベント
 	virtual void OnLanding() {}
@@ -100,8 +107,10 @@ protected:
 	std::shared_ptr<Model> character;	//キャラクターモデル
 	std::unique_ptr<StateBlackboard> blackboard;
 	std::unique_ptr<AnimationComponent> animation_component;	//アニメーション制御
+	std::unique_ptr<RootMotionComponent> root_motion_component;	//ルートモーション制御
 	std::unique_ptr<StateMachineComponent> state_machine_component;	//ステートマシン制御
 
+	std::string previous_animation_name = "";	//前回のアニメーション名
 	DirectX::XMFLOAT3 angle;	//角度
 	float radius;				//半径
 	float gravity;				//重力

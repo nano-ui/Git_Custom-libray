@@ -121,6 +121,32 @@ void GltfModelAnimation::UpdateAnimation(float delta_time)
 	Animate(current_animation_index, current_animation_time);	//実際の計算処理
 }
 
+//現在のアニメーション経過時間を取得
+float GltfModelAnimation::GetCurrentAnimationTime() const
+{
+	//モデルデータが読み込まれていないなど、不正な状態での呼び出しを検知
+	if (!model_data)
+	{
+		OutputDebugStringA("[GltfModelAnimation Error] GetCurrentAnimationTime: model_data is null!\n");
+		return 0.0f;
+	}
+
+	return current_animation_time;
+}
+
+//アニメーションの総時間を取得
+float GltfModelAnimation::GetAnimationDuration() const
+{
+	//モデルデータが読み込まれていない場合は安全のためゼロを返す
+	if (!model_data)
+	{
+		OutputDebugStringA("[GltfModelAnimation Error] GetAnimationDuration: model_data is null!\n");
+		return 0.0f;
+	}
+
+	return current_animation_duration;
+}
+
 //========================================================
 //指定した時間のアニメーションを適用しノード情報を更新
 //========================================================

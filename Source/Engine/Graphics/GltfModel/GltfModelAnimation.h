@@ -26,6 +26,12 @@ public:
 	//アニメーションの終了したか取得
 	bool IsFinished()const { return is_animation_finished; }
 
+	//現在のアニメーション経過時間を取得
+	float GetCurrentAnimationTime()const;
+
+	//アニメーションの総時間を取得
+	float GetAnimationDuration()const;
+
 private:
 	//指定した時間のアニメーションを適用しノード情報を更新
 	void Animate(size_t animation_index, float time);

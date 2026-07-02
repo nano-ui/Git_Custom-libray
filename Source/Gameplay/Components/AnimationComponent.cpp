@@ -73,7 +73,14 @@ void AnimationComponent::PlayAnimationByName(const std::string& anim_name, uint3
 	}
 }
 
-//アニメーションマップの設定
-void AnimationComponent::SetAnimationMap(const std::unordered_map<uint32_t, std::string>& new_map)
+//再生時間を取得
+float AnimationComponent::GetCurrentAnimationTime()const
 {
+	std::shared_ptr<Model> shared_model = target_model.lock();
+	if (shared_model)
+	{
+		return shared_model->GetAnimationTime();
+	}
+	OutputDebugStringA("[AnimationComponent Error] GetCurrentAnimationTime: shared_model is null!\n");
+	return 0.0f;
 }

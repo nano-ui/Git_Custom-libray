@@ -38,6 +38,12 @@ public:
 	//アニメーション情報取得
 	const std::vector<GltfModelData::node>& GetAnimatedNodes() const;
 
+	//現在の再生経過時間を取得
+	float GetAnimationCurrentTime() const;
+
+	//アニメーションの総時間を取得
+	float GetAnimationDuration() const;
+
 private:
 	std::shared_ptr<GltfModelData> data;			//リソースデータ
 	std::shared_ptr<GltfModelRenderer> renderer;	//描画命令クラス

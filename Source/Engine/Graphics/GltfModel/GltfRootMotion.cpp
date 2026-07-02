@@ -3,7 +3,6 @@
 
 #include <windows.h>
 #include <algorithm>
-#include "RootMotionComponent.h"
 
 //初期化
 void GltfRootMotion::Initialize(const std::shared_ptr<const GltfModelData>& data, int root_node_index)
@@ -121,7 +120,7 @@ void GltfRootMotion::ComputeRootPose(size_t animation_index, float time, DirectX
 			{
 				continue;
 			}
-			float interpolation_factor = INTERPOLATION_MIN;	//補完用の毛数
+			float interpolation_factor = INTERPOLATION_MIN;	//補完用の係数
 			size_t keyframe_index = START_INDEX;			//現在のキーフレーム番号
 			const size_t keyframe_count = timeline.size();	//キーフレームの総数
 
@@ -176,7 +175,7 @@ void GltfRootMotion::ComputeRootPose(size_t animation_index, float time, DirectX
 			{
 				auto rot_it = animation.rotations.find(sampler.output);	//回転情報のイテレーター
 
-				// 回転データが見つからないか、インデックスが範囲外の場合はエラー
+				//回転情報が見つからないか、インデックスが範囲外の場合はエラー
 				if (rot_it == animation.rotations.end() || (keyframe_index + INDEX_OFFSET_NEXT) >= rot_it->second.size())
 				{
 					OutputDebugStringA("[GltfRootMotion Error] ComputeRootPose: rotations key or index error!\n");

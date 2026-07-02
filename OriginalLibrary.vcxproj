@@ -123,7 +123,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;USE_IMGUI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Gameplay;$(ProjectDir)ThirdParty;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;$(ProjectDir)External\cereal-master\include;$(ProjectDir)External\DirectXTK-main\DirectXTK-main\Inc;$(ProjectDir)External\DirectXTex;$(ProjectDir)External\imgui-docking\imgui-docking;$(ProjectDir)External\imgui-docking\imgui-docking\backends;$(ProjectDir)External\imgui-node-editor-master\imgui-node-editor-master;$(ProjectDir)External\ImGuizmo-master\ImGuizmo-master\src;$(ProjectDir)External\imguizmo;$(ProjectDir)External\json-develop;.\External\imgui;.\External\json-develop;.\External\tinygltf-release;%(AdditionalIncludeDirectories);.\External\DirectXTe;.\External\DirectXTex</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;$(ProjectDir)External\cereal-master\include;$(ProjectDir)External\DirectXTK-main\DirectXTK-main\Inc;$(ProjectDir)External\DirectXTex;$(ProjectDir)External\imgui-docking\imgui-docking;$(ProjectDir)External\imgui-docking\imgui-docking\backends;$(ProjectDir)External\imgui-node-editor-master\imgui-node-editor-master;$(ProjectDir)External\ImGuizmo-master\ImGuizmo-master\src;$(ProjectDir)External\imguizmo;$(ProjectDir)External\json-develop;.\External\imgui;.\External\json-develop;.\External\tinygltf-release;%(AdditionalIncludeDirectories);.\External\DirectXTe;.\External\DirectXTex</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/Zc:char8_t- %(AdditionalOptions)</AdditionalOptions>
@@ -189,7 +189,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Gameplay;$(ProjectDir)ThirdParty;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;$(ProjectDir)External\cereal-master\include;$(ProjectDir)External\DirectXTK-main\DirectXTK-main\Inc;$(ProjectDir)External\DirectXTex;$(ProjectDir)External\imgui-docking\imgui-docking;$(ProjectDir)External\imgui-docking\imgui-docking\backends;$(ProjectDir)External\imgui-node-editor-master\imgui-node-editor-master;$(ProjectDir)External\ImGuizmo-master\ImGuizmo-master\src;$(ProjectDir)External\imguizmo;$(ProjectDir)External\json-develop;.\External\tinygltf-release;.\External\DirectXTe;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.7\include;$(ProjectDir)External\cereal-master\include;$(ProjectDir)External\DirectXTK-main\DirectXTK-main\Inc;$(ProjectDir)External\DirectXTex;$(ProjectDir)External\imgui-docking\imgui-docking;$(ProjectDir)External\imgui-docking\imgui-docking\backends;$(ProjectDir)External\imgui-node-editor-master\imgui-node-editor-master;$(ProjectDir)External\ImGuizmo-master\ImGuizmo-master\src;$(ProjectDir)External\imguizmo;$(ProjectDir)External\json-develop;.\External\tinygltf-release;.\External\DirectXTe;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:char8_t- %(AdditionalOptions)</AdditionalOptions>
@@ -295,6 +295,7 @@
     <ClCompile Include="Source\Gameplay\AI\SelectorNode.cpp" />
     <ClCompile Include="Source\Gameplay\AI\WeightedNode.cpp" />
     <ClCompile Include="Source\Gameplay\Components\AnimationComponent.cpp" />
+    <ClCompile Include="Source\Gameplay\Components\RootMotionComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\StateMachineComponent.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Character.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Player.cpp" />
@@ -405,6 +406,7 @@
     <ClInclude Include="Source\Gameplay\AI\StateActionNode.h" />
     <ClInclude Include="Source\Gameplay\AI\WeightedNode.h" />
     <ClInclude Include="Source\Gameplay\Components\AnimationComponent.h" />
+    <ClInclude Include="Source\Gameplay\Components\RootMotionComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\StateMachineComponent.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Character.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Player.h" />

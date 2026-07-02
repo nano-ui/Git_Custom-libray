@@ -29,6 +29,7 @@ Character::Character()
 
 	blackboard = std::make_unique<StateBlackboard>();
 	state_machine_component = std::make_unique<StateMachineComponent>();
+	root_motion_component = std::make_unique<RootMotionComponent>();
 }
 
 //デストラクタ
@@ -42,6 +43,11 @@ void Character::Initialize()
 	is_active = true;
 	SetupSerialization();
 	SetupBlackboard();
+
+	if (root_motion_component && character)
+	{
+		root_motion_component->Initialize(character->GetGltfModelData(), 0);
+	}
 }
 
 //更新処理
@@ -204,6 +210,36 @@ void Character::UpdateInvincibleTimer(float elapsed_time)
 	if (invincible_timer > 0.0f)
 	{
 		invincible_timer -= elapsed_time;
+	}
+}
+
+//ルートモーション更新
+void Character::UpdateRootMotion()
+{
+	if (root_motion_component && animation_component && character)
+	{
+		std::string curreent_anim_name = animation_component->GetCurrentAnimationName();	//現在のアニメーション名
+
+		//アニメーションが切り替わったか判定
+		if (previous_animation_name != curreent_anim_name)
+		{
+			int anim_index = 0;
+			anim_index = character->GetAnimationIndex(curreent_anim_name.c_str());
+
+			//インデックスが有効か判定
+			if (anim_index >= 0)
+			{
+				root_motion_component->OnAnimationChaanged(static_cast<size_t>(anim_index));
+			}
+			else
+			{
+				OutputDebugStringA("[Character Error] Update: Animation index not found!\n");
+			}
+			previous_animation_name = curreent_anim_name;
+		}
+		//ルートモーションの更新
+		float current_time = animation_component->GetCurrentAnimationTime(); // 現在の再生時間
+		root_motion_component->Update(current_time);
 	}
 }
 

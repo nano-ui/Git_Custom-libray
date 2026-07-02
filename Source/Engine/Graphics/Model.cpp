@@ -8,6 +8,8 @@
 #include "../Graphics/GltfModel/GltfModelRenderer.h"
 #include "../Engine/Graphics/GltfModel/GltfModel.h"
 
+// アニメーションが見つからない場合のエラー用定数（マジックナンバー排除）
+constexpr int ERROR_ANIMATION_NOT_FOUND = -1;
 
 //各モデルコンポーネントの共通インターフェース
 class Model::ModelImpl
@@ -36,6 +38,18 @@ public:
 
 	//アニメーションの終了判定取得
 	virtual bool IsAnimationFinished() const = 0;
+
+	//アニメーション時間取得
+	virtual float GetAnimationTime()const = 0;
+
+	//アニメーションの総時間を取得
+	virtual float GetAnimationDuration()const = 0;
+
+	// アニメーションインデックス取得用仮想関数
+	virtual int GetAnimationIndex(const char* name) const = 0;
+
+	// glTFデータ取得用仮想関数
+	virtual std::shared_ptr<const GltfModelData> GetGltfModelData() const = 0;
 };
 
 //FBXモデルを扱うための実装クラス
@@ -124,8 +138,37 @@ public:
 	{
 		return true;
 	}
+
+	float GetAnimationTime()const override
+	{
+		return 0.0f;
+	}
+
+	//アニメーションの総時間を取得
+	float GetAnimationDuration()const override
+	{
+		return 0.0f;
+	}
+
+	// FBXモデルに対するインデックス取得
+	int GetAnimationIndex(const char* name) const override
+	{
+		if (name) // パラメータ名が有効かチェック
+		{
+			OutputDebugStringA("[Model Error] FbxModelImpl does not support GetAnimationIndex!\n");
+		}
+		return ERROR_ANIMATION_NOT_FOUND;
+	}
+
+	// FBXモデルに対するglTFデータ取得
+	std::shared_ptr<const GltfModelData> GetGltfModelData() const override
+	{
+		OutputDebugStringA("[Model Error] FbxModelImpl does not support GetGltfModelData!\n");
+		return nullptr;
+	}
 };
 
+//glTFモデルを扱うための実装クラス
 class GltfModelImpl :public Model::ModelImpl
 {
 private:
@@ -267,6 +310,49 @@ public:
 		}
 		return true;
 	}
+
+	//アニメーション再生時間取得
+	float GetAnimationTime()const
+	{
+		return model->GetAnimationCurrentTime();
+	}
+
+	//アニメーションの総時間を取得
+	float GetAnimationDuration()const override
+	{
+		return model->GetAnimationDuration();
+	}
+
+	// アニメーション名からインデックス番号をマップ検索して返す
+	int GetAnimationIndex(const char* name) const override
+	{
+		if (!data || !name) // データまたは名前が不正な場合
+		{
+			OutputDebugStringA("[Model Error] GltfModelImpl::GetAnimationIndex: invalid arguments!\n");
+			return ERROR_ANIMATION_NOT_FOUND;
+		}
+
+		std::string search_name(name); // 検索用文字列
+		auto it = data->animation_index_map.find(search_name); // マップ内を走査
+
+		if (it != data->animation_index_map.end()) // 対象のアニメーションキーを発見した場合
+		{
+			return static_cast<int>(it->second);
+		}
+
+		OutputDebugStringA("[Model Warning] GetAnimationIndex: Specified animation name not found.\n");
+		return ERROR_ANIMATION_NOT_FOUND;
+	}
+
+	// glTFのモデルデータポインタを返す
+	std::shared_ptr<const GltfModelData> GetGltfModelData() const override
+	{
+		if (!data) // データが空の場合
+		{
+			OutputDebugStringA("[Model Error] GltfModelImpl::GetGltfModelData: data is null!\n");
+		}
+		return data;
+	}
 };
 
 //===================
@@ -372,4 +458,35 @@ bool Model::IsAnimationFinished() const
 		return model_impl->IsAnimationFinished();
 	}
 	return true;
+}
+
+//アニメーション再生時間取得
+float Model::GetAnimationTime() const
+{
+	return model_impl->GetAnimationTime();
+}
+
+float Model::GetAnimationDuration() const
+{
+	return model_impl->GetAnimationDuration();
+}
+
+// アニメーションインデックス取得窓口
+int Model::GetAnimationIndex(const char* name) const
+{
+	if (model_impl) // 実装クラスが有効か確認
+	{
+		return model_impl->GetAnimationIndex(name);
+	}
+	return ERROR_ANIMATION_NOT_FOUND;
+}
+
+// glTFデータ取得窓口
+std::shared_ptr<const GltfModelData> Model::GetGltfModelData() const
+{
+	if (model_impl) // 実装クラスが有効か確認
+	{
+		return model_impl->GetGltfModelData();
+	}
+	return nullptr;
 }
