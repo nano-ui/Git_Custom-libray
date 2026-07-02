@@ -265,6 +265,7 @@
     <ClCompile Include="Source\Engine\Graphics\GltfModel\GltfModelAnimation.cpp" />
     <ClCompile Include="Source\Engine\Graphics\GltfModel\GltfModelData.cpp" />
     <ClCompile Include="Source\Engine\Graphics\GltfModel\GltfModelRenderer.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\GltfModel\GltfRootMotion.cpp" />
     <ClCompile Include="Source\Engine\Graphics\GltfModel\TinygltfImpl.cpp" />
     <ClCompile Include="Source\Engine\Graphics\GpuResourceUtils.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Graphics.cpp" />
@@ -371,6 +372,7 @@
     <ClInclude Include="Source\Engine\Graphics\GltfModel\GltfModelAnimation.h" />
     <ClInclude Include="Source\Engine\Graphics\GltfModel\GltfModelData.h" />
     <ClInclude Include="Source\Engine\Graphics\GltfModel\GltfModelRenderer.h" />
+    <ClInclude Include="Source\Engine\Graphics\GltfModel\GltfRootMotion.h" />
     <ClInclude Include="Source\Engine\Graphics\GpuResourceUtils.h" />
     <ClInclude Include="Source\Engine\Graphics\Graphics.h" />
     <ClInclude Include="Source\Engine\Graphics\Light.h" />

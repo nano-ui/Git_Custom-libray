@@ -366,6 +366,9 @@
     <ClCompile Include="Source\Editor\EditorMediator.cpp">
       <Filter>Source\Editor\EditorMediator</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\GltfModel\GltfRootMotion.cpp">
+      <Filter>Source\Engine\Graphics\Model\GltfModel\GltfRootMotion</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -694,6 +697,9 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\EditorMediator.h">
       <Filter>Source\Editor\EditorMediator</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\GltfModel\GltfRootMotion.h">
+      <Filter>Source\Engine\Graphics\Model\GltfModel\GltfRootMotion</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1085,6 +1091,9 @@
     </Filter>
     <Filter Include="Source\Editor\EditorMediator">
       <UniqueIdentifier>{8f615b74-2187-4561-bbe4-f46cdeb5c2ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Model\GltfModel\GltfRootMotion">
+      <UniqueIdentifier>{add93751-853e-497e-a50d-2fbf3cc921d5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
