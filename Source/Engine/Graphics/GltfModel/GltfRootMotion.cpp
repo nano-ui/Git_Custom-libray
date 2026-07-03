@@ -43,7 +43,9 @@ void GltfRootMotion::Update(size_t animation_index, float current_time)
 
 		DirectX::XMVECTOR prev_rot = DirectX::XMLoadFloat4(&previous_rotation);	//前回の回転クォータニオン
 		DirectX::XMVECTOR curr_rot = DirectX::XMLoadFloat4(&current_rotation);	//現在の回転クォータニオン
-		DirectX::XMStoreFloat4(&delta_rotation, DirectX::XMQuaternionMultiply(prev_rot, curr_rot));
+		DirectX::XMVECTOR prev_rot_inv = DirectX::XMQuaternionInverse(prev_rot); //前回回転の逆クォータニオン
+
+		DirectX::XMStoreFloat4(&delta_rotation, DirectX::XMQuaternionMultiply(curr_rot, prev_rot_inv));
 
 		previous_position = current_position;
 		previous_rotation = current_rotation;

@@ -93,6 +93,7 @@
                         }
                     ],
                     "IsLoop": true,
+                    "IsRootMotion": false,
                     "IsSubGraph": false,
                     "LinkColorB": 1.0,
                     "LinkColorG": 1.0,
@@ -121,6 +122,7 @@
                         }
                     ],
                     "IsLoop": true,
+                    "IsRootMotion": false,
                     "IsSubGraph": true,
                     "LinkColorB": 1.0,
                     "LinkColorG": 1.0,
@@ -237,7 +239,7 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 0,
+                            "HashKey": 68,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
@@ -312,7 +314,7 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 0,
+                            "HashKey": 87,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
@@ -337,6 +339,7 @@
                         }
                     ],
                     "IsLoop": true,
+                    "IsRootMotion": true,
                     "IsSubGraph": false,
                     "LinkColorB": 0.9575289487838745,
                     "LinkColorG": 0.340126097202301,
@@ -365,10 +368,11 @@
                         }
                     ],
                     "IsLoop": true,
+                    "IsRootMotion": true,
                     "IsSubGraph": false,
-                    "LinkColorB": 0.32487064599990845,
-                    "LinkColorG": 0.8339768648147583,
-                    "LinkColorR": 0.15777941048145294,
+                    "LinkColorB": 0.27162688970565796,
+                    "LinkColorG": 0.9343629479408264,
+                    "LinkColorR": 0.054113660007715225,
                     "Name": "右移動",
                     "Output": [
                         {
@@ -393,6 +397,7 @@
                         }
                     ],
                     "IsLoop": true,
+                    "IsRootMotion": true,
                     "IsSubGraph": false,
                     "LinkColorB": 0.13197477161884308,
                     "LinkColorG": 0.13197477161884308,
@@ -421,6 +426,7 @@
                         }
                     ],
                     "IsLoop": true,
+                    "IsRootMotion": true,
                     "IsSubGraph": false,
                     "LinkColorB": 0.876447856426239,
                     "LinkColorG": 0.1398664116859436,

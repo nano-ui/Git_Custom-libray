@@ -3,7 +3,7 @@
 #include "../Engine/Core/Input.h"
 #include "../Engine/Graphics/Graphics.h"
 #include "../Gameplay/GameObjects/ObjectFactory.h"
-#include "../Gameplay/StateMachine/StateBlackboard.h"
+#include "Gameplay\StateMachine\StateBlackboard.h"
 #include "../Gameplay/Components/StateMachineComponent.h"
 
 #include <imgui.h>
@@ -47,13 +47,12 @@ void Player::Initialize()
 
 	std::weak_ptr<IAnimationListener> null_listener;
 	animation_component = std::make_unique<AnimationComponent>(character, null_listener);
-	animation_component->Initialize();
-	
-	if (state_machine_component && animation_component)
-	{
-		animation_component->SetAnimationMap(state_machine_component->GetAnimationMap());
-	}
 
+	if (animation_component)
+	{
+		animation_component->Initialize();
+	}
+	
 	std::string current_model_path = character->GetModelPath();
 
 	//パスが取得できているか確認
@@ -150,19 +149,19 @@ void Player::UpdateInput(float elapsed_time)
 	//キーボード入力の検知
 	if (Input::Instance().IsKeyPress('W'))
 	{
-		move_z += 1.0f;
+		//move_z += 1.0f;
 	}
 	if (Input::Instance().IsKeyPress('S'))
 	{
-		move_z -= 1.0f;
+		//move_z -= 1.0f;
 	}
 	if (Input::Instance().IsKeyPress('A'))
 	{
-		move_x -= 1.0f;
+		//move_x -= 1.0f;
 	}
 	if (Input::Instance().IsKeyPress('D'))
 	{
-		move_x += 1.0f;
+		//move_x += 1.0f;
 	}
 
 	//移動・旋回処理

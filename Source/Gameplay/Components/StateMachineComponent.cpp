@@ -1,6 +1,6 @@
 #include "StateMachineComponent.h"
 #include "../Serialization/JsonSerializer.h"
-#include "../Gameplay/StateMachine/StateBlackboard.h"
+#include "Gameplay\StateMachine\StateBlackboard.h"
 #include "../ThiedParty/json.hpp"
 #include "../Gameplay/Components/AnimationComponent.h"
 #include "../Engine/Core/Input.h"
@@ -240,6 +240,21 @@ void StateMachineComponent::SetupSerialization(JsonSerializer* serializer)
 	}
 }
 
+//現在のステートがルートモーションを有効にしているか取得
+bool StateMachineComponent::IsCurrentRootMotionEnbled() const
+{
+	for (size_t i = 0; i < runtime_nodes.size(); i++)
+	{
+		//現在のアクティブノードに一致するか判定
+		if (runtime_nodes[i].id == current_node_id)
+		{
+			return runtime_nodes[i].is_root_motion;
+		}
+	}
+
+	return false;
+}
+
 //ステートマシンJSONからアニメーション対応表を抽出
 void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 {
@@ -312,6 +327,7 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 						node.is_sub_graph = node_json["IsSubGraph"].get<bool>();
 						node.sub_graph_id = node_json["SubGraphID"].get<uint32_t>();
 						node.is_loop = node_json.contains("IsLoop") ? node_json["IsLoop"].get<bool>() : true;
+						node.is_root_motion = node_json.contains("IsRootMotion") ? node_json["IsRootMotion"].get<bool>() : false;
 						node.parent_node_id = parent_id;
 
 						if (node_json.contains("Input") && node_json["Input"].is_array())

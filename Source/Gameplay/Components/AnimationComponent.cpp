@@ -1,7 +1,7 @@
 #include "AnimationComponent.h"
 
 #include "../Engine/Graphics/Model.h"
-#include "../Gameplay/StateMachine/StateBlackboard.h"
+#include "Gameplay\StateMachine\StateBlackboard.h"
 #include "../ThiedParty/json.hpp"
 
 #include <fstream>

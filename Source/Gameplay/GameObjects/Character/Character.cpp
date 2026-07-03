@@ -1,5 +1,5 @@
 #include "Character.h"
-#include "../Gameplay/StateMachine/StateBlackboard.h"
+#include "Gameplay\StateMachine\StateBlackboard.h"
 #include "../Gameplay/Components/StateMachineComponent.h"
 
 #include <imgui.h>
@@ -29,6 +29,7 @@ Character::Character()
 
 	blackboard = std::make_unique<StateBlackboard>();
 	state_machine_component = std::make_unique<StateMachineComponent>();
+	animation_component = nullptr;
 	root_motion_component = std::make_unique<RootMotionComponent>();
 }
 
@@ -46,7 +47,7 @@ void Character::Initialize()
 
 	if (root_motion_component && character)
 	{
-		root_motion_component->Initialize(character->GetGltfModelData(), 0);
+		root_motion_component->Initialize(character->GetGltfModelData(), 1);
 	}
 }
 
@@ -77,6 +78,7 @@ void Character::Update(float elapsed_time)
 	if (animation_component)
 	{
 		animation_component->Update(elapsed_time);
+		UpdateRootMotion();
 	}
 
 }
@@ -239,7 +241,40 @@ void Character::UpdateRootMotion()
 		}
 		//ルートモーションの更新
 		float current_time = animation_component->GetCurrentAnimationTime(); // 現在の再生時間
-		root_motion_component->Update(current_time);
+
+		//ステートマシンから現在のルートモーション適応フラグを取得して同期
+		if (state_machine_component)
+		{
+			bool is_rm_enabled = state_machine_component->IsCurrentRootMotionEnbled();
+			root_motion_component->SetEnable(is_rm_enabled);
+		}
+
+		//ルートモーションが有効か確認
+		if (root_motion_component->IsEnable())
+		{
+			root_motion_component->Update(current_time);
+			DirectX::XMFLOAT3 delta_pos = root_motion_component->GetDeltaPosition();	//ローカルの移動差分
+			DirectX::XMVECTOR local_delta = DirectX::XMLoadFloat3(&delta_pos);			//移動ベクトル
+			DirectX::XMVECTOR rot_quat = DirectX::XMQuaternionRotationRollPitchYaw(angle.x, angle.y, angle.z);	//キャラクターの回転
+			DirectX::XMVECTOR world_delta = DirectX::XMVector3Rotate(local_delta, rot_quat);	//ワールド方向への回転
+			DirectX::XMFLOAT3 final_delta;	//最終移動量
+			DirectX::XMStoreFloat3(&final_delta, world_delta);
+
+			//座標更新
+			position.x += final_delta.x;
+			position.y += final_delta.y;
+			position.z += final_delta.z;
+
+			DirectX::XMFLOAT4 delta_rot = root_motion_component->GetDeltaRotation();	//回転の差分
+			DirectX::XMVECTOR rot_delta_quat = DirectX::XMLoadFloat4(&delta_rot);		//回転クォータニオン
+			float quat_length_sq = 0.0f;	//回転ベクトルの長さの2乗
+			DirectX::XMStoreFloat(&quat_length_sq, DirectX::XMQuaternionLengthSq(rot_delta_quat));
+
+			if (quat_length_sq < 0.001f)
+			{
+				OutputDebugStringA("[Character Warning] UpdateRootMotion: RootMotion delta rotation is unexpectedly zero.\n");
+			}
+		}
 	}
 }
 

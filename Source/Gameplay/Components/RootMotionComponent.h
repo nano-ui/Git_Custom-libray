@@ -26,6 +26,9 @@ public:
 	//ルートモーションのフラグ設定
 	void SetEnable(bool enable) { is_enabled = enable; }
 
+	//ルートモーションフラグ取得
+	bool IsEnable()const { return is_enabled; }
+
 	//位置の差分を取得
 	DirectX::XMFLOAT3 GetDeltaPosition()const;
 

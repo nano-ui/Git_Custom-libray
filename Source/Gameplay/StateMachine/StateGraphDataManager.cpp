@@ -47,6 +47,7 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 			node_json["ActionCategory"] = node.action_category;	// アクション値
 			node_json["AnimationName"] = node.animation_name;	// アニメ名
 			node_json["IsLoop"] = node.is_loop;					// 再生フラグ
+			node_json["IsRootMotion"] = node.is_root_motion;	
 			node_json["LinkColorR"] = node.link_color_r;
 			node_json["LinkColorG"] = node.link_color_g;
 			node_json["LinkColorB"] = node.link_color_b;
@@ -178,6 +179,17 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 			node.is_sub_graph = node_json["IsSubGraph"]; // フラグ
 			node.sub_graph_id = node_json["SubGraphID"]; // 下位ID
 			node.is_loop = node_json.contains("IsLoop") ? node_json["IsLoop"].get<bool>() : true;
+
+			//互換性維持のためのキー存在チェック
+			if (node_json.contains("IsRootMotion"))
+			{
+				node.is_root_motion = node_json["IsRootMotion"];
+			}
+			else
+			{
+				node.is_root_motion = false;
+			}
+
 			node.link_color_r = node_json.contains("LinkColorR") ? node_json["LinkColorR"].get<float>() : 1.0f;
 			node.link_color_g = node_json.contains("LinkColorG") ? node_json["LinkColorG"].get<float>() : 1.0f;
 			node.link_color_b = node_json.contains("LinkColorB") ? node_json["LinkColorB"].get<float>() : 1.0f;

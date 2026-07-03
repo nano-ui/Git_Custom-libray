@@ -118,12 +118,6 @@ void ObjectManager::RefreshAnimationMap(uint32_t target_model_hash, const std::u
 			if (character_obj)
 			{
 				AnimationComponent* anim_component = character_obj->GetAnimationComponent();	//キャラクターのアニメーション
-				
-				//コンポーネント有効確認
-				if (anim_component)
-				{
-					anim_component->SetAnimationMap(new_map);
-				}
 			}
 		}
 	}

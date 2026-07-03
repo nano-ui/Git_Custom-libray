@@ -1,7 +1,7 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 
 #include "StateMachineGraphEditor.h"
-#include "../Gameplay/StateMachine/StateBlackboard.h"
+#include "Gameplay\StateMachine\StateBlackboard.h"
 #include "../Gameplay/StateMachine/StateGraphDataManager.h"
 #include "../Gameplay/GameObjects/ObjectManager.h"
 #include "../Editor/FileDialogHelper.h"

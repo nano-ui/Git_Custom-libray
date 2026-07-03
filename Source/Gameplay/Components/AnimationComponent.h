@@ -36,9 +36,6 @@ public:
 	//アニメーション名で直接再生命令を出
 	void PlayAnimationByName(const std::string& anim_name, uint32_t state_key, bool is_loop);
 
-	//アニメーションマップの設定
-	void SetAnimationMap(const std::unordered_map<uint32_t, std::string>& new_map);
-
 	//再生時間を取得
 	float GetCurrentAnimationTime()const;
 

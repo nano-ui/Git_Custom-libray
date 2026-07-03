@@ -1,5 +1,5 @@
 #include "LinearMove.h"
-#include "../Gameplay/StateMachine/StateBlackboard.h"
+#include "Gameplay\StateMachine\StateBlackboard.h"
 
 //コンストラクタ
 LinearMove::LinearMove(uint32_t key)

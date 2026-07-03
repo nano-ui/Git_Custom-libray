@@ -3,7 +3,7 @@
 #include <string>
 #include <cstdint>
 #include <unordered_map>
-#include "../Gameplay/StateMachine/StateBlackboard.h"
+#include "Gameplay\StateMachine\StateBlackboard.h"
 
 class StateBlackboard;
 class JsonSerializer;
@@ -29,6 +29,7 @@ struct RuntimeNode
 	bool is_sub_graph = false;		//サブグラフノードのフラグ
 	uint32_t sub_graph_id = 0;		//紐づく位階階層のグラフID
 	bool is_loop;					//ループ再生フラグ
+	bool is_root_motion = false;	//ルートモーション有効フラグ
 	uint32_t parent_node_id;		//親サブグラフノードのID
 };
 
@@ -71,6 +72,9 @@ public:
 
 	//アニメーションループを取得
 	bool GetAnimationLoop()const { return current_animation_loop; }
+
+	//現在のステートがルートモーションを有効にしているか取得
+	bool IsCurrentRootMotionEnbled()const;
 
 	//リフレッシュ要求
 	void RequestReload() { is_pending_reload = true; }

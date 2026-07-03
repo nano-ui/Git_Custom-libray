@@ -1,6 +1,6 @@
 #include "StateGraphSimulator.h"
 #include "../Gameplay/StateMachine/StateGraphDataManager.h"
-#include "../Gameplay/StateMachine/StateBlackboard.h"
+#include "Gameplay\StateMachine\StateBlackboard.h"
 
 #include <imgui.h>
 

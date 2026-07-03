@@ -1,6 +1,6 @@
 #include "StateGraphPropertyWindow.h"
 #include "../Gameplay/StateMachine/StateGraphDataManager.h"
-#include "../Gameplay/StateMachine/StateBlackboard.h"
+#include "Gameplay\StateMachine\StateBlackboard.h"
 #include "../Engine/Core/Input.h"
 #include "TransitionConditionEditor.h"
 
@@ -228,9 +228,22 @@ bool StateGraphPropertyWindow::DeawNodeActionSettings(GraphNode* target_node, co
 
 	ImGui::Spacing();
 
-	if (ImGui::Checkbox(u8"アニメーションをループ再生する", &target_node->is_loop))
+	if (ImGui::Checkbox(u8"アニメーションをループ再生", &target_node->is_loop))
 	{
 		is_changed = true;
+	}
+
+	ImGui::Spacing();
+
+	//ルートモーションのオンオフを切り替えるチェックボックス
+	if (ImGui::Checkbox(u8"ルートモーションを適用", &target_node->is_root_motion))
+	{
+		is_changed = true;
+
+		char debug_message_buffer[256];
+		sprintf_s(debug_message_buffer, sizeof(debug_message_buffer), "[StateGraphPropertyWindow] Node ID: %d, RootMotion changed to: %s\n",
+			target_node->id, target_node->is_root_motion ? "ON" : "OFF");
+		OutputDebugStringA(debug_message_buffer);
 	}
 
 	ImGui::Spacing();
