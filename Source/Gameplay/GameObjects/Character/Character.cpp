@@ -47,7 +47,7 @@ void Character::Initialize()
 
 	if (root_motion_component && character)
 	{
-		root_motion_component->Initialize(character->GetGltfModelData());
+		root_motion_component->Initialize(character->GetGltfModelData(), "B_Pelvis");
 	}
 }
 
@@ -55,7 +55,10 @@ void Character::Initialize()
 void Character::Update(float elapsed_time)
 {
 	UpdateInvincibleTimer(elapsed_time);
-	UpdateVelocity(elapsed_time);
+	if (!root_motion_component->IsEnable())
+	{
+		UpdateVelocity(elapsed_time);
+	}
 
 	DirectX::XMVECTOR q = DirectX::XMQuaternionRotationRollPitchYaw(angle.x, angle.y, angle.z);
 	DirectX::XMStoreFloat4(&rotation, q);
@@ -79,6 +82,7 @@ void Character::Update(float elapsed_time)
 	{
 		animation_component->Update(elapsed_time);
 		UpdateRootMotion();
+		root_motion_component->TraceRootMotionDebug(position);
 	}
 
 }
@@ -218,77 +222,106 @@ void Character::UpdateInvincibleTimer(float elapsed_time)
 //ルートモーション更新
 void Character::UpdateRootMotion()
 {
-	if (root_motion_component && animation_component && character)
+	// コンポーネントやモデルの実体、アニメーションの有効性を安全確認
+	if (!root_motion_component || !animation_component || !character)
 	{
-		std::string curreent_anim_name = animation_component->GetCurrentAnimationName();	//現在のアニメーション名
+		return;
+	}
 
-		//アニメーションが切り替わったか判定
-		if (previous_animation_name != curreent_anim_name)
+	// 現在再生中のアニメーション名を取得
+	std::string curreent_anim_name = animation_component->GetCurrentAnimationName();
+	float current_time = animation_component->GetCurrentAnimationTime();
+
+	// アニメーションが切り替わった場合のインデックス同期処理
+	if (previous_animation_name != curreent_anim_name)
+	{
+		int anim_index = character->GetAnimationIndex(curreent_anim_name.c_str());
+		if (anim_index >= 0)
 		{
-			int anim_index = 0;
-			anim_index = character->GetAnimationIndex(curreent_anim_name.c_str());
-
-			//インデックスが有効か判定
-			if (anim_index >= 0)
-			{
-				root_motion_component->OnAnimationChaanged(static_cast<size_t>(anim_index));
-			}
-			else
-			{
-				OutputDebugStringA("[Character Error] Update: Animation index not found!\n");
-			}
-			previous_animation_name = curreent_anim_name;
+			root_motion_component->OnAnimationChaanged(static_cast<size_t>(anim_index));
 		}
-		//ルートモーションの更新
-		float current_time = animation_component->GetCurrentAnimationTime(); // 現在の再生時間
-
-		//ステートマシンから現在のルートモーション適応フラグを取得して同期
-		if (state_machine_component)
+		else
 		{
-			bool is_rm_enabled = state_machine_component->IsCurrentRootMotionEnbled();
-			root_motion_component->SetEnable(is_rm_enabled);
+			// エラーが起きる可能性のある個所には OutputDebugStringA を使ってデバッグ出力を行う
+			OutputDebugStringA("[Character Error] UpdateRootMotion: Animation index not found!\n");
+		}
+		previous_animation_name = curreent_anim_name;
+		previous_animation_time = 0.0f;
+	}
+
+	// ステートマシンからルートモーションが有効であるかを取得して設定
+	bool is_rm_enabled = state_machine_component ? state_machine_component->IsCurrentRootMotionEnbled() : false;
+	root_motion_component->SetEnable(is_rm_enabled);
+
+	// ルートモーションが無効な場合はここで処理を終了
+	if (!root_motion_component->IsEnable())
+	{
+		return;
+	}
+
+	// アニメーションの現在の再生時間を取得してコンポーネントを更新
+	root_motion_component->Update(current_time);
+
+	// ComputeAnimation側でスケールを含めて正しく計算されたローカル移動差分（Delta）を取得
+	DirectX::XMFLOAT3 delta_pos = root_motion_component->GetDeltaPosition();
+	DirectX::XMVECTOR local_translation = DirectX::XMLoadFloat3(&delta_pos);
+
+	//対象ノード（B_Pelvis）の「親ノード」の行列を走査して取得
+	int root_index = root_motion_component->GetTargetNodeIndex();
+	DirectX::XMMATRIX parent_global_transform = DirectX::XMMatrixIdentity();
+
+	if (root_index >= 0)
+	{
+		const auto& nodes = character->GetNodes();
+		int parent_node_index = -1;
+
+		// 各ノードの子供リストに対象のルートインデックスが含まれているか走査
+		for (size_t i = 0; i < nodes.size(); ++i)
+		{
+			for (int child_idx : nodes.at(i).children)
+			{
+				if (child_idx == root_index)
+				{
+					parent_node_index = static_cast<int>(i); // 親ボーンのインデックスを発見
+					break;
+				}
+			}
+			if (parent_node_index >= 0) break;
 		}
 
-		//ルートモーションが有効か確認
-		if (root_motion_component->IsEnable())
+		// 親ノードが見つかった場合、その親が持つ global_transform を取得する
+		if (parent_node_index >= 0)
 		{
-			root_motion_component->Update(current_time);
-			DirectX::XMFLOAT3 delta_pos = root_motion_component->GetDeltaPosition();	//ローカルの移動差分
-
-			// ログ出力追加
-			printf("[DEBUG] UpdateRootMotion: DeltaPos=(%.4f, %.4f, %.4f)\n", delta_pos.x, delta_pos.y, delta_pos.z);
-
-			DirectX::XMVECTOR local_delta = DirectX::XMLoadFloat3(&delta_pos);			//移動ベクトル
-			DirectX::XMVECTOR rot_quat = DirectX::XMQuaternionRotationRollPitchYaw(angle.x, angle.y, angle.z);	//キャラクターの回転
-			DirectX::XMVECTOR world_delta = DirectX::XMVector3Rotate(local_delta, rot_quat);	//ワールド方向への回転
-			DirectX::XMFLOAT3 final_delta;	//最終移動量
-			DirectX::XMStoreFloat3(&final_delta, world_delta);
-
-			//座標更新
-			position.x += final_delta.x;
-			position.y += final_delta.y;
-			position.z += final_delta.z;
-
-			//int root_index = root_motion_component->GetTargetNodeIndex();
-			//if (root_index >= 0)
-			//{
-			//	auto& nodes = character->GetNodes();
-			//	nodes[root_index].translation.x -= delta_pos.x;
-			//	nodes[root_index].translation.y -= delta_pos.y;
-			//	nodes[root_index].translation.z -= delta_pos.z;
-			//}
-
-			DirectX::XMFLOAT4 delta_rot = root_motion_component->GetDeltaRotation();	//回転の差分
-			DirectX::XMVECTOR rot_delta_quat = DirectX::XMLoadFloat4(&delta_rot);		//回転クォータニオン
-			float quat_length_sq = 0.0f;	//回転ベクトルの長さの2乗
-			DirectX::XMStoreFloat(&quat_length_sq, DirectX::XMQuaternionLengthSq(rot_delta_quat));
-
-			if (quat_length_sq < 0.001f)
-			{
-				printf_s("[Character Warning] UpdateRootMotion: RootMotion delta rotation is unexpectedly zero.\n");
-			}
+			parent_global_transform = DirectX::XMLoadFloat4x4(&nodes.at(parent_node_index).global_transform);
 		}
 	}
+
+	// これにより、3Dツール側でルートボーンにかかっている初期スケールや回転軸が正しく掛け合わされます
+	DirectX::XMVECTOR global_translation = DirectX::XMVector3TransformNormal(local_translation, parent_global_transform);
+
+	// ルートモーションによる上下（Y軸）の強制的な移動や沈み込みを防ぐためクランプ
+	global_translation = DirectX::XMVectorSetY(global_translation, 0.0f);
+
+	// 軸の入れ替わり（XとZのスワップ）をモデル空間に変換した後のベクトルに対して適用
+	float extracted_x = DirectX::XMVectorGetX(global_translation);
+	float extracted_z = DirectX::XMVectorGetZ(global_translation);
+	global_translation = DirectX::XMVectorSetX(global_translation, extracted_z);
+	global_translation = DirectX::XMVectorSetZ(global_translation, extracted_x);
+
+	//キャラクター自身のワールド行列を適用して、最終的な世界の移動量を算出
+	DirectX::XMMATRIX world_transform = GetWorldMatrix(); // キャラクター自身のS * R * T行列
+	DirectX::XMVECTOR world_translation = DirectX::XMVector3TransformNormal(global_translation, world_transform);
+
+	DirectX::XMFLOAT3 final_movement;
+	DirectX::XMStoreFloat3(&final_movement, world_translation);
+
+	// 計算された最終的なワールド移動量をオブジェクトの位置座標に加算
+	position.x += final_movement.x;
+	position.y += final_movement.y;
+	position.z += final_movement.z;
+
+	// 現在の時間を次フレーム用に保存
+	previous_animation_time = current_time;
 }
 
 //ステージとの衝突処理

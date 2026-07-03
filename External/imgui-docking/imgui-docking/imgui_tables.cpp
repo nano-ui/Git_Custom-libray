@@ -3288,7 +3288,7 @@ void ImGui::TableHeader(const char* label)
         // - While moving a column it will jump on the other side of the mouse, so we also test for MouseDelta.x
         // - We need to handle reordering across hidden columns.
         //   In the configuration below, moving C to the right of E will lead to:
-        //      ... C [D] E  --->  ... [D] E  C   (Column name/index)
+        //      ... C [D] E >  ... [D] E  C   (Column name/index)
         //      ... 2  3  4        ...  2  3  4   (Display order)
         // - The other constraints are enforced by TableQueueSetColumnDisplayOrder() which might early out.
         table->InstanceInteracted = table->InstanceCurrent;

@@ -1905,7 +1905,7 @@ enum ImGuiCol_
 // - When changing this enum, you need to update the associated internal table GStyleVarInfo[] accordingly. This is where we link enum values to members offset/type.
 enum ImGuiStyleVar_
 {
-    // Enum name -------------------------- // Member in ImGuiStyle structure (see ImGuiStyle for descriptions)
+    // Enum name----------------------- // Member in ImGuiStyle structure (see ImGuiStyle for descriptions)
     ImGuiStyleVar_Alpha,                    // float     Alpha
     ImGuiStyleVar_DisabledAlpha,            // float     DisabledAlpha
     ImGuiStyleVar_WindowPadding,            // ImVec2    WindowPadding
@@ -3661,7 +3661,7 @@ struct ImTextureRect
  // In columns below: who reads/writes each fields? 'r'=read, 'w'=write, 'core'=main library, 'backend'=renderer backend
 struct ImTextureData
 {
-    //------------------------------------------ core / backend ---------------------------------------
+    //------------------------------------------ core / backend------------------------------------
     int                 UniqueID;               // w    -   // [DEBUG] Sequential index to facilitate identifying a texture when debugging/printing. Unique per atlas.
     ImTextureStatus     Status;                 // rw   rw  // ImTextureStatus_OK/_WantCreate/_WantUpdates/_WantDestroy. Always use SetStatus() to modify!
     void*               BackendUserData;        // -    rw  // Convenience storage for backend. Some backends may have enough with TexID.
@@ -3900,7 +3900,7 @@ struct ImFontAtlas
     // - If you render colored output into your custom rectangles: set 'atlas->TexPixelsUseColors = true' as this may help some backends decide of preferred texture format.
     // - Read docs/FONTS.md for more details about using colorful icons.
     // - Note: this API may be reworked further in order to facilitate supporting e.g. multi-monitor, varying DPI settings.
-    // - (Pre-1.92 names) ------------> (1.92 names)
+    // - (Pre-1.92 names)---------> (1.92 names)
     //   - GetCustomRectByIndex()   --> Use GetCustomRect()
     //   - CalcCustomRectUV()       --> Use GetCustomRect() and read uv0, uv1 fields.
     //   - AddCustomRectRegular()   --> Renamed to AddCustomRect()
@@ -4275,7 +4275,7 @@ struct ImGuiPlatformIO
     // Custom engine backends will often provide both Platform and Renderer interfaces together and so may not need to use all functions.
     // Platform functions are typically called _before_ their Renderer counterpart, apart from Destroy which are called the other way.
 
-    // Platform Backend functions (e.g. Win32, GLFW, SDL) ------------------- Called by -----
+    // Platform Backend functions (e.g. Win32, GLFW, SDL)---------------- Called by--
     void    (*Platform_CreateWindow)(ImGuiViewport* vp);                    // . . U . .  // Create a new platform window for the given viewport
     void    (*Platform_DestroyWindow)(ImGuiViewport* vp);                   // N . U . D  //
     void    (*Platform_ShowWindow)(ImGuiViewport* vp);                      // . . U . .  // Newly created windows are initially hidden so SetWindowPos/Size/Title can be called on them before showing the window
@@ -4297,7 +4297,7 @@ struct ImGuiPlatformIO
     ImVec4  (*Platform_GetWindowWorkAreaInsets)(ImGuiViewport* vp);         // N . . . .  // (Optional) [BETA] Get initial work area inset for the viewport (won't be covered by main menu bar, dockspace over viewport etc.). Default to (0,0),(0,0). 'safeAreaInsets' in iOS land, 'DisplayCutout' in Android land.
     int     (*Platform_CreateVkSurface)(ImGuiViewport* vp, ImU64 vk_inst, const void* vk_allocators, ImU64* out_vk_surface); // (Optional) For a Vulkan Renderer to call into Platform code (since the surface creation needs to tie them both).
 
-    // Renderer Backend functions (e.g. DirectX, OpenGL, Vulkan) ------------ Called by -----
+    // Renderer Backend functions (e.g. DirectX, OpenGL, Vulkan)--------- Called by--
     void    (*Renderer_CreateWindow)(ImGuiViewport* vp);                    // . . U . .  // Create swap chain, frame buffers etc. (called after Platform_CreateWindow)
     void    (*Renderer_DestroyWindow)(ImGuiViewport* vp);                   // N . U . D  // Destroy swap chain, frame buffers etc. (called before Platform_DestroyWindow)
     void    (*Renderer_SetWindowSize)(ImGuiViewport* vp, ImVec2 size);      // . . U . .  // Resize swap chain, frame buffers etc. (called after Platform_SetWindowSize)

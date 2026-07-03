@@ -1,5 +1,7 @@
 #include "RootMotionComponent.h"
 
+#include <cstdio>
+
 //コンストラクタ
 RootMotionComponent::RootMotionComponent()
 {
@@ -13,9 +15,9 @@ RootMotionComponent::~RootMotionComponent()
 }
 
 //初期化
-void RootMotionComponent::Initialize(const std::shared_ptr<const GltfModelData>& data)
+void RootMotionComponent::Initialize(const std::shared_ptr<const GltfModelData>& data, const std::string& prev_name)
 {
-	root_motion->Initialize(data);
+	root_motion->Initialize(data, prev_name);
 }
 
 //アニメーション切り替え時のリセット
@@ -66,4 +68,20 @@ int RootMotionComponent::GetTargetNodeIndex() const
 {
 	if (!root_motion)return 0;
 	return root_motion->GetTargetNodeIndex();
+}
+
+//ルートモーションの抽出値を検証
+void RootMotionComponent::TraceRootMotionDebug(const DirectX::XMFLOAT3& raw_position)
+{
+	// 出力バッファの確保
+	char debugStr[256];
+
+	// GetDeltaPosition() の結果を一時変数に格納
+	DirectX::XMFLOAT3 delta = GetDeltaPosition();
+
+	// sprintf_s を使用して安全に出力文字列を作成
+	// 引数にバッファサイズ(256)を追加します
+	printf("[RootMotion Debug] Raw: %.4f, %.4f, %.4f | Delta: %.4f, %.4f, %.4f\n",
+		raw_position.x, raw_position.y, raw_position.z,
+		GetDeltaPosition().x, GetDeltaPosition().y, GetDeltaPosition().z);
 }

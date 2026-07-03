@@ -36,6 +36,9 @@ private:
 	//入力更新処理
 	void UpdateInput(float elapsed_time);
 
+	//プレイヤーの現在位置と、コライダーの現在位置のズレを出力
+	void CheckColliderSyncDebug() const;
+
 private:
 	CapsuleCollider capsule_collider;	//カプセルの当たり判定
 };

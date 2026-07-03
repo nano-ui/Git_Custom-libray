@@ -111,6 +111,7 @@ protected:
 	std::unique_ptr<StateMachineComponent> state_machine_component;	//ステートマシン制御
 
 	std::string previous_animation_name = "";	//前回のアニメーション名
+	float previous_animation_time = 0.0f;		//前回の再生時間
 	DirectX::XMFLOAT3 angle;	//角度
 	float radius;				//半径
 	float gravity;				//重力
@@ -129,5 +130,6 @@ protected:
 	float weight;				//キャラクターの重さ
 	float health;				//生命力	
 	float move_speed;			//移動速度
+
 };
 

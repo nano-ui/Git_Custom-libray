@@ -23,7 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// -------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------
 // History :
 // 2026/05/03 v1.9 release. CMake build system, vcpkg support, many fixes and new features from contributors.
 // 2019/11/03 View gizmo
@@ -33,7 +33,7 @@
 // 2016/09/01 Mogwai changed to Manipulate. Draw debug cube. Fixed inverted scale. Mixing scale and translation/rotation gives bad results.
 // 2016/08/31 First version
 //
-// -------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------
 // Future (no order):
 //
 // - Multi view
@@ -41,7 +41,7 @@
 // - finish local/world matrix application
 // - OPERATION as bitmask
 //
-// -------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------
 // Example
 #if 0
 void EditTransform(const Camera& camera, matrix_t& matrix)

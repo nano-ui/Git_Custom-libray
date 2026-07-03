@@ -203,7 +203,7 @@ CODE
  ================
 
  READ FIRST
- ----------
+-------
  - Remember to check the wonderful Wiki: https://github.com/ocornut/imgui/wiki
  - Your code creates the UI every frame of your application loop, if your code doesn't run the UI is gone!
    The UI can be highly dynamic, there are no construction or destruction steps, less superfluous
@@ -241,7 +241,7 @@ CODE
 
 
  HOW TO UPDATE TO A NEWER VERSION OF DEAR IMGUI
- ----------------------------------------------
+-------------------------------------------
  - Update submodule or copy/overwrite every file.
  - About imconfig.h:
    - You may modify your copy of imconfig.h, in this case don't overwrite it.
@@ -261,7 +261,7 @@ CODE
 
 
  GETTING STARTED WITH INTEGRATING DEAR IMGUI IN YOUR CODE/ENGINE
- ---------------------------------------------------------------
+------------------------------------------------------------
  - See https://github.com/ocornut/imgui/wiki/Getting-Started.
  - Run and study the examples and demo in imgui_demo.cpp to get acquainted with the library.
  - In the majority of cases you should be able to use unmodified backends files available in the backends/ folder.
@@ -277,7 +277,7 @@ CODE
 
 
  HOW A SIMPLE APPLICATION MAY LOOK LIKE
- --------------------------------------
+-----------------------------------
 
  USING THE EXAMPLE BACKENDS (= imgui_impl_XXX.cpp files from the backends/ folder).
  The sub-folders in examples/ contain examples applications following this structure.
@@ -1189,7 +1189,7 @@ IMPLEMENTING SUPPORT for ImGuiBackendFlags_RendererHasTextures:
  >> See https://www.dearimgui.com/faq
 
  Q&A: Usage
- ----------
+-------
 
  Q: About the ID Stack system..
    - How can I have multiple widgets with the same label? (using ## or PushID)

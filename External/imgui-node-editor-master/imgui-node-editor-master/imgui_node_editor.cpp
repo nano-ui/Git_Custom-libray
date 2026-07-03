@@ -1165,7 +1165,7 @@ void ed::EditorContext::Begin(const char* id, const ImVec2& size)
     }
 
     //ImGui::LogToClipboard();
-    //Log("---- begin ----");
+    //Log("---- begin-");
 
     static auto resetAndCollect = [](auto& objects)
     {

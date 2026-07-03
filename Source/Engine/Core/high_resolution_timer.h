@@ -31,7 +31,7 @@ public:
 		// To correct this, we can subtract the paused time from mStopTime:  
 		//
 		//                     |<--paused_time-->|
-		// ----*---------------*-----------------*------------*------------*------> time
+		//-*---------------*-----------------*------------*------------*------> time
 		//  base_time       stop_time        start_time     stop_time    this_time
 
 		if (stopped)
@@ -46,7 +46,7 @@ public:
 		//  (this_time - paused_time) - base_time 
 		//
 		//                     |<--paused_time-->|
-		// ----*---------------*-----------------*------------*------> time
+		//-*---------------*-----------------*------------*------> time
 		//  base_time       stop_time        start_time     this_time
 		else
 		{
@@ -77,7 +77,7 @@ public:
 		// Accumulate the time elapsed between stop and start pairs.
 		//
 		//                     |<-------d------->|
-		// ----*---------------*-----------------*------------> time
+		//-*---------------*-----------------*------------> time
 		//  base_time       stop_time        start_time     
 		if (stopped)
 		{

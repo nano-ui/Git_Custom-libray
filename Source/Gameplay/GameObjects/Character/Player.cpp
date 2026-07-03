@@ -76,11 +76,13 @@ void Player::Update(float elapsed_time)
 
 	UpdateInput(elapsed_time);
 	Character::Update(elapsed_time);
+	
 
 	capsule_collider.start_center = position;
 	capsule_collider.start_center.y = position.y + offset_y;
 	capsule_collider.end_center = position;
 	capsule_collider.end_center.y += height + offset_y;
+	CheckColliderSyncDebug();
 }
 
 //デバッグ描画
@@ -167,4 +169,27 @@ void Player::UpdateInput(float elapsed_time)
 	//移動・旋回処理
 	Character::Move(elapsed_time, move_x, move_z, move_speed);
 	Character::Tuen(elapsed_time, move_x, move_z, move_speed);
+}
+
+//プレイヤーの現在位置と、コライダーの現在位置のズレを出力
+void Player::CheckColliderSyncDebug() const
+{
+	const float diffX = position.x - capsule_collider.start_center.x;
+	const float diffY = position.y - capsule_collider.start_center.y;
+	const float diffZ = position.z - capsule_collider.start_center.z;
+
+	const float tolerance = 0.001f;
+
+	if (std::abs(diffX) > tolerance || std::abs(diffY) > tolerance || std::abs(diffZ) > tolerance)
+	{
+		const int bufferSize = 256;
+		char debugStr[bufferSize];
+
+		std::snprintf(debugStr, bufferSize,
+			"Sync Warning! Player(%.3f, %.3f, %.3f) Collider(%.3f, %.3f, %.3f)\n",
+			position.x, position.y, position.z,
+			capsule_collider.start_center.x,
+			capsule_collider.start_center.y,
+			capsule_collider.start_center.z);
+	}
 }
