@@ -556,10 +556,20 @@ void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 				const pair<unordered_map<int, vector<XMFLOAT3>>::iterator, bool>& translations = animation.translations.emplace(gltf_sampler.output, gltf_accessor.count);
 				if (translations.second)
 				{
+					const Accessor& gltf_accessor = gltf_model.accessors.at(gltf_sampler.output); // サンプラーの出力を参照
+					const BufferView& gltf_buffer_view = gltf_model.bufferViews.at(gltf_accessor.bufferView); // バッファビューを取得
+					const unsigned char* raw_ptr = gltf_model.buffers.at(gltf_buffer_view.buffer).data.data() + gltf_buffer_view.byteOffset + gltf_accessor.byteOffset; // 生データの開始ポインタ
+
+					const XMFLOAT3* first_val = reinterpret_cast<const XMFLOAT3*>(raw_ptr); // バッファから直接キャスト
+					printf("[DEBUG] FetchAnimations: Translation raw buffer at offset first key: (%.2f, %.2f, %.2f)\n", first_val->x, first_val->y, first_val->z); //[cite: 6]
+
 					memcpy(
 						translations.first->second.data(),
 						gltf_model.buffers.at(gltf_buffer_view.buffer).data.data() + gltf_buffer_view.byteOffset + gltf_accessor.byteOffset,
 						gltf_accessor.count * sizeof(XMFLOAT3));
+
+					const XMFLOAT3& stored_val = translations.first->second.at(0); // 保存後のデータ確認[cite: 6]
+					printf("[DEBUG] FetchAnimations: Translation data loaded. Stored Key: (%.2f, %.2f, %.2f)\n", stored_val.x, stored_val.y, stored_val.z); //[cite: 6]				}
 				}
 			}
 		}

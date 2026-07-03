@@ -47,7 +47,7 @@ void Character::Initialize()
 
 	if (root_motion_component && character)
 	{
-		root_motion_component->Initialize(character->GetGltfModelData(), 1);
+		root_motion_component->Initialize(character->GetGltfModelData());
 	}
 }
 
@@ -254,6 +254,10 @@ void Character::UpdateRootMotion()
 		{
 			root_motion_component->Update(current_time);
 			DirectX::XMFLOAT3 delta_pos = root_motion_component->GetDeltaPosition();	//ローカルの移動差分
+
+			// ログ出力追加
+			printf("[DEBUG] UpdateRootMotion: DeltaPos=(%.4f, %.4f, %.4f)\n", delta_pos.x, delta_pos.y, delta_pos.z);
+
 			DirectX::XMVECTOR local_delta = DirectX::XMLoadFloat3(&delta_pos);			//移動ベクトル
 			DirectX::XMVECTOR rot_quat = DirectX::XMQuaternionRotationRollPitchYaw(angle.x, angle.y, angle.z);	//キャラクターの回転
 			DirectX::XMVECTOR world_delta = DirectX::XMVector3Rotate(local_delta, rot_quat);	//ワールド方向への回転
@@ -265,6 +269,15 @@ void Character::UpdateRootMotion()
 			position.y += final_delta.y;
 			position.z += final_delta.z;
 
+			//int root_index = root_motion_component->GetTargetNodeIndex();
+			//if (root_index >= 0)
+			//{
+			//	auto& nodes = character->GetNodes();
+			//	nodes[root_index].translation.x -= delta_pos.x;
+			//	nodes[root_index].translation.y -= delta_pos.y;
+			//	nodes[root_index].translation.z -= delta_pos.z;
+			//}
+
 			DirectX::XMFLOAT4 delta_rot = root_motion_component->GetDeltaRotation();	//回転の差分
 			DirectX::XMVECTOR rot_delta_quat = DirectX::XMLoadFloat4(&delta_rot);		//回転クォータニオン
 			float quat_length_sq = 0.0f;	//回転ベクトルの長さの2乗
@@ -272,7 +285,7 @@ void Character::UpdateRootMotion()
 
 			if (quat_length_sq < 0.001f)
 			{
-				OutputDebugStringA("[Character Warning] UpdateRootMotion: RootMotion delta rotation is unexpectedly zero.\n");
+				printf_s("[Character Warning] UpdateRootMotion: RootMotion delta rotation is unexpectedly zero.\n");
 			}
 		}
 	}

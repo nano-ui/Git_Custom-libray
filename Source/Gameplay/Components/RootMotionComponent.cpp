@@ -13,9 +13,9 @@ RootMotionComponent::~RootMotionComponent()
 }
 
 //初期化
-void RootMotionComponent::Initialize(const std::shared_ptr<const GltfModelData>& data, int root_node_index)
+void RootMotionComponent::Initialize(const std::shared_ptr<const GltfModelData>& data)
 {
-	root_motion->Initialize(data, root_node_index);
+	root_motion->Initialize(data);
 }
 
 //アニメーション切り替え時のリセット
@@ -59,4 +59,11 @@ DirectX::XMFLOAT4 RootMotionComponent::GetDeltaRotation() const
 	}
 
 	return root_motion->GetDeltaRotation();
+}
+
+//ルートノードのインデックスを取得
+int RootMotionComponent::GetTargetNodeIndex() const
+{
+	if (!root_motion)return 0;
+	return root_motion->GetTargetNodeIndex();
 }

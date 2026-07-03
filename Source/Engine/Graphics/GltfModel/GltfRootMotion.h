@@ -9,7 +9,7 @@ class GltfRootMotion
 {
 public:
 	//初期化
-	void Initialize(const std::shared_ptr<const GltfModelData>& data, int root_node_index = 0);
+	void Initialize(const std::shared_ptr<const GltfModelData>& data);
 
 	//アニメーションの進行に合わせてルートノードの差分を計算
 	void Update(size_t animation_index, float current_time);
@@ -20,12 +20,18 @@ public:
 	//計算された回転の差分を取得
 	DirectX::XMFLOAT4 GetDeltaRotation()const;
 
+	//対象のノードを取得
+	int GetTargetNodeIndex()const { return target_node_index; }
+
 	//アニメーションの切り替えやループ時に、前回の状態をリセット
 	void ResetDelta();
 
 private:
 	//任意の時間のルートノードの位置と回転を計算
 	void ComputeRootPose(size_t animation_index, float time, DirectX::XMFLOAT3& out_position, DirectX::XMFLOAT4& out_rotation)const;
+
+	//階層構造からルートモーションの対象となるノードインデックスを検索
+	int FindRootNodeIndex()const;
 
 private:
 	std::shared_ptr<const GltfModelData> model_data;				//参照するモデル情報

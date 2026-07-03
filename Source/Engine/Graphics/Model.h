@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-class GltfModelData;
+#include "../Engine/Graphics/GltfModel/GltfModelData.h"
 
 class Model
 {
@@ -52,6 +52,9 @@ public:
 
 	//glTFモデルのデータ本体を取得
 	std::shared_ptr<const GltfModelData> GetGltfModelData() const;
+
+	//ノードを取得
+	std::vector<GltfModelData::node>& GetNodes();
 
 public:
 	class ModelImpl;						//実際の処理を行う内部クラス

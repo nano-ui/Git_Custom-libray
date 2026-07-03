@@ -15,7 +15,7 @@ public:
 	~RootMotionComponent();
 
 	//初期化
-	void Initialize(const std::shared_ptr<const GltfModelData>& data, int root_node_index = 0);
+	void Initialize(const std::shared_ptr<const GltfModelData>& data);
 
 	//アニメーション切り替え時のリセット
 	void OnAnimationChaanged(size_t new_animation_index);
@@ -34,6 +34,9 @@ public:
 
 	//回転の差分を取得
 	DirectX::XMFLOAT4 GetDeltaRotation()const;
+
+	//ルートノードのインデックスを取得
+	int GetTargetNodeIndex()const;
 
 private:
 	std::unique_ptr<GltfRootMotion> root_motion;	//ルートモーション計算クラス

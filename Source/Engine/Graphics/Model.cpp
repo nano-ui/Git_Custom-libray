@@ -4,7 +4,6 @@
 
 #include "../Engine/Graphics/FbxModel/FbxSkinnedResource.h"
 #include "../Graphics/FbxModel/FbxSkinnedModel.h"
-#include "../Engine/Graphics/GltfModel/GltfModelData.h"
 #include "../Graphics/GltfModel/GltfModelRenderer.h"
 #include "../Engine/Graphics/GltfModel/GltfModel.h"
 
@@ -50,6 +49,9 @@ public:
 
 	// glTFデータ取得用仮想関数
 	virtual std::shared_ptr<const GltfModelData> GetGltfModelData() const = 0;
+
+	//ノードを取得
+	virtual std::vector<GltfModelData::node>& GetNodes() = 0;
 };
 
 //FBXモデルを扱うための実装クラス
@@ -166,6 +168,14 @@ public:
 		OutputDebugStringA("[Model Error] FbxModelImpl does not support GetGltfModelData!\n");
 		return nullptr;
 	}
+
+	std::vector<GltfModelData::node>& GetNodes() override
+	{
+		static std::vector<GltfModelData::node> dummy_nodes;
+		return dummy_nodes;
+	}
+
+
 };
 
 //glTFモデルを扱うための実装クラス
@@ -353,6 +363,12 @@ public:
 		}
 		return data;
 	}
+
+
+	std::vector<GltfModelData::node>& GetNodes() override
+	{
+		return data->nodes;
+	}
 };
 
 //===================
@@ -489,4 +505,10 @@ std::shared_ptr<const GltfModelData> Model::GetGltfModelData() const
 		return model_impl->GetGltfModelData();
 	}
 	return nullptr;
+}
+
+//ノードを取得
+std::vector<GltfModelData::node>& Model::GetNodes()
+{
+	return model_impl->GetNodes();
 }
