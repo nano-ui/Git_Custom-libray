@@ -390,3 +390,12 @@ float GltfModelAnimation::CalculateAnimationDuration(size_t animation_index)
 	}
 	return max_time;	//アニメーション終了時間を返す
 }
+
+//指定したノードの移動成分を外部から上書き
+void GltfModelAnimation::SetNodeTranslation(int node_index, const DirectX::XMFLOAT3& translation)
+{
+	if (node_index >= 0 && static_cast<size_t>(node_index) < animated_nodes.size())
+	{
+		animated_nodes.at(node_index).translation = translation;
+	}
+}

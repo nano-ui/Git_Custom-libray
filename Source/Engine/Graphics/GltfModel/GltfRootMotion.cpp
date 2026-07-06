@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <algorithm>
 
-void GltfRootMotion::Initialize(const std::shared_ptr<const GltfModelData>& data, const std::string& root_node_name)
+void GltfRootMotion::Initialize(const std::shared_ptr<const GltfModelData>& data)
 {
 	//参照するモデル情報が存在するか確認
 	if (!data)
@@ -13,21 +13,62 @@ void GltfRootMotion::Initialize(const std::shared_ptr<const GltfModelData>& data
 		return;
 	}
 	model_data = data;
-	target_node_index = FindRootNodeIndex(root_node_name);
-	printf("[DEBUG] RootMotion: Target Node Index is %d\n", target_node_index);
+
+	//シーンとルートノード配列の存在確認
+	int scene_index = model_data->default_scene;
+	if (scene_index < 0 || static_cast<size_t>(scene_index) >= model_data->scenes.size())
+	{
+		scene_index = 0;
+	}
+
+	if (!model_data->scenes.empty() && !model_data->scenes.at(scene_index).nodes.empty())
+	{
+		base_root_node_index = model_data->scenes.at(scene_index).nodes.at(0);
+	}
+
+	AnalyzeAnimations();
 	ResetDelta();
 }
 
 //アニメーションの進行に合わせてルートノードの差分を計算
 void GltfRootMotion::Update(size_t animation_index, float current_time)
 {
-	DirectX::XMFLOAT3 current_position;	//現在のルートノードの位置
-	DirectX::XMFLOAT4 current_rotation;	//現在のルートノードの回転
+	current_target_node_index = INVALID_NODE_INDEX;
 
-	//指定時間におけるルートノードの生の姿勢を計算
+	auto it = animation_target_nodes.find(animation_index);	//現在のアニメーションに対応するターゲットノードを検索するためのイテレータ
+
+	//検索結果の成否判定
+	if (it != animation_target_nodes.end())
+	{
+		current_target_node_index = it->second;
+	}
+
+	//適用中ノードのIDと名前を可視化するデバッグ出力
+	if (current_target_node_index != INVALID_NODE_INDEX)
+	{
+		char active_node_info[256];
+		std::string node_name = model_data->nodes.at(current_target_node_index).name;
+
+		sprintf_s(active_node_info, "[RootMotion Active Node] ID: %d | Name: %s\n", current_target_node_index, node_name.c_str());
+		OutputDebugStringA(active_node_info);
+	}
+
+	//ターゲットインデックスの有効チェック
+	if (current_target_node_index == INVALID_NODE_INDEX)
+	{
+		return;
+	}
+
+	//現在のモーションの0秒時点（初期位置）を算出してキャッシュ
+	DirectX::XMFLOAT4 dummy_rotation;
+	ComputeRootPose(animation_index, 0.0f, initial_local_position, dummy_rotation);
+
+	DirectX::XMFLOAT3 current_position;	//現在の位置
+	DirectX::XMFLOAT4 current_rotation;	//現在の角度
+
 	ComputeRootPose(animation_index, current_time, current_position, current_rotation);
 
-	//更新化の判定フラグの成否判定
+	//初回更新の判定
 	if (is_first_update)
 	{
 		previous_position = current_position;
@@ -39,53 +80,45 @@ void GltfRootMotion::Update(size_t animation_index, float current_time)
 	}
 	else
 	{
-		DirectX::XMVECTOR prev_pos = DirectX::XMLoadFloat3(&previous_position); // 前回の位置ベクトル
-		DirectX::XMVECTOR curr_pos = DirectX::XMLoadFloat3(&current_position); // 現在の位置ベクトル
+		DirectX::XMVECTOR prev_pos = DirectX::XMLoadFloat3(&previous_position);
+		DirectX::XMVECTOR curr_pos = DirectX::XMLoadFloat3(&current_position);
+		DirectX::XMVECTOR prev_rot = DirectX::XMLoadFloat4(&previous_rotation);
+		DirectX::XMVECTOR curr_rot = DirectX::XMLoadFloat4(&current_rotation);
 
-		//アニメーションループ（時間が巻き戻った瞬間）の検知と補正
+		//アニメーションの巻き戻り（ループ）判定
 		if (current_time < previous_time)
 		{
 			DirectX::XMFLOAT3 start_position;
-			DirectX::XMFLOAT4 dummy_start_rotation;
-			ComputeRootPose(animation_index, 0.0f, start_position, dummy_start_rotation);
+			DirectX::XMFLOAT4 start_rotation;
+			ComputeRootPose(animation_index, 0.0f, start_position, start_rotation);
 			DirectX::XMVECTOR begin_pos = DirectX::XMLoadFloat3(&start_position);
+			DirectX::XMVECTOR begin_rot = DirectX::XMLoadFloat4(&start_rotation);
 
-
-			// アニメーション全体の終端（最後のキーフレーム）における座標を取得するため
-			// そのアニメーションの最大継続時間（duration）を使って姿勢を再計算
 			float duration = model_data->animations.at(animation_index).duration;
 			DirectX::XMFLOAT3 end_position;
-			DirectX::XMFLOAT4 dummy_rotation;
-			ComputeRootPose(animation_index, duration, end_position, dummy_rotation);
+			DirectX::XMFLOAT4 end_rotation;
+			ComputeRootPose(animation_index, duration, end_position, end_rotation);
 			DirectX::XMVECTOR end_pos = DirectX::XMLoadFloat3(&end_position);
+			DirectX::XMVECTOR end_rot = DirectX::XMLoadFloat4(&end_rotation);
 
-			// 外部プロジェクトの思想に基づき、「前回の位置から終端までの移動量」と
-			// 「開始点（0）から現在の位置までの移動量」を合計して連続した移動量（Delta）を算出します
 			DirectX::XMVECTOR old_to_end = DirectX::XMVectorSubtract(end_pos, prev_pos);
 			DirectX::XMVECTOR begin_to_new = DirectX::XMVectorSubtract(curr_pos, begin_pos);
 
 			DirectX::XMStoreFloat3(&delta_position, DirectX::XMVectorAdd(old_to_end, begin_to_new));
+
+			DirectX::XMVECTOR old_to_end_rot = DirectX::XMQuaternionMultiply(end_rot, DirectX::XMQuaternionInverse(prev_rot));
+			DirectX::XMVECTOR begin_to_new_rot = DirectX::XMQuaternionMultiply(curr_rot, DirectX::XMQuaternionInverse(begin_rot));
+
+			DirectX::XMStoreFloat4(&delta_rotation, DirectX::XMQuaternionMultiply(begin_to_new_rot, old_to_end_rot));
 		}
 		else
 		{
-			// 通常進行時は、純粋に現在の位置と前回の位置の差分を移動量とする
-			DirectX::XMStoreFloat3(&delta_position, DirectX::XMVectorSubtract(curr_pos, prev_pos)); //
+			DirectX::XMStoreFloat3(&delta_position, DirectX::XMVectorSubtract(curr_pos, prev_pos));
+			DirectX::XMVECTOR prev_rot_inv = DirectX::XMQuaternionInverse(prev_rot);
+			DirectX::XMStoreFloat4(&delta_rotation, DirectX::XMQuaternionMultiply(curr_rot, prev_rot_inv));
 		}
 
-		//回転の差分計算とトランスフォームの保存
-		DirectX::XMVECTOR prev_rot = DirectX::XMLoadFloat4(&previous_rotation); // 前回の回転クォータニオン
-		DirectX::XMVECTOR curr_rot = DirectX::XMLoadFloat4(&current_rotation); // 現在の回転クォータニオン
-		DirectX::XMVECTOR prev_rot_inv = DirectX::XMQuaternionInverse(prev_rot); // 前回回転の逆クォータニオン
-
-		DirectX::XMStoreFloat4(&delta_rotation, DirectX::XMQuaternionMultiply(curr_rot, prev_rot_inv)); 
-
-		DirectX::XMVECTOR local_translation = DirectX::XMVectorSubtract(curr_pos, prev_pos);
-		const GltfModelData::node& root_motion_node = model_data->nodes.at(target_node_index);
-		DirectX::XMMATRIX parentGlobalTransform = DirectX::XMMatrixIdentity();
-
-
-		//次のフレームのために現在の状態を保存
-		previous_position = current_position; 
+		previous_position = current_position;
 		previous_rotation = current_rotation;
 		previous_time = current_time;
 	}
@@ -112,6 +145,80 @@ void GltfRootMotion::ResetDelta()
 	previous_time = 0.0f;
 }
 
+//各アニメーションデータを走査して移動値のある子ノードを事前に自動検出
+void GltfRootMotion::AnalyzeAnimations()
+{
+	//モデルデータの有効チェック
+	if (!model_data)
+	{
+		return;
+	}
+
+	//全アニメーションデータの走査
+	for (size_t anim_idx = 0; anim_idx < model_data->animations.size(); anim_idx++)
+	{
+		const GltfModelData::animation& animation = model_data->animations.at(anim_idx);
+		int max_movement_node_index = INVALID_NODE_INDEX;
+		float max_distance = 0.0f;
+
+		//アニメーション内全チャンネルの走査
+		for (const GltfModelData::animation::channel& channel : animation.channels)
+		{
+			//移動値（translation）チャンネルかつ最上位ルート以外のノードであるかの判定
+			if (channel.target_path == "translation" && channel.target_node != base_root_node_index)
+			{
+				const GltfModelData::animation::sampler& sampler = animation.samplers.at(channel.sampler);
+				auto trans_it = animation.translations.find(sampler.output);
+
+				//位置キーフレームデータの存在確認
+				if (trans_it != animation.translations.end())
+				{
+					const std::vector<DirectX::XMFLOAT3>& translations = trans_it->second;
+
+					//キーフレーム数が有効であるかの判定
+					if (translations.size() >= 2)
+					{
+						float current_node_total_distance = 0.0f;	//当該ボーンの全フレームにおける総走行距離を蓄積
+
+						//全キーフレーム間の移動距離を累積するループ
+						for (size_t k = 0; k < translations.size() - 1; k++)
+						{
+							//隣り合うキーフレームの座標ベクトルをロード
+							DirectX::XMVECTOR p0 = DirectX::XMLoadFloat3(&translations.at(k));
+							DirectX::XMVECTOR p1 = DirectX::XMLoadFloat3(&translations.at(k + 1));
+
+							DirectX::XMVECTOR move_vec = DirectX::XMVectorSubtract(p1, p0);		//直線移動ベクトル
+
+							DirectX::XMVECTOR length_vec = DirectX::XMVector3Length(move_vec);	//ベクトルの長さ
+
+							float distance = 0.0f;	//直線距離
+							DirectX::XMStoreFloat(&distance, length_vec);
+
+							current_node_total_distance += distance;
+						}
+						//最大移動距離の更新判定
+						if (current_node_total_distance > max_distance)
+						{
+							max_distance = current_node_total_distance;
+							max_movement_node_index = channel.target_node;
+						}
+					}
+				}
+			}
+		}
+
+		//移動値を持つノードが検出できたかの判定
+		if (max_movement_node_index != INVALID_NODE_INDEX)
+		{
+			animation_target_nodes[anim_idx] = max_movement_node_index;
+		}
+		else
+		{
+			animation_target_nodes[anim_idx] = base_root_node_index;
+		}
+	}
+}
+
 //任意の時間のルートノードの位置と回転を計算
 void GltfRootMotion::ComputeRootPose(size_t animation_index, float time, DirectX::XMFLOAT3& out_position, DirectX::XMFLOAT4& out_rotation) const
 {
@@ -133,7 +240,7 @@ void GltfRootMotion::ComputeRootPose(size_t animation_index, float time, DirectX
 	for (const GltfModelData::animation::channel& channel : animation.channels)
 	{
 		// 対象がルートモーションのターゲットノードではない場合はスキップ
-		if (channel.target_node != target_node_index)
+		if (channel.target_node != current_target_node_index)
 		{
 			continue;
 		}
@@ -244,7 +351,7 @@ void GltfRootMotion::ComputeRootPose(size_t animation_index, float time, DirectX
 						// 再生時間とキーフレームの時間から補間率を算出する
 						float rate = (time - t0) / (t1 - t0);
 
-						// 前のキーフレームと次のキーフレームのスケール姿勢を提示コードと同じ作りでLerp補間
+						// 前のキーフレームと次のキーフレームのスケール姿勢をLerp補間
 						DirectX::XMVECTOR S0 = DirectX::XMLoadFloat3(&scales.at(index));
 						DirectX::XMVECTOR S1 = DirectX::XMLoadFloat3(&scales.at(index + 1));
 						final_scale = DirectX::XMVectorLerp(S0, S1, rate);

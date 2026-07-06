@@ -15,7 +15,7 @@ public:
 	~RootMotionComponent();
 
 	//初期化
-	void Initialize(const std::shared_ptr<const GltfModelData>& data, const std::string& prev_name);
+	void Initialize(const std::shared_ptr<const GltfModelData>& data);
 
 	//アニメーション切り替え時のリセット
 	void OnAnimationChaanged(size_t new_animation_index);
@@ -37,6 +37,9 @@ public:
 
 	//ルートノードのインデックスを取得
 	int GetTargetNodeIndex()const;
+
+	//初期ポーズ座標を取得
+	DirectX::XMFLOAT3 GetInitialLocalPosition()const { return root_motion->GetInitialLocalPosition(); }
 
 	//ルートモーションの抽出値を検証
 	void TraceRootMotionDebug(const DirectX::XMFLOAT3& raw_position);

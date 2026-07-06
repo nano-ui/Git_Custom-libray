@@ -47,7 +47,7 @@ void Character::Initialize()
 
 	if (root_motion_component && character)
 	{
-		root_motion_component->Initialize(character->GetGltfModelData(), "B_Pelvis");
+		root_motion_component->Initialize(character->GetGltfModelData());
 	}
 }
 
@@ -158,14 +158,14 @@ void Character::SetupBlackboard()
 	blackboard->SetValue(u8"速度", max_speed);
 	blackboard->SetValue(u8"接地フラグ", is_ground);
 
-	printf("Character: 共有ブラックボードにを登録しました。\n");
+	printf("Character: 共有ブラックボードにを登録しま。\n");
 }
 
 //アニメーション終了イベント
 void Character::OnAnimationEnd(uint32_t state_key)
 {
 #ifdef _DEBUG
-	std::cout << "Debug: Character::OnAnimationEnd - アニメーション再生終了を検知しました。StateKey: " << state_key << "\n";
+	std::cout << "Debug: Character::OnAnimationEnd - アニメーション再生終了を検知しま。StateKey: " << state_key << "\n";
 #endif
 }
 
@@ -222,105 +222,126 @@ void Character::UpdateInvincibleTimer(float elapsed_time)
 //ルートモーション更新
 void Character::UpdateRootMotion()
 {
-	// コンポーネントやモデルの実体、アニメーションの有効性を安全確認
-	if (!root_motion_component || !animation_component || !character)
-	{
-		return;
-	}
+	// ルートモーションコンポーネントなどの存在を確認
+	if (!root_motion_component || !animation_component || !character) return;
 
-	// 現在再生中のアニメーション名を取得
 	std::string curreent_anim_name = animation_component->GetCurrentAnimationName();
 	float current_time = animation_component->GetCurrentAnimationTime();
 
-	// アニメーションが切り替わった場合のインデックス同期処理
+	// アニメーションが切り替わったか確認
 	if (previous_animation_name != curreent_anim_name)
 	{
+		// アニメーションのインデックスを格納
 		int anim_index = character->GetAnimationIndex(curreent_anim_name.c_str());
+		// インデックスが有効か確認
 		if (anim_index >= 0)
 		{
 			root_motion_component->OnAnimationChaanged(static_cast<size_t>(anim_index));
 		}
 		else
 		{
-			// エラーが起きる可能性のある個所には OutputDebugStringA を使ってデバッグ出力を行う
 			OutputDebugStringA("[Character Error] UpdateRootMotion: Animation index not found!\n");
 		}
 		previous_animation_name = curreent_anim_name;
 		previous_animation_time = 0.0f;
 	}
 
-	// ステートマシンからルートモーションが有効であるかを取得して設定
+	// ルートモーションの有効フラグを格納
 	bool is_rm_enabled = state_machine_component ? state_machine_component->IsCurrentRootMotionEnbled() : false;
 	root_motion_component->SetEnable(is_rm_enabled);
 
-	// ルートモーションが無効な場合はここで処理を終了
-	if (!root_motion_component->IsEnable())
-	{
-		return;
-	}
+	// ルートモーションが無効か確認
+	if (!root_motion_component->IsEnable()) return;
 
-	// アニメーションの現在の再生時間を取得してコンポーネントを更新
 	root_motion_component->Update(current_time);
 
-	// ComputeAnimation側でスケールを含めて正しく計算されたローカル移動差分（Delta）を取得
+	// 移動の差分量を格納
 	DirectX::XMFLOAT3 delta_pos = root_motion_component->GetDeltaPosition();
+	// 差分量をベクトルとして定義
 	DirectX::XMVECTOR local_translation = DirectX::XMLoadFloat3(&delta_pos);
 
-	//対象ノード（B_Pelvis）の「親ノード」の行列を走査して取得
+	// ルートノードのインデックスを格納
 	int root_index = root_motion_component->GetTargetNodeIndex();
+	// 親ノードのグローバル行列を定義
 	DirectX::XMMATRIX parent_global_transform = DirectX::XMMatrixIdentity();
 
+	// ルートノードのインデックスが有効か確認
 	if (root_index >= 0)
 	{
+		// 全ノード配列を定義
 		const auto& nodes = character->GetNodes();
+		// 親ノードのインデックスを格納
 		int parent_node_index = -1;
-
-		// 各ノードの子供リストに対象のルートインデックスが含まれているか走査
+		// 親ノードを検索ループ文
 		for (size_t i = 0; i < nodes.size(); ++i)
 		{
+			// 子ノードを走査ループ文
 			for (int child_idx : nodes.at(i).children)
 			{
+				// 対象のノードか確認
 				if (child_idx == root_index)
 				{
-					parent_node_index = static_cast<int>(i); // 親ボーンのインデックスを発見
-					break;
+					parent_node_index = static_cast<int>(i);
 				}
 			}
+			// 親ノードが見つかったか確認
 			if (parent_node_index >= 0) break;
 		}
-
-		// 親ノードが見つかった場合、その親が持つ global_transform を取得する
+		// 親ノードのインデックスが有効か確認
 		if (parent_node_index >= 0)
 		{
 			parent_global_transform = DirectX::XMLoadFloat4x4(&nodes.at(parent_node_index).global_transform);
 		}
 	}
 
-	// これにより、3Dツール側でルートボーンにかかっている初期スケールや回転軸が正しく掛け合わされます
+	// グローバル空間の移動量を定義
 	DirectX::XMVECTOR global_translation = DirectX::XMVector3TransformNormal(local_translation, parent_global_transform);
-
-	// ルートモーションによる上下（Y軸）の強制的な移動や沈み込みを防ぐためクランプ
 	global_translation = DirectX::XMVectorSetY(global_translation, 0.0f);
-
-	// 軸の入れ替わり（XとZのスワップ）をモデル空間に変換した後のベクトルに対して適用
+	// グローバル空間のX移動量を格納
 	float extracted_x = DirectX::XMVectorGetX(global_translation);
+	// グローバル空間のZ移動量を格納
 	float extracted_z = DirectX::XMVectorGetZ(global_translation);
 	global_translation = DirectX::XMVectorSetX(global_translation, extracted_z);
 	global_translation = DirectX::XMVectorSetZ(global_translation, extracted_x);
 
-	//キャラクター自身のワールド行列を適用して、最終的な世界の移動量を算出
-	DirectX::XMMATRIX world_transform = GetWorldMatrix(); // キャラクター自身のS * R * T行列
+	// キャラクターのワールド行列を定義
+	DirectX::XMMATRIX world_transform = GetWorldMatrix();
+	// ワールド空間の移動量を定義
 	DirectX::XMVECTOR world_translation = DirectX::XMVector3TransformNormal(global_translation, world_transform);
-
+	// 最終的な移動数値を格納
 	DirectX::XMFLOAT3 final_movement;
 	DirectX::XMStoreFloat3(&final_movement, world_translation);
-
-	// 計算された最終的なワールド移動量をオブジェクトの位置座標に加算
 	position.x += final_movement.x;
 	position.y += final_movement.y;
 	position.z += final_movement.z;
 
-	// 現在の時間を次フレーム用に保存
+	// ルートノードのインデックスが有効か確認
+	if (root_index >= 0)
+	{
+		// アニメーション用のノード配列を定義
+		const std::vector<GltfModelData::node>& animated_nodes = character->GetAnimatedNodes();
+		// インデックスが範囲内か確認
+		if (static_cast<size_t>(root_index) < animated_nodes.size())
+		{
+			// 初期ポーズの座標を格納
+			DirectX::XMFLOAT3 initial_pose_pos = root_motion_component->GetInitialLocalPosition();
+			// 現在のローカル座標を格納
+			DirectX::XMFLOAT3 current_local_pos = animated_nodes.at(root_index).translation;
+
+			// 補正後のローカル座標を格納
+			DirectX::XMFLOAT3 new_local_pos = current_local_pos;
+			// ローカル空間で直接、水平移動成分（XとZ）を初期位置に戻す処理
+			new_local_pos.x = initial_pose_pos.x;
+			new_local_pos.z = initial_pose_pos.z;
+
+			character->SetNodeTranslation(root_index, new_local_pos);
+			character->RecalculateTransforms();
+		}
+		else
+		{
+			OutputDebugStringA("[Character Error] UpdateRootMotion: root_index is out of range of animated_nodes!\n");
+		}
+	}
 	previous_animation_time = current_time;
 }
 
@@ -386,7 +407,7 @@ void Character::ResolveDynamicCollision(
 	float cap_height,
 	float offset_y)
 {
-	//相手のコライダー情報が存在するかチェック
+	//相手のコライダー情報が存在かチェック
 	if (!result.hit_collider)return;
 
 	//互いの重さを取得

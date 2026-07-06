@@ -44,6 +44,12 @@ public:
 	//アニメーションの総時間を取得
 	float GetAnimationDuration() const;
 
+	//指定したノードの移動成分を外部から上書き
+	void SetNodeTranslation(int node_index, const DirectX::XMFLOAT3& translation);
+
+	//変更されたノード情報をもとに、グローバル行列を再計算
+	void RecalculateTransforms();
+
 private:
 	std::shared_ptr<GltfModelData> data;			//リソースデータ
 	std::shared_ptr<GltfModelRenderer> renderer;	//描画命令クラス

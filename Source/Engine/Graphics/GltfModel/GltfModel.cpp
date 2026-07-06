@@ -82,3 +82,21 @@ float GltfModel::GetAnimationDuration() const
 {
 	return animation->GetAnimationDuration();
 }
+
+//指定したノードの移動成分を外部から上書き
+void GltfModel::SetNodeTranslation(int node_index, const DirectX::XMFLOAT3& translation)
+{
+	if (animation)
+	{
+		animation->SetNodeTranslation(node_index, translation);
+	}
+}
+
+//変更されたノード情報をもとに、グローバル行列を再計算
+void GltfModel::RecalculateTransforms()
+{
+	if (animation)
+	{
+		animation->CumulateTransforms();
+	}
+}

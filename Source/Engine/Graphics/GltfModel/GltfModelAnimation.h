@@ -32,6 +32,9 @@ public:
 	//アニメーションの総時間を取得
 	float GetAnimationDuration()const;
 
+	//指定したノードの移動成分を外部から上書き
+	void SetNodeTranslation(int node_index, const DirectX::XMFLOAT3& translation);
+
 private:
 	//指定した時間のアニメーションを適用しノード情報を更新
 	void Animate(size_t animation_index, float time);
