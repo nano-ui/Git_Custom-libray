@@ -222,116 +222,119 @@ void Character::UpdateInvincibleTimer(float elapsed_time)
 //ルートモーション更新
 void Character::UpdateRootMotion()
 {
-	// ルートモーションコンポーネントなどの存在を確認
+	// コンポーネントやモデルデータが存在するか確認する条件分岐
 	if (!root_motion_component || !animation_component || !character) return;
 
+	// 現在再生中のアニメーション名を取得して格納する変数
 	std::string curreent_anim_name = animation_component->GetCurrentAnimationName();
+	// アニメーションの現在の再生時間を取得して格納する変数
 	float current_time = animation_component->GetCurrentAnimationTime();
 
-	// アニメーションが切り替わったか確認
+	// 再生するアニメーションが切り替わったか確認する条件分岐
 	if (previous_animation_name != curreent_anim_name)
 	{
-		// アニメーションのインデックスを格納
+		// アニメーション名からインデックス番号を取得して格納する変数
 		int anim_index = character->GetAnimationIndex(curreent_anim_name.c_str());
-		// インデックスが有効か確認
+
+		// インデックス番号が有効であるか確認する条件分岐
 		if (anim_index >= 0)
 		{
 			root_motion_component->OnAnimationChaanged(static_cast<size_t>(anim_index));
 		}
 		else
 		{
+			// エラーが発生する可能性のある箇所のためデバッグ出力を行う
 			OutputDebugStringA("[Character Error] UpdateRootMotion: Animation index not found!\n");
 		}
 		previous_animation_name = curreent_anim_name;
 		previous_animation_time = 0.0f;
 	}
 
-	// ルートモーションの有効フラグを格納
+	// ステートマシンからルートモーションの有効フラグを取得して格納する変数
 	bool is_rm_enabled = state_machine_component ? state_machine_component->IsCurrentRootMotionEnbled() : false;
 	root_motion_component->SetEnable(is_rm_enabled);
 
-	// ルートモーションが無効か確認
+	// ルートモーションが無効であるか確認する条件分岐
 	if (!root_motion_component->IsEnable()) return;
 
 	root_motion_component->Update(current_time);
 
-	// 移動の差分量を格納
+	// ルートモーション計算クラスから移動の差分ベクトルを取得して格納する変数
 	DirectX::XMFLOAT3 delta_pos = root_motion_component->GetDeltaPosition();
-	// 差分量をベクトルとして定義
+	// ルートモーション計算クラスから回転の差分クォータニオンを取得して格納する変数
+	DirectX::XMFLOAT4 delta_rot = root_motion_component->GetDeltaRotation();
+
+	// 取得した差分移動量を計算用のベクトルとして読み込んだ変数
 	DirectX::XMVECTOR local_translation = DirectX::XMLoadFloat3(&delta_pos);
+	// 取得した差分回転量を計算用のクォータニオンとして読み込んだ変数
+	DirectX::XMVECTOR local_rotation = DirectX::XMLoadFloat4(&delta_rot);
 
-	// ルートノードのインデックスを格納
+	// 計算対象となるルートノードのインデックスを取得して格納する変数
 	int root_index = root_motion_component->GetTargetNodeIndex();
-	// 親ノードのグローバル行列を定義
-	DirectX::XMMATRIX parent_global_transform = DirectX::XMMatrixIdentity();
 
-	// ルートノードのインデックスが有効か確認
+	// ルートノード自体のローカル回転行列を定義して初期化するための変数
+	DirectX::XMMATRIX root_local_rotation_matrix = DirectX::XMMatrixIdentity();
+
+	// ルートノードのインデックスが有効であるか確認する条件分岐
 	if (root_index >= 0)
 	{
-		// 全ノード配列を定義
-		const auto& nodes = character->GetNodes();
-		// 親ノードのインデックスを格納
-		int parent_node_index = -1;
-		// 親ノードを検索ループ文
-		for (size_t i = 0; i < nodes.size(); ++i)
+		// アニメーション計算後の全ノード配列の参照を格納する変数
+		const auto& animated_nodes = character->GetAnimatedNodes();
+		// インデックスが配列の範囲内にあるか確認する条件分岐
+		if (static_cast<size_t>(root_index) < animated_nodes.size())
 		{
-			// 子ノードを走査ループ文
-			for (int child_idx : nodes.at(i).children)
-			{
-				// 対象のノードか確認
-				if (child_idx == root_index)
-				{
-					parent_node_index = static_cast<int>(i);
-				}
-			}
-			// 親ノードが見つかったか確認
-			if (parent_node_index >= 0) break;
-		}
-		// 親ノードのインデックスが有効か確認
-		if (parent_node_index >= 0)
-		{
-			parent_global_transform = DirectX::XMLoadFloat4x4(&nodes.at(parent_node_index).global_transform);
+			// ルートノード自体の現在のローカル回転クォータニオンを読み込むための変数
+			DirectX::XMVECTOR root_rot = DirectX::XMLoadFloat4(&animated_nodes.at(root_index).rotation);
+			// ルートノードのローカル回転から回転行列を生成して格納する変数
+			root_local_rotation_matrix = DirectX::XMMatrixRotationQuaternion(root_rot);
 		}
 	}
 
-	// グローバル空間の移動量を定義
-	DirectX::XMVECTOR global_translation = DirectX::XMVector3TransformNormal(local_translation, parent_global_transform);
-	global_translation = DirectX::XMVectorSetY(global_translation, 0.0f);
-	// グローバル空間のX移動量を格納
-	float extracted_x = DirectX::XMVectorGetX(global_translation);
-	// グローバル空間のZ移動量を格納
-	float extracted_z = DirectX::XMVectorGetZ(global_translation);
-	global_translation = DirectX::XMVectorSetX(global_translation, extracted_z);
-	global_translation = DirectX::XMVectorSetZ(global_translation, extracted_x);
+	// 【ここがポイント】モデル空間で歪んでいた移動ベクトルを、ルート自身の回転行列を通してキャラクターの正しい前後左右（基準軸）へ変換する
+	DirectX::XMVECTOR corrected_local_translation = DirectX::XMVector3TransformNormal(local_translation, root_local_rotation_matrix);
 
-	// キャラクターのワールド行列を定義
+	// キャラクター自身の現在のワールド行列を取得して格納する変数
 	DirectX::XMMATRIX world_transform = GetWorldMatrix();
-	// ワールド空間の移動量を定義
-	DirectX::XMVECTOR world_translation = DirectX::XMVector3TransformNormal(global_translation, world_transform);
-	// 最終的な移動数値を格納
+	// キャラクターの基準軸に直した移動量を、キャラクターのワールド空間の向きへ変換した変数
+	DirectX::XMVECTOR world_translation = DirectX::XMVector3TransformNormal(corrected_local_translation, world_transform);
+
+	// キャラクターの高さ方向の移動成分をゼロにクランプして相殺する処理
+	world_translation = DirectX::XMVectorSetY(world_translation, 0.0f);
+
+	// コライダーの移動に適用するための最終的な3次元移動数値を格納する変数
 	DirectX::XMFLOAT3 final_movement;
-	DirectX::XMStoreFloat3(&final_movement, world_translation);
+	DirectX::XMFLOAT3 final_movement_temp;
+	DirectX::XMStoreFloat3(&final_movement_temp, world_translation);
+
+	// 軸がずれていた場合にゲーム上の前進・横移動として正しく適用されるようにマッピングを整理した処理
+	final_movement.x = final_movement_temp.x;
+	final_movement.y = final_movement_temp.y;
+	final_movement.z = final_movement_temp.z;
+
 	position.x += final_movement.x;
 	position.y += final_movement.y;
 	position.z += final_movement.z;
 
-	// ルートノードのインデックスが有効か確認
+	// ルートノードのインデックスが有効であるか確認する条件分岐
 	if (root_index >= 0)
 	{
-		// アニメーション用のノード配列を定義
+		// アニメーション計算後の全ノード配列の参照を格納する変数
 		const std::vector<GltfModelData::node>& animated_nodes = character->GetAnimatedNodes();
-		// インデックスが範囲内か確認
+
+		// インデックスが配列の範囲内にあるか確認する条件分岐
 		if (static_cast<size_t>(root_index) < animated_nodes.size())
 		{
-			// 初期ポーズの座標を格納
+			// モデルの初期状態におけるローカル座標を取得して格納する変数
 			DirectX::XMFLOAT3 initial_pose_pos = root_motion_component->GetInitialLocalPosition();
-			// 現在のローカル座標を格納
+			// アニメーションによって移動した現在のローカル座標を取得して格納する変数
 			DirectX::XMFLOAT3 current_local_pos = animated_nodes.at(root_index).translation;
 
-			// 補正後のローカル座標を格納
+			// 補正を適用するためのローカル座標をコピーして格納する変数
 			DirectX::XMFLOAT3 new_local_pos = current_local_pos;
-			// ローカル空間で直接、水平移動成分（XとZ）を初期位置に戻す処理
+
+			// モデルが勝手に移動して飛び出さないようにX・Y・Zすべての移動軸を完全に初期位置へとリセットする処理
 			new_local_pos.x = initial_pose_pos.x;
+			new_local_pos.y = initial_pose_pos.y;
 			new_local_pos.z = initial_pose_pos.z;
 
 			character->SetNodeTranslation(root_index, new_local_pos);
@@ -339,6 +342,7 @@ void Character::UpdateRootMotion()
 		}
 		else
 		{
+			// 配列の範囲外アクセスを防ぐための境界チェックでエラーを検出したためデバッグ出力を行う
 			OutputDebugStringA("[Character Error] UpdateRootMotion: root_index is out of range of animated_nodes!\n");
 		}
 	}
