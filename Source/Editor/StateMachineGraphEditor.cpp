@@ -633,7 +633,12 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 
 		if (palette_window->IsPendingSubGraph())
 		{
-			data_manager->AddSubGrapNode(current_graph_id, canvas_pos.x, canvas_pos.y, palette_window->GetPendingNodeName());
+			data_manager->AddNode(
+				current_graph,
+				static_cast<float>(canvas_pos.x),
+				static_cast<float>(canvas_pos.y),
+				palette_window->GetPendingNodeName()
+			);
 
 			for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
 			{
@@ -646,7 +651,12 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 		}
 		else
 		{
-			data_manager->AddNode(current_graph, canvas_pos.x, canvas_pos.y, palette_window->GetPendingNodeName());
+			data_manager->AddNode(
+				current_graph,
+				static_cast<float>(canvas_pos.x),
+				static_cast<float>(canvas_pos.y),
+				palette_window->GetPendingNodeName()
+			);
 		}
 
 		uint32_t new_state_id = current_graph->nodes.back().id; // 新しいノードID
@@ -657,13 +667,19 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 
 	if (trigger_add_node)
 	{
-		data_manager->AddNode(current_graph, popup_click_pos.x, popup_click_pos.y);
+		data_manager->AddNode(
+			current_graph, 
+			static_cast<float>(popup_click_pos.x),
+			static_cast<float>(popup_click_pos.y));
 		uint32_t new_state_id = current_graph->nodes.back().id; // 追加ノードID
 		ed::SetNodePosition(new_state_id, popup_click_pos);
 	}
 	if (trigger_add_subgraph)
 	{
-		data_manager->AddSubGrapNode(current_graph_id, popup_click_pos.x, popup_click_pos.y);
+		data_manager->AddSubGrapNode(
+			current_graph_id,
+			static_cast<float>(popup_click_pos.x),
+			static_cast<float>(popup_click_pos.y));
 
 		for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
 		{
@@ -701,7 +717,11 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 			ImVec2 drap_mouse_screen_pos = ImGui::GetMousePos(); // マウス画面座標
 			ImVec2 drop_mouse_canvas_pos = ed::ScreenToCanvas(drap_mouse_screen_pos); // キャンバス座標
 
-			data_manager->AddNode(current_graph, drop_mouse_canvas_pos.x, drop_mouse_canvas_pos.y, dropped_node_name);
+			data_manager->AddNode(
+				current_graph, 
+				static_cast<float>(drop_mouse_canvas_pos.x), 
+				static_cast<float>(drop_mouse_canvas_pos.y), 
+				dropped_node_name);
 
 			uint32_t new_node_id = current_graph->nodes.back().id; // 新しいノードID
 			ed::SetNodePosition(new_node_id, drop_mouse_canvas_pos);
@@ -715,7 +735,11 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 			ImVec2 drap_mouse_screen_pos = ImGui::GetMousePos(); // マウス画面座標
 			ImVec2 drop_mouse_canvas_pos = ed::ScreenToCanvas(drap_mouse_screen_pos); // キャンバス座標
 
-			data_manager->AddSubGrapNode(current_graph_id, drop_mouse_canvas_pos.x, drop_mouse_canvas_pos.y, dropped_sub_name);
+			data_manager->AddSubGrapNode(
+				current_graph_id,
+				static_cast<float>(drop_mouse_canvas_pos.x),
+				static_cast<float>(drop_mouse_canvas_pos.y),
+				dropped_sub_name);
 
 			for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
 			{

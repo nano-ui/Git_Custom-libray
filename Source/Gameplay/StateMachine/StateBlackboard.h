@@ -184,10 +184,11 @@ private:
 		GuiVisitor(const std::string& variable_name, float min_v, float max_v, float speed)
 			:name(variable_name), min_val(min_v), max_val(max_v), speed_val(speed)
 		{
+
 		}
 
 		//intŒ^—p‚Ì•`‰æE•ÒWˆ—
-		void operator()(int& val) { ImGui::DragInt(name.c_str(), &val, speed_val, min_val, max_val); }
+		void operator()(int& val) { ImGui::DragInt(name.c_str(), &val, speed_val, static_cast<int>(min_val), static_cast<int>(max_val)); }
 
 		//floatŒ^—p‚Ì•`‰æE•ÒWˆ—
 		void operator()(float& val) { ImGui::DragFloat(name.c_str(), &val, speed_val, min_val, max_val); }
@@ -243,13 +244,13 @@ struct CompareVisitor
 		//‰‰Zq‚É‰‚¶‚½”äŠrˆ—
 		switch (op)
 		{
-		case CompareOperator::Equal:		return val == *ref; break;
-		case CompareOperator::NotEqual:		return val != *ref; break;
-		case CompareOperator::Greater:		return val > *ref;	break;
-		case CompareOperator::Less:			return val < *ref;	break;
-		case CompareOperator::GreaterEqual:	return val >= *ref; break;
-		case CompareOperator::LessEqual:	return val <= *ref; break;
-		default:							return false;		break;
+		case CompareOperator::Equal:		return static_cast<float>(val) == *ref; break;
+		case CompareOperator::NotEqual:		return static_cast<float>(val) != *ref; break;
+		case CompareOperator::Greater:		return static_cast<float>(val) > *ref;  break;
+		case CompareOperator::Less:			return static_cast<float>(val) < *ref;  break;
+		case CompareOperator::GreaterEqual:	return static_cast<float>(val) >= *ref; break;
+		case CompareOperator::LessEqual:	return static_cast<float>(val) <= *ref; break;
+		default:							return false;			  break;
 		}
 	}
 
