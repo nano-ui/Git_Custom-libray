@@ -1,7 +1,7 @@
 [Project Structure] 
  
 Folder PATH listing for volume Windows
-Volume serial number is 0000003D 0255:C8DA
+Volume serial number is 0000008D 0255:C8DA
 C:.
 „    structure.txt
 „    _dump_structure.bat
@@ -119,6 +119,8 @@ C:.
 „        „        GltfModelData.h
 „        „        GltfModelRenderer.cpp
 „        „        GltfModelRenderer.h
+„        „        GltfRootMotion.cpp
+„        „        GltfRootMotion.h
 „        „        TinygltfImpl.cpp
 „        „        
 „        „¤„Ÿ„Ÿ„ŸShaders
@@ -162,11 +164,31 @@ C:.
 „    „        WeightedNode.h
 „    „        
 „    „¥„Ÿ„Ÿ„ŸComponents
-„    „        AnimationComponent.cpp
-„    „        AnimationComponent.h
-„    „        StateMachineComponent.cpp
-„    „        StateMachineComponent.h
-„    „        
+„    „    „    StateMachineComponent.cpp
+„    „    „    StateMachineComponent.h
+„    „    „    
+„    „    „¥„Ÿ„Ÿ„ŸAnimation
+„    „    „        AnimationComponent.cpp
+„    „    „        AnimationComponent.h
+„    „    „        RootMotionComponent.cpp
+„    „    „        RootMotionComponent.h
+„    „    „        
+„    „    „¤„Ÿ„Ÿ„ŸMovement
+„    „            CircularMove.cpp
+„    „            CircularMove.h
+„    „            LinearMove.cpp
+„    „            LinearMove.h
+„    „            LockAtRotation.cpp
+„    „            LockAtRotation.h
+„    „            MoveBase.h
+„    „            MoveFactory.cpp
+„    „            MoveFactory.h
+„    „            RepulsiveMove.cpp
+„    „            RepulsiveMove.h
+„    „            RotationBase.h
+„    „            RotationFactory.cpp
+„    „            RotationFactory.h
+„    „            
 „    „¥„Ÿ„Ÿ„ŸGameObjects
 „    „    „    GameObject.cpp
 „    „    „    GameObject.h
@@ -185,22 +207,6 @@ C:.
 „    „            Stage.cpp
 „    „            Stage.h
 „    „            
-„    „¥„Ÿ„Ÿ„ŸMovement
-„    „        CircularMove.cpp
-„    „        CircularMove.h
-„    „        LinearMove.cpp
-„    „        LinearMove.h
-„    „        LockAtRotation.cpp
-„    „        LockAtRotation.h
-„    „        MoveBase.h
-„    „        MoveFactory.cpp
-„    „        MoveFactory.h
-„    „        RepulsiveMove.cpp
-„    „        RepulsiveMove.h
-„    „        RotationBase.h
-„    „        RotationFactory.cpp
-„    „        RotationFactory.h
-„    „        
 „    „¥„Ÿ„Ÿ„ŸScene
 „    „        Scene.cpp
 „    „        Scene.h

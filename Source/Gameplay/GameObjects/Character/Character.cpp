@@ -4,6 +4,7 @@
 
 #include <imgui.h>
 #include <cmath>
+//#include "CharacterMovementComponent.h"
 
 //コンストラクタ
 Character::Character()

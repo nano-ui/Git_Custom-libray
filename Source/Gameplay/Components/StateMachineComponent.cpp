@@ -2,7 +2,7 @@
 #include "../Serialization/JsonSerializer.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
 #include "../ThiedParty/json.hpp"
-#include "../Gameplay/Components/AnimationComponent.h"
+#include "Gameplay\Components\Animation\AnimationComponent.h"
 #include "../Engine/Core/Input.h"
 
 
