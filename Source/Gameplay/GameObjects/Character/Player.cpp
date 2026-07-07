@@ -15,7 +15,6 @@ Player::Player()
 {
 	auto device = Graphics::Instance().GetDevice();
 	character = std::make_shared<Model>(device, "Data/Model/Character/RPG-Character.glb");
-	move_speed = 5.0f;
 	height = 0.8f;
 	radius = 0.4f;
 	offset_y = 0.5f;
@@ -144,7 +143,7 @@ void Player::OnAnimationEnd(uint32_t state_key)
 //入力更新処理
 void Player::UpdateInput(float elapsed_time)
 {
-	//横方向ベクトルの算出
+	//横方向ベクトル
 	float move_x = 0.0f;
 	float move_z = 0.0f;
 
@@ -166,9 +165,6 @@ void Player::UpdateInput(float elapsed_time)
 		//move_x += 1.0f;
 	}
 
-	//移動・旋回処理
-	Character::Move(elapsed_time, move_x, move_z, move_speed);
-	Character::Tuen(elapsed_time, move_x, move_z, move_speed);
 }
 
 //プレイヤーの現在位置と、コライダーの現在位置のズレを出力

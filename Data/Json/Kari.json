@@ -23,21 +23,6 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 0,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 1
-                        }
-                    ],
-                    "EndPinID": 101,
-                    "ID": 119,
-                    "StartPinID": 105
-                },
-                {
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
                             "HashKey": 65,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
@@ -78,6 +63,21 @@
                     "EndPinID": 104,
                     "ID": 142,
                     "StartPinID": 102
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 1.0,
+                            "SecondaryHash": 0,
+                            "Type": 1
+                        }
+                    ],
+                    "EndPinID": 101,
+                    "ID": 160,
+                    "StartPinID": 105
                 }
             ],
             "Nodes": [
@@ -446,6 +446,6 @@
             ]
         }
     ],
-    "NextID": 160,
+    "NextID": 161,
     "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }

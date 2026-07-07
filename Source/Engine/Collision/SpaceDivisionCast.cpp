@@ -140,7 +140,7 @@ bool SpaceDivisionCast::PsseudoSpheraCast(const DirectX::XMFLOAT3& start_pos, co
 	DirectX::XMVECTOR v_norm_dir = DirectX::XMVector3Normalize(v_dir);				//レイの方向を正規化
 
 	//-----------------------------
-	//基準となる軸ベクトルの算出
+	//基準となる軸ベクトル
 	//-----------------------------
 	DirectX::XMVECTOR v_world_up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);	//進行方向に対する上方向の基準ベクトルを仮設定
 

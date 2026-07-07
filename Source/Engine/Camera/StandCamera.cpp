@@ -25,7 +25,7 @@ void StandCamera::Initialize()
 	focus = default_focus;
 	up = { 0.0f,1.0f,0.0f };
 
-	//ù‰ñ‰^“®—p‚Ì”¼Œa‚Æ‰ŠúŠp“x‚ÌZo
+	//ù‰ñ‰^“®—p‚Ì”¼Œa‚Æ‰ŠúŠp“x
 	float dx = eye.x - focus.x;
 	float dz = eye.z - focus.z;
 	camera_radius = sqrtf(dx * dx + dz * dz);

@@ -36,7 +36,7 @@ DirectX::XMFLOAT3 RepulsiveMove::UpdateRepulsion
     const float effect_radius               //斥力が届く影響範囲
 )
 {
-    //ベクトル計算の準備と方向の算出
+    //ベクトル計算の準備と方向
     DirectX::XMVECTOR start_vector = DirectX::XMLoadFloat3(&current_pos);   //XMVECTOR型に変換した自身の座標
     DirectX::XMVECTOR end_vector = DirectX::XMLoadFloat3(&target_pos);      //XMVECTOR型に変換した対象の座標
     DirectX::XMVECTOR diff_vector = DirectX::XMVectorSubtract(start_vector, end_vector);    //遠ざかる方向ベクトル

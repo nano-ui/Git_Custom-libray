@@ -37,7 +37,7 @@ DirectX::XMFLOAT3 LinearMove::UpdateLiner
 	DirectX::XMVECTOR end_vector = DirectX::XMLoadFloat3(&target_pos);		//対象の座標
 
 	//----------------
-	//移動量の算出
+	//移動量
 	//----------------
 	DirectX::XMVECTOR diff_vector = DirectX::XMVectorSubtract(end_vector, start_vector);	//方向ベクトル
 	DirectX::XMVECTOR length_vector = DirectX::XMVector3Length(diff_vector);				//ベクトルの長さ

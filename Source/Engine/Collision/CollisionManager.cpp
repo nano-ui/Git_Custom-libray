@@ -438,7 +438,7 @@ void CollisionManager::CheckSphereVsSphere()
 //グリッド登録用の補助関数
 void CollisionManager::AddColluderToGrid(Collider* collider)
 {
-    //グリッド範囲の算出
+    //グリッド範囲
     GridRange range = CalculateGridRenge(collider);
 
     //3重ループによる一括登録
@@ -471,7 +471,7 @@ GridRange CollisionManager::CalculateGridRenge(Collider* collider) const
     DirectX::XMFLOAT3 min_pos = { 0.0f,0.0f,0.0f };
     DirectX::XMFLOAT3 max_pos = { 0.0f,0.0f,0.0f };
 
-    //形状ごとのAABB(境界線)の算出
+    //形状ごとのAABB(境界線)
     switch (collider->type)
     {
     case ColliderType::Sphere:
@@ -528,7 +528,7 @@ void CollisionManager::OptimizeCellSize()
     float total_diameter = 0.0f;
     size_t active_count = 0;
 
-    //平均サイズの算出ループ
+    //平均サイズループ
     for (size_t i = 0; i < dynamic_colliders.size(); i++)
     {
         Collider* col = dynamic_colliders[i];

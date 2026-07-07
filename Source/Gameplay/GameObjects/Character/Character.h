@@ -1,135 +1,112 @@
 #pragma once
 
+// インクルード
 #include "../Gameplay/GameObjects/GameObject.h"
 #include "../Engine/Collision/Collider.h"
 #include "Gameplay\Components\Animation\RootMotionComponent.h"
 #include "Gameplay\Components\Animation\AnimationComponent.h"
-
 #include <memory>
 #include <unordered_map>
 
+// クラス宣言
 class StateBlackboard;
 class StateMachineComponent;
+class CharacterMovementComponent;
 
+// キャラクターの基底となるゲームオブジェクトクラス
 class Character : public GameObject, public IAnimationListener
 {
 public:
-	//コンストラクタ
+	// コンストラクタ
 	Character();
 
-	//デストラクタ
+	// デストラクタ
 	virtual ~Character();
 
-	//初期化処理
+	// 初期化処理
 	void Initialize()override;
 
-	//更新処理
+	// 更新処理
 	void Update(float elapsed_time)override;
 
-	//描画処理
+	// 描画処理
 	void Render(ID3D11DeviceContext* context)override;
 
-	//デバッグ描画
+	// デバッグ描画
 	void RenderDebug(ShapeRenderer* renderer)override;
 
-	//をシリアライザに登録
+	// シリアライザへの登録
 	void SetupSerialization()override;
 
-	//ダメージ処理
+	// ダメージ適用処理
 	bool ApplyDamage(float damage, float invincible_time);
 
-	//ブラックボードを取得
+	// ブラックボードの取得
 	StateBlackboard* GetBlackboard()const { return blackboard.get(); }
 
-	//ブラックボードに登録・初期化
+	// ブラックボードの登録・初期化
 	virtual void SetupBlackboard();
 
-	//アニメーション終了イベント
+	// アニメーション終了イベント
 	virtual void OnAnimationEnd(uint32_t stake_key);
 
-	//アニメーションコンポーネント取得
+	// アニメーションコンポーネントの取得
 	AnimationComponent* GetAnimationComponent()const { return animation_component.get(); }
 
-	//ルートモーションコンポーネントクラス取得
+	// ルートモーションコンポーネントの取得
 	RootMotionComponent* GetRootMotionComponent()const { return root_motion_component.get(); }
 
-	//ステートマシンコンポーネントクラス取得
+	// ステートマシンコンポーネントの取得
 	StateMachineComponent* GetStateMachineComponent()const { return state_machine_component.get(); }
 
+	// 移動更新コンポーネントの取得
+	CharacterMovementComponent* GetMovementComponent()const { return movement_component.get(); }
+
 protected:
-	//移動方向の設定
+	// 移動方向の設定
 	void Move(float elapsed_time, float vx, float vz, float speed);
 
-	//旋回処理
-	void Tuen(float elapsed_time, float vx, float vz, float speed);
-
-	//ジャンプ処理
+	// ジャンプ処理
 	void Jump(float speed);
 
-	//速度と座標の更新処理
-	void UpdateVelocity(float elapsed_time);
-
-	//無敵時間更新処理
+	// 無敵時間の更新処理
 	void UpdateInvincibleTimer(float elapsed_time);
 
-	//ルートモーション更新
+	// ルートモーションの更新処理
 	void UpdateRootMotion();
 
-	//接地時イベント
+	// 接地時イベント
 	virtual void OnLanding() {}
 
-	//被弾時イベント
+	// 被弾時イベント
 	virtual void OnDamage() {}
 
-	//死亡時イベント
+	// 死亡時イベント
 	virtual void OnDead() {}
 
-	//ステージとの衝突処理
+	// ステージとの衝突応答処理
 	void ResolveStageCollision(const CollisionResult& result, CapsuleCollider& collider, float cap_height, float offset_y);
 
-	//動的オブジェクトとの衝突処理
+	// 動的オブジェクトとの衝突応答処理
 	void ResolveDynamicCollision(const CollisionResult& result, CapsuleCollider& collider, float cap_height, float offset_y);
 
-private:
-	//垂直方向の移動速度更新
-	void UpdateVerticalVelocity(float elapsed_time);
-
-	//垂直方向の座標更新処理
-	void UpdateVerticalMove(float elapsed_time);
-
-	//水平方向の速度更新処理
-	void UpdateHorizontalVelocity(float elapsed_time);
-
-	//水平方向の座標更新処理
-	void UpdateHorizontalMove(float elapsed_time);
-
 protected:
-	std::shared_ptr<Model> character;	//キャラクターモデル
-	std::unique_ptr<StateBlackboard> blackboard;
-	std::unique_ptr<AnimationComponent> animation_component;	//アニメーション制御
-	std::unique_ptr<RootMotionComponent> root_motion_component;	//ルートモーション制御
-	std::unique_ptr<StateMachineComponent> state_machine_component;	//ステートマシン制御
+	std::shared_ptr<Model> character;	// キャラクターモデル
+	std::unique_ptr<StateBlackboard> blackboard; // 共有ブラックボード
+	std::unique_ptr<AnimationComponent> animation_component;	// アニメーション制御コンポーネント
+	std::unique_ptr<RootMotionComponent> root_motion_component;	// ルートモーション制御コンポーネント
+	std::unique_ptr<StateMachineComponent> state_machine_component;	// ステートマシン制御コンポーネント
+	std::unique_ptr<CharacterMovementComponent> movement_component; // 移動・物理制御コンポーネント
 
-	std::string previous_animation_name = "";	//前回のアニメーション名
-	float previous_animation_time = 0.0f;		//前回の再生時間
-	DirectX::XMFLOAT3 angle;	//角度
-	float radius;				//半径
-	float gravity;				//重力
-	DirectX::XMFLOAT3 velocity;	//移動速度ベクトル
-	float move_vecX;			//移動ベクトルX
-	float move_vecZ;			//移動ベクトルZ
-	bool is_ground;				//接地判定フラグ
-	float height;				//高さ
-	float invincible_timer;		//無敵時間
-	float acceleration;			//加速度
-	float max_speed;			//最大移動速度
-	float attack_power;			//攻撃力
-	float friction;				//摩擦力
-	float air_control;			//空中での制御力
-	float offset_y;				//当たり判定のY軸オフセット
-	float weight;				//キャラクターの重さ
-	float health;				//生命力	
-	float move_speed;			//移動速度
-
+	std::string previous_animation_name = "";	// 前回のアニメーション名
+	float previous_animation_time = 0.0f;		// 前回の再生時間
+	DirectX::XMFLOAT3 angle;	// キャラクターの回転角度
+	float radius;				// 当たり判定のコライダー半径
+	float height;				// 当たり判定のコライダー高さ
+	float invincible_timer;		// 被弾後の無敵時間タイマー
+	float attack_power;			// 攻撃力ステータス
+	float offset_y;				// 当たり判定のY軸オフセット
+	float weight;				// キャラクターの重量重量
+	float health;				// 生命力・体力ステータス
+	bool is_ground;
 };
-

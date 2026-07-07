@@ -537,7 +537,7 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 
 		auto start_it = pin_cache_map.find(link.start_pin_id); // 検索イテレーター
 
-		// 開始ピンがハッシュマップ内に存在するかを判定する条件分岐
+		// 開始ピンがハッシュマップ内に存在するかを判定
 		if (start_it != pin_cache_map.end())
 		{
 			src_node_id = start_it->second.node_id;
@@ -550,13 +550,13 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 		uint32_t dst_node_id = 0; // 接続先ノードID用変数
 		auto end_it = pin_cache_map.find(link.end_pin_id); // 検索イテレーター
 
-		// 終了ピンがハッシュマップ内に存在するかを判定する条件分岐
+		// 終了ピンがハッシュマップ内に存在するかを判定
 		if (end_it != pin_cache_map.end())
 		{
 			dst_node_id = end_it->second.node_id;
 		}
 
-		// このリンクが直近で遷移したノード間を結ぶものかを判定する条件分岐
+		// このリンクが直近で遷移したノード間を結ぶものかを判定
 		if (src_node_id == flow_src_node_id && dst_node_id == flow_dst_node_id)
 		{
 			is_last_transition_link = true;
@@ -565,7 +565,7 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 		// エディタ標準のキャッシュカラーを優先させるため、色は元の色のまま描画を実行
 		ed::Link(link.id, link.start_pin_id, link.end_pin_id, ImVec4(r, g, b, 1.0f));
 
-		// 直近の遷移経路として選ばれているリンクであるかを判定する条件分岐（常時エフェクト維持方式へ変更）
+		// 直近の遷移経路として選ばれているリンクであるかを判定（常時エフェクト維持方式へ変更）
 		if (is_last_transition_link)
 		{
 			// 画像から存在が確認できた StyleColor_Flow を用いて、パルスの光の色を上品な緑色に上書きする処理

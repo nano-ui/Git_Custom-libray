@@ -2,6 +2,8 @@
 
 #include <DirectXMath.h>
 
+class JsonSerializer;
+
 class CharacterMovementComponent
 {
 public:
@@ -14,8 +16,17 @@ public:
 	//移動・旋回・物理更新処理
 	void Update(float elapsed_time, DirectX::XMFLOAT3& position, DirectX::XMFLOAT3& angle);
 
-	//移動方向と最高速度の入力設定
-	void SetMoveSpeed(DirectX::XMFLOAT3 move_velocity) { move_vec = move_velocity; }
+	//ジャンプ処理
+	void Jump(float speed) { velocity.y += speed; }
+
+	//シリアライズの登録処理
+	void SetupSerialization(JsonSerializer* serializer);
+
+	//ImGui描画
+	void DrawImGui();
+
+	//移動方向の設定
+	void SetMoveVec(DirectX::XMFLOAT3 move_velocity) { move_vec = move_velocity; }
 
 	//接地フラグの取得
 	bool IsGround()const { return is_ground; }
@@ -34,6 +45,12 @@ public:
 
 	//最高速度設定
 	void SetMaxSpeed(float speed) { max_speed = speed; }
+
+	//移動速度取得
+	float GetMoveSpeed()const { return move_speed; }
+
+	//移動速度設定
+	void SetMoveSpeed(float speed) { move_speed = speed; }
 
 	//加速度を取得
 	float GetAcceleration()const { return acceleration; }
@@ -67,6 +84,7 @@ private:
 	DirectX::XMFLOAT3 velocity;		//移動速度ベクトル
 	DirectX::XMFLOAT3 move_vec;		//移動指示ベクトル
 	float max_speed;				//最大移動速度
+	float move_speed;				//移動速度
 	float acceleration;				//加速度
 	float friction;					//摩擦力
 	float air_control;				//空中での制御比率

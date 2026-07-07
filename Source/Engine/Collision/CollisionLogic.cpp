@@ -171,7 +171,7 @@ void CollisionLogic::CalculaterClosestPointsBetweenSegments(
     float ratio_b = 0.0f;
     constexpr float epsilon = 0.0001f;
 
-    //ü•ª‚Ì’·‚³‚É‚æ‚éğŒ‚Æ”}‰î‚ÌZo
+    //ü•ª‚Ì’·‚³‚É‚æ‚éğŒ‚Æ”}‰î
     if (len_sq_a <= epsilon && len_sq_b <= epsilon)
     {
         ratio_a = 0.0f;
