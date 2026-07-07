@@ -128,7 +128,7 @@ public:
 	}
 
 private:
-	T* data_pointer;	//‘ÎÛ‚Ì
+	T* data_pointer;	//‘ÎÛ‚Ìƒ|ƒCƒ“ƒ^
 };
 
 class JsonSerializer
