@@ -241,6 +241,18 @@ private:
 	//アニメーション名をマップに登録
 	void MapAnimationNames(const tinygltf::Model& gltf_model);
 
+	//モデルデータに接線（TANGENT）情報が含まれていない場合、頂点座標とUV座標から接線ベクトルを自動計算
+	void ComputeTangentsForPrimitive(mesh::primitive& primitive);
+
+	//メッシュ内の頂点データ（座標、法線、接線）のX軸を反転してDirectX仕様の左手系に変換
+	void ConvertMeshAxisSystem(mesh& target_mesh);
+
+	//各ボーン・ノードの初期ポーズ（TRSプロパティ）の座標系を右手系から左手系に変換
+	void ConvertNodeAxisSystem(node& target_node);
+
+	//ニメーションの全キーフレーム（位置、回転）のデータを左手系に変換
+	void ConvertAnimationAxisSystem(animation& target_animation);
+
 public:
 	std::vector<std::vector<unsigned char>> raw_buffers;	//シリアライズ用の生データ保持配列
 	std::string filename;	//ファイルの名前

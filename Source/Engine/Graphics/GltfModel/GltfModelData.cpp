@@ -20,69 +20,69 @@ bool null_load_image_data(tinygltf::Image*, const int, std::string*, std::string
 //デバイスとファイルを受け取ってモデルデータを初期化
 GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const std::string& filename)
 {
-	this->filename = filename;	//ファイル名を保持
+	this->filename = filename;
 
-	//-----------------------
-	//tinygltfのロード設定
-	//-----------------------
-	tinygltf::TinyGLTF tiny_gltf;	//tinygltfのローダーオブジェクト
-	tiny_gltf.SetImageLoader(null_load_image_data, nullptr);	//画像読み込みをスキップ
+	tinygltf::TinyGLTF tiny_gltf;
+	tiny_gltf.SetImageLoader(null_load_image_data, nullptr);
 
-	tinygltf::Model gltf_model;	//解析結果を格納するモデル
-	std::string error, warning;	//警告やエラーメッセージを格納
-	bool succeeded = false;		//読み込みが成功したかを示すグラフ
+	tinygltf::Model gltf_model;
+	std::string error, warning;
+	bool succeeded = false;
 
-	//-----------------------------------------
-	//ファイルの拡張子に応じた読み込み処理
-	//-----------------------------------------
-	if (filename.find(".glb") != std::string::npos)	//ファイルに.glbが含まれているかを確認
+	if (filename.find(".glb") != std::string::npos) //ファイル名に.glbが含まれているかの条件分岐
 	{
-		succeeded = tiny_gltf.LoadBinaryFromFile(&gltf_model, &error, &warning, filename.c_str());	//バイナリ形式をして読み込む
+		succeeded = tiny_gltf.LoadBinaryFromFile(&gltf_model, &error, &warning, filename.c_str());
 	}
-	else if (filename.find(".gltf") != std::string::npos)	//ファイル名に.gltfが含まれているかを確認
+	else if (filename.find(".gltf") != std::string::npos) //ファイル名に.gltfが含まれているかの条件分岐
 	{
-		succeeded = tiny_gltf.LoadASCIIFromFile(&gltf_model, &error, &warning, filename.c_str());	//テキスト形式として読み込む
+		succeeded = tiny_gltf.LoadASCIIFromFile(&gltf_model, &error, &warning, filename.c_str());
 	}
 
-	//---------------------
-	//読み込み結果の検証
-	//---------------------
-	_ASSERT_EXPR_A(warning.empty(), warning.c_str());	//警告があればデバッグ出力
-	_ASSERT_EXPR_A(error.empty(), error.c_str());		//エラーがあればデバッグ出力し停止
-	_ASSERT_EXPR_A(succeeded, L"failed to load gltf file");	//読み込み成功か確認
+	_ASSERT_EXPR_A(warning.empty(), warning.c_str());
+	_ASSERT_EXPR_A(error.empty(), error.c_str());
+	_ASSERT_EXPR_A(succeeded, L"failed to load gltf file");
 
-	//------------------
-	//シーン情報の構築
-	//------------------
-	for (std::vector<tinygltf::Scene>::const_reference gltf_scene : gltf_model.scenes)	//モデル内の全シーンをループ
+	for (std::vector<tinygltf::Scene>::const_reference gltf_scene : gltf_model.scenes) //全シーンを走査するループ
 	{
-		scene& scene = scenes.emplace_back();	//自身のシーンリストに新しい要素を追加
-		scene.name = gltf_scene.name;			//シーン名をコピー
-		scene.nodes = gltf_scene.nodes;			//シーンに所属するノードインデックスをコピー
+		scene& scene = scenes.emplace_back();
+		scene.name = gltf_scene.name;
+		scene.nodes = gltf_scene.nodes;
 	}
-	default_scene = gltf_model.defaultScene;	//デフォルトシーンの番号を設定
+	default_scene = gltf_model.defaultScene;
 
-	//------------------
-	//モデル情報の解析
-	//------------------
-	FetchMeshes(gltf_model);			//メッシュデータの抽出とバッファの生成
-	FetchNodes(gltf_model);				//ノード情報の抽出と階層行列の計算
-	FetchMaterials(gltf_model);			//マテリアルデータの抽出
-	FetchTextures(gltf_model);			//テクスチャ情報の抽出
-	FetchAnimations(gltf_model);		//アニメーション情報を抽出
-	MapAnimationNames(gltf_model);		//抽出したアニメーション名から検索用マップを構築
-
-	//-------------------------------------
-	//バッファの生データを丸ごと保存
-	//--------------------------------------
-	for (const tinygltf::Buffer& gltf_buffer : gltf_model.buffers)
+	for (const tinygltf::Buffer& gltf_buffer : gltf_model.buffers) //全生バッファを走査するループ
 	{
-		raw_buffers.push_back(gltf_buffer.data);	//CPU側に生のバイト配列をコピーして保持
+		raw_buffers.push_back(gltf_buffer.data);
 	}
-	//----------------------------------------------------
-	//抽出した生データをもとに、GPU用のバッファを生成
-	//----------------------------------------------------
-	if (device)
+
+	FetchMeshes(gltf_model);
+	FetchNodes(gltf_model);
+	FetchMaterials(gltf_model);
+	FetchTextures(gltf_model);
+	FetchAnimations(gltf_model);
+	MapAnimationNames(gltf_model);
+
+	int nodes_with_mesh = 0; //メッシュを持つノードの総数カウンタ変数
+	for (const auto& n : nodes) //全ノードを走査するループ
+	{
+		if (n.mesh > -1) //メッシュが割り当てられているかの条件分岐
+		{
+			nodes_with_mesh++;
+		}
+	}
+
+	int total_primitives = 0; //全プリミティブの総数カウンタ変数
+	for (const auto& m : meshes) //全メッシュを走査するループ
+	{
+		total_primitives += static_cast<int>(m.primitives.size());
+	}
+
+	char debug_buf[512]; //デバッグ文字列バッファ配列変数
+	sprintf_s(debug_buf, "[GltfModelData Debug] File: %s | Nodes: %zu (With Mesh: %d) | Meshes: %zu (Primitives: %d)\n",
+		this->filename.c_str(), nodes.size(), nodes_with_mesh, meshes.size(), total_primitives);
+	OutputDebugStringA(debug_buf);
+
+	if (device) //デバイスポインタが有効であるかの条件分岐
 	{
 		CreateGpuResources(device.Get());
 	}
@@ -101,7 +101,7 @@ void GltfModelData::CreateGpuResources(ID3D11Device* device)
 	buffers.resize(raw_buffers.size());										// 生成するバッファの数を生データに合わせる
 	for (size_t i = 0; i < raw_buffers.size(); i++)							// 保持している全ての生バッファをループ
 	{
-		if (raw_buffers.at(i).empty()) return;								//生データが空っぽの場合はバッファを作らずにスキップ
+		if (raw_buffers.at(i).empty()) continue;								//生データが空っぽの場合はバッファを作らずにスキップ
 		D3D11_BUFFER_DESC buffer_desc = {};
 		buffer_desc.ByteWidth = static_cast<UINT>(raw_buffers.at(i).size());// バイトサイズを生データから取得
 		buffer_desc.Usage = D3D11_USAGE_DEFAULT;
@@ -201,7 +201,7 @@ std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const s
 	{
 		data->CreateGpuResources(device);	//復元した生データから即座にGPUバッファを生成
 		return data;						//完成したデータを返す
-	}	
+	}
 
 	//------------------------------------
 	//キャッシュがない場合の通常読み込み
@@ -222,59 +222,68 @@ std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const s
 //=================================================
 DXGI_FORMAT GltfModelData::ConvertFormat(const tinygltf::Accessor& accessor)
 {
-	switch (accessor.type)	//gltfの型(スカラー、ベクトル等)で
+	switch (accessor.type)	//gltfの型(スカラー、ベクトル等)で判定
 	{
-	case TINYGLTF_TYPE_SCALAR:	//スカラー値の場合
+	case TINYGLTF_TYPE_SCALAR:	//インデックスバッファ等
 		switch (accessor.componentType)
 		{
-		case TINYGLTF_COMPONENT_TYPE_BYTE:
-			return DXGI_FORMAT_R8_UINT;	//8ビット符号あり整数
-		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
-			return DXGI_FORMAT_R16_UINT;	//16ビット符号なし整数
-		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:
-			return DXGI_FORMAT_R32_UINT;	//32ビット符号無し整数
-		default:
-			_ASSERT_EXPR(FALSE, L"This accessor component type is not supported");
-			return DXGI_FORMAT_UNKNOWN;	//未対応
-		}
-	case TINYGLTF_TYPE_VEC2:	//2次元ベクトルの場合
-		switch (accessor.componentType)
-		{
-		case TINYGLTF_COMPONENT_TYPE_FLOAT:
-			return DXGI_FORMAT_R32G32_FLOAT;	//UV座標などで使用
-		default:
-			_ASSERT_EXPR(FALSE, L"This accessor component type is not supported");
-			return DXGI_FORMAT_UNKNOWN;	//未対応
-		}
-	case TINYGLTF_TYPE_VEC3:	//３次元ベクトルの場合
-		switch (accessor.componentType)
-		{
-		case TINYGLTF_COMPONENT_TYPE_FLOAT:
-			return DXGI_FORMAT_R32G32B32_FLOAT;	//座標、法線などで使用
-		default:
-			_ASSERT_EXPR(FALSE, L"This accessor component type is not supported");
-			return DXGI_FORMAT_UNKNOWN;	//未対応
-		}
-	case TINYGLTF_TYPE_VEC4:	//4次元ベクトルの場合
-		switch (accessor.componentType)
-		{
-		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
-			return DXGI_FORMAT_R8G8B8A8_UINT;	//色、ウェイトなど
-		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
-			return DXGI_FORMAT_R16G16B16A16_UINT;	//色、ウェイトなど
-		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:
-			return DXGI_FORMAT_R32G32B32A32_UINT;	//色、ウェイトなど
-		case TINYGLTF_COMPONENT_TYPE_FLOAT:
-			return DXGI_FORMAT_R32G32B32A32_FLOAT;	//色、ウェイトなど
-		default:
-			_ASSERT_EXPR(FALSE, L"This accessor component type is not supported");
-			return DXGI_FORMAT_UNKNOWN;	//未対応
+		case TINYGLTF_COMPONENT_TYPE_BYTE:           return DXGI_FORMAT_R8_SINT;
+		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:  return DXGI_FORMAT_R8_UINT;	//UEが容量節約によく使う型
+		case TINYGLTF_COMPONENT_TYPE_SHORT:          return DXGI_FORMAT_R16_SINT;
+		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT: return DXGI_FORMAT_R16_UINT;
+		case TINYGLTF_COMPONENT_TYPE_INT:            return DXGI_FORMAT_R32_SINT;
+		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:   return DXGI_FORMAT_R32_UINT;
+		case TINYGLTF_COMPONENT_TYPE_FLOAT:          return DXGI_FORMAT_R32_FLOAT;
+		default: break;
 		}
 		break;
-	default:
-		_ASSERT_EXPR(FALSE, L"This accessor component type is not supported");
-		return DXGI_FORMAT_UNKNOWN;	//未知の型
+
+	case TINYGLTF_TYPE_VEC2:	//UV座標等
+		switch (accessor.componentType)
+		{
+		case TINYGLTF_COMPONENT_TYPE_BYTE:           return accessor.normalized ? DXGI_FORMAT_R8G8_SNORM : DXGI_FORMAT_R8G8_SINT;
+		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:  return accessor.normalized ? DXGI_FORMAT_R8G8_UNORM : DXGI_FORMAT_R8G8_UINT;
+		case TINYGLTF_COMPONENT_TYPE_SHORT:          return accessor.normalized ? DXGI_FORMAT_R16G16_SNORM : DXGI_FORMAT_R16G16_SINT;
+		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT: return accessor.normalized ? DXGI_FORMAT_R16G16_UNORM : DXGI_FORMAT_R16G16_UINT;
+		case TINYGLTF_COMPONENT_TYPE_INT:            return DXGI_FORMAT_R32G32_SINT;
+		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:   return DXGI_FORMAT_R32G32_UINT;
+		case TINYGLTF_COMPONENT_TYPE_FLOAT:          return DXGI_FORMAT_R32G32_FLOAT;
+		default: break;
+		}
+		break;
+
+	case TINYGLTF_TYPE_VEC3:	//座標、法線等
+		switch (accessor.componentType)
+		{
+		case TINYGLTF_COMPONENT_TYPE_FLOAT:          return DXGI_FORMAT_R32G32B32_FLOAT;
+		case TINYGLTF_COMPONENT_TYPE_INT:            return DXGI_FORMAT_R32G32B32_SINT;
+		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:   return DXGI_FORMAT_R32G32B32_UINT;
+		default: break;
+		}
+		break;
+
+	case TINYGLTF_TYPE_VEC4:	//色、ジョイント、ウェイト等
+		switch (accessor.componentType)
+		{
+		case TINYGLTF_COMPONENT_TYPE_BYTE:           return accessor.normalized ? DXGI_FORMAT_R8G8B8A8_SNORM : DXGI_FORMAT_R8G8B8A8_SINT;
+		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:  return accessor.normalized ? DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT_R8G8B8A8_UINT;
+		case TINYGLTF_COMPONENT_TYPE_SHORT:          return accessor.normalized ? DXGI_FORMAT_R16G16B16A16_SNORM : DXGI_FORMAT_R16G16B16A16_SINT;
+		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT: return accessor.normalized ? DXGI_FORMAT_R16G16B16A16_UNORM : DXGI_FORMAT_R16G16B16A16_UINT;
+		case TINYGLTF_COMPONENT_TYPE_INT:            return DXGI_FORMAT_R32G32B32A32_SINT;
+		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:   return DXGI_FORMAT_R32G32B32A32_UINT;
+		case TINYGLTF_COMPONENT_TYPE_FLOAT:          return DXGI_FORMAT_R32G32B32A32_FLOAT;
+		default: break;
+		}
+		break;
 	}
+
+	//エラー原因特定のためのデバッグ出力を追加
+	char debug_msg[256];
+	sprintf_s(debug_msg, "[GltfModelData Error] Unsupported accessor! Type: %d, ComponentType: %d\n", accessor.type, accessor.componentType);
+	OutputDebugStringA(debug_msg);
+
+	_ASSERT_EXPR(FALSE, L"This accessor component type is not supported");
+	return DXGI_FORMAT_UNKNOWN;	//未知の型
 }
 
 //=================================
@@ -282,51 +291,142 @@ DXGI_FORMAT GltfModelData::ConvertFormat(const tinygltf::Accessor& accessor)
 //=================================
 void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 {
-	//-------------------------------------
-	//メッシュとプリミティブ情報の構成
-	//-------------------------------------
 	for (std::vector<tinygltf::Mesh>::const_reference gltf_mesh : gltf_model.meshes)	//全メッシュをループ
 	{
 		mesh& mesh = meshes.emplace_back();	//自身のリストにメッシュを追加
-		mesh.name = gltf_mesh.name;	//メッシュ名をコピー
+		mesh.name = gltf_mesh.name;
+
 		for (std::vector<tinygltf::Primitive>::const_reference gltf_primitive : gltf_mesh.primitives)	//メッシュ内の全プリミティブをループ
 		{
 			mesh::primitive& primitive = mesh.primitives.emplace_back();	//自身のリストにプリミティブ追加
-			primitive.material = gltf_primitive.material;	//マテリアル番号をコピー
+			primitive.material = gltf_primitive.material;
 
-			//------------------------------------
-			//インデックスバッファビューの設定
-			//------------------------------------
 			if (gltf_primitive.indices > -1)	//インデックスバッファが存在するか場合
 			{
 				const tinygltf::Accessor& gltf_accessor = gltf_model.accessors.at(gltf_primitive.indices);	//アクセサを取得
 				const tinygltf::BufferView& gltf_buffer_view = gltf_model.bufferViews.at(gltf_accessor.bufferView);	//ビューを取得
 
-				primitive.index_buffer_view.format = ConvertFormat(gltf_accessor);	//データ型をDXGI形式に変換
-				primitive.index_buffer_view.buffer = gltf_buffer_view.buffer;		//参照バッファをコピー
-				primitive.index_buffer_view.stride_in_bytes = gltf_accessor.ByteStride(gltf_buffer_view);	//ストライドを計算
-				primitive.index_buffer_view.byte_offset = gltf_buffer_view.byteOffset + gltf_accessor.byteOffset;	//合計オフセットを計算
-				primitive.index_buffer_view.count = gltf_accessor.count;	//要素数を格納
+				if (gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE)	//8bitのインデックスバッファであるか判定
+				{
+					OutputDebugStringA("[GltfModelData Warning] 8-bit index buffer detected. Promoting to 16-bit.\n");
+
+					std::vector<unsigned char> expanded_buffer(gltf_accessor.count * sizeof(uint16_t));	//16bit用に拡張したサイズのバッファを確保
+					uint16_t* dest = reinterpret_cast<uint16_t*>(expanded_buffer.data());	//書き込み用の16bitポインタ
+					const uint8_t* src = gltf_model.buffers.at(gltf_buffer_view.buffer).data.data() + gltf_buffer_view.byteOffset + gltf_accessor.byteOffset;	//読み込み元の8bitポインタ
+
+					for (size_t i = 0; i < gltf_accessor.count; i++)	//全てのインデックスをループ
+					{
+						dest[i] = src[i];
+					}
+
+					raw_buffers.push_back(std::move(expanded_buffer));
+
+					primitive.index_buffer_view.format = DXGI_FORMAT_R16_UINT;
+					primitive.index_buffer_view.buffer = static_cast<int>(raw_buffers.size() - 1);
+					primitive.index_buffer_view.stride_in_bytes = sizeof(uint16_t);
+					primitive.index_buffer_view.byte_offset = 0;
+					primitive.index_buffer_view.count = gltf_accessor.count;
+				}
+				else	//8bit以外の場合
+				{
+					primitive.index_buffer_view.format = ConvertFormat(gltf_accessor);
+					primitive.index_buffer_view.buffer = gltf_buffer_view.buffer;
+					primitive.index_buffer_view.stride_in_bytes = gltf_accessor.ByteStride(gltf_buffer_view);
+					primitive.index_buffer_view.byte_offset = gltf_buffer_view.byteOffset + gltf_accessor.byteOffset;
+					primitive.index_buffer_view.count = gltf_accessor.count;
+				}
 			}
 
-			//----------------------------
-			//頂点バッファビューの設定
-			//----------------------------
 			for (std::map<std::string, int>::const_reference gltf_attribute : gltf_primitive.attributes)	//全頂点属性を走査
 			{
 				const tinygltf::Accessor& gltf_accessor = gltf_model.accessors.at(gltf_attribute.second);	//属性ごとのアクセサを取得
 				const tinygltf::BufferView& gltf_buffer_view = gltf_model.bufferViews.at(gltf_accessor.bufferView);	//ビューを取得
 
-				buffer_view vertex_buffer_view = {};	//頂点バッファビュー情報を構築
-				vertex_buffer_view.format = ConvertFormat(gltf_accessor);	//データ型をDXGI形式に変換
-				vertex_buffer_view.buffer = gltf_buffer_view.buffer;	//バッファ番号をコピー
-				vertex_buffer_view.stride_in_bytes = gltf_accessor.ByteStride(gltf_buffer_view);	//ストライドをコピー
-				vertex_buffer_view.byte_offset = gltf_buffer_view.byteOffset + gltf_accessor.byteOffset;	//開始位置を計算
-				vertex_buffer_view.count = gltf_accessor.count;	//頂点数を保持
+				if (gltf_attribute.first == "JOINTS_0" && gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE) //ジョイントデータが8ビット整数であるかの条件分岐
+				{
+					OutputDebugStringA("[GltfModelData Warning] 8-bit bone indices detected. Promoting to 16-bit.\n");
 
-				primitive.vertex_buffer_views.emplace(std::make_pair(gltf_attribute.first, vertex_buffer_view));	//マップに登録
+					std::vector<unsigned char> expanded_buffer(gltf_accessor.count * sizeof(uint16_t) * 4); //16ビット整数4要素に拡張するための作業バッファ配列
+					uint16_t* dest = reinterpret_cast<uint16_t*>(expanded_buffer.data()); //拡張バッファの書き込み先先頭ポインタ変数
+					const uint8_t* src = gltf_model.buffers.at(gltf_buffer_view.buffer).data.data() + gltf_buffer_view.byteOffset + gltf_accessor.byteOffset; //生のバイト配列から属性データの開始位置を示す読み込み元ポインタ変数
+					size_t src_stride = gltf_accessor.ByteStride(gltf_buffer_view); //元のデータのストライド幅を表すサイズ変数
+
+					for (size_t i = 0; i < gltf_accessor.count; i++) //すべての頂点要素を走査して型拡張を行うループ
+					{
+						const uint8_t* src_vertex = src + i * src_stride; //現在の頂点のデータ位置を示すポインタ変数
+						dest[i * 4 + 0] = src_vertex[0];
+						dest[i * 4 + 1] = src_vertex[1];
+						dest[i * 4 + 2] = src_vertex[2];
+						dest[i * 4 + 3] = src_vertex[3];
+					}
+
+					raw_buffers.push_back(std::move(expanded_buffer));
+
+					buffer_view vertex_buffer_view = {}; //頂点属性バッファビュー
+					vertex_buffer_view.format = DXGI_FORMAT_R16G16B16A16_UINT;
+					vertex_buffer_view.buffer = static_cast<int>(raw_buffers.size() - 1);
+					vertex_buffer_view.stride_in_bytes = sizeof(uint16_t) * 4;
+					vertex_buffer_view.byte_offset = 0;
+					vertex_buffer_view.count = gltf_accessor.count;
+
+					primitive.vertex_buffer_views.emplace(std::make_pair(gltf_attribute.first, vertex_buffer_view));
+				}
+				else if (gltf_attribute.first == "WEIGHTS_0" && gltf_accessor.componentType != TINYGLTF_COMPONENT_TYPE_FLOAT) //ウェイトデータが浮動小数点数以外で格納されているかの条件分岐
+				{
+					OutputDebugStringA("[GltfModelData Warning] Non-float bone weights detected. Promoting to 32-bit float.\n");
+
+					std::vector<unsigned char> expanded_buffer(gltf_accessor.count * sizeof(float) * 4); //32ビット浮動小数点数4要素に復元するための作業バッファ配列
+					float* dest = reinterpret_cast<float*>(expanded_buffer.data()); //拡張バッファの書き込み先浮動小数点数ポインタ変数
+					const unsigned char* src = gltf_model.buffers.at(gltf_buffer_view.buffer).data.data() + gltf_buffer_view.byteOffset + gltf_accessor.byteOffset; //読み込み元のバイトデータポインタ変数
+					size_t src_stride = gltf_accessor.ByteStride(gltf_buffer_view); //ストライド幅サイズ変数
+
+					for (size_t i = 0; i < gltf_accessor.count; i++) //すべての頂点要素を走査して正規化デコードを行うループ
+					{
+						const unsigned char* src_vertex = src + i * src_stride; //現在の頂点ウェイトデータ位置ポインタ変数
+						if (gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE) //元のデータが8ビット整数であるかの条件分岐
+						{
+							const uint8_t* src_w = reinterpret_cast<const uint8_t*>(src_vertex); //8ビット整数用ポインタ変数
+							dest[i * 4 + 0] = gltf_accessor.normalized ? (src_w[0] / 255.0f) : static_cast<float>(src_w[0]);
+							dest[i * 4 + 1] = gltf_accessor.normalized ? (src_w[1] / 255.0f) : static_cast<float>(src_w[1]);
+							dest[i * 4 + 2] = gltf_accessor.normalized ? (src_w[2] / 255.0f) : static_cast<float>(src_w[2]);
+							dest[i * 4 + 3] = gltf_accessor.normalized ? (src_w[3] / 255.0f) : static_cast<float>(src_w[3]);
+						}
+						else if (gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) //元のデータが16ビット整数であるかの条件分岐
+						{
+							const uint16_t* src_w = reinterpret_cast<const uint16_t*>(src_vertex); //16ビット整数用ポインタ変数
+							dest[i * 4 + 0] = gltf_accessor.normalized ? (src_w[0] / 65535.0f) : static_cast<float>(src_w[0]);
+							dest[i * 4 + 1] = gltf_accessor.normalized ? (src_w[1] / 65535.0f) : static_cast<float>(src_w[1]);
+							dest[i * 4 + 2] = gltf_accessor.normalized ? (src_w[2] / 65535.0f) : static_cast<float>(src_w[2]);
+							dest[i * 4 + 3] = gltf_accessor.normalized ? (src_w[3] / 65535.0f) : static_cast<float>(src_w[3]);
+						}
+					}
+
+					raw_buffers.push_back(std::move(expanded_buffer));
+
+					buffer_view vertex_buffer_view = {}; //頂点属性バッファビュー
+					vertex_buffer_view.format = DXGI_FORMAT_R32G32B32_FLOAT;
+					vertex_buffer_view.buffer = static_cast<int>(raw_buffers.size() - 1);
+					vertex_buffer_view.stride_in_bytes = sizeof(float) * 4;
+					vertex_buffer_view.byte_offset = 0;
+					vertex_buffer_view.count = gltf_accessor.count;
+
+					primitive.vertex_buffer_views.emplace(std::make_pair(gltf_attribute.first, vertex_buffer_view));
+				}
+				else //通常の属性データである場合の条件分岐
+				{
+					buffer_view vertex_buffer_view = {};	//頂点バッファビュー情報を構築
+					vertex_buffer_view.format = ConvertFormat(gltf_accessor);
+					vertex_buffer_view.buffer = gltf_buffer_view.buffer;
+					vertex_buffer_view.stride_in_bytes = gltf_accessor.ByteStride(gltf_buffer_view);
+					vertex_buffer_view.byte_offset = gltf_buffer_view.byteOffset + gltf_accessor.byteOffset;
+					vertex_buffer_view.count = gltf_accessor.count;
+
+					primitive.vertex_buffer_views.emplace(std::make_pair(gltf_attribute.first, vertex_buffer_view));
+				}
 			}
+			ComputeTangentsForPrimitive(primitive);
 		}
+		ConvertMeshAxisSystem(mesh);
 	}
 }
 
@@ -335,58 +435,84 @@ void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 //=========================================
 void GltfModelData::FetchNodes(const tinygltf::Model& gltf_model)
 {
-	for (std::vector<tinygltf::Node>::const_reference gltf_node : gltf_model.nodes)	//モデルの全ノードを走査
+	for (std::vector<tinygltf::Node>::const_reference gltf_node : gltf_model.nodes)
 	{
-		node& node = nodes.emplace_back();	//自身のノードリストに新しい要素を追加
-		node.name = gltf_node.name;			//ノード名を格納
-		node.skin = gltf_node.skin;			//スキン番号を格納
-		node.mesh = gltf_node.mesh;			//メッシュ番号を格納
-		node.children = gltf_node.children;	//子ノードのリストをコピー
+		node& node = nodes.emplace_back();
+		node.name = gltf_node.name;
+		node.skin = gltf_node.skin;
+		node.mesh = gltf_node.mesh;
+		node.children = gltf_node.children;
 
-		//--------------------------------
-		//行列またはTRSプロパティの抽出
-		//--------------------------------
-		if (!gltf_node.matrix.empty())	//ノードに行列が直接定義されている場合
+		if (!gltf_node.matrix.empty())
 		{
-			DirectX::XMFLOAT4X4 matrix;	//一時的な行列格納
-			for (size_t row = 0; row < MATRIX_DIMENSION; row++)	//行ループを行う
+			DirectX::XMFLOAT4X4 matrix;
+			constexpr size_t MATRIX_ELEMENTS = 16;
+
+			for (size_t i = 0; i < MATRIX_ELEMENTS; i++)
 			{
-				for (size_t column = 0; column < 4; column++)	//列ループを行う
+				matrix.m[i / MATRIX_DIMENSION][i % MATRIX_DIMENSION] = static_cast<float>(gltf_node.matrix.at(i));
+			}
+
+			DirectX::XMMATRIX m = DirectX::XMLoadFloat4x4(&matrix);
+			DirectX::XMVECTOR det = DirectX::XMMatrixDeterminant(m);
+			DirectX::XMVECTOR S, R, T;
+			bool succeed = false;
+
+			if (DirectX::XMVector3Less(det, DirectX::XMVectorZero()))
+			{
+				DirectX::XMMATRIX fixed_m = m;
+				fixed_m.r[0] = DirectX::XMVectorNegate(fixed_m.r[0]);
+				succeed = DirectX::XMMatrixDecompose(&S, &R, &T, fixed_m);
+
+				if (succeed)
 				{
-					matrix(row, column) = static_cast<float>(gltf_node.matrix.at(4 * row + column));	//行列要素に一つずつ転送
+					DirectX::XMFLOAT3 scale_val;
+					DirectX::XMStoreFloat3(&scale_val, S);
+					scale_val.x = -scale_val.x;
+					S = DirectX::XMLoadFloat3(&scale_val);
 				}
 			}
+			else
+			{
+				succeed = DirectX::XMMatrixDecompose(&S, &R, &T, m);
+			}
 
-			DirectX::XMVECTOR S, R, T;	//スケール、回転、座標を格納
-			bool succeed = DirectX::XMMatrixDecompose(&S, &R, &T, DirectX::XMLoadFloat4x4(&matrix));	//行列をTRS成分に分解
-			_ASSERT_EXPR(succeed, L"Failed to decompose matrix");	//分解に失敗した際は停止
+			if (!succeed)
+			{
+				OutputDebugStringA("[GltfModelData Warning] FetchNodes: Failed to decompose matrix. Setting default identity.\n");
+				S = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
+				R = DirectX::XMQuaternionIdentity();
+				T = DirectX::XMVectorZero();
+			}
 
-			DirectX::XMStoreFloat3(&node.scale, S);			//分解したスケールを格納
-			DirectX::XMStoreFloat4(&node.rotation, R);		//分解した回転を格納
-			DirectX::XMStoreFloat3(&node.translation, T);	//分解した座標を格納
+			DirectX::XMStoreFloat3(&node.scale, S);
+			DirectX::XMStoreFloat4(&node.rotation, R);
+			DirectX::XMStoreFloat3(&node.translation, T);
 		}
-		else	//行列がなく、個別にスケール、回転、座標が定義されている場合
+		else
 		{
-			if (gltf_node.scale.size() > 0)	//スケール情報がある場合
+			if (gltf_node.scale.size() > 0)
 			{
-				node.scale.x = static_cast<float>(gltf_node.scale.at(0));	//Xスケールを設定
-				node.scale.y = static_cast<float>(gltf_node.scale.at(1));	//Yスケールを設定
-				node.scale.z = static_cast<float>(gltf_node.scale.at(2));	//Zスケールを設定
+				node.scale.x = static_cast<float>(gltf_node.scale.at(0));
+				node.scale.y = static_cast<float>(gltf_node.scale.at(1));
+				node.scale.z = static_cast<float>(gltf_node.scale.at(2));
 			}
-			if (gltf_node.translation.size() > 0)	//座標情報がある場合
+			if (gltf_node.translation.size() > 0)
 			{
-				node.translation.x = static_cast<float>(gltf_node.translation.at(0));	//X座標を設定
-				node.translation.y = static_cast<float>(gltf_node.translation.at(1));	//Y座標を設定
-				node.translation.z = static_cast<float>(gltf_node.translation.at(2));	//Z座標を設定
+				node.translation.x = static_cast<float>(gltf_node.translation.at(0));
+				node.translation.y = static_cast<float>(gltf_node.translation.at(1));
+				node.translation.z = static_cast<float>(gltf_node.translation.at(2));
 			}
-			if (gltf_node.rotation.size() > 0)	//回転情報がある場合
+			if (gltf_node.rotation.size() > 0)
 			{
-				node.rotation.x = static_cast<float>(gltf_node.rotation.at(0));	//虚部Xを設定
-				node.rotation.y = static_cast<float>(gltf_node.rotation.at(1));	//虚部Yを設定
-				node.rotation.z = static_cast<float>(gltf_node.rotation.at(2));	//虚部Zを設定
-				node.rotation.w = static_cast<float>(gltf_node.rotation.at(3));	//虚部Wを設定
+				node.rotation.x = static_cast<float>(gltf_node.rotation.at(0));
+				node.rotation.y = static_cast<float>(gltf_node.rotation.at(1));
+				node.rotation.z = static_cast<float>(gltf_node.rotation.at(2));
+				node.rotation.w = static_cast<float>(gltf_node.rotation.at(3));
 			}
 		}
+
+		ConvertNodeAxisSystem(node);
 	}
 }
 
@@ -484,34 +610,47 @@ void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 	using namespace tinygltf;
 	using namespace DirectX;
 
-	for (vector<Skin>::const_reference transmission_skin : gltf_model.skins)
+	for (vector<Skin>::const_reference transmission_skin : gltf_model.skins)	//モデル内のすべてのスキン情報をループ
 	{
-		skin& skin = skins.emplace_back();
-		const Accessor& gltf_accessor = gltf_model.accessors.at(transmission_skin.inverseBindMatrices);
-		const BufferView& gltf_buffer_view = gltf_model.bufferViews.at(gltf_accessor.bufferView);
+		skin& skin = skins.emplace_back();	//新しいスキン要素を追加
+		const Accessor& gltf_accessor = gltf_model.accessors.at(transmission_skin.inverseBindMatrices);	//逆バインド行列のアクセサを取得
+		const BufferView& gltf_buffer_view = gltf_model.bufferViews.at(gltf_accessor.bufferView);	//対応するバッファビューを取得
 		skin.inverse_bind_matrices.resize(gltf_accessor.count);
 		memcpy(
 			skin.inverse_bind_matrices.data(),
 			gltf_model.buffers.at(gltf_buffer_view.buffer).data.data() + gltf_buffer_view.byteOffset + gltf_accessor.byteOffset,
 			gltf_accessor.count * sizeof(XMFLOAT4X4));
 		skin.joints = transmission_skin.joints;
+
+		for (size_t i = 0; i < skin.inverse_bind_matrices.size(); i++)	//読み込んだ全ての逆バインド行列をループ
+		{
+			DirectX::XMFLOAT4X4& m = skin.inverse_bind_matrices.at(i); //対象の逆バインド行列参照変数
+
+			m._12 = -m._12;
+			m._13 = -m._13;
+			m._21 = -m._21;
+			m._31 = -m._31;
+			m._41 = -m._41;
+		}
+
+		skin.joints = transmission_skin.joints;
 	}
 
-	for (vector<Animation>::const_reference gltf_animation : gltf_model.animations)
+	for (vector<Animation>::const_reference gltf_animation : gltf_model.animations)	//全アニメーションデータをループ
 	{
-		animation& animation = animations.emplace_back();
+		animation& animation = animations.emplace_back();	//アニメーション構造体を追加
 		animation.name = gltf_animation.name;
-		for (vector<AnimationSampler>::const_reference gltf_sampler : gltf_animation.samplers)
+		for (vector<AnimationSampler>::const_reference gltf_sampler : gltf_animation.samplers)	//アニメーション内の全サンプラーをループ
 		{
-			animation::sampler& sampler = animation.samplers.emplace_back();
+			animation::sampler& sampler = animation.samplers.emplace_back();	//サンプラー構造体を追加
 			sampler.input = gltf_sampler.input;
 			sampler.output = gltf_sampler.output;
 			sampler.interpolation = gltf_sampler.interpolation;
 
-			const Accessor& gltf_accessor = gltf_model.accessors.at(gltf_sampler.input);
-			const BufferView& gltf_buffer_view = gltf_model.bufferViews.at(gltf_accessor.bufferView);
-			const pair<unordered_map<int, vector<float>>::iterator, bool>& timelines{ animation.timelines.emplace(gltf_sampler.input, gltf_accessor.count) };
-			if (timelines.second)
+			const Accessor& gltf_accessor = gltf_model.accessors.at(gltf_sampler.input);	//入力アクセサを取得
+			const BufferView& gltf_buffer_view = gltf_model.bufferViews.at(gltf_accessor.bufferView);	//入力ビューを取得
+			const pair<unordered_map<int, vector<float>>::iterator, bool>& timelines{ animation.timelines.emplace(gltf_sampler.input, gltf_accessor.count) };	//タイムライン配列を確保
+			if (timelines.second)	//新規に確保が成功したかの条件分岐
 			{
 				memcpy(
 					timelines.first->second.data(),
@@ -519,20 +658,21 @@ void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 					gltf_accessor.count * sizeof(FLOAT));
 			}
 		}
-		for (vector<AnimationChannel>::const_reference gltf_channel : gltf_animation.channels)
+		for (vector<AnimationChannel>::const_reference gltf_channel : gltf_animation.channels)	//全チャンネルをループ
 		{
-			animation::channel& channel = animation.channels.emplace_back();
+			animation::channel& channel = animation.channels.emplace_back();	//チャンネル構造体を追加
 			channel.sampler = gltf_channel.sampler;
 			channel.target_node = gltf_channel.target_node;
 			channel.target_path = gltf_channel.target_path;
 
-			const AnimationSampler& gltf_sampler = gltf_animation.samplers.at(gltf_channel.sampler);
-			const Accessor& gltf_accessor = gltf_model.accessors.at(gltf_sampler.output);
-			const BufferView& gltf_buffer_view = gltf_model.bufferViews.at(gltf_accessor.bufferView);
+			const AnimationSampler& gltf_sampler = gltf_animation.samplers.at(gltf_channel.sampler);	//対応サンプラーを取得
+			const Accessor& gltf_accessor = gltf_model.accessors.at(gltf_sampler.output);	//出力アクセサを取得
+			const BufferView& gltf_buffer_view = gltf_model.bufferViews.at(gltf_accessor.bufferView);	//出力ビューを取得
 
-			if (gltf_channel.target_path == "scale")
+			if (gltf_channel.target_path == "scale")	//スケールに対するアニメーションチャネルであるかの条件分岐
 			{
-				const pair<unordered_map<int, vector<XMFLOAT3>>::iterator, bool>& scales = animation.scales.emplace(gltf_sampler.output, gltf_accessor.count);				if (scales.second)
+				const pair<unordered_map<int, vector<XMFLOAT3>>::iterator, bool>& scales = animation.scales.emplace(gltf_sampler.output, gltf_accessor.count);
+				if (scales.second)	//新規に確保が成功したかの条件分岐
 				{
 					memcpy(
 						scales.first->second.data(),
@@ -540,10 +680,10 @@ void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 						gltf_accessor.count * sizeof(XMFLOAT3));
 				}
 			}
-			else if (gltf_channel.target_path == "rotation")
+			else if (gltf_channel.target_path == "rotation")	//回転に対するアニメーションチャネルであるかの条件分岐
 			{
 				const pair<unordered_map<int, vector<XMFLOAT4>>::iterator, bool>& rotations = animation.rotations.emplace(gltf_sampler.output, gltf_accessor.count);
-				if (rotations.second)
+				if (rotations.second)	//新規に確保が成功したかの条件分岐
 				{
 					memcpy(
 						rotations.first->second.data(),
@@ -551,11 +691,11 @@ void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 						gltf_accessor.count * sizeof(XMFLOAT4));
 				}
 			}
-			else if (gltf_channel.target_path == "translation")
+			else if (gltf_channel.target_path == "translation")	//位置に対するアニメーションチャネルであるかの条件分岐
 			{
 				const pair<unordered_map<int, vector<XMFLOAT3>>::iterator, bool>& translations = animation.translations.emplace(gltf_sampler.output, gltf_accessor.count);
 
-				if (translations.second)
+				if (translations.second)	//新規に確保が成功したかの条件分岐
 				{
 					memcpy(
 						translations.first->second.data(),
@@ -565,12 +705,13 @@ void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 			}
 		}
 	}
-	for (decltype(animations)::reference animation : animations)
+	for (decltype(animations)::reference animation : animations) //全アニメーションの再生時間を確定するループ
 	{
-		for (decltype(animation.timelines)::reference timelines : animation.timelines)
+		for (decltype(animation.timelines)::reference timelines : animation.timelines) //全タイムラインを走査するループ
 		{
 			animation.duration = std::max<float>(animation.duration, timelines.second.back());
 		}
+		ConvertAnimationAxisSystem(animation);
 	}
 }
 
@@ -588,5 +729,195 @@ void GltfModelData::MapAnimationNames(const tinygltf::Model& gltf_model)
 			animation_name = "anim_" + std::to_string(animation_index);	//anim_0, anim_1 のように連番の仮名を作成しエラーを防ぐ
 		}
 		animation_index_map.insert(std::make_pair(animation_name, animation_index));	//名前をキーとして、インデックス番号をマップに登録
+	}
+}
+
+//モデルデータに接線（TANGENT）情報が含まれていない場合、頂点座標とUV座標から接線ベクトルを自動計算
+void GltfModelData::ComputeTangentsForPrimitive(mesh::primitive& primitive)
+{
+	if (primitive.has("TANGENT") || !primitive.has("POSITION") || !primitive.has("TEXCOORD_0") || primitive.index_buffer_view.buffer == -1)
+	{
+		return;
+	}
+
+	const buffer_view& pos_view = primitive.vertex_buffer_views.at("POSITION");
+	const buffer_view& uv_view = primitive.vertex_buffer_views.at("TEXCOORD_0");
+	const buffer_view& idx_view = primitive.index_buffer_view;
+	const buffer_view& norm_view = primitive.has("NORMAL") ? primitive.vertex_buffer_views.at("NORMAL") : pos_view;
+
+	size_t vertex_count = pos_view.count;
+	std::vector<DirectX::XMFLOAT3> tan1(vertex_count, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	std::vector<DirectX::XMFLOAT3> tan2(vertex_count, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+
+	const unsigned char* pos_data = raw_buffers.at(pos_view.buffer).data() + pos_view.byte_offset;
+	const unsigned char* uv_data = raw_buffers.at(uv_view.buffer).data() + uv_view.byte_offset;
+	const unsigned char* idx_data = raw_buffers.at(idx_view.buffer).data() + idx_view.byte_offset;
+
+	for (size_t i = 0; i < idx_view.count; i += 3)
+	{
+		uint32_t i1 = 0, i2 = 0, i3 = 0;
+
+		if (idx_view.format == DXGI_FORMAT_R16_UINT)
+		{
+			const uint16_t* idx = reinterpret_cast<const uint16_t*>(idx_data + i * idx_view.stride_in_bytes);
+			i1 = idx[0]; i2 = idx[1]; i3 = idx[2];
+		}
+		else if (idx_view.format == DXGI_FORMAT_R32_UINT)
+		{
+			const uint32_t* idx = reinterpret_cast<const uint32_t*>(idx_data + i * idx_view.stride_in_bytes);
+			i1 = idx[0]; i2 = idx[1]; i3 = idx[2];
+		}
+
+		const DirectX::XMFLOAT3& v1 = *reinterpret_cast<const DirectX::XMFLOAT3*>(pos_data + i1 * pos_view.stride_in_bytes);
+		const DirectX::XMFLOAT3& v2 = *reinterpret_cast<const DirectX::XMFLOAT3*>(pos_data + i2 * pos_view.stride_in_bytes);
+		const DirectX::XMFLOAT3& v3 = *reinterpret_cast<const DirectX::XMFLOAT3*>(pos_data + i3 * pos_view.stride_in_bytes);
+
+		const DirectX::XMFLOAT2& w1 = *reinterpret_cast<const DirectX::XMFLOAT2*>(uv_data + i1 * uv_view.stride_in_bytes);
+		const DirectX::XMFLOAT2& w2 = *reinterpret_cast<const DirectX::XMFLOAT2*>(uv_data + i2 * uv_view.stride_in_bytes);
+		const DirectX::XMFLOAT2& w3 = *reinterpret_cast<const DirectX::XMFLOAT2*>(uv_data + i3 * uv_view.stride_in_bytes);
+
+		float x1 = v2.x - v1.x; float x2 = v3.x - v1.x;
+		float y1 = v2.y - v1.y; float y2 = v3.y - v1.y;
+		float z1 = v2.z - v1.z; float z2 = v3.z - v1.z;
+		float s1 = w2.x - w1.x; float s2 = w3.x - w1.x;
+		float t1 = w2.y - w1.y; float t2 = w3.y - w1.y;
+
+		float r = 1.0f / (s1 * t2 - s2 * t1);
+		DirectX::XMFLOAT3 sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r, (t2 * z1 - t1 * z2) * r);
+		DirectX::XMFLOAT3 tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r, (s1 * z2 - s2 * z1) * r);
+
+		tan1.at(i1).x += sdir.x; tan1.at(i1).y += sdir.y; tan1.at(i1).z += sdir.z;
+		tan1.at(i2).x += sdir.x; tan1.at(i2).y += sdir.y; tan1.at(i2).z += sdir.z;
+		tan1.at(i3).x += sdir.x; tan1.at(i3).y += sdir.y; tan1.at(i3).z += sdir.z;
+
+		tan2.at(i1).x += tdir.x; tan2.at(i1).y += tdir.y; tan2.at(i1).z += tdir.z;
+		tan2.at(i2).x += tdir.x; tan2.at(i2).y += tdir.y; tan2.at(i2).z += tdir.z;
+		tan2.at(i3).x += tdir.x; tan2.at(i3).y += tdir.y; tan2.at(i3).z += tdir.z;
+	}
+
+	std::vector<unsigned char> tangent_buffer(vertex_count * sizeof(DirectX::XMFLOAT4));
+	unsigned char* norm_base_data = raw_buffers.at(norm_view.buffer).data() + norm_view.byte_offset;
+
+	for (size_t i = 0; i < vertex_count; ++i)
+	{
+		const DirectX::XMFLOAT3& n_val = *reinterpret_cast<const DirectX::XMFLOAT3*>(norm_base_data + i * norm_view.stride_in_bytes);
+		DirectX::XMVECTOR N = DirectX::XMLoadFloat3(&n_val);
+		DirectX::XMVECTOR T1 = DirectX::XMLoadFloat3(&tan1.at(i));
+
+		DirectX::XMVECTOR T = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(T1, DirectX::XMVectorScale(N, DirectX::XMVectorGetX(DirectX::XMVector3Dot(N, T1)))));
+		DirectX::XMVECTOR T2 = DirectX::XMLoadFloat3(&tan2.at(i));
+		float handedness = (DirectX::XMVectorGetX(DirectX::XMVector3Dot(DirectX::XMVector3Cross(N, T1), T2)) < 0.0f) ? -1.0f : 1.0f;
+
+		DirectX::XMFLOAT4 final_tangent;
+		DirectX::XMStoreFloat4(&final_tangent, DirectX::XMVectorSetW(T, handedness));
+		reinterpret_cast<DirectX::XMFLOAT4*>(tangent_buffer.data())[i] = final_tangent;
+	}
+
+	raw_buffers.push_back(std::move(tangent_buffer));
+
+	buffer_view tang_view = {};
+	tang_view.format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	tang_view.buffer = static_cast<int>(raw_buffers.size() - 1);
+	tang_view.stride_in_bytes = sizeof(DirectX::XMFLOAT4);
+	tang_view.byte_offset = 0;
+	tang_view.count = vertex_count;
+
+	primitive.vertex_buffer_views.emplace("TANGENT", tang_view);
+}
+
+//メッシュ内の頂点データ（座標、法線、接線）のX軸を反転してDirectX仕様の左手系に変換
+void GltfModelData::ConvertMeshAxisSystem(mesh& target_mesh)
+{
+	for (mesh::primitive& primitive : target_mesh.primitives)
+	{
+		if (primitive.has("POSITION"))
+		{
+			buffer_view& view = primitive.vertex_buffer_views.at("POSITION");
+			unsigned char* data = raw_buffers.at(view.buffer).data() + view.byte_offset;
+
+			for (size_t i = 0; i < view.count; ++i)
+			{
+				DirectX::XMFLOAT3* pos = reinterpret_cast<DirectX::XMFLOAT3*>(data + i * view.stride_in_bytes);
+				pos->x = -pos->x;
+			}
+		}
+
+		if (primitive.has("NORMAL"))
+		{
+			buffer_view& view = primitive.vertex_buffer_views.at("NORMAL");
+			unsigned char* data = raw_buffers.at(view.buffer).data() + view.byte_offset;
+
+			for (size_t i = 0; i < view.count; ++i)
+			{
+				DirectX::XMFLOAT3* norm = reinterpret_cast<DirectX::XMFLOAT3*>(data + i * view.stride_in_bytes);
+				norm->x = -norm->x;
+			}
+		}
+
+		if (primitive.has("TANGENT"))
+		{
+			buffer_view& view = primitive.vertex_buffer_views.at("TANGENT");
+			unsigned char* data = raw_buffers.at(view.buffer).data() + view.byte_offset;
+
+			for (size_t i = 0; i < view.count; ++i)
+			{
+				DirectX::XMFLOAT4* tang = reinterpret_cast<DirectX::XMFLOAT4*>(data + i * view.stride_in_bytes);
+				tang->x = -tang->x;
+			}
+		}
+
+		if (primitive.index_buffer_view.buffer > -1)
+		{
+			buffer_view& view = primitive.index_buffer_view;
+			unsigned char* data = raw_buffers.at(view.buffer).data() + view.byte_offset;
+
+			for (size_t i = 0; i < view.count; i += 3)
+			{
+				if (view.format == DXGI_FORMAT_R16_UINT)
+				{
+					uint16_t* idx = reinterpret_cast<uint16_t*>(data + i * view.stride_in_bytes);
+					uint16_t temp = idx[1];
+					idx[1] = idx[2];
+					idx[2] = temp;
+				}
+				else if (view.format == DXGI_FORMAT_R32_UINT)
+				{
+					uint32_t* idx = reinterpret_cast<uint32_t*>(data + i * view.stride_in_bytes);
+					uint32_t temp = idx[1];
+					idx[1] = idx[2];
+					idx[2] = temp;
+				}
+			}
+		}
+	}
+}
+
+//各ボーン・ノードの初期ポーズ（TRSプロパティ）の座標系を右手系から左手系に変換
+void GltfModelData::ConvertNodeAxisSystem(node& target_node)
+{
+	target_node.translation.x = -target_node.translation.x;
+
+	target_node.rotation.x = -target_node.rotation.x;
+	target_node.rotation.z = -target_node.rotation.z;
+}
+
+//アニメーションの全キーフレーム（位置、回転）のデータを左手系に変換
+void GltfModelData::ConvertAnimationAxisSystem(animation& target_animation)
+{
+	for (auto& pair : target_animation.translations) // すべての移動キーフレームマップを走査するループ
+	{
+		for (DirectX::XMFLOAT3& trans : pair.second)
+		{
+			trans.x = -trans.x;
+		}
+	}
+
+	for (auto& pair : target_animation.rotations) // すべての回転キーフレームマップを走査するループ
+	{
+		for (DirectX::XMFLOAT4& rot : pair.second)
+		{
+			rot.x = -rot.x;
+			rot.w = -rot.w;
+		}
 	}
 }
