@@ -23,7 +23,7 @@ bool FbxLoader::Load(
 	if (!out_resource) return false;
 
 	//キャッシュの確認
-	std::string cache_filename = filename + ".bin";
+	std::string cache_filename = filename + ".cerial";
 	bool use_cache = false;
 
 	namespace fs = std::filesystem;

@@ -14,7 +14,7 @@ static AutoRegister<Player> auto_register_player("Player");
 Player::Player()
 {
 	auto device = Graphics::Instance().GetDevice();
-	character = std::make_shared<Model>(device, "Data/Model/Character/Player/Greystone_WhiteTiger.glb");
+	character = std::make_shared<Model>(device, "Data/Model/Character/Player/Greystone_WhiteTiger.gltf");
 	move_speed = 5.0f;
 	height = 0.8f;
 	radius = 0.4f;

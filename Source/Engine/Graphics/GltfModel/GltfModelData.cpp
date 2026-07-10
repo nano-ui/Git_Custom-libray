@@ -203,7 +203,7 @@ std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const s
 	//-----------------------------
 	//キャッシュファイル名の生成
 	//-----------------------------
-	std::string binary_filename = filename + ".bin";							//元の名前に「.bin」を付与してキャッシュ用ファイル名とする
+	std::string binary_filename = filename + ".cerial";							//元の名前に「.bin」を付与してキャッシュ用ファイル名とする
 	std::shared_ptr<GltfModelData> data = std::make_shared<GltfModelData>();	//空のデータインスタンスを生成
 
 	//-------------------------------
