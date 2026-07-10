@@ -335,7 +335,7 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 		// 最終確定した遷移先ノードに対応するアニメーション情報を反映するためのループ処理
 		for (size_t n = 0; n < runtime_nodes.size(); n++)
 		{
-			const RuntimeNode& node = runtime_nodes[n]; // 走査対象の実行時ノード情報の
+			const RuntimeNode& node = runtime_nodes[n]; // 走査対象の実行時ノード情報
 
 			// ノードIDが最終的な現在のアクティブIDと一致したかを判定
 			if (node.id == current_node_id)

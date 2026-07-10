@@ -1213,7 +1213,7 @@
             "Nodes": [
                 {
                     "ActionCategory": 1,
-                    "AnimationName": "Run_Back_Start",
+                    "AnimationName": "Run_Back",
                     "ID": 110,
                     "Input": [
                         {
@@ -1242,7 +1242,7 @@
                 },
                 {
                     "ActionCategory": 1,
-                    "AnimationName": "Run_Right_Start",
+                    "AnimationName": "Run_Right",
                     "ID": 124,
                     "Input": [
                         {
@@ -1271,7 +1271,7 @@
                 },
                 {
                     "ActionCategory": 1,
-                    "AnimationName": "Run_Left_Start",
+                    "AnimationName": "Run_Left",
                     "ID": 131,
                     "Input": [
                         {
@@ -1300,7 +1300,7 @@
                 },
                 {
                     "ActionCategory": 1,
-                    "AnimationName": "Run_Front_Start",
+                    "AnimationName": "Run_Front",
                     "ID": 147,
                     "Input": [
                         {

@@ -217,6 +217,15 @@ public:
 		DirectX::XMFLOAT4X4 matrices[PRIMITIVE_MAX_JOINTS];
 	};
 
+	//インデックス指定によるキャッシュ用の軽量描画コマンド構造体
+	struct cached_command
+	{
+		int node_index = -1;		//対象ノードの番号
+		int mesh_index = -1;		//対象メッシュの番号
+		int primitive_index = -1;	//対象プリミティブの番号
+		int material_index = -1;	//ソート比較用のマテリアル番号
+	};
+
 public:
 	//コンストラクタ
 	GltfModelData() = default;
@@ -253,6 +262,9 @@ private:
 	//ニメーションの全キーフレーム（位置、回転）のデータを左手系に変換
 	void ConvertAnimationAxisSystem(animation& target_animation);
 
+	//初期化時に描画コマンド配列の構築とマテリアル順ソートを事前に行う
+	void BuildRenderCommandsCache();
+
 public:
 	std::vector<std::vector<unsigned char>> raw_buffers;	//シリアライズ用の生データ保持配列
 	std::string filename;	//ファイルの名前
@@ -274,5 +286,6 @@ public:
 	int default_scene = 0;	//開始シーン番号
 
 	std::unordered_map<std::string, size_t> animation_index_map;	//アニメーション名からインデックスを検索するためのマップ
+	std::vector<cached_command> cached_render_commands;	//マテリアル順にソート済みの事前構築描画コマンドキャッシュ配列
 };
 

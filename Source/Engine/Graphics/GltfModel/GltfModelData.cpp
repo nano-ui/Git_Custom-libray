@@ -17,6 +17,16 @@ bool null_load_image_data(tinygltf::Image*, const int, std::string*, std::string
 	return true;
 }
 
+//マテリアルキャッシュを昇順ソートするための比較関数オブジェクト構造体
+struct CompareMaterialCache
+{
+	//比較演算子のオーバーロード関数
+	bool operator()(const GltfModelData::cached_command& a, const GltfModelData::cached_command& b) const
+	{
+		return a.material_index < b.material_index;
+	}
+};
+
 //デバイスとファイルを受け取ってモデルデータを初期化
 GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const std::string& filename)
 {
@@ -86,6 +96,8 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 	{
 		CreateGpuResources(device.Get());
 	}
+
+	BuildRenderCommandsCache();
 }
 
 //========================================
@@ -920,4 +932,39 @@ void GltfModelData::ConvertAnimationAxisSystem(animation& target_animation)
 			rot.w = -rot.w;
 		}
 	}
+}
+
+//初期化時に描画コマンド配列の構築とマテリアル順ソートを事前に行う
+void GltfModelData::BuildRenderCommandsCache()
+{
+	//モデルが持つすべてのノードを走査
+	for (size_t i = 0; i < nodes.size(); i++)
+	{
+		const node& current_node = nodes.at(i);	//現在のノード情報
+
+		//ノードに有効なメッシュ番号が割り当てられているか判定
+		if (current_node.mesh > -1)
+		{
+			const mesh& current_mesh = meshes.at(current_node.mesh);	//該当するメッシュデータ
+
+			for (size_t j = 0; j < current_mesh.primitives.size(); j++)
+			{
+				cached_command command = {};	//登録用の軽量コマンド構造体
+				command.node_index = static_cast<int>(i);
+				command.mesh_index = current_node.mesh;
+				command.primitive_index = static_cast<int>(j);
+				command.material_index = current_mesh.primitives.at(j).material;
+				cached_render_commands.push_back(command);
+			}
+		}
+	}
+
+	//構築したキャッシュコマンド配列が完全に空であるかの条件分岐
+	if (cached_render_commands.empty()) 
+	{
+		OutputDebugStringA("[GltfModelData Warning] BuildRenderCommandsCache: No renderable primitives found in this model.\n");
+		return;
+	}
+
+	std::sort(cached_render_commands.begin(), cached_render_commands.end(), CompareMaterialCache()); //関数オブジェクトを利用してマテリアル番号順にソートを実行
 }

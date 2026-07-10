@@ -92,7 +92,6 @@ template<class Archive> void serialize(Archive& archive, GltfModelData::image& i
 //--------------------------------------------------
 template<class Archive> void serialize(Archive& archive, GltfModelData::skin& s)
 {
-	// ※skin構造体にnameは存在しないので除外してあります
 	archive(s.inverse_bind_matrices, s.joints);
 }
 template<class Archive> void serialize(Archive& archive, GltfModelData::animation::channel& c)
@@ -107,26 +106,33 @@ template<class Archive> void serialize(Archive& archive, GltfModelData::animatio
 {
 	archive(a.name, a.duration, a.channels, a.samplers, a.timelines, a.scales, a.rotations, a.translations);
 }
-//---------------------------------------
+
+//キャッシュ用の軽量描画コマンド構造体のシリアライズ定義関数
+template<class Archive> void serialize(Archive& archive, GltfModelData::cached_command& c)
+{
+	archive(c.node_index, c.mesh_index, c.primitive_index, c.material_index);
+}
+
+//=======================================
 //バイナリファイルからデータを読み込み
-//---------------------------------------
+//=======================================
 bool GltfModelSerializer::Load(const std::string& filename, const std::shared_ptr<GltfModelData>& resource)
 {
-	if (!resource) return false;
+	if (!resource) //ポインタの有効性確認の条件分岐
+	{
+		return false;
+	}
 
 	try
 	{
-		//--------------------------------------------------
-		// バイナリ読み込みモードでストリームを開く
-		//--------------------------------------------------
-		std::ifstream input_file(filename, std::ios::binary);	// 指定されたファイルをバイナリ形式で開く
-		if (!input_file.is_open()) return false;				// ファイルが見つからなかった場合は失敗を返す
+		std::ifstream input_file(filename, std::ios::binary); //読み込み用のバイナリファイルストリーム変数
+		if (!input_file.is_open()) //ファイルのオープン成否判定の条件分岐
+		{
+			return false;
+		}
 
-		cereal::BinaryInputArchive archive(input_file);			// cerealのバイナリ入力アーカイブを生成する
+		cereal::BinaryInputArchive archive(input_file); //cerealの入力用アーカイブオブジェクト変数
 
-		//--------------------------------------------------
-		// 全ての生データをファイルから一括で復元する
-		//--------------------------------------------------
 		archive(
 			resource->filename,
 			resource->default_scene,
@@ -139,14 +145,16 @@ bool GltfModelSerializer::Load(const std::string& filename, const std::shared_pt
 			resource->images,
 			resource->skins,
 			resource->animations,
-			resource->animation_index_map
+			resource->animation_index_map,
+			resource->cached_render_commands //事前ソート済みの描画コマンドキャッシュ配列を末尾に追加して復元
 		);
 
-		return true;	// 読み込み成功としてtrueを返す
+		return true;
 	}
-	catch (...)			// 読み込み中に予期せぬ例外（ファイル破損など）が発生した場合
+	catch (...) //シリアライズ解釈の不一致やファイル破損などで例外が発生した場合の条件分岐
 	{
-		return false;	// 失敗としてfalseを返す
+		OutputDebugStringA("[GltfModelSerializer Error] Load: Exception caught during deserialization. Cache may be corrupted.\n");
+		return false;
 	}
 }
 
@@ -155,21 +163,21 @@ bool GltfModelSerializer::Load(const std::string& filename, const std::shared_pt
 //===================================
 bool GltfModelSerializer::Save(const std::string& filename, const std::shared_ptr<GltfModelData>& resource)
 {
-	if (!resource) return false;																	
+	if (!resource) //ポインタの有効性確認の条件分岐
+	{
+		return false;
+	}
 
 	try
 	{
-		//--------------------------------------------------
-		// バイナリ書き込みモードでストリームを開く
-		//--------------------------------------------------
-		std::ofstream output_file(filename, std::ios::binary);	//指定されたファイルをバイナリ書き込み形式で開く（上書き）
-		if (!output_file.is_open()) return false;				//ファイルが作成できなかった場合は失敗を返す
+		std::ofstream output_file(filename, std::ios::binary); //書き込み用のバイナリファイルストリーム変数
+		if (!output_file.is_open()) //ファイルのオープン成否判定の条件分岐
+		{
+			return false;
+		}
 
-		cereal::BinaryOutputArchive archive(output_file);		// erealのバイナリ出力アーカイブを生成する
+		cereal::BinaryOutputArchive archive(output_file); //cerealの出力用アーカイブオブジェクト変数
 
-		//--------------------------------------------------
-		// 全ての生データをファイルへ一括で書き込む
-		//--------------------------------------------------
 		archive(
 			resource->filename,
 			resource->default_scene,
@@ -182,13 +190,15 @@ bool GltfModelSerializer::Save(const std::string& filename, const std::shared_pt
 			resource->images,
 			resource->skins,
 			resource->animations,
-			resource->animation_index_map
+			resource->animation_index_map,
+			resource->cached_render_commands //事前ソート済みの描画コマンドキャッシュ配列を末尾に追加して保存
 		);
 
-		return true;	//書き込み成功としてtrueを返す
+		return true;
 	}
-	catch (...)			//書き込み中に予期せぬ例外が発生した場合
+	catch (...) //ファイル書き込み規制や予期せぬメモリエラーで例外が発生した場合の条件分岐
 	{
-		return false;	//失敗としてfalseを返す
+		OutputDebugStringA("[GltfModelSerializer Error] Save: Exception caught during serialization.\n");
+		return false;
 	}
 }
