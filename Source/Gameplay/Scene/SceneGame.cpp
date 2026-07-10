@@ -9,7 +9,7 @@
 #include "../Engine/Collision/CollisionManager.h"
 #include "../Engine/Collision/CollisionExperiment.h"
 #include "../Editor/ObjectEditor.h"
-#include "../Editor/StateMachineGraphEditor.h"
+#include "Editor\StateMachineEditor\StateMachineGraphEditor.h"
 #include "../Gameplay/GameObjects/Character/Character.h"
 #include "../Engine/Graphics/Shaders/SkyBox.h"
 #include "SceneManager.h"

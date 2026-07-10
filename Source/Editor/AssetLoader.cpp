@@ -1,4 +1,4 @@
-#include "AssetLoader.h"
+#include "Editor\AssetLoader.h"
 #include "../Engine/Graphics/Graphics.h"
 #include "../Engine/Graphics/Model.h"
 

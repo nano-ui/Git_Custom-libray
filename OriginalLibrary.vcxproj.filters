@@ -126,12 +126,6 @@
     <ClCompile Include="Source\Editor\ObjectEditor.cpp">
       <Filter>Source\Editor\ObjectEditor</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineGraphEditor.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\TransitionConditionEditor.cpp">
-      <Filter>Source\Editor\TransitionConditionEditor</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Camera\FreeCamera.cpp">
       <Filter>Source\Engine\Camera\FreeCamera</Filter>
     </ClCompile>
@@ -345,18 +339,6 @@
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Player.cpp">
       <Filter>Source\Gameplay\GameObjects\Character\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateGraphPaletteWindow.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPaletteWindow</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\StateGraphPropertyWindow.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\StateGraphSimulator.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphsSimulator</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\StateGraphConfigManager.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphConfigManager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Editor\AssetLoader.cpp">
       <Filter>Source\Editor\AssetLoader</Filter>
     </ClCompile>
@@ -371,6 +353,24 @@
     </ClCompile>
     <ClCompile Include="Source\Gameplay\Components\RootMotionComponent.cpp">
       <Filter>Source\Gameplay\Components\RootMotionComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphConfigManager.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphConfigManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphPaletteWindow.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPaletteWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphPropertyWindow.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphSimulator.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphsSimulator</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\TransitionConditionEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -436,12 +436,6 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\ObjectEditor.h">
       <Filter>Source\Editor\ObjectEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineGraphEditor.h">
-      <Filter>Source\Editor\StateMachineGraphEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\TransitionConditionEditor.h">
-      <Filter>Source\Editor\TransitionConditionEditor</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Camera\FreeCamera.h">
       <Filter>Source\Engine\Camera\FreeCamera</Filter>
@@ -680,18 +674,6 @@
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Player.h">
       <Filter>Source\Gameplay\GameObjects\Character\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\StateGraphPaletteWindow.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPaletteWindow</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\StateGraphPropertyWindow.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\StateGraphSimulator.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphsSimulator</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\StateGraphConfigManager.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphConfigManager</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Editor\AssetLoader.h">
       <Filter>Source\Editor\AssetLoader</Filter>
     </ClInclude>
@@ -706,6 +688,24 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\RootMotionComponent.h">
       <Filter>Source\Gameplay\Components\RootMotionComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.h">
+      <Filter>Source\Editor\StateMachineGraphEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphConfigManager.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphConfigManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphPaletteWindow.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPaletteWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphPropertyWindow.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphSimulator.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphsSimulator</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\TransitionConditionEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -824,9 +824,6 @@
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor">
       <UniqueIdentifier>{0f7920b5-f5bb-421c-b26f-1853b47badae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\TransitionConditionEditor">
-      <UniqueIdentifier>{8b97f2da-592b-430d-8cc7-25f87ffbacb0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Engine\Camera\FreeCamera">
       <UniqueIdentifier>{0b40ca37-88b6-4371-93bf-96cbb3c1f4c3}</UniqueIdentifier>
@@ -1103,6 +1100,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\RootMotionComponent">
       <UniqueIdentifier>{a248dffe-bb94-4423-ad9f-8e9eab46f8fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\TransitionConditionEditor">
+      <UniqueIdentifier>{8b97f2da-592b-430d-8cc7-25f87ffbacb0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

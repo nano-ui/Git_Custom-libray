@@ -10,7 +10,7 @@
 #include "StateGraphPropertyWindow.h"
 #include "StateGraphSimulator.h"
 #include "StateGraphConfigManager.h"
-#include "AssetLoader.h"
+#include "Editor\AssetLoader.h"
 
 #include <imgui_node_editor_internal.h>
 #include <cassert>
