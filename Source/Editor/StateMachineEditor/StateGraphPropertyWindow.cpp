@@ -256,7 +256,7 @@ bool StateGraphPropertyWindow::DeawNodeActionSettings(GraphNode* target_node, co
 	ImGui::Text(u8"出発リンクの色設定");
 	ImGui::SetNextItemWidth(-1.0f);
 
-	//カラーピッカーで色が変更されたかを判定する条件
+	//カラーピッカーで色が変更されたかを判定
 	if (ImGui::ColorEdit3(u8"##NodeLinkColorPicker", imgui_color_buffer))	
 	{
 		target_node->link_color_r = imgui_color_buffer[0];

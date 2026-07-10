@@ -616,7 +616,7 @@ std::vector<GraphLink*> StateGraphDataManager::GetLinkesFromNode(uint32_t graph_
 			{
 				uint32_t src_node_id = GetNodeIdFromPinId(graph_id, layer_datas[g].links[l].start_pin_id);	//リンクの開始ピンからノードIDを逆引き
 
-				//リンクの出発元が対象のノードIDと一致したかを判定する条件
+				//リンクの出発元が対象のノードIDと一致したかを判定
 				if (src_node_id == node_id)
 				{
 					result_linkes.push_back(&layer_datas[g].links[l]);

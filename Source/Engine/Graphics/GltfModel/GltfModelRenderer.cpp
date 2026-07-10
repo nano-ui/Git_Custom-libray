@@ -63,7 +63,7 @@ void GltfModelRenderer::Render
 		return;
 	}
 
-	std::vector<RenderCommand> render_commands; //描画コマンドを蓄積する配列変数
+	std::vector<RenderCommand> render_commands; //描画コマンドを蓄積する配列
 
 	for (size_t i = 0; i < nodes.size(); i++) //全ノードを走査するループ
 	{
@@ -75,7 +75,7 @@ void GltfModelRenderer::Render
 
 			for (const GltfModelData::mesh::primitive& primitive : mesh.primitives) //プリミティブを走査するループ
 			{
-				RenderCommand cmd = {}; //描画コマンドの一時格納用変数
+				RenderCommand cmd = {}; //描画コマンドの一時格納用
 
 				DirectX::XMStoreFloat4x4(&cmd.world_matrix,
 					DirectX::XMLoadFloat4x4(&current_node.global_transform) *
@@ -103,7 +103,7 @@ void GltfModelRenderer::Render
 
 	std::sort(render_commands.begin(), render_commands.end(), CompartMaterial());
 
-	int last_material_id = -1; //前回のマテリアルIDを保持するキャッシュ変数
+	int last_material_id = -1; //前回のマテリアルIDを保持するキャッシュ
 
 	for (const RenderCommand& cmd : render_commands) //ソート済みの描画コマンドを走査するループ
 	{
@@ -137,7 +137,7 @@ void GltfModelRenderer::Render
 		}
 
 		{
-			GltfModelData::primitive_constants primitive_data = {}; //GPU転送用のプリミティブ定数構造体変数
+			GltfModelData::primitive_constants primitive_data = {}; //GPU転送用のプリミティブ定数構造体
 			primitive_data.material = primitive->material;
 			primitive_data.has_tangent = primitive->has("TANGENT") ? 1 : 0;
 			primitive_data.skin = cmd.skin_index;
@@ -155,12 +155,12 @@ void GltfModelRenderer::Render
 				immediate_context->PSSetShaderResources(0, RESOURCE_COUNT_1, data.material_resource_view.GetAddressOf());
 			}
 
-			ID3D11ShaderResourceView* shader_resource_views[TEXTURE_COUNT_5] = { nullptr }; //テクスチャビューの配列変数
+			ID3D11ShaderResourceView* shader_resource_views[TEXTURE_COUNT_5] = { nullptr }; //テクスチャビューの配列
 
 			if (primitive->material >= 0 && static_cast<size_t>(primitive->material) < data.materials.size()) //有効なマテリアル番号であるかの条件分岐
 			{
 				const GltfModelData::material& material = data.materials.at(primitive->material); //マテリアルデータ
-				const int texture_indices[] = //テクスチャインデックスの配列変数
+				const int texture_indices[] = //テクスチャインデックスの配列
 				{
 					material.data.pbr_metallic_roughness.basecolor_texture.index,
 					material.data.pbr_metallic_roughness.metallic_roughness_texture.index,
@@ -185,10 +185,10 @@ void GltfModelRenderer::Render
 
 			immediate_context->PSSetShaderResources(SHADER_SLOT_1, TEXTURE_COUNT_5, shader_resource_views);
 
-			auto states = Graphics::Instance().GetPipelineStates(); //パイプラインステートマネージャーのポインタ変数
+			auto states = Graphics::Instance().GetPipelineStates(); //パイプラインステートマネージャーのポインタ
 			if (states) //ステートが有効であるかの条件分岐
 			{
-				ID3D11SamplerState* samplers[SAMPLER_COUNT_3] = { //サンプラーステートの配列変数
+				ID3D11SamplerState* samplers[SAMPLER_COUNT_3] = { //サンプラーステートの配列
 					states->GetSamplerState(0).Get(),
 					states->GetSamplerState(1).Get(),
 					states->GetSamplerState(2).Get()
@@ -198,18 +198,18 @@ void GltfModelRenderer::Render
 			last_material_id = primitive->material;
 		}
 
-		ID3D11Buffer* vertex_buffers[6] = { nullptr }; //頂点バッファのバインド用配列変数
-		UINT strides[6] = { OFFSET_ZERO }; //ストライド値の配列変数
-		UINT offsets[6] = { OFFSET_ZERO }; //オフセット値の配列変数
+		ID3D11Buffer* vertex_buffers[6] = { nullptr }; //頂点バッファのバインド用配列
+		UINT strides[6] = { OFFSET_ZERO }; //ストライド値の配列
+		UINT offsets[6] = { OFFSET_ZERO }; //オフセット値の配列
 
-		const char* attribute_names[] = { "POSITION", "NORMAL", "TANGENT", "TEXCOORD_0", "JOINTS_0", "WEIGHTS_0" }; //属性名の配列変数
+		const char* attribute_names[] = { "POSITION", "NORMAL", "TANGENT", "TEXCOORD_0", "JOINTS_0", "WEIGHTS_0" }; //属性名の配列
 
 		for (int i = 0; i < 6; ++i) //6つの頂点属性を巡回するループ
 		{
 			const char* attr = attribute_names[i]; //対象 of 属性名
 			if (primitive->has(attr)) //属性を保持しているかの条件分岐
 			{
-				auto it = primitive->vertex_buffer_views.find(attr); //バッファビューのイテレータ変数
+				auto it = primitive->vertex_buffer_views.find(attr); //バッファビューのイテレータ
 				if (it != primitive->vertex_buffer_views.end()) //イテレータが有効であるかの条件分岐
 				{
 					int buffer_idx = it->second.buffer; //バッファ番号
@@ -233,7 +233,7 @@ void GltfModelRenderer::Render
 		}
 		else //インデックスバッファが存在しない場合の条件分岐
 		{
-			auto pos_it = primitive->vertex_buffer_views.find("POSITION"); //座標属性のイテレータ変数
+			auto pos_it = primitive->vertex_buffer_views.find("POSITION"); //座標属性のイテレータ
 			if (pos_it != primitive->vertex_buffer_views.end()) //座標属性が存在するかの条件分岐
 			{
 				immediate_context->Draw(static_cast<UINT>(pos_it->second.count), OFFSET_ZERO);

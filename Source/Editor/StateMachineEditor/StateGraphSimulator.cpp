@@ -14,7 +14,7 @@ bool StateGraphSimulator::UpdateSimulation(
 	uint32_t& out_flowing_link_id
 )
 {
-	if (!data_manager || !current_graph)	//必要なデータポインタが安全であるかを判定する条件
+	if (!data_manager || !current_graph)	//必要なデータポインタが安全であるかを判定
 	{
 		return false;
 	}
@@ -57,7 +57,7 @@ bool StateGraphSimulator::UpdateSimulation(
 			src_node_id = start_it->second;
 		}
 
-		//リンクの出発元が現在の実行中アクティブノードと一致するかを判定する条件
+		//リンクの出発元が現在の実行中アクティブノードと一致するかを判定
 		if (src_node_id != in_out_active_node_id)	
 		{
 			continue;
@@ -85,7 +85,7 @@ bool StateGraphSimulator::UpdateSimulation(
 			}
 		}
 
-		if (is_all_condition_met)	//すべての遷移条件を完全にクリアしたかを判定する条件
+		if (is_all_condition_met)	//すべての遷移条件を完全にクリアしたかを判定
 		{
 			//リンクの条件数が最大値よりも大きいか、または最初の適合リンクか判定
 			if (!best_link || link.conditions.size() > max_conditions)

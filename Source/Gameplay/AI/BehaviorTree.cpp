@@ -35,7 +35,7 @@ bool BehaviorTree::AddSelectorNode
 (
 	CompositeNodeID parent_id,			//親ノードID
 	CompositeNodeID entry_id,			//生成するノードID
-	std::function<bool()> condition		//実行許可する条件関数
+	std::function<bool()> condition		//実行許可関数
 )
 {
 	auto parent_node = FindParentNode(parent_id);	//IDをもとに親となインスタンスを取得
@@ -56,7 +56,7 @@ bool BehaviorTree::AddWeightedNode
 (
 	CompositeNodeID parent_id,		//親ノードID
 	CompositeNodeID entry_id,		//生成するノードID
-	std::function<bool()> condition	//実行許可する条件関数
+	std::function<bool()> condition	//実行許可関数
 )
 {
 	auto parent_node = FindParentNode(parent_id);	//IDをもとに親となインスタンスを取得
@@ -78,7 +78,7 @@ bool BehaviorTree::AddActionNode
 	CompositeNodeID parent_id,	//親ノードID
 	ActionNodeID entry_id,		//アクションの識別ID
 	std::shared_ptr<BehaviorNode> action_node,	//実行されるアクションのインスタンス
-	std::function<bool()> condition,	//実行許可する条件関数
+	std::function<bool()> condition,	//実行許可関数
 	int weight_value					//親がウェイトの時の重み
 )
 {

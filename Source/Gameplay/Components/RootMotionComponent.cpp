@@ -77,7 +77,7 @@ void RootMotionComponent::TraceRootMotionDebug(const DirectX::XMFLOAT3& raw_posi
 	// 出力バッファの確保
 	char debugStr[256];
 
-	// GetDeltaPosition() の結果を一時変数に格納
+	// GetDeltaPosition() の結果を一時に格納
 	DirectX::XMFLOAT3 delta = GetDeltaPosition();
 
 	//printf("[RootMotion Debug] Raw: %.4f, %.4f, %.4f | Delta: %.4f, %.4f, %.4f\n", raw_position.x, raw_position.y, raw_position.z, delta.x, delta.y, delta.z);

@@ -62,7 +62,7 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 	FetchAnimations(gltf_model);
 	MapAnimationNames(gltf_model);
 
-	int nodes_with_mesh = 0; //メッシュを持つノードの総数カウンタ変数
+	int nodes_with_mesh = 0; //メッシュを持つノードの総数カウンタ
 	for (const auto& n : nodes) //全ノードを走査するループ
 	{
 		if (n.mesh > -1) //メッシュが割り当てられているかの条件分岐
@@ -71,13 +71,13 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 		}
 	}
 
-	int total_primitives = 0; //全プリミティブの総数カウンタ変数
+	int total_primitives = 0; //全プリミティブの総数カウンタ
 	for (const auto& m : meshes) //全メッシュを走査するループ
 	{
 		total_primitives += static_cast<int>(m.primitives.size());
 	}
 
-	char debug_buf[512]; //デバッグ文字列バッファ配列変数
+	char debug_buf[512]; //デバッグ文字列バッファ配列
 	sprintf_s(debug_buf, "[GltfModelData Debug] File: %s | Nodes: %zu (With Mesh: %d) | Meshes: %zu (Primitives: %d)\n",
 		this->filename.c_str(), nodes.size(), nodes_with_mesh, meshes.size(), total_primitives);
 	OutputDebugStringA(debug_buf);
@@ -347,13 +347,13 @@ void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 					OutputDebugStringA("[GltfModelData Warning] 8-bit bone indices detected. Promoting to 16-bit.\n");
 
 					std::vector<unsigned char> expanded_buffer(gltf_accessor.count * sizeof(uint16_t) * 4); //16ビット整数4要素に拡張するための作業バッファ配列
-					uint16_t* dest = reinterpret_cast<uint16_t*>(expanded_buffer.data()); //拡張バッファの書き込み先先頭ポインタ変数
-					const uint8_t* src = gltf_model.buffers.at(gltf_buffer_view.buffer).data.data() + gltf_buffer_view.byteOffset + gltf_accessor.byteOffset; //生のバイト配列から属性データの開始位置を示す読み込み元ポインタ変数
-					size_t src_stride = gltf_accessor.ByteStride(gltf_buffer_view); //元のデータのストライド幅を表すサイズ変数
+					uint16_t* dest = reinterpret_cast<uint16_t*>(expanded_buffer.data()); //拡張バッファの書き込み先先頭ポインタ
+					const uint8_t* src = gltf_model.buffers.at(gltf_buffer_view.buffer).data.data() + gltf_buffer_view.byteOffset + gltf_accessor.byteOffset; //生のバイト配列から属性データの開始位置を示す読み込み元ポインタ
+					size_t src_stride = gltf_accessor.ByteStride(gltf_buffer_view); //元のデータのストライド幅を表すサイズ
 
 					for (size_t i = 0; i < gltf_accessor.count; i++) //すべての頂点要素を走査して型拡張を行うループ
 					{
-						const uint8_t* src_vertex = src + i * src_stride; //現在の頂点のデータ位置を示すポインタ変数
+						const uint8_t* src_vertex = src + i * src_stride; //現在の頂点のデータ位置を示すポインタ
 						dest[i * 4 + 0] = src_vertex[0];
 						dest[i * 4 + 1] = src_vertex[1];
 						dest[i * 4 + 2] = src_vertex[2];
@@ -376,16 +376,16 @@ void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 					OutputDebugStringA("[GltfModelData Warning] Non-float bone weights detected. Promoting to 32-bit float.\n");
 
 					std::vector<unsigned char> expanded_buffer(gltf_accessor.count * sizeof(float) * 4); //32ビット浮動小数点数4要素に復元するための作業バッファ配列
-					float* dest = reinterpret_cast<float*>(expanded_buffer.data()); //拡張バッファの書き込み先浮動小数点数ポインタ変数
-					const unsigned char* src = gltf_model.buffers.at(gltf_buffer_view.buffer).data.data() + gltf_buffer_view.byteOffset + gltf_accessor.byteOffset; //読み込み元のバイトデータポインタ変数
-					size_t src_stride = gltf_accessor.ByteStride(gltf_buffer_view); //ストライド幅サイズ変数
+					float* dest = reinterpret_cast<float*>(expanded_buffer.data()); //拡張バッファの書き込み先浮動小数点数ポインタ
+					const unsigned char* src = gltf_model.buffers.at(gltf_buffer_view.buffer).data.data() + gltf_buffer_view.byteOffset + gltf_accessor.byteOffset; //読み込み元のバイトデータポインタ
+					size_t src_stride = gltf_accessor.ByteStride(gltf_buffer_view); //ストライド幅サイズ
 
 					for (size_t i = 0; i < gltf_accessor.count; i++) //すべての頂点要素を走査して正規化デコードを行うループ
 					{
-						const unsigned char* src_vertex = src + i * src_stride; //現在の頂点ウェイトデータ位置ポインタ変数
+						const unsigned char* src_vertex = src + i * src_stride; //現在の頂点ウェイトデータ位置ポインタ
 						if (gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE) //元のデータが8ビット整数であるかの条件分岐
 						{
-							const uint8_t* src_w = reinterpret_cast<const uint8_t*>(src_vertex); //8ビット整数用ポインタ変数
+							const uint8_t* src_w = reinterpret_cast<const uint8_t*>(src_vertex); //8ビット整数用ポインタ
 							dest[i * 4 + 0] = gltf_accessor.normalized ? (src_w[0] / 255.0f) : static_cast<float>(src_w[0]);
 							dest[i * 4 + 1] = gltf_accessor.normalized ? (src_w[1] / 255.0f) : static_cast<float>(src_w[1]);
 							dest[i * 4 + 2] = gltf_accessor.normalized ? (src_w[2] / 255.0f) : static_cast<float>(src_w[2]);
@@ -393,7 +393,7 @@ void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 						}
 						else if (gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) //元のデータが16ビット整数であるかの条件分岐
 						{
-							const uint16_t* src_w = reinterpret_cast<const uint16_t*>(src_vertex); //16ビット整数用ポインタ変数
+							const uint16_t* src_w = reinterpret_cast<const uint16_t*>(src_vertex); //16ビット整数用ポインタ
 							dest[i * 4 + 0] = gltf_accessor.normalized ? (src_w[0] / 65535.0f) : static_cast<float>(src_w[0]);
 							dest[i * 4 + 1] = gltf_accessor.normalized ? (src_w[1] / 65535.0f) : static_cast<float>(src_w[1]);
 							dest[i * 4 + 2] = gltf_accessor.normalized ? (src_w[2] / 65535.0f) : static_cast<float>(src_w[2]);
@@ -624,7 +624,7 @@ void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 
 		for (size_t i = 0; i < skin.inverse_bind_matrices.size(); i++)	//読み込んだ全ての逆バインド行列をループ
 		{
-			DirectX::XMFLOAT4X4& m = skin.inverse_bind_matrices.at(i); //対象の逆バインド行列参照変数
+			DirectX::XMFLOAT4X4& m = skin.inverse_bind_matrices.at(i); //対象の逆バインド行列
 
 			m._12 = -m._12;
 			m._13 = -m._13;
