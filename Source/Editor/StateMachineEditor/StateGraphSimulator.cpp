@@ -3,6 +3,7 @@
 #include "Gameplay\StateMachine\StateBlackboard.h"
 
 #include <imgui.h>
+#include <windows.h>
 
 //現在の階層におけるステートの遷移をブラックボードをもとに評価・更新
 bool StateGraphSimulator::UpdateSimulation(
@@ -39,6 +40,8 @@ bool StateGraphSimulator::UpdateSimulation(
 	}
 
 	bool is_state_changed = false;	//ステートが遷移したかを表すフラグ
+	const GraphLink* best_link = nullptr;	//最も多くの条件を満たした最適なリンク
+	size_t max_conditions = 0;				//満たされた条件の最大数
 
 	//現在の階層に存在するすべてのリンク条件を走査
 	for (size_t i = 0; i < current_graph->links.size(); i++)	
@@ -62,7 +65,7 @@ bool StateGraphSimulator::UpdateSimulation(
 
 		bool is_all_condition_met = true;	//すべての条件を満たしたかを表す判定フラグ
 
-		for (size_t c = 0; i < link.conditions.size(); c++)	//リンクが持つすべての遷移条件を個別に精査するループ処理
+		for (size_t c = 0; c < link.conditions.size(); c++)	//リンクが持つすべての遷移条件を個別に精査するループ処理
 		{
 			const GraphTransitionCondition& graph_cond = link.conditions[c];    //評価先の条件
 
@@ -84,19 +87,36 @@ bool StateGraphSimulator::UpdateSimulation(
 
 		if (is_all_condition_met)	//すべての遷移条件を完全にクリアしたかを判定する条件
 		{
-			uint32_t dst_node_id = 0;	//遷移先となるノードIDを保持する
-			auto end_it = pin_cache_map.find(link.end_pin_id);	//終了ピンIDからキャッシュを探索した結果イテレーター
-
-			if (end_it != pin_cache_map.end())	//終了ピンのキャッシュ情報がマップ内に存在するかを判定する条件
+			//リンクの条件数が最大値よりも大きいか、または最初の適合リンクか判定
+			if (!best_link || link.conditions.size() > max_conditions)
 			{
-				dst_node_id = end_it->second;
+				best_link = &link;
+				max_conditions = link.conditions.size();
 			}
-
-			in_out_active_node_id = dst_node_id;
-			out_flowing_link_id = link.id;
-			is_state_changed = true;
-			break;
 		}
+	}
+
+	//条件を満たす最適な遷移リンクが見つかったか判定
+	if (best_link)
+	{
+		uint32_t dst_node_id = 0;	//遷移先のノードID
+		auto end_it = pin_cache_map.find(best_link->end_pin_id);	//終了ピンIDからキャッシュを探索した結果イテレーター
+
+		//終了ピンのキャッシュ情報がマップ内に存在するか判定
+		if (end_it != pin_cache_map.end())
+		{
+			dst_node_id = end_it->second;
+		}
+
+		//不正なピン定義
+		if (dst_node_id == 0)
+		{
+			OutputDebugStringA("[StateGraphSimulator] Error: 終了ピンに対応するノードIDがキャッシュに存在しません。\n");
+		}
+
+		in_out_active_node_id = dst_node_id;
+		out_flowing_link_id = best_link->id;
+		is_state_changed = true;
 	}
 
 	return is_state_changed;

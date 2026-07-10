@@ -117,19 +117,24 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 		}
 	}
 
-	uint32_t next_node_id = current_node_id;
-	bool is_transition_triggered = false;
-
+	uint32_t next_node_id = current_node_id;	//遷移先として選ばれるノードID
+	bool is_transition_triggered = false;		//遷移の発生トリガーを引くかを表す判定フラグ
+	const RuntimeLink* best_link = nullptr;		//条件をクリアした中から最も条件数の多い最適なリンク
+	size_t max_conditions = 0;					//満たされた条件の最大数
+		
+	//すべての実行時リンクを走査して最適な遷移先を検索するループ
 	for (size_t i = 0; i < runtime_links.size(); i++)
 	{
-		const RuntimeLink& link = runtime_links[i];
-		uint32_t src_node_id = GetNodeIdFromPinId(link.start_pin_id);
+		const RuntimeLink& link = runtime_links[i];	//対象のリンク情報
+		uint32_t src_node_id = GetNodeIdFromPinId(link.start_pin_id);	//リンクの開始ピンIDから出発元のノードIDを逆引き
 
 		bool is_src_node_active = false; //出発地有効フラグ
 		uint32_t trace_id = current_node_id; //親を遡るための探索用追跡
 
+		//現在のアクティブノードから親サブグラフを走査して一致を確認
 		while (trace_id != UINT32_MAX)
 		{
+			//出発元ノードIDがアクティブな追跡ツリーに引っかかったか判定
 			if (src_node_id == trace_id)
 			{
 				is_src_node_active = true;
@@ -138,10 +143,12 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 			trace_id = GetParentNodeId(trace_id); //1階層上の親ノードIDを引っこ抜いて上書き
 		}
 
+		//出発元ノードが有効なアクティブ状態にあるかを判定
 		if (is_src_node_active)
 		{
-			bool is_all_conditions_met = !link.conditions.empty();
+			bool is_all_conditions_met = !link.conditions.empty();	//リンクに設定されたすべての条件を満たしたかを表すフラグ
 
+			//リンクが抱えるすべての条件式を個別に精査するループ
 			for (size_t c = 0; c < link.conditions.size(); c++)
 			{
 				const auto& cond = link.conditions[c];	//現在の評価条件
@@ -152,8 +159,10 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 					int v_key = static_cast<int>(cond.hash_key);	//仮想キーコード
 					int input_behavior = static_cast<int>(cond.param_second);	//入力形式
 					bool is_key_ok = false;	//入力条件クリアフラグ
+					constexpr int mode_trigger = 1;	//押された瞬間(Trigger)の検知形式
 
-					if (input_behavior == 1)
+					//入力検知形式がトリガーモードであるかを判定
+					if (input_behavior == mode_trigger)
 					{
 						is_key_ok = Input::Instance().IsKeyTrigger(v_key);
 					}
@@ -162,6 +171,7 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 						is_key_ok = Input::Instance().IsKeyPress(v_key);
 					}
 
+					//キー入力条件を満たせなかったかを判定
 					if (!is_key_ok)
 					{
 						is_all_conditions_met = false;
@@ -170,6 +180,7 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 				}
 				else
 				{
+					//ブラックボードを用いた通常比較や距離判定などの条件を満たしていないかを判定
 					if (!link.conditions[c].IsJudgment(*blackboard))
 					{
 						is_all_conditions_met = false;
@@ -178,15 +189,27 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 				}
 			}
 
+			//該当リンクのすべての遷移条件を完全にクリアしたかを判定
 			if (is_all_conditions_met)
 			{
-				next_node_id = GetNodeIdFromPinId(link.end_pin_id);
-				is_transition_triggered = true;
-				break;
+				//現在のリンクの条件数がこれまでの最大適合条件数より多いか、または最初の適合リンクであるかを判定
+				if (!best_link || link.conditions.size() > max_conditions)
+				{
+					best_link = &link;
+					max_conditions = link.conditions.size();
+				}
 			}
 		}
 	}
 
+	//すべてのリンク走査後に条件をクリアした最適なリンク候補が確定したかを判定
+	if (best_link)
+	{
+		next_node_id = GetNodeIdFromPinId(best_link->end_pin_id);
+		is_transition_triggered = true;
+	}
+
+	//遷移トリガーが引かれ、かつ現在のノードIDから変更が発生したかを判定
 	if (is_transition_triggered && next_node_id != current_node_id)
 	{
 		current_node_id = next_node_id;
