@@ -45,7 +45,7 @@ void ModelPreviewScene::Update(float elapsed_time)
 void ModelPreviewScene::Render(ID3D11DeviceContext* immediate_context)
 {
 	frame_buffer->clear(immediate_context);
-	frame_buffer->deactivate(immediate_context);
+	frame_buffer->activate(immediate_context);
 
 	DirectX::XMFLOAT4X4 world_matrix;
 	DirectX::XMStoreFloat4x4(&world_matrix, DirectX::XMMatrixIdentity());

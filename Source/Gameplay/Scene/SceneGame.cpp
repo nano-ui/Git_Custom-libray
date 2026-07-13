@@ -10,6 +10,7 @@
 #include "../Engine/Collision/CollisionExperiment.h"
 #include "../Editor/ObjectEditor.h"
 #include "Editor\StateMachineEditor\StateMachineGraphEditor.h"
+#include "Editor\Sequence\AnimationSequencerEditor.h"
 #include "../Gameplay/GameObjects/Character/Character.h"
 #include "../Engine/Graphics/Shaders/SkyBox.h"
 #include "SceneManager.h"
@@ -58,6 +59,8 @@ void SceneGame::Initialize()
 	object_editor->Initialize();
 
 	graph_editor = std::make_unique<StateMachineGraphEditor>();
+	sequencer_editor = std::make_unique<AnimationSequencerEditor>();
+	sequencer_editor->Initialize();
 }
 
 //終了化
@@ -81,11 +84,18 @@ void SceneGame::Finalize()
 		light.reset();
 	}
 	object_editor.reset();
+	sequencer_editor.reset();
 }
 
 //更新処理
 void SceneGame::Update(float elapsed_time)
 {
+	if (is_sequencer_active)
+	{
+		sequencer_editor->Update(elapsed_time);
+		return;
+	}
+
 	if (camera)
 	{
 		camera->Update(elapsed_time);
@@ -119,9 +129,25 @@ void SceneGame::Render(float elapsed_time)
 	auto states = Graphics::Instance().GetPipelineStates();
 	framebuffer* shadow_fb = Graphics::Instance().GetShadowFramebuffer();
 
-	//パス間で共有するライト空間変換行列の計算
+	// シーケンサ表示アクティブフラグが有効か判定
+	if (is_sequencer_active)
+	{
+		// シーケンサエディタの3D描画を実行
+		sequencer_editor->Render(context);
+
+#ifdef USE_IMGUI
+		// エディタ用のImGui描画関数を呼び出し
+		RenderGui();
+#endif // USE_IMGUI
+
+		return;
+	}
+
+	// パス間で共有するライト空間変換行列の計算
 	DirectX::XMFLOAT4X4 light_view_projection_matrix{};
 	DirectX::XMFLOAT4 light_dir_vector{};
+
+	// ライトが有効か判定
 	if (light)
 	{
 		const float k_light_camera_distance = 100.0f;
@@ -132,23 +158,22 @@ void SceneGame::Render(float elapsed_time)
 		DirectX::XMFLOAT3 camera_focus = camera->GetFocus();
 		DirectX::XMVECTOR target_pos = DirectX::XMLoadFloat3(&camera_focus);
 		DirectX::XMVECTOR light_pos = DirectX::XMLoadFloat4(&light_dir_vector);
-		light_pos = DirectX::XMVectorScale(light_pos, -k_light_camera_distance); 
+		light_pos = DirectX::XMVectorScale(light_pos, -k_light_camera_distance);
 		DirectX::XMMATRIX light_view = DirectX::XMMatrixLookAtLH(
-			light_pos, 
+			light_pos,
 			target_pos,
-			DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) 
+			DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
 		);
 		DirectX::XMMATRIX light_projection = DirectX::XMMatrixOrthographicLH(
 			k_shadow_area_size,
-			k_shadow_area_size, 
+			k_shadow_area_size,
 			k_light_near_clip,
-			k_light_far_clip 
+			k_light_far_clip
 		);
 		DirectX::XMStoreFloat4x4(&light_view_projection_matrix, light_view * light_projection);
 	}
 
-
-	//パイプラインのハザードを解消するためのテクスチャ解除処理
+	// パイプラインのハザードを解消するためのテクスチャ解除処理
 	if (shadow_fb)
 	{
 		ID3D11ShaderResourceView* null_srv_list[] = { nullptr };
@@ -156,14 +181,12 @@ void SceneGame::Render(float elapsed_time)
 		context->PSSetShaderResources(k_shader_shadow_srv_slot, 1, null_srv_list);
 	}
 
-	//シャドウマップ（深度バッファ）生成パス
+	// シャドウマップ（深度バッファ）生成パス
 	if (shadow_fb && camera && light && object_manager)
 	{
-		//シャドウマップバッファのクリアと有効化
 		shadow_fb->clear(context, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f);
 		shadow_fb->activate(context);
 
-		//ライト空間用のシーン定数バッファの構築・更新
 		scene_constants light_scene_constants{};
 		light_scene_constants.view_projection = light_view_projection_matrix;
 		light_scene_constants.light_view_projection = light_view_projection_matrix;
@@ -173,34 +196,28 @@ void SceneGame::Render(float elapsed_time)
 		light_scene_constants.ambient_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		Graphics::Instance().UpdateSceneConstantBuffer(light_scene_constants);
 
-		//深度値のみを描き込むステート群のバインド
 		context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
 		context->RSSetState(states->GetRasterizerState(2).Get());
 
-		//パス1でのピクセルシェーダー警告を抑制するためのサンプラーバインド
 		ID3D11SamplerState* shadow_sampler = Graphics::Instance().GetShadowSamplerState();
 		const UINT k_shader_shadow_sampler_slot = 10;
 		context->PSSetSamplers(k_shader_shadow_sampler_slot, 1, &shadow_sampler);
 
-		//ライト視点でのシーンオブジェクト描画
 		object_manager->Render(context);
 		shadow_fb->deactivate(context);
 	}
 
-	//通常カメラからの本描画パス
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
 	context->RSSetState(states->GetRasterizerState(0).Get());
 
-	ID3D11SamplerState* sampler_p0 = states->GetSamplerState(0).Get(); //POINTサンプラー
-	ID3D11SamplerState* sampler_p1 = states->GetSamplerState(1).Get(); //LINEARサンプラー
-	ID3D11SamplerState* sampler_p2 = states->GetSamplerState(2).Get(); //ANISOTROPICサンプラー
+	ID3D11SamplerState* sampler_p0 = states->GetSamplerState(0).Get();
+	ID3D11SamplerState* sampler_p1 = states->GetSamplerState(1).Get();
+	ID3D11SamplerState* sampler_p2 = states->GetSamplerState(2).Get();
 
-	//各スロットへ1つずつバインドします
 	context->PSSetSamplers(0, 1, &sampler_p0);
 	context->PSSetSamplers(1, 1, &sampler_p1);
 	context->PSSetSamplers(2, 1, &sampler_p2);
 
-	//シャドウマップ用テクスチャおよびサンプラーを専用スロットへバインド
 	if (shadow_fb)
 	{
 		ID3D11ShaderResourceView* shadow_srv = shadow_fb->shader_resource_views[1].Get();
@@ -212,6 +229,8 @@ void SceneGame::Render(float elapsed_time)
 	}
 
 	scene_constants constants{};
+
+	// カメラとライトが有効か判定
 	if (camera && light)
 	{
 		constants.view_projection = camera->GetViewProjectionMatrix();
@@ -238,9 +257,9 @@ void SceneGame::Render(float elapsed_time)
 		collision_experiment->Render(shape_renderer.get());
 	}
 
+	// レンダラーとカメラが有効か判定
 	if (shape_renderer && camera)
 	{
-		//平行光源の方向を可視化する球を描画
 		const float k_light_debug_distance = 5.0f;
 		DirectX::XMFLOAT4 light_dir = light->GetDirection();
 		DirectX::XMFLOAT3 light_pos = {
@@ -250,25 +269,26 @@ void SceneGame::Render(float elapsed_time)
 		};
 		shape_renderer->DrawSphere(light_pos, 0.5f, { 1.0f, 1.0f, 0.0f, 1.0f }, ShapeDrawMode::Solid);
 
-
-		for (const debug_shape & shape : debug_shapes)
+		for (const debug_shape& shape : debug_shapes)
 		{
 			ShapeDrawMode mode = static_cast<ShapeDrawMode>(shape.draw_mode);
 			DirectX::XMFLOAT4 rotation = { 0.0f,0.0f,0.0f,1.0f };
-			switch (shape.type)
+
+			if (shape.type == debug_shape_type::box)
 			{
-			case debug_shape_type::box:
 				shape_renderer->DrawBox(shape.position, rotation, { 1.0f, 1.0f, 1.0f }, shape.color, mode);
-				break;
-			case debug_shape_type::sphere:
+			}
+			if (shape.type == debug_shape_type::sphere)
+			{
 				shape_renderer->DrawSphere(shape.position, 0.5f, shape.color, mode);
-				break;
-			case debug_shape_type::cylinder:
+			}
+			if (shape.type == debug_shape_type::cylinder)
+			{
 				shape_renderer->DrawCylinder(shape.position, rotation, 0.5f, 1.0f, shape.color, mode);
-				break;
-			case debug_shape_type::capsule:
+			}
+			if (shape.type == debug_shape_type::capsule)
+			{
 				shape_renderer->DrawCapsule(shape.position, rotation, 0.5f, 3.0f, shape.color, mode);
-				break;
 			}
 		}
 		shape_renderer->Render(context, camera->GetView(), camera->GetProjection());
@@ -279,17 +299,47 @@ void SceneGame::Render(float elapsed_time)
 		skybox->Render(context);
 	}
 
-
 #ifdef USE_IMGUI
 	RenderGui();
-
-#endif // USE_IMGUI
+#endif
 }
 
 //ImGuiデバッグ描画
 void SceneGame::RenderGui()
 {
 #ifdef USE_IMGUI
+	const float sidebar_width = 80.0f;
+	const float sidebar_height = 720.0f;
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(sidebar_width, sidebar_height), ImGuiCond_Always);
+
+	const ImGuiWindowFlags sidebar_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
+
+	if (ImGui::Begin("##SceneSidebar", nullptr, sidebar_flags))
+	{
+		// 通常ゲーム画面への切り替えボタン
+		if (ImGui::Button(u8"ゲーム", ImVec2(64, 40)))
+		{
+			is_sequencer_active = false;
+		}
+
+		ImGui::Spacing();
+
+		// シーケンサ画面への切り替えボタン
+		if (ImGui::Button(u8"シーケンサ", ImVec2(64, 40)))
+		{
+			is_sequencer_active = true;
+		}
+	}
+	ImGui::End();
+
+	if (is_sequencer_active)
+	{
+		sequencer_editor->RenderGui();
+		return;
+	}
+
 	//Scene::ImGuiScaleCorrection();
 	ImGuiID dockspace_id = 0;
 	ImGui::DockSpaceOverViewport(dockspace_id, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
