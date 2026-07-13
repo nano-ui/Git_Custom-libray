@@ -58,18 +58,18 @@ void GltfModelRenderer::Render
 	const GltfModelData& data = *model.GetData();	//モデルの実体情報
 	const std::vector<GltfModelData::node>& nodes = model.GetAnimatedNodes();	//アニメーション計算済みのノード配列
 
-	if (data.scenes.empty()) //シーン情報が空であるかの条件分岐
+	if (data.scenes.empty()) //シーン情報が空であるか
 	{
 		return;
 	}
 
-	if (data.cached_render_commands.empty()) //ソート済みの描画キャッシュ配列が空であるかの条件分岐
+	if (data.cached_render_commands.empty()) //ソート済みの描画キャッシュ配列が空であるか
 	{
 		OutputDebugStringA("[GltfModelRenderer Error] Render: Pre-built render cache is completely empty!\n");
 		return;
 	}
 
-	if (custom_shader) //カスタムシェーダーが有効であるかの条件分岐
+	if (custom_shader) //カスタムシェーダーが有効であるか
 	{
 		custom_shader->Apply();
 	}
@@ -90,7 +90,7 @@ void GltfModelRenderer::Render
 		int skin_index = current_node.skin; //ノードに紐づくスキン番号
 		DirectX::XMFLOAT4X4 node_global_matrix = current_node.global_transform; //ノード単体のグローバル行列
 
-		if (skin_index > -1 && static_cast<size_t>(skin_index) < data.skins.size()) //スキニング処理が必要であるかの条件分岐
+		if (skin_index > -1 && static_cast<size_t>(skin_index) < data.skins.size()) //スキニング処理が必要であるか
 		{
 			const GltfModelData::skin& skin = data.skins.at(skin_index);
 			GltfModelData::primitive_joint_constants primitive_joint_data = {};
@@ -102,7 +102,7 @@ void GltfModelRenderer::Render
 				DirectX::XMVECTOR determinant = {};
 				DirectX::XMMATRIX mesh_inv = DirectX::XMMatrixInverse(&determinant, DirectX::XMLoadFloat4x4(&node_global_matrix));
 
-				if (DirectX::XMVector3Less(DirectX::XMVectorAbs(determinant), DirectX::XMVectorReplicate(1e-6f))) //パーツ行列の逆行列がゼロ行列等で計算不可能であるかの条件分岐
+				if (DirectX::XMVector3Less(DirectX::XMVectorAbs(determinant), DirectX::XMVectorReplicate(1e-6f))) //パーツ行列の逆行列がゼロ行列等で計算不可能であるか
 				{
 					mesh_inv = DirectX::XMMatrixIdentity();
 				}
@@ -128,16 +128,16 @@ void GltfModelRenderer::Render
 			immediate_context->PSSetConstantBuffers(SHADER_SLOT_0, RESOURCE_COUNT_1, primitive_cbuffer.GetAddressOf());
 		}
 
-		if (primitive->material != last_material_id) //マテリアルの変更が発生したかの条件分岐
+		if (primitive->material != last_material_id) //マテリアルの変更が発生したか
 		{
-			if (data.material_resource_view) //マテリアル配列の構造化バッファSRVが有効であるかの条件分岐
+			if (data.material_resource_view) //マテリアル配列の構造化バッファSRVが有効であるか
 			{
 				immediate_context->PSSetShaderResources(0, RESOURCE_COUNT_1, data.material_resource_view.GetAddressOf());
 			}
 
 			ID3D11ShaderResourceView* shader_resource_views[TEXTURE_COUNT_5] = { nullptr }; //テクスチャスロットバインド用配列
 
-			if (primitive->material >= 0 && static_cast<size_t>(primitive->material) < data.materials.size()) //マテリアルインデックスが配列範囲内であるかの条件分岐
+			if (primitive->material >= 0 && static_cast<size_t>(primitive->material) < data.materials.size()) //マテリアルインデックスが配列範囲内であるか
 			{
 				const GltfModelData::material& material = data.materials.at(primitive->material); //マテリアル参照
 				const int texture_indices[] = //スロットごとのテクスチャ番号をマッピングした配列
@@ -152,10 +152,10 @@ void GltfModelRenderer::Render
 				for (int texture_index = 0; texture_index < TEXTURE_COUNT_5; texture_index++) //5つのスロットを走査するループ
 				{
 					int tex_idx = texture_indices[texture_index]; //テクスチャインデックス番号
-					if (tex_idx >= 0 && static_cast<size_t>(tex_idx) < data.textures.size()) //有効なテクスチャ番号であるかの条件分岐
+					if (tex_idx >= 0 && static_cast<size_t>(tex_idx) < data.textures.size()) //有効なテクスチャ番号であるか
 					{
 						int source_idx = data.textures.at(tex_idx).source; //画像ソース番号
-						if (source_idx >= 0 && static_cast<size_t>(source_idx) < data.texture_resource_views.size()) //リソースビューが構築済みであるかの条件分岐
+						if (source_idx >= 0 && static_cast<size_t>(source_idx) < data.texture_resource_views.size()) //リソースビューが構築済みであるか
 						{
 							shader_resource_views[texture_index] = data.texture_resource_views.at(source_idx).Get();
 						}
@@ -166,7 +166,7 @@ void GltfModelRenderer::Render
 			immediate_context->PSSetShaderResources(SHADER_SLOT_1, TEXTURE_COUNT_5, shader_resource_views);
 
 			auto states = Graphics::Instance().GetPipelineStates(); //パイプラインステート
-			if (states) //オブジェクトが有効であるかの条件分岐
+			if (states) //オブジェクトが有効であるか
 			{
 				ID3D11SamplerState* samplers[SAMPLER_COUNT_3] = { //サンプラーステート配列
 					states->GetSamplerState(0).Get(),
@@ -187,13 +187,13 @@ void GltfModelRenderer::Render
 		for (int i = 0; i < 6; ++i) //6つの属性ストリームを走査するループ
 		{
 			const char* attr = attribute_names[i]; //対象属性の名前
-			if (primitive->has(attr)) //プリミティブが該当の頂点属性データを保持しているかの条件分岐
+			if (primitive->has(attr)) //プリミティブが該当の頂点属性データを保持しているか
 			{
 				auto it = primitive->vertex_buffer_views.find(attr); //マップから検索
-				if (it != primitive->vertex_buffer_views.end()) //データが存在するかの条件分岐
+				if (it != primitive->vertex_buffer_views.end()) //データが存在するか
 				{
 					int buffer_idx = it->second.buffer; //バッファ番号
-					if (buffer_idx >= 0 && static_cast<size_t>(buffer_idx) < data.buffers.size()) //有効なバッファ番号であるかの条件分岐
+					if (buffer_idx >= 0 && static_cast<size_t>(buffer_idx) < data.buffers.size()) //有効なバッファ番号であるか
 					{
 						vertex_buffers[i] = data.buffers.at(buffer_idx).Get();
 						strides[i] = static_cast<UINT>(it->second.stride_in_bytes);
@@ -205,16 +205,16 @@ void GltfModelRenderer::Render
 
 		immediate_context->IASetVertexBuffers(SHADER_SLOT_0, _countof(vertex_buffers), vertex_buffers, strides, offsets);
 
-		if (primitive->index_buffer_view.buffer > -1) //インデックス描画が可能であるかの条件分岐
+		if (primitive->index_buffer_view.buffer > -1) //インデックス描画が可能であるか
 		{
 			immediate_context->IASetIndexBuffer(data.buffers.at(primitive->index_buffer_view.buffer).Get(),
 				primitive->index_buffer_view.format, static_cast<UINT>(primitive->index_buffer_view.byte_offset));
 			immediate_context->DrawIndexed(static_cast<UINT>(primitive->index_buffer_view.count), OFFSET_ZERO, OFFSET_ZERO);
 		}
-		else //インデックスバッファがなく頂点数による直接描画を行うかの条件分岐
+		else //インデックスバッファがなく頂点数による直接描画を行うか
 		{
 			auto pos_it = primitive->vertex_buffer_views.find("POSITION"); //座標属性
-			if (pos_it != primitive->vertex_buffer_views.end()) //座標属性が存在するかの条件分岐
+			if (pos_it != primitive->vertex_buffer_views.end()) //座標属性が存在するか
 			{
 				immediate_context->Draw(static_cast<UINT>(pos_it->second.count), OFFSET_ZERO);
 			}

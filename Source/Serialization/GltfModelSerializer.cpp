@@ -118,20 +118,20 @@ template<class Archive> void serialize(Archive& archive, GltfModelData::cached_c
 //=======================================
 bool GltfModelSerializer::Load(const std::string& filename, const std::shared_ptr<GltfModelData>& resource)
 {
-	if (!resource) //ポインタの有効性確認の条件分岐
+	if (!resource) //ポインタの有効性確認
 	{
 		return false;
 	}
 
 	try
 	{
-		std::ifstream input_file(filename, std::ios::binary); //読み込み用のバイナリファイルストリーム変数
-		if (!input_file.is_open()) //ファイルのオープン成否判定の条件分岐
+		std::ifstream input_file(filename, std::ios::binary); //読み込み用のバイナリファイルストリーム
+		if (!input_file.is_open()) //ファイルのオープン成否判定
 		{
 			return false;
 		}
 
-		cereal::BinaryInputArchive archive(input_file); //cerealの入力用アーカイブオブジェクト変数
+		cereal::BinaryInputArchive archive(input_file); //cerealの入力用アーカイブオブジェクト
 
 		archive(
 			resource->filename,
@@ -151,7 +151,7 @@ bool GltfModelSerializer::Load(const std::string& filename, const std::shared_pt
 
 		return true;
 	}
-	catch (...) //シリアライズ解釈の不一致やファイル破損などで例外が発生した場合の条件分岐
+	catch (...) //シリアライズ解釈の不一致やファイル破損などで例外が発生した場合
 	{
 		OutputDebugStringA("[GltfModelSerializer Error] Load: Exception caught during deserialization. Cache may be corrupted.\n");
 		return false;
@@ -163,20 +163,20 @@ bool GltfModelSerializer::Load(const std::string& filename, const std::shared_pt
 //===================================
 bool GltfModelSerializer::Save(const std::string& filename, const std::shared_ptr<GltfModelData>& resource)
 {
-	if (!resource) //ポインタの有効性確認の条件分岐
+	if (!resource) //ポインタの有効性確認
 	{
 		return false;
 	}
 
 	try
 	{
-		std::ofstream output_file(filename, std::ios::binary); //書き込み用のバイナリファイルストリーム変数
-		if (!output_file.is_open()) //ファイルのオープン成否判定の条件分岐
+		std::ofstream output_file(filename, std::ios::binary); //書き込み用のバイナリファイルストリーム
+		if (!output_file.is_open()) //ファイルのオープン成否判定
 		{
 			return false;
 		}
 
-		cereal::BinaryOutputArchive archive(output_file); //cerealの出力用アーカイブオブジェクト変数
+		cereal::BinaryOutputArchive archive(output_file); //cerealの出力用アーカイブオブジェクト
 
 		archive(
 			resource->filename,
@@ -196,7 +196,7 @@ bool GltfModelSerializer::Save(const std::string& filename, const std::shared_pt
 
 		return true;
 	}
-	catch (...) //ファイル書き込み規制や予期せぬメモリエラーで例外が発生した場合の条件分岐
+	catch (...) //ファイル書き込み規制や予期せぬメモリエラーで例外が発生した場合
 	{
 		OutputDebugStringA("[GltfModelSerializer Error] Save: Exception caught during serialization.\n");
 		return false;

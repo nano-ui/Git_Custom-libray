@@ -1447,5 +1447,5 @@
         }
     ],
     "NextID": 220,
-    "TargetModelPath": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.glb"
+    "TargetModelPath": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf"
 }

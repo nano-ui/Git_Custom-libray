@@ -39,11 +39,11 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 	std::string error, warning;
 	bool succeeded = false;
 
-	if (filename.find(".glb") != std::string::npos) //ファイル名に.glbが含まれているかの条件分岐
+	if (filename.find(".glb") != std::string::npos) //ファイル名に.glbが含まれているか
 	{
 		succeeded = tiny_gltf.LoadBinaryFromFile(&gltf_model, &error, &warning, filename.c_str());
 	}
-	else if (filename.find(".gltf") != std::string::npos) //ファイル名に.gltfが含まれているかの条件分岐
+	else if (filename.find(".gltf") != std::string::npos) //ファイル名に.gltfが含まれているか
 	{
 		succeeded = tiny_gltf.LoadASCIIFromFile(&gltf_model, &error, &warning, filename.c_str());
 	}
@@ -75,7 +75,7 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 	int nodes_with_mesh = 0; //メッシュを持つノードの総数カウンタ
 	for (const auto& n : nodes) //全ノードを走査するループ
 	{
-		if (n.mesh > -1) //メッシュが割り当てられているかの条件分岐
+		if (n.mesh > -1) //メッシュが割り当てられているか
 		{
 			nodes_with_mesh++;
 		}
@@ -92,7 +92,7 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 		this->filename.c_str(), nodes.size(), nodes_with_mesh, meshes.size(), total_primitives);
 	OutputDebugStringA(debug_buf);
 
-	if (device) //デバイスポインタが有効であるかの条件分岐
+	if (device) //デバイスポインタが有効であるか
 	{
 		CreateGpuResources(device.Get());
 	}
@@ -159,9 +159,7 @@ void GltfModelData::CreateGpuResources(ID3D11Device* device)
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));	//シェーダーリソースビューが作成されたかチェック
 	}
 
-	//------------------------------------------------------
 	//テクスチャのシェーダーリソースビュー（SRV）の生成
-	//------------------------------------------------------
 	for (const image& img : images)
 	{
 		ID3D11ShaderResourceView* shader_resource_view = nullptr;
@@ -174,9 +172,24 @@ void GltfModelData::CreateGpuResources(ID3D11Device* device)
 		}
 		else if (!img.uri.empty()) // 外部ファイルパスが指定されている場合
 		{
-			std::filesystem::path path = filename;
-			std::string image_filename = path.parent_path().string() + "/" + img.uri;
-			D3D11_TEXTURE2D_DESC texture2d_desc;
+			std::filesystem::path path = filename; //モデルファイル名から親階層を取得するための作業用
+			std::string image_filename = path.parent_path().string() + "/" + img.uri; //元々の画像ファイルへのフルパスを格納
+
+			std::filesystem::path dds_path(image_filename); //拡張子を.ddsに置換して検証を行うためのパス
+			dds_path.replace_extension(".dds");
+
+			if (std::filesystem::exists(dds_path)) //同名のDDS形式テクスチャファイルがフォルダー内に存在しているか
+			{
+				image_filename = dds_path.string();
+			}
+			else //DDSファイルが見つからず元のテクスチャ（PNG/TGA等）でフォールバックして読み込む場合
+			{
+				char debug_msg[512]; //意図しない挙動を警告するためのデバッグ文字列バッファ
+				sprintf_s(debug_msg, "[GltfModelData Warning] CreateGpuResources: Optimized DDS file not found. Falling back to original: %s\n", image_filename.c_str());
+				OutputDebugStringA(debug_msg);
+			}
+
+			D3D11_TEXTURE2D_DESC texture2d_desc; //読み込んだテクスチャのサイズ等の詳細情報を受け取るための構造体
 			hr = GpuResourceUtils::LoadTexture(device, image_filename.c_str(), &shader_resource_view, &texture2d_desc);
 			_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		}
@@ -354,7 +367,7 @@ void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 				const tinygltf::Accessor& gltf_accessor = gltf_model.accessors.at(gltf_attribute.second);	//属性ごとのアクセサを取得
 				const tinygltf::BufferView& gltf_buffer_view = gltf_model.bufferViews.at(gltf_accessor.bufferView);	//ビューを取得
 
-				if (gltf_attribute.first == "JOINTS_0" && gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE) //ジョイントデータが8ビット整数であるかの条件分岐
+				if (gltf_attribute.first == "JOINTS_0" && gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE) //ジョイントデータが8ビット整数であるか
 				{
 					OutputDebugStringA("[GltfModelData Warning] 8-bit bone indices detected. Promoting to 16-bit.\n");
 
@@ -383,7 +396,7 @@ void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 
 					primitive.vertex_buffer_views.emplace(std::make_pair(gltf_attribute.first, vertex_buffer_view));
 				}
-				else if (gltf_attribute.first == "WEIGHTS_0" && gltf_accessor.componentType != TINYGLTF_COMPONENT_TYPE_FLOAT) //ウェイトデータが浮動小数点数以外で格納されているかの条件分岐
+				else if (gltf_attribute.first == "WEIGHTS_0" && gltf_accessor.componentType != TINYGLTF_COMPONENT_TYPE_FLOAT) //ウェイトデータが浮動小数点数以外で格納されているか
 				{
 					OutputDebugStringA("[GltfModelData Warning] Non-float bone weights detected. Promoting to 32-bit float.\n");
 
@@ -395,7 +408,7 @@ void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 					for (size_t i = 0; i < gltf_accessor.count; i++) //すべての頂点要素を走査して正規化デコードを行うループ
 					{
 						const unsigned char* src_vertex = src + i * src_stride; //現在の頂点ウェイトデータ位置ポインタ
-						if (gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE) //元のデータが8ビット整数であるかの条件分岐
+						if (gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE) //元のデータが8ビット整数であるか
 						{
 							const uint8_t* src_w = reinterpret_cast<const uint8_t*>(src_vertex); //8ビット整数用ポインタ
 							dest[i * 4 + 0] = gltf_accessor.normalized ? (src_w[0] / 255.0f) : static_cast<float>(src_w[0]);
@@ -403,7 +416,7 @@ void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 							dest[i * 4 + 2] = gltf_accessor.normalized ? (src_w[2] / 255.0f) : static_cast<float>(src_w[2]);
 							dest[i * 4 + 3] = gltf_accessor.normalized ? (src_w[3] / 255.0f) : static_cast<float>(src_w[3]);
 						}
-						else if (gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) //元のデータが16ビット整数であるかの条件分岐
+						else if (gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) //元のデータが16ビット整数であるか
 						{
 							const uint16_t* src_w = reinterpret_cast<const uint16_t*>(src_vertex); //16ビット整数用ポインタ
 							dest[i * 4 + 0] = gltf_accessor.normalized ? (src_w[0] / 65535.0f) : static_cast<float>(src_w[0]);
@@ -424,7 +437,7 @@ void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 
 					primitive.vertex_buffer_views.emplace(std::make_pair(gltf_attribute.first, vertex_buffer_view));
 				}
-				else //通常の属性データである場合の条件分岐
+				else //通常の属性データである場合
 				{
 					buffer_view vertex_buffer_view = {};	//頂点バッファビュー情報を構築
 					vertex_buffer_view.format = ConvertFormat(gltf_accessor);
@@ -662,7 +675,7 @@ void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 			const Accessor& gltf_accessor = gltf_model.accessors.at(gltf_sampler.input);	//入力アクセサを取得
 			const BufferView& gltf_buffer_view = gltf_model.bufferViews.at(gltf_accessor.bufferView);	//入力ビューを取得
 			const pair<unordered_map<int, vector<float>>::iterator, bool>& timelines{ animation.timelines.emplace(gltf_sampler.input, gltf_accessor.count) };	//タイムライン配列を確保
-			if (timelines.second)	//新規に確保が成功したかの条件分岐
+			if (timelines.second)	//新規に確保が成功したか
 			{
 				memcpy(
 					timelines.first->second.data(),
@@ -681,10 +694,10 @@ void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 			const Accessor& gltf_accessor = gltf_model.accessors.at(gltf_sampler.output);	//出力アクセサを取得
 			const BufferView& gltf_buffer_view = gltf_model.bufferViews.at(gltf_accessor.bufferView);	//出力ビューを取得
 
-			if (gltf_channel.target_path == "scale")	//スケールに対するアニメーションチャネルであるかの条件分岐
+			if (gltf_channel.target_path == "scale")	//スケールに対するアニメーションチャネルであるか
 			{
 				const pair<unordered_map<int, vector<XMFLOAT3>>::iterator, bool>& scales = animation.scales.emplace(gltf_sampler.output, gltf_accessor.count);
-				if (scales.second)	//新規に確保が成功したかの条件分岐
+				if (scales.second)	//新規に確保が成功したか
 				{
 					memcpy(
 						scales.first->second.data(),
@@ -692,10 +705,10 @@ void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 						gltf_accessor.count * sizeof(XMFLOAT3));
 				}
 			}
-			else if (gltf_channel.target_path == "rotation")	//回転に対するアニメーションチャネルであるかの条件分岐
+			else if (gltf_channel.target_path == "rotation")	//回転に対するアニメーションチャネルであるか
 			{
 				const pair<unordered_map<int, vector<XMFLOAT4>>::iterator, bool>& rotations = animation.rotations.emplace(gltf_sampler.output, gltf_accessor.count);
-				if (rotations.second)	//新規に確保が成功したかの条件分岐
+				if (rotations.second)	//新規に確保が成功したか
 				{
 					memcpy(
 						rotations.first->second.data(),
@@ -703,11 +716,11 @@ void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 						gltf_accessor.count * sizeof(XMFLOAT4));
 				}
 			}
-			else if (gltf_channel.target_path == "translation")	//位置に対するアニメーションチャネルであるかの条件分岐
+			else if (gltf_channel.target_path == "translation")	//位置に対するアニメーションチャネルであるか
 			{
 				const pair<unordered_map<int, vector<XMFLOAT3>>::iterator, bool>& translations = animation.translations.emplace(gltf_sampler.output, gltf_accessor.count);
 
-				if (translations.second)	//新規に確保が成功したかの条件分岐
+				if (translations.second)	//新規に確保が成功したか
 				{
 					memcpy(
 						translations.first->second.data(),
@@ -959,7 +972,7 @@ void GltfModelData::BuildRenderCommandsCache()
 		}
 	}
 
-	//構築したキャッシュコマンド配列が完全に空であるかの条件分岐
+	//構築したキャッシュコマンド配列が完全に空であるか
 	if (cached_render_commands.empty()) 
 	{
 		OutputDebugStringA("[GltfModelData Warning] BuildRenderCommandsCache: No renderable primitives found in this model.\n");

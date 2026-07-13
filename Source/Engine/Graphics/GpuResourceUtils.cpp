@@ -89,20 +89,20 @@ HRESULT GpuResourceUtils::LoadTexture(
 	HRESULT hr;
 	DirectX::TexMetadata metadata;
 	DirectX::ScratchImage scratch_image;
-	if (extension == ".tga")
-	{
-		hr = DirectX::GetMetadataFromTGAFile(wfilename.c_str(), metadata);
-		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-		hr = DirectX::LoadFromTGAFile(wfilename.c_str(), &metadata, scratch_image);
-		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-	}
-	else if (extension == ".dds")
+	if (extension == ".dds")
 	{
 		hr = DirectX::GetMetadataFromDDSFile(wfilename.c_str(), DirectX::DDS_FLAGS_NONE, metadata);
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
 		hr = DirectX::LoadFromDDSFile(wfilename.c_str(), DirectX::DDS_FLAGS_NONE, &metadata, scratch_image);
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	}
+	else if (extension == ".tga")
+	{
+		hr = DirectX::GetMetadataFromTGAFile(wfilename.c_str(), metadata);
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+		hr = DirectX::LoadFromTGAFile(wfilename.c_str(), &metadata, scratch_image);
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
 	else if (extension == ".hdr")
