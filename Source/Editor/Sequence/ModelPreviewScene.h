@@ -18,7 +18,7 @@ public:
 	ModelPreviewScene();
 
 	//デストラクタ
-	~ModelPreviewScene()override = default;
+	~ModelPreviewScene()override;
 
 	//初期化
 	void Initialize()override;

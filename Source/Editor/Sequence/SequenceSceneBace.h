@@ -1,5 +1,7 @@
 #pragma once
 
+struct ID3D11DeviceContext;
+
 class SequenceSceneBace
 {
 public:

@@ -13,6 +13,9 @@ ModelPreviewScene::ModelPreviewScene()
 
 }
 
+//デストラクタ
+ModelPreviewScene::~ModelPreviewScene() = default;
+
 //初期化
 void ModelPreviewScene::Initialize()
 {

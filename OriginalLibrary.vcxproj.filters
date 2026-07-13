@@ -375,6 +375,9 @@
     <ClCompile Include="Source\Editor\Sequence\ModelPreviewScene.cpp">
       <Filter>Source\Editor\Sequence\ModelPreviewScene</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\Sequence\AnimationSequencerEditor.cpp">
+      <Filter>Source\Editor\Sequence\AnimationSequenceEditor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -715,6 +718,9 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\Sequence\ModelPreviewScene.h">
       <Filter>Source\Editor\Sequence\ModelPreviewScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Sequence\AnimationSequencerEditor.h">
+      <Filter>Source\Editor\Sequence\AnimationSequenceEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1121,6 +1127,9 @@
     </Filter>
     <Filter Include="Source\Editor\Sequence\SequenceSceneBace">
       <UniqueIdentifier>{2dcf45bb-3f27-4433-b305-ba0c99a6914a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Sequence\AnimationSequenceEditor">
+      <UniqueIdentifier>{e4ebf929-33b7-4a22-9f4e-029da1f5c59a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
