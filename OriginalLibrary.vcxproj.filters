@@ -372,6 +372,9 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\TransitionConditionEditor</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\Sequence\ModelPreviewScene.cpp">
+      <Filter>Source\Editor\Sequence\ModelPreviewScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -706,6 +709,12 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.h">
       <Filter>Source\Editor\StateMachineGraphEditor\TransitionConditionEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Sequence\SequenceSceneBace.h">
+      <Filter>Source\Editor\Sequence\SequenceSceneBace</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Sequence\ModelPreviewScene.h">
+      <Filter>Source\Editor\Sequence\ModelPreviewScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1103,6 +1112,15 @@
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\TransitionConditionEditor">
       <UniqueIdentifier>{8b97f2da-592b-430d-8cc7-25f87ffbacb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Sequence">
+      <UniqueIdentifier>{c6302ddf-12a4-444f-9777-619672e570b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Sequence\ModelPreviewScene">
+      <UniqueIdentifier>{e4726fc1-f77f-4137-aec8-90c2c53ff5ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Sequence\SequenceSceneBace">
+      <UniqueIdentifier>{2dcf45bb-3f27-4433-b305-ba0c99a6914a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

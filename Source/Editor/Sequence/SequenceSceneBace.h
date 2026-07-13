@@ -12,6 +12,9 @@ public:
 	//XV
 	virtual void Update(float elapsed_time) = 0;
 
+	//•`‰æˆ—
+	virtual void Render(ID3D11DeviceContext* immediate_context) = 0;
+
 	//ImGui•`‰æ
 	virtual void RenderGui() = 0;
 };
