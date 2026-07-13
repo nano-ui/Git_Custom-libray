@@ -367,22 +367,46 @@ void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 				const tinygltf::Accessor& gltf_accessor = gltf_model.accessors.at(gltf_attribute.second);	//属性ごとのアクセサを取得
 				const tinygltf::BufferView& gltf_buffer_view = gltf_model.bufferViews.at(gltf_accessor.bufferView);	//ビューを取得
 
-				if (gltf_attribute.first == "JOINTS_0" && gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE) //ジョイントデータが8ビット整数であるか
+				if (gltf_attribute.first == "JOINTS_0") // ジョイントデータの属性であるか
 				{
-					OutputDebugStringA("[GltfModelData Warning] 8-bit bone indices detected. Promoting to 16-bit.\n");
+					// 1頂点あたり4要素（インデックス）を保持するため、すべて16ビット整数（uint16_t）の4要素として拡張・統一する
+					std::vector<unsigned char> expanded_buffer(gltf_accessor.count * sizeof(uint16_t) * 4); // 16ビット整数4要素に拡張するための作業バッファ配列
+					uint16_t* dest = reinterpret_cast<uint16_t*>(expanded_buffer.data()); // 拡張バッファの書き込み先先頭ポインタ
+					const unsigned char* src = gltf_model.buffers.at(gltf_buffer_view.buffer).data.data() + gltf_buffer_view.byteOffset + gltf_accessor.byteOffset; // 生バッファからの読み込み元先頭ポインタ
+					size_t src_stride = gltf_accessor.ByteStride(gltf_buffer_view); // 元のデータのストライド幅
 
-					std::vector<unsigned char> expanded_buffer(gltf_accessor.count * sizeof(uint16_t) * 4); //16ビット整数4要素に拡張するための作業バッファ配列
-					uint16_t* dest = reinterpret_cast<uint16_t*>(expanded_buffer.data()); //拡張バッファの書き込み先先頭ポインタ
-					const uint8_t* src = gltf_model.buffers.at(gltf_buffer_view.buffer).data.data() + gltf_buffer_view.byteOffset + gltf_accessor.byteOffset; //生のバイト配列から属性データの開始位置を示す読み込み元ポインタ
-					size_t src_stride = gltf_accessor.ByteStride(gltf_buffer_view); //元のデータのストライド幅を表すサイズ
-
-					for (size_t i = 0; i < gltf_accessor.count; i++) //すべての頂点要素を走査して型拡張を行うループ
+					for (size_t i = 0; i < gltf_accessor.count; i++) // すべての頂点要素を走査して型拡張を行うループ
 					{
-						const uint8_t* src_vertex = src + i * src_stride; //現在の頂点のデータ位置を示すポインタ
-						dest[i * 4 + 0] = src_vertex[0];
-						dest[i * 4 + 1] = src_vertex[1];
-						dest[i * 4 + 2] = src_vertex[2];
-						dest[i * 4 + 3] = src_vertex[3];
+						const unsigned char* src_vertex = src + i * src_stride; // 現在の頂点のデータ位置を示すポインタ
+
+						if (gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE) // 元のデータが8ビット無符号整数であるか
+						{
+							const uint8_t* src_j = reinterpret_cast<const uint8_t*>(src_vertex); // 8ビット整数用ポインタ
+							dest[i * 4 + 0] = src_j[0];
+							dest[i * 4 + 1] = src_j[1];
+							dest[i * 4 + 2] = src_j[2];
+							dest[i * 4 + 3] = src_j[3];
+						}
+						else if (gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) // 元のデータが16ビット無符号整数であるか
+						{
+							const uint16_t* src_j = reinterpret_cast<const uint16_t*>(src_vertex); // 16ビット整数用ポインタ
+							dest[i * 4 + 0] = src_j[0];
+							dest[i * 4 + 1] = src_j[1];
+							dest[i * 4 + 2] = src_j[2];
+							dest[i * 4 + 3] = src_j[3];
+						}
+						else if (gltf_accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT) // 元のデータが32ビット無符号整数であるか
+						{
+							const uint32_t* src_j = reinterpret_cast<const uint32_t*>(src_vertex); // 32ビット整数用ポインタ
+							dest[i * 4 + 0] = static_cast<uint16_t>(src_j[0]);
+							dest[i * 4 + 1] = static_cast<uint16_t>(src_j[1]);
+							dest[i * 4 + 2] = static_cast<uint16_t>(src_j[2]);
+							dest[i * 4 + 3] = static_cast<uint16_t>(src_j[3]);
+						}
+						else // 想定外の型が検出された場合
+						{
+							OutputDebugStringA("[GltfModelData Error] FetchMeshes: Unsupported component type for JOINTS_0!\n");
+						}
 					}
 
 					raw_buffers.push_back(std::move(expanded_buffer));
@@ -429,7 +453,7 @@ void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 					raw_buffers.push_back(std::move(expanded_buffer));
 
 					buffer_view vertex_buffer_view = {}; //頂点属性バッファビュー
-					vertex_buffer_view.format = DXGI_FORMAT_R32G32B32_FLOAT;
+					vertex_buffer_view.format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 					vertex_buffer_view.buffer = static_cast<int>(raw_buffers.size() - 1);
 					vertex_buffer_view.stride_in_bytes = sizeof(float) * 4;
 					vertex_buffer_view.byte_offset = 0;
@@ -923,7 +947,7 @@ void GltfModelData::ConvertNodeAxisSystem(node& target_node)
 	target_node.translation.x = -target_node.translation.x;
 
 	target_node.rotation.x = -target_node.rotation.x;
-	target_node.rotation.z = -target_node.rotation.z;
+	target_node.rotation.z = -target_node.rotation.w;
 }
 
 //アニメーションの全キーフレーム（位置、回転）のデータを左手系に変換

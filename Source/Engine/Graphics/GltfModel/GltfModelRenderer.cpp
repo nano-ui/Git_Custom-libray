@@ -108,7 +108,6 @@ void GltfModelRenderer::Render
 				}
 
 				DirectX::XMMATRIX skin_matrix = inv_bind * joint_global * mesh_inv; //列優先順序でのスキニング行列計算
-
 				DirectX::XMStoreFloat4x4(&primitive_joint_data.matrices[joint_index], skin_matrix);
 			}
 
@@ -253,8 +252,7 @@ void GltfModelRenderer::TraverseNodeForRender
 			DirectX::XMMATRIX current_inv = DirectX::XMMatrixInverse(nullptr, DirectX::XMLoadFloat4x4(&current_node.global_transform));
 
 			DirectX::XMMATRIX skin_matrix = inv_bind * joint_global * current_inv;
-
-			XMStoreFloat4x4(&primitive_joint_data.matrices[joint_index], skin_matrix);
+			DirectX::XMStoreFloat4x4(&primitive_joint_data.matrices[joint_index], skin_matrix);
 		}
 
 		immediate_context->UpdateSubresource(primitive_joint_cbuffer.Get(), OFFSET_ZERO, nullptr, &primitive_joint_data, OFFSET_ZERO, OFFSET_ZERO);	// 計算したスキニング行列をGPUバッファに更新
