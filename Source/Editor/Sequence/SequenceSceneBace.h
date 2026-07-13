@@ -1,10 +1,10 @@
 #pragma once
 
-class SwquenceSceneBace
+class SequenceSceneBace
 {
 public:
 	//仮想デストラクタ
-	virtual ~SwquenceSceneBace() = default;
+	virtual ~SequenceSceneBace() = default;
 
 	//初期化
 	virtual void Initialize() = 0;
