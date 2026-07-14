@@ -2,7 +2,7 @@
 #include "../Gameplay/GameObjects/GameObject.h"
 #include "../Gameplay/Components/StateMachineComponent.h"
 #include "../Gameplay/GameObjects/Character/Character.h"
-#include "StateMachineGraphEditor.h"
+#include "StateMachineEditor\StateMachineGraphEditor.h"
 
 #include <iostream>
 

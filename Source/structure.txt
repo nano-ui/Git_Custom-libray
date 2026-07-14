@@ -1,33 +1,46 @@
 [Project Structure] 
  
 Folder PATH listing for volume Windows
-Volume serial number is 0000003D 0255:C8DA
+Volume serial number is 0000005F 0255:C8DA
 C:.
 „    structure.txt
 „    _dump_structure.bat
 „    
 „¥„Ÿ„Ÿ„ŸEditor
-„        AssetLoader.cpp
-„        AssetLoader.h
-„        EditorMediator.cpp
-„        EditorMediator.h
-„        FileDialogHelper.cpp
-„        FileDialogHelper.h
-„        ObjectEditor.cpp
-„        ObjectEditor.h
-„        StateGraphConfigManager.cpp
-„        StateGraphConfigManager.h
-„        StateGraphPaletteWindow.cpp
-„        StateGraphPaletteWindow.h
-„        StateGraphPropertyWindow.cpp
-„        StateGraphPropertyWindow.h
-„        StateGraphSimulator.cpp
-„        StateGraphSimulator.h
-„        StateMachineGraphEditor.cpp
-„        StateMachineGraphEditor.h
-„        TransitionConditionEditor.cpp
-„        TransitionConditionEditor.h
-„        
+„    „    AssetLoader.cpp
+„    „    AssetLoader.h
+„    „    EditorManager.cpp
+„    „    EditorManager.h
+„    „    EditorMediator.cpp
+„    „    EditorMediator.h
+„    „    EditorMenuBar.cpp
+„    „    EditorMenuBar.h
+„    „    FileDialogHelper.cpp
+„    „    FileDialogHelper.h
+„    „    ObjectEditor.cpp
+„    „    ObjectEditor.h
+„    „    
+„    „¥„Ÿ„Ÿ„ŸSequence
+„    „        AnimationSequencerEditor.cpp
+„    „        AnimationSequencerEditor.h
+„    „        ModelPreviewScene.cpp
+„    „        ModelPreviewScene.h
+„    „        SequenceSceneBace.h
+„    „        
+„    „¤„Ÿ„Ÿ„ŸStateMachineEditor
+„            StateGraphConfigManager.cpp
+„            StateGraphConfigManager.h
+„            StateGraphPaletteWindow.cpp
+„            StateGraphPaletteWindow.h
+„            StateGraphPropertyWindow.cpp
+„            StateGraphPropertyWindow.h
+„            StateGraphSimulator.cpp
+„            StateGraphSimulator.h
+„            StateMachineGraphEditor.cpp
+„            StateMachineGraphEditor.h
+„            TransitionConditionEditor.cpp
+„            TransitionConditionEditor.h
+„            
 „¥„Ÿ„Ÿ„ŸEngine
 „    „¥„Ÿ„Ÿ„ŸCamera
 „    „        Camera.cpp
@@ -119,6 +132,8 @@ C:.
 „        „        GltfModelData.h
 „        „        GltfModelRenderer.cpp
 „        „        GltfModelRenderer.h
+„        „        GltfRootMotion.cpp
+„        „        GltfRootMotion.h
 „        „        TinygltfImpl.cpp
 „        „        
 „        „¤„Ÿ„Ÿ„ŸShaders
@@ -164,6 +179,8 @@ C:.
 „    „¥„Ÿ„Ÿ„ŸComponents
 „    „        AnimationComponent.cpp
 „    „        AnimationComponent.h
+„    „        RootMotionComponent.cpp
+„    „        RootMotionComponent.h
 „    „        StateMachineComponent.cpp
 „    „        StateMachineComponent.h
 „    „        
