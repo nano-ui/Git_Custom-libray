@@ -47,6 +47,41 @@ void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manage
 	ImGui::Text(u8"エディタマネージャー有効");
 	ImGui::End();
 
+	//画面全体のドッキング空間用の設定フラグ構築
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->WorkPos);
+	ImGui::SetNextWindowSize(viewport->WorkSize);
+	ImGui::SetNextWindowViewport(viewport->ID);
+
+	//ドッキングの背景となるウィンドウのスタイルを設定
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+	window_flags |= ImGuiWindowFlags_NoBackground; //ゲーム画面の上に重ねるため背景を透明化
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+	//背景となる親ウィンドウの描画開始
+	ImGui::Begin("EditorManagerDockSpaceWindow", nullptr, window_flags);
+	ImGui::PopStyleVar(3);
+
+	//ドッキング空間の有効化
+	ImGuiIO& io = ImGui::GetIO();
+
+	//ドッキング機能がサポートされているか判定
+	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+	{
+		ImGuiID dockspace_id = ImGui::GetID("MyEditorDockSpace");
+		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+	}
+	else
+	{
+		OutputDebugStringA("Warning: ImGuiConfigFlags_DockingEnable is not set.\n");
+	}
+	ImGui::End();
+
 	//各種エディタ呼び出し
 	object_editor->RenderUi(camera, collision_manager);
 

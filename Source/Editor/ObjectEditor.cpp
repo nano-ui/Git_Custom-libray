@@ -164,10 +164,6 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 
 	ImGui::End();
 
-	const float right_window_pos_x = screen_width - panel_width;
-	ImGui::SetNextWindowPos(ImVec2(right_window_pos_x, 0.0f), ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowSize(ImVec2(panel_width, screen_height), ImGuiCond_FirstUseEver);
-
 	ImGui::Begin(u8"è⁄ç◊");
 	DrawRightPane();
 	ImGui::End();
