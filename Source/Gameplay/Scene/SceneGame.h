@@ -11,9 +11,7 @@ class ShapeRenderer;
 class CollisionManager;
 class SkyBox;
 class CollisionExperiment;
-class ObjectEditor;
-class StateMachineGraphEditor;
-class AnimationSequencerEditor;
+class EditorManager;
 
 class SceneGame : public Scene
 {
@@ -70,9 +68,7 @@ private:
 	float k_shadow_area_size = 50.0f;
 
 	std::unique_ptr<CollisionExperiment> collision_experiment;	//当たり判定実験クラス
-	std::unique_ptr<ObjectEditor> object_editor;				//オブジェクトエディタクラス
-	std::unique_ptr<StateMachineGraphEditor> graph_editor;		//ステートマシンエディタクラス
-	std::unique_ptr<AnimationSequencerEditor> sequencer_editor;	//アニメーションシーケンサエディタ
+	std::unique_ptr<EditorManager> editor_manager;				//エディタマネージャー
 	bool is_sequencer_active = false;							//シーケンサ表示フラグ
 };
 

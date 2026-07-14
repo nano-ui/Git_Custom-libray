@@ -25,6 +25,9 @@ void EditorManager::Initialize()
 	object_editor = std::make_unique<ObjectEditor>();
 	state_graph_editor = std::make_unique<StateMachineGraphEditor>();
 	animation_sequencer_editor = std::make_unique<AnimationSequencerEditor>();
+
+	object_editor->Initialize();
+	animation_sequencer_editor->Initialize();
 }
 
 //XVˆ—

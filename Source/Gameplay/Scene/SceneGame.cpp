@@ -6,11 +6,9 @@
 #include "../Engine/Camera/FreeCamera.h"
 #include "../Engine/Graphics/Light.h"
 #include "../Engine/Graphics/ShapeRenderer.h"
+#include "Editor\EditorManager.h"
 #include "../Engine/Collision/CollisionManager.h"
 #include "../Engine/Collision/CollisionExperiment.h"
-#include "../Editor/ObjectEditor.h"
-#include "Editor\StateMachineEditor\StateMachineGraphEditor.h"
-#include "Editor\Sequence\AnimationSequencerEditor.h"
 #include "../Gameplay/GameObjects/Character/Character.h"
 #include "../Engine/Graphics/Shaders/SkyBox.h"
 #include "SceneManager.h"
@@ -54,13 +52,8 @@ void SceneGame::Initialize()
 
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	shape_renderer = std::make_unique<ShapeRenderer>(device);
-
-	object_editor = std::make_unique<ObjectEditor>();
-	object_editor->Initialize();
-
-	graph_editor = std::make_unique<StateMachineGraphEditor>();
-	sequencer_editor = std::make_unique<AnimationSequencerEditor>();
-	sequencer_editor->Initialize();
+	editor_manager = std::make_unique<EditorManager>();
+	editor_manager->Initialize();
 }
 
 //終了化
@@ -83,19 +76,11 @@ void SceneGame::Finalize()
 	{
 		light.reset();
 	}
-	object_editor.reset();
-	sequencer_editor.reset();
 }
 
 //更新処理
 void SceneGame::Update(float elapsed_time)
 {
-	if (is_sequencer_active)
-	{
-		sequencer_editor->Update(elapsed_time);
-		return;
-	}
-
 	if (camera)
 	{
 		camera->Update(elapsed_time);
@@ -128,20 +113,6 @@ void SceneGame::Render(float elapsed_time)
 	ID3D11DeviceContext* context = Graphics::Instance().GetContext();
 	auto states = Graphics::Instance().GetPipelineStates();
 	framebuffer* shadow_fb = Graphics::Instance().GetShadowFramebuffer();
-
-	// シーケンサ表示アクティブフラグが有効か判定
-	if (is_sequencer_active)
-	{
-		// シーケンサエディタの3D描画を実行
-		sequencer_editor->Render(context);
-
-#ifdef USE_IMGUI
-		// エディタ用のImGui描画関数を呼び出し
-		RenderGui();
-#endif // USE_IMGUI
-
-		return;
-	}
 
 	// パス間で共有するライト空間変換行列の計算
 	DirectX::XMFLOAT4X4 light_view_projection_matrix{};
@@ -334,12 +305,6 @@ void SceneGame::RenderGui()
 	}
 	ImGui::End();
 
-	if (is_sequencer_active)
-	{
-		sequencer_editor->RenderGui();
-		return;
-	}
-
 	//Scene::ImGuiScaleCorrection();
 	ImGuiID dockspace_id = 0;
 	ImGui::DockSpaceOverViewport(dockspace_id, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
@@ -348,6 +313,8 @@ void SceneGame::RenderGui()
 		//object_manager->RenderGui();
 		object_manager->RenderDebug(shape_renderer.get());
 	}
+
+	editor_manager->RenderGui(camera.get(), collision_manager.get());
 
 	if (ImGui::Begin("Game Debug"))
 	{
@@ -438,41 +405,5 @@ void SceneGame::RenderGui()
 		}
 	}
 	ImGui::End();
-
-	if (object_editor)
-	{
-		object_editor->RenderUi(camera.get(), collision_manager.get());
-	}
-
-	if (graph_editor)
-	{
-		StateBlackboard* target_blackboard = nullptr;
-		GameObject* selected_obj = object_editor->GetCurrentSelectObject();
-
-		// オブジェクトが選択されているか判定
-		if (selected_obj)
-		{
-			// 選択中のオブジェクトがキャラクター型（または派生クラス）か判定
-			Character* selected_character = dynamic_cast<Character*>(selected_obj);
-
-			if (selected_character)
-			{
-				target_blackboard = selected_character->GetBlackboard();
-			}
-		}
-
-		// 有効なブラックボードが見つかった場合のみエディタを描画・シミュレーション
-		if (target_blackboard)
-		{
-			graph_editor->DrawEditor(target_blackboard);
-		}
-		else
-		{
-			// 画面上に「編集対象のキャラクターを選択してください」等のプレースホルダーを出したい場合はここに記述可能
-			ImGui::Begin(u8"ステートマシンエディタ");
-			ImGui::TextColored(ImVec4(1.0f, 0.6f, 0.2f, 1.0f), u8"※Hierarchy または画面上で編集したいキャラクターを選択してください");
-			ImGui::End();
-		}
-	}
 #endif // USE_IMGUI
 }

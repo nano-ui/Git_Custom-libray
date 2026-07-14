@@ -16,7 +16,7 @@
 #include <filesystem>
 #include <windows.h>
 #include <commdlg.h>
-#include "StateGraphConfigManager.h"
+#include "StateMachineEditor\StateGraphConfigManager.h"
 
 static const std::string editor_config_path = "Data/System/EditorConfig.json";
 static const std::string config_key_scene_path = "last_opened_scene";
@@ -137,14 +137,14 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 	ImGui::SetNextWindowSize(ImVec2(panel_width, screen_height), ImGuiCond_FirstUseEver);
 
 	//画面を左右に分割するメインウインドウ
-	ImGui::Begin("Hierarchy");
+	ImGui::Begin(u8"ヒストリー");
 	DrawLeftPane(camera, collision_manager);
 
 	ImGui::Dummy(ImVec2(0.0f, dummy_height_value));
 	ImGui::Separator();
 	ImGui::Text("Global Scene Operations");
 
-	if (ImGui::Button("Save Scene Layout", ImVec2(-1, 0)))
+	if (ImGui::Button(u8"シーン保存", ImVec2(-1, 0)))
 	{
 		std::string dynamic_save_path = SelectSavePath();
 		if (!dynamic_save_path.empty())
@@ -153,7 +153,7 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 		}
 	}
 
-	if (ImGui::Button("Load Scene Layout", ImVec2(-1, 0)))
+	if (ImGui::Button(u8"シーン読み込み", ImVec2(-1, 0)))
 	{
 		std::string dynamic_load_path = SelectOpenPath();
 		if (!dynamic_load_path.empty())
@@ -168,7 +168,7 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 	ImGui::SetNextWindowPos(ImVec2(right_window_pos_x, 0.0f), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(panel_width, screen_height), ImGuiCond_FirstUseEver);
 
-	ImGui::Begin("Inspector");
+	ImGui::Begin(u8"インスペクター");
 	DrawRightPane();
 	ImGui::End();
 
@@ -182,7 +182,7 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_manager)
 {
 	//クラス名リストの取得とリストボックスの描画
-	ImGui::Text("Registered Classes");
+	ImGui::Text(u8"登録クラス");
 	ImGui::Separator();
 
 	if (!cached_class_names.empty())
@@ -211,7 +211,7 @@ void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_mana
 	}
 
 	//生成ボタン処理
-	if (ImGui::Button("Create and Register", ImVec2(-1, 0)))
+	if (ImGui::Button(u8"クラス生成", ImVec2(-1, 0)))
 	{
 		const std::string& target_class_name = cached_class_names[selected_class_index];
 		GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
@@ -228,7 +228,7 @@ void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_mana
 	ImGui::Dummy(ImVec2(0.0f, dummy_height_value));
 
 	//現在生成されているオブジェクトの一覧リスト描画
-	ImGui::Text("Active Object List");
+	ImGui::Text(u8"オブジェクトリスト");
 	ImGui::Separator();
 	const auto& active_objects = ObjectManager::Instance().GetGameObjects();
 	frame_class_counters.clear();
@@ -270,7 +270,7 @@ void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_mana
 void ObjectEditor::DrawRightPane()
 {
 	//選択中のオブジェクト情報の表示
-	ImGui::Text("Object Properties");
+	ImGui::Text(u8"モデル情報");
 	ImGui::Separator();
 
 	if (current_selected_object != nullptr)
@@ -281,7 +281,7 @@ void ObjectEditor::DrawRightPane()
 			ImGui::Separator();
 
 			//オブジェクトの削除ボタン
-			if (ImGui::Button("Destroy Object", ImVec2(-1, 0)))
+			if (ImGui::Button(u8"モデル削除", ImVec2(-1, 0)))
 			{
 				current_selected_object->Destory();
 				current_selected_object = nullptr;
