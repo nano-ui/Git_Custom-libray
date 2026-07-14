@@ -3,6 +3,7 @@
 #include "StateMachineEditor\StateMachineGraphEditor.h"
 #include "Sequence\AnimationSequencerEditor.h"
 #include "EditorMenuBar.h"
+#include "ConstentBrowser\ContentBrowserEditor.h"
 #include "Engine\Camera\Camera.h"
 #include "Engine\Collision\CollisionManager.h"
 #include "Gameplay\GameObjects\Character\Character.h"
@@ -27,9 +28,11 @@ void EditorManager::Initialize()
 	state_graph_editor = std::make_unique<StateMachineGraphEditor>();
 	animation_sequencer_editor = std::make_unique<AnimationSequencerEditor>();
 	menu_bar = std::make_unique<EditorMenuBar>();
+	content_browser_editor = std::make_unique<ContentBrowserEditor>();
 
 	object_editor->Initialize();
 	animation_sequencer_editor->Initialize();
+	content_browser_editor->Initialize();
 }
 
 //XVˆ—
@@ -96,6 +99,8 @@ void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manage
 		}
 	}
 	state_graph_editor->DrawEditor(target_blackboard);
+
+	content_browser_editor->RenderGui();
 
 	animation_sequencer_editor->RenderGui();
 }

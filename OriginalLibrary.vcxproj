@@ -230,6 +230,7 @@
     <ClCompile Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_node_editor_api.cpp" />
     <ClCompile Include="External\ImGuizmo-master\ImGuizmo-master\src\ImGuizmo.cpp" />
     <ClCompile Include="Source\Editor\AssetLoader.cpp" />
+    <ClCompile Include="Source\Editor\ConstentBrowser\ContentBrowserEditor.cpp" />
     <ClCompile Include="Source\Editor\EditorManager.cpp" />
     <ClCompile Include="Source\Editor\EditorMediator.cpp" />
     <ClCompile Include="Source\Editor\EditorMenuBar.cpp" />
@@ -338,6 +339,7 @@
     <ClInclude Include="External\imgui-node-editor-master\imgui-node-editor-master\imgui_node_editor.h" />
     <ClInclude Include="External\ImGuizmo-master\ImGuizmo-master\src\ImGuizmo.h" />
     <ClInclude Include="Source\Editor\AssetLoader.h" />
+    <ClInclude Include="Source\Editor\ConstentBrowser\ContentBrowserEditor.h" />
     <ClInclude Include="Source\Editor\EditorManager.h" />
     <ClInclude Include="Source\Editor\EditorMediator.h" />
     <ClInclude Include="Source\Editor\EditorMenuBar.h" />
