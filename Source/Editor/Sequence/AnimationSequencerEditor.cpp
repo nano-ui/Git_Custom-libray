@@ -136,9 +136,9 @@ void AnimationSequencerEditor::RenderGui()
 	ImGui::End();
 
 	// タイムラインウィンドウの描画
-	if (ImGui::Begin("タイムライン"))
+	if (ImGui::Begin(u8"タイムライン"))
 	{
-		ImGui::Text("アニメーションのイベント設定バーやアニメーションカーブなどを表示");
+		ImGui::Text(u8"アニメーションのイベント設定バーやアニメーションカーブなどを表示");
 	}
 	ImGui::End();
 

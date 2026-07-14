@@ -151,19 +151,19 @@ void Player::UpdateInput(float elapsed_time)
 	//キーボード入力の検知
 	if (Input::Instance().IsKeyPress('W'))
 	{
-		//move_z += 1.0f;
+		move_z += 1.0f;
 	}
 	if (Input::Instance().IsKeyPress('S'))
 	{
-		//move_z -= 1.0f;
+		move_z -= 1.0f;
 	}
 	if (Input::Instance().IsKeyPress('A'))
 	{
-		//move_x -= 1.0f;
+		move_x -= 1.0f;
 	}
 	if (Input::Instance().IsKeyPress('D'))
 	{
-		//move_x += 1.0f;
+		move_x += 1.0f;
 	}
 
 	//移動・旋回処理
