@@ -168,7 +168,7 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 	ImGui::SetNextWindowPos(ImVec2(right_window_pos_x, 0.0f), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(panel_width, screen_height), ImGuiCond_FirstUseEver);
 
-	ImGui::Begin(u8"インスペクター");
+	ImGui::Begin(u8"詳細");
 	DrawRightPane();
 	ImGui::End();
 
@@ -176,6 +176,27 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 	EditorMediator::Instance().UpdateViewerSynchronization(current_selected_object);
 
 	DrawGizmo(camera);
+}
+
+//シーン保存
+void ObjectEditor::SaveSceneWithDialog()
+{
+	std::string dynamic_save_path = SelectSavePath();
+	if (!dynamic_save_path.empty())
+	{
+		SaveScene(dynamic_save_path);
+	}
+}
+
+//シーン読み込み
+void ObjectEditor::LoadSceneWithDialog()
+{
+	std::string dynamic_load_path = SelectOpenPath();
+
+	if (!dynamic_load_path.empty())
+	{
+		LoadScene(dynamic_load_path);
+	}
 }
 
 //オブジェクト生成UI描画

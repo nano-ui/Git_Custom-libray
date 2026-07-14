@@ -381,6 +381,9 @@
     <ClCompile Include="Source\Editor\EditorManager.cpp">
       <Filter>Source\Editor\EditorManager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\EditorMenuBar.cpp">
+      <Filter>Source\Editor\EditorMenuBar</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -727,6 +730,9 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\EditorManager.h">
       <Filter>Source\Editor\EditorManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\EditorMenuBar.h">
+      <Filter>Source\Editor\EditorMenuBar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1139,6 +1145,9 @@
     </Filter>
     <Filter Include="Source\Editor\EditorManager">
       <UniqueIdentifier>{2fe00281-2af4-4964-8722-4555aeaf3c18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\EditorMenuBar">
+      <UniqueIdentifier>{389c1f8b-0f81-45a7-9d7d-19707c110ec2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

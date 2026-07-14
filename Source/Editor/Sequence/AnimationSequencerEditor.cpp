@@ -38,29 +38,6 @@ void AnimationSequencerEditor::Render(ID3D11DeviceContext* immediate_context)
 //ImGui描画処理
 void AnimationSequencerEditor::RenderGui()
 {
-	// 画面最上部のメインメニューバーを描画
-	if (ImGui::BeginMainMenuBar())
-	{
-		// ファイルメニューの展開判定
-		if (ImGui::BeginMenu(u8"ファイル"))
-		{
-			// モデル読み込み項目の選択判定
-			if (ImGui::MenuItem(u8"モデルを開く"))
-			{
-				const PathResult path_result = FileDialogHelper::OpenGenericFileDialog();
-
-				// 取得した相対パスが有効かつプレビュー画面が存在するか判定
-				if (!path_result.relative_path.empty() && preview_scene)
-				{
-					// 構造体が自動計算した相対パスをそのままモデル読み込みに渡す
-					preview_scene->LoadModel(path_result.relative_path);
-				}
-			}
-			ImGui::EndMenu();
-		}
-		ImGui::EndMainMenuBar();
-	}
-
 	// シーケンサ専用のドッキングスペースIDを定義
 	const ImGuiID dockspace_id = ImGui::GetID("SequencerDockSpace");
 

@@ -232,6 +232,7 @@
     <ClCompile Include="Source\Editor\AssetLoader.cpp" />
     <ClCompile Include="Source\Editor\EditorManager.cpp" />
     <ClCompile Include="Source\Editor\EditorMediator.cpp" />
+    <ClCompile Include="Source\Editor\EditorMenuBar.cpp" />
     <ClCompile Include="Source\Editor\FileDialogHelper.cpp" />
     <ClCompile Include="Source\Editor\ObjectEditor.cpp" />
     <ClCompile Include="Source\Editor\Sequence\AnimationSequencerEditor.cpp" />
@@ -339,6 +340,7 @@
     <ClInclude Include="Source\Editor\AssetLoader.h" />
     <ClInclude Include="Source\Editor\EditorManager.h" />
     <ClInclude Include="Source\Editor\EditorMediator.h" />
+    <ClInclude Include="Source\Editor\EditorMenuBar.h" />
     <ClInclude Include="Source\Editor\FileDialogHelper.h" />
     <ClInclude Include="Source\Editor\ObjectEditor.h" />
     <ClInclude Include="Source\Editor\Sequence\AnimationSequencerEditor.h" />

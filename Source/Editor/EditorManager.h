@@ -5,6 +5,7 @@
 class ObjectEditor;
 class StateMachineGraphEditor;
 class AnimationSequencerEditor;
+class EditorMenuBar; 
 class Camera;
 class CollisionManager;
 
@@ -30,5 +31,6 @@ private:
 	std::unique_ptr<ObjectEditor> object_editor;							//オブジェクトエディタ
 	std::unique_ptr<StateMachineGraphEditor> state_graph_editor;			//ステートマシンエディタ
 	std::unique_ptr<AnimationSequencerEditor> animation_sequencer_editor;	//アニメーションシーケンサエディタ
+	std::unique_ptr<EditorMenuBar> menu_bar;								//メニューバーエディタ
 };
 

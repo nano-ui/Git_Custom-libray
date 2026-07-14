@@ -2,6 +2,7 @@
 #include "ObjectEditor.h"
 #include "StateMachineEditor\StateMachineGraphEditor.h"
 #include "Sequence\AnimationSequencerEditor.h"
+#include "EditorMenuBar.h"
 #include "Engine\Camera\Camera.h"
 #include "Engine\Collision\CollisionManager.h"
 #include "Gameplay\GameObjects\Character\Character.h"
@@ -25,6 +26,7 @@ void EditorManager::Initialize()
 	object_editor = std::make_unique<ObjectEditor>();
 	state_graph_editor = std::make_unique<StateMachineGraphEditor>();
 	animation_sequencer_editor = std::make_unique<AnimationSequencerEditor>();
+	menu_bar = std::make_unique<EditorMenuBar>();
 
 	object_editor->Initialize();
 	animation_sequencer_editor->Initialize();
@@ -39,6 +41,8 @@ void EditorManager::Update(float elapsed_time)
 //Gui描画、レイアウト構築
 void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manager)
 {
+	menu_bar->RenderGui(object_editor.get());
+
 	ImGui::Begin(u8"エディタマネージャーウィンドウ");
 	ImGui::Text(u8"エディタマネージャー有効");
 	ImGui::End();

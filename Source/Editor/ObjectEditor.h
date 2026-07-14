@@ -29,6 +29,12 @@ public:
 	//選択中のオブジェクトを取得
 	GameObject* GetCurrentSelectObject()const { return current_selected_object; }
 
+	//シーン保存
+	void SaveSceneWithDialog();
+
+	//シーン読み込み
+	void LoadSceneWithDialog();
+
 private:
 	//オブジェクト生成UI描画
 	void DrawLeftPane(Camera* camera, CollisionManager* collision_manager);

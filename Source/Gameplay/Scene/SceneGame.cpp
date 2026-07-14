@@ -287,24 +287,6 @@ void SceneGame::RenderGui()
 	const ImGuiWindowFlags sidebar_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
 
-	if (ImGui::Begin("##SceneSidebar", nullptr, sidebar_flags))
-	{
-		// 通常ゲーム画面への切り替えボタン
-		if (ImGui::Button(u8"ゲーム", ImVec2(64, 40)))
-		{
-			is_sequencer_active = false;
-		}
-
-		ImGui::Spacing();
-
-		// シーケンサ画面への切り替えボタン
-		if (ImGui::Button(u8"シーケンサ", ImVec2(64, 40)))
-		{
-			is_sequencer_active = true;
-		}
-	}
-	ImGui::End();
-
 	//Scene::ImGuiScaleCorrection();
 	ImGuiID dockspace_id = 0;
 	ImGui::DockSpaceOverViewport(dockspace_id, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
@@ -316,94 +298,5 @@ void SceneGame::RenderGui()
 
 	editor_manager->RenderGui(camera.get(), collision_manager.get());
 
-	if (ImGui::Begin("Game Debug"))
-	{
-		bool check_paused = SceneManager::Instance().IsPaused();
-		if (ImGui::Checkbox("Game Pause (F5)", &check_paused))
-		{
-			SceneManager::Instance().SetPauseState(check_paused);
-		}
-		if (camera)
-		{
-			camera->RenderGui();
-		}
-
-		//シャドウマップビューア項目の描画
-		if (ImGui::CollapsingHeader("Shadow Map Viewer", ImGuiDockNodeFlags_None))
-		{
-			framebuffer* shadow_fb = Graphics::Instance().GetShadowFramebuffer();
-			if (shadow_fb)
-			{
-				ID3D11ShaderResourceView* shadow_srv = shadow_fb->shader_resource_views[1].Get();
-				ImGui::DragFloat("ShadowSize", &k_shadow_area_size, 0.1f);
-				if (shadow_srv) 
-				{
-					static const float k_shadow_viewer_width = 256.0f;
-					static const float k_shadow_viewer_height = 256.0f;
-
-					ImGui::Text("Texture SRV Slot 10 (Format: R24_UNORM_X8)");
-					ImGui::Image( 
-						reinterpret_cast<ImTextureID>(shadow_srv),
-						ImVec2(k_shadow_viewer_width, k_shadow_viewer_height)
-					);
-				}
-				else 
-				{
-					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Shadow SRV is Null.");
-				}
-			}
-		}
-
-		if (ImGui::CollapsingHeader("Shape Generator", ImGuiDockNodeFlags_None))
-		{
-			ImGui::RadioButton("Wireframe", &current_debug_draw_mode, 0);
-			ImGui::RadioButton("Solid", &current_debug_draw_mode, 1);
-			ImGui::RadioButton("Solid & Wireframe", &current_debug_draw_mode, 2);
-			ImGui::ColorEdit4("Shape Color", &current_debug_color.x);
-			ImGui::Spacing();
-			if (camera)
-			{
-				DirectX::XMFLOAT3 focus = camera->GetFocus();
-				ImGui::InputFloat3("Camera Focus", &focus.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
-				if (ImGui::Button("Spawn Box"))
-				{
-					debug_shapes.push_back({ debug_shape_type::box, focus, current_debug_draw_mode, current_debug_color });
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Spawn Sphere"))
-				{
-					debug_shapes.push_back({ debug_shape_type::sphere, focus, current_debug_draw_mode, current_debug_color });
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Spawn Cylinder"))
-				{
-					debug_shapes.push_back({ debug_shape_type::cylinder, focus, current_debug_draw_mode, current_debug_color });
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Spawn Capsule"))
-				{
-					debug_shapes.push_back({ debug_shape_type::capsule, focus, current_debug_draw_mode, current_debug_color });
-				}
-
-				ImGui::Spacing();
-				if (ImGui::Button("Clear All Shapes"))
-				{
-					debug_shapes.clear();
-				}
-			}
-		}
-
-		if (collision_experiment)
-		{
-			collision_experiment->RenderGui();
-		}
-
-		if (collision_manager)
-		{
-			collision_manager->RenderGui();
-			collision_manager->RenderDebug(shape_renderer.get());
-		}
-	}
-	ImGui::End();
 #endif // USE_IMGUI
 }
