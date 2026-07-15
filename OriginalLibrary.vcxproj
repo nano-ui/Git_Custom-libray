@@ -237,6 +237,7 @@
     <ClCompile Include="Source\Editor\EditorTabBar.cpp" />
     <ClCompile Include="Source\Editor\FileDialogHelper.cpp" />
     <ClCompile Include="Source\Editor\ObjectEditor.cpp" />
+    <ClCompile Include="Source\Editor\Preview\ModelPreviewWindow.cpp" />
     <ClCompile Include="Source\Editor\Sequence\AnimationSequencerEditor.cpp" />
     <ClCompile Include="Source\Editor\Sequence\ModelPreviewScene.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphConfigManager.cpp" />
@@ -347,6 +348,7 @@
     <ClInclude Include="Source\Editor\EditorTabBar.h" />
     <ClInclude Include="Source\Editor\FileDialogHelper.h" />
     <ClInclude Include="Source\Editor\ObjectEditor.h" />
+    <ClInclude Include="Source\Editor\Preview\ModelPreviewWindow.h" />
     <ClInclude Include="Source\Editor\Sequence\AnimationSequencerEditor.h" />
     <ClInclude Include="Source\Editor\Sequence\ModelPreviewScene.h" />
     <ClInclude Include="Source\Editor\Sequence\SequenceSceneBace.h" />

@@ -390,6 +390,7 @@
     <ClCompile Include="Source\Editor\EditorTabBar.cpp">
       <Filter>Source\Editor\TabBar\EditorTabBar</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\Preview\ModelPreviewWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -746,6 +747,7 @@
     <ClInclude Include="Source\Editor\EditorTabBar.h">
       <Filter>Source\Editor\TabBar\EditorTabBar</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Editor\Preview\ModelPreviewWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli">
@@ -1169,6 +1171,12 @@
     </Filter>
     <Filter Include="Source\Editor\TabBar\EditorTabBar">
       <UniqueIdentifier>{ea28dd4e-d981-4b68-b212-9a519503a05e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Preview">
+      <UniqueIdentifier>{8df766c9-daa8-4242-88d4-20d237b6ac03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Preview\ModelPreviewWindow">
+      <UniqueIdentifier>{f62475ae-4f79-4d38-8494-1519435c794a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
