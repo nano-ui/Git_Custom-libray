@@ -18,10 +18,12 @@ ContentBrowserEditor::~ContentBrowserEditor()
 //初期化処理
 void ContentBrowserEditor::Initialize()
 {
+	//ルートパスの初期化
 	root_path = "Data";
 	current_path = root_path;
 	should_sync_tree = true;
 	
+	//ディレクトリの存在確認
 	if (!std::filesystem::exists(root_path))
 	{
 		OutputDebugStringA("[Error] ContentBrowserEditor: 'Data' directory not found!\n");
@@ -31,15 +33,17 @@ void ContentBrowserEditor::Initialize()
 //Gui描画
 void ContentBrowserEditor::RenderGui()
 {
-	const float default_window_width = 500.0f;	//ウィンドウ幅
-	const float default_window_height = 400.0f;	//ウィンドウの高さ
+	//ウィンドウサイズの設定
+	const float default_window_width = 500.0f;	
+	const float default_window_height = 400.0f;	
 	ImGui::SetNextWindowSize(ImVec2(default_window_width, default_window_height), ImGuiCond_FirstUseEver);
 
 	if (ImGui::Begin(u8"コンテンツブラウザ"))
 	{
-		const float left_panel_width = 200.0f;	//フォルダツリーの横幅
-		const float panel_child_id = 1;			//パネル識別ID
+		const float left_panel_width = 200.0f;
+		const float panel_child_id = 1;
 
+		//左パネル：フォルダツリーの描画
 		ImGui::BeginChild(u8"フォルダ階層", ImVec2(left_panel_width, 0.0f), true);
 		DrawFolderTree(root_path);
 		ImGui::EndChild();
@@ -47,6 +51,7 @@ void ContentBrowserEditor::RenderGui()
 
 		ImGui::SameLine();
 
+		//右パネル：ファイル一覧の描画
 		ImGui::BeginChild(u8"フォルダの中身", ImVec2(0.0f, 0.0f), true);
 		DrawFolderContents(current_path);
 		ImGui::EndChild();
@@ -59,6 +64,7 @@ void ContentBrowserEditor::DrawFolderTree(const std::filesystem::path& path)
 {
 	try
 	{
+		//指定ディレクトリ内のイテレーション
 		for (const auto& entry : std::filesystem::directory_iterator(path))
 		{
 			if (entry.is_directory())
@@ -66,13 +72,14 @@ void ContentBrowserEditor::DrawFolderTree(const std::filesystem::path& path)
 				std::string folder_name = entry.path().filename().string();	//フォルダ名
 				ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;	//挙動制御フラグ
 
+				//選択状態の更新
 				if (current_path == entry.path())
 				{
 					node_flags |= ImGuiTreeNodeFlags_Selected;
 				}
 
+				//フォルダ階層の自動開閉ロジック
 				bool is_ancestor = false;
-
 				for (auto p = current_path; p != root_path.parent_path(); p = p.parent_path())
 				{
 					if (p == entry.path())
@@ -87,6 +94,7 @@ void ContentBrowserEditor::DrawFolderTree(const std::filesystem::path& path)
 					ImGui::SetNextItemOpen(true);
 				}
 
+				//ツリーノードの描画と再帰処理
 				if (ImGui::TreeNodeEx(folder_name.c_str(), node_flags))
 				{
 					if (ImGui::IsItemClicked())
@@ -124,37 +132,41 @@ void ContentBrowserEditor::DrawFolderContents(const std::filesystem::path& path)
 
 	try
 	{
-		float panel_width = ImGui::GetContentRegionAvail().x;	//ウィンドウの横幅
-		float cell_size = icon_size + grid_padding;				//セルの幅
-		int column_count = static_cast<int>(panel_width / cell_size);	//横並び列数
+		//グリッドレイアウト計算
+		float panel_width = ImGui::GetContentRegionAvail().x;	
+		float cell_size = icon_size + grid_padding;				
+		int column_count = static_cast<int>(panel_width / cell_size);	
 
 		if (column_count < 1)
 		{
 			column_count = 1;
 		}
 
+		//テーブルによるアイコン描画
 		if (ImGui::BeginTable("FolderContentsGrid", column_count, ImGuiTableFlags_None))
 		{
 			for (const auto& entry : std::filesystem::directory_iterator(path))
 			{
 				ImGui::TableNextColumn();
 
-				std::string name = entry.path().filename().string();	//ファイル名
-				bool is_selected = (selected_path == entry.path());		//選択中フラグ
+				std::string name = entry.path().filename().string();	
+				bool is_selected = (selected_path == entry.path());		
 
 				ImGui::PushID(name.c_str());
 
-				ID3D11ShaderResourceView* srv = GetOrCreateSystemIcon(entry.path());	//srvのアドレス
-
+				//アイコンリソースの取得
+				ID3D11ShaderResourceView* srv = GetOrCreateSystemIcon(entry.path());	
 				ImVec4 bg_color = is_selected ? ImVec4(0.2f, 0.4f, 0.8f, 0.6f) : ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
 
 				ImGui::BeginGroup();
 
+				//アイコンボタンの描画
 				if (ImGui::ImageButton(name.c_str(), reinterpret_cast<ImTextureID>(srv), ImVec2(icon_size, icon_size), ImVec2(0.0f, 0.0f), ImVec2(1.0f, 1.0f), bg_color)) 
 				{
 					selected_path = entry.path();
 				}
 
+				//ダブルクリック判定（ディレクトリ遷移）
 				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 				{
 					if (entry.is_directory())
@@ -165,17 +177,15 @@ void ContentBrowserEditor::DrawFolderContents(const std::filesystem::path& path)
 					}
 				}
 
+				//テキストの中央寄せ処理
 				float text_offset_x = (icon_size - ImGui::CalcTextSize(name.c_str()).x) * 0.5f;
-
 				if (text_offset_x > 0.0f)
 				{
 					ImGui::SetCursorPosX(ImGui::GetCursorPosX() + text_offset_x);
 				}
-
 				ImGui::TextWrapped(name.c_str());
 
 				ImGui::EndGroup();
-
 				ImGui::PopID();
 			}
 			ImGui::EndTable();
@@ -190,22 +200,22 @@ void ContentBrowserEditor::DrawFolderContents(const std::filesystem::path& path)
 //システムアイコンを取得、新規生成
 ID3D11ShaderResourceView* ContentBrowserEditor::GetOrCreateSystemIcon(const std::filesystem::path& path)
 {
+	//キャッシュキーの生成
 	std::wstring key = path.extension().wstring();
-
 	if (std::filesystem::is_directory(path))
 	{
 		key = L"[Folder]";
 	}
 
+	//キャッシュ確認
 	auto it = icon_cache.find(key);
-
 	if (it != icon_cache.end())
 	{
 		return it->second.Get();
 	}
 
+	//Windows APIによるシステムアイコン取得
 	ID3D11Device* device = Graphics::Instance().GetDevice();
-
 	SHFILEINFOA sfi = {};
 	UINT flags = SHGFI_ICON | SHGFI_LARGEICON | SHGFI_USEFILEATTRIBUTES;
 	DWORD attributes = std::filesystem::is_directory(path) ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL;
@@ -218,6 +228,8 @@ ID3D11ShaderResourceView* ContentBrowserEditor::GetOrCreateSystemIcon(const std:
 		if (h_icon)
 		{
 			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
+
+			//SRVへの変換
 			HRESULT hr = CreateSrvFromHIcon(device, h_icon, srv.GetAddressOf());
 			DestroyIcon(h_icon);
 
@@ -242,8 +254,8 @@ ID3D11ShaderResourceView* ContentBrowserEditor::GetOrCreateSystemIcon(const std:
 //Win32のHICONからDirect3D11のシェーダーリソースビューを作成
 HRESULT ContentBrowserEditor::CreateSrvFromHIcon(ID3D11Device* device, HICON h_icon, ID3D11ShaderResourceView** pp_srv)
 {
+	//アイコン情報の取得
 	ICONINFO icon_info = {};
-
 	if (!GetIconInfo(h_icon, &icon_info))
 	{
 		return E_FAIL;
@@ -251,12 +263,11 @@ HRESULT ContentBrowserEditor::CreateSrvFromHIcon(ID3D11Device* device, HICON h_i
 
 	BITMAP bitmap = {};
 	GetObject(icon_info.hbmColor, sizeof(BITMAP), &bitmap);
-
 	int width = bitmap.bmWidth;
 	int height = bitmap.bmHeight;
 
+	//ピクセルデータの取得
 	std::vector<DWORD> pixels(width * height);
-
 	HDC hdc = GetDC(nullptr);
 	BITMAPINFO bmi = {};
 	bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -270,6 +281,7 @@ HRESULT ContentBrowserEditor::CreateSrvFromHIcon(ID3D11Device* device, HICON h_i
 
 	ReleaseDC(nullptr, hdc);
 
+	//リソース解放
 	if (icon_info.hbmColor)
 	{
 		DeleteObject(icon_info.hbmColor);
@@ -284,8 +296,8 @@ HRESULT ContentBrowserEditor::CreateSrvFromHIcon(ID3D11Device* device, HICON h_i
 		return E_FAIL;
 	}
 
+	//アルファチャンネルの確認と補完
 	bool has_alpha = false;
-
 	for (int i = 0; i < width * height; ++i)
 	{
 		if ((pixels[i] & 0xFF000000) != 0)
@@ -303,6 +315,7 @@ HRESULT ContentBrowserEditor::CreateSrvFromHIcon(ID3D11Device* device, HICON h_i
 		}
 	}
 
+	//D3D11テクスチャ生成
 	D3D11_TEXTURE2D_DESC desc = {};
 	desc.Width = width;
 	desc.Height = height;
@@ -327,7 +340,8 @@ HRESULT ContentBrowserEditor::CreateSrvFromHIcon(ID3D11Device* device, HICON h_i
 	{
 		return hr;
 	}
-	hr = device->CreateShaderResourceView(texture.Get(), nullptr, pp_srv);
 
+	//SRV生成
+	hr = device->CreateShaderResourceView(texture.Get(), nullptr, pp_srv);
 	return hr;
 }

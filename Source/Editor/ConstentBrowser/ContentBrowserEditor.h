@@ -44,7 +44,7 @@ private:
 	std::filesystem::path root_path;	//ルートディレクトリパス
 	std::filesystem::path current_path;	//現在のディレクトリパス
 	std::filesystem::path selected_path;//選択中のパス
-	std::unordered_map<std::wstring, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> icon_cache;	//拡張子をキーにしたシステムアイコン用テクスチャのキャッシュマップ
+	std::unordered_map<std::wstring, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> icon_cache;	//アイコンのキャッシュ
 	static constexpr float icon_size = 64.0f;		//アイコンの大きさ
 	static constexpr float grid_padding = 16.0f;	//周囲の余白
 	bool should_sync_tree = false;					//フォルダ遷移時のツリー同期フラグ
