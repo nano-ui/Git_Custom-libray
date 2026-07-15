@@ -18,7 +18,7 @@ EditorTabBar::~EditorTabBar()
 }
 
 //初期化処理
-void EditorTabBar::Initalize()
+void EditorTabBar::Initialize()
 {
 	current_scene_type = EditorSceneType::LevelEditor;
 }
@@ -29,7 +29,7 @@ EditorSceneType EditorTabBar::Draw()
 	//メインメニューバーのすぐ下にタブバーを描画するためのウィンドウ設定
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImGui::SetNextWindowPos(ImVec2(viewport->WorkPos.x, viewport->WorkPos.y));
-	ImGui::SetNextWindowSize(ImVec2(viewport->WorkSize.x, viewport->WorkSize.y));
+	ImGui::SetNextWindowSize(ImVec2(viewport->WorkSize.x, tab_bar_hieght));
 	ImGui::SetNextWindowViewport(viewport->ID);
 
 	//タイトルバーや背景を消し、平坦なバーとして描画
@@ -43,7 +43,7 @@ EditorSceneType EditorTabBar::Draw()
 		{
 			DrawTabItem(u8"レベル", EditorSceneType::LevelEditor, tab_button_width);
 			DrawTabItem(u8"ステートマシン", EditorSceneType::StateMachineEditor, tab_button_width);
-			DrawTabItem(u8"アニメーションシーケンサ", EditorSceneType::AnimationSequencer, tab_button_width);
+			DrawTabItem(u8"シーケンサ", EditorSceneType::AnimationSequencer, tab_button_width);
 			ImGui::EndMenuBar();
 		}
 	}
@@ -73,10 +73,6 @@ void EditorTabBar::DrawTabItem(const char* label, EditorSceneType type, float wi
 		if (current_scene_type != type)
 		{
 			current_scene_type = type;
-
-			char debug_msg[128];
-			sprintf_s(debug_msg, "[EditorTabBar] Scene changed to type: %d\n", static_cast<int>(type));
-			OutputDebugStringA(debug_msg);
 		}
 	}
 	ImGui::PopStyleColor();

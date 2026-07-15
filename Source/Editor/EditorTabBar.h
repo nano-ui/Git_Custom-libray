@@ -19,7 +19,7 @@ public:
 	~EditorTabBar();
 
 	//初期化処理
-	void Initalize();
+	void Initialize();
 
 	//遷移タブバー描画
 	EditorSceneType Draw();

@@ -382,10 +382,13 @@
       <Filter>Source\Editor\EditorManager</Filter>
     </ClCompile>
     <ClCompile Include="Source\Editor\EditorMenuBar.cpp">
-      <Filter>Source\Editor\EditorMenuBar</Filter>
+      <Filter>Source\Editor\TabBar\EditorMenuBar</Filter>
     </ClCompile>
     <ClCompile Include="Source\Editor\ConstentBrowser\ContentBrowserEditor.cpp">
       <Filter>Source\Editor\ConstentBrowserEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\EditorTabBar.cpp">
+      <Filter>Source\Editor\TabBar\EditorTabBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -735,10 +738,13 @@
       <Filter>Source\Editor\EditorManager</Filter>
     </ClInclude>
     <ClInclude Include="Source\Editor\EditorMenuBar.h">
-      <Filter>Source\Editor\EditorMenuBar</Filter>
+      <Filter>Source\Editor\TabBar\EditorMenuBar</Filter>
     </ClInclude>
     <ClInclude Include="Source\Editor\ConstentBrowser\ContentBrowserEditor.h">
       <Filter>Source\Editor\ConstentBrowserEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\EditorTabBar.h">
+      <Filter>Source\Editor\TabBar\EditorTabBar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1152,11 +1158,17 @@
     <Filter Include="Source\Editor\EditorManager">
       <UniqueIdentifier>{2fe00281-2af4-4964-8722-4555aeaf3c18}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Editor\EditorMenuBar">
-      <UniqueIdentifier>{389c1f8b-0f81-45a7-9d7d-19707c110ec2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Editor\ConstentBrowserEditor">
       <UniqueIdentifier>{687c5d68-ed98-4cfb-a310-b684925c3775}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\TabBar">
+      <UniqueIdentifier>{f3d91ca4-50ea-4cea-b0a7-5db7047a067d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\TabBar\EditorMenuBar">
+      <UniqueIdentifier>{389c1f8b-0f81-45a7-9d7d-19707c110ec2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\TabBar\EditorTabBar">
+      <UniqueIdentifier>{ea28dd4e-d981-4b68-b212-9a519503a05e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

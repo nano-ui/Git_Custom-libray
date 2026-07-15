@@ -86,6 +86,11 @@ void SceneGame::Update(float elapsed_time)
 		camera->Update(elapsed_time);
 	}
 
+	if (editor_manager && !editor_manager->IsGameViewportActive())
+	{
+		return;
+	}
+
 	if (SceneManager::Instance().IsPaused())
 	{
 		return;
@@ -113,6 +118,14 @@ void SceneGame::Render(float elapsed_time)
 	ID3D11DeviceContext* context = Graphics::Instance().GetContext();
 	auto states = Graphics::Instance().GetPipelineStates();
 	framebuffer* shadow_fb = Graphics::Instance().GetShadowFramebuffer();
+
+	if (editor_manager && !editor_manager->IsGameViewportActive())
+	{
+#ifdef USE_IMGUI
+		RenderGui(); 
+#endif
+		return;
+	}
 
 	// パス間で共有するライト空間変換行列の計算
 	DirectX::XMFLOAT4X4 light_view_projection_matrix{};
@@ -279,17 +292,6 @@ void SceneGame::Render(float elapsed_time)
 void SceneGame::RenderGui()
 {
 #ifdef USE_IMGUI
-	const float sidebar_width = 80.0f;
-	const float sidebar_height = 720.0f;
-	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
-	ImGui::SetNextWindowSize(ImVec2(sidebar_width, sidebar_height), ImGuiCond_Always);
-
-	const ImGuiWindowFlags sidebar_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
-
-	//Scene::ImGuiScaleCorrection();
-	ImGuiID dockspace_id = 0;
-	ImGui::DockSpaceOverViewport(dockspace_id, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 	if (object_manager)
 	{
 		//object_manager->RenderGui();
