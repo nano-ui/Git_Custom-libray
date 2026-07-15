@@ -47,5 +47,6 @@ private:
 	std::unordered_map<std::wstring, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> icon_cache;	//拡張子をキーにしたシステムアイコン用テクスチャのキャッシュマップ
 	static constexpr float icon_size = 64.0f;		//アイコンの大きさ
 	static constexpr float grid_padding = 16.0f;	//周囲の余白
+	bool should_sync_tree = false;					//フォルダ遷移時のツリー同期フラグ
 };
 

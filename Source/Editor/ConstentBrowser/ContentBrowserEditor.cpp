@@ -20,6 +20,7 @@ void ContentBrowserEditor::Initialize()
 {
 	root_path = "Data";
 	current_path = root_path;
+	should_sync_tree = true;
 	
 	if (!std::filesystem::exists(root_path))
 	{
@@ -42,6 +43,7 @@ void ContentBrowserEditor::RenderGui()
 		ImGui::BeginChild(u8"ƒtƒHƒ‹ƒ_ŠK‘w", ImVec2(left_panel_width, 0.0f), true);
 		DrawFolderTree(root_path);
 		ImGui::EndChild();
+		should_sync_tree = false;
 
 		ImGui::SameLine();
 
@@ -67,6 +69,22 @@ void ContentBrowserEditor::DrawFolderTree(const std::filesystem::path& path)
 				if (current_path == entry.path())
 				{
 					node_flags |= ImGuiTreeNodeFlags_Selected;
+				}
+
+				bool is_ancestor = false;
+
+				for (auto p = current_path; p != root_path.parent_path(); p = p.parent_path())
+				{
+					if (p == entry.path())
+					{
+						is_ancestor = true;
+						break;
+					}
+				}
+
+				if (should_sync_tree && is_ancestor)
+				{
+					ImGui::SetNextItemOpen(true);
 				}
 
 				if (ImGui::TreeNodeEx(folder_name.c_str(), node_flags))
@@ -143,6 +161,7 @@ void ContentBrowserEditor::DrawFolderContents(const std::filesystem::path& path)
 					{
 						current_path = entry.path();
 						selected_path = entry.path();
+						should_sync_tree = true;
 					}
 				}
 
