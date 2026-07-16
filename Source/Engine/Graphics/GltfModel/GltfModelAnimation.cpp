@@ -134,6 +134,38 @@ float GltfModelAnimation::GetCurrentAnimationTime() const
 	return current_animation_time;
 }
 
+//アニメーションの再生時間を設定
+void GltfModelAnimation::SetCurrentAnimationTime(float time)
+{
+	if (!model_data || model_data->animations.empty())return;
+
+	//指定された時間に再生経過時間を設定
+	current_animation_time = time;
+	is_animation_finished = false;
+
+	//ループ設定やアニメーションの総時間に合わせて、設定された時間を範囲内に丸め込む
+	if (current_animation_time > current_animation_duration)
+	{
+		if (is_loop_enabled)
+		{
+			//ループ再生が有効な場合は、剰余をとってループ
+			current_animation_time = fmodf(current_animation_time, current_animation_duration);
+		}
+		else
+		{
+			//ループ再生が無効な場合は、終端（総時間）で止める
+			current_animation_time = current_animation_duration;
+			is_animation_finished = true;
+			is_playing = false;
+		}
+	}
+	else if(current_animation_time < 0.0f)
+	{
+		current_animation_time = 0.0f;
+	}
+	Animate(current_animation_index, current_animation_time);
+}
+
 //アニメーションの総時間を取得
 float GltfModelAnimation::GetAnimationDuration() const
 {

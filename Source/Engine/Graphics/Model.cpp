@@ -167,6 +167,20 @@ float Model::GetAnimationTime() const
 	return 0.0f;
 }
 
+//アニメーション再生時間を設定
+void Model::SetAnimationTime(float time)
+{
+	if (model)
+	{
+		model->SetAnimationTime(time);
+	}
+	else
+	{
+		// 意図しない挙動を防ぐためのデバッグ出力
+		OutputDebugStringA("[Model Error] SetAnimationTime: Internal glTF model is null!\n");
+	}
+}
+
 
 // アニメーション総時間取得
 float Model::GetAnimationDuration() const

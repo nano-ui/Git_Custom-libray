@@ -77,6 +77,15 @@ float GltfModel::GetAnimationCurrentTime() const
 	return animation->GetCurrentAnimationTime();
 }
 
+//再生時間を設定
+void GltfModel::SetAnimationTime(float time)
+{
+	if (animation)
+	{
+		animation->SetCurrentAnimationTime(time);
+	}
+}
+
 //アニメーションの総時間を取得
 float GltfModel::GetAnimationDuration() const
 {

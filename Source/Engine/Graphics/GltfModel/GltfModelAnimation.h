@@ -29,6 +29,9 @@ public:
 	//現在のアニメーション経過時間を取得
 	float GetCurrentAnimationTime()const;
 
+	//アニメーションの再生時間を設定
+	void SetCurrentAnimationTime(float time);
+
 	//アニメーションの総時間を取得
 	float GetAnimationDuration()const;
 
