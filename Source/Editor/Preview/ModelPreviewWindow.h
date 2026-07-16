@@ -37,6 +37,21 @@ public:
 	//外部からモデル読み込み
 	void LoadModel(const std::string& file_path);
 
+	//再生速度設定
+	void SetAnimationSpeed(float speed);
+
+	//アニメーションフラグ設定
+	void SetPlaying(bool playing);
+
+	//アニメーション時間設定
+	void SetAnimationTime(float time);
+
+	//現在の再生経過時間を取得
+	float GetAnimationCurrentTime() const;
+
+	//アニメーションの総時間を取得
+	float GetAnimationDuration() const;
+
 private:
 	//UIコントロール描画
 	void DrawControlPanel();
@@ -62,5 +77,8 @@ private:
 	float grid_size = 10.0f;									//グリッドの全体サイズ
 	int grid_divisions = 10;									//グリッドの分割数
 	DirectX::XMFLOAT4 grid_color = { 1.0f, 1.0f, 1.0f, 1.0f };	//グリッドの色
+
+	float animation_speed = 1.0f;								//再生速度倍率
+	bool is_playing = true;										//アニメーション状態フラグ
 };
 

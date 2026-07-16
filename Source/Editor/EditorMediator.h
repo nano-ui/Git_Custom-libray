@@ -24,6 +24,21 @@ public:
 	//コンテンツブラウザ等でモデルファイルがダブルクリックされたときに呼び出し
 	void OnModelDubleClied(const std::string& file_path);
 
+	//再生速度を仲介
+	void SetModelAnimationSpeed(float speed);
+
+	//再生状態を仲介
+	void SetModelAnimationPlaying(bool playing);
+
+	//現在の再生時間を仲介
+	void SetModelAnimationTime(float time);
+
+	//モデルの現在の再生時間を取得
+	float GetModelAnimationCurrentTime() const;
+
+	//モデルのアニメーション総時間を取得
+	float GetModelAnimationDuration() const;
+
 	//アクティブノードIDをエディタに同期
 	void UpdateViewerSynchronization(GameObject* object);
 

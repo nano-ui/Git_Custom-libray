@@ -82,6 +82,36 @@ void EditorMediator::OnModelDubleClied(const std::string& file_path)
 	}
 }
 
+//再生速度を仲介
+void EditorMediator::SetModelAnimationSpeed(float speed)
+{
+	model_preview_window->SetAnimationSpeed(speed);
+}
+
+//再生状態を仲介
+void EditorMediator::SetModelAnimationPlaying(bool playing)
+{
+	model_preview_window->SetPlaying(playing);
+}
+
+//現在の再生時間を仲介
+void EditorMediator::SetModelAnimationTime(float time)
+{
+	model_preview_window->SetAnimationTime(time);
+}
+
+//モデルの現在の再生時間を取得
+float EditorMediator::GetModelAnimationCurrentTime() const
+{
+	if (model_preview_window)return model_preview_window->GetAnimationCurrentTime();
+}
+
+//モデルのアニメーション総時間を取得
+float EditorMediator::GetModelAnimationDuration() const
+{
+	if (model_preview_window)return model_preview_window->GetAnimationDuration();
+}
+
 //アクティブノードIDをエディタに同期
 void EditorMediator::UpdateViewerSynchronization(GameObject* object)
 {

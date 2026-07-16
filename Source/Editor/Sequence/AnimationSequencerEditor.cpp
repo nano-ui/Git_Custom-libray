@@ -2,6 +2,7 @@
 #include "ModelPreviewScene.h"
 #include "Engine\Graphics\Graphics.h"
 #include "Editor\FileDialogHelper.h"
+#include "Editor\EditorMediator.h"
 
 #include <windows.h>
 #include <imgui.h>
@@ -101,7 +102,24 @@ void AnimationSequencerEditor::RenderGui()
 	// 操作パネルウィンドウの描画
 	if (ImGui::Begin(u8"操作パネル"))
 	{
-		ImGui::Text(u8"いろんなボタン配置");
+		ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), u8"シーケンス制御");
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		// 【ImGui描画】再生速度の編集用スライダー
+		if (ImGui::SliderFloat(u8"再生速度", &playback_speed, 0.0f, 3.0f, "%.2f x"))
+		{
+			// 速度がスライダーで変更されたら、即座に仲介役を介してプレビューウィンドウへ同期
+			EditorMediator::Instance().SetModelAnimationSpeed(playback_speed);
+		}
+
+		ImGui::Spacing();
+
+		// ループ設定の切り替え
+		if (ImGui::Checkbox(u8"ループ再生", &is_loop))
+		{
+			// 必要に応じてプレビュー側と同期（今回はモデル側が個別にis_loopを持っていますが同期させておく）
+		}
 	}
 	ImGui::End();
 
@@ -115,7 +133,47 @@ void AnimationSequencerEditor::RenderGui()
 	// タイムラインウィンドウの描画
 	if (ImGui::Begin(u8"タイムライン"))
 	{
-		ImGui::Text(u8"アニメーションのイベント設定バーやアニメーションカーブなどを表示");
+		// プレビュー中のモデルからアニメーション総時間を取得
+		animation_duration = EditorMediator::Instance().GetModelAnimationDuration();
+
+		// アニメーションが存在しない場合は操作を制限するセーフガード
+		bool is_disabled = (animation_duration <= 0.0f);
+		if (is_disabled)
+		{
+			ImGui::BeginDisabled();
+		}
+
+		// 再生 / 一時停止ボタン
+		if (ImGui::Button(is_playing ? u8"一時停止" : u8"再生"))
+		{
+			is_playing = !is_playing;
+			EditorMediator::Instance().SetModelAnimationPlaying(is_playing);
+		}
+
+		ImGui::SameLine();
+
+		if (!ImGui::IsAnyItemActive() && is_playing)
+		{
+			current_time = EditorMediator::Instance().GetModelAnimationCurrentTime();
+		}
+
+		ImGui::SetNextItemWidth(-1.0f);
+
+		char progress_label[64];
+		sprintf_s(progress_label, "%.2f s / %.2f s", current_time, animation_duration);
+
+		// マウスで引っ張って時間を変えられるシークバースライダー
+		if (ImGui::SliderFloat("##TimelineSeek", &current_time, 0.0f, animation_duration, progress_label))
+		{
+			// マウスでドラッグ中のみ、変更された時間（current_time）を仲介役を介してモデルに即座にシーク通知する
+			EditorMediator::Instance().SetModelAnimationTime(current_time);
+		}
+
+		if (is_disabled)
+		{
+			ImGui::EndDisabled();
+			ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), u8"※アニメーションデータがロードされていません。");
+		}
 	}
 	ImGui::End();
 

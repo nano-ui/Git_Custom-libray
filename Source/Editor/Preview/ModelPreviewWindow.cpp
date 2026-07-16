@@ -62,7 +62,14 @@ void ModelPreviewWindow::Update(float elapsed_time)
 		camera->Update(elapsed_time);
 	}
 
-	if (model)model->Update(elapsed_time);
+	if (model)
+	{
+		if (is_playing)
+		{
+			float adusted_time = elapsed_time * animation_speed;
+			model->Update(adusted_time);
+		}
+	}
 }
 
 //描画処理
@@ -180,6 +187,36 @@ void ModelPreviewWindow::LoadModel(const std::string& file_path)
 	current_model_path = file_path;
 	animation_names = model->GetAnimationNames();
 	selected_animation_index = -1;
+}
+
+//再生速度設定
+void ModelPreviewWindow::SetAnimationSpeed(float speed)
+{
+	animation_speed = speed;
+}
+
+//アニメーションフラグ設定
+void ModelPreviewWindow::SetPlaying(bool playing)
+{
+	is_playing = playing;
+}
+
+//アニメーション時間設定
+void ModelPreviewWindow::SetAnimationTime(float time)
+{
+	if (model)model->SetAnimationTime(time);
+}
+
+//現在の再生経過時間を取得
+float  ModelPreviewWindow::GetAnimationCurrentTime() const
+{
+	if (model)return model->GetAnimationTime();
+}
+
+//アニメーションの総時間を取得
+float ModelPreviewWindow::GetAnimationDuration() const
+{
+	if (model)return model->GetAnimationDuration();
 }
 
 //UIコントロール描画

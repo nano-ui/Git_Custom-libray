@@ -31,5 +31,11 @@ public:
 private:
 	std::shared_ptr<SequenceSceneBace> active_scene;	//現在の画面
 	std::shared_ptr<ModelPreviewScene> preview_scene;	//モデル描画画面
+
+	float playback_speed = 1.0f;						//アニメーション再生速度
+	bool is_playing = true;								//再生/一時停止フラグ
+	bool is_loop = true;								//ループ再生フラグ
+	float current_time = 0.0f;							//現在の再生時刻
+	float animation_duration = 0.0f;					//アニメーションの総時間
 };
 
