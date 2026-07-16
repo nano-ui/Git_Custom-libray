@@ -1,6 +1,7 @@
 #include "ContentBrowserEditor.h"
 #include "Engine\Graphics\Graphics.h"
 #include "Engine\Graphics\GpuResourceUtils.h"
+#include "Editor\EditorMediator.h"
 
 #include <windows.h>
 #include <imgui.h>
@@ -174,6 +175,15 @@ void ContentBrowserEditor::DrawFolderContents(const std::filesystem::path& path)
 						current_path = entry.path();
 						selected_path = entry.path();
 						should_sync_tree = true;
+					}
+					else if (entry.is_regular_file())
+					{
+						std::string extension = entry.path().extension().string();
+						if (extension == ".gltf" || extension == ".glb")
+						{
+							std::string relative_path = entry.path().string();
+							EditorMediator::Instance().OnModelDubleClied(relative_path);
+						}
 					}
 				}
 

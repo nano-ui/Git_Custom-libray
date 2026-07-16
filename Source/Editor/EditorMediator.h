@@ -4,6 +4,7 @@
 
 class GameObject;
 class StateMachineGraphEditor;
+class ModelPreviewWindow;
 
 class EditorMediator
 {
@@ -14,8 +15,14 @@ public:
 	//ステートマシンエディタのポインタを登録
 	void RegisterStateMachineGraphEditor(StateMachineGraphEditor* editor);
 
+	//モデルプレビューウィンドウのポインタを中継用に登録
+	void RegisterModelPreviewWindow(ModelPreviewWindow* window);
+
 	//中継通知イベント
 	void OnObjectSelected(GameObject* object);
+
+	//コンテンツブラウザ等でモデルファイルがダブルクリックされたときに呼び出し
+	void OnModelDubleClied(const std::string& file_path);
 
 	//アクティブノードIDをエディタに同期
 	void UpdateViewerSynchronization(GameObject* object);
@@ -33,5 +40,6 @@ private:
 private:
 	StateMachineGraphEditor* state_machine_graph_editor = nullptr;	//対象エディタのポインタ
 	GameObject* last_selected_object = nullptr;						//前回選択オブジェクト
+	ModelPreviewWindow* model_preview_window = nullptr;				//モデルプレビュー
 };
 

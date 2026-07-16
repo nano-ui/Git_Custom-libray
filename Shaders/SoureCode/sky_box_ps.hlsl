@@ -8,6 +8,7 @@ float4 main(VS_OUT pin) : SV_TARGET
 {
 	//視線ベクトルの取得と環境光の計算
     float3 E = normalize(pin.local_position);
+    E.y = abs(E.y);
     float3 ambient = ambient_color.rgb * ambient_color.a;
 	
 	//テクスチャのサンプリングと最終カラーの合成

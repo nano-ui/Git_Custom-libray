@@ -6,6 +6,8 @@
 #include "ConstentBrowser\ContentBrowserEditor.h"
 #include "Engine\Camera\Camera.h"
 #include "Engine\Collision\CollisionManager.h"
+#include "Preview\ModelPreviewWindow.h"
+#include "EditorMediator.h"
 #include "Gameplay\GameObjects\Character\Character.h"
 
 #include <windows.h>
@@ -31,17 +33,20 @@ void EditorManager::Initialize()
 	menu_bar = std::make_unique<EditorMenuBar>();
 	content_browser_editor = std::make_unique<ContentBrowserEditor>();
 	tab_bar = std::make_unique<EditorTabBar>();
+	model_preview_window = std::make_unique<ModelPreviewWindow>();
 
 	object_editor->Initialize();
 	animation_sequencer_editor->Initialize();
 	content_browser_editor->Initialize();
 	tab_bar->Initialize();
+	model_preview_window->Initialize();
+	EditorMediator::Instance().RegisterModelPreviewWindow(model_preview_window.get());
 }
 
 //更新処理
 void EditorManager::Update(float elapsed_time)
 {
-
+	model_preview_window->Update(elapsed_time);
 }
 
 //Gui描画、レイアウト構築
@@ -119,15 +124,25 @@ void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manage
 			}
 		}
 		state_graph_editor->DrawEditor(target_blackboard);
+		model_preview_window->RenderGui();
+		content_browser_editor->RenderGui();
 		break;
 	}
 	case EditorSceneType::AnimationSequencer:
 	{
 		animation_sequencer_editor->RenderGui();
+		model_preview_window->RenderGui();
+		content_browser_editor->RenderGui();
 		break;
 	}
 	default:
 		OutputDebugStringA("[Error] EditorManager::RenderGui: Unknown active_scene_type detected!\n");
 		break;
 	}
+}
+
+//プレビュー用のフレームバッファに3Dモデルをレンダリング
+void EditorManager::RenderPreviews(ID3D11DeviceContext* immediate_context)
+{
+	model_preview_window->Render(immediate_context);
 }

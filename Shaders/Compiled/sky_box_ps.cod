@@ -60,14 +60,18 @@ rsq r0.x, r0.x
 mul r0.xyz, r0.xxxx, v1.xyzx  // r0.x <- E.x; r0.y <- E.y; r0.z <- E.z
 
 #line 11
+mov r1.x, -r0.y
+max r0.w, r0.y, r1.x  // r0.w <- E.y
+
+#line 12
 mul r1.xyz, cb1[7].wwww, cb1[7].xyzx  // r1.x <- ambient.x; r1.y <- ambient.y; r1.z <- ambient.z
 
-#line 14
-itof r0.w, l(0)
-sample_l_indexable(texturecube)(float,float,float,float) r0.xyzw, r0.xyzx, t0.xyzw, s0, r0.w  // r0.x <- sampled_color.x; r0.y <- sampled_color.y; r0.z <- sampled_color.z; r0.w <- sampled_color.w
+#line 15
+itof r0.y, l(0)
+sample_l_indexable(texturecube)(float,float,float,float) r0.xyzw, r0.xwzx, t0.xyzw, s0, r0.y  // r0.x <- sampled_color.x; r0.y <- sampled_color.y; r0.z <- sampled_color.z; r0.w <- sampled_color.w
 
-#line 16
+#line 17
 mov r1.w, l(1.000000)
 mul o0.xyzw, r0.xyzw, r1.xyzw
 ret 
-// Approximately 9 instruction slots used
+// Approximately 11 instruction slots used

@@ -2,6 +2,7 @@
 #include "Engine\Graphics\framebuffer.h"
 #include "Engine\Graphics\Graphics.h"
 #include "Engine\Graphics\Model.h"
+#include "Engine\Graphics\Shaders\SkyBox.h"
 #include "Engine\Camera\FreeCamera.h"
 
 #include <windows.h>
@@ -36,13 +37,29 @@ void ModelPreviewWindow::Initialize()
 
 	camera = std::make_unique<FreeCamera>();
 	camera->Initialize();
+
+	skybox = std::make_unique<SkyBox>();
+	if (skybox)
+	{
+		skybox->Initialize(
+			device,
+			L"Data/Sprite/SkyTexture/skybox.dds",			// 背景用キューブマップ
+			L"Data/Sprite/SkyTexture/diffuse_iem.dds",		// IBL拡散反射テクスチャ
+			L"Data/Sprite/SkyTexture/specular_pmrem.dds",	// IBL鏡面反射テクスチャ
+			L"Data/Sprite/SkyTexture/lut_ggx.dds"			// IBLルックアップテーブル
+		);
+	}
 }
 
 //更新処理
 void ModelPreviewWindow::Update(float elapsed_time)
 {
-	camera->Update(elapsed_time);
-	model->Update(elapsed_time);
+	if (is_viewport_active)
+	{
+		camera->Update(elapsed_time);
+	}
+
+	if (model)model->Update(elapsed_time);
 }
 
 //描画処理
@@ -52,13 +69,31 @@ void ModelPreviewWindow::Render(ID3D11DeviceContext* immediate_context)
 	frame_buffer->clear(immediate_context, default_clear_color_r, default_clear_color_g, default_clear_color_b, default_clear_color_a);
 	frame_buffer->activate(immediate_context);
 
+	//描画ステートの明示的セット
+	PipelineStates* states = Graphics::Instance().GetPipelineStates();
+	immediate_context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
+	immediate_context->RSSetState(states->GetRasterizerState(0).Get());
+	ID3D11SamplerState* sampler_p0 = states->GetSamplerState(0).Get();
+	ID3D11SamplerState* sampler_p1 = states->GetSamplerState(1).Get();
+	ID3D11SamplerState* sampler_p2 = states->GetSamplerState(2).Get();
+
+	immediate_context->PSSetSamplers(0, 1, &sampler_p0);
+	immediate_context->PSSetSamplers(1, 1, &sampler_p1);
+	immediate_context->PSSetSamplers(2, 1, &sampler_p2);
+
+
 	//プレビューカメラのビュー・射影行列をシーン定数バッファに適用して光源をセット
 	scene_constants constants = {};
 	constants.view_projection = camera->GetViewProjectionMatrix();
 	constants.camera_position = camera->GetPosition();
-	constants.light_direction = { 0.0f,-1.0f,1.0f,0.0f };
-	constants.light_color = { 0.3f,0.3f,0.3f,1.0f };
+	constants.light_direction = { -0.5f, -1.0f, 0.5f, 0.0f }; 
+	constants.light_color = { 1.2f, 1.2f, 1.2f, 1.0f };       
+	constants.ambient_color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	constants.light_view_projection = constants.view_projection;
+
 	Graphics::Instance().UpdateSceneConstantBuffer(constants);
+
+	skybox->BindIblTextures(immediate_context);
 
 	//スケール、回転(度数からラジアンに変換)、位置のワールド変換行列を合成
 	if (model)
@@ -69,11 +104,12 @@ void ModelPreviewWindow::Render(ID3D11DeviceContext* immediate_context)
 			DirectX::XMConvertToRadians(model_rotation.y),
 			DirectX::XMConvertToRadians(model_rotation.z)
 		);
-		DirectX::XMMATRIX world = scaling * rotation;
-		DirectX::XMFLOAT4X4 world_matrix;
+		DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(model_position.x, model_position.y, model_position.z);
+		DirectX::XMMATRIX world = scaling * rotation * translation;		DirectX::XMFLOAT4X4 world_matrix;
 		DirectX::XMStoreFloat4x4(&world_matrix, world);
 		model->Render(immediate_context, world_matrix);
 	}
+	skybox->Render(immediate_context);
 	frame_buffer->deactivate(immediate_context);
 }
 
@@ -107,6 +143,18 @@ void ModelPreviewWindow::RenderGui()
 				reinterpret_cast<ImTextureID>(srv),
 				ImVec2(preview_width, avail_height)
 			);
+			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+			{
+				is_viewport_active = true;
+			}
+			if (!ImGui::IsMouseDown(ImGuiMouseButton_Right))
+			{
+				is_viewport_active = false;
+			}
+		}
+		else
+		{
+			is_viewport_active = false;
 		}
 		ImGui::EndChild();
 	}
@@ -141,6 +189,7 @@ void ModelPreviewWindow::DrawControlPanel()
 
 		//拡大・回転パラメータをリアルタイム編集できるようにImGuiで描画
 		ImGui::Text(u8"トランスフォーム");
+		ImGui::DragFloat3(u8"位置(X/Y/Z)", &model_position.x, 0.05f, -100.0f, 100.0f);
 		ImGui::DragFloat3(u8"拡大率", &model_scale.x, 0.01f, 0.01f, 10.0f);
 		ImGui::DragFloat3(u8"角度", &model_rotation.x, 0.5f, -360.0f, 360.0f);
 
@@ -149,7 +198,7 @@ void ModelPreviewWindow::DrawControlPanel()
 		ImGui::Spacing();
 
 		//モーションアニメーションコントロール
-		ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), u8"アニメーション操作");
+		ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), u8"アニメーション");
 		if (!animation_names.empty())
 		{
 			ImGui::Checkbox(u8"ループ再生", &is_loop);

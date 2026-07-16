@@ -81,10 +81,20 @@ void SceneGame::Finalize()
 //XVˆ—
 void SceneGame::Update(float elapsed_time)
 {
+	
+#ifdef USE_IMGUI
+	const ImGuiIO& io = ImGui::GetIO();
+	if (camera && !io.WantCaptureMouse)
+	{
+		camera->Update(elapsed_time);
+	}
+#else
 	if (camera)
 	{
 		camera->Update(elapsed_time);
 	}
+#endif
+	if (editor_manager)editor_manager->Update(elapsed_time);
 
 	if (editor_manager && !editor_manager->IsGameViewportActive())
 	{
@@ -122,6 +132,7 @@ void SceneGame::Render(float elapsed_time)
 	if (editor_manager && !editor_manager->IsGameViewportActive())
 	{
 #ifdef USE_IMGUI
+		editor_manager->RenderPreviews(context);
 		RenderGui(); 
 #endif
 		return;

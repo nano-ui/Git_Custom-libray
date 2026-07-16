@@ -1,8 +1,9 @@
 #include "EditorMediator.h"
-#include "../Gameplay/GameObjects/GameObject.h"
-#include "../Gameplay/Components/StateMachineComponent.h"
-#include "../Gameplay/GameObjects/Character/Character.h"
+#include "Gameplay/GameObjects/GameObject.h"
+#include "Gameplay/Components/StateMachineComponent.h"
+#include "Gameplay/GameObjects/Character/Character.h"
 #include "StateMachineEditor\StateMachineGraphEditor.h"
+#include "Preview\ModelPreviewWindow.h"
 
 #include <iostream>
 
@@ -19,6 +20,19 @@ void EditorMediator::RegisterStateMachineGraphEditor(StateMachineGraphEditor* ed
 	if (editor)
 	{
 		state_machine_graph_editor = editor;
+	}
+}
+
+//モデルプレビューウィンドウのポインタを中継用に登録
+void EditorMediator::RegisterModelPreviewWindow(ModelPreviewWindow* window)
+{
+	if (window)
+	{
+		model_preview_window = window;
+	}
+	else
+	{
+		OutputDebugStringA("[Warning] EditorMediator::RegisterModelPreviewWindow: Passed window is null!\n");
 	}
 }
 
@@ -52,6 +66,19 @@ void EditorMediator::OnObjectSelected(GameObject* object)
 					object->GetClassName().c_str(), target_path.c_str());
 			}
 		}
+	}
+}
+
+//コンテンツブラウザ等でモデルファイルがダブルクリックされたときに呼び出し
+void EditorMediator::OnModelDubleClied(const std::string& file_path)
+{
+	if (model_preview_window)
+	{
+		model_preview_window->LoadModel(file_path);
+	}
+	else
+	{
+		OutputDebugStringA("[Error] EditorMediator: ModelPreviewWindow is not registered! Cannot load model.\n");
 	}
 }
 

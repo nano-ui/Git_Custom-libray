@@ -8,6 +8,7 @@
 class framebuffer;
 class Camera;
 class Model;
+class SkyBox;
 
 struct ID3D11DeviceContext;
 
@@ -43,13 +44,16 @@ private:
 	std::unique_ptr<framebuffer> frame_buffer;	//描画結果を保存
 	std::unique_ptr<Camera> camera;				//フリーカメラ
 	std::unique_ptr<Model> model;				//3Dモデル
+	std::unique_ptr<SkyBox> skybox;				//スカイボックス
 
 	std::string current_model_path = "";		//現在のモデルパス
 	std::vector<std::string> animation_names;	//アニメーションリスト
 
+	DirectX::XMFLOAT3 model_position = { 0.0f, 0.0f, -2.0f };//座標
 	DirectX::XMFLOAT3 model_rotation = { 0.0f,0.0f,0.0f };	//角度
 	DirectX::XMFLOAT3 model_scale = { 1.0f,1.0f,1.0f };		//拡大率
 	bool is_loop = true;									//ループフラグ
 	int selected_animation_index = -1;						//選択中のアニメーションインデックス
+	bool is_viewport_active = false;						//カメラ操作フラグ
 };
 

@@ -390,7 +390,9 @@
     <ClCompile Include="Source\Editor\EditorTabBar.cpp">
       <Filter>Source\Editor\TabBar\EditorTabBar</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\Preview\ModelPreviewWindow.cpp" />
+    <ClCompile Include="Source\Editor\Preview\ModelPreviewWindow.cpp">
+      <Filter>Source\Editor\Preview\ModelPreviewWindow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -747,7 +749,9 @@
     <ClInclude Include="Source\Editor\EditorTabBar.h">
       <Filter>Source\Editor\TabBar\EditorTabBar</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\Preview\ModelPreviewWindow.h" />
+    <ClInclude Include="Source\Editor\Preview\ModelPreviewWindow.h">
+      <Filter>Source\Editor\Preview\ModelPreviewWindow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli">
