@@ -118,6 +118,33 @@ void ShapeRenderer::DrawCapsule(const DirectX::XMFLOAT3& position, const DirectX
 	DrawSphere(bottom_pos, radius, color, mode);
 }
 
+//グリッド線を描画登録
+void ShapeRenderer::DrawGrid(const DirectX::XMFLOAT3& center, float size, int divisions, const DirectX::XMFLOAT4& color)
+{
+	if (divisions <= 0)return;
+
+	//線の太さ
+	static constexpr float line_thickness = 0.01f;
+	const float half_size = size * 0.5f;
+	const float step = size / static_cast<float>(divisions);
+
+	const DirectX::XMFLOAT4 identity_rotation = { 0.0f,0.0f,0.0f,1.0f };
+
+	for (int i = 0; i <= divisions; i++)
+	{
+		//Z方向（奥行き方向）のグリッド線
+		const float offset = -half_size + (static_cast<float>(i) * step);
+		DirectX::XMFLOAT3 pos_z = { center.x + offset,center.y,center.z };
+		DirectX::XMFLOAT3 size_z = { line_thickness, line_thickness, size };
+		DrawBox(pos_z, identity_rotation, size_z, color, ShapeDrawMode::Wireframe);
+
+		//X方向（横方向）のグリッド線
+		DirectX::XMFLOAT3 pos_x = { center.x, center.y, center.z + offset };
+		DirectX::XMFLOAT3 size_x = { size, line_thickness, line_thickness };
+		DrawBox(pos_x, identity_rotation, size_x, color, ShapeDrawMode::Wireframe);
+	}
+}
+
 //蓄積された全図形の描画実行とリストクリア
 void ShapeRenderer::Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection)
 {

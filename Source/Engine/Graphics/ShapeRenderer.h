@@ -37,6 +37,9 @@ public:
 	//カプセルの描画登録
 	void DrawCapsule(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT4& rotation, float radius, float height, const DirectX::XMFLOAT4& color, ShapeDrawMode mode = ShapeDrawMode::Wireframe);
 
+	//グリッド線を描画登録
+	void DrawGrid(const DirectX::XMFLOAT3& center, float size, int divisions, const DirectX::XMFLOAT4& color);
+
 	//蓄積された全図形の描画実行とリストクリア
 	void Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection);
 

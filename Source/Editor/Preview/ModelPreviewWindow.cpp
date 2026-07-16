@@ -4,6 +4,7 @@
 #include "Engine\Graphics\Model.h"
 #include "Engine\Graphics\Shaders\SkyBox.h"
 #include "Engine\Camera\FreeCamera.h"
+#include "Engine\Graphics\ShapeRenderer.h"
 
 #include <windows.h>
 #include <imgui.h>
@@ -37,6 +38,8 @@ void ModelPreviewWindow::Initialize()
 
 	camera = std::make_unique<FreeCamera>();
 	camera->Initialize();
+
+	shape_renderer = std::make_unique<ShapeRenderer>(device);
 
 	skybox = std::make_unique<SkyBox>();
 	if (skybox)
@@ -105,10 +108,26 @@ void ModelPreviewWindow::Render(ID3D11DeviceContext* immediate_context)
 			DirectX::XMConvertToRadians(model_rotation.z)
 		);
 		DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(model_position.x, model_position.y, model_position.z);
-		DirectX::XMMATRIX world = scaling * rotation * translation;		DirectX::XMFLOAT4X4 world_matrix;
+		DirectX::XMMATRIX world = scaling * rotation * translation;
+		DirectX::XMFLOAT4X4 world_matrix;
 		DirectX::XMStoreFloat4x4(&world_matrix, world);
 		model->Render(immediate_context, world_matrix);
 	}
+
+	if (show_grid && shape_renderer)
+	{
+		static bool is_logged = false;
+		if (!is_logged)
+		{
+			OutputDebugStringA("[ModelPreview] Grid rendering has been initialized.\n");
+			is_logged = true;
+		}
+
+		const DirectX::XMFLOAT3 grid_center = { 0.0f, 0.0f, 0.0f };
+		shape_renderer->DrawGrid(grid_center, grid_size, grid_divisions, grid_color);
+		shape_renderer->Render(immediate_context, camera->GetView(), camera->GetProjection());
+	}
+
 	skybox->Render(immediate_context);
 	frame_buffer->deactivate(immediate_context);
 }
@@ -123,25 +142,12 @@ void ModelPreviewWindow::RenderGui()
 		float avail_width = ImGui::GetContentRegionAvail().x;
 		float avail_height = ImGui::GetContentRegionAvail().y;
 
-		static constexpr float control_panel_width = 250.0f;
-		float preview_width = avail_width - control_panel_width - 10.0f;
-		if (preview_width < 100.0f)preview_width = 100.0f;
-
-		//左半分: コントロールパラメータパネル
-		ImGui::BeginChild(u8"コントロールパネル", ImVec2(control_panel_width, avail_height), true);
-		DrawControlPanel();
-		ImGui::EndChild();
-
-		ImGui::SameLine();
-
-		//右半分: 3Dビューポート
-		ImGui::BeginChild(u8"プレビュービューポート", ImVec2(preview_width, avail_height), false);
 		ID3D11ShaderResourceView* srv = frame_buffer->shader_resource_views[0].Get();
 		if (srv)
 		{
 			ImGui::Image(
 				reinterpret_cast<ImTextureID>(srv),
-				ImVec2(preview_width, avail_height)
+				ImVec2(avail_width, avail_height)
 			);
 			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
 			{
@@ -156,9 +162,10 @@ void ModelPreviewWindow::RenderGui()
 		{
 			is_viewport_active = false;
 		}
-		ImGui::EndChild();
 	}
 	ImGui::End();
+
+	DrawControlPanel();
 }
 
 //外部からモデル読み込み
@@ -178,6 +185,13 @@ void ModelPreviewWindow::LoadModel(const std::string& file_path)
 //UIコントロール描画
 void ModelPreviewWindow::DrawControlPanel()
 {
+	ImGui::SetNextWindowSize(ImVec2(280.0f, 450.0f), ImGuiCond_FirstUseEver);
+	if (!ImGui::Begin(u8"モデルの詳細"))
+	{
+		ImGui::End();
+		return;
+	}
+
 	ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), u8"モデルの詳細");
 	ImGui::Separator();
 	ImGui::Spacing();
@@ -192,6 +206,19 @@ void ModelPreviewWindow::DrawControlPanel()
 		ImGui::DragFloat3(u8"位置(X/Y/Z)", &model_position.x, 0.05f, -100.0f, 100.0f);
 		ImGui::DragFloat3(u8"拡大率", &model_scale.x, 0.01f, 0.01f, 10.0f);
 		ImGui::DragFloat3(u8"角度", &model_rotation.x, 0.5f, -360.0f, 360.0f);
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.4f, 1.0f), u8"グリッド設定");
+		ImGui::Checkbox(u8"グリッドを表示", &show_grid);
+		if (show_grid)
+		{
+			ImGui::DragFloat(u8"グリッドサイズ", &grid_size, 0.5f, 1.0f, 100.0f);
+			ImGui::DragInt(u8"分割数", &grid_divisions, 1, 1, 100);
+			ImGui::ColorEdit4(u8"線の色", &grid_color.x);
+		}
 
 		ImGui::Spacing();
 		ImGui::Separator();
@@ -234,4 +261,5 @@ void ModelPreviewWindow::DrawControlPanel()
 		ImGui::TextWrapped(u8"モデルを選択してください");
 		ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), u8"Gltf、Glbモデルをダブルクリックしてモデル読み込みをしてください");
 	}
+	ImGui::End();
 }
