@@ -14,8 +14,8 @@ public:
 	//タイムリマップキーフレーム
 	struct TimeMapKeyframe
 	{
-		float sequencer_time;	//シーケンサ上の再生経過時間
-		float model_time;		//3Dモデル側のアニメーション再生秒数
+		float sequencer_time;		//シーケンサ上の再生経過時間
+		float speed_multiplier;		//再生速度倍率
 	};
 
 public:
@@ -43,6 +43,15 @@ private:
 
 	//モデル時間を線形補間して算出
 	float GetRemappedTime(float seq_time)const;
+
+	//指定時刻における速度倍率を取得
+	float GetSpeedMultiplierAt(float seq_time) const;
+
+	//台形公式を用いて0秒から指定時刻までの速度倍率を積算し、モデル再生時間を算出
+	float GetIntegratedModelTime(float seq_time) const;
+
+	//速度カーブからモデルが完走するのに必要な実際の合計時間（実効総時間）を算出
+	float GetEffectiveDuration() const;
 
 	//タイムライン詳細トラックを描画し、ドラッグなどのマウス操作を行う
 	void DrawTimelineTracks();

@@ -9,7 +9,10 @@
 #include <imgui_internal.h>
 #include <algorithm>
 
-static constexpr float MIN_KEYFRAME_INTERVAL = 0.02f;
+static constexpr float MIN_KEYFRAME_INTERVAL = 0.02f;	//キーフレーム間の最小時間差
+static constexpr float MIN_SPEED_MULTIPLIER = 0.0f;		//最小速度倍率
+static constexpr float DEFAULT_SPEED_MULTIPLIER = 1.0f;	//標準速度倍率
+static constexpr float MAX_SPEED_MULTIPLIER = 2.0f;		//最大速度倍率
 
 //コンストラクタ
 AnimationSequencerEditor::AnimationSequencerEditor()
@@ -45,30 +48,33 @@ void AnimationSequencerEditor::Update(float elapsed_time)
 
 	if (animation_duration <= 0.0f)return;
 
+	float effective_duration = GetEffectiveDuration();
+
 	//アニメーションがロード済み、かつシーケンサが再生中の場合のみシーケンサ時間を進める
 	if (animation_duration > 0.0f && is_playing)
 	{
 		//再生速度を考慮したデルタ経過時間をシーケンサ時間へ加算
 		current_time += elapsed_time * playback_speed;
 
+		float integrated_model_time = GetIntegratedModelTime(current_time);
+
 		//タイムラインの終端に達した場合のループ/停止処理
-		if (current_time > animation_duration)
+		if (integrated_model_time >= animation_duration || current_time >= effective_duration)
 		{
 			if (is_loop)
 			{
-				current_time = fmodf(current_time, animation_duration);
+				current_time = 0.0f;
+				integrated_model_time = 0.0f;
 			}
 			else
 			{
-				current_time = animation_duration;
 				is_playing = false;
+				integrated_model_time = animation_duration;
 			}
 		}
-		//シーケンサの時間をもとに、タイムリマップ補間されたモデル再生時間を取得
-		float remapped_time = GetRemappedTime(current_time);
 
 		//取得した時間をプレビューウィンドウ内の3Dモデルに直接強制適用
-		EditorMediator::Instance().SetModelAnimationTime(remapped_time);
+		EditorMediator::Instance().SetModelAnimationTime(integrated_model_time);
 	}
 }
 
@@ -154,6 +160,8 @@ void AnimationSequencerEditor::RenderGui()
 			ImGui::BeginDisabled();
 		}
 
+		float effective_duration = GetEffectiveDuration();
+
 		// 【固定エリア：上部コントロール＆シークバー】
 		ImGui::BeginChild("TimelineControl", ImVec2(0, 65), false, ImGuiWindowFlags_NoScrollbar);
 		{
@@ -169,10 +177,10 @@ void AnimationSequencerEditor::RenderGui()
 			ImGui::SetNextItemWidth(-1.0f);
 
 			char progress_label[64];
-			sprintf_s(progress_label, "%.2f s / %.2f s", current_time, animation_duration);
+			sprintf_s(progress_label, "%.2f s / %.2f s", current_time, effective_duration);
 
 			// マウスで引っ張って時間を変えられるシークバースライダー
-			if (ImGui::SliderFloat("##TimelineSeek", &current_time, 0.0f, animation_duration, progress_label))
+			if (ImGui::SliderFloat("##TimelineSeek", &current_time, 0.0f, effective_duration, progress_label))
 			{
 				float remapped_time = GetRemappedTime(current_time);
 				EditorMediator::Instance().SetModelAnimationTime(remapped_time);
@@ -212,55 +220,143 @@ void AnimationSequencerEditor::InitializerTimeMap()
 	if (animation_duration <= 0.0f)return;
 
 	//アニメーション開始時のキーフレーム
-	TimeMapKeyframe start_kf = { 0.0f,0.0f };
+	TimeMapKeyframe start_kf = { 0.0f,DEFAULT_SPEED_MULTIPLIER };
 	time_map_keyframes.push_back(start_kf);
 
 	//アニメーション終了時のキーフレーム
-	TimeMapKeyframe end_kf = { animation_duration,animation_duration };
+	TimeMapKeyframe end_kf = { animation_duration,DEFAULT_SPEED_MULTIPLIER };
 	time_map_keyframes.push_back(end_kf);
 }
 
 //モデル時間を線形補間して算出
 float AnimationSequencerEditor::GetRemappedTime(float seq_time) const
 {
+	return GetIntegratedModelTime(seq_time);
+}
+
+//指定時刻における速度倍率を取得
+float AnimationSequencerEditor::GetSpeedMultiplierAt(float seq_time) const
+{
 	if (time_map_keyframes.empty())
 	{
-		OutputDebugStringA("[Sequencer Error] GetRemappedTime: Keyframes array is empty!\n");
-		return 0.0f;
+		OutputDebugStringA("[Sequencer Error] GetSpeedMultiplierAt: Keyframes array is empty!\n");
+		return DEFAULT_SPEED_MULTIPLIER;
 	}
 
-	//キーフレームが1点しかない場合はその点の対応値を返す
-	if (time_map_keyframes.size() == 1)return time_map_keyframes[0].model_time;
+	if (seq_time <= time_map_keyframes.front().sequencer_time)return time_map_keyframes.front().speed_multiplier;
 
-	//指定時間が最初のキーフレームより前の場合は、最前点の値を返す
-	if (seq_time <= time_map_keyframes.front().sequencer_time)return time_map_keyframes.front().model_time;
+	if (seq_time >= time_map_keyframes.back().sequencer_time)return time_map_keyframes.back().speed_multiplier;
 
-	//指定時間が最後のキーフレームより後の場合は、最後端の値を返す
-	if (seq_time >= time_map_keyframes.back().sequencer_time)return time_map_keyframes.back().model_time;
-
-	//適切なキーフレーム区間（二点の間）を線形探索
-	for (size_t i = 0; i < time_map_keyframes.size()-1; i++)
+	for (size_t i = 0; i < time_map_keyframes.size() - 1; ++i)
 	{
 		const TimeMapKeyframe& kf0 = time_map_keyframes[i];
 		const TimeMapKeyframe& kf1 = time_map_keyframes[i + 1];
 
-		//探索対象のシーケンサ時間がこの二つのキーフレームの間に存在するか確認
 		if (seq_time >= kf0.sequencer_time && seq_time <= kf1.sequencer_time)
 		{
-			//区間内の総時間幅を計算
 			float duration = kf1.sequencer_time - kf0.sequencer_time;
-
-			//キーフレーム同士が極端に重なっている場合のゼロ除算防止
-			if (duration <= 0.00001f)return kf0.model_time;
-
-			//2つのキーフレーム間における進行比率を算出
+			if (duration <= 0.00001f)return kf0.speed_multiplier;
 			float rate = (seq_time - kf0.sequencer_time) / duration;
-
-			//線形補間（Lerp）を用いて、モデルが再生すべき正確な時間を計算して返す
-			return kf0.model_time + rate * (kf1.model_time - kf0.model_time);
+			return kf0.speed_multiplier + rate * (kf1.speed_multiplier - kf0.speed_multiplier);
 		}
 	}
-	return 0.0f;
+
+	return DEFAULT_SPEED_MULTIPLIER;
+}
+
+//台形公式を用いて0秒から指定時刻までの速度倍率を積算し、モデル再生時間を算出
+float AnimationSequencerEditor::GetIntegratedModelTime(float seq_time) const
+{
+	if (time_map_keyframes.empty())
+	{
+		OutputDebugStringA("[Sequencer Error] GetIntegratedModelTime: Keyframes array is empty!\n");
+		return 0.0f;
+	}
+
+	float total_model_time = 0.0f;
+
+	//指定時間までの区間を巡回して台形公式で面積を加算
+	for (size_t i = 0; i < time_map_keyframes.size() - 1; ++i) 
+	{
+		const TimeMapKeyframe& kf0 = time_map_keyframes[i];
+		const TimeMapKeyframe& kf1 = time_map_keyframes[i + 1];
+
+		//指定時間を超えたら終了
+		if (seq_time <= kf0.sequencer_time)break;
+
+		//区間の終端時間を計算
+		float t_start = kf0.sequencer_time;
+		float t_end = (seq_time < kf1.sequencer_time) ? seq_time : kf1.sequencer_time;
+		float dt = t_end - t_start;
+
+		if (dt > 0.0f)
+		{
+			float s_start = GetSpeedMultiplierAt(t_start);
+			float s_end = GetSpeedMultiplierAt(t_end);
+			float segment_area = ((s_start + s_end) * 0.5f) * dt;
+			total_model_time += segment_area;
+		}
+	}
+	return total_model_time;
+}
+
+//速度カーブからモデルが完走するのに必要な実際の合計時間（実効総時間）を算出
+float AnimationSequencerEditor::GetEffectiveDuration() const
+{
+	if (time_map_keyframes.empty() || animation_duration <= 0.0f)return animation_duration;
+
+	float accumulated_model_time = 0.0f;
+
+	//各キーフレーム区間を辿り、モデルの目標時間(animation_duration)に達する瞬間を逆算
+	for (size_t i = 0; i < time_map_keyframes.size() - 1; i++)
+	{
+		const TimeMapKeyframe& kf0 = time_map_keyframes[i];
+		const TimeMapKeyframe& kf1 = time_map_keyframes[i + 1];
+
+		float dt = kf1.sequencer_time - kf0.sequencer_time;
+		if (dt <= 0.0f)continue;
+
+		float s0 = kf0.speed_multiplier;
+		float s1 = kf1.speed_multiplier;
+
+		//区間内で進むモデル時間
+		float segment_model_time = ((s0 + s1) * 0.5f) * dt;
+
+		//この区間内でモデル時間が目標に達する場合
+		if (accumulated_model_time + segment_model_time >= animation_duration)
+		{
+			float rem_model_time = animation_duration - accumulated_model_time;
+
+			//速度変化がない場合
+			if (fabs(s1 - s0) < 0.0001f)
+			{
+				if (s0 > 0.0001f)return kf0.sequencer_time + (rem_model_time / s0);
+				return kf0.sequencer_time;
+			}
+
+			//速度変化がある場合
+			float accel = (s1 - s0) / dt;
+			float discriminant = (s0 * s0) + (2.0f * accel * rem_model_time);
+			if (discriminant >= 0.0f)
+			{
+				float delta_t = (-s0 + sqrtf(discriminant)) / accel;
+				return kf0.sequencer_time + delta_t;
+			}
+			return kf0.sequencer_time;
+		}
+		accumulated_model_time += segment_model_time;
+	}
+	//キーフレーム末尾に達しても完了していない場合
+	const TimeMapKeyframe& last_kf = time_map_keyframes.back();
+	float last_speed = last_kf.speed_multiplier;
+
+	if (last_speed > 0.0001f)
+	{
+		float rem_model_time = animation_duration - accumulated_model_time;
+		return last_kf.sequencer_time + (rem_model_time / last_speed);
+	}
+
+	return last_kf.sequencer_time;
 }
 
 //タイムライン詳細トラックを描画し、ドラッグなどのマウス操作を行う
@@ -273,7 +369,7 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 		return;
 	}
 
-	ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), u8"タイムリマップ（縦：モデル時間 / 横：シーケンス時間）");
+	ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), u8"速度倍率カーブ（中央：1.0x 等速 / 上：倍速 / 下：スロー・停止）");
 	ImGui::Spacing();
 
 	//カスタム描画用の領域幅と座標情報を算出
@@ -295,7 +391,24 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 	draw_list->AddRect(canvas_pos, canvas_end, IM_COL32(100, 100, 110, 255));
 
 	float padding_x = 15.0f;
+	float padding_y = 15.0f;
 	float usable_width = canvas_size.x - (padding_x * 2.0f);
+	float usable_height = canvas_size.y - (padding_y * 2.0f);
+
+	//1.0倍速を表す中央の基準線を破線/半透明描画
+	float default_y = canvas_pos.y + canvas_size.y - padding_y - (((DEFAULT_SPEED_MULTIPLIER - MIN_SPEED_MULTIPLIER) / (MAX_SPEED_MULTIPLIER - MIN_SPEED_MULTIPLIER)) * usable_height);
+	draw_list->AddLine(ImVec2(canvas_pos.x, default_y), ImVec2(canvas_end.x, default_y), IM_COL32(120, 120, 130, 180), 1.0f);
+	
+	//現在の再生時刻（current_time）に対応するXピクセル座標を算出
+	float current_x = canvas_pos.x + padding_x + ((current_time / animation_duration) * usable_width);
+
+	//トラック領域の上下いっぱいに現在の再生位置を示す「白い縦線」を描画
+	draw_list->AddLine(
+		ImVec2(current_x, canvas_pos.y),
+		ImVec2(current_x, canvas_pos.y + canvas_size.y),
+		IM_COL32(255, 255, 255, 255),
+		2.0f // 線の太さ
+	);
 
 	//マウス入力イベント
 	ImGuiIO& io = ImGui::GetIO();
@@ -311,10 +424,10 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 
 		//制御点のピクセル座標を算出
 		float t_rate_x = kf.sequencer_time / animation_duration;
-		float t_rate_y = kf.model_time / animation_duration;
+		float speed_rate_y = (kf.speed_multiplier - MIN_SPEED_MULTIPLIER) / (MAX_SPEED_MULTIPLIER - MIN_SPEED_MULTIPLIER);
 
 		float kf_x = canvas_pos.x + padding_x + (t_rate_x * usable_width);
-		float kf_y = canvas_pos.y + canvas_size.y - padding_x - (t_rate_y * (canvas_size.y - (padding_x * 2.0f)));
+		float kf_y = canvas_pos.y + canvas_size.y - padding_y - (speed_rate_y * usable_height);
 		ImVec2 pt(kf_x, kf_y);
 
 		//制御点（丸）とマウスの距離を測って、当たり判定チェック
@@ -333,25 +446,26 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 			float relative_mouse_x = mouse_pos.x - (canvas_pos.x + padding_x);
 			float relative_mouse_y = (canvas_pos.y + canvas_size.y - padding_x) - mouse_pos.y;
 			float new_seq_time = (relative_mouse_x / usable_width) * animation_duration;
-			float new_model_time = (relative_mouse_y / (canvas_size.y - (padding_x * 2.0f))) * animation_duration;
+			float new_speed = MIN_SPEED_MULTIPLIER + (relative_mouse_y / usable_height) * (MAX_SPEED_MULTIPLIER - MIN_SPEED_MULTIPLIER);
 
 			//時間が範囲外にはみ出ないようにクランプ制限
 			if (new_seq_time < 0.0f)new_seq_time = 0.0f;
 			if (new_seq_time > animation_duration)new_seq_time = animation_duration;
-			if (new_model_time < 0.0f)new_model_time = 0.0f;
-			if (new_model_time > animation_duration)new_model_time = animation_duration;
+
+			if (new_speed < MIN_SPEED_MULTIPLIER) new_speed = MIN_SPEED_MULTIPLIER;
+			if (new_speed > MAX_SPEED_MULTIPLIER) new_speed = MAX_SPEED_MULTIPLIER;
 
 			//前後のキーフレームを追い越さないように移動可能限界を設
 			float min_seq = (i > 0) ? time_map_keyframes[i - 1].sequencer_time + MIN_KEYFRAME_INTERVAL : 0.0f;
 			float max_seq = (i < static_cast<int>(time_map_keyframes.size()) - 1) ? time_map_keyframes[i + 1].sequencer_time - MIN_KEYFRAME_INTERVAL : animation_duration;
-
+			
 			//最初と最後のキーフレームは、補間関係維持のために「シーケンサ時間(横軸)」の移動はロック
 			if (i == 0)kf.sequencer_time = 0.0f;
 			else if (i == static_cast<int>(time_map_keyframes.size()) - 1)kf.sequencer_time = animation_duration;
 			else kf.sequencer_time = (std::max)(min_seq, (std::min)(new_seq_time, max_seq));
 
 			//縦軸（モデルの実際の再生時間）は、制限なくドラッグ移動
-			kf.model_time = new_model_time;
+			kf.speed_multiplier = new_speed;
 
 			//モデル側に変更された時間を即時通知して、3Dビューをドラッグに追従
 			float current_remapped = GetRemappedTime(current_time);
@@ -377,8 +491,8 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 
 		//時間表示のテキストをオーバーレイ
 		char kf_text[32];
-		sprintf_s(kf_text, "S:%.1fs\nM:%.1fs", kf.sequencer_time, kf.model_time);
-		draw_list->AddText(ImVec2(pt.x - 20.0f, pt.y - 35.0f), IM_COL32(220, 220, 220, 255), kf_text);
+		sprintf_s(kf_text, "%.1fs\n%.2fx", kf.sequencer_time, kf.speed_multiplier);
+		draw_list->AddText(ImVec2(pt.x - 15.0f, pt.y - 30.0f), IM_COL32(220, 220, 220, 255), kf_text);
 	}
 
 	//【制御点を繋ぐ折れ線の描画】
@@ -388,10 +502,10 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 		const auto& kf1 = time_map_keyframes[i + 1];
 
 		float x0 = canvas_pos.x + padding_x + ((kf0.sequencer_time / animation_duration) * usable_width);
-		float y0 = canvas_pos.y + canvas_size.y - padding_x - ((kf0.model_time / animation_duration) * (canvas_size.y - (padding_x * 2.0f)));
+		float y0 = canvas_pos.y + canvas_size.y - padding_y - (((kf0.speed_multiplier - MIN_SPEED_MULTIPLIER) / (MAX_SPEED_MULTIPLIER - MIN_SPEED_MULTIPLIER)) * usable_height);
 
 		float x1 = canvas_pos.x + padding_x + ((kf1.sequencer_time / animation_duration) * usable_width);
-		float y1 = canvas_pos.y + canvas_size.y - padding_x - ((kf1.model_time / animation_duration) * (canvas_size.y - (padding_x * 2.0f)));
+		float y1 = canvas_pos.y + canvas_size.y - padding_y - (((kf1.speed_multiplier - MIN_SPEED_MULTIPLIER) / (MAX_SPEED_MULTIPLIER - MIN_SPEED_MULTIPLIER)) * usable_height);
 
 		draw_list->AddLine(ImVec2(x0, y0), ImVec2(x1, y1), IM_COL32(0, 220, 100, 255), 2.0f);
 	}
@@ -402,12 +516,12 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 		float relative_click_y = (canvas_pos.y + canvas_size.y - padding_x) - mouse_pos.y;
 
 		float click_seq_time = (relative_click_x / usable_width) * animation_duration;
-		float click_model_time = (relative_click_y / (canvas_size.y - (padding_x * 2.0f))) * animation_duration;
+		float click_speed = MIN_SPEED_MULTIPLIER + (relative_click_y / usable_height) * (MAX_SPEED_MULTIPLIER - MIN_SPEED_MULTIPLIER);
 
 		if (click_seq_time > 0.0f && click_seq_time < animation_duration)
 		{
 			// 新規キーフレームを追加
-			TimeMapKeyframe new_kf = { click_seq_time, click_model_time };
+			TimeMapKeyframe new_kf = { click_seq_time, click_speed };
 			time_map_keyframes.push_back(new_kf);
 
 			// 追加後にシーケンサ時間の昇順になるように配列を強制的にソート
@@ -415,7 +529,7 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 
 			// デバッグログを出力
 			char added_log[256];
-			sprintf_s(added_log, "[Sequencer] Added Keyframe via Double-Click at SequencerTime: %.2fs -> ModelTime: %.2fs\n", click_seq_time, click_model_time);
+			sprintf_s(added_log, "[Sequencer] Added Speed Keyframe at Time: %.2fs -> Speed: %.2fx\n", click_seq_time, click_speed);
 			OutputDebugStringA(added_log);
 		}
 	}
