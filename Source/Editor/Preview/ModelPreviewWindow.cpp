@@ -5,6 +5,7 @@
 #include "Engine\Graphics\Shaders\SkyBox.h"
 #include "Engine\Camera\FreeCamera.h"
 #include "Engine\Graphics\ShapeRenderer.h"
+#include "Editor\EditorMediator.h"
 
 #include <windows.h>
 #include <imgui.h>
@@ -52,6 +53,8 @@ void ModelPreviewWindow::Initialize()
 			L"Data/Sprite/SkyTexture/lut_ggx.dds"			// IBLルックアップテーブル
 		);
 	}
+
+	EditorMediator::Instance().RegisterModelPreviewWindow(this);
 }
 
 //更新処理
@@ -187,6 +190,17 @@ void ModelPreviewWindow::LoadModel(const std::string& file_path)
 	current_model_path = file_path;
 	animation_names = model->GetAnimationNames();
 	selected_animation_index = -1;
+
+	if (!animation_names.empty())
+	{
+		selected_animation_index = 0;
+		model->PlayAnimation(animation_names[0], is_loop);
+	}
+	else
+	{
+		selected_animation_index = -1;
+	}
+
 }
 
 //再生速度設定

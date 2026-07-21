@@ -102,14 +102,14 @@ void Player::RenderDebug(ShapeRenderer* renderer)
 
 	//既存関数の呼び出し
 	DirectX::XMFLOAT4 color = { 0.0f, 1.0f, 0.0f, 1.0f };
-	renderer->DrawCapsule(
-		cap_center,
-		rotation,
-		capsule_collider.radius,
-		total_height,
-		color,
-		ShapeDrawMode::Wireframe
-	);
+	//renderer->DrawCapsule(
+	//	cap_center,
+	//	rotation,
+	//	capsule_collider.radius,
+	//	total_height,
+	//	color,
+	//	ShapeDrawMode::Wireframe
+	//);
 }
 
 //をシリアライザに登録

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 class SequenceSceneBace;
 class ModelPreviewScene;
@@ -9,6 +10,14 @@ struct ID3D11DeviceContext;
 
 class AnimationSequencerEditor
 {
+public:
+	//タイムリマップキーフレーム
+	struct TimeMapKeyframe
+	{
+		float sequencer_time;	//シーケンサ上の再生経過時間
+		float model_time;		//3Dモデル側のアニメーション再生秒数
+	};
+
 public:
 	//コンストラクタ
 	AnimationSequencerEditor();
@@ -29,6 +38,20 @@ public:
 	void RenderGui();
 
 private:
+	//キーフレームの初期化
+	void InitializerTimeMap();
+
+	//モデル時間を線形補間して算出
+	float GetRemappedTime(float seq_time)const;
+
+	//タイムライン詳細トラックを描画し、ドラッグなどのマウス操作を行う
+	void DrawTimelineTracks();
+
+	//キーフレームをシーケンサ時間の昇順でソート
+	static bool CompareKeyframes(const TimeMapKeyframe& a, const TimeMapKeyframe& b);
+
+
+private:
 	std::shared_ptr<SequenceSceneBace> active_scene;	//現在の画面
 	std::shared_ptr<ModelPreviewScene> preview_scene;	//モデル描画画面
 
@@ -37,5 +60,8 @@ private:
 	bool is_loop = true;								//ループ再生フラグ
 	float current_time = 0.0f;							//現在の再生時刻
 	float animation_duration = 0.0f;					//アニメーションの総時間
+	
+	std::vector<TimeMapKeyframe> time_map_keyframes;	//タイムリマップキーフレーム配列
+	int selected_keyframe_index = -1;					//ドラッグ移動中のキーフレーム番号
 };
 

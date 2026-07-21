@@ -47,6 +47,7 @@ void EditorManager::Initialize()
 void EditorManager::Update(float elapsed_time)
 {
 	model_preview_window->Update(elapsed_time);
+	animation_sequencer_editor->Update(elapsed_time);
 }
 
 //Gui描画、レイアウト構築
