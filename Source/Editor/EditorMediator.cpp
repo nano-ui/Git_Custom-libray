@@ -112,6 +112,18 @@ float EditorMediator::GetModelAnimationDuration() const
 	if (model_preview_window)return model_preview_window->GetAnimationDuration();
 }
 
+//モデルのファイルパスを取得
+std::string EditorMediator::GetModelName() const
+{
+	if (model_preview_window) return model_preview_window->GetModelName();
+}
+
+//現在再生されているアニメーション名を取得
+std::string EditorMediator::GetModelAnimationName() const
+{
+	if (model_preview_window)return model_preview_window->GetAnimationName();
+}
+
 //アクティブノードIDをエディタに同期
 void EditorMediator::UpdateViewerSynchronization(GameObject* object)
 {

@@ -233,6 +233,24 @@ float ModelPreviewWindow::GetAnimationDuration() const
 	if (model)return model->GetAnimationDuration();
 }
 
+//モデル名取得
+std::string ModelPreviewWindow::GetModelName()
+{
+	return current_model_path;
+}
+
+//アニメーション名を取得
+std::string ModelPreviewWindow::GetAnimationName()
+{
+	//インデックスが安全な範囲内にあるかチェック
+	if (selected_animation_index >= 0 && static_cast<size_t>(selected_animation_index) < animation_names.size())
+	{
+		return animation_names[selected_animation_index];
+	}
+
+	return "";
+}
+
 //UIコントロール描画
 void ModelPreviewWindow::DrawControlPanel()
 {
@@ -254,7 +272,7 @@ void ModelPreviewWindow::DrawControlPanel()
 
 		//拡大・回転パラメータをリアルタイム編集できるようにImGuiで描画
 		ImGui::Text(u8"トランスフォーム");
-		ImGui::DragFloat3(u8"位置(X/Y/Z)", &model_position.x, 0.05f, -100.0f, 100.0f);
+		ImGui::DragFloat3(u8"位置", &model_position.x, 0.05f, -100.0f, 100.0f);
 		ImGui::DragFloat3(u8"拡大率", &model_scale.x, 0.01f, 0.01f, 10.0f);
 		ImGui::DragFloat3(u8"角度", &model_rotation.x, 0.5f, -360.0f, 360.0f);
 

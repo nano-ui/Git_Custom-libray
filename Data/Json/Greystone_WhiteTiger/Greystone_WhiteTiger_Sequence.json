@@ -1,0 +1,33 @@
+{
+    "animation_sequences": {
+        "Attack_RMB": {
+            "animation_duration": 3.0333330631256104,
+            "effective_duration": 3.0333330631256104,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 3.0333330631256104,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
+        "Idle": {
+            "animation_duration": 29.96666717529297,
+            "effective_duration": 29.96666717529297,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 29.96666717529297,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        }
+    },
+    "model_name": "Greystone_WhiteTiger"
+}

@@ -1,8 +1,10 @@
 #pragma once
+#include "Serialization\AnimationSequenceSerializer.h"
 
 #include <memory>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 class SequenceSceneBace;
 class ModelPreviewScene;
@@ -53,6 +55,12 @@ private:
 	//速度カーブからモデルが完走するのに必要な実際の合計時間（実効総時間）を算出
 	float GetEffectiveDuration() const;
 
+	//現在編集中のタイムラインキーフレームをマップ構造体へ退避・同期
+	void SaveCurrentSequenceDataToMap();
+
+	//マップ構造体から現在選択中のアニメーションキーフレームへ復元
+	void LoadCurrentSequenceDataFromMap();
+
 	//タイムライン詳細トラックを描画し、ドラッグなどのマウス操作を行う
 	void DrawTimelineTracks();
 
@@ -72,5 +80,9 @@ private:
 	
 	std::vector<TimeMapKeyframe> time_map_keyframes;	//タイムリマップキーフレーム配列
 	int selected_keyframe_index = -1;					//ドラッグ移動中のキーフレーム番号
+
+	std::unordered_map<std::string, AnimationSequenceData> all_sequences_map;	//モデルの全アニメーションシーケンス設定を保持
+	std::string current_model_name = "DefaultModel";		//現在ロード中のモデル
+	std::string current_animation_name = "DefaultAnim";		//現在再生中のアニメーション
 };
 

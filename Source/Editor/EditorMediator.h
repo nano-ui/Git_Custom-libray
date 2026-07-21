@@ -39,6 +39,12 @@ public:
 	//モデルのアニメーション総時間を取得
 	float GetModelAnimationDuration() const;
 
+	//モデルのファイルパスを取得
+	std::string GetModelName()const;
+
+	//現在再生されているアニメーション名を取得
+	std::string GetModelAnimationName()const;
+
 	//アクティブノードIDをエディタに同期
 	void UpdateViewerSynchronization(GameObject* object);
 

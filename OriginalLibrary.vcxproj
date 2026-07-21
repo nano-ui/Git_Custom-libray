@@ -326,6 +326,7 @@
     <ClCompile Include="Source\Gameplay\StateMachine\StateGraphDataManager.cpp" />
     <ClCompile Include="Source\Gameplay\StateMachine\StateMachine.cpp" />
     <ClCompile Include="Source\Gameplay\StateMachine\StateTransition.cpp" />
+    <ClCompile Include="Source\Serialization\AnimationSequenceSerializer.cpp" />
     <ClCompile Include="Source\Serialization\GltfModelSerializer.cpp" />
     <ClCompile Include="Source\Serialization\JsonSerializer.cpp" />
     <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp" />
@@ -447,6 +448,7 @@
     <ClInclude Include="Source\Gameplay\StateMachine\StateGraphDataManager.h" />
     <ClInclude Include="Source\Gameplay\StateMachine\StateMachine.h" />
     <ClInclude Include="Source\Gameplay\StateMachine\StateTransition.h" />
+    <ClInclude Include="Source\Serialization\AnimationSequenceSerializer.h" />
     <ClInclude Include="Source\Serialization\GltfModelSerializer.h" />
     <ClInclude Include="Source\Serialization\JsonSerializer.h" />
     <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h" />

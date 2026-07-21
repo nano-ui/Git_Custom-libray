@@ -41,8 +41,26 @@ void AnimationSequencerEditor::Update(float elapsed_time)
 	//アニメーション総時間の変更（新しいアニメーションのロード完了）を検知
 	if (duration > 0.0f && animation_duration != duration)
 	{
+		SaveCurrentSequenceDataToMap();
 		animation_duration = duration;
-		InitializerTimeMap();
+
+		std::string new_model_name = EditorMediator::Instance().GetModelName();
+		std::string new_anim_name = EditorMediator::Instance().GetModelAnimationName();
+
+		if (!new_model_name.empty())
+		{
+			if (current_model_name != new_model_name)
+			{
+				current_model_name = new_model_name;
+				AnimationSequenceSerializer::LoadFromFile(current_model_name, all_sequences_map);
+			}
+		}
+
+		if (!new_anim_name.empty())current_animation_name = new_anim_name;
+
+		if (all_sequences_map.find(current_animation_name) != all_sequences_map.end())LoadCurrentSequenceDataFromMap();
+		else InitializerTimeMap();
+
 		EditorMediator::Instance().SetModelAnimationPlaying(false);
 	}
 
@@ -165,6 +183,38 @@ void AnimationSequencerEditor::RenderGui()
 		// 【固定エリア：上部コントロール＆シークバー】
 		ImGui::BeginChild("TimelineControl", ImVec2(0, 65), false, ImGuiWindowFlags_NoScrollbar);
 		{
+			if (ImGui::Button(u8"保存", ImVec2(80.0f, 0.0f))) 
+			{
+				// 現在の編集状態をマップへ反映してからJSONファイルへ一括保存
+				SaveCurrentSequenceDataToMap();
+				if (AnimationSequenceSerializer::SaveToFile(current_model_name, all_sequences_map))
+				{
+					OutputDebugStringA("[Sequencer] All sequences saved to JSON successfully.\n");
+				}
+				else
+				{
+					OutputDebugStringA("[Sequencer Error] Failed to save sequences to JSON!\n");
+				}
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button(u8"読み込み", ImVec2(80.0f, 0.0f))) 
+			{
+				// JSONファイルから一括読み込みして現在のタイムラインへ即時反映
+				if (AnimationSequenceSerializer::LoadFromFile(current_model_name, all_sequences_map))
+				{
+					LoadCurrentSequenceDataFromMap();
+					OutputDebugStringA("[Sequencer] All sequences loaded from JSON successfully.\n");
+				}
+				else
+				{
+					OutputDebugStringA("[Sequencer Error] Failed to load sequences from JSON!\n");
+				}
+			}
+
+			ImGui::Spacing();
+
 			// 再生 / 一時停止ボタン
 			if (ImGui::Button(is_playing ? u8"一時停止" : u8"再生"))
 			{
@@ -357,6 +407,52 @@ float AnimationSequencerEditor::GetEffectiveDuration() const
 	}
 
 	return last_kf.sequencer_time;
+}
+
+//現在編集中のタイムラインキーフレームをマップ構造体へ退避・同期
+void AnimationSequencerEditor::SaveCurrentSequenceDataToMap()
+{
+	if (animation_duration <= 0.0f || time_map_keyframes.empty())return;
+
+	AnimationSequenceData seq_data;
+	seq_data.animation_duration = animation_duration;
+	seq_data.effective_duration = GetEffectiveDuration();
+
+	//タイムラインのキーフレームをシリアライザ用構造体へ変換して格納
+	for (size_t i = 0; i < time_map_keyframes.size(); i++)
+	{
+		const auto& kf = time_map_keyframes[i];
+		SequenceKeyframe seq_kf;
+		seq_kf.sequencer_time = kf.sequencer_time;
+		seq_kf.speed_multiplier = kf.speed_multiplier;
+		seq_data.keyframes.push_back(seq_kf);
+	}
+	all_sequences_map[current_animation_name] = seq_data;
+}
+
+//マップ構造体から現在選択中のアニメーションキーフレームへ復元
+void AnimationSequencerEditor::LoadCurrentSequenceDataFromMap()
+{
+	auto it = all_sequences_map.find(current_animation_name);
+	if (it == all_sequences_map.end())
+	{
+		InitializerTimeMap();
+		return;
+	}
+
+	const AnimationSequenceData& seq_data = it->second;
+	time_map_keyframes.clear();
+
+	//シリアライザ用構造体からタイムラインキーフレームへ変換して復元
+	for (size_t i = 0; i < seq_data.keyframes.size(); i++)
+	{
+		const auto& seq_kf = seq_data.keyframes[i];
+		TimeMapKeyframe kf;
+		kf.sequencer_time = seq_kf.sequencer_time;
+		kf.speed_multiplier = seq_kf.speed_multiplier;
+		time_map_keyframes.push_back(kf);
+	}
+	current_time = 0.0f;
 }
 
 //タイムライン詳細トラックを描画し、ドラッグなどのマウス操作を行う

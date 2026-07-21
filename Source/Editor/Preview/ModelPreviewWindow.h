@@ -52,6 +52,12 @@ public:
 	//アニメーションの総時間を取得
 	float GetAnimationDuration() const;
 
+	//モデル名取得
+	std::string GetModelName();
+
+	//アニメーション名を取得
+	std::string GetAnimationName();
+
 private:
 	//UIコントロール描画
 	void DrawControlPanel();
