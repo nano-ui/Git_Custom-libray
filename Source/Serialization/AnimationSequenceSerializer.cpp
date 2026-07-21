@@ -146,3 +146,40 @@ bool AnimationSequenceSerializer::LoadFromFile(
 
 	return true;
 }
+
+//パスや拡張子から純粋なモデル名を抽出
+std::string AnimationSequenceSerializer::ExtractCleanModelName(const std::string& raw_model_name)
+{
+	if (raw_model_name.empty())return "DefaultModel";
+
+	//パス構造体を利用してファイル名を取得
+	std::filesystem::path path_obj(raw_model_name);
+	return path_obj.stem().string();
+}
+
+//ディレクトリパスを取得し、存在しない場合は自動生成
+std::string AnimationSequenceSerializer::GetDirectoryPath(const std::string& clean_model_name)
+{
+	std::string dir_path = BASE_JSON_DIR + clean_model_name;
+	std::error_code ec;
+
+	//フォルダが存在しない場合作成
+	if (!std::filesystem::exists(dir_path, ec))
+	{
+		std::filesystem::create_directories(dir_path, ec);
+		if (ec)
+		{
+			char err_buf[256];
+			sprintf_s(err_buf, "[Serializer Error] Failed to create directory: %s\n", dir_path.c_str());
+			OutputDebugStringA(err_buf);
+		}
+	}
+	return dir_path;
+}
+
+//保存・読み込み用のフルJSONファイルパスを取得
+std::string AnimationSequenceSerializer::GetFullFilePath(const std::string& clean_model_name)
+{
+	std::string dir_path = GetDirectoryPath(clean_model_name);
+	return dir_path + "/" + clean_model_name + "_Sequence.json";
+}
