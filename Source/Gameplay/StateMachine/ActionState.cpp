@@ -1,6 +1,6 @@
 #include "ActionState.h"
-#include "../Gameplay/Movement/MoveBase.h"
-#include "../Gameplay/Movement/RotationBase.h"
+#include "Gameplay\Components\Movement\Move\MoveBase.h"
+#include "Gameplay\Components\Movement\Rotation\RotationBase.h"
 
 //コンストラクタ
 ActionState::ActionState(

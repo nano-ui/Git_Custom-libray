@@ -6,7 +6,7 @@
 
 #include "../Engine/Graphics/ShapeRenderer.h"
 #include "../Engine/Graphics/Model.h"
-#include "../Serialization/JsonSerializer.h"
+#include "Serialization\JsonSerializer.h"
 
 struct Collider;
 

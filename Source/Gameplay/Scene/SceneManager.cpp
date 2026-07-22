@@ -1,6 +1,6 @@
 #include "SceneManager.h"
 #include "Scene.h"
-#include "../Engine/Core/Input.h"
+#include "Engine\Core\Input.h"
 
 //ƒVƒ“ƒOƒ‹ƒgƒ“‚Ìæ“¾
 SceneManager& SceneManager::Instance()

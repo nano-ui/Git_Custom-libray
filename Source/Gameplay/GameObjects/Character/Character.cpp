@@ -1,6 +1,6 @@
 #include "Character.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
-#include "../Gameplay/Components/StateMachineComponent.h"
+#include "Gameplay\Components\Editor\StateMachineComponent.h"
 
 #include <imgui.h>
 #include <cmath>

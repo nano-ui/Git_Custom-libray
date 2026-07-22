@@ -282,24 +282,6 @@
     <ClCompile Include="Source\Gameplay\GameObjects\ObjectManager.cpp">
       <Filter>Source\Gameplay\GameObjects\ObjectManager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Gameplay\Movement\CircularMove.cpp">
-      <Filter>Source\Gameplay\Movement\CircularMove</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\Movement\LinearMove.cpp">
-      <Filter>Source\Gameplay\Movement\LinearMove</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\Movement\LockAtRotation.cpp">
-      <Filter>Source\Gameplay\Movement\LockAtRotation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\Movement\MoveFactory.cpp">
-      <Filter>Source\Gameplay\Movement\MoveFactory</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\Movement\RepulsiveMove.cpp">
-      <Filter>Source\Gameplay\Movement\RepulsiveMove</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\Movement\RotationFactory.cpp">
-      <Filter>Source\Gameplay\Movement\RotationFactory</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Gameplay\Scene\SceneGame.cpp">
       <Filter>Source\Gameplay\Scene\SceneGame</Filter>
     </ClCompile>
@@ -333,26 +315,17 @@
     <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp">
       <Filter>Source\Serialization\SkinnedMeshSerializer</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Gameplay\Components\AnimationComponent.cpp">
-      <Filter>Source\Gameplay\Components\AnimationComponent</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Player.cpp">
       <Filter>Source\Gameplay\GameObjects\Character\Player</Filter>
     </ClCompile>
     <ClCompile Include="Source\Editor\AssetLoader.cpp">
       <Filter>Source\Editor\AssetLoader</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Gameplay\Components\StateMachineComponent.cpp">
-      <Filter>Source\Gameplay\Components\StateMachineComponent</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Editor\EditorMediator.cpp">
       <Filter>Source\Editor\EditorMediator</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\GltfModel\GltfRootMotion.cpp">
       <Filter>Source\Engine\Graphics\Model\GltfModel\GltfRootMotion</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Gameplay\Components\RootMotionComponent.cpp">
-      <Filter>Source\Gameplay\Components\RootMotionComponent</Filter>
     </ClCompile>
     <ClCompile Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor</Filter>
@@ -395,6 +368,33 @@
     </ClCompile>
     <ClCompile Include="Source\Serialization\AnimationSequenceSerializer.cpp">
       <Filter>Source\Serialization\AnimationSequenceSerializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Animation\AnimationComponent.cpp">
+      <Filter>Source\Gameplay\Components\Animation\AnimationComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Animation\RootMotionComponent.cpp">
+      <Filter>Source\Gameplay\Components\Animation\RootMotionComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Movement\Move\CircularMove.cpp">
+      <Filter>Source\Gameplay\Components\Movement\Move\CircularMove</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Movement\Move\LinearMove.cpp">
+      <Filter>Source\Gameplay\Components\Movement\Move\LinearMove</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Movement\Move\RepulsiveMove.cpp">
+      <Filter>Source\Gameplay\Components\Movement\Move\RepulsiveMove</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Movement\Move\MoveFactory.cpp">
+      <Filter>Source\Gameplay\Components\Movement\Move\MoveFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Movement\Rotation\LockAtRotation.cpp">
+      <Filter>Source\Gameplay\Components\Movement\Rotation\LockAtRotation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Movement\Rotation\RotationFactory.cpp">
+      <Filter>Source\Gameplay\Components\Movement\Rotation\RotationFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Editor\StateMachineComponent.cpp">
+      <Filter>Source\Gameplay\Components\Editor\StateMachineComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -635,30 +635,6 @@
     <ClInclude Include="Source\Gameplay\GameObjects\ObjectManager.h">
       <Filter>Source\Gameplay\GameObjects\ObjectManager</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Gameplay\Movement\CircularMove.h">
-      <Filter>Source\Gameplay\Movement\CircularMove</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Gameplay\Movement\LinearMove.h">
-      <Filter>Source\Gameplay\Movement\LinearMove</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Gameplay\Movement\LockAtRotation.h">
-      <Filter>Source\Gameplay\Movement\LockAtRotation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Gameplay\Movement\MoveBase.h">
-      <Filter>Source\Gameplay\Movement\MoveBase</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Gameplay\Movement\MoveFactory.h">
-      <Filter>Source\Gameplay\Movement\MoveFactory</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Gameplay\Movement\RepulsiveMove.h">
-      <Filter>Source\Gameplay\Movement\RepulsiveMove</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Gameplay\Movement\RotationBase.h">
-      <Filter>Source\Gameplay\Movement\RotationBase</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Gameplay\Movement\RotationFactory.h">
-      <Filter>Source\Gameplay\Movement\RotationFactory</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Gameplay\Scene\SceneGame.h">
       <Filter>Source\Gameplay\Scene\SceneGame</Filter>
     </ClInclude>
@@ -692,26 +668,17 @@
     <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h">
       <Filter>Source\Serialization\SkinnedMeshSerializer</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Gameplay\Components\AnimationComponent.h">
-      <Filter>Source\Gameplay\Components\AnimationComponent</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Player.h">
       <Filter>Source\Gameplay\GameObjects\Character\Player</Filter>
     </ClInclude>
     <ClInclude Include="Source\Editor\AssetLoader.h">
       <Filter>Source\Editor\AssetLoader</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Gameplay\Components\StateMachineComponent.h">
-      <Filter>Source\Gameplay\Components\StateMachineComponent</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Editor\EditorMediator.h">
       <Filter>Source\Editor\EditorMediator</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\GltfModel\GltfRootMotion.h">
       <Filter>Source\Engine\Graphics\Model\GltfModel\GltfRootMotion</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Gameplay\Components\RootMotionComponent.h">
-      <Filter>Source\Gameplay\Components\RootMotionComponent</Filter>
     </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.h">
       <Filter>Source\Editor\StateMachineGraphEditor</Filter>
@@ -757,6 +724,39 @@
     </ClInclude>
     <ClInclude Include="Source\Serialization\AnimationSequenceSerializer.h">
       <Filter>Source\Serialization\AnimationSequenceSerializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Animation\AnimationComponent.h">
+      <Filter>Source\Gameplay\Components\Animation\AnimationComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Animation\RootMotionComponent.h">
+      <Filter>Source\Gameplay\Components\Animation\RootMotionComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Movement\Move\CircularMove.h">
+      <Filter>Source\Gameplay\Components\Movement\Move\CircularMove</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Movement\Move\MoveBase.h">
+      <Filter>Source\Gameplay\Components\Movement\Move\MoveBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Movement\Move\LinearMove.h">
+      <Filter>Source\Gameplay\Components\Movement\Move\LinearMove</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Movement\Move\RepulsiveMove.h">
+      <Filter>Source\Gameplay\Components\Movement\Move\RepulsiveMove</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Movement\Move\MoveFactory.h">
+      <Filter>Source\Gameplay\Components\Movement\Move\MoveFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Movement\Rotation\LockAtRotation.h">
+      <Filter>Source\Gameplay\Components\Movement\Rotation\LockAtRotation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Movement\Rotation\RotationBase.h">
+      <Filter>Source\Gameplay\Components\Movement\Rotation\RotationBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Movement\Rotation\RotationFactory.h">
+      <Filter>Source\Gameplay\Components\Movement\Rotation\RotationFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Editor\StateMachineComponent.h">
+      <Filter>Source\Gameplay\Components\Editor\StateMachineComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1014,33 +1014,6 @@
     <Filter Include="Source\Gameplay\GameObjects\ObjectManager">
       <UniqueIdentifier>{d118512d-931f-4ee3-af4d-82b612bb70fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Gameplay\Movement">
-      <UniqueIdentifier>{45e2da2e-b3ad-46d6-997d-796a6747d828}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\Movement\CircularMove">
-      <UniqueIdentifier>{76dedd85-a59a-4f6a-9617-7c1bb156be4d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\Movement\LinearMove">
-      <UniqueIdentifier>{d56ce9d6-29d8-4e69-8f30-55169393bf4c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\Movement\LockAtRotation">
-      <UniqueIdentifier>{e565909b-b7a7-4cfc-afaa-a6383ca832dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\Movement\MoveBase">
-      <UniqueIdentifier>{02cb8caa-92c4-4e5f-90b1-0548fa6c7270}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\Movement\MoveFactory">
-      <UniqueIdentifier>{7928744d-f069-468e-bbda-2dabeb2074d5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\Movement\RepulsiveMove">
-      <UniqueIdentifier>{48036965-b432-4caf-87ad-8f0339960700}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\Movement\RotationBase">
-      <UniqueIdentifier>{b55be45a-f39c-41bf-acc0-9478c582a213}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\Movement\RotationFactory">
-      <UniqueIdentifier>{21104d8e-49eb-4cbe-91c8-e0a437cca929}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Gameplay\Scene\SceneGame">
       <UniqueIdentifier>{ac0f3a33-76ac-4afd-bda9-f215b85f74a4}</UniqueIdentifier>
     </Filter>
@@ -1076,9 +1049,6 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components">
       <UniqueIdentifier>{4ad2d37d-d4b6-41ae-a28e-48065b03dc6b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\Components\AnimationComponent">
-      <UniqueIdentifier>{bed052f1-baac-4b91-ad71-d44e3752eb13}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Engine\Graphics\Model\FbxModel">
       <UniqueIdentifier>{c0b05a5b-c17b-460a-bba9-052d03834e09}</UniqueIdentifier>
@@ -1140,17 +1110,11 @@
     <Filter Include="Source\Editor\AssetLoader">
       <UniqueIdentifier>{2ce713aa-1b04-437f-9f70-10e9a227942b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Gameplay\Components\StateMachineComponent">
-      <UniqueIdentifier>{570fef4c-14db-4477-b4b0-cd964f62568e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Editor\EditorMediator">
       <UniqueIdentifier>{8f615b74-2187-4561-bbe4-f46cdeb5c2ac}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Engine\Graphics\Model\GltfModel\GltfRootMotion">
       <UniqueIdentifier>{add93751-853e-497e-a50d-2fbf3cc921d5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\Components\RootMotionComponent">
-      <UniqueIdentifier>{a248dffe-bb94-4423-ad9f-8e9eab46f8fb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\TransitionConditionEditor">
       <UniqueIdentifier>{8b97f2da-592b-430d-8cc7-25f87ffbacb0}</UniqueIdentifier>
@@ -1190,6 +1154,54 @@
     </Filter>
     <Filter Include="Source\Serialization\AnimationSequenceSerializer">
       <UniqueIdentifier>{72681945-c2b9-4da6-907e-fbf1ec735393}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Animation">
+      <UniqueIdentifier>{14901e66-d6b0-4a33-b4ec-c33589566a81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Animation\AnimationComponent">
+      <UniqueIdentifier>{ce206cba-b236-4e91-ba28-1ef6ef34fe4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Animation\RootMotionComponent">
+      <UniqueIdentifier>{eae277ca-af6a-4350-bf33-f090f8e49fd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Editor">
+      <UniqueIdentifier>{f999f5a1-4c24-4324-82ed-bb41fafd9f54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Editor\StateMachineComponent">
+      <UniqueIdentifier>{c065cf05-36c9-4910-8772-7714fa2c3bfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Movement">
+      <UniqueIdentifier>{45e2da2e-b3ad-46d6-997d-796a6747d828}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Movement\Move">
+      <UniqueIdentifier>{74f0ad6f-df95-4b70-9800-d6641f238693}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Movement\Move\CircularMove">
+      <UniqueIdentifier>{76dedd85-a59a-4f6a-9617-7c1bb156be4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Movement\Move\LinearMove">
+      <UniqueIdentifier>{d56ce9d6-29d8-4e69-8f30-55169393bf4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Movement\Move\MoveBase">
+      <UniqueIdentifier>{02cb8caa-92c4-4e5f-90b1-0548fa6c7270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Movement\Move\MoveFactory">
+      <UniqueIdentifier>{7928744d-f069-468e-bbda-2dabeb2074d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Movement\Move\RepulsiveMove">
+      <UniqueIdentifier>{48036965-b432-4caf-87ad-8f0339960700}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Movement\Rotation">
+      <UniqueIdentifier>{9bbdffe8-e8b1-4a78-aca4-5fd6be4804d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Movement\Rotation\LockAtRotation">
+      <UniqueIdentifier>{e565909b-b7a7-4cfc-afaa-a6383ca832dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Movement\Rotation\RotationBase">
+      <UniqueIdentifier>{b55be45a-f39c-41bf-acc0-9478c582a213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Movement\Rotation\RotationFactory">
+      <UniqueIdentifier>{21104d8e-49eb-4cbe-91c8-e0a437cca929}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

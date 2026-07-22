@@ -1,6 +1,6 @@
 #include "StateGraphConfigManager.h"
 #include "../Editor/FileDialogHelper.h"
-#include "../ThiedParty/json.hpp"
+#include "ThiedParty\json.hpp"
 
 #include <fstream>
 #include <iomanip>

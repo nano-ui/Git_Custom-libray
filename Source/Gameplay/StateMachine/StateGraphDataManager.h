@@ -4,7 +4,7 @@
 #include <string>
 #include <cstdint>
 #include <unordered_map>
-#include "../ThiedParty/json.hpp"
+#include "ThiedParty\json.hpp"
 
 //ƒsƒ“‚ÌŽí—Þ
 enum class PinKind

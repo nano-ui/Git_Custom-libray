@@ -1,7 +1,7 @@
 #include "ObjectManager.h"
 #include "GameObject.h"
 #include "Character/Character.h"
-#include "../Gameplay/Components/AnimationComponent.h"
+#include "Gameplay\Components\Animation\AnimationComponent.h"
 
 //Ã“I‚ÌÀ‘Ì’è‹`
 ObjectManager* ObjectManager::instance_ptr = nullptr;

@@ -2,8 +2,8 @@
 
 #include "../Gameplay/GameObjects/GameObject.h"
 #include "../Engine/Collision/Collider.h"
-#include "Gameplay\Components\RootMotionComponent.h"
-#include "../Gameplay/Components/AnimationComponent.h"
+#include "Gameplay\Components\Animation\RootMotionComponent.h"
+#include "Gameplay\Components\Animation\AnimationComponent.h"
 
 #include <memory>
 #include <unordered_map>

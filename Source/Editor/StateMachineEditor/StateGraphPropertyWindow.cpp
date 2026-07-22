@@ -1,7 +1,7 @@
 #include "StateGraphPropertyWindow.h"
 #include "../Gameplay/StateMachine/StateGraphDataManager.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
-#include "../Engine/Core/Input.h"
+#include "Engine\Core\Input.h"
 #include "TransitionConditionEditor.h"
 
 #include <imgui.h>

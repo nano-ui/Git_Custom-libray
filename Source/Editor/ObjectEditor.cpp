@@ -4,8 +4,8 @@
 #include "../Gameplay/GameObjects/ObjectManager.h"
 #include "../Engine/Collision/CollisionManager.h"
 #include "../Engine/Camera/Camera.h"
-#include "../Engine/Core/Input.h"
-#include "../ThiedParty/json.hpp"
+#include "Engine\Core\Input.h"
+#include "ThiedParty\json.hpp"
 #include "../Editor/EditorMediator.h"
 
 #include <imgui.h>
