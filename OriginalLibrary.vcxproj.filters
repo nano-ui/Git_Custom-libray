@@ -396,6 +396,9 @@
     <ClCompile Include="Source\Gameplay\Components\Editor\StateMachineComponent.cpp">
       <Filter>Source\Gameplay\Components\Editor\StateMachineComponent</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.cpp">
+      <Filter>Source\Gameplay\Components\Animation\AnimationSequencerComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -757,6 +760,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Editor\StateMachineComponent.h">
       <Filter>Source\Gameplay\Components\Editor\StateMachineComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.h">
+      <Filter>Source\Gameplay\Components\Animation\AnimationSequencerComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1202,6 +1208,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Movement\Rotation\RotationFactory">
       <UniqueIdentifier>{21104d8e-49eb-4cbe-91c8-e0a437cca929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent">
+      <UniqueIdentifier>{62862072-ccba-4c48-8074-6bac9cf6dcd9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
