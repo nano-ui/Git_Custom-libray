@@ -7,7 +7,7 @@
 #include <memory>
 #include <unordered_map>
 
-#include "../Engine/Graphics/FbxModel/FbxModelData.h"
+#include "Engine/Graphics/FbxModel/FbxModelData.h"
 
 //‘O•ûéŒ¾
 class FbxLoader;

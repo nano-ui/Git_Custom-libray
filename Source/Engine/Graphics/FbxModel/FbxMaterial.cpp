@@ -3,8 +3,8 @@
 #include <fbxsdk.h>
 #include <filesystem>
 
-#include "../Engine/Graphics/FbxModel/FbxModelData.h"
-#include "../Engine/Graphics/texture.h"
+#include "Engine/Graphics/FbxModel/FbxModelData.h"
+#include "Engine/Graphics/texture.h"
 
 //====================================
 //マテリアル情報とテクスチャの抽出

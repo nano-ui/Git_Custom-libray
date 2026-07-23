@@ -2,10 +2,10 @@
 
 #include "StateMachineGraphEditor.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
-#include "../Gameplay/StateMachine/StateGraphDataManager.h"
-#include "../Gameplay/GameObjects/ObjectManager.h"
-#include "../Editor/FileDialogHelper.h"
-#include "../Editor/EditorMediator.h"
+#include "Gameplay/StateMachine/StateGraphDataManager.h"
+#include "Gameplay/GameObjects/ObjectManager.h"
+#include "Editor/FileDialogHelper.h"
+#include "Editor/EditorMediator.h"
 #include "StateGraphPaletteWindow.h"
 #include "StateGraphPropertyWindow.h"
 #include "StateGraphSimulator.h"
@@ -37,6 +37,7 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	property_window = std::make_unique<StateGraphPropertyWindow>();
 	config_manager = std::make_unique<StateGraphConfigManager>();
 	asset_loader = std::make_unique<AssetLoader>();
+	simulator = std::make_unique<StateGraphSimulator>();
 
 	target_model_hash = 0;
 
@@ -100,12 +101,6 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 		}
 	}
 
-	if (!current_graph)
-	{
-		assert(false && "StateMachineGraphEditor: 指定されたグラフIDが見つかりません。");
-		return;
-	}
-
 	uint32_t& current_active_node_id = graph_active_nodes[current_graph_id]; // 階層固有のアクティブID
 
 	if (runtime_active_node_id != UINT32_MAX)
@@ -114,11 +109,21 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	}
 	else
 	{
+		// ゲーム非実行時：アクティブノードが未設定（0）の場合は先頭ノードをデフォルト設定
 		if (current_active_node_id == 0 && !current_graph->nodes.empty())
 		{
 			current_active_node_id = current_graph->nodes.front().id;
 		}
+
 	}
+
+	// 擬似シミュレーションがONになっている場合、条件評価を行ってアクティブノードを自動更新
+	if (is_simulation_active)
+	{
+		UpdateSimulationMode(blackboard, current_graph, current_active_node_id);
+	}
+
+	SyncActiveNodeAnimation(current_graph, current_active_node_id);
 
 	// ゲーム側の実行ノードIDが前フレームから変化した瞬間を直接検知
 	if (runtime_active_node_id != UINT32_MAX && previous_active_node_id != 0 && previous_active_node_id != runtime_active_node_id)
@@ -286,6 +291,77 @@ void StateMachineGraphEditor::UpdateRuntimeTracking()
 	}
 }
 
+//擬似シミュレーション更新
+void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, GraphData* current_graph, uint32_t& current_active_node_id)
+{
+	if (!simulator || !current_graph)
+	{
+		printf("Error: StateMachineGraphEditor::UpdateSimulationMode - simulator または current_graph が nullptr です。\n");
+		return;
+	}
+
+	if (!blackboard)return;
+
+	uint32_t out_flowing_link_id = 0;
+	uint32_t prev_node_id = current_active_node_id;
+
+	bool is_state_changed = simulator->UpdateSimulation(
+		data_manager.get(),
+		blackboard,
+		current_graph,
+		current_active_node_id,
+		out_flowing_link_id
+	);
+
+	//遷移が発生した場合
+	if (is_state_changed)
+	{
+		flow_src_node_id = prev_node_id;
+		flow_dst_node_id = current_active_node_id;
+		has_flow_requsted = true;
+		constexpr float DEFAULT_FLOW_EFFECT_TIME = 1.0f;
+		flow_effect_timer = DEFAULT_FLOW_EFFECT_TIME;
+	}
+}
+
+//アクティブノードのアニメーション同期
+void StateMachineGraphEditor::SyncActiveNodeAnimation(GraphData* current_graph, uint32_t active_node_id)
+{
+	if (!current_graph || active_node_id == 0 || active_node_id == UINT32_MAX)return;
+	if (active_node_id == last_synced_node_id)return;
+	
+	//現在のグラフから対象のノードデータを検索
+	const GraphNode* target_node = nullptr;
+	for (size_t i = 0; i < current_graph->nodes.size(); i++)
+	{
+		if (current_graph->nodes[i].id == active_node_id)
+		{
+			target_node = &current_graph->nodes[i];
+			break;
+		}
+	}
+
+	if (!target_node)
+	{
+		printf("Error: StateMachineGraphEditor::SyncActiveNodeAnimation - アクティブノード ID:%d が見つかりません。\n", active_node_id);
+		return;
+	}
+
+	last_synced_node_id = active_node_id;
+
+	//アニメーション名が設定されている場合にのみ再生指示を通知
+	if (!target_node->animation_name.empty())
+	{
+		EditorMediator::Instance().PlayModelAnimation(target_node->animation_name, target_node->is_loop);
+	}
+	else
+	{
+		printf("Warning: StateMachineGraphEditor::SyncActiveNodeAnimation - ノード「%s」(ID:%d) にアニメーション名が設定されていません。\n",
+			target_node->name.c_str(), active_node_id);
+	}
+
+}
+
 //上部メニューとナビゲーション
 bool StateMachineGraphEditor::DrawTopMenuBar()
 {
@@ -297,7 +373,7 @@ bool StateMachineGraphEditor::DrawTopMenuBar()
 	const float upper_btn_width = 200.0f;
 	const float upper_btn_height = 25.0f;
 
-	if (ImGui::Button(u8"グラフデータを保存", ImVec2(upper_btn_width, upper_btn_height)))
+	if (ImGui::Button(u8"保存", ImVec2(upper_btn_width, upper_btn_height)))
 	{
 		std::string selected_save_path = FileDialogHelper::SaveFileDialog();
 		if (!selected_save_path.empty())
@@ -314,7 +390,7 @@ bool StateMachineGraphEditor::DrawTopMenuBar()
 	const ImVec4 load_btn_color = ImVec4(0.2f, 0.4f, 0.6f, 1.0f);
 	ImGui::PushStyleColor(ImGuiCol_Button, load_btn_color);
 
-	if (ImGui::Button(u8"グラフデータを読込", ImVec2(upper_btn_width, upper_btn_height)))
+	if (ImGui::Button(u8"読込", ImVec2(upper_btn_width, upper_btn_height)))
 	{
 		std::string selected_load_path = FileDialogHelper::OpenFileDialog();
 		if (!selected_load_path.empty())
@@ -356,35 +432,17 @@ bool StateMachineGraphEditor::DrawTopMenuBar()
 	ImGui::SameLine();
 
 	//追尾設定チェックボックスが変更されたかを判定
-	if (ImGui::Checkbox(u8"実行中ノードを追尾", &is_tracking_active_node))
+	if (ImGui::Checkbox(u8"追尾", &is_tracking_active_node))
 	{
 		printf("StateMachineGraphEditor: 追尾モードが %s に切り替わりました。\n", is_tracking_active_node ? "ON" : "OFF");
 	}
 
 	ImGui::SameLine();
 
-	//ズーム補正チェックボックスが変更されたかを判定
-	if (ImGui::Checkbox(u8"ズーム自動補正", &is_zoom_correction_enabled))
+	if (ImGui::Checkbox(u8"シミュレーション", &is_simulation_active))
 	{
-		printf("StateMachineGraphEditor: ズーム自動補正が %s に切り替わりました。\n", is_zoom_correction_enabled ? "ON" : "OFF");
+		printf("StateMachineGraphEditor: 擬似シミュレーションが %s に切り替わりました。\n", is_simulation_active ? "ON" : "OFF");
 	}
-
-	ImGui::SameLine();
-
-	ImGui::SetNextItemWidth(100.0f);
-	ImGui::SliderFloat(u8"フォーカス時間", &focus_duration_time, 0.0f, 1.0f, "%.2f");
-
-	ImGui::SameLine();
-
-	constexpr float min_margin_limit = 0.0f;	//最小制限
-	constexpr float max_margin_limit = 200.0f;	//最大制限
-	ImGui::SetNextItemWidth(120.0f);
-	if (ImGui::SliderFloat(u8"判定マージン", &focus_margin, min_margin_limit, max_margin_limit, "%.0f px"))
-	{
-
-	}
-
-	ImGui::SameLine();
 
 	ImGui::Spacing();
 

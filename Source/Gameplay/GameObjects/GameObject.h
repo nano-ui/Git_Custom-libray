@@ -4,8 +4,8 @@
 #include <string>
 #include <d3d11.h>
 
-#include "../Engine/Graphics/ShapeRenderer.h"
-#include "../Engine/Graphics/Model.h"
+#include "Engine/Graphics/ShapeRenderer.h"
+#include "Engine/Graphics/Model.h"
 #include "Serialization\JsonSerializer.h"
 
 struct Collider;

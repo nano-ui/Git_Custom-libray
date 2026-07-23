@@ -5,7 +5,7 @@
 #include <vector>
 #include <DirectXMath.h>
 
-#include "../Engine/Graphics/GltfModel/GltfModelData.h"
+#include "Engine/Graphics/GltfModel/GltfModelData.h"
 
 class GltfModelAnimation;
 class GltfModelRenderer;

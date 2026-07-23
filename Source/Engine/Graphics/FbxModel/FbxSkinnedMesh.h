@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <string>
 
-#include "../Engine/Graphics/FbxModel/FbxModelData.h"
+#include "Engine/Graphics/FbxModel/FbxModelData.h"
 
 namespace fbxsdk
 {

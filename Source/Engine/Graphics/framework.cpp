@@ -1,7 +1,7 @@
 ﻿#include "framework.h"
-#include "../Engine/Graphics/Graphics.h"
-#include "../Gameplay/Scene/SceneTitle.h"
-#include "../Gameplay/Scene/SceneManager.h"
+#include "Engine/Graphics/Graphics.h"
+#include "Gameplay/Scene/SceneTitle.h"
+#include "Gameplay/Scene/SceneManager.h"
 #include "Engine\Core\Input.h"
 
 #include <sstream>

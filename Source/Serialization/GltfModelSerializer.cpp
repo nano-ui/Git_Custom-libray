@@ -1,5 +1,5 @@
 #include "GltfModelSerializer.h"
-#include "../Engine/Graphics/GltfModel/GltfModelData.h"
+#include "Engine/Graphics/GltfModel/GltfModelData.h"
 
 #include <fstream>
 #include <cereal/archives/binary.hpp>

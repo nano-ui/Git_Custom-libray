@@ -1,5 +1,5 @@
 #include "DirectXDevice.h"
-#include "../Engine/Core/misc.h"
+#include "Engine/Core/misc.h"
 
 #include <dxgi1_2.h>
 #include <algorithm>

@@ -1,5 +1,5 @@
 #include "BlurShader.h"
-#include "../Engine/Graphics/Graphics.h"
+#include "Engine/Graphics/Graphics.h"
 
 //マジックナンバーを避けるための定数定義群
 static constexpr UINT constant_buffer_slot_bloom = 1; //register(b1) に対応するスロット番号

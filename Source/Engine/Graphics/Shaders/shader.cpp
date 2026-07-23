@@ -1,5 +1,5 @@
-#include "../Engine/Graphics/Shaders/shader.h"
-#include "../Engine/Core/misc.h"
+#include "Engine/Graphics/Shaders/shader.h"
+#include "Engine/Core/misc.h"
 #include <memory>
 #include <filesystem>
 

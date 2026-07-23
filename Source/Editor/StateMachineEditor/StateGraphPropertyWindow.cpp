@@ -1,5 +1,5 @@
 #include "StateGraphPropertyWindow.h"
-#include "../Gameplay/StateMachine/StateGraphDataManager.h"
+#include "Gameplay/StateMachine/StateGraphDataManager.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
 #include "Engine\Core\Input.h"
 #include "TransitionConditionEditor.h"
@@ -88,7 +88,6 @@ bool StateGraphPropertyWindow::DrawNodeProperty(
 
 	if (!target_node)
 	{
-		printf("Warning: 選択されたノードID: %d がデータ内に見つかりません。\n", node_id);
 		return false;
 	}
 

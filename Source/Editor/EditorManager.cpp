@@ -118,6 +118,7 @@ void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manage
 		GameObject* selected_obj = object_editor->GetCurrentSelectObject();
 		if (selected_obj)
 		{
+			EditorMediator::Instance().UpdateViewerSynchronization(selected_obj);
 			Character* selected_character = dynamic_cast<Character*>(selected_obj);
 			if (selected_character)
 			{

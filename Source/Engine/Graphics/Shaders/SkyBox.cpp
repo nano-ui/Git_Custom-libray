@@ -1,8 +1,8 @@
 #include "SkyBox.h"
-#include "../Engine/Graphics/Shaders/CustomShader.h"
-#include "../Engine/Graphics/texture.h"
+#include "Engine/Graphics/Shaders/CustomShader.h"
+#include "Engine/Graphics/texture.h"
 #include <crtdbg.h>
-#include <../Engine/Core/misc.h>
+#include <Engine/Core/misc.h>
 
 //コンストラクタ
 SkyBox::SkyBox()

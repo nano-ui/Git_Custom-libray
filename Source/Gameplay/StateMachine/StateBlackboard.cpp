@@ -1,8 +1,8 @@
 #include "StateBlackboard.h"
 
-#include "../Gameplay/AI/RandomJugment.h"
-#include "../Gameplay/AI/DistanceJugment.h"
-#include "../Gameplay/AI/RatioJudgment.h"
+#include "Gameplay/AI/RandomJugment.h"
+#include "Gameplay/AI/DistanceJugment.h"
+#include "Gameplay/AI/RatioJudgment.h"
 
 //コンストラクタ
 StateBlackboard::StateBlackboard()

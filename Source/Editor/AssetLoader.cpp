@@ -1,6 +1,6 @@
 #include "Editor\AssetLoader.h"
-#include "../Engine/Graphics/Graphics.h"
-#include "../Engine/Graphics/Model.h"
+#include "Engine/Graphics/Graphics.h"
+#include "Engine/Graphics/Model.h"
 
 #include <filesystem>
 

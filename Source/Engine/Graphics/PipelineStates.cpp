@@ -1,5 +1,5 @@
 #include "PipelineStates.h"
-#include "../Engine/Core/misc.h"
+#include "Engine/Core/misc.h"
 
 //ID3D11Deviceポインタを受け取り、ステート生成に備える
 PipelineStates::PipelineStates(ID3D11Device* device)

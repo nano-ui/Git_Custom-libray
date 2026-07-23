@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Gameplay/GameObjects/GameObject.h"
-#include "../Engine/Collision/Collider.h"
+#include "Gameplay/GameObjects/GameObject.h"
+#include "Engine/Collision/Collider.h"
 
 #include <memory>
 #include <vector>

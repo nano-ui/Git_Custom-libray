@@ -1,13 +1,13 @@
 #include "FbxLoader.h"
 
-#include "../FbxModel/FbxBone.h"
-#include "../FbxModel/FbxAnimation.h"
-#include "../FbxModel/FbxMaterial.h"
-#include "../FbxModel/FbxSkinnedMesh.h"
+#include "Engine\Graphics\FbxModel\FbxBone.h"
+#include "Engine\Graphics\FbxModel\FbxAnimation.h"
+#include "Engine\Graphics\FbxModel\FbxMaterial.h"
+#include "Engine\Graphics\FbxModel\FbxSkinnedMesh.h"
 
-#include "../Engine/Graphics/FbxModel/FbxSkinnedResource.h"
-#include "../Serialization/SkinnedMeshSerializer.h"
-#include "../Engine/Graphics/texture.h"
+#include "Engine/Graphics/FbxModel/FbxSkinnedResource.h"
+#include "Serialization/SkinnedMeshSerializer.h"
+#include "Engine/Graphics/texture.h"
 
 #include <fbxsdk.h>
 #include <filesystem>

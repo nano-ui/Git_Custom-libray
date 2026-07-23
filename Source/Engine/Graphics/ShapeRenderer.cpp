@@ -1,6 +1,6 @@
 #include "ShapeRenderer.h"
-#include "../Engine/Graphics/Shaders/CustomShader.h"
-#include "../Graphics/Graphics.h"
+#include "Engine/Graphics/Shaders/CustomShader.h"
+#include "Graphics.h"
 
 #include <cmath>
 

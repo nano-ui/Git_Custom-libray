@@ -1,6 +1,6 @@
 #include "CustomShader.h"
-#include "../Engine/Graphics/Graphics.h"
-#include "../Engine/Graphics/Shaders/shader.h"
+#include "Engine/Graphics/Graphics.h"
+#include "Engine/Graphics/Shaders/shader.h"
 
 #include <filesystem>
 #include <vector>

@@ -1,6 +1,6 @@
 #include "geometric_primitive.h"
-#include "../Engine/Graphics/Shaders/shader.h"
-#include "../Engine/Core/misc.h"
+#include "Engine/Graphics/Shaders/shader.h"
+#include "Engine/Core/misc.h"
 
 
 geometric_primitive::geometric_primitive(ID3D11Device* device)

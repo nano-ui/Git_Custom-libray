@@ -124,6 +124,16 @@ std::string EditorMediator::GetModelAnimationName() const
 	if (model_preview_window)return model_preview_window->GetAnimationName();
 }
 
+//モデルのアニメーション再生を中継
+void EditorMediator::PlayModelAnimation(const std::string& anim_name, bool is_loop)
+{
+	if (model_preview_window)model_preview_window->PlayPreviewAnimation(anim_name, is_loop);
+	else
+	{
+		printf("Error: EditorMediator::PlayModelAnimation - ModelPreviewWindow が登録されていません。\n");
+	}
+}
+
 //アクティブノードIDをエディタに同期
 void EditorMediator::UpdateViewerSynchronization(GameObject* object)
 {

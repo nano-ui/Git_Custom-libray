@@ -178,6 +178,44 @@ void ModelPreviewWindow::RenderGui()
 	DrawControlPanel();
 }
 
+//アニメーション再生命令
+void ModelPreviewWindow::PlayPreviewAnimation(const std::string& anim_name, bool is_loop)
+{
+	if (!model)
+	{
+		printf("Error: ModelPreviewWindow::PlayPreviewAnimation - モデルが読み込まれていないため再生できません。\n");
+		return;
+	}
+
+	if (anim_name.empty())
+	{
+		printf("Warning: ModelPreviewWindow::PlayPreviewAnimation - 指定されたアニメーション名が空です。\n");
+		return;
+	}
+
+	//モデルに登録されているアニメーション名から一致するものを検索
+	bool is_found = false;
+	for (size_t i = 0; i < animation_names.size(); i++)
+	{
+		if (animation_names[i] == anim_name)
+		{
+			selected_animation_index = static_cast<int>(i);
+			is_found = true;
+			break;
+		}
+	}
+
+	if (!is_found)
+	{
+		printf("Warning: ModelPreviewWindow::PlayPreviewAnimation - アニメーション「%s」がモデル内に見つかりません。\n", anim_name.c_str());
+		return;
+	}
+
+	//ループフラグの更新とアニメーション再生
+	this->is_loop = is_loop;
+	model->PlayAnimation(anim_name, is_loop);
+}
+
 //外部からモデル読み込み
 void ModelPreviewWindow::LoadModel(const std::string& file_path)
 {

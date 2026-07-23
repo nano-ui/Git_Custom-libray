@@ -45,6 +45,9 @@ public:
 	//現在再生されているアニメーション名を取得
 	std::string GetModelAnimationName()const;
 
+	//モデルのアニメーション再生を中継
+	void PlayModelAnimation(const std::string& anim_name, bool is_loop);
+
 	//アクティブノードIDをエディタに同期
 	void UpdateViewerSynchronization(GameObject* object);
 

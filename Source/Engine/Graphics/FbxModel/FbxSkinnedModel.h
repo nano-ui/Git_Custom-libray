@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "../Engine/Graphics/FbxModel/FbxSkinnedResource.h"
+#include "Engine/Graphics/FbxModel/FbxSkinnedResource.h"
 
 
 //シーン定数バッファ用

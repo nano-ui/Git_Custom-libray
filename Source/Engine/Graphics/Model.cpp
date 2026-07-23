@@ -2,8 +2,8 @@
 #include <filesystem>
 #include <stdexcept>
 
-#include "../Graphics/GltfModel/GltfModelRenderer.h"
-#include "../Engine/Graphics/GltfModel/GltfModel.h"
+#include "GltfModel\GltfModelRenderer.h"
+#include "Engine/Graphics/GltfModel/GltfModel.h"
 
 // アニメーションが見つからない場合のエラー用定数
 constexpr int ERROR_ANIMATION_NOT_FOUND = -1;

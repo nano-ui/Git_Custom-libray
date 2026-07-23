@@ -1,5 +1,5 @@
 #include "sprite_batch.h"
-#include "../Engine/Core/misc.h"
+#include "Engine/Core/misc.h"
 #include <sstream>
 #include <WICTextureLoader.h>
 

@@ -1,7 +1,7 @@
 #include <filesystem>
 #include <wrl.h>
 #include <DirectXTex.h>
-#include <../Engine/Core/misc.h>
+#include <Engine/Core/misc.h>
 #include "GpuResourceUtils.h"
 
 // 頂点シェーダー読み込み

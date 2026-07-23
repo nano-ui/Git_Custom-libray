@@ -3,7 +3,7 @@
 #include "GltfModelData.h"
 #include <wrl.h>
 #include <memory>
-#include "../Engine/Graphics/Shaders/CustomShader.h"
+#include "Engine/Graphics/Shaders/CustomShader.h"
 
 class GltfModel;
 

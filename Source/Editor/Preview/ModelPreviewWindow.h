@@ -34,6 +34,9 @@ public:
 	//ImGui描画
 	void RenderGui();
 
+	//アニメーション再生命令
+	void PlayPreviewAnimation(const std::string& anim_name, bool is_loop);
+
 	//外部からモデル読み込み
 	void LoadModel(const std::string& file_path);
 

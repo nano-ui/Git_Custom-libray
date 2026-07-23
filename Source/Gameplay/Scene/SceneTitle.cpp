@@ -1,10 +1,10 @@
 #include "SceneTitle.h"
 #include "SceneManager.h"
 #include "SceneGame.h"
-#include "../Engine/Graphics/sprite_batch.h"
-#include "../Engine/Graphics/Graphics.h"
-#include "../Common/../Engine/Core/misc.h"
-#include "../Engine/Camera/StandCamera.h"
+#include "Engine/Graphics/sprite_batch.h"
+#include "Engine/Graphics/Graphics.h"
+#include "Engine\Core\misc.h"
+#include "Engine/Camera/StandCamera.h"
 
 static constexpr float logical_screen_width = 1280.0f; //ゲームの設計上の基本横幅
 static constexpr float logical_screen_height = 720.0f; //ゲームの設計上の基本縦幅

@@ -1,6 +1,6 @@
 #pragma once
 #include "Character.h"
-#include "../Engine/Collision/Collider.h"
+#include "Engine/Collision/Collider.h"
 
 class Player : public Character, public ICollisionListener
 {

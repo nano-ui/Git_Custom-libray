@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include "../Engine/Graphics/Graphics.h"
+#include "Engine/Graphics/Graphics.h"
 
 // コンストラクタ
 Camera::Camera()

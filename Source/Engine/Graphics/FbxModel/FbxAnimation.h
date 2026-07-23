@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../Engine/Graphics/FbxModel/FbxModelData.h"
+#include "Engine/Graphics/FbxModel/FbxModelData.h"
 
 namespace fbxsdk
 {

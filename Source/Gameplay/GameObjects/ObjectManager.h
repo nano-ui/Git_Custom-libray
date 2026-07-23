@@ -5,7 +5,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "../Engine/Collision/CollisionManager.h"
+#include "Engine/Collision/CollisionManager.h"
 
 class ShapeRenderer;
 class GameObject;

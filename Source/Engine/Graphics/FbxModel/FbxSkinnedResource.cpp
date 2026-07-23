@@ -1,5 +1,5 @@
 #include "FbxSkinnedResource.h"
-#include "../FbxModel/FbxLoader.h"
+#include "FbxLoader.h"
 
 //===================
 //コンストラクタ

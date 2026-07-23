@@ -6,7 +6,7 @@
 #include <map>
 #include <vector>
 #include "FbxSkinnedMesh.h"
-#include "../FbxModel/FbxMaterial.h"
+#include "FbxMaterial.h"
 
 //==============
 //•ÏŠ·ƒwƒ‹ƒp[

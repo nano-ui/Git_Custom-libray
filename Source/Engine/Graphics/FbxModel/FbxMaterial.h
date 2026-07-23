@@ -3,7 +3,7 @@
 #include <string>
 #include <d3d11.h>
 
-#include "../Engine/Graphics/FbxModel/FbxModelData.h"
+#include "Engine/Graphics/FbxModel/FbxModelData.h"
 
 namespace fbxsdk {
     class FbxScene;

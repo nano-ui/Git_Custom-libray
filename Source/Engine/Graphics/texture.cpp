@@ -1,5 +1,5 @@
 #include "texture.h"
-#include "../Engine/Core/misc.h"
+#include "Engine/Core/misc.h"
 #include <WICTextureLoader.h>
 #include <filesystem>
 #include <DDSTextureLoader.h>

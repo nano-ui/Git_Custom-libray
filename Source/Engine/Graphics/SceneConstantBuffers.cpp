@@ -1,5 +1,5 @@
 #include "SceneConstantBuffers.h"
-#include "../Engine/Core/misc.h"
+#include "Engine/Core/misc.h"
 
 SceneConstantBuffers::SceneConstantBuffers(ID3D11Device* device)
 	:device_ptr_(device)

@@ -1,7 +1,7 @@
 #include <time.h>
 
-#include "../Engine/Graphics/framework.h"
-#include "../Engine/Graphics/DirectXDevice.h"
+#include "Engine/Graphics/framework.h"
+#include "Engine/Graphics/DirectXDevice.h"
 
 
 LRESULT CALLBACK window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)

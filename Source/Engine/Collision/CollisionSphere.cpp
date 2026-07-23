@@ -1,6 +1,6 @@
 #include "CollisionSphere.h"
-#include "../Engine/Collision/CollisionManager.h"
-#include "../Engine/Graphics/ShapeRenderer.h"
+#include "Engine/Collision/CollisionManager.h"
+#include "Engine/Graphics/ShapeRenderer.h"
 #include <cmath>
 #include "CollisionExperiment.h"
 

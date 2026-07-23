@@ -3,7 +3,7 @@
 #include <DirectXMath.h>
 #include <memory>
 
-#include "../Engine/Collision/Collider.h"
+#include "Engine/Collision/Collider.h"
 
 struct SphereCollider;
 class ShapeRenderer;

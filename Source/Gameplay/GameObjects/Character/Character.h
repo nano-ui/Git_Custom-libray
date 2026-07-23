@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Gameplay/GameObjects/GameObject.h"
-#include "../Engine/Collision/Collider.h"
+#include "Gameplay/GameObjects/GameObject.h"
+#include "Engine/Collision/Collider.h"
 #include "Gameplay\Components\Animation\RootMotionComponent.h"
 #include "Gameplay\Components\Animation\AnimationComponent.h"
 #include "Gameplay\Components\Animation\AnimationSequencerComponent.h"

@@ -1208,12 +1208,6 @@
                     "EndPinID": 111,
                     "ID": 219,
                     "StartPinID": 205
-                },
-                {
-                    "Conditions": [],
-                    "EndPinID": 204,
-                    "ID": 223,
-                    "StartPinID": 222
                 }
             ],
             "Nodes": [
@@ -1260,9 +1254,9 @@
                     "IsLoop": true,
                     "IsRootMotion": false,
                     "IsSubGraph": false,
-                    "LinkColorB": 0.27162688970565796,
-                    "LinkColorG": 0.9343629479408264,
-                    "LinkColorR": 0.054113660007715225,
+                    "LinkColorB": 0.5369541049003601,
+                    "LinkColorG": 0.8880308866500854,
+                    "LinkColorR": 0.4217289388179779,
                     "Name": "右移動",
                     "Output": [
                         {
@@ -1289,9 +1283,9 @@
                     "IsLoop": true,
                     "IsRootMotion": false,
                     "IsSubGraph": false,
-                    "LinkColorB": 0.13197477161884308,
-                    "LinkColorG": 0.13197477161884308,
-                    "LinkColorR": 0.876447856426239,
+                    "LinkColorB": 0.28792059421539307,
+                    "LinkColorG": 0.28792059421539307,
+                    "LinkColorR": 0.8571428656578064,
                     "Name": "左移動",
                     "Output": [
                         {
@@ -1318,9 +1312,9 @@
                     "IsLoop": true,
                     "IsRootMotion": false,
                     "IsSubGraph": false,
-                    "LinkColorB": 0.876447856426239,
-                    "LinkColorG": 0.1398664116859436,
-                    "LinkColorR": 0.09136714041233063,
+                    "LinkColorB": 0.7451737523078918,
+                    "LinkColorG": 0.45634010434150696,
+                    "LinkColorR": 0.43732205033302307,
                     "Name": "前に移動",
                     "Output": [
                         {
@@ -1376,9 +1370,9 @@
                     "IsLoop": true,
                     "IsRootMotion": false,
                     "IsSubGraph": false,
-                    "LinkColorB": 0.0,
-                    "LinkColorG": 0.9845559597015381,
-                    "LinkColorR": 0.7374667525291443,
+                    "LinkColorB": 0.2932127118110657,
+                    "LinkColorG": 0.8532818555831909,
+                    "LinkColorR": 0.7127240300178528,
                     "Name": "斜め後ろ右移動",
                     "Output": [
                         {
@@ -1447,35 +1441,6 @@
                     ],
                     "PosX": -354.09765625,
                     "PosY": 134.286865234375,
-                    "SubGraphID": 0
-                },
-                {
-                    "ActionCategory": 0,
-                    "AnimationName": "",
-                    "ID": 220,
-                    "Input": [
-                        {
-                            "ID": 221,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": true,
-                    "IsRootMotion": false,
-                    "IsSubGraph": false,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "新規ステート",
-                    "Output": [
-                        {
-                            "ID": 222,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": -285.70257568359375,
-                    "PosY": -218.32696533203125,
                     "SubGraphID": 0
                 }
             ]

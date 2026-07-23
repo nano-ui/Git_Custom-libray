@@ -1,8 +1,8 @@
 #pragma once
 #include <windows.h>
 #include <memory>
-#include "../Engine/Core/high_resolution_timer.h"
-#include "../Gameplay/Scene/Scene.h"
+#include "Engine/Core/high_resolution_timer.h"
+#include "Gameplay/Scene/Scene.h"
 
 class framework
 {

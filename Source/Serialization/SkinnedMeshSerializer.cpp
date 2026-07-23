@@ -1,6 +1,6 @@
 #include "SkinnedMeshSerializer.h"
 
-#include "../Engine/Graphics/FbxModel/FbxSkinnedResource.h"
+#include "Engine/Graphics/FbxModel/FbxSkinnedResource.h"
 
 #include <fstream>
 #include <cereal/archives/binary.hpp>

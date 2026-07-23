@@ -1,9 +1,9 @@
 #include "StateMachineComponent.h"
-#include "../Serialization/JsonSerializer.h"
+#include "Serialization/JsonSerializer.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
-#include "../ThiedParty/json.hpp"
+#include "ThiedParty/json.hpp"
 #include "Gameplay\Components\Animation\AnimationComponent.h"
-#include "../Engine/Core/Input.h"
+#include "Engine/Core/Input.h"
 
 
 #include <fstream>

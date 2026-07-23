@@ -43,6 +43,12 @@ private:
 	//追従ロジックとタイマー更新
 	void UpdateRuntimeTracking();
 
+	//擬似シミュレーション更新
+	void UpdateSimulationMode(StateBlackboard* blackboard, GraphData* current_graph, uint32_t& current_active_node_id);
+
+	//アクティブノードのアニメーション同期
+	void SyncActiveNodeAnimation(GraphData* current_graph, uint32_t active_node_id); 
+
 	//上部メニューとナビゲーション
 	bool DrawTopMenuBar();
 
@@ -96,6 +102,7 @@ private:
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::unique_ptr<StateGraphConfigManager> config_manager;
 	std::unique_ptr<AssetLoader> asset_loader;					//モデル読み込みクラス
+	std::unique_ptr<StateGraphSimulator> simulator;				//擬似シミュレーション実行クラス
 
 	uint32_t current_graph_id;									//現在の階層のグラフID
 	std::unordered_map<uint32_t, uint32_t> graph_active_nodes;	//各階層ごとのアクティブノードIDを個別に保持
@@ -110,7 +117,9 @@ private:
 	float flow_effect_timer = 0.0f;								//遷移エフェクトの残り表示時間（秒）
 	bool is_tracking_active_node = false;						//実行中のアクティブノードを自動で追尾する状態フラグ
 	bool is_zoom_correction_enabled = false;					//追尾カメラ移動時にズーム倍率を最適化する状態フラグ
+	bool is_simulation_active = false;							//エディタ上での擬似シミュレーション実行フラグ
 	uint32_t last_tracked_runtime_node_id = UINT32_MAX;			//直前に追尾処理を行ったゲーム側のアクティブノードID
+	uint32_t last_synced_node_id = UINT32_MAX;					//直前に同期を行ったノードID
 	float focus_duration_time = 0;								//カメラフォーカス時の補間アニメーション時間
 	float focus_margin = 50.0f;									//ノードの画面内判定に用いる安全マージン
 	bool has_flow_requsted = false;								//エフェクトリクエスト
