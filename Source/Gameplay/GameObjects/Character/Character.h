@@ -4,6 +4,7 @@
 #include "../Engine/Collision/Collider.h"
 #include "Gameplay\Components\Animation\RootMotionComponent.h"
 #include "Gameplay\Components\Animation\AnimationComponent.h"
+#include "Gameplay\Components\Animation\AnimationSequencerComponent.h"
 
 #include <memory>
 #include <unordered_map>
@@ -49,6 +50,9 @@ public:
 
 	//アニメーションコンポーネント取得
 	AnimationComponent* GetAnimationComponent()const { return animation_component.get(); }
+
+	//アニメーションシーケンサコンポーネント取得
+	AnimationSequencerComponent* GetAnimationSequencerComponent()const { return animation_sequencer_component.get(); }
 
 	//ルートモーションコンポーネントクラス取得
 	RootMotionComponent* GetRootMotionComponent()const { return root_motion_component.get(); }
@@ -108,6 +112,7 @@ protected:
 	std::unique_ptr<StateBlackboard> blackboard;
 	std::unique_ptr<AnimationComponent> animation_component;	//アニメーション制御
 	std::unique_ptr<RootMotionComponent> root_motion_component;	//ルートモーション制御
+	std::unique_ptr<AnimationSequencerComponent> animation_sequencer_component;	//速度カーブ制御
 	std::unique_ptr<StateMachineComponent> state_machine_component;	//ステートマシン制御
 
 	std::string previous_animation_name = "";	//前回のアニメーション名

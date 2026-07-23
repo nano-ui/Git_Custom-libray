@@ -76,11 +76,17 @@ void Character::Update(float elapsed_time)
 		bool target_anim_loop = state_machine_component->GetAnimationLoop();
 	
 		animation_component->PlayAnimationByName(target_anim_name, current_state_id, target_anim_loop);
+
+		if (animation_sequencer_component)
+		{
+			animation_sequencer_component->ChangeAnimation(target_anim_name);
+		}
 	}
 
 	if (animation_component)
 	{
 		animation_component->Update(elapsed_time);
+		if (animation_sequencer_component)animation_sequencer_component->Update(elapsed_time);
 		UpdateRootMotion();
 		root_motion_component->TraceRootMotionDebug(position);
 	}

@@ -63,6 +63,25 @@ void AnimationSequencerComponent::Update(float elapsed_time)
 	//現在のアニメーションに対応する速度カーブからモデル再生時間を算出
 	float integrated_time = GetIntegratedModelTime(current_sequence_time);
 
+	//モーションの終了時にシーケンサ時間をリセット
+	auto it = sequence_map.find(current_animaiton_name);
+	if (it != sequence_map.end())
+	{
+		float anim_duration = it->second.animation_duration;
+		float eff_duration = it->second.effective_duration;
+
+		if ((anim_duration > 0.0f && integrated_time >= anim_duration) ||
+			(eff_duration > 0.0f && current_sequence_time >= eff_duration))
+		{
+			current_sequence_time = 0.0f;
+			integrated_time = 0.0f;
+		}
+	}
+	else
+	{
+		OutputDebugStringA(u8"[SequencerComponent Warning] Update: sequence_map に該当アニメーションデータが存在しません。\n");
+	}
+
 	//計算した時間をモデルへ設定
 	shared_model->SetAnimationTime(integrated_time);
 }
@@ -70,6 +89,7 @@ void AnimationSequencerComponent::Update(float elapsed_time)
 //アニメーション切り替え
 void AnimationSequencerComponent::ChangeAnimation(const std::string& anim_name)
 {
+	if (current_animaiton_name == anim_name)return;
 	current_animaiton_name = anim_name;
 	current_sequence_time = 0.0f;
 }

@@ -52,6 +52,8 @@ void Player::Initialize()
 	{
 		animation_component->Initialize();
 	}
+
+	animation_sequencer_component = std::make_unique<AnimationSequencerComponent>(character);
 	
 	std::string current_model_path = character->GetModelPath();
 
@@ -63,6 +65,18 @@ void Player::Initialize()
 		uint32_t calculated_hash = StateBlackboard::CalculateHash(model_name);
 		SetModelHash(calculated_hash);
 		if (state_machine_component)state_machine_component->SetModelHash(calculated_hash);
+
+		if (animation_sequencer_component)
+		{
+			if (!animation_sequencer_component->Initialize(model_name))
+			{
+				OutputDebugStringA("[Player Warning] Failed to initialize AnimationSequencerComponent.\n");
+			}
+		}
+	}
+	else
+	{
+		OutputDebugStringA("[Player Error] Initialize: current_model_path is empty!\n");
 	}
 }
 
