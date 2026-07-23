@@ -73,7 +73,7 @@ private:
 	std::vector<std::string> animation_names;	//アニメーションリスト
 
 	DirectX::XMFLOAT3 model_position = { 0.0f, 0.0f, 0.0f };//座標
-	DirectX::XMFLOAT3 model_rotation = { 0.0f,0.0f,0.0f };	//角度
+	DirectX::XMFLOAT3 model_rotation = { 0.0f,180.0f,0.0f };	//角度
 	DirectX::XMFLOAT3 model_scale = { 1.0f,1.0f,1.0f };		//拡大率
 	bool is_loop = true;									//ループフラグ
 	int selected_animation_index = -1;						//選択中のアニメーションインデックス

@@ -118,8 +118,6 @@ float4 main(VS_OUT pin, bool is_front_face : SV_IsFrontFace) : SV_TARGET
         discard;
     }
     
-    return
-    
     basecolor.rgb = pow(basecolor.rgb, GammaFactor);
     
     //エミッシブ

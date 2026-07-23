@@ -1,6 +1,6 @@
 #include "EditorMediator.h"
 #include "Gameplay/GameObjects/GameObject.h"
-#include "Gameplay/Components/StateMachineComponent.h"
+#include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Gameplay/GameObjects/Character/Character.h"
 #include "StateMachineEditor\StateMachineGraphEditor.h"
 #include "Preview\ModelPreviewWindow.h"

@@ -1208,6 +1208,12 @@
                     "EndPinID": 111,
                     "ID": 219,
                     "StartPinID": 205
+                },
+                {
+                    "Conditions": [],
+                    "EndPinID": 204,
+                    "ID": 223,
+                    "StartPinID": 222
                 }
             ],
             "Nodes": [
@@ -1442,10 +1448,39 @@
                     "PosX": -354.09765625,
                     "PosY": 134.286865234375,
                     "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "ID": 220,
+                    "Input": [
+                        {
+                            "ID": 221,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "新規ステート",
+                    "Output": [
+                        {
+                            "ID": 222,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -285.70257568359375,
+                    "PosY": -218.32696533203125,
+                    "SubGraphID": 0
                 }
             ]
         }
     ],
-    "NextID": 220,
+    "NextID": 224,
     "TargetModelPath": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf"
 }
