@@ -1,6 +1,7 @@
 #include "StateGraphSimulator.h"
 #include "Gameplay/StateMachine/StateGraphDataManager.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
+#include "Engine\Core\Input.h"
 
 #include <imgui.h>
 #include <windows.h>
@@ -69,19 +70,46 @@ bool StateGraphSimulator::UpdateSimulation(
 		{
 			const GraphTransitionCondition& graph_cond = link.conditions[c];    //評価先の条件
 
-			TransitionCondition runtime_cond;   //実行時判定
-			runtime_cond.type = graph_cond.type;
-			runtime_cond.hash_key = graph_cond.hash_key;
-			runtime_cond.reference_value = graph_cond.reference_value;
-			runtime_cond.compart_op = static_cast<CompareOperator>(graph_cond.compare_operator);
-			runtime_cond.param_second = graph_cond.param_second;
-			runtime_cond.secondary_hash = graph_cond.secondary_hash;
-
-			//条件を満たしていないか判定
-			if (!runtime_cond.IsJudgment(*blackboard))
+			//キー入力判定 (InputCheck) の場合の処理
+			if (graph_cond.type == ConditionNodeType::InputCheck)
 			{
-				is_all_condition_met = false;
-				break;
+				int v_key_code = static_cast<int>(graph_cond.hash_key); // 仮想キーコード
+				int input_behavior_mode = static_cast<int>(graph_cond.param_second); // 0:Press, 1:Trigger
+
+				constexpr int mode_trigger_val = 1; // マジックナンバーの回避：トリガーモード
+				bool is_key_satisfied = false;
+
+				if (input_behavior_mode == mode_trigger_val)
+				{
+					is_key_satisfied = Input::Instance().IsKeyTrigger(v_key_code);
+				}
+				else
+				{
+					is_key_satisfied = Input::Instance().IsKeyPress(v_key_code);
+				}
+
+				if (!is_key_satisfied)
+				{
+					is_all_condition_met = false;
+					break;
+				}
+			}
+			else
+			{
+				TransitionCondition runtime_cond;   //実行時判定
+				runtime_cond.type = graph_cond.type;
+				runtime_cond.hash_key = graph_cond.hash_key;
+				runtime_cond.reference_value = graph_cond.reference_value;
+				runtime_cond.compart_op = static_cast<CompareOperator>(graph_cond.compare_operator);
+				runtime_cond.param_second = graph_cond.param_second;
+				runtime_cond.secondary_hash = graph_cond.secondary_hash;
+
+				//条件を満たしていないか判定
+				if (!runtime_cond.IsJudgment(*blackboard))
+				{
+					is_all_condition_met = false;
+					break;
+				}
 			}
 		}
 

@@ -9,6 +9,7 @@
 #include "Preview\ModelPreviewWindow.h"
 #include "EditorMediator.h"
 #include "Gameplay\GameObjects\Character\Character.h"
+#include "Engine\Core\Input.h"
 
 #include <windows.h>
 
@@ -46,6 +47,7 @@ void EditorManager::Initialize()
 //XVˆ—
 void EditorManager::Update(float elapsed_time)
 {
+	Input::Instance().Update();
 	model_preview_window->Update(elapsed_time);
 	animation_sequencer_editor->Update(elapsed_time);
 }
@@ -125,6 +127,7 @@ void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manage
 				target_blackboard = selected_character->GetBlackboard();
 			}
 		}
+		object_editor->RenderUi(camera, collision_manager);
 		state_graph_editor->DrawEditor(target_blackboard);
 		model_preview_window->RenderGui();
 		content_browser_editor->RenderGui();

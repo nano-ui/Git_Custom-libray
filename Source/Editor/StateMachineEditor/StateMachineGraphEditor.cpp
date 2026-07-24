@@ -8,8 +8,9 @@
 #include "Editor/EditorMediator.h"
 #include "StateGraphPaletteWindow.h"
 #include "StateGraphPropertyWindow.h"
-#include "StateGraphSimulator.h"
 #include "StateGraphConfigManager.h"
+#include "StateBlackboardInspectorWindow.h"
+#include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Editor\AssetLoader.h"
 
 #include <imgui_node_editor_internal.h>
@@ -37,8 +38,9 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	property_window = std::make_unique<StateGraphPropertyWindow>();
 	config_manager = std::make_unique<StateGraphConfigManager>();
 	asset_loader = std::make_unique<AssetLoader>();
-	simulator = std::make_unique<StateGraphSimulator>();
+	state_machine_component = std::make_unique<StateMachineComponent>();
 	editor_dummy_blackboard = std::make_unique<StateBlackboard>();
+	blackboard_inspector = std::make_unique<StateBlackboardInspectorWindow>();
 
 	target_model_hash = 0;
 
@@ -125,6 +127,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	// 擬似シミュレーションがONになっている場合、条件評価を行ってアクティブノードを自動更新
 	if (is_simulation_active)
 	{
+		if (blackboard_inspector)blackboard_inspector->SyncBlackboardVariablesFromGraph(current_graph, active_blackboard);
 		UpdateSimulationMode(active_blackboard, current_graph, current_active_node_id);
 	}
 
@@ -153,7 +156,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 
-	if (DrawTopMenuBar())
+	if (DrawTopMenuBar(active_blackboard))
 	{
 		return;
 	}
@@ -210,6 +213,8 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	ImGui::SameLine();
 
 	DrawRightSidebar(current_graph, active_blackboard, dynamic_right_width, canvas_height);
+
+	blackboard_inspector->DrawInspector(active_blackboard);
 }
 
 //ファイルパスのグラフ情報をリロード
@@ -300,9 +305,10 @@ void StateMachineGraphEditor::UpdateRuntimeTracking()
 //擬似シミュレーション更新
 void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, GraphData* current_graph, uint32_t& current_active_node_id)
 {
-	if (!simulator || !current_graph)
+	//意図しない挙動の防止：ポインタの健全性チェック
+	if (!state_machine_component || !current_graph)
 	{
-		printf("Error: StateMachineGraphEditor::UpdateSimulationMode - simulator または current_graph が nullptr です。\n");
+		printf("Error: StateMachineGraphEditor::UpdateSimulationMode - state_machine_component または current_graph が nullptr です。\n");
 		return;
 	}
 
@@ -312,37 +318,71 @@ void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, 
 		return;
 	}
 
-	uint32_t out_flowing_link_id = 0;
-	uint32_t prev_node_id = current_active_node_id;
+	float delta_time = ImGui::GetIO().DeltaTime;
+	uint32_t prev_node_id = state_machine_component->GetCurrentNodeId();
 
-	bool is_state_changed = simulator->UpdateSimulation(
-		data_manager.get(),
-		blackboard,
-		current_graph,
-		current_active_node_id,
-		out_flowing_link_id
-	);
+	state_machine_component->Update(delta_time, blackboard);
 
-	//遷移が発生した場合
-	if (is_state_changed)
+	uint32_t new_active_node_id = state_machine_component->GetCurrentNodeId();
+
+	//ステート遷移が成立した場合
+	if (new_active_node_id != UINT32_MAX && new_active_node_id != prev_node_id)
 	{
 		flow_src_node_id = prev_node_id;
-		flow_dst_node_id = current_active_node_id;
+		flow_dst_node_id = new_active_node_id;
 		has_flow_requsted = true;
-		constexpr float DEFAULT_FLOW_EFFECT_TIME = 1.0f;
-		flow_effect_timer = DEFAULT_FLOW_EFFECT_TIME;
-		printf("StateMachineGraphEditor: 擬似シミュレーションの遷移条件が成立しました！ [ノードID: %d -> %d] (リンクID: %d)\n",
-			flow_src_node_id, flow_dst_node_id, out_flowing_link_id);
+	}
+
+	// 現在の確定アクティブノードIDを反映
+	if (new_active_node_id != UINT32_MAX)
+	{
+		current_active_node_id = new_active_node_id;
+
+		// 追尾モードが有効な場合、アクティブノードが所属する階層へ表示を自動切り替え
+		if (is_tracking_active_node)
+		{
+			uint32_t target_graph_id = data_manager->GetGraphIdFromNodeId(new_active_node_id);
+			if (target_graph_id != UINT32_MAX && target_graph_id != current_graph_id)
+			{
+				current_graph_id = target_graph_id;
+				printf("StateMachineGraphEditor: サブステート追尾により表示階層を ID:%d へ自動切り替えしました。\n", current_graph_id);
+			}
+		}
 	}
 }
 
 //アクティブノードのアニメーション同期
 void StateMachineGraphEditor::SyncActiveNodeAnimation(GraphData* current_graph, uint32_t active_node_id)
 {
-	if (!current_graph || active_node_id == 0 || active_node_id == UINT32_MAX)return;
-	if (active_node_id == last_synced_node_id)return;
-	
-	//現在のグラフから対象のノードデータを検索
+	if (!current_graph || active_node_id == 0 || active_node_id == UINT32_MAX) return;
+
+	// シミュレーション実行中は StateMachineComponent から直接再生中のアニメーションを取得する
+	if (is_simulation_active && state_machine_component)
+	{
+		uint32_t current_sim_node_id = state_machine_component->GetCurrentNodeId();
+
+		// 同一ノードでの連続再生命令を防ぐガード節
+		if (current_sim_node_id == last_synced_node_id) return;
+
+		last_synced_node_id = current_sim_node_id;
+
+		std::string anim_name = state_machine_component->GetCurrentAnimationName();
+		bool is_loop = state_machine_component->GetAnimationLoop();
+
+		if (!anim_name.empty())
+		{
+			EditorMediator::Instance().PlayModelAnimation(anim_name, is_loop);
+		}
+		else
+		{
+			printf("Warning: StateMachineGraphEditor::SyncActiveNodeAnimation - ノード ID:%d のアニメーション名が空です。\n", current_sim_node_id);
+		}
+		return;
+	}
+
+	// 手動選択時（シミュレーション非実行時）の同期処理
+	if (active_node_id == last_synced_node_id) return;
+
 	const GraphNode* target_node = nullptr;
 	for (size_t i = 0; i < current_graph->nodes.size(); i++)
 	{
@@ -353,29 +393,18 @@ void StateMachineGraphEditor::SyncActiveNodeAnimation(GraphData* current_graph, 
 		}
 	}
 
-	if (!target_node)
-	{
-		printf("Error: StateMachineGraphEditor::SyncActiveNodeAnimation - アクティブノード ID:%d が見つかりません。\n", active_node_id);
-		return;
-	}
+	if (!target_node) return;
 
 	last_synced_node_id = active_node_id;
 
-	//アニメーション名が設定されている場合にのみ再生指示を通知
 	if (!target_node->animation_name.empty())
 	{
 		EditorMediator::Instance().PlayModelAnimation(target_node->animation_name, target_node->is_loop);
 	}
-	else
-	{
-		printf("Warning: StateMachineGraphEditor::SyncActiveNodeAnimation - ノード「%s」(ID:%d) にアニメーション名が設定されていません。\n",
-			target_node->name.c_str(), active_node_id);
-	}
-
 }
 
 //上部メニューとナビゲーション
-bool StateMachineGraphEditor::DrawTopMenuBar()
+bool StateMachineGraphEditor::DrawTopMenuBar(StateBlackboard* blackboard)
 {
 	ImGui::Begin(u8"ステートマシンエディタ");
 
@@ -455,7 +484,16 @@ bool StateMachineGraphEditor::DrawTopMenuBar()
 	if (ImGui::Checkbox(u8"シミュレーション", &is_simulation_active))
 	{
 		last_synced_node_id = UINT32_MAX;
-		printf("StateMachineGraphEditor: 擬似シミュレーションが %s に切り替わりました。\n", is_simulation_active ? "ON" : "OFF");
+		// シミュレーション開始時に最新のグラフ構造を保存・リロードして初期化
+		if (is_simulation_active && state_machine_component)
+		{
+			if (!current_loaded_file_path.empty())
+			{
+				data_manager->SaveToFile(current_loaded_file_path);
+			}
+			state_machine_component->RequestReload();
+			state_machine_component->Initialize(blackboard);
+		}
 	}
 
 	ImGui::Spacing();
@@ -478,6 +516,7 @@ void StateMachineGraphEditor::DrawLeftSidebar(GraphData* current_graph, float wi
 	{
 		g_pending_focus_node_id = focus_node_id;
 	}
+
 	ImGui::EndChild();
 }
 

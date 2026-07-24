@@ -143,7 +143,7 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 			// リンクに設定されたすべての遷移条件を個別に精査するループ処理
 			for (size_t c = 0; c < link.conditions.size(); c++)
 			{
-				const auto& cond = link.conditions[c]; // 評価対象の遷移条件の
+				const auto& cond = link.conditions[c]; // 評価対象の遷移条件
 
 				// 条件判定のタイプを入力チェックであるかを判定
 				if (static_cast<int>(cond.type) == static_cast<int>(ConditionNodeType::InputCheck))

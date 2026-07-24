@@ -111,9 +111,6 @@
     <ClCompile Include="Source\Engine\Camera\Camera.cpp">
       <Filter>Source\Engine\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Core\Input.cpp">
-      <Filter>Source\Engine\Core</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Core\main.cpp">
       <Filter>Source\Engine\Core</Filter>
     </ClCompile>
@@ -339,9 +336,6 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphPropertyWindow.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphSimulator.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphsSimulator</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\TransitionConditionEditor</Filter>
     </ClCompile>
@@ -399,6 +393,12 @@
     <ClCompile Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.cpp">
       <Filter>Source\Gameplay\Components\Animation\AnimationSequencerComponent</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateBlackboardInspectorWindow.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateBlackboardInspectorWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Core\Input.cpp">
+      <Filter>Source\Engine\Core\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -447,9 +447,6 @@
       <Filter>Source\Engine\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Core\high_resolution_timer.h">
-      <Filter>Source\Engine\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Core\Input.h">
       <Filter>Source\Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Core\misc.h">
@@ -695,9 +692,6 @@
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphPropertyWindow.h">
       <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphSimulator.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphsSimulator</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.h">
       <Filter>Source\Editor\StateMachineGraphEditor\TransitionConditionEditor</Filter>
     </ClInclude>
@@ -763,6 +757,12 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.h">
       <Filter>Source\Gameplay\Components\Animation\AnimationSequencerComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateBlackboardInspectorWindow.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateBlackboardInspectorWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Core\Input.h">
+      <Filter>Source\Engine\Core\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1107,9 +1107,6 @@
     <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow">
       <UniqueIdentifier>{aabe0601-df02-464c-8504-67c6fe465159}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphsSimulator">
-      <UniqueIdentifier>{d580b4f5-5d4d-4482-9a82-32f60e9f5081}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphConfigManager">
       <UniqueIdentifier>{2c81925d-dc39-4651-a01d-e32dbc45db76}</UniqueIdentifier>
     </Filter>
@@ -1211,6 +1208,12 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent">
       <UniqueIdentifier>{62862072-ccba-4c48-8074-6bac9cf6dcd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\StateBlackboardInspectorWindow">
+      <UniqueIdentifier>{caad47d4-db15-4457-a477-b3d10c215e54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Core\Input">
+      <UniqueIdentifier>{f40482a3-25b2-458e-aa90-3985baf32073}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

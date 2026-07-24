@@ -59,13 +59,14 @@ private:
 	Input& operator = (const Input&) = delete;
 
 private:
-	static constexpr int max_keys = 256;	//キーボードの最大キー数
-	BYTE current_key_state[max_keys];		//現在の全キー状態を保存する配列
-	BYTE prev_key_state[max_keys];			//前回の全キー状態を保存する配列
-	XINPUT_STATE current_pad_state;			//現在のコントローラーの状態を保存
-	XINPUT_STATE prev_pad_state;			//前回のコントローラーの状態を保存
-	bool is_pad_connected;					//コントローラーの接続フラグ
-	POINT current_mouse_pos;				//現在のマウス座標
-	POINT prev_mouse_pos;					//前回のマウス座標
+	static constexpr int max_keys = 256;		//キーボードの最大キー数
+	BYTE current_key_state[max_keys];			//現在の全キー状態を保存する配列
+	BYTE prev_key_state[max_keys];				//前回の全キー状態を保存する配列
+	mutable bool latched_key_trigger[max_keys]; //トリガー判定の取りこぼしを防ぐ保持用配列
+	XINPUT_STATE current_pad_state;				//現在のコントローラーの状態を保存
+	XINPUT_STATE prev_pad_state;				//前回のコントローラーの状態を保存
+	bool is_pad_connected;						//コントローラーの接続フラグ
+	POINT current_mouse_pos;					//現在のマウス座標
+	POINT prev_mouse_pos;						//前回のマウス座標
 };
 

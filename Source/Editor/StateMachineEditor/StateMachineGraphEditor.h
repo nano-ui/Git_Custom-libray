@@ -12,9 +12,10 @@ class StateBlackboard;
 class StateGraphDataManager;
 class StateGraphPaletteWindow;
 class StateGraphPropertyWindow;
-class StateGraphSimulator;
 class StateGraphConfigManager;
+class StateMachineComponent;
 class AssetLoader;
+class StateBlackboardInspectorWindow;
 
 struct GraphData;
 struct GraphLink;
@@ -50,7 +51,7 @@ private:
 	void SyncActiveNodeAnimation(GraphData* current_graph, uint32_t active_node_id); 
 
 	//上部メニューとナビゲーション
-	bool DrawTopMenuBar();
+	bool DrawTopMenuBar(StateBlackboard* blackboard);
 
 	//左パレットとノードリスト
 	void DrawLeftSidebar(GraphData* current_graph, float width, float height);
@@ -96,14 +97,15 @@ private:
 	};
 
 private:
-	std::unique_ptr<StateGraphDataManager> data_manager;				//データを専門的に扱うマネージャー
-	std::unique_ptr<StateGraphPaletteWindow> palette_window;			//左ペイン：パレット描画クラス
-	std::unique_ptr<StateGraphPropertyWindow> property_window;			//右ペイン：プロパティ描画クラス
+	std::unique_ptr<StateGraphDataManager> data_manager;								//データを専門的に扱うマネージャー
+	std::unique_ptr<StateGraphPaletteWindow> palette_window;							//左ペイン：パレット描画クラス
+	std::unique_ptr<StateGraphPropertyWindow> property_window;							//右ペイン：プロパティ描画クラス
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::unique_ptr<StateGraphConfigManager> config_manager;
-	std::unique_ptr<AssetLoader> asset_loader;					//モデル読み込みクラス
-	std::unique_ptr<StateGraphSimulator> simulator;				//擬似シミュレーション実行クラス
-	std::unique_ptr<StateBlackboard> editor_dummy_blackboard;	//未選択時に使用するエディタ専用のダミーブラックボード
+	std::unique_ptr<AssetLoader> asset_loader;								//モデル読み込みクラス
+	std::unique_ptr<StateBlackboard> editor_dummy_blackboard;				//未選択時に使用するエディタ専用のダミーブラックボード
+	std::unique_ptr<StateBlackboardInspectorWindow> blackboard_inspector;	//シミュレーション用パラメータ表示ウィンドウ
+	std::unique_ptr<StateMachineComponent> state_machine_component;			//実機互換のシミュレーション実行コンポーネント
 
 	uint32_t current_graph_id;									//現在の階層のグラフID
 	std::unordered_map<uint32_t, uint32_t> graph_active_nodes;	//各階層ごとのアクティブノードIDを個別に保持

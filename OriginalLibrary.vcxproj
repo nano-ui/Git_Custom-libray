@@ -240,10 +240,10 @@
     <ClCompile Include="Source\Editor\Preview\ModelPreviewWindow.cpp" />
     <ClCompile Include="Source\Editor\Sequence\AnimationSequencerEditor.cpp" />
     <ClCompile Include="Source\Editor\Sequence\ModelPreviewScene.cpp" />
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateBlackboardInspectorWindow.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphConfigManager.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphPaletteWindow.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphPropertyWindow.cpp" />
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphSimulator.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.cpp" />
     <ClCompile Include="Source\Engine\Camera\Camera.cpp" />
@@ -354,10 +354,10 @@
     <ClInclude Include="Source\Editor\Sequence\AnimationSequencerEditor.h" />
     <ClInclude Include="Source\Editor\Sequence\ModelPreviewScene.h" />
     <ClInclude Include="Source\Editor\Sequence\SequenceSceneBace.h" />
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateBlackboardInspectorWindow.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphConfigManager.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphPaletteWindow.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphPropertyWindow.h" />
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphSimulator.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.h" />
     <ClInclude Include="Source\Engine\Camera\Camera.h" />

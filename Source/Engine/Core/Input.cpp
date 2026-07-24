@@ -31,6 +31,7 @@ void Input::Initialize()
 	//キーとパッドの初期化
 	ZeroMemory(current_key_state, sizeof(current_key_state));
 	ZeroMemory(prev_key_state, sizeof(prev_key_state));
+	ZeroMemory(latched_key_trigger, sizeof(latched_key_trigger));
 
 	ZeroMemory(&current_pad_state, sizeof(XINPUT_STATE));
 	ZeroMemory(&prev_pad_state, sizeof(XINPUT_STATE));
@@ -51,6 +52,17 @@ void Input::Update()
 	if (!success_keyboard)
 	{
 		ZeroMemory(current_key_state, sizeof(current_key_state));
+	}
+
+	//各キーのトリガー発生をチェックし、ラッチフラグを更新
+	for (int key_idx = 0; key_idx < max_keys; key_idx++)
+	{
+		bool is_current_press = (current_key_state[key_idx] & key_press_mask) != 0;
+		bool is_prev_press = (prev_key_state[key_idx] & key_press_mask) != 0;
+
+		//押された瞬間を検知
+		if (is_current_press && !is_prev_press)latched_key_trigger[key_idx] = true;
+		else if (!is_current_press)latched_key_trigger[key_idx] = false;
 	}
 
 	//コントローラーの状態更新
@@ -81,6 +93,11 @@ bool Input::IsKeyPress(int key_code) const
 //キーボードが押された瞬間か判定
 bool Input::IsKeyTrigger(int key_code) const
 {
+	if (key_code < 0 || key_code >= max_keys)return false;
+	if (latched_key_trigger[key_code])
+	{
+		return true;
+	}
 	bool is_current_press = (current_key_state[key_code] & key_press_mask) != 0;
 	bool is_prev_press = (prev_key_state[key_code] & key_press_mask) != 0;
 	return  is_current_press && !is_prev_press;

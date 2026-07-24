@@ -20,6 +20,8 @@ void StateBlackboardInspectorWindow::SyncBlackboardVariablesFromGraph(const Grap
 		{
 			const GraphTransitionCondition& cond = link.conditions[c];
 
+			if (cond.type == ConditionNodeType::InputCheck || cond.type == ConditionNodeType::Random) return;
+
 			//ハッシュキーが設定されており、Blackboardに未登録の場合に自動登録
 			if (cond.hash_key != 0)
 			{
@@ -53,9 +55,24 @@ void StateBlackboardInspectorWindow::SyncBlackboardVariablesFromGraph(const Grap
 //ImGui描画
 void StateBlackboardInspectorWindow::DrawInspector(StateBlackboard* blackboard)
 {
+	//初期ウィンドウサイズ
+	constexpr float default_window_width = 300.0f;
+	constexpr float default_window_height = 400.0f;
+
+	ImGui::SetNextWindowSize(ImVec2(default_window_width, default_window_height), ImGuiCond_FirstUseEver);
+
+	//独立ウィンドウとして描画
+	if (!ImGui::Begin(u8"シミュレーションパラメータ"))
+	{
+		ImGui::End();
+		return;
+	}
+
 	if (!blackboard)
 	{
 		ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), u8"Blackboardが割り当てられていません");
+		printf("Warning: StateBlackboardInspectorWindow::DrawInspector - blackboard が nullptr のため描画を中断しました。\n");
+		ImGui::End();
 		return;
 	}
 
@@ -69,6 +86,7 @@ void StateBlackboardInspectorWindow::DrawInspector(StateBlackboard* blackboard)
 	if (var_name.empty())
 	{
 		ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), u8"登録されているパラメータはありません");
+		ImGui::End();
 		return;
 	}
 
@@ -78,6 +96,7 @@ void StateBlackboardInspectorWindow::DrawInspector(StateBlackboard* blackboard)
 		uint32_t hash_key = blackboard->GetVariableHash(var_name[i]);
 		DrawVariableControl(blackboard, var_name[i], hash_key);
 	}
+	ImGui::End();
 }
 
 //変数の型に応じたImGui描画
