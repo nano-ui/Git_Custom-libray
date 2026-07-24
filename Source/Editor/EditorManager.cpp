@@ -47,7 +47,6 @@ void EditorManager::Initialize()
 //XVˆ—
 void EditorManager::Update(float elapsed_time)
 {
-	Input::Instance().Update();
 	model_preview_window->Update(elapsed_time);
 	animation_sequencer_editor->Update(elapsed_time);
 }

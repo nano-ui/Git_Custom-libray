@@ -1,10 +1,13 @@
 #include "Input.h"
 
+#include <cmath>
+
 //マジックナンバーを排除するための定数
 static constexpr int pad_user_index = 0;			//読み取るコントローラーのプレイヤー番号（1P）
 static constexpr int key_press_mask = 0x80;			//GetKeyboardStateでキーが押されているかを判定する最上位ビットマスク
 static constexpr float stick_max_value = 32767.0f;	//アナログスティックの最大値（short型の最大値）
 static constexpr float dead_zone = 0.2f;			//アナログスティックの遊び（デッドゾーン）の割合
+static constexpr float max_abnormal_mouse_delta = 1000.0f; //異常なマウス移動量の検知閾値
 
 //シングルトンインスタンスの取得
 Input& Input::Instance()
@@ -41,6 +44,11 @@ void Input::Initialize()
 	current_mouse_pos = { 0,0 };
 	GetCursorPos(&current_mouse_pos);
 	prev_mouse_pos = current_mouse_pos;
+
+	mouse_delta_x = 0.0f;
+	mouse_delta_y = 0.0f;
+	raw_mouse_delta_x = 0.0f;
+	raw_mouse_delta_y = 0.0f;
 }
 
 //更新処理
@@ -51,6 +59,7 @@ void Input::Update()
 	bool success_keyboard = GetKeyboardState(current_key_state);
 	if (!success_keyboard)
 	{
+		OutputDebugStringA("[Input] エラー: GetKeyboardStateの取得に失敗しました。\n");
 		ZeroMemory(current_key_state, sizeof(current_key_state));
 	}
 
@@ -79,7 +88,15 @@ void Input::Update()
 		ZeroMemory(&current_pad_state, sizeof(XINPUT_STATE));
 	}
 
-	//マウス座標の更新
+	//マウス移動量の確定処理
+	mouse_delta_x = raw_mouse_delta_x;
+	mouse_delta_y = raw_mouse_delta_y;
+
+	//次フレーム用に累積変数をクリア
+	raw_mouse_delta_x = 0.0f;
+	raw_mouse_delta_y = 0.0f;
+
+	//スクリーン座標の更新
 	prev_mouse_pos = current_mouse_pos;
 	GetCursorPos(&current_mouse_pos);
 }
@@ -172,11 +189,44 @@ float Input::GetLeftSticeY() const
 //マウスのX方向の移動量を取得
 float Input::GetMouseDeltaX() const
 {
-	return static_cast<float>(current_mouse_pos.x - prev_mouse_pos.x);
+	return mouse_delta_x;
 }
 
 //マウスのY方向の移動量を取得
 float Input::GetMouseDeltaY() const
 {
-	return static_cast<float>(current_mouse_pos.y - prev_mouse_pos.y);
+	return mouse_delta_y;
+}
+
+//Windowsメッセージ処理
+bool Input::ProcessMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	if (msg == WM_MOUSEMOVE)
+	{
+		//メッセージパラメーターから現在のローカルマウス座標を抽出
+		int current_x = static_cast<int>(LOWORD(lparam));
+		int current_y = static_cast<int>(HIWORD(lparam));
+
+		static int last_msg_x = current_x;
+		static int last_msg_y = current_y;
+
+		float diff_x = static_cast<float>(current_x - last_msg_x);
+		float diff_y = static_cast<float>(current_y - last_msg_y);
+
+		//異常に大きな飛び値を検出した場合のデバッグ出力
+		if (std::abs(diff_x) > max_abnormal_mouse_delta || std::abs(diff_y) > max_abnormal_mouse_delta)
+		{
+			OutputDebugStringA("[Input] 警告: WM_MOUSEMOVEで異常なマウス移動差分を検出しました。\n");
+		}
+		else
+		{
+			raw_mouse_delta_x += diff_x;
+			raw_mouse_delta_y += diff_y;
+		}
+
+		last_msg_x = current_x;
+		last_msg_y = current_y;
+		return true;
+	}
+	return false;
 }

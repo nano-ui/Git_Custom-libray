@@ -2,10 +2,12 @@
 
 #include "Engine/Graphics/framework.h"
 #include "Engine/Graphics/DirectXDevice.h"
+#include "Engine\Core\Input.h"
 
 
 LRESULT CALLBACK window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	Input::Instance().ProcessMessage(hwnd, msg, wparam, lparam);
 	framework* p{ reinterpret_cast<framework*>(GetWindowLongPtr(hwnd, GWLP_USERDATA)) };
 	return p ? p->handle_message(hwnd, msg, wparam, lparam) : DefWindowProc(hwnd, msg, wparam, lparam);
 }

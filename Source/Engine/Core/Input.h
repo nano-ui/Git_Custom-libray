@@ -47,6 +47,9 @@ public:
 	//マウスのY方向の移動量を取得
 	float GetMouseDeltaY()const;
 
+	//Windowsメッセージ処理
+	bool ProcessMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+
 private:
 	//コンストラクタ
 	Input();
@@ -68,5 +71,10 @@ private:
 	bool is_pad_connected;						//コントローラーの接続フラグ
 	POINT current_mouse_pos;					//現在のマウス座標
 	POINT prev_mouse_pos;						//前回のマウス座標
+
+	float mouse_delta_x = 0.0f;					//確定した1フレーム間のマウスX移動量
+	float mouse_delta_y = 0.0f;					//確定した1フレーム間のマウスY移動量
+	float raw_mouse_delta_x = 0.0f;				//メッセージハンドラで累積蓄積するマウスX移動量
+	float raw_mouse_delta_y = 0.0f;				//メッセージハンドラで累積蓄積するマウスY移動量
 };
 
