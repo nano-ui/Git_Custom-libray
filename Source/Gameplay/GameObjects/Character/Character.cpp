@@ -63,7 +63,7 @@ void Character::Update(float elapsed_time)
 	DirectX::XMVECTOR q = DirectX::XMQuaternionRotationRollPitchYaw(angle.x, angle.y, angle.z);
 	DirectX::XMStoreFloat4(&rotation, q);
 
-		blackboard->SetValue(u8"体力", health);
+	blackboard->SetValue(u8"体力", health);
 	blackboard->SetValue(u8"速度", move_speed);
 	blackboard->SetValue(u8"接地フラグ", is_ground);
 
