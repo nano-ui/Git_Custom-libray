@@ -278,6 +278,7 @@
     <ClCompile Include="Source\Engine\Graphics\Graphics.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Light.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Model.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ModelManager.cpp" />
     <ClCompile Include="Source\Engine\Graphics\PipelineStates.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Renderer.cpp" />
     <ClCompile Include="Source\Engine\Graphics\SceneConstantBuffers.cpp" />
@@ -395,6 +396,7 @@
     <ClInclude Include="Source\Engine\Graphics\Graphics.h" />
     <ClInclude Include="Source\Engine\Graphics\Light.h" />
     <ClInclude Include="Source\Engine\Graphics\Model.h" />
+    <ClInclude Include="Source\Engine\Graphics\ModelManager.h" />
     <ClInclude Include="Source\Engine\Graphics\ModelRenderer.h" />
     <ClInclude Include="Source\Engine\Graphics\PipelineStates.h" />
     <ClInclude Include="Source\Engine\Graphics\Renderer.h" />

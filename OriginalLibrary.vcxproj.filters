@@ -399,6 +399,9 @@
     <ClCompile Include="Source\Engine\Core\Input.cpp">
       <Filter>Source\Engine\Core\Input</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\ModelManager.cpp">
+      <Filter>Source\Engine\Graphics\Model\ModelManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -763,6 +766,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Core\Input.h">
       <Filter>Source\Engine\Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\ModelManager.h">
+      <Filter>Source\Engine\Graphics\Model\ModelManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1214,6 +1220,9 @@
     </Filter>
     <Filter Include="Source\Engine\Core\Input">
       <UniqueIdentifier>{f40482a3-25b2-458e-aa90-3985baf32073}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Model\ModelManager">
+      <UniqueIdentifier>{d63d70cc-8753-45d9-a989-020535a8ca86}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
