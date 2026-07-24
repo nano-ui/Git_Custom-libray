@@ -38,6 +38,7 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	config_manager = std::make_unique<StateGraphConfigManager>();
 	asset_loader = std::make_unique<AssetLoader>();
 	simulator = std::make_unique<StateGraphSimulator>();
+	editor_dummy_blackboard = std::make_unique<StateBlackboard>();
 
 	target_model_hash = 0;
 
@@ -67,13 +68,15 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	// 起動時の自動復元に成功し、かつモデルパスがデータに存在するか判定
 	if (is_success && !data_manager->GetTargetModelPath().empty())
 	{
+		std::string target_path = data_manager->GetTargetModelPath();
 		// 既存の関数でモデルとアニメーションリストをロード
-		if (asset_loader->LoadModelAnimations(data_manager->GetTargetModelPath()))
+		if (asset_loader->LoadModelAnimations(target_path))
 		{
 			std::filesystem::path path_obj(data_manager->GetTargetModelPath());
 			std::string model_name = path_obj.stem().string(); //拡張子を除いたファイル名を抽出
 
 			target_model_hash = StateBlackboard::CalculateHash(model_name);
+			EditorMediator::Instance().OnModelDubleClied(target_path);
 		}
 	}
 
@@ -89,6 +92,8 @@ StateMachineGraphEditor::~StateMachineGraphEditor() = default;
 void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 {
 	UpdateRuntimeTracking();
+
+	StateBlackboard* active_blackboard = blackboard ? blackboard : editor_dummy_blackboard.get();
 
 	GraphData* current_graph = nullptr; // 現在の階層情報
 
@@ -120,7 +125,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	// 擬似シミュレーションがONになっている場合、条件評価を行ってアクティブノードを自動更新
 	if (is_simulation_active)
 	{
-		UpdateSimulationMode(blackboard, current_graph, current_active_node_id);
+		UpdateSimulationMode(active_blackboard, current_graph, current_active_node_id);
 	}
 
 	SyncActiveNodeAnimation(current_graph, current_active_node_id);
@@ -204,7 +209,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 	ImGui::SameLine();
 
-	DrawRightSidebar(current_graph, blackboard, dynamic_right_width, canvas_height);
+	DrawRightSidebar(current_graph, active_blackboard, dynamic_right_width, canvas_height);
 }
 
 //ファイルパスのグラフ情報をリロード
@@ -246,6 +251,7 @@ bool StateMachineGraphEditor::LoadGraphFromFile(const std::string& file_path)
 
 		TriggerHotReload();
 		last_tracked_runtime_node_id = UINT32_MAX;
+		last_synced_node_id = UINT32_MAX;
 		printf("StateMachineGraphEditor: 「%s」から正常読込したため階層をリセットしました。\n", file_path.c_str());
 		return true;
 	}
@@ -300,7 +306,11 @@ void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, 
 		return;
 	}
 
-	if (!blackboard)return;
+	if (!blackboard)
+	{
+		printf("Error: StateMachineGraphEditor::UpdateSimulationMode - 有効な StateBlackboard が割り当てられていません。\n");
+		return;
+	}
 
 	uint32_t out_flowing_link_id = 0;
 	uint32_t prev_node_id = current_active_node_id;
@@ -321,6 +331,8 @@ void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, 
 		has_flow_requsted = true;
 		constexpr float DEFAULT_FLOW_EFFECT_TIME = 1.0f;
 		flow_effect_timer = DEFAULT_FLOW_EFFECT_TIME;
+		printf("StateMachineGraphEditor: 擬似シミュレーションの遷移条件が成立しました！ [ノードID: %d -> %d] (リンクID: %d)\n",
+			flow_src_node_id, flow_dst_node_id, out_flowing_link_id);
 	}
 }
 
@@ -416,6 +428,7 @@ bool StateMachineGraphEditor::DrawTopMenuBar()
 				std::filesystem::path path_obj(path_result.relative_path);
 				std::string model_name = path_obj.stem().string(); // 拡張子を除いたファイル名を抽出
 				target_model_hash = StateBlackboard::CalculateHash(model_name);
+				EditorMediator::Instance().OnModelDubleClied(path_result.relative_path);
 				printf("StateMachineGraphEditor: モデル「%s」からアニメーションリストを取得しました。\n", path_result.relative_path.c_str());
 				TriggerHotReload();
 			}
@@ -441,6 +454,7 @@ bool StateMachineGraphEditor::DrawTopMenuBar()
 
 	if (ImGui::Checkbox(u8"シミュレーション", &is_simulation_active))
 	{
+		last_synced_node_id = UINT32_MAX;
 		printf("StateMachineGraphEditor: 擬似シミュレーションが %s に切り替わりました。\n", is_simulation_active ? "ON" : "OFF");
 	}
 

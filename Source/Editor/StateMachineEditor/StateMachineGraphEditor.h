@@ -103,6 +103,7 @@ private:
 	std::unique_ptr<StateGraphConfigManager> config_manager;
 	std::unique_ptr<AssetLoader> asset_loader;					//モデル読み込みクラス
 	std::unique_ptr<StateGraphSimulator> simulator;				//擬似シミュレーション実行クラス
+	std::unique_ptr<StateBlackboard> editor_dummy_blackboard;	//未選択時に使用するエディタ専用のダミーブラックボード
 
 	uint32_t current_graph_id;									//現在の階層のグラフID
 	std::unordered_map<uint32_t, uint32_t> graph_active_nodes;	//各階層ごとのアクティブノードIDを個別に保持

@@ -27,19 +27,19 @@ EditorManager::~EditorManager()
 void EditorManager::Initialize()
 {
 	//各エディタインスタンスの生成
+	model_preview_window = std::make_unique<ModelPreviewWindow>();
+	model_preview_window->Initialize();
 	object_editor = std::make_unique<ObjectEditor>();
 	state_graph_editor = std::make_unique<StateMachineGraphEditor>();
 	animation_sequencer_editor = std::make_unique<AnimationSequencerEditor>();
 	menu_bar = std::make_unique<EditorMenuBar>();
 	content_browser_editor = std::make_unique<ContentBrowserEditor>();
 	tab_bar = std::make_unique<EditorTabBar>();
-	model_preview_window = std::make_unique<ModelPreviewWindow>();
 
 	object_editor->Initialize();
 	animation_sequencer_editor->Initialize();
 	content_browser_editor->Initialize();
 	tab_bar->Initialize();
-	model_preview_window->Initialize();
 	EditorMediator::Instance().RegisterModelPreviewWindow(model_preview_window.get());
 }
 
