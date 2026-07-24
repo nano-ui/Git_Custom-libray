@@ -1,7 +1,7 @@
 [Project Structure] 
  
 Folder PATH listing for volume Windows
-Volume serial number is 00000008 0255:C8DA
+Volume serial number is 00000059 0255:C8DA
 C:.
 „    structure.txt
 „    _dump_structure.bat
@@ -76,6 +76,8 @@ C:.
 „    „        SpaceDivisionCast.h
 „    „        
 „    „¥„Ÿ„Ÿ„ŸCore
+„    „        framework.cpp
+„    „        framework.h
 „    „        high_resolution_timer.h
 „    „        Input.cpp
 „    „        Input.h
@@ -83,73 +85,55 @@ C:.
 „    „        misc.h
 „    „        
 „    „¤„Ÿ„Ÿ„ŸGraphics
-„        „    DirectXDevice.cpp
-„        „    DirectXDevice.h
-„        „    fbx_utility.h
-„        „    framebuffer.cpp
-„        „    framebuffer.h
-„        „    framework.cpp
-„        „    framework.h
-„        „    fullscreen_quad.cpp
-„        „    fullscreen_quad.h
-„        „    geometric_primitive.cpp
-„        „    geometric_primitive.h
-„        „    GpuResourceUtils.cpp
-„        „    GpuResourceUtils.h
-„        „    Graphics.cpp
-„        „    Graphics.h
-„        „    Light.cpp
-„        „    Light.h
-„        „    Model.cpp
-„        „    Model.h
-„        „    ModelManager.cpp
-„        „    ModelManager.h
-„        „    ModelRenderer.h
-„        „    PipelineStates.cpp
-„        „    PipelineStates.h
-„        „    Renderer.cpp
-„        „    Renderer.h
-„        „    SceneConstantBuffers.cpp
-„        „    SceneConstantBuffers.h
-„        „    ShapeRenderer.cpp
-„        „    ShapeRenderer.h
-„        „    sprite.cpp
-„        „    sprite.h
-„        „    sprite_batch.cpp
-„        „    sprite_batch.h
-„        „    texture.cpp
-„        „    texture.h
-„        „    
-„        „¥„Ÿ„Ÿ„ŸFbxModel
-„        „        FbxAnimation.cpp
-„        „        FbxAnimation.h
-„        „        FbxBone.cpp
-„        „        FbxBone.h
-„        „        FbxLoader.cpp
-„        „        FbxLoader.h
-„        „        FbxMaterial.cpp
-„        „        FbxMaterial.h
-„        „        FbxModelData.h
-„        „        FbxSkinnedMesh.cpp
-„        „        FbxSkinnedMesh.h
-„        „        FbxSkinnedModel.cpp
-„        „        FbxSkinnedModel.h
-„        „        FbxSkinnedResource.cpp
-„        „        FbxSkinnedResource.h
+„        „¥„Ÿ„Ÿ„ŸDevice
+„        „        DirectXDevice.cpp
+„        „        DirectXDevice.h
+„        „        framebuffer.cpp
+„        „        framebuffer.h
+„        „        GpuResourceUtils.cpp
+„        „        GpuResourceUtils.h
+„        „        PipelineStates.cpp
+„        „        PipelineStates.h
+„        „        SceneConstantBuffers.cpp
+„        „        SceneConstantBuffers.h
 „        „        
-„        „¥„Ÿ„Ÿ„ŸGltfModel
-„        „        GltfModel.cpp
-„        „        GltfModel.h
-„        „        GltfModelAnimation.cpp
-„        „        GltfModelAnimation.h
-„        „        GltfModelData.cpp
-„        „        GltfModelData.h
-„        „        GltfModelRenderer.cpp
-„        „        GltfModelRenderer.h
-„        „        GltfRootMotion.cpp
-„        „        GltfRootMotion.h
-„        „        TinygltfImpl.cpp
+„        „¥„Ÿ„Ÿ„ŸRenderers
+„        „        fullscreen_quad.cpp
+„        „        fullscreen_quad.h
+„        „        Graphics.cpp
+„        „        Graphics.h
+„        „        ShapeRenderer.cpp
+„        „        ShapeRenderer.h
+„        „        sprite.cpp
+„        „        sprite.h
+„        „        sprite_batch.cpp
+„        „        sprite_batch.h
 „        „        
+„        „¥„Ÿ„Ÿ„ŸResources
+„        „    „    geometric_primitive.cpp
+„        „    „    geometric_primitive.h
+„        „    „    Light.cpp
+„        „    „    Light.h
+„        „    „    Model.cpp
+„        „    „    Model.h
+„        „    „    ModelManager.cpp
+„        „    „    ModelManager.h
+„        „    „    texture.cpp
+„        „    „    texture.h
+„        „    „    
+„        „    „¤„Ÿ„Ÿ„ŸGltfModel
+„        „            GltfModel.cpp
+„        „            GltfModel.h
+„        „            GltfModelAnimation.cpp
+„        „            GltfModelAnimation.h
+„        „            GltfModelData.cpp
+„        „            GltfModelData.h
+„        „            GltfModelRenderer.cpp
+„        „            GltfModelRenderer.h
+„        „            GltfRootMotion.cpp
+„        „            GltfRootMotion.h
+„        „            TinygltfImpl.cpp
+„        „            
 „        „¤„Ÿ„Ÿ„ŸShaders
 „                BlurShader.cpp
 „                BlurShader.h
@@ -271,8 +255,6 @@ C:.
 „        GltfModelSerializer.h
 „        JsonSerializer.cpp
 „        JsonSerializer.h
-„        SkinnedMeshSerializer.cpp
-„        SkinnedMeshSerializer.h
 „        
 „¤„Ÿ„Ÿ„ŸThiedParty
         json.hpp

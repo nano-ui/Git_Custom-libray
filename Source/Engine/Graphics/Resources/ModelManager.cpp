@@ -45,6 +45,21 @@ std::shared_ptr<GltfModelData> ModelManager::LoadModelData(const std::string& fi
 	return new_model_data;
 }
 
+//モデルデータの一括読み込み
+void ModelManager::PreloadModels(const std::vector<std::string>& file_paths)
+{
+	//渡されたパスリストをループして順番にロード処理を実行
+	for (const std::string& file_path : file_paths)
+	{
+		std::shared_ptr<GltfModelData>loaded_data = LoadModelData(file_path);
+		if (!loaded_data)
+		{
+			std::string debug_message = "[ModelManager 警告] PreloadModels: 事前ロードに失敗しました。 パス: " + file_path + "\n";
+			OutputDebugStringA(debug_message.c_str());
+		}
+	}
+}
+
 //登録済みモデルデータ取得
 std::shared_ptr<GltfModelData> ModelManager::GetModelData(const std::string& file_path) const
 {
@@ -68,6 +83,27 @@ void ModelManager::UnloadModelData(const std::string& file_path)
 	{
 		std::string debug_message = "[ModelManager 警告] 削除対象のモデルデータが存在しません。 パス: " + file_path + "\n";
 		OutputDebugStringA(debug_message.c_str());
+	}
+}
+
+//使われていないモデルデータの一括開放
+void ModelManager::UnloadUnusedModels()
+{
+	constexpr long UNUSED_REFERENCE_COUNT = 1;
+
+	//登録されているモデルの参照カウントを確認しながら安全にループ削除
+	for (auto iterator = model_registry.begin(); iterator != model_registry.end();)
+	{
+		if (iterator->second.use_count() == UNUSED_REFERENCE_COUNT)
+		{
+			std::string debug_message = "[ModelManager 情報] 未使用のモデルデータを自動解放しました。 パス: " + iterator->first + "\n";
+			OutputDebugStringA(debug_message.c_str());
+			iterator = model_registry.erase(iterator);
+		}
+		else
+		{
+			iterator++;
+		}
 	}
 }
 

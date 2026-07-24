@@ -16,11 +16,17 @@ public:
 	//モデルデータのロードと登録
 	std::shared_ptr<GltfModelData> LoadModelData(const std::string& file_path);
 
+	//モデルデータの一括読み込み
+	void PreloadModels(const std::vector<std::string>& file_paths);
+
 	//登録済みモデルデータ取得
 	std::shared_ptr<GltfModelData> GetModelData(const std::string& file_path)const;
 
 	//指定したモデルデータを削除
 	void UnloadModelData(const std::string& file_path);
+
+	//使われていないモデルデータの一括開放
+	void UnloadUnusedModels();
 
 	//全てのモデルデータキャッシュを開放
 	void Clear();
