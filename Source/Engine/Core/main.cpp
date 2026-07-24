@@ -1,7 +1,7 @@
 #include <time.h>
 
-#include "Engine/Graphics/framework.h"
-#include "Engine/Graphics/DirectXDevice.h"
+#include "Engine\Core\framework.h"
+#include "Engine\Graphics\Device\DirectXDevice.h"
 #include "Engine\Core\Input.h"
 
 

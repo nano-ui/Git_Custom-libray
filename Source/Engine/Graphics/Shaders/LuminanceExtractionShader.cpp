@@ -1,5 +1,5 @@
 #include "LuminanceExtractionShader.h"
-#include "Engine/Graphics/Graphics.h"
+#include "Engine\Graphics\Renderers\Graphics.h"
 
 //マジックナンバーを避けるための定数定義群
 static constexpr UINT constant_buffer_slot_threshold = 0; //register(b0) に対応するスロット番号

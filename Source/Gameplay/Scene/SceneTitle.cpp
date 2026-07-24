@@ -1,8 +1,8 @@
 #include "SceneTitle.h"
 #include "SceneManager.h"
 #include "SceneGame.h"
-#include "Engine/Graphics/sprite_batch.h"
-#include "Engine/Graphics/Graphics.h"
+#include "Engine\Graphics\Renderers\sprite_batch.h"
+#include "Engine\Graphics\Renderers\Graphics.h"
 #include "Engine\Core\misc.h"
 #include "Engine/Camera/StandCamera.h"
 

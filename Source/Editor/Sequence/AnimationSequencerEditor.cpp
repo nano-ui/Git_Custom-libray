@@ -1,6 +1,6 @@
 #include "AnimationSequencerEditor.h"
 #include "ModelPreviewScene.h"
-#include "Engine\Graphics\Graphics.h"
+#include "Engine\Graphics\Renderers\Graphics.h"
 #include "Editor\FileDialogHelper.h"
 #include "Editor\EditorMediator.h"
 

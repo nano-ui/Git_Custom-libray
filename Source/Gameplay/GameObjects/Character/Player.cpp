@@ -1,7 +1,7 @@
 #include "Player.h"
 
 #include "Engine\Core\Input.h"
-#include "Engine/Graphics/Graphics.h"
+#include "Engine\Graphics\Renderers\Graphics.h"
 #include "Gameplay/GameObjects/ObjectFactory.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"

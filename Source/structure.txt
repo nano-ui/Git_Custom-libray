@@ -1,7 +1,7 @@
 [Project Structure] 
  
 Folder PATH listing for volume Windows
-Volume serial number is 00000092 0255:C8DA
+Volume serial number is 00000008 0255:C8DA
 C:.
 „    structure.txt
 „    _dump_structure.bat
@@ -38,6 +38,8 @@ C:.
 „    „        SequenceSceneBace.h
 „    „        
 „    „¤„Ÿ„Ÿ„ŸStateMachineEditor
+„            StateBlackboardInspectorWindow.cpp
+„            StateBlackboardInspectorWindow.h
 „            StateGraphConfigManager.cpp
 „            StateGraphConfigManager.h
 „            StateGraphPaletteWindow.cpp
@@ -100,6 +102,8 @@ C:.
 „        „    Light.h
 „        „    Model.cpp
 „        „    Model.h
+„        „    ModelManager.cpp
+„        „    ModelManager.h
 „        „    ModelRenderer.h
 „        „    PipelineStates.cpp
 „        „    PipelineStates.h
@@ -187,13 +191,37 @@ C:.
 „    „        WeightedNode.h
 „    „        
 „    „¥„Ÿ„Ÿ„ŸComponents
-„    „        AnimationComponent.cpp
-„    „        AnimationComponent.h
-„    „        RootMotionComponent.cpp
-„    „        RootMotionComponent.h
-„    „        StateMachineComponent.cpp
-„    „        StateMachineComponent.h
-„    „        
+„    „    „¥„Ÿ„Ÿ„ŸAnimation
+„    „    „        AnimationComponent.cpp
+„    „    „        AnimationComponent.h
+„    „    „        AnimationSequencerComponent.cpp
+„    „    „        AnimationSequencerComponent.h
+„    „    „        RootMotionComponent.cpp
+„    „    „        RootMotionComponent.h
+„    „    „        
+„    „    „¥„Ÿ„Ÿ„ŸEditor
+„    „    „        StateMachineComponent.cpp
+„    „    „        StateMachineComponent.h
+„    „    „        
+„    „    „¤„Ÿ„Ÿ„ŸMovement
+„    „        „¥„Ÿ„Ÿ„ŸMove
+„    „        „        CircularMove.cpp
+„    „        „        CircularMove.h
+„    „        „        LinearMove.cpp
+„    „        „        LinearMove.h
+„    „        „        MoveBase.h
+„    „        „        MoveFactory.cpp
+„    „        „        MoveFactory.h
+„    „        „        RepulsiveMove.cpp
+„    „        „        RepulsiveMove.h
+„    „        „        
+„    „        „¤„Ÿ„Ÿ„ŸRotation
+„    „                LockAtRotation.cpp
+„    „                LockAtRotation.h
+„    „                RotationBase.h
+„    „                RotationFactory.cpp
+„    „                RotationFactory.h
+„    „                
 „    „¥„Ÿ„Ÿ„ŸGameObjects
 „    „    „    GameObject.cpp
 „    „    „    GameObject.h
@@ -212,22 +240,6 @@ C:.
 „    „            Stage.cpp
 „    „            Stage.h
 „    „            
-„    „¥„Ÿ„Ÿ„ŸMovement
-„    „        CircularMove.cpp
-„    „        CircularMove.h
-„    „        LinearMove.cpp
-„    „        LinearMove.h
-„    „        LockAtRotation.cpp
-„    „        LockAtRotation.h
-„    „        MoveBase.h
-„    „        MoveFactory.cpp
-„    „        MoveFactory.h
-„    „        RepulsiveMove.cpp
-„    „        RepulsiveMove.h
-„    „        RotationBase.h
-„    „        RotationFactory.cpp
-„    „        RotationFactory.h
-„    „        
 „    „¥„Ÿ„Ÿ„ŸScene
 „    „        Scene.cpp
 „    „        Scene.h
@@ -253,6 +265,8 @@ C:.
 „            StateTransition.h
 „            
 „¥„Ÿ„Ÿ„ŸSerialization
+„        AnimationSequenceSerializer.cpp
+„        AnimationSequenceSerializer.h
 „        GltfModelSerializer.cpp
 „        GltfModelSerializer.h
 „        JsonSerializer.cpp

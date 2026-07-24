@@ -1,6 +1,6 @@
 #include "SkyBox.h"
 #include "Engine/Graphics/Shaders/CustomShader.h"
-#include "Engine/Graphics/texture.h"
+#include "Engine\Graphics\Resources\texture.h"
 #include <crtdbg.h>
 #include <Engine/Core/misc.h>
 

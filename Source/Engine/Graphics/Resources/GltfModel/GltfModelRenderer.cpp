@@ -1,8 +1,8 @@
 #include "GltfModelRenderer.h"
 #include <Engine/Core/misc.h>
 #include "Engine/Graphics/Shaders/shader.h"
-#include "Engine/Graphics/Graphics.h"
-#include "Engine/Graphics/GltfModel/GltfModel.h"
+#include "Engine\Graphics\Renderers\Graphics.h"
+#include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
 
 //=========================================
 //デバイスを受け取り描画リソースを初期化

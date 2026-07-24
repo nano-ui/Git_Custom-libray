@@ -4,8 +4,8 @@
 #include <wrl.h>
 #include <d3d11.h>
 #include <DirectXMath.h>
-#include "DirectXDevice.h"
-#include "PipelineStates.h"
+#include "Engine\Graphics\Device\DirectXDevice.h"
+#include "Engine\Graphics\Device\PipelineStates.h"
 
 class framebuffer;
 

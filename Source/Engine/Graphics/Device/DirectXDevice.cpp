@@ -1,4 +1,4 @@
-#include "DirectXDevice.h"
+#include "Engine\Graphics\Device\DirectXDevice.h"
 #include "Engine/Core/misc.h"
 
 #include <dxgi1_2.h>

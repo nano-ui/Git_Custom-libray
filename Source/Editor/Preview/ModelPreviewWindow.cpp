@@ -1,10 +1,10 @@
 #include "ModelPreviewWindow.h"
-#include "Engine\Graphics\framebuffer.h"
-#include "Engine\Graphics\Graphics.h"
-#include "Engine\Graphics\Model.h"
+#include "Engine\Graphics\Device\framebuffer.h"
+#include "Engine\Graphics\Renderers\Graphics.h"
+#include "Engine\Graphics\Resources\Model.h"
 #include "Engine\Graphics\Shaders\SkyBox.h"
 #include "Engine\Camera\FreeCamera.h"
-#include "Engine\Graphics\ShapeRenderer.h"
+#include "Engine\Graphics\Renderers\ShapeRenderer.h"
 #include "Editor\EditorMediator.h"
 
 #include <windows.h>

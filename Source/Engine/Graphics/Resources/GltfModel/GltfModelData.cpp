@@ -1,8 +1,8 @@
 #include "GltfModelData.h"
 #include "Serialization/GltfModelSerializer.h"
-#include "Engine/Graphics/GpuResourceUtils.h"
+#include "Engine\Graphics\Device\GpuResourceUtils.h"
 #include <stack>
-#include "Engine/Graphics/texture.h"
+#include "Engine\Graphics\Resources\texture.h"
 #include "Engine/Core/misc.h"
 #include "Engine\Graphics\Shaders\shader.h"
 

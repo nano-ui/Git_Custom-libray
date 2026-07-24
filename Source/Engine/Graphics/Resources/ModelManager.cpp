@@ -1,6 +1,6 @@
 #include "ModelManager.h"
-#include "Engine\Graphics\GltfModel\GltfModelData.h"
-#include "Engine\Graphics\Graphics.h"
+#include "Engine\Graphics\Resources\GltfModel\GltfModelData.h"
+#include "Engine\Graphics\Renderers\Graphics.h"
 
 #include <algorithm>
 #include <filesystem>

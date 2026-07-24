@@ -1,7 +1,7 @@
 #include "ModelPreviewScene.h"
-#include "Engine\Graphics\framebuffer.h"
-#include "Engine\Graphics\Graphics.h"
-#include "Engine\Graphics\Model.h"
+#include "Engine\Graphics\Device\framebuffer.h"
+#include "Engine\Graphics\Renderers\Graphics.h"
+#include "Engine\Graphics\Resources\Model.h"
 #include "Engine\Camera\FreeCamera.h"
 
 #include <windows.h>

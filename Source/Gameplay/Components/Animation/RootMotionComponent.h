@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine\Graphics\GltfModel\GltfRootMotion.h"
+#include "Engine\Graphics\Resources\GltfModel\GltfRootMotion.h"
 
 #include <memory>
 #include <DirectXMath.h>

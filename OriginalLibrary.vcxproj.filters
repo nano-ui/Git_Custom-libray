@@ -114,9 +114,6 @@
     <ClCompile Include="Source\Engine\Core\main.cpp">
       <Filter>Source\Engine\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Graphics.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Editor\FileDialogHelper.cpp">
       <Filter>Source\Editor\FileDialogHelper</Filter>
     </ClCompile>
@@ -143,102 +140,6 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\Collision\SpaceDivisionCast.cpp">
       <Filter>Source\Engine\Collision\SpaceDivisionCast</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\FbxModel\FbxAnimation.cpp">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxAnimation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\FbxModel\FbxBone.cpp">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxBone</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\FbxModel\FbxLoader.cpp">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxLoader</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\FbxModel\FbxMaterial.cpp">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxMaterial</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\FbxModel\FbxSkinnedMesh.cpp">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxSkinnedMesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\FbxModel\FbxSkinnedModel.cpp">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxSkinnedModel</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\FbxModel\FbxSkinnedResource.cpp">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxSkinnedResource</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\GltfModel\GltfModelAnimation.cpp">
-      <Filter>Source\Engine\Graphics\Model\GltfModel\GltfModelAnimation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\GltfModel\GltfModel.cpp">
-      <Filter>Source\Engine\Graphics\Model\GltfModel</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\GltfModel\GltfModelData.cpp">
-      <Filter>Source\Engine\Graphics\Model\GltfModel\GltfModelData</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\GltfModel\GltfModelRenderer.cpp">
-      <Filter>Source\Engine\Graphics\Model\GltfModel\GltfModelRenderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\GltfModel\TinygltfImpl.cpp">
-      <Filter>Source\Engine\Graphics\Model\GltfModel\TinygltfImpl</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Shaders\BlurShader.cpp">
-      <Filter>Source\Engine\Graphics\Shaders\BlurShader</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Shaders\CustomShader.cpp">
-      <Filter>Source\Engine\Graphics\Shaders\CustomShader</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Shaders\LuminanceExtractionShader.cpp">
-      <Filter>Source\Engine\Graphics\Shaders\LuminanceExtractionShader</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Shaders\shader.cpp">
-      <Filter>Source\Engine\Graphics\Shaders\shader</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Shaders\SkyBox.cpp">
-      <Filter>Source\Engine\Graphics\Shaders\SkyBox</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\DirectXDevice.cpp">
-      <Filter>Source\Engine\Graphics\DirectXDevice</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\framebuffer.cpp">
-      <Filter>Source\Engine\Graphics\framebuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\framework.cpp">
-      <Filter>Source\Engine\Graphics\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\fullscreen_quad.cpp">
-      <Filter>Source\Engine\Graphics\fullscreen_quad</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\geometric_primitive.cpp">
-      <Filter>Source\Engine\Graphics\geometric_primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\GpuResourceUtils.cpp">
-      <Filter>Source\Engine\Graphics\GpuResourceUtils</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Light.cpp">
-      <Filter>Source\Engine\Graphics\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Model.cpp">
-      <Filter>Source\Engine\Graphics\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\PipelineStates.cpp">
-      <Filter>Source\Engine\Graphics\PipelineStates</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Renderer.cpp">
-      <Filter>Source\Engine\Graphics\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\SceneConstantBuffers.cpp">
-      <Filter>Source\Engine\Graphics\SceneConstantBuffers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\ShapeRenderer.cpp">
-      <Filter>Source\Engine\Graphics\ShapeRenderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\sprite.cpp">
-      <Filter>Source\Engine\Graphics\sprite</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\sprite_batch.cpp">
-      <Filter>Source\Engine\Graphics\sprite_batch</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\texture.cpp">
-      <Filter>Source\Engine\Graphics\texture</Filter>
     </ClCompile>
     <ClCompile Include="Source\Gameplay\AI\BehaviorNode.cpp">
       <Filter>Source\Gameplay\AI\BehaviorNode</Filter>
@@ -309,9 +210,6 @@
     <ClCompile Include="Source\Serialization\JsonSerializer.cpp">
       <Filter>Source\Serialization\JsonSerializer</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Serialization\SkinnedMeshSerializer.cpp">
-      <Filter>Source\Serialization\SkinnedMeshSerializer</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Player.cpp">
       <Filter>Source\Gameplay\GameObjects\Character\Player</Filter>
     </ClCompile>
@@ -320,9 +218,6 @@
     </ClCompile>
     <ClCompile Include="Source\Editor\EditorMediator.cpp">
       <Filter>Source\Editor\EditorMediator</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\GltfModel\GltfRootMotion.cpp">
-      <Filter>Source\Engine\Graphics\Model\GltfModel\GltfRootMotion</Filter>
     </ClCompile>
     <ClCompile Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor</Filter>
@@ -399,8 +294,86 @@
     <ClCompile Include="Source\Engine\Core\Input.cpp">
       <Filter>Source\Engine\Core\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\ModelManager.cpp">
-      <Filter>Source\Engine\Graphics\Model\ModelManager</Filter>
+    <ClCompile Include="Source\Engine\Core\framework.cpp">
+      <Filter>Source\Engine\Core\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Device\DirectXDevice.cpp">
+      <Filter>Source\Engine\Graphics\Device\DirectXDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Device\framebuffer.cpp">
+      <Filter>Source\Engine\Graphics\Device\framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Device\GpuResourceUtils.cpp">
+      <Filter>Source\Engine\Graphics\Device\GpuResourceUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Device\PipelineStates.cpp">
+      <Filter>Source\Engine\Graphics\Device\PipelineStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Device\SceneConstantBuffers.cpp">
+      <Filter>Source\Engine\Graphics\Device\SceneConstantBuffers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Renderers\fullscreen_quad.cpp">
+      <Filter>Source\Engine\Graphics\Renderers\fullscreen_quad</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Renderers\Graphics.cpp">
+      <Filter>Source\Engine\Graphics\Renderers\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Renderers\ShapeRenderer.cpp">
+      <Filter>Source\Engine\Graphics\Renderers\ShapeRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Renderers\sprite.cpp">
+      <Filter>Source\Engine\Graphics\Renderers\sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Renderers\sprite_batch.cpp">
+      <Filter>Source\Engine\Graphics\Renderers\sprite_batch</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfModel.cpp">
+      <Filter>Source\Engine\Graphics\Resources\GltfModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelAnimation.cpp">
+      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfModelAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelData.cpp">
+      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfModelData</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelRenderer.cpp">
+      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfModelRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfRootMotion.cpp">
+      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfRootMotion</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\TinygltfImpl.cpp">
+      <Filter>Source\Engine\Graphics\Resources\GltfModel\TinygltfImpl</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Resources\geometric_primitive.cpp">
+      <Filter>Source\Engine\Graphics\Resources\geometric_primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Resources\Light.cpp">
+      <Filter>Source\Engine\Graphics\Resources\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Resources\Model.cpp">
+      <Filter>Source\Engine\Graphics\Resources\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Resources\ModelManager.cpp">
+      <Filter>Source\Engine\Graphics\Resources\Model\ModelManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Resources\texture.cpp">
+      <Filter>Source\Engine\Graphics\Resources\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Shaders\BlurShader.cpp">
+      <Filter>Source\Engine\Graphics\Shaders\BlurShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Shaders\CustomShader.cpp">
+      <Filter>Source\Engine\Graphics\Shaders\CustomShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Shaders\LuminanceExtractionShader.cpp">
+      <Filter>Source\Engine\Graphics\Shaders\LuminanceExtractionShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Shaders\shader.cpp">
+      <Filter>Source\Engine\Graphics\Shaders\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Shaders\SkyBox.cpp">
+      <Filter>Source\Engine\Graphics\Shaders\SkyBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -455,9 +428,6 @@
     <ClInclude Include="Source\Engine\Core\misc.h">
       <Filter>Source\Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Graphics.h">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Editor\FileDialogHelper.h">
       <Filter>Source\Editor\FileDialogHelper</Filter>
     </ClInclude>
@@ -487,108 +457,6 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Collision\SpaceDivisionCast.h">
       <Filter>Source\Engine\Collision\SpaceDivisionCast</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\FbxModel\FbxAnimation.h">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxAnimation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\FbxModel\FbxBone.h">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxBone</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\FbxModel\FbxLoader.h">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxLoader</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\FbxModel\FbxMaterial.h">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxMaterial</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\FbxModel\FbxModelData.h">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxModelData</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\FbxModel\FbxSkinnedMesh.h">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxSkinnedMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\FbxModel\FbxSkinnedModel.h">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxSkinnedModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\FbxModel\FbxSkinnedResource.h">
-      <Filter>Source\Engine\Graphics\Model\FbxModel\FbxSkinnedResource</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\GltfModel\GltfModelAnimation.h">
-      <Filter>Source\Engine\Graphics\Model\GltfModel\GltfModelAnimation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\GltfModel\GltfModel.h">
-      <Filter>Source\Engine\Graphics\Model\GltfModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\GltfModel\GltfModelData.h">
-      <Filter>Source\Engine\Graphics\Model\GltfModel\GltfModelData</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\GltfModel\GltfModelRenderer.h">
-      <Filter>Source\Engine\Graphics\Model\GltfModel\GltfModelRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Shaders\BlurShader.h">
-      <Filter>Source\Engine\Graphics\Shaders\BlurShader</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Shaders\CustomShader.h">
-      <Filter>Source\Engine\Graphics\Shaders\CustomShader</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Shaders\LuminanceExtractionShader.h">
-      <Filter>Source\Engine\Graphics\Shaders\LuminanceExtractionShader</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Shaders\shader.h">
-      <Filter>Source\Engine\Graphics\Shaders\shader</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Shaders\SkyBox.h">
-      <Filter>Source\Engine\Graphics\Shaders\SkyBox</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\DirectXDevice.h">
-      <Filter>Source\Engine\Graphics\DirectXDevice</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\fbx_utility.h">
-      <Filter>Source\Engine\Graphics\fbx_utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\framebuffer.h">
-      <Filter>Source\Engine\Graphics\framebuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\framework.h">
-      <Filter>Source\Engine\Graphics\framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\fullscreen_quad.h">
-      <Filter>Source\Engine\Graphics\fullscreen_quad</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\geometric_primitive.h">
-      <Filter>Source\Engine\Graphics\geometric_primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\GpuResourceUtils.h">
-      <Filter>Source\Engine\Graphics\GpuResourceUtils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Light.h">
-      <Filter>Source\Engine\Graphics\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Model.h">
-      <Filter>Source\Engine\Graphics\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\ModelRenderer.h">
-      <Filter>Source\Engine\Graphics\ModelRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\PipelineStates.h">
-      <Filter>Source\Engine\Graphics\PipelineStates</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Renderer.h">
-      <Filter>Source\Engine\Graphics\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\SceneConstantBuffers.h">
-      <Filter>Source\Engine\Graphics\SceneConstantBuffers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\ShapeRenderer.h">
-      <Filter>Source\Engine\Graphics\ShapeRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\sprite.h">
-      <Filter>Source\Engine\Graphics\sprite</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\sprite_batch.h">
-      <Filter>Source\Engine\Graphics\sprite_batch</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\texture.h">
-      <Filter>Source\Engine\Graphics\texture</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\AI\ActionNode.h">
       <Filter>Source\Gameplay\AI\ActionNode</Filter>
@@ -668,9 +536,6 @@
     <ClInclude Include="Source\Serialization\JsonSerializer.h">
       <Filter>Source\Serialization\JsonSerializer</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Serialization\SkinnedMeshSerializer.h">
-      <Filter>Source\Serialization\SkinnedMeshSerializer</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Player.h">
       <Filter>Source\Gameplay\GameObjects\Character\Player</Filter>
     </ClInclude>
@@ -679,9 +544,6 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\EditorMediator.h">
       <Filter>Source\Editor\EditorMediator</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\GltfModel\GltfRootMotion.h">
-      <Filter>Source\Engine\Graphics\Model\GltfModel\GltfRootMotion</Filter>
     </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.h">
       <Filter>Source\Editor\StateMachineGraphEditor</Filter>
@@ -767,8 +629,83 @@
     <ClInclude Include="Source\Engine\Core\Input.h">
       <Filter>Source\Engine\Core\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\ModelManager.h">
-      <Filter>Source\Engine\Graphics\Model\ModelManager</Filter>
+    <ClInclude Include="Source\Engine\Core\framework.h">
+      <Filter>Source\Engine\Core\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Device\DirectXDevice.h">
+      <Filter>Source\Engine\Graphics\Device\DirectXDevice</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Device\framebuffer.h">
+      <Filter>Source\Engine\Graphics\Device\framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Device\GpuResourceUtils.h">
+      <Filter>Source\Engine\Graphics\Device\GpuResourceUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Device\PipelineStates.h">
+      <Filter>Source\Engine\Graphics\Device\PipelineStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Device\SceneConstantBuffers.h">
+      <Filter>Source\Engine\Graphics\Device\SceneConstantBuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Renderers\fullscreen_quad.h">
+      <Filter>Source\Engine\Graphics\Renderers\fullscreen_quad</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Renderers\Graphics.h">
+      <Filter>Source\Engine\Graphics\Renderers\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Renderers\ShapeRenderer.h">
+      <Filter>Source\Engine\Graphics\Renderers\ShapeRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Renderers\sprite.h">
+      <Filter>Source\Engine\Graphics\Renderers\sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Renderers\sprite_batch.h">
+      <Filter>Source\Engine\Graphics\Renderers\sprite_batch</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModel.h">
+      <Filter>Source\Engine\Graphics\Resources\GltfModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelAnimation.h">
+      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfModelAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelData.h">
+      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfModelData</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelRenderer.h">
+      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfModelRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfRootMotion.h">
+      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfRootMotion</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\geometric_primitive.h">
+      <Filter>Source\Engine\Graphics\Resources\geometric_primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\Light.h">
+      <Filter>Source\Engine\Graphics\Resources\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\Model.h">
+      <Filter>Source\Engine\Graphics\Resources\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\ModelManager.h">
+      <Filter>Source\Engine\Graphics\Resources\Model\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\texture.h">
+      <Filter>Source\Engine\Graphics\Resources\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Shaders\BlurShader.h">
+      <Filter>Source\Engine\Graphics\Shaders\BlurShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Shaders\CustomShader.h">
+      <Filter>Source\Engine\Graphics\Shaders\CustomShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Shaders\LuminanceExtractionShader.h">
+      <Filter>Source\Engine\Graphics\Shaders\LuminanceExtractionShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Shaders\shader.h">
+      <Filter>Source\Engine\Graphics\Shaders\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Shaders\SkyBox.h">
+      <Filter>Source\Engine\Graphics\Shaders\SkyBox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -840,9 +777,6 @@
     <Filter Include="Source\Engine\Graphics">
       <UniqueIdentifier>{21b7006f-85f4-4422-b0b3-f7596f7f0ae0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Engine\Graphics\Shaders">
-      <UniqueIdentifier>{2336918b-308d-4eec-98ee-f35412c436f0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Gameplay">
       <UniqueIdentifier>{cf89b4d3-3ed9-4880-a0f3-28e4b3d0b568}</UniqueIdentifier>
     </Filter>
@@ -911,72 +845,6 @@
     </Filter>
     <Filter Include="Source\Engine\Collision\SpaceDivisionCast">
       <UniqueIdentifier>{eed830da-be5b-4170-8d8f-bf8cace21100}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Shaders\BlurShader">
-      <UniqueIdentifier>{a990529c-de37-4907-8e09-02c108ff3e76}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Shaders\CustomShader">
-      <UniqueIdentifier>{2a666027-6cd5-4f91-86f6-df585e660cc1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Shaders\LuminanceExtractionShader">
-      <UniqueIdentifier>{84dbd127-76ab-41e9-8d5a-91a399048479}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Shaders\shader">
-      <UniqueIdentifier>{3844f516-730f-449e-b9a3-c8f4c0d7aa8f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Shaders\SkyBox">
-      <UniqueIdentifier>{f027cafa-28ce-45bc-b9dd-8f4f8e7b025f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\DirectXDevice">
-      <UniqueIdentifier>{88c555b0-f48b-450c-8909-5d4f9b4d9139}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\fbx_utility">
-      <UniqueIdentifier>{5fb2820e-ba64-45da-a09d-24b74cf16412}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\framebuffer">
-      <UniqueIdentifier>{f7a09e8c-2101-402d-9959-c5ac1383e2e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\framework">
-      <UniqueIdentifier>{8741183c-a52d-4149-b8eb-d9e2364f0f03}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\fullscreen_quad">
-      <UniqueIdentifier>{447646b4-f3ff-4286-9695-b5248221010d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\geometric_primitive">
-      <UniqueIdentifier>{c39c4465-9524-41ee-9c2d-ff0b51680415}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\GpuResourceUtils">
-      <UniqueIdentifier>{1254a14b-a7c4-41ba-a023-02888d99be45}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Light">
-      <UniqueIdentifier>{bf21f4f6-8dd9-4e5b-8e22-f065edc3b565}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model">
-      <UniqueIdentifier>{2e6a44c3-4400-4cf3-9f5d-45cc2d20347c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\ModelRenderer">
-      <UniqueIdentifier>{b0e46423-4672-4bc0-abdd-5069c2fef853}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\PipelineStates">
-      <UniqueIdentifier>{c7669a98-ed4a-4440-b34c-985f24c888dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Renderer">
-      <UniqueIdentifier>{12db22cb-c75e-4b94-b302-2c0c753d1a87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\SceneConstantBuffers">
-      <UniqueIdentifier>{bf2e5b9c-f000-479a-bde1-26c05d3fa530}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\ShapeRenderer">
-      <UniqueIdentifier>{cafb7ef5-3da7-4218-ae34-726e1de8f032}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\sprite">
-      <UniqueIdentifier>{4ab1dc7c-df1e-4911-bacc-29fe9856fddf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\sprite_batch">
-      <UniqueIdentifier>{27379cc9-92f9-43d2-b8b6-637f7152876b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\texture">
-      <UniqueIdentifier>{fc5845a9-d797-4e3b-b933-1f44d46f4479}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Gameplay\AI\ActionNode">
       <UniqueIdentifier>{6de32ebc-452d-4639-9926-d7dc166321a8}</UniqueIdentifier>
@@ -1056,53 +924,8 @@
     <Filter Include="Source\Serialization\JsonSerializer">
       <UniqueIdentifier>{61948ec6-7275-49f0-8a55-3ec5e1ccf96d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Serialization\SkinnedMeshSerializer">
-      <UniqueIdentifier>{ec175a09-1e93-4cc7-b4c0-707a97364ad4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Gameplay\Components">
       <UniqueIdentifier>{4ad2d37d-d4b6-41ae-a28e-48065b03dc6b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\FbxModel">
-      <UniqueIdentifier>{c0b05a5b-c17b-460a-bba9-052d03834e09}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\FbxModel\FbxAnimation">
-      <UniqueIdentifier>{b34cb4e4-2c59-416b-87f4-a1d4e814a6ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\FbxModel\FbxBone">
-      <UniqueIdentifier>{bbc82e98-f7b5-4d94-a847-f28fad976f76}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\FbxModel\FbxLoader">
-      <UniqueIdentifier>{f804ddc8-d358-41ba-86d5-02b644fe514a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\FbxModel\FbxMaterial">
-      <UniqueIdentifier>{f6382450-9193-4481-8996-14cf061cfa7d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\FbxModel\FbxModelData">
-      <UniqueIdentifier>{37a993f0-c449-41c0-ab02-c7b61e37a7f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\FbxModel\FbxSkinnedMesh">
-      <UniqueIdentifier>{caff06fe-65ae-4508-ad97-9e516e533da1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\FbxModel\FbxSkinnedModel">
-      <UniqueIdentifier>{c4ce55e1-1c03-466a-a914-57874a329335}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\FbxModel\FbxSkinnedResource">
-      <UniqueIdentifier>{568e8be0-d844-476b-88b4-049ece295fd3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\GltfModel">
-      <UniqueIdentifier>{b331b1d3-89e3-466f-bc96-fa451e977950}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\GltfModel\GltfModelAnimation">
-      <UniqueIdentifier>{ec8c74f4-a6b5-4309-a635-4e0ecaf26921}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\GltfModel\GltfModelData">
-      <UniqueIdentifier>{80e99694-caed-40c7-84fe-bf57870aa834}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\GltfModel\GltfModelRenderer">
-      <UniqueIdentifier>{2f9049d9-ceab-470c-9dad-a37d5e9a373b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\GltfModel\TinygltfImpl">
-      <UniqueIdentifier>{7221eb4e-a5a3-46e4-ae53-08ccad7157f5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Gameplay\GameObjects\Character\Player">
       <UniqueIdentifier>{d157c02a-a75f-451b-825d-7a3bf1003046}</UniqueIdentifier>
@@ -1121,9 +944,6 @@
     </Filter>
     <Filter Include="Source\Editor\EditorMediator">
       <UniqueIdentifier>{8f615b74-2187-4561-bbe4-f46cdeb5c2ac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\GltfModel\GltfRootMotion">
-      <UniqueIdentifier>{add93751-853e-497e-a50d-2fbf3cc921d5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\TransitionConditionEditor">
       <UniqueIdentifier>{8b97f2da-592b-430d-8cc7-25f87ffbacb0}</UniqueIdentifier>
@@ -1221,8 +1041,98 @@
     <Filter Include="Source\Engine\Core\Input">
       <UniqueIdentifier>{f40482a3-25b2-458e-aa90-3985baf32073}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Engine\Graphics\Model\ModelManager">
-      <UniqueIdentifier>{d63d70cc-8753-45d9-a989-020535a8ca86}</UniqueIdentifier>
+    <Filter Include="Source\Engine\Core\framework">
+      <UniqueIdentifier>{7706c22f-35e1-4b13-b88f-504e6f13dcbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Device">
+      <UniqueIdentifier>{0edc48de-f1c0-40d6-a48c-9c5a00ae3aeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Device\DirectXDevice">
+      <UniqueIdentifier>{cacd2c5e-0cc5-44f5-ac6d-ad6913a4b761}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Device\framebuffer">
+      <UniqueIdentifier>{776119fe-cd8a-4ed3-afc6-dc99e0781d5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Device\GpuResourceUtils">
+      <UniqueIdentifier>{4a550c08-1f5f-4cbd-a64f-144e21e9f48b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Device\PipelineStates">
+      <UniqueIdentifier>{3ebf4bc7-4cd2-4671-aac3-e0313f2f85d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Device\SceneConstantBuffers">
+      <UniqueIdentifier>{136d3b51-972d-46ec-bab8-6d06133c6d66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Renderers">
+      <UniqueIdentifier>{5565f5e5-f794-4807-8d90-e8e17943a7ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Renderers\fullscreen_quad">
+      <UniqueIdentifier>{4fbf36da-1a73-47a9-a2d1-5f2ff7212a1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Renderers\Graphics">
+      <UniqueIdentifier>{b7ca72a7-e12e-4ce8-aff8-cf401ccb2b15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Renderers\ShapeRenderer">
+      <UniqueIdentifier>{c04d819c-f24d-4b3e-b2f1-a5f3c62acb74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Renderers\sprite">
+      <UniqueIdentifier>{5af09c02-d60f-4a3a-88d9-ae25ef8d052c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Renderers\sprite_batch">
+      <UniqueIdentifier>{92430d43-2bc0-460a-a580-2d035f1006cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources">
+      <UniqueIdentifier>{d74c98d0-db81-428e-baf8-2a40c3b3d58f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\GltfModel">
+      <UniqueIdentifier>{8cf878da-d2c3-4877-93f9-cf941998eef6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelAnimation">
+      <UniqueIdentifier>{2fc57691-37eb-42c7-ae53-eb7660b43544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelData">
+      <UniqueIdentifier>{a91dfa58-4eb3-44de-9152-a8bc9afc497b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelRenderer">
+      <UniqueIdentifier>{88391441-9f02-4d5e-ae83-e48ea760cd9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\GltfModel\GltfRootMotion">
+      <UniqueIdentifier>{f1c6b7af-ea62-42c4-9d8f-1e58bc38ba82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\GltfModel\TinygltfImpl">
+      <UniqueIdentifier>{a45ed410-4c04-4a7e-9fe0-44f4f41332e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\geometric_primitive">
+      <UniqueIdentifier>{9ad38500-a65a-4b6f-920d-a0aece61fe17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\Light">
+      <UniqueIdentifier>{7f2f8ddb-ccb1-4a95-9c24-4c6b1fe2e024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\Model">
+      <UniqueIdentifier>{1606fc69-dcbb-4d77-a026-73daaf12cb51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\Model\ModelManager">
+      <UniqueIdentifier>{ca2e2fc0-0de0-4f34-a688-5aabbcf433b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\texture">
+      <UniqueIdentifier>{5dd6009f-9396-49ac-8918-0779ad51dcb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Shaders">
+      <UniqueIdentifier>{7aa9dcf2-de5e-49ed-9c52-25b78e832e1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Shaders\BlurShader">
+      <UniqueIdentifier>{0e916f47-267b-4d9a-b578-847530c16b94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Shaders\CustomShader">
+      <UniqueIdentifier>{d3da7102-6e00-4e8b-9dcd-3e99dfa612bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Shaders\LuminanceExtractionShader">
+      <UniqueIdentifier>{f3821417-69c1-4b4a-99f8-c0ebc9bfeea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Shaders\shader">
+      <UniqueIdentifier>{c4c94440-b6d7-4a4d-bfdc-cdf084731020}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Shaders\SkyBox">
+      <UniqueIdentifier>{ade75e81-2849-4df1-ac4c-49e5e7e14fb4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

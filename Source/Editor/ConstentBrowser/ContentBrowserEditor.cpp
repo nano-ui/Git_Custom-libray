@@ -1,6 +1,6 @@
 #include "ContentBrowserEditor.h"
-#include "Engine\Graphics\Graphics.h"
-#include "Engine\Graphics\GpuResourceUtils.h"
+#include "Engine\Graphics\Renderers\Graphics.h"
+#include "Engine\Graphics\Device\GpuResourceUtils.h"
 #include "Editor\EditorMediator.h"
 
 #include <windows.h>

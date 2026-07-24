@@ -1,5 +1,5 @@
-#include "Engine/Graphics/Graphics.h"
-#include "framebuffer.h"
+#include "Engine\Graphics\Renderers\Graphics.h"
+#include "Engine\Graphics\Device\framebuffer.h"
 
 static constexpr UINT constant_buffer_slot_scene = 1;
 

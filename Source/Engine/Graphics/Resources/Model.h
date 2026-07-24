@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "Engine/Graphics/GltfModel/GltfModelData.h"
+#include "Engine\Graphics\Resources\GltfModel\GltfModelData.h"
 
 class GltfModel;
 class GltfModelRenderer;

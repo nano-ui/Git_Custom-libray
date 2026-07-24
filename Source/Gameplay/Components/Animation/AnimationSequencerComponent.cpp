@@ -1,5 +1,5 @@
 #include "AnimationSequencerComponent.h"
-#include "Engine\Graphics\Model.h"
+#include "Engine\Graphics\Resources\Model.h"
 
 #include <windows.h>
 #include <cstdio>
