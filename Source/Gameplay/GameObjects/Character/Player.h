@@ -2,6 +2,8 @@
 #include "Character.h"
 #include "Engine/Collision/Collider.h"
 
+class Camera;
+
 class Player : public Character, public ICollisionListener
 {
 public:

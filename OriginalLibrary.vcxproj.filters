@@ -378,6 +378,9 @@
     <ClCompile Include="Source\Editor\PathHelper.cpp">
       <Filter>Source\Editor\PathHelper</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Camera\FollowCameraComponent.cpp">
+      <Filter>Source\Engine\Camera\FollowCameraComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -712,6 +715,9 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\PathHelper.h">
       <Filter>Source\Editor\PathHelper</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Camera\FollowCameraComponent.h">
+      <Filter>Source\Engine\Camera\FollowCameraComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1145,6 +1151,9 @@
     </Filter>
     <Filter Include="Source\Editor\PathHelper">
       <UniqueIdentifier>{df919b32-24a9-4c3e-a751-8ab70a0cfc4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Camera\FollowCameraComponent">
+      <UniqueIdentifier>{104ed3da-b51d-4ec6-958b-2a8f6329744f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

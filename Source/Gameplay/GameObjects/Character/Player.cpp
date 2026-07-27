@@ -1,6 +1,7 @@
 #include "Player.h"
 
 #include "Engine\Core\Input.h"
+#include "Engine\Camera\Camera.h"
 #include "Engine\Graphics\Renderers\Graphics.h"
 #include "Gameplay/GameObjects/ObjectFactory.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
@@ -138,22 +139,10 @@ void Player::UpdateInput(float elapsed_time)
 	float move_z = 0.0f;
 
 	//キーボード入力の検知
-	if (Input::Instance().IsKeyPress('W'))
-	{
-		move_z += 1.0f;
-	}
-	if (Input::Instance().IsKeyPress('S'))
-	{
-		move_z -= 1.0f;
-	}
-	if (Input::Instance().IsKeyPress('A'))
-	{
-		move_x -= 1.0f;
-	}
-	if (Input::Instance().IsKeyPress('D'))
-	{
-		move_x += 1.0f;
-	}
+	if (Input::Instance().IsKeyPress('W'))move_z += 1.0f;
+	if (Input::Instance().IsKeyPress('S'))move_z -= 1.0f;
+	if (Input::Instance().IsKeyPress('A'))move_x -= 1.0f;
+	if (Input::Instance().IsKeyPress('D'))move_x += 1.0f;
 
 	//移動・旋回処理
 	Character::Move(elapsed_time, move_x, move_z, move_speed);

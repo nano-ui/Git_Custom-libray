@@ -247,6 +247,7 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.cpp" />
     <ClCompile Include="Source\Engine\Camera\Camera.cpp" />
+    <ClCompile Include="Source\Engine\Camera\FollowCameraComponent.cpp" />
     <ClCompile Include="Source\Engine\Camera\FreeCamera.cpp" />
     <ClCompile Include="Source\Engine\Camera\StandCamera.cpp" />
     <ClCompile Include="Source\Engine\Collision\CollisionExperiment.cpp" />
@@ -354,6 +355,7 @@
     <ClInclude Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.h" />
     <ClInclude Include="Source\Engine\Camera\Camera.h" />
+    <ClInclude Include="Source\Engine\Camera\FollowCameraComponent.h" />
     <ClInclude Include="Source\Engine\Camera\FreeCamera.h" />
     <ClInclude Include="Source\Engine\Camera\StandCamera.h" />
     <ClInclude Include="Source\Engine\Collision\Collider.h" />
