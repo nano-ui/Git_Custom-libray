@@ -138,6 +138,35 @@
                     "PosX": -18.621337890625,
                     "PosY": 151.908935546875,
                     "SubGraphID": 108
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "ID": 239,
+                    "Input": [
+                        {
+                            "ID": 240,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": true,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "新規サブグラフ",
+                    "Output": [
+                        {
+                            "ID": 241,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -174.42724609375,
+                    "PosY": -54.90185546875,
+                    "SubGraphID": 238
                 }
             ]
         },
@@ -1444,8 +1473,89 @@
                     "SubGraphID": 0
                 }
             ]
+        },
+        {
+            "GraphID": 238,
+            "GraphName": "新規サブグラフ",
+            "Links": [
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 240,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 246,
+                    "ID": 248,
+                    "StartPinID": 244
+                }
+            ],
+            "Nodes": [
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "ID": 242,
+                    "Input": [
+                        {
+                            "ID": 243,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "新規ステート",
+                    "Output": [
+                        {
+                            "ID": 244,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -166.42724609375,
+                    "PosY": -58.90185546875,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "Death",
+                    "ID": 245,
+                    "Input": [
+                        {
+                            "ID": 246,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "新規ステート",
+                    "Output": [
+                        {
+                            "ID": 247,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 117.57275390625,
+                    "PosY": -49.56852340698242,
+                    "SubGraphID": 0
+                }
+            ]
         }
     ],
-    "NextID": 238,
+    "NextID": 249,
     "TargetModelPath": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf"
 }
