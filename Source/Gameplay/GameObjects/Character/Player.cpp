@@ -1,7 +1,6 @@
 #include "Player.h"
 
 #include "Engine\Core\Input.h"
-#include "Engine\Camera\Camera.h"
 #include "Engine\Graphics\Renderers\Graphics.h"
 #include "Gameplay/GameObjects/ObjectFactory.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
