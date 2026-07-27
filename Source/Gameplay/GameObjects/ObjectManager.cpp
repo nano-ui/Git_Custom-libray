@@ -113,15 +113,8 @@ void ObjectManager::RefreshAnimationMap(uint32_t target_model_hash, const std::u
 		if ((*iterator)->GetModelHash() == target_model_hash)
 		{
 			Character* character_obj = dynamic_cast<Character*>(iterator->get());	//キャラクターのモデル
-
-			//キャスト成功確認
-			if (character_obj)
-			{
-				AnimationComponent* anim_component = character_obj->GetAnimationComponent();	//キャラクターのアニメーション
-			}
 		}
 	}
-
 }
 
 //無効になったオブジェクトの削除処理

@@ -45,18 +45,6 @@ public:
 	//ブラックボードに登録・初期化
 	virtual void SetupBlackboard();
 
-	//アニメーション終了イベント
-	virtual void OnAnimationEnd(uint32_t stake_key);
-
-	//アニメーションコンポーネント取得
-	AnimationComponent* GetAnimationComponent()const { return animation_component.get(); }
-
-	//アニメーションシーケンサコンポーネント取得
-	AnimationSequencerComponent* GetAnimationSequencerComponent()const { return animation_sequencer_component.get(); }
-
-	//ルートモーションコンポーネントクラス取得
-	RootMotionComponent* GetRootMotionComponent()const { return root_motion_component.get(); }
-
 	//ステートマシンコンポーネントクラス取得
 	StateMachineComponent* GetStateMachineComponent()const { return state_machine_component.get(); }
 
@@ -108,11 +96,7 @@ private:
 	void UpdateHorizontalMove(float elapsed_time);
 
 protected:
-	std::shared_ptr<Model> character;	//キャラクターモデル
 	std::unique_ptr<StateBlackboard> blackboard;
-	std::unique_ptr<AnimationComponent> animation_component;	//アニメーション制御
-	std::unique_ptr<RootMotionComponent> root_motion_component;	//ルートモーション制御
-	std::unique_ptr<AnimationSequencerComponent> animation_sequencer_component;	//速度カーブ制御
 	std::unique_ptr<StateMachineComponent> state_machine_component;	//ステートマシン制御
 
 	std::string previous_animation_name = "";	//前回のアニメーション名

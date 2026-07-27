@@ -31,7 +31,8 @@ bool AssetLoader::LoadModelAnimations(const std::string& model_path)
 		return false;
 	}
 
-	std::unique_ptr<Model> temporary_model = std::make_unique<Model>(device_context, model_path.c_str());	//一時的なモデル読み込み
+	std::unique_ptr<Model> temporary_model = std::make_unique<Model>();	//一時的なモデル読み込み
+	temporary_model->Initialize(model_path);
 
 	//モデルの読み込み成否を確認
 	if (temporary_model)

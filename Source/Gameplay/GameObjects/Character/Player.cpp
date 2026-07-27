@@ -14,11 +14,12 @@ static AutoRegister<Player> auto_register_player("Player");
 Player::Player()
 {
 	auto device = Graphics::Instance().GetDevice();
-	character = std::make_shared<Model>(device, "Data/Model/Character/test/Greystone_WhiteTiger.gltf");
 	move_speed = 5.0f;
 	height = 0.8f;
 	radius = 0.4f;
 	offset_y = 0.5f;
+	model = std::make_unique<Model>();
+	model->Initialize("Data/Model/Character/Player/Greystone_WhiteTiger.gltf");
 }
 
 //デストラクタ
@@ -46,38 +47,6 @@ void Player::Initialize()
 	AddCollider(&capsule_collider);
 
 	std::weak_ptr<IAnimationListener> null_listener;
-	animation_component = std::make_unique<AnimationComponent>(character, null_listener);
-
-	if (animation_component)
-	{
-		animation_component->Initialize();
-	}
-
-	animation_sequencer_component = std::make_unique<AnimationSequencerComponent>(character);
-	
-	std::string current_model_path = character->GetModelPath();
-
-	//パスが取得できているか確認
-	if (!current_model_path.empty())
-	{
-		std::filesystem::path path_obj(current_model_path);
-		std::string model_name = path_obj.stem().string();
-		uint32_t calculated_hash = StateBlackboard::CalculateHash(model_name);
-		SetModelHash(calculated_hash);
-		if (state_machine_component)state_machine_component->SetModelHash(calculated_hash);
-
-		if (animation_sequencer_component)
-		{
-			if (!animation_sequencer_component->Initialize(model_name))
-			{
-				OutputDebugStringA("[Player Warning] Failed to initialize AnimationSequencerComponent.\n");
-			}
-		}
-	}
-	else
-	{
-		OutputDebugStringA("[Player Error] Initialize: current_model_path is empty!\n");
-	}
 }
 
 //更新処理

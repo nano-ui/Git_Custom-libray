@@ -9,9 +9,7 @@
 #include <Windows.h>
 
 
-//==============================================
 //画像読み込みをスキップするためのダミー関数
-//==============================================
 bool null_load_image_data(tinygltf::Image*, const int, std::string*, std::string*,
 	int, int, const unsigned char*, int, void*)
 {
@@ -102,16 +100,12 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 	BuildRenderCommandsCache();
 }
 
-//========================================
 //復元した生データからGPUリソースを構築
-//========================================
 void GltfModelData::CreateGpuResources(ID3D11Device* device)
 {
 	buffers.resize(raw_buffers.size());	//格納用ベクトルをリサイズ
 
-	//---------------------------------------------
 	//メッシュのバッファーリソースビューの生成
-	//---------------------------------------------
 	buffers.resize(raw_buffers.size());										// 生成するバッファの数を生データに合わせる
 	for (size_t i = 0; i < raw_buffers.size(); i++)							// 保持している全ての生バッファをループ
 	{
@@ -134,9 +128,7 @@ void GltfModelData::CreateGpuResources(ID3D11Device* device)
 		material_data.emplace_back(material.data);	//データ構造体のみを抽出してリストに追加
 	}
 
-	//---------------------------------------------
 	//マテリアルのシェーダーリソースビューを生成
-	//---------------------------------------------
 	HRESULT hr;	//DirectXの関数実行結果を格納する
 	Microsoft::WRL::ComPtr<ID3D11Buffer> material_buffer;	//バッファ本体を保存
 	if (!material_data.empty())
@@ -210,35 +202,25 @@ void GltfModelData::CreateGpuResources(ID3D11Device* device)
 
 }
 
-//================================================
 //バイナリキャッシュを利用してモデルを読み込む
-//================================================
 std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const std::string& filename)
 {
-	//-----------------------------
 	//キャッシュファイル名の生成
-	//-----------------------------
 	std::string binary_filename = filename + ".cerial";							//元の名前に「.bin」を付与してキャッシュ用ファイル名とする
 	std::shared_ptr<GltfModelData> data = std::make_shared<GltfModelData>();	//空のデータインスタンスを生成
 
-	//-------------------------------
 	//キャッシュからのロード試行
-	//-------------------------------
 	if (GltfModelSerializer::Load(binary_filename, data))	//バイナリファイルが存在し、読み込みに成功した場合
 	{
 		data->CreateGpuResources(device);	//復元した生データから即座にGPUバッファを生成
 		return data;						//完成したデータを返す
 	}
 
-	//------------------------------------
 	//キャッシュがない場合の通常読み込み
-	//------------------------------------
 	Microsoft::WRL::ComPtr<ID3D11Device> com_device(device);
 	data = std::make_shared<GltfModelData>(com_device, filename);
 
-	//------------------------------------
 	//次回起動時のためにベイク保存処理
-	//------------------------------------
 	GltfModelSerializer::Save(binary_filename, data);
 
 	return data;
@@ -408,9 +390,7 @@ DXGI_FORMAT GltfModelData::ConvertFormat(const tinygltf::Accessor& accessor)
 	return DXGI_FORMAT_UNKNOWN;	//未知の型
 }
 
-//=================================
 //メッシュ情報とGPUバッファを生成
-//=================================
 void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 {
 	for (std::vector<tinygltf::Mesh>::const_reference gltf_mesh : gltf_model.meshes)	//全メッシュをループ
@@ -576,9 +556,7 @@ void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 	}
 }
 
-//=========================================
 //tinygltfのモデルからノード情報を抽出
-//=========================================
 void GltfModelData::FetchNodes(const tinygltf::Model& gltf_model)
 {
 	for (std::vector<tinygltf::Node>::const_reference gltf_node : gltf_model.nodes)
@@ -662,9 +640,7 @@ void GltfModelData::FetchNodes(const tinygltf::Model& gltf_model)
 	}
 }
 
-//===================================================
 //tinygltfのモデルからマテリアルデータを抽出
-//===================================================
 void GltfModelData::FetchMaterials(const tinygltf::Model& gltf_model)
 {
 	//---------------------------------------
@@ -707,9 +683,7 @@ void GltfModelData::FetchMaterials(const tinygltf::Model& gltf_model)
 	}
 }
 
-//=======================
 //テクスチャ情報を抽出
-//=======================
 void GltfModelData::FetchTextures(const tinygltf::Model& gltf_model)
 {
 	HRESULT hr = S_OK;
@@ -747,9 +721,7 @@ void GltfModelData::FetchTextures(const tinygltf::Model& gltf_model)
 	}
 }
 
-//===============================
 //アニメーション情報を抽出
-//===============================
 void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 {
 	using namespace std;
@@ -861,9 +833,7 @@ void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 	}
 }
 
-//===================================
 //アニメーション名をマップに登録
-//===================================
 void GltfModelData::MapAnimationNames(const tinygltf::Model& gltf_model)
 {
 	//全てのアニメーションをループ
@@ -1044,7 +1014,7 @@ void GltfModelData::ConvertNodeAxisSystem(node& target_node)
 	target_node.translation.x = -target_node.translation.x;
 
 	target_node.rotation.x = -target_node.rotation.x;
-	target_node.rotation.z = -target_node.rotation.w;
+	target_node.rotation.w = -target_node.rotation.w;
 }
 
 //アニメーションの全キーフレーム（位置、回転）のデータを左手系に変換

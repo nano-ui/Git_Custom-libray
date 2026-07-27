@@ -41,6 +41,9 @@ public:
 	//アニメーション再生
 	void PlayAnimation(const std::string& animation_name, bool is_loop = true);
 
+	//アニメーション名一覧を取得
+	std::vector<std::string> GetAnimationNames() const;
+
 	//アニメーション時間の取得・設定
 	float GetAnimationTime() const;
 	void SetAnimationTime(float time);

@@ -29,8 +29,6 @@ Character::Character()
 
 	blackboard = std::make_unique<StateBlackboard>();
 	state_machine_component = std::make_unique<StateMachineComponent>();
-	animation_component = nullptr;
-	root_motion_component = std::make_unique<RootMotionComponent>();
 }
 
 //デストラクタ
@@ -44,53 +42,51 @@ void Character::Initialize()
 	is_active = true;
 	SetupSerialization();
 	SetupBlackboard();
-
-	if (root_motion_component && character)
-	{
-		root_motion_component->Initialize(character->GetGltfModelData());
-	}
 }
 
 //更新処理
 void Character::Update(float elapsed_time)
 {
 	UpdateInvincibleTimer(elapsed_time);
-	if (!root_motion_component->IsEnable())
+
+	if (model)model->Update(elapsed_time);
+
+	if (state_machine_component)
+	{
+		state_machine_component->Update(elapsed_time, blackboard.get());
+
+		std::string target_anim_name = state_machine_component->GetCurrentAnimationName();
+		bool target_anim_loop = state_machine_component->GetAnimationLoop();
+
+		//ステートマシンから指定されたアニメーションを Model で再生
+		if (model && !target_anim_name.empty())
+		{
+			if (previous_animation_name != target_anim_name)
+			{
+				model->PlayAnimation(target_anim_name, target_anim_loop);
+				previous_animation_name = target_anim_name;
+			}
+		}
+	}
+
+	//移動処理
+	bool is_rm_enabled = state_machine_component ? state_machine_component->IsCurrentRootMotionEnbled() : false;
+	if (is_rm_enabled && model)
+	{
+		UpdateRootMotion();
+	}
+	else
 	{
 		UpdateVelocity(elapsed_time);
 	}
 
+	//回転クォータニオンの更新
 	DirectX::XMVECTOR q = DirectX::XMQuaternionRotationRollPitchYaw(angle.x, angle.y, angle.z);
 	DirectX::XMStoreFloat4(&rotation, q);
 
 	blackboard->SetValue(u8"体力", health);
 	blackboard->SetValue(u8"速度", move_speed);
 	blackboard->SetValue(u8"接地フラグ", is_ground);
-
-	if (state_machine_component)state_machine_component->Update(elapsed_time, blackboard.get());
-
-	if (state_machine_component && animation_component)
-	{
-		std::string target_anim_name = state_machine_component->GetCurrentAnimationName(); // 最新のアニメーション名
-		uint32_t current_state_id = state_machine_component->GetCurrentNodeId(); // 最新のステートID
-		bool target_anim_loop = state_machine_component->GetAnimationLoop();
-	
-		animation_component->PlayAnimationByName(target_anim_name, current_state_id, target_anim_loop);
-
-		if (animation_sequencer_component)
-		{
-			animation_sequencer_component->ChangeAnimation(target_anim_name);
-		}
-	}
-
-	if (animation_component)
-	{
-		animation_component->Update(elapsed_time);
-		if (animation_sequencer_component)animation_sequencer_component->Update(elapsed_time);
-		UpdateRootMotion();
-		root_motion_component->TraceRootMotionDebug(position);
-	}
-
 }
 
 //描画処理
@@ -99,7 +95,7 @@ void Character::Render(ID3D11DeviceContext* context)
 	DirectX::XMMATRIX world_matrix = GetWorldMatrix();
 	DirectX::XMFLOAT4X4 transform_matrix;
 	DirectX::XMStoreFloat4x4(&transform_matrix, world_matrix);
-	character->Render(context, transform_matrix);
+	model->Render(context, transform_matrix);
 }
 
 //デバッグ描画
@@ -167,14 +163,6 @@ void Character::SetupBlackboard()
 	printf("Character: 共有ブラックボードにを登録しま。\n");
 }
 
-//アニメーション終了イベント
-void Character::OnAnimationEnd(uint32_t state_key)
-{
-#ifdef _DEBUG
-	std::cout << "Debug: Character::OnAnimationEnd - アニメーション再生終了を検知しま。StateKey: " << state_key << "\n";
-#endif
-}
-
 //移動方向の設定
 void Character::Move(float elapsed_time, float vx, float vz, float speed)
 {
@@ -228,131 +216,28 @@ void Character::UpdateInvincibleTimer(float elapsed_time)
 //ルートモーション更新
 void Character::UpdateRootMotion()
 {
-	// コンポーネントやモデルデータが存在するか確認分岐
-	if (!root_motion_component || !animation_component || !character) return;
-
-	// 現在再生中のアニメーション名を取得して格納する
-	std::string curreent_anim_name = animation_component->GetCurrentAnimationName();
-	// アニメーションの現在の再生時間を取得して格納する
-	float current_time = animation_component->GetCurrentAnimationTime();
-
-	// 再生するアニメーションが切り替わったか確認分岐
-	if (previous_animation_name != curreent_anim_name)
+	if (!model)
 	{
-		// アニメーション名からインデックス番号を取得して格納する
-		int anim_index = character->GetAnimationIndex(curreent_anim_name.c_str());
-
-		// インデックス番号が有効であるか確認分岐
-		if (anim_index >= 0)
-		{
-			root_motion_component->OnAnimationChaanged(static_cast<size_t>(anim_index));
-		}
-		else
-		{
-			// エラーが発生する可能性のある箇所のためデバッグ出力を行う
-			OutputDebugStringA("[Character Error] UpdateRootMotion: Animation index not found!\n");
-		}
-		previous_animation_name = curreent_anim_name;
-		previous_animation_time = 0.0f;
+		OutputDebugStringA("[Character 警告] UpdateRootMotion: model が nullptr です。\n");
+		return;
 	}
 
-	// ステートマシンからルートモーションの有効フラグを取得して格納する
-	bool is_rm_enabled = state_machine_component ? state_machine_component->IsCurrentRootMotionEnbled() : false;
-	root_motion_component->SetEnable(is_rm_enabled);
-
-	// ルートモーションが無効であるか確認分岐
-	if (!root_motion_component->IsEnable()) return;
-
-	root_motion_component->Update(current_time);
-
-	// ルートモーション計算クラスから移動の差分ベクトルを取得して格納する
-	DirectX::XMFLOAT3 delta_pos = root_motion_component->GetDeltaPosition();
-	// ルートモーション計算クラスから回転の差分クォータニオンを取得して格納する
-	DirectX::XMFLOAT4 delta_rot = root_motion_component->GetDeltaRotation();
-
-	// 取得した差分移動量を計算用のベクトルとして読み込んだ
+	// Model クラスから最新のルートモーション移動差分を取得
+	DirectX::XMFLOAT3 delta_pos = model->GetDeltaPosition();
 	DirectX::XMVECTOR local_translation = DirectX::XMLoadFloat3(&delta_pos);
-	// 取得した差分回転量を計算用のクォータニオンとして読み込んだ
-	DirectX::XMVECTOR local_rotation = DirectX::XMLoadFloat4(&delta_rot);
 
-	// 計算対象となるルートノードのインデックスを取得して格納する
-	int root_index = root_motion_component->GetTargetNodeIndex();
-
-	// ルートノード自体のローカル回転行列を定義して初期化するための
-	DirectX::XMMATRIX root_local_rotation_matrix = DirectX::XMMatrixIdentity();
-
-	// ルートノードのインデックスが有効であるか確認分岐
-	if (root_index >= 0)
-	{
-		// アニメーション計算後の全ノード配列の参照を格納する
-		const auto& animated_nodes = character->GetAnimatedNodes();
-		// インデックスが配列の範囲内にあるか確認分岐
-		if (static_cast<size_t>(root_index) < animated_nodes.size())
-		{
-			// ルートノード自体の現在のローカル回転クォータニオンを読み込むための
-			DirectX::XMVECTOR root_rot = DirectX::XMLoadFloat4(&animated_nodes.at(root_index).rotation);
-			// ルートノードのローカル回転から回転行列を生成して格納する
-			root_local_rotation_matrix = DirectX::XMMatrixRotationQuaternion(root_rot);
-		}
-	}
-
-	// 【ここがポイント】モデル空間で歪んでいた移動ベクトルを、ルート自身の回転行列を通してキャラクターの正しい前後左右（基準軸）へ変換する
-	DirectX::XMVECTOR corrected_local_translation = DirectX::XMVector3TransformNormal(local_translation, root_local_rotation_matrix);
-
-	// キャラクター自身の現在のワールド行列を取得して格納する
+	// ワールド変換行列をもとにキャラクターの向きへ移動量を変換
 	DirectX::XMMATRIX world_transform = GetWorldMatrix();
-	// キャラクターの基準軸に直した移動量を、キャラクターのワールド空間の向きへ変換した
-	DirectX::XMVECTOR world_translation = DirectX::XMVector3TransformNormal(corrected_local_translation, world_transform);
+	DirectX::XMVECTOR world_translation = DirectX::XMVector3TransformNormal(local_translation, world_transform);
+	world_translation = DirectX::XMVectorSetY(world_translation, 0.0f); // Y軸補正
 
-	// キャラクターの高さ方向の移動成分をゼロにクランプして相殺する処理
-	world_translation = DirectX::XMVectorSetY(world_translation, 0.0f);
+	DirectX::XMFLOAT3 final_movement = {};
+	DirectX::XMStoreFloat3(&final_movement, world_translation);
 
-	// コライダーの移動に適用するための最終的な3次元移動数値を格納する
-	DirectX::XMFLOAT3 final_movement;
-	DirectX::XMFLOAT3 final_movement_temp;
-	DirectX::XMStoreFloat3(&final_movement_temp, world_translation);
-
-	// 軸がずれていた場合にゲーム上の前進・横移動として正しく適用されるようにマッピングを整理した処理
-	final_movement.x = final_movement_temp.x;
-	final_movement.y = final_movement_temp.y;
-	final_movement.z = final_movement_temp.z;
-
+	// 位置座標へ加算
 	position.x += final_movement.x;
 	position.y += final_movement.y;
 	position.z += final_movement.z;
-
-	// ルートノードのインデックスが有効であるか確認分岐
-	if (root_index >= 0)
-	{
-		// アニメーション計算後の全ノード配列の参照を格納する
-		const std::vector<GltfModelData::node>& animated_nodes = character->GetAnimatedNodes();
-
-		// インデックスが配列の範囲内にあるか確認分岐
-		if (static_cast<size_t>(root_index) < animated_nodes.size())
-		{
-			// モデルの初期状態におけるローカル座標を取得して格納する
-			DirectX::XMFLOAT3 initial_pose_pos = root_motion_component->GetInitialLocalPosition();
-			// アニメーションによって移動した現在のローカル座標を取得して格納する
-			DirectX::XMFLOAT3 current_local_pos = animated_nodes.at(root_index).translation;
-
-			// 補正を適用するためのローカル座標をコピーして格納する
-			DirectX::XMFLOAT3 new_local_pos = current_local_pos;
-
-			// モデルが勝手に移動して飛び出さないようにX・Y・Zすべての移動軸を完全に初期位置へとリセットする処理
-			new_local_pos.x = initial_pose_pos.x;
-			new_local_pos.y = initial_pose_pos.y;
-			new_local_pos.z = initial_pose_pos.z;
-
-			character->SetNodeTranslation(root_index, new_local_pos);
-			character->RecalculateTransforms();
-		}
-		else
-		{
-			// 配列の範囲外アクセスを防ぐための境界チェックでエラーを検出したためデバッグ出力を行う
-			OutputDebugStringA("[Character Error] UpdateRootMotion: root_index is out of range of animated_nodes!\n");
-		}
-	}
-	previous_animation_time = current_time;
 }
 
 //ステージとの衝突処理

@@ -224,7 +224,12 @@ void ModelPreviewWindow::LoadModel(const std::string& file_path)
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 
 	//前のモデルを破棄して新しいモデルをロード
-	model = std::make_unique<Model>(device, file_path);
+	model = std::make_unique<Model>();
+	if (!model->Initialize(file_path))
+	{
+		OutputDebugStringA("[ModelPreviewWindow エラー] LoadModel: モデルの初期化に失敗しました。\n");
+		return;
+	}
 	current_model_path = file_path;
 	animation_names = model->GetAnimationNames();
 	selected_animation_index = -1;

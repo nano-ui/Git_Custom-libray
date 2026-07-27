@@ -234,9 +234,6 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\TransitionConditionEditor</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\Sequence\ModelPreviewScene.cpp">
-      <Filter>Source\Editor\Sequence\ModelPreviewScene</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Editor\Sequence\AnimationSequencerEditor.cpp">
       <Filter>Source\Editor\Sequence\AnimationSequenceEditor</Filter>
     </ClCompile>
@@ -565,9 +562,6 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\Sequence\SequenceSceneBace.h">
       <Filter>Source\Editor\Sequence\SequenceSceneBace</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\Sequence\ModelPreviewScene.h">
-      <Filter>Source\Editor\Sequence\ModelPreviewScene</Filter>
     </ClInclude>
     <ClInclude Include="Source\Editor\Sequence\AnimationSequencerEditor.h">
       <Filter>Source\Editor\Sequence\AnimationSequenceEditor</Filter>
@@ -956,9 +950,6 @@
     </Filter>
     <Filter Include="Source\Editor\Sequence">
       <UniqueIdentifier>{c6302ddf-12a4-444f-9777-619672e570b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\Sequence\ModelPreviewScene">
-      <UniqueIdentifier>{e4726fc1-f77f-4137-aec8-90c2c53ff5ff}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Editor\Sequence\SequenceSceneBace">
       <UniqueIdentifier>{2dcf45bb-3f27-4433-b305-ba0c99a6914a}</UniqueIdentifier>

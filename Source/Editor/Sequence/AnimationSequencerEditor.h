@@ -7,7 +7,6 @@
 #include <unordered_map>
 
 class SequenceSceneBace;
-class ModelPreviewScene;
 struct ID3D11DeviceContext;
 
 class AnimationSequencerEditor
@@ -70,7 +69,6 @@ private:
 
 private:
 	std::shared_ptr<SequenceSceneBace> active_scene;	//現在の画面
-	std::shared_ptr<ModelPreviewScene> preview_scene;	//モデル描画画面
 
 	float playback_speed = 1.0f;						//アニメーション再生速度
 	bool is_playing = true;								//再生/一時停止フラグ

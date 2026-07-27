@@ -47,6 +47,9 @@ bool Model::LoadModelInternal(const std::string& file_path)
 	renderer = std::make_shared<GltfModelRenderer>(device);
 	model = std::make_unique<GltfModel>(data, renderer);
 
+	constexpr float INITIAL_UPDATE_TIME = 0.0f;
+	if (model)model->Update(INITIAL_UPDATE_TIME);
+
 	//内部ルートモーションコンポーネントの初期化
 	if (root_motion_component)root_motion_component->Initialize(data);
 
@@ -125,6 +128,13 @@ void Model::LoadFromJObject(const nlohmann::json& object_json)
 void Model::PlayAnimation(const std::string& animation_name, bool is_loop)
 {
 	if (model)model->PlayAnimation(animation_name, is_loop);
+}
+
+//アニメーション名一覧を取得
+std::vector<std::string> Model::GetAnimationNames() const
+{
+	if (data)return data->GetAnimationNames();
+	return {};
 }
 
 // 再生時間取得

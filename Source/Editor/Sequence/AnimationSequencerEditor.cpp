@@ -1,5 +1,4 @@
 #include "AnimationSequencerEditor.h"
-#include "ModelPreviewScene.h"
 #include "Engine\Graphics\Renderers\Graphics.h"
 #include "Editor\FileDialogHelper.h"
 #include "Editor\EditorMediator.h"
@@ -25,16 +24,11 @@ AnimationSequencerEditor::~AnimationSequencerEditor() = default;
 //初期化処理
 void AnimationSequencerEditor::Initialize()
 {
-	preview_scene = std::make_shared<ModelPreviewScene>();
-	active_scene = preview_scene;
-	active_scene->Initialize();
 }
 
 //更新処理
 void AnimationSequencerEditor::Update(float elapsed_time)
 {
-	active_scene->Update(elapsed_time);
-
 	//プレビューモデル側からロード中のアニメーション総時間を取得
 	float duration = EditorMediator::Instance().GetModelAnimationDuration();
 
@@ -99,7 +93,6 @@ void AnimationSequencerEditor::Update(float elapsed_time)
 //描画処理
 void AnimationSequencerEditor::Render(ID3D11DeviceContext* immediate_context)
 {
-	active_scene->Render(immediate_context);
 }
 
 //ImGui描画処理
@@ -255,11 +248,6 @@ void AnimationSequencerEditor::RenderGui()
 		}
 	}
 	ImGui::End();
-	// アクティブシーンが有効か判定
-	if (active_scene)
-	{
-		active_scene->RenderGui();
-	}
 }
 
 //キーフレームの初期化

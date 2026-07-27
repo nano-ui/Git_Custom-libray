@@ -9,6 +9,8 @@ GameObject::GameObject()
 	scale = { 1.0f,1.0f,1.0f };
 	color = { 1.0f,1.0f,1.0f,1.0f };
 	is_active = true;
+
+	model = std::make_unique<Model>();
 }
 
 //デストラクタ
@@ -33,20 +35,16 @@ DirectX::XMMATRIX GameObject::GetWorldMatrix() const
 //ImGuiデバッグ描画
 void GameObject::RenderGui()
 {
-	if (serializer)
-	{
-		serializer->RenderGui();
-	}
+	if (serializer)serializer->RenderGui();
+
+	if (model)model->DrawImGui();
 
 	ImGui::Separator();
 
-	if (ImGui::Button("Save Json Data"))
-	{
-		SaveToJson();
-	}
+	if (ImGui::Button("Save Json Data"))SaveToJson();
 }
 
-//をシリアライザに登録
+//シリアライザに登録
 void GameObject::SetupSerialization()
 {
 	serializer = std::make_unique<JsonSerializer>();
@@ -58,19 +56,15 @@ void GameObject::SetupSerialization()
 //指定されたJSONオブジェクトへ自身のデータを書き込む
 void GameObject::SaveToJObject(nlohmann::json& object_json)
 {
-	if (serializer)
-	{
-		serializer->SaveToObject(object_json);
-	}
+	if (serializer)serializer->SaveToObject(object_json);
 }
 
 //指定されたJSONオブジェクトから自身のデータを復元
 void GameObject::LoadFromJObject(const nlohmann::json& object_json)
 {
-	if (serializer)
-	{
-		serializer->LoadFromObject(object_json);
-	}
+	if (serializer)serializer->LoadFromObject(object_json);
+	if (model)model->LoadFromJObject(object_json);
+	else OutputDebugStringA("[GameObject 警告] LoadFromJObject: model インスタンスが nullptr です。\n");
 }
 
 //パラメータをJSONファイルへ保存

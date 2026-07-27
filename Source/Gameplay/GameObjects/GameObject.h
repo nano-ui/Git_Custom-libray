@@ -91,11 +91,16 @@ public:
 	//モデル識別ハッシュ値の設定
 	void SetModelHash(uint32_t hash) { model_hash = hash; }
 
+	//モデル取得
+	Model* GetModel()const { return model.get(); }
+
 protected:
 	//コライダーを登録
 	void AddCollider(Collider* collider) { collideres.push_back(collider); }
 
 protected:
+	std::unique_ptr<Model> model;				//モデルインスタンス
+	std::unique_ptr<JsonSerializer> serializer;	//自身専用のシリアライザ
 	DirectX::XMFLOAT3 position;	//位置
 	DirectX::XMFLOAT4 rotation;	//角度
 	DirectX::XMFLOAT3 scale;	//スケール倍率
@@ -104,6 +109,5 @@ protected:
 	std::vector<Collider*> collideres;	//コライダーのリスト
 	std::string class_name;				//クラス名
 	uint32_t model_hash = 0;			//モデル識別ハッシュ値
-	std::unique_ptr<JsonSerializer> serializer;	//自身専用のシリアライザ
 };
 
