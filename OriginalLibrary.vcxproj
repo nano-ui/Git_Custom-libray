@@ -298,6 +298,7 @@
     <ClCompile Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Animation\RootMotionComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Editor\StateMachineComponent.cpp" />
+    <ClCompile Include="Source\Gameplay\Components\Model\ModelComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Movement\Move\CircularMove.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Movement\Move\LinearMove.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Movement\Move\MoveFactory.cpp" />
@@ -408,6 +409,7 @@
     <ClInclude Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Animation\RootMotionComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Editor\StateMachineComponent.h" />
+    <ClInclude Include="Source\Gameplay\Components\Model\ModelComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Movement\Move\CircularMove.h" />
     <ClInclude Include="Source\Gameplay\Components\Movement\Move\LinearMove.h" />
     <ClInclude Include="Source\Gameplay\Components\Movement\Move\MoveBase.h" />

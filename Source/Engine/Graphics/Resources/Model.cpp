@@ -1,251 +1,197 @@
 #include "Model.h"
-#include <filesystem>
-#include <stdexcept>
+#include "Engine/Graphics/Resources/ModelManager.h"
+#include "Engine/Graphics/Resources/GltfModel/GltfModel.h"
+#include "Engine/Graphics/Resources/GltfModel/GltfModelRenderer.h"
+#include "Engine/Graphics/Renderers/Graphics.h"
+#include "Gameplay/Components/Animation/RootMotionComponent.h"
 
-#include "GltfModel\GltfModelRenderer.h"
-#include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
-
-// アニメーションが見つからない場合のエラー用定数
-constexpr int ERROR_ANIMATION_NOT_FOUND = -1;
-
+#include <Windows.h>
+#include <imgui.h>
 
 // コンストラクタ
-Model::Model(ID3D11Device* device, const std::string& file_path)
+Model::Model()
 {
-	model_path = file_path;
-
-	// 常にglTFモデルとしてロードを行う
-	data = GltfModelData::Load(device, file_path);
-	renderer = std::make_shared<GltfModelRenderer>(device);
-	model = std::make_unique<GltfModel>(data, renderer);
+	root_motion_component = std::make_unique<RootMotionComponent>();
 }
-
 
 // デストラクタ
 Model::~Model() = default;
 
+// 初期化処理
+bool Model::Initialize(const std::string& file_path)
+{
+	return LoadModelInternal(file_path);
+}
+
+bool Model::LoadModelInternal(const std::string& file_path)
+{
+	model_path = file_path;
+
+	//ModelManagerからのデータ取得
+	data = ModelManager::Instance().LoadModelData(file_path);
+	if (!data)
+	{
+		std::string debug_msg = "[Model エラー] LoadModelInternal: ModelManager からのモデル読み込みに失敗しました。 パス: " + file_path + "\n";
+		OutputDebugStringA(debug_msg.c_str());
+		return false;
+	}
+
+	//DirectX11デバイスを取得して描画用インスタンスを生成
+	ID3D11Device* device = Graphics::Instance().GetDevice();
+	if (!device)
+	{
+		OutputDebugStringA("[Model エラー] LoadModelInternal: Graphics から ID3D11Device を取得できませんでした。\n");
+		return false;
+	}
+
+	renderer = std::make_shared<GltfModelRenderer>(device);
+	model = std::make_unique<GltfModel>(data, renderer);
+
+	//内部ルートモーションコンポーネントの初期化
+	if (root_motion_component)root_motion_component->Initialize(data);
+
+	return true;
+}
 
 // 更新処理
 void Model::Update(float elapsed_time)
 {
 	if (model)
 	{
+		//姿勢・アニメーション時間の更新
 		model->Update(elapsed_time);
-	}
-}
 
+		//ルートモーション有効時は、アニメーション再生時間をもとに移動量を更新
+		if (root_motion_component)
+		{
+			float current_anim_time = model->GetAnimationCurrentTime();
+			root_motion_component->Update(current_anim_time);
+		}
+	}
+	else OutputDebugStringA("[Model 警告] Update: model インスタンスが nullptr です。\n");
+}
 
 // 描画処理
 void Model::Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4 color)
 {
-	if (model)
+	// 描画非表示フラグが有効な場合は処理をスキップ
+	if (!is_visible)return;
+
+	if (!context)
 	{
-		model->Render(context, world);
+		OutputDebugStringA("[Model エラー] Render: context が nullptr です。\n");
+		return;
+	}
+
+	if (model)model->Render(context, world);
+	else OutputDebugStringA("[Model 警告] Render: model インスタンスが nullptr です。\n");
+}
+
+// ImGuiでのデバッグ表示
+void Model::DrawImGui()
+{
+	if (ImGui::TreeNode(u8"モデル設定"))
+	{
+		ImGui::Checkbox(u8"表示", &is_visible);
+		ImGui::Text(u8"モデルパス: %s", model_path.c_str());
+
+		if (data)
+		{
+			ImGui::Text(u8"共有参照数: %ld", data.use_count());
+		}
+		ImGui::TreePop();
 	}
 }
 
+// JSONへのデータ書き出し
+void Model::SaveToObject(nlohmann::json& object_json) const
+{
+	object_json["model_path"] = model_path;
+}
+
+// JSONからのデータ復元
+void Model::LoadFromJObject(const nlohmann::json& object_json)
+{
+	if (object_json.contains("model_path"))
+	{
+		std::string path_from_json = object_json["model_path"].get<std::string>();
+		if (!path_from_json.empty())Initialize(path_from_json);
+		else OutputDebugStringA("[Model 警告] LoadFromJObject: model_path が空文字列です。\n");
+	}
+	else OutputDebugStringA("[Model 警告] LoadFromJObject: JSON内に 'model_path' キーが存在しません。\n");
+}
 
 // アニメーション再生
 void Model::PlayAnimation(const std::string& animation_name, bool is_loop)
 {
-	if (model)
-	{
-		model->PlayAnimation(animation_name, is_loop);
-	}
+	if (model)model->PlayAnimation(animation_name, is_loop);
 }
-
-
-// アニメーション名一覧取得
-std::vector<std::string> Model::GetAnimationNames() const
-{
-	std::vector<std::string> names;
-	if (data)
-	{
-		for (const auto& pair : data->animation_index_map)
-		{
-			names.push_back(pair.first);
-		}
-	}
-	return names;
-}
-
-
-// 頂点座標リストの取得
-std::vector<DirectX::XMFLOAT3> Model::GetVertices() const
-{
-	std::vector<DirectX::XMFLOAT3> vertices_data;
-	if (data)
-	{
-		for (const auto& mesh : data->meshes)
-		{
-			for (const auto& primitive : mesh.primitives)
-			{
-				auto it = primitive.vertex_buffer_views.find("POSITION");
-				if (it != primitive.vertex_buffer_views.end())
-				{
-					const GltfModelData::buffer_view& view = it->second;
-					if (view.buffer > -1)
-					{
-						const std::vector<unsigned char>& raw_buffer = data->raw_buffers[view.buffer];
-						const uint8_t* data_ptr = raw_buffer.data() + view.byte_offset;
-						size_t stride = (view.stride_in_bytes > 0) ? view.stride_in_bytes : sizeof(DirectX::XMFLOAT3);
-						for (size_t i = 0; i < view.count; i++)
-						{
-							const DirectX::XMFLOAT3* pos = reinterpret_cast<const DirectX::XMFLOAT3*>(data_ptr + (i * stride));
-							vertices_data.push_back(*pos);
-						}
-					}
-				}
-			}
-		}
-	}
-	return vertices_data;
-}
-
-
-// インデックスリストの取得
-std::vector<uint32_t> Model::GetIndices() const
-{
-	std::vector<uint32_t> indices_data;
-	uint32_t vertex_offset = 0;
-	if (data)
-	{
-		for (const auto& mesh : data->meshes)
-		{
-			for (const auto& primitive : mesh.primitives)
-			{
-				const GltfModelData::buffer_view& index_view = primitive.index_buffer_view;
-				if (index_view.buffer > -1)
-				{
-					const std::vector<unsigned char>& raw_buffer = data->raw_buffers[index_view.buffer];
-					const uint8_t* data_ptr = raw_buffer.data() + index_view.byte_offset;
-					size_t stride = (index_view.stride_in_bytes > 0) ? index_view.stride_in_bytes : ((index_view.format == DXGI_FORMAT_R32_UINT) ? sizeof(uint32_t) : sizeof(uint16_t));
-					for (size_t i = 0; i < index_view.count; i++)
-					{
-						if (stride == sizeof(uint32_t))
-						{
-							uint32_t index_value = *reinterpret_cast<const uint32_t*>(data_ptr + (i * stride));
-							indices_data.push_back(index_value + vertex_offset);
-						}
-						else
-						{
-							uint16_t index_value = *reinterpret_cast<const uint16_t*>(data_ptr + (i * stride));
-							indices_data.push_back(static_cast<uint32_t>(index_value) + vertex_offset);
-						}
-					}
-				}
-				auto it = primitive.vertex_buffer_views.find("POSITION");
-				if (it != primitive.vertex_buffer_views.end())
-				{
-					vertex_offset += static_cast<uint32_t>(it->second.count);
-				}
-			}
-		}
-	}
-	return indices_data;
-}
-
-
-// アニメーション終了判定
-bool Model::IsAnimationFinished() const
-{
-	if (model)
-	{
-		return model->IsAnimationFinished();
-	}
-	return true;
-}
-
 
 // 再生時間取得
 float Model::GetAnimationTime() const
 {
-	if (model)
-	{
-		return model->GetAnimationCurrentTime();
-	}
+	if (model)return model->GetAnimationCurrentTime();
 	return 0.0f;
 }
 
-//アニメーション再生時間を設定
+// アニメーション再生時間を設定
 void Model::SetAnimationTime(float time)
 {
-	if (model)
-	{
-		model->SetAnimationTime(time);
-	}
-	else
-	{
-		// 意図しない挙動を防ぐためのデバッグ出力
-		OutputDebugStringA("[Model Error] SetAnimationTime: Internal glTF model is null!\n");
-	}
+	if (model)model->SetAnimationTime(time);
+	else OutputDebugStringA("[Model 警告] SetAnimationTime: model インスタンスが nullptr です。\n");
 }
-
 
 // アニメーション総時間取得
 float Model::GetAnimationDuration() const
 {
-	if (model)
-	{
-		return model->GetAnimationDuration();
-	}
+	if (model)return model->GetAnimationDuration();
 	return 0.0f;
 }
 
+// アニメーション終了判定
+bool Model::IsAnimationFinished() const
+{
+	if (model)return model->IsAnimationFinished();
+	return true;
+}
 
 // アニメーション名からインデックス取得
 int Model::GetAnimationIndex(const char* name) const
 {
-	if (!data || !name)
-	{
-		return ERROR_ANIMATION_NOT_FOUND;
-	}
-	std::string search_name(name);
-	auto it = data->animation_index_map.find(search_name);
-	if (it != data->animation_index_map.end())
-	{
-		return static_cast<int>(it->second);
-	}
+	if (data && name)return data->GetAnimationIndex(name);
 	return ERROR_ANIMATION_NOT_FOUND;
 }
 
-
-// glTFデータ構造の取得
-std::shared_ptr<const GltfModelData> Model::GetGltfModelData() const
+// ルートモーション移動差分の取得
+DirectX::XMFLOAT3 Model::GetDeltaPosition() const
 {
-	return data;
+	if (root_motion_component)return root_motion_component->GetDeltaPosition();
+	return { 0.0f, 0.0f, 0.0f };
 }
 
-
-// オリジナルノード配列取得
-std::vector<GltfModelData::node>& Model::GetNodes()
+// ルートモーション回転差分の取得
+DirectX::XMFLOAT4 Model::GetDeltaRotation() const
 {
-	return data->nodes;
+	if (root_motion_component)return root_motion_component->GetDeltaRotation();
+	return { 0.0f, 0.0f, 0.0f, 1.0f };
 }
 
-
-// アニメーション後のノード配列取得
+// 動的ノード配列取得
 const std::vector<GltfModelData::node>& Model::GetAnimatedNodes() const
 {
-	return model->GetAnimatedNodes();
+	static const std::vector<GltfModelData::node> empty_nodes;
+	if (model)return model->GetAnimatedNodes();
+	return empty_nodes;
 }
 
-
-// 外部からノード位置を上書き
+// ノード位置の上書き
 void Model::SetNodeTranslation(int node_index, const DirectX::XMFLOAT3& translation)
 {
-	if (model)
-	{
-		model->SetNodeTranslation(node_index, translation);
-	}
+	if (model)model->SetNodeTranslation(node_index, translation);
 }
-
 
 // グローバル行列の再計算
 void Model::RecalculateTransforms()
 {
-	if (model)
-	{
-		model->RecalculateTransforms();
-	}
+	if (model)model->RecalculateTransforms();
 }

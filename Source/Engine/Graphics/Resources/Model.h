@@ -6,74 +6,86 @@
 #include <string>
 #include <vector>
 
-#include "Engine\Graphics\Resources\GltfModel\GltfModelData.h"
+#include "ThiedParty/json.hpp"
+#include "Engine/Graphics/Resources/GltfModel/GltfModelData.h"
 
 class GltfModel;
 class GltfModelRenderer;
+class RootMotionComponent;
 
 class Model
 {
 public:
-	// コンストラクタ
-	Model(ID3D11Device* device, const std::string& file_path);
+	//コンストラクタ・デストラクタ
+	Model();
+	~Model();
 
-	// デストラクタ
-	~Model();	
+	//初期化処理（ModelManagerを利用して共有ロード）
+	bool Initialize(const std::string& file_path);
 
-	// 更新処理
-	void Update(float elapsed_time);	
+	//更新処理（アニメーションおよびルートモーション）
+	void Update(float elapsed_time);
 
-	// 描画処理
-	void Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f });
+	//描画処理
+	void Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 
-	// アニメーションの再生
-	void PlayAnimation(const std::string& animation_name, bool is_loop);
+	//ImGuiでのデバッグ用パラメータ描画
+	void DrawImGui();
 
-	// 登録されているすべてのアニメーション名の一覧を取得	
-	std::vector<std::string> GetAnimationNames() const;
+	//JSONへのモデルデータ書き出し
+	void SaveToObject(nlohmann::json& object_json) const;
 
-	// 頂点座標リストの取得	
-	std::vector<DirectX::XMFLOAT3> GetVertices() const;
+	//JSONからのモデルデータ復元と自動読み込み
+	void LoadFromJObject(const nlohmann::json& object_json);
 
-	// インデックスリストの取得	
-	std::vector<uint32_t> GetIndices() const;
+	//アニメーション再生
+	void PlayAnimation(const std::string& animation_name, bool is_loop = true);
 
-	// アニメーションが終了したか取得	
-	bool IsAnimationFinished() const;
-
-	// モデルパスの取得	
-	const std::string& GetModelPath() const { return model_path; }
-
-	// アニメーション再生時間取得	
+	//アニメーション時間の取得・設定
 	float GetAnimationTime() const;
-
-	//アニメーション再生時間を設定
 	void SetAnimationTime(float time);
 
-	// アニメーションの総時間を取得	
+	//アニメーション総時間の取得
 	float GetAnimationDuration() const;
 
-	// アニメーション名からインデックス番号を取得	
+	//アニメーション終了判定
+	bool IsAnimationFinished() const;
+
+	//アニメーション名からインデックス取得
 	int GetAnimationIndex(const char* name) const;
-	
-	// glTFモデルのデータ本体を取得	
-	std::shared_ptr<const GltfModelData> GetGltfModelData() const;
 
-	// 初期状態（アニメーション前）のオリジナルノード配列を取得
-	std::vector<GltfModelData::node>& GetNodes();
+	//ルートモーション差分の取得
+	DirectX::XMFLOAT3 GetDeltaPosition() const;
+	DirectX::XMFLOAT4 GetDeltaRotation() const;
 
-	// アニメーション計算適用後の動的なノード配列を取得
+	//描画表示フラグ設定・取得
+	void SetVisible(bool visible) { is_visible = visible; }
+	bool IsVisible() const { return is_visible; }
+
+	//モデルパス取得
+	const std::string& GetModelPath() const { return model_path; }
+
+	//glTF共有データ構造体の取得
+	std::shared_ptr<const GltfModelData> GetGltfModelData() const { return data; }
+
+	//アニメーション計算適用後の動的ノード配列取得
 	const std::vector<GltfModelData::node>& GetAnimatedNodes() const;
 
-	// 指定したノードの移動成分を外部から上書きする	
+	//指定ノードの位置の上書き
 	void SetNodeTranslation(int node_index, const DirectX::XMFLOAT3& translation);
 
-	// 変更されたノード情報をもとに、グローバル行列を再計算する
+	//姿勢行列の再計算
 	void RecalculateTransforms();
 
 private:
-	std::shared_ptr<GltfModelData> data;			// glTFのデータ構造を保持するスマートポインタ
-	std::shared_ptr<GltfModelRenderer> renderer;	// 描画を司るレンダラーのスマートポインタ
-	std::unique_ptr<GltfModel> model;				// アニメーション更新や制御を行う実体
-	std::string model_path = "";					// 読み込んだモデルのファイルパス
+	//使いまわさない内部専用のモデルロード処理
+	bool LoadModelInternal(const std::string& file_path);
+
+private:
+	std::shared_ptr<GltfModelData> data = nullptr;				//ModelManagerから共有キャッシュされるモデルデータ
+	std::shared_ptr<GltfModelRenderer> renderer = nullptr;		//描画を司るレンダラー
+	std::unique_ptr<GltfModel> model = nullptr;					//個別オブジェクトのノード姿勢制御用実体
+	std::unique_ptr<RootMotionComponent> root_motion_component = nullptr; //ルートモーション計算コンポーネント
+	std::string model_path = "";								//ロード中のモデルファイルパス
+	bool is_visible = true;										//描画表示可否フラグ
 };

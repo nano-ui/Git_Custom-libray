@@ -1,0 +1,122 @@
+#include "ModelComponent.h"
+
+#include "Engine/Graphics/Resources/ModelManager.h"
+#include "Engine/Graphics/Resources/GltfModel/GltfModel.h"
+#include "Engine/Graphics/Resources/GltfModel/GltfModelData.h"
+#include "Engine/Graphics/Resources/GltfModel/GltfModelRenderer.h"
+#include "Engine/Graphics/Renderers/Graphics.h"
+
+#include <Windows.h>
+#include <vector>
+#include <imgui.h>
+
+//初期化処理
+bool ModelComponent::Initialize(const std::string& file_path)
+{
+	return LoadModel(file_path);
+}
+
+//モデルデータのロード処理
+bool ModelComponent::LoadModel(const std::string& file_path)
+{
+	model_path = file_path;
+
+	//ModelManagerを経由して共有モデルデータを取得
+	model_data = ModelManager::Instance().LoadModelData(file_path);
+	if (!model_data)
+	{
+		OutputDebugStringA("[ModelComponent エラー] LoadModel: ModelManagerからのモデルデータ取得に失敗しました。\n");
+		return false;
+	}
+
+	//レンダラーの生成
+	ID3D11Device* device = Graphics::Instance().GetDevice();
+	if (!device)
+	{
+		OutputDebugStringA("[ModelComponent エラー] LoadModel: ID3D11Device の取得に失敗しました。\n");
+		return false;
+	}
+
+	renderer = std::make_unique<GltfModelRenderer>(device);
+	if (!renderer)
+	{
+		OutputDebugStringA("[ModelComponent エラー] LoadModel: GltfModelRenderer の生成に失敗しました。\n");
+		return false;
+	}
+
+	//個別オブジェクト用の GltfModel インスタンスを生成
+	model = std::make_unique<GltfModel>(model_data, renderer);
+	if (!model)
+	{
+		OutputDebugStringA("[ModelComponent エラー] LoadModel: GltfModel の生成に失敗しました。\n");
+		return false;
+	}
+	return true;
+}
+
+//アニメーション更新
+void ModelComponent::Update(float delta_time)
+{
+	if (model)
+	{
+		model->Update(delta_time);
+	}
+	else
+	{
+		OutputDebugStringA("[ModelComponent 警告] Update: model インスタンスが nullptr です。\n");
+	}
+}
+
+//描画処理
+void ModelComponent::Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world_matrix)
+{
+	//描画非表示フラグが有効な場合はスキップ
+	if (!is_visible)return;
+
+	if (!immediate_context)
+	{
+		OutputDebugStringA("[ModelComponent エラー] Render: immediate_context が nullptr です。\n");
+		return;
+	}
+
+	if (model)model->Render(immediate_context, world_matrix);
+	else OutputDebugStringA("[ModelComponent 警告] Render: model インスタンスが nullptr です。\n");
+}
+
+//ImGui描画
+void ModelComponent::DrawImGui()
+{
+	if (ImGui::TreeNode(u8"モデルコンポーネント"))
+	{
+		ImGui::Checkbox(u8"表示", &is_visible);
+		ImGui::Text(u8"モデルパス:%s", model_path.c_str());
+
+		if (model_data)
+		{
+			ImGui::Text(u8"リソース共有参照数: %ld", model_data.use_count());
+		}
+		ImGui::TreePop();
+	}
+}
+
+//Jsonへのモデルパスデータ保存
+void ModelComponent::SaveToObject(nlohmann::json& object_json) const
+{
+	object_json["model_path"] = model_path;
+}
+
+//Jsonへのモデルパスデータ復元とモデルロード
+void ModelComponent::LoadFromJObject(const nlohmann::json& object_json)
+{
+	if (object_json.contains("model_path"))
+	{
+		std::string path_from_json = object_json["model_path"].get<std::string>();
+
+		if (!path_from_json.empty())Initialize(path_from_json);
+		else OutputDebugStringA("[ModelComponent 警告] LoadFromJObject: model_path が空文字列です。\n");
+	}
+	else
+	{
+		OutputDebugStringA("[ModelComponent 警告] LoadFromJObject: JSON内に 'model_path' キーが存在しません。\n");
+	}
+}

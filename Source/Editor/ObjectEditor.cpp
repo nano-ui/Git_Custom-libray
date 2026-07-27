@@ -18,7 +18,7 @@
 #include <commdlg.h>
 #include "StateMachineEditor\StateGraphConfigManager.h"
 
-static const std::string editor_config_path = "Data/System/EditorConfig.json";
+static const std::string editor_config_path = "Data/Json/System/EditorConfig.json";
 static const std::string config_key_scene_path = "last_opened_scene";
 static const std::string json_root_key_objects = "objects";
 

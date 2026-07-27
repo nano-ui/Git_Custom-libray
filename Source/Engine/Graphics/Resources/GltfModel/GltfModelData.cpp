@@ -6,6 +6,8 @@
 #include "Engine/Core/misc.h"
 #include "Engine\Graphics\Shaders\shader.h"
 
+#include <Windows.h>
+
 
 //==============================================
 //画像読み込みをスキップするためのダミー関数
@@ -242,9 +244,104 @@ std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const s
 	return data;
 }
 
-//=================================================
+//頂点座標リスト取得
+std::vector<DirectX::XMFLOAT3> GltfModelData::GetVertices() const
+{
+	std::vector<DirectX::XMFLOAT3> vertices_data;
+	for (const auto& mesh : meshes)
+	{
+		for (const auto& primitive : mesh.primitives)
+		{
+			auto it = primitive.vertex_buffer_views.find("POSITION");
+			if (it != primitive.vertex_buffer_views.end())
+			{
+				const GltfModelData::buffer_view& view = it->second;
+				if (view.buffer > -1)
+				{
+					const std::vector<unsigned char>& raw_buffer = raw_buffers[view.buffer];
+					const uint8_t* data_ptr = raw_buffer.data() + view.byte_offset;
+					size_t stride = (view.stride_in_bytes > 0) ? view.stride_in_bytes : sizeof(DirectX::XMFLOAT3);
+					for (size_t i = 0; i < view.count; i++)
+					{
+						const DirectX::XMFLOAT3* pos = reinterpret_cast<const DirectX::XMFLOAT3*>(data_ptr + (i * stride));
+						vertices_data.push_back(*pos);
+					}
+				}
+				else
+				{
+					OutputDebugStringA("[GltfModelData 警告] GetVertices: view.buffer のインデックスが不正です。\n");
+				}
+			}
+		}
+	}
+	return vertices_data;
+}
+
+//インデックスリスト取得
+std::vector<uint32_t> GltfModelData::GetIndices() const
+{
+	std::vector<uint32_t> indices_data;
+	uint32_t vertex_offset = 0;
+	for (const auto& mesh : meshes)
+	{
+		for (const auto& primitive : mesh.primitives)
+		{
+			const GltfModelData::buffer_view& index_view = primitive.index_buffer_view;
+			if (index_view.buffer > -1)
+			{
+				const std::vector<unsigned char>& raw_buffer = raw_buffers[index_view.buffer];
+				const uint8_t* data_ptr = raw_buffer.data() + index_view.byte_offset;
+				size_t stride = (index_view.stride_in_bytes > 0) ? index_view.stride_in_bytes : ((index_view.format == DXGI_FORMAT_R32_UINT) ? sizeof(uint32_t) : sizeof(uint16_t));
+				for (size_t i = 0; i < index_view.count; i++)
+				{
+					if (stride == sizeof(uint32_t))
+					{
+						uint32_t index_value = *reinterpret_cast<const uint32_t*>(data_ptr + (i * stride));
+						indices_data.push_back(index_value + vertex_offset);
+					}
+					else
+					{
+						uint16_t index_value = *reinterpret_cast<const uint16_t*>(data_ptr + (i * stride));
+						indices_data.push_back(static_cast<uint32_t>(index_value) + vertex_offset);
+					}
+				}
+			}
+			auto it = primitive.vertex_buffer_views.find("POSITION");
+			if (it != primitive.vertex_buffer_views.end())
+			{
+				vertex_offset += static_cast<uint32_t>(it->second.count);
+			}
+		}
+	}
+	return indices_data;
+}
+
+//アニメーション名一覧取得
+std::vector<std::string> GltfModelData::GetAnimationNames() const
+{
+	std::vector<std::string> names;
+	for (const auto& pair : animation_index_map)
+	{
+		names.push_back(pair.first);
+	}
+	return names;
+}
+
+//アニメーション名からインデックス番号を取得
+int GltfModelData::GetAnimationIndex(const std::string& name) const
+{
+	if (name.empty())return ERROR_ANIMATION_NOT_FOUND;
+
+	auto iterator = animation_index_map.find(name);
+	if (iterator != animation_index_map.end())return static_cast<int>(iterator->second);
+
+	std::string debug_msg = "[GltfModelData 警告] GetAnimationIndex: 指定されたアニメーション名が見つかりません。 Name: " + name + "\n";
+	OutputDebugStringA(debug_msg.c_str());
+
+	return ERROR_ANIMATION_NOT_FOUND;
+}
+
 //tinygltfの型情報をDirectXのフォーマットに変換
-//=================================================
 DXGI_FORMAT GltfModelData::ConvertFormat(const tinygltf::Accessor& accessor)
 {
 	switch (accessor.type)	//gltfの型(スカラー、ベクトル等)で判定
@@ -253,7 +350,7 @@ DXGI_FORMAT GltfModelData::ConvertFormat(const tinygltf::Accessor& accessor)
 		switch (accessor.componentType)
 		{
 		case TINYGLTF_COMPONENT_TYPE_BYTE:           return DXGI_FORMAT_R8_SINT;
-		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:  return DXGI_FORMAT_R8_UINT;	//UEが容量節約によく使う型
+		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:  return DXGI_FORMAT_R8_UINT;
 		case TINYGLTF_COMPONENT_TYPE_SHORT:          return DXGI_FORMAT_R16_SINT;
 		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT: return DXGI_FORMAT_R16_UINT;
 		case TINYGLTF_COMPONENT_TYPE_INT:            return DXGI_FORMAT_R32_SINT;

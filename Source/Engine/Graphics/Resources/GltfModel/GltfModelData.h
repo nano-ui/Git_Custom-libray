@@ -16,6 +16,8 @@
 #define TINYGLTF_NO_STB_IMAGE_WRITE
 #include "tinygltf-release/tiny_gltf.h"
 
+constexpr int ERROR_ANIMATION_NOT_FOUND = -1;
+
 class GltfModelData
 {
 public:
@@ -238,6 +240,18 @@ public:
 
 	//バイナリキャッシュを利用してモデルを読み込む
 	static std::shared_ptr<GltfModelData> Load(ID3D11Device* device, const std::string& filename);
+
+	//頂点座標リスト取得
+	std::vector<DirectX::XMFLOAT3> GetVertices()const;
+
+	//インデックスリスト取得
+	std::vector<uint32_t> GetIndices()const;
+
+	//アニメーション名一覧取得
+	std::vector<std::string> GetAnimationNames()const;
+
+	//アニメーション名からインデックス番号を取得
+	int GetAnimationIndex(const std::string& name)const;
 
 private:
 	DXGI_FORMAT ConvertFormat(const tinygltf::Accessor& accessor);

@@ -375,6 +375,9 @@
     <ClCompile Include="Source\Engine\Graphics\Shaders\SkyBox.cpp">
       <Filter>Source\Engine\Graphics\Shaders\SkyBox</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Model\ModelComponent.cpp">
+      <Filter>Source\Gameplay\Components\Model\ModelComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -706,6 +709,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Shaders\SkyBox.h">
       <Filter>Source\Engine\Graphics\Shaders\SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Model\ModelComponent.h">
+      <Filter>Source\Gameplay\Components\Model\ModelComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1133,6 +1139,12 @@
     </Filter>
     <Filter Include="Source\Engine\Graphics\Shaders\SkyBox">
       <UniqueIdentifier>{ade75e81-2849-4df1-ac4c-49e5e7e14fb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Model">
+      <UniqueIdentifier>{6a89f427-9ea5-458e-b233-30ba5086e500}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Model\ModelComponent">
+      <UniqueIdentifier>{f2454b76-6b57-4cef-8523-af0b58535eea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

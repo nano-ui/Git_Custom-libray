@@ -1,9 +1,11 @@
 #include "ModelManager.h"
 #include "Engine\Graphics\Resources\GltfModel\GltfModelData.h"
 #include "Engine\Graphics\Renderers\Graphics.h"
+#include "ThiedParty\json.hpp"
 
 #include <algorithm>
 #include <filesystem>
+#include <fstream>
 #include <Windows.h>
 
 //インスタンス取得
@@ -58,6 +60,68 @@ void ModelManager::PreloadModels(const std::vector<std::string>& file_paths)
 			OutputDebugStringA(debug_message.c_str());
 		}
 	}
+}
+
+//Jsonファイルから事前ロードリストを一括読み込み
+bool ModelManager::LoadPreloadListFromJson(const std::string& json_file_path)
+{
+	std::ifstream input_file(json_file_path);
+
+	if (!input_file.is_open())
+	{
+		std::string debug_message = "[ModelManager 警告] LoadPreloadListFromJson: JSONファイルが開けません。 パス: " + json_file_path + "\n";
+		OutputDebugStringA(debug_message.c_str());
+		return false;
+	}
+
+	nlohmann::json preload_json;
+	input_file >> preload_json;
+	input_file.close();
+
+	if (!preload_json.contains("preload_models") || !preload_json["preload_models"].is_array())
+	{
+		std::string debug_message = "[ModelManager エラー] LoadPreloadListFromJson: JSON内に 'preload_models' 配列が存在しません。 パス: " + json_file_path + "\n";
+		OutputDebugStringA(debug_message.c_str());
+		return false;
+	}
+
+	std::vector<std::string>file_paths;
+	for (const auto& item : preload_json["preload_models"])
+	{
+		if (item.is_string())file_paths.push_back(item.get<std::string>());
+	}
+
+	PreloadModels(file_paths);
+	return false;
+}
+
+//事前ロード用リストをJsonファイルとして保存作成
+bool ModelManager::SavePreloadListToJson(const std::vector<std::string>& file_paths, const std::string& json_file_path)
+{
+	std::filesystem::path target_path(json_file_path);
+
+	//親フォルダがない場合は生成
+	if (target_path.has_parent_path())
+	{
+		std::filesystem::create_directories(target_path.parent_path());
+	}
+
+	nlohmann::json preload_json;
+	preload_json["preload_models"] = file_paths;
+
+	constexpr int JSON_INDENT_SPACES = 4;
+	std::ofstream output_file(json_file_path);
+
+	if (!output_file.is_open())
+	{
+		std::string debug_message = "[ModelManager エラー] SavePreloadListToJson: ファイルの保存に失敗しました。 パス: " + json_file_path + "\n";
+		OutputDebugStringA(debug_message.c_str());
+		return false;
+	}
+
+	output_file << preload_json.dump(JSON_INDENT_SPACES);
+	output_file.close();
+	return true;
 }
 
 //登録済みモデルデータ取得
