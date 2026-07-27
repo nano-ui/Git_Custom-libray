@@ -12,6 +12,7 @@
 #include "StateBlackboardInspectorWindow.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Editor\AssetLoader.h"
+#include "Editor\PathHelper.h"
 
 #include <imgui_node_editor_internal.h>
 #include <cassert>
@@ -235,6 +236,7 @@ bool StateMachineGraphEditor::LoadGraphFromFile(const std::string& file_path)
 		const uint32_t reset_root_id = 0;
 		current_graph_id = reset_root_id;
 		current_loaded_file_path = file_path;
+		if (state_machine_component)state_machine_component->SetStateMachinePath(current_loaded_file_path);
 		SaveEditorCondig();
 
 		//読み込んだデータにモデルパスが記録されているか判定
@@ -416,12 +418,36 @@ bool StateMachineGraphEditor::DrawTopMenuBar(StateBlackboard* blackboard)
 
 	if (ImGui::Button(u8"保存", ImVec2(upper_btn_width, upper_btn_height)))
 	{
-		std::string selected_save_path = FileDialogHelper::SaveFileDialog();
-		if (!selected_save_path.empty())
+		std::string save_target_path = current_loaded_file_path; // 保存先パス
+
+		//現在の保存先パスが空で、紐付けモデルが存在する場合に自動パスを構築
+		if (save_target_path.empty() && !data_manager->GetTargetModelPath().empty())
 		{
-			data_manager->SaveToFile(selected_save_path);
-			current_loaded_file_path = selected_save_path;
+			std::filesystem::path path_obj(data_manager->GetTargetModelPath());
+			std::string model_name = path_obj.stem().string(); //拡張子なしのモデル名
+			const std::string suffix_name = "_StateMachine";    //接尾辞定数
+
+			save_target_path = PathHelper::GenerateJsonFilePath(model_name, suffix_name);
+		}
+
+		//それでもパスが決まらない場合（モデル未設定時）はファイルダイアログを表示
+		if (save_target_path.empty())
+		{
+			save_target_path = FileDialogHelper::SaveFileDialog();
+		}
+
+		//有効な保存先パスが確定したか判定
+		if (!save_target_path.empty())
+		{
+			data_manager->SaveToFile(save_target_path);
+			current_loaded_file_path = save_target_path;
 			SaveEditorCondig();
+			printf("StateMachineGraphEditor: ファイル「%s」へ保存を完了しました。\n", current_loaded_file_path.c_str());
+		}
+		else
+		{
+			// 意図しない挙動（保存先パス未指定）が発生した場合のデバッグ出力
+			printf("Error: StateMachineGraphEditor - 保存先のパスが指定されなかったため保存をキャンセルしました。\n");
 		}
 	}
 	ImGui::PopStyleColor();
@@ -431,38 +457,43 @@ bool StateMachineGraphEditor::DrawTopMenuBar(StateBlackboard* blackboard)
 	const ImVec4 load_btn_color = ImVec4(0.2f, 0.4f, 0.6f, 1.0f);
 	ImGui::PushStyleColor(ImGuiCol_Button, load_btn_color);
 
-	if (ImGui::Button(u8"読込", ImVec2(upper_btn_width, upper_btn_height)))
+	if (ImGui::Button(u8"モデル読み込み", ImVec2(upper_btn_width, upper_btn_height)))
 	{
-		std::string selected_load_path = FileDialogHelper::OpenFileDialog();
-		if (!selected_load_path.empty())
+		PathResult path_result = FileDialogHelper::OpenGenericFileDialog(); 
+		if (!path_result.absolute_path.empty())
 		{
-			LoadGraphFromFile(selected_load_path);
+			if (asset_loader->LoadModelAnimations(path_result.relative_path))
+			{
+				data_manager->SetTargetModelPath(path_result.relative_path); 
+					std::filesystem::path path_obj(path_result.relative_path); 
+					std::string model_name = path_obj.stem().string();
+
+				//モデル名と接尾辞から対応するJSONパスを自動構築
+				const std::string suffix_name = "_StateMachine"; // ファイル接尾辞の定数化
+				std::string auto_json_path = PathHelper::GenerateJsonFilePath(model_name, suffix_name); 
+
+					//生成されたパスが有効か検証
+					if (!auto_json_path.empty())
+					{
+						current_loaded_file_path = auto_json_path;
+						data_manager->LoadFromFile(current_loaded_file_path);
+						printf("StateMachineGraphEditor: モデル「%s」のJsonパス「%s」を自動構築して読み込みました。\n",
+								model_name.c_str(), current_loaded_file_path.c_str());
+					}
+					else
+					{
+						printf("Error: StateMachineGraphEditor - PathHelperでのパス生成に失敗しました。\n");
+					}
+
+				target_model_hash = StateBlackboard::CalculateHash(model_name); 
+					EditorMediator::Instance().OnModelDubleClied(path_result.relative_path); 
+					printf("StateMachineGraphEditor: モデル読み込み完了: %s\n", path_result.relative_path.c_str()); 
+					TriggerHotReload(); 
+			}
 		}
 	}
 	ImGui::PopStyleColor();
 	ImGui::SameLine();
-
-	//モデル選択ボタンが押されたか判定
-	if (ImGui::Button(u8"モデル選択"))
-	{
-		PathResult path_result = FileDialogHelper::OpenGenericFileDialog();
-
-		//ファイルが選択されたか判定
-		if (!path_result.absolute_path.empty())
-		{
-			//モデルのロードとアニメーション名抽出
-			if (asset_loader->LoadModelAnimations(path_result.relative_path))
-			{
-				data_manager->SetTargetModelPath(path_result.relative_path);
-				std::filesystem::path path_obj(path_result.relative_path);
-				std::string model_name = path_obj.stem().string(); // 拡張子を除いたファイル名を抽出
-				target_model_hash = StateBlackboard::CalculateHash(model_name);
-				EditorMediator::Instance().OnModelDubleClied(path_result.relative_path);
-				printf("StateMachineGraphEditor: モデル「%s」からアニメーションリストを取得しました。\n", path_result.relative_path.c_str());
-				TriggerHotReload();
-			}
-		}
-	}
 
 	//モデル読み込みの成否を判定
 	if (!asset_loader->GetLoadedModelPath().empty())
@@ -490,6 +521,7 @@ bool StateMachineGraphEditor::DrawTopMenuBar(StateBlackboard* blackboard)
 			if (!current_loaded_file_path.empty())
 			{
 				data_manager->SaveToFile(current_loaded_file_path);
+				state_machine_component->SetStateMachinePath(current_loaded_file_path);
 			}
 			state_machine_component->RequestReload();
 			state_machine_component->Initialize(blackboard);

@@ -4,7 +4,7 @@
 #include "ThiedParty/json.hpp"
 #include "Gameplay\Components\Animation\AnimationComponent.h"
 #include "Engine/Core/Input.h"
-
+#include "Editor\PathHelper.h"
 
 #include <fstream>
 #include <iostream>
@@ -31,7 +31,9 @@ void StateMachineComponent::Initialize(StateBlackboard* blackboard)
 	}
 	else
 	{
-		state_machine_path = "Data/Json/Kari.json";
+		const std::string default_model_name = "Default";
+		const std::string suffix_name = "_StateMachine";
+		state_machine_path = PathHelper::GenerateJsonFilePath(default_model_name, suffix_name);
 		LoadAnimationMap(blackboard);
 	}
 
@@ -77,7 +79,9 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 		//ファイルパスが空であるかを判定
 		if (state_machine_path.empty())
 		{
-			state_machine_path = "Data/Json/Kari.json";
+			const std::string default_model_name = "Default";
+			const std::string suffix_name = "_StateMachine";
+			state_machine_path = PathHelper::GenerateJsonFilePath(default_model_name, suffix_name);
 		}
 
 		LoadAnimationMap(blackboard);
@@ -345,6 +349,24 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 				break;
 			}
 		}
+	}
+}
+
+//モデル名設定
+void StateMachineComponent::SetModelName(const std::string& model_name)
+{
+	const std::string suffix_name = "_StateMachine";
+	std::string generated_path = PathHelper::GenerateJsonFilePath(model_name, suffix_name);
+
+	if (!generated_path.empty())
+	{
+		state_machine_path = generated_path;
+		printf("StateMachineComponent: モデル名「%s」からパス「%s」を設定しました。\n",
+			model_name.c_str(), state_machine_path.c_str());
+	}
+	else
+	{
+		printf("Error: StateMachineComponent::SetModelName - パスの構築に失敗しました。\n");
 	}
 }
 

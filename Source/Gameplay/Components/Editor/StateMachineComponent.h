@@ -49,6 +49,12 @@ public:
 	//更新
 	void Update(float elapsed_time, StateBlackboard* blackboard);
 
+	//モデル名設定
+	void SetModelName(const std::string& model_name);
+
+	//ステートマシンパス設定
+	void SetStateMachinePath(const std::string& path) { state_machine_path = path; }
+
 	//シリアライズ登録
 	void SetupSerialization(JsonSerializer* serializer);
 

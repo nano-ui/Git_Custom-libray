@@ -7,6 +7,7 @@
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 
 #include <imgui.h>
+#include <filesystem>
 
 static AutoRegister<Player> auto_register_player("Player");
 
@@ -18,8 +19,13 @@ Player::Player()
 	height = 0.8f;
 	radius = 0.4f;
 	offset_y = 0.5f;
-	model = std::make_unique<Model>();
-	model->Initialize("Data/Model/Character/Player/Greystone_WhiteTiger.gltf");
+	const std::string model_path = "Data/Model/Character/Player/Greystone_WhiteTiger.gltf";
+	model->Initialize(model_path);
+	std::filesystem::path path_obj(model_path);
+	std::string model_name = path_obj.stem().string();
+
+	if (state_machine_component)state_machine_component->SetModelName(model_name);
+	else printf("Error: Player::Player - state_machine_component が nullptr です。\n");
 }
 
 //デストラクタ

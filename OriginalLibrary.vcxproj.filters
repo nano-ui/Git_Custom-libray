@@ -375,6 +375,9 @@
     <ClCompile Include="Source\Gameplay\Components\Model\ModelComponent.cpp">
       <Filter>Source\Gameplay\Components\Model\ModelComponent</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\PathHelper.cpp">
+      <Filter>Source\Editor\PathHelper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -706,6 +709,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Model\ModelComponent.h">
       <Filter>Source\Gameplay\Components\Model\ModelComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\PathHelper.h">
+      <Filter>Source\Editor\PathHelper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1136,6 +1142,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Model\ModelComponent">
       <UniqueIdentifier>{f2454b76-6b57-4cef-8523-af0b58535eea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\PathHelper">
+      <UniqueIdentifier>{df919b32-24a9-4c3e-a751-8ab70a0cfc4d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -160,7 +160,7 @@ void Character::SetupBlackboard()
 	blackboard->SetValue(u8"速度", max_speed);
 	blackboard->SetValue(u8"接地フラグ", is_ground);
 
-	printf("Character: 共有ブラックボードにを登録しま。\n");
+	printf("Character: 共有ブラックボードにを登録します。\n");
 }
 
 //移動方向の設定
