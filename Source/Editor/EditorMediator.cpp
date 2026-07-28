@@ -1,4 +1,5 @@
 #include "EditorMediator.h"
+#include "ObjectEditor.h"
 #include "Gameplay/GameObjects/GameObject.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Gameplay/GameObjects/Character/Character.h"
@@ -46,7 +47,7 @@ void EditorMediator::RegisterObjectEditor(ObjectEditor* editor)
 //モデルファイルがドロップした際のイベント
 void EditorMediator::OnModelDropped(const std::string& file_path)
 {
-	if (object_editor)return;
+	if (object_editor)object_editor->CreateTempModelObject(file_path);
 	else OutputDebugStringA("[Error] EditorMediator: ObjectEditor is not registered!\n");
 }
 

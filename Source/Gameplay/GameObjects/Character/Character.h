@@ -119,6 +119,5 @@ protected:
 	float weight;				//キャラクターの重さ
 	float health;				//生命力	
 	float move_speed;			//移動速度
-
 };
 

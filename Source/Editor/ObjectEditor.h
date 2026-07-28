@@ -35,6 +35,9 @@ public:
 	//シーン読み込み
 	void LoadSceneWithDialog();
 
+	//仮オブジェクト生成
+	void CreateTempModelObject(const std::string& model_path);
+
 private:
 	//オブジェクト生成UI描画
 	void DrawLeftPane(Camera* camera, CollisionManager* collision_manager);
@@ -62,6 +65,9 @@ private:
 
 	//エディタ設定ファイルの読み込み
 	std::string LoadEditorConfig();
+
+	//ドラッグターゲットの監視処理
+	void HandleDragDropTarget(Camera* camera, CollisionManager* collision_manager);
 
 private:
 	int selected_class_index;				//選択されているクラスのインデックス

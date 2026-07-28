@@ -50,6 +50,7 @@ void ObjectEditor::Initialize()
 	selected_class_index = 0;
 	current_selected_object = nullptr;
 	cached_class_names = ObjectFactory::GetClassNames();
+	EditorMediator::Instance().RegisterObjectEditor(this);
 
 	//起動時のシーン復元処理
 	std::string auto_load_path = LoadEditorConfig();
@@ -127,6 +128,8 @@ void ObjectEditor::Update(Camera* camera, CollisionManager* collision_manager)
 //描画
 void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 {
+	HandleDragDropTarget(camera, collision_manager);
+
 	//画面解像度に基づいた初期配置位置の計算
 	ImGuiIO io = ImGui::GetIO();
 	const float screen_width = io.DisplaySize.x;
@@ -193,6 +196,32 @@ void ObjectEditor::LoadSceneWithDialog()
 	{
 		LoadScene(dynamic_load_path);
 	}
+}
+
+//仮オブジェクト生成
+void ObjectEditor::CreateTempModelObject(const std::string& model_path)
+{
+	if (model_path.empty())
+	{
+		OutputDebugStringA("[Error] ObjectEditor: CreateTempModelObject - model_path is empty!\n");
+		return;
+	}
+
+	if (cached_class_names.empty())
+	{
+		OutputDebugStringA("[Error] ObjectEditor: CreateTempModelObject - No registered classes available!\n");
+		return;
+	}
+
+	std::string default_class = cached_class_names[0];
+	GameObject* new_object = ObjectFactory::CreateAndRegister(default_class);
+
+	if (new_object)
+	{
+
+		current_selected_object = new_object;
+	}
+	else OutputDebugStringA("[Error] ObjectEditor: CreateTempModelObject - Failed to create object via ObjectFactory!\n");
 }
 
 //オブジェクト生成UI描画
@@ -573,4 +602,96 @@ std::string ObjectEditor::LoadEditorConfig()
 	}
 
 	return std::string();
+}
+
+//ドラッグターゲットの監視処理
+void ObjectEditor::HandleDragDropTarget(Camera* camera, CollisionManager* collision_manager)
+{
+	// ドラッグ&ドロップの送信中のみ全画面の背景ドロップ領域を生成
+	if (ImGui::GetDragDropPayload() != nullptr)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
+		ImGui::SetNextWindowSize(io.DisplaySize);
+		ImGui::SetNextWindowBgAlpha(0.0f); // 背景を透明に設定
+
+		constexpr ImGuiWindowFlags viewport_flags =
+			ImGuiWindowFlags_NoTitleBar |
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoScrollbar |
+			ImGuiWindowFlags_NoSavedSettings |
+			ImGuiWindowFlags_NoBringToFrontOnFocus;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+		// 全画面の透明ウィンドウを作成して背景に配置
+		if (ImGui::Begin("##ViewportDropTarget", nullptr, viewport_flags))
+		{
+			ImGui::InvisibleButton("##ViewportDropArea", io.DisplaySize);
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MODEL_FILE_PATH"))
+				{
+					if (payload->Data != nullptr)
+					{
+						std::string model_path(static_cast<const char*>(payload->Data));
+
+						// Mediator経由で仮オブジェクト作成を呼び出し
+						EditorMediator::Instance().OnModelDropped(model_path);
+
+						// ドロップ位置へのレイキャスト計算と座標設定
+						if (current_selected_object != nullptr && camera != nullptr && collision_manager != nullptr)
+						{
+							// 画面座標からNDCへの変換
+							const float screen_width = io.DisplaySize.x;
+							const float screen_height = io.DisplaySize.y;
+							const float mouse_x = io.MousePos.x;
+							const float mouse_y = io.MousePos.y;
+							constexpr float ndc_multiplier = 2.0f;
+							constexpr float ndc_offset = 1.0f;
+
+							const float ndc_x = (ndc_multiplier * mouse_x) / screen_width - ndc_offset;
+							const float ndc_y = ndc_offset - (ndc_multiplier * mouse_y) / screen_height;
+
+							// 逆行列を用いた光線の生成
+							DirectX::XMFLOAT4X4 vp_float4x4 = camera->GetViewProjectionMatrix();
+							DirectX::XMMATRIX view_proj_matrix = DirectX::XMLoadFloat4x4(&vp_float4x4);
+							DirectX::XMMATRIX inv_view_proj = DirectX::XMMatrixInverse(nullptr, view_proj_matrix);
+
+							constexpr float depth_near = 0.0f;
+							constexpr float depth_far = 1.0f;
+							constexpr float w_value = 1.0f;
+
+							DirectX::XMVECTOR near_point = DirectX::XMVectorSet(ndc_x, ndc_y, depth_near, w_value);
+							DirectX::XMVECTOR far_point = DirectX::XMVectorSet(ndc_x, ndc_y, depth_far, w_value);
+
+							near_point = DirectX::XMVector3TransformCoord(near_point, inv_view_proj);
+							far_point = DirectX::XMVector3TransformCoord(far_point, inv_view_proj);
+
+							DirectX::XMFLOAT3 ray_start = {};
+							DirectX::XMFLOAT3 ray_end = {};
+							DirectX::XMStoreFloat3(&ray_start, near_point);
+							DirectX::XMStoreFloat3(&ray_end, far_point);
+
+							DirectX::XMFLOAT3 hit_position = {};
+							if (collision_manager->RayCastSpace(ray_start, ray_end, hit_position))
+							{
+								current_selected_object->SetPosition(hit_position);
+							}
+						}
+					}
+					else
+					{
+						OutputDebugStringA("[Error] ObjectEditor: HandleDragDropTarget - payload data is nullptr!\n");
+					}
+				}
+				ImGui::EndDragDropTarget();
+			}
+		}
+		ImGui::End();
+		ImGui::PopStyleVar(2);
+	}
 }
