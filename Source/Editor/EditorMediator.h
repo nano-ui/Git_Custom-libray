@@ -3,6 +3,7 @@
 #include <string>
 
 class GameObject;
+class ObjectEditor;
 class StateMachineGraphEditor;
 class ModelPreviewWindow;
 
@@ -17,6 +18,12 @@ public:
 
 	//モデルプレビューウィンドウのポインタを中継用に登録
 	void RegisterModelPreviewWindow(ModelPreviewWindow* window);
+
+	//オブジェクトエディタのポインタを仲介用に登録
+	void RegisterObjectEditor(ObjectEditor* editor);
+
+	//モデルファイルがドロップした際のイベント
+	void OnModelDropped(const std::string& file_path);
 
 	//中継通知イベント
 	void OnObjectSelected(GameObject* object);
@@ -65,5 +72,6 @@ private:
 	StateMachineGraphEditor* state_machine_graph_editor = nullptr;	//対象エディタのポインタ
 	GameObject* last_selected_object = nullptr;						//前回選択オブジェクト
 	ModelPreviewWindow* model_preview_window = nullptr;				//モデルプレビュー
+	ObjectEditor* object_editor = nullptr;							//オブジェクトエディタのポインタ
 };
 

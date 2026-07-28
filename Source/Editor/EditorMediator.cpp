@@ -36,6 +36,20 @@ void EditorMediator::RegisterModelPreviewWindow(ModelPreviewWindow* window)
 	}
 }
 
+//オブジェクトエディタのポインタを仲介用に登録
+void EditorMediator::RegisterObjectEditor(ObjectEditor* editor)
+{
+	if (editor)object_editor = editor;
+	else OutputDebugStringA("[Warning] EditorMediator::RegisterObjectEditor: Passed editor is null!\n");
+}
+
+//モデルファイルがドロップした際のイベント
+void EditorMediator::OnModelDropped(const std::string& file_path)
+{
+	if (object_editor)return;
+	else OutputDebugStringA("[Error] EditorMediator: ObjectEditor is not registered!\n");
+}
+
 //中継通知イベント
 void EditorMediator::OnObjectSelected(GameObject* object)
 {
