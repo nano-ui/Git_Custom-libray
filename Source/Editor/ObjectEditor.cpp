@@ -312,6 +312,44 @@ void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_mana
 	Update(camera, collision_manager);
 }
 
+//クラス適用UI描画
+void ObjectEditor::DrawClassApplySection()
+{
+	if (cached_class_names.empty())
+	{
+		OutputDebugStringA("[Error] ObjectEditor: DrawClassApplySection - cached_class_names が空です。\n");
+		return;
+	}
+	ImGui::Text(u8"クラスの適用");
+
+	//インデックス範囲の安全確認
+	if (inspector_selected_class_index < 0 || inspector_selected_class_index >= static_cast<int>(cached_class_names.size()))
+	{
+		inspector_selected_class_index = 0;
+	}
+
+	//登録されているクラス一覧のコンボボックス描画
+	const std::string& current_combo_preview = cached_class_names[inspector_selected_class_index];
+	if (ImGui::BeginCombo("##ApplyClassCombo", current_combo_preview.c_str()))
+	{
+		for (int i = 0; i < static_cast<int>(cached_class_names.size()); i++)
+		{
+			const bool is_selected = (inspector_selected_class_index == i);
+			if (ImGui::Selectable(cached_class_names[i].c_str(), is_selected))
+			{
+				inspector_selected_class_index = i;
+			}
+			if (is_selected)ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
+	}
+	//クラス適用ボタン
+	if (ImGui::Button(u8"選択クラスを適用", ImVec2(-1, 0)))
+	{
+		OutputDebugStringA("[Info] ObjectEditor: クラス適用ボタンが押されました。\n");
+	}
+}
+
 //オブジェクトパラメータ編集UI描画
 void ObjectEditor::DrawRightPane()
 {
@@ -334,6 +372,8 @@ void ObjectEditor::DrawRightPane()
 				return;
 			}
 			ImGui::Dummy(ImVec2(0.0f, dummy_height_value));
+			ImGui::Separator();
+			DrawClassApplySection();
 			ImGui::Separator();
 			current_selected_object->RenderGui();
 		}
@@ -677,16 +717,10 @@ void ObjectEditor::HandleDragDropTarget(Camera* camera, CollisionManager* collis
 							DirectX::XMStoreFloat3(&ray_end, far_point);
 
 							DirectX::XMFLOAT3 hit_position = {};
-							if (collision_manager->RayCastSpace(ray_start, ray_end, hit_position))
-							{
-								current_selected_object->SetPosition(hit_position);
-							}
+							if (collision_manager->RayCastSpace(ray_start, ray_end, hit_position))current_selected_object->SetPosition(hit_position);
 						}
 					}
-					else
-					{
-						OutputDebugStringA("[Error] ObjectEditor: HandleDragDropTarget - payload data is nullptr!\n");
-					}
+					else OutputDebugStringA("[Error] ObjectEditor: HandleDragDropTarget - payload data is nullptr!\n");
 				}
 				ImGui::EndDragDropTarget();
 			}

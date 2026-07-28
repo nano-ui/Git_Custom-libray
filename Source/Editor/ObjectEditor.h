@@ -42,6 +42,9 @@ private:
 	//オブジェクト生成UI描画
 	void DrawLeftPane(Camera* camera, CollisionManager* collision_manager);
 
+	//クラス適用UI描画
+	void DrawClassApplySection();
+
 	//オブジェクトパラメータ編集UI描画
 	void DrawRightPane();
 
@@ -71,6 +74,7 @@ private:
 
 private:
 	int selected_class_index;				//選択されているクラスのインデックス
+	int inspector_selected_class_index = 0;	//選択されている変更用クラスのインデックス
 	GameObject* current_selected_object;	//選択されているゲームオブジェクト
 	std::vector<std::string> cached_class_names;						//クラス名リストを毎フレーム取得しないためのキャッシュ
 	std::unordered_map<std::string, int> frame_class_counters;			//毎フレームのメモリ確保を避けるための連番カウント用マップ
