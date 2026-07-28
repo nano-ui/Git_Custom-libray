@@ -222,7 +222,7 @@ void ContentBrowserEditor::HandleDragAndDrop(const std::filesystem::path& path)
 	{
 		//パス文字列を「MODEL_FILE_PATH」というキー名でペイロード登録
 		std::string path_str = path.string();
-		ImGui::SetDragDropPayload("MODEL_FILE_PATH", path_str.c_str(), path_str.size(), path_str.size() + 1);
+		ImGui::SetDragDropPayload("MODEL_FILE_PATH", path_str.c_str(), path_str.size() + 1);
 
 		//マウスカーソルに追従するテキストの描画
 		std::string file_name = path.filename().string();
