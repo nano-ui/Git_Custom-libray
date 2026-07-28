@@ -381,6 +381,9 @@
     <ClCompile Include="Source\Engine\Camera\FollowCameraComponent.cpp">
       <Filter>Source\Engine\Camera\FollowCameraComponent</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Camera\CameraManager.cpp">
+      <Filter>Source\Engine\Camera\CameraManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -718,6 +721,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Camera\FollowCameraComponent.h">
       <Filter>Source\Engine\Camera\FollowCameraComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Camera\CameraManager.h">
+      <Filter>Source\Engine\Camera\CameraManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1154,6 +1160,9 @@
     </Filter>
     <Filter Include="Source\Engine\Camera\FollowCameraComponent">
       <UniqueIdentifier>{104ed3da-b51d-4ec6-958b-2a8f6329744f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Camera\CameraManager">
+      <UniqueIdentifier>{c5364b17-b865-43ac-acbf-69002b7db53b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

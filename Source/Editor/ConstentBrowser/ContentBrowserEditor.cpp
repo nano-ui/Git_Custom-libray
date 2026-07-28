@@ -167,6 +167,9 @@ void ContentBrowserEditor::DrawFolderContents(const std::filesystem::path& path)
 					selected_path = entry.path();
 				}
 
+				//ドラッグ&ドロップ処理
+				HandleDragAndDrop(entry.path());
+
 				//ダブルクリック判定（ディレクトリ遷移）
 				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 				{
@@ -204,6 +207,27 @@ void ContentBrowserEditor::DrawFolderContents(const std::filesystem::path& path)
 	catch (const std::filesystem::filesystem_error& error)
 	{
 		OutputDebugStringA("[Error] ContentBrowserEditor: Failed to iterate directory contents.\n");
+	}
+}
+
+//ドラッグ&ドロップの送信処理
+void ContentBrowserEditor::HandleDragAndDrop(const std::filesystem::path& path)
+{
+	//拡張子の確認
+	std::string extension = path.extension().string();
+	if (extension != ".gltf" && extension != ".glb")return;
+
+	//直前に描画したアイコンボタンの上でドラッグが開始されたか確認
+	if (ImGui::BeginDragDropSource())
+	{
+		//パス文字列を「MODEL_FILE_PATH」というキー名でペイロード登録
+		std::string path_str = path.string();
+		ImGui::SetDragDropPayload("MODEL_FILE_PATH", path_str.c_str(), path_str.size(), path_str.size() + 1);
+
+		//マウスカーソルに追従するテキストの描画
+		std::string file_name = path.filename().string();
+		ImGui::Text(u8"モデル配置:%s", file_name.c_str());
+		ImGui::EndDragDropSource();
 	}
 }
 

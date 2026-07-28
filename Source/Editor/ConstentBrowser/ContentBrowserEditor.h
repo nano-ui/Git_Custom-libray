@@ -34,6 +34,9 @@ private:
 	//フォルダ内容を表示
 	void DrawFolderContents(const std::filesystem::path& path);
 
+	//ドラッグ&ドロップの送信処理
+	void HandleDragAndDrop(const std::filesystem::path& path);
+
 	//システムアイコンを取得、新規生成
 	ID3D11ShaderResourceView* GetOrCreateSystemIcon(const std::filesystem::path& path);
 

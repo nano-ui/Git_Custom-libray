@@ -1492,6 +1492,21 @@
                     "EndPinID": 246,
                     "ID": 248,
                     "StartPinID": 244
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 1572818033,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 0
+                        }
+                    ],
+                    "EndPinID": 250,
+                    "ID": 252,
+                    "StartPinID": 247
                 }
             ],
             "Nodes": [
@@ -1552,10 +1567,39 @@
                     "PosX": 117.57275390625,
                     "PosY": -49.56852340698242,
                     "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "ID": 249,
+                    "Input": [
+                        {
+                            "ID": 250,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "新規ステート",
+                    "Output": [
+                        {
+                            "ID": 251,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 67.078125,
+                    "PosY": 94.04644012451172,
+                    "SubGraphID": 0
                 }
             ]
         }
     ],
-    "NextID": 249,
+    "NextID": 253,
     "TargetModelPath": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf"
 }
