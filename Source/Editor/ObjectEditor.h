@@ -45,6 +45,9 @@ private:
 	//クラス適用UI描画
 	void DrawClassApplySection();
 
+	//選択されたクラスへの置き換え処理
+	void ApplySelectedClassToObject();
+
 	//オブジェクトパラメータ編集UI描画
 	void DrawRightPane();
 
@@ -80,5 +83,6 @@ private:
 	std::unordered_map<std::string, int> frame_class_counters;			//毎フレームのメモリ確保を避けるための連番カウント用マップ
 	bool is_placement_mode = false;										//配置モード切り替えフラグ
 	int current_gizmo_operation;										//ギズモの現在の操作モード
+	std::string current_model_path = "";								//ドロップされたモデルのパス
 };
 

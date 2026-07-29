@@ -3,26 +3,26 @@
 #include <algorithm>
 
 
-//============================================
 //アニメーションクラスをモデルデータで初期化
-//============================================
 void GltfModelAnimation::Initialize(const std::shared_ptr<const GltfModelData>& data)
 {
-	//----------------------------------------
 	//データの保持と作業用ノード配列の初期化
-	//----------------------------------------
 	model_data = data;	//モデルデータを保存
 	if (model_data)		//モデルデータが有効か確認
 	{
 		animated_nodes = model_data->nodes;	//初期状態のノード構造をアニメーション用の可変配列にコピー
-		CumulateTransforms();				//初期姿勢のグローバル行列を一度計算して確定
+
+		if (!model_data->animations.empty())
+		{
+			current_animation_duration = CalculateAnimationDuration(current_animation_index);
+			Animate(current_animation_index, 0.0f);
+		}
+		else CumulateTransforms();				//初期姿勢のグローバル行列を一度計算して確定
 	}
 	is_animation_finished = false;
 }
 
-//====================================================
 //親子関係をたどって各ノードのグローバル行列を計算
-//====================================================
 void GltfModelAnimation::CumulateTransforms()
 {
 	//モデルデータの有効性チェック
@@ -50,9 +50,7 @@ void GltfModelAnimation::CumulateTransforms()
 		}
 	}
 
-	//--------------------------------------------------
 	// ルートノードからの巡回処理
-	//--------------------------------------------------
 	std::stack<DirectX::XMFLOAT4X4> parent_global_transforms;							//親ノードの行列情報を順次保持するためのスタックを作成
 	DirectX::XMFLOAT4X4 identity_matrix;												//処理の起点となる単位行列用のを宣言
 	DirectX::XMStoreFloat4x4(&identity_matrix, DirectX::XMMatrixIdentity());			//DirectXの関数を利用してに単位行列を格納
@@ -68,24 +66,18 @@ void GltfModelAnimation::CumulateTransforms()
 	}
 }
 
-//===========================================
 //名前を指定してアニメーションの再生を開始
-//===========================================
 void GltfModelAnimation::PlayAniamtion(const std::string& animation_name, bool is_loop)
 {
 	if (!model_data) return;	//モデルデータが有効か確認
-	//-------------------------------------
 	//マップからアニメーション番号の検索
-	//--------------------------------------
 	auto iterator = model_data->animation_index_map.find(animation_name);	//指定されたアニメーションを検索
 	if (iterator == model_data->animation_index_map.end())					//名前が見つからない場合
 	{
 		return;	//処理を終了
 	}
 
-	//--------------------
 	//再生状態の初期化
-	//--------------------
 	current_animation_index = iterator->second;	//検索結果からインデックス番号を取得
 	is_loop_enabled = is_loop;					//ループフラグを設定
 	current_animation_time = 0.0f;				//再生時間をリセット
@@ -94,16 +86,12 @@ void GltfModelAnimation::PlayAniamtion(const std::string& animation_name, bool i
 	is_animation_finished = false;
 }
 
-//============================
 //アニメーション更新処理
-//============================
 void GltfModelAnimation::UpdateAnimation(float delta_time)
 {
 	if (!model_data || !is_playing || model_data->animations.empty())return;
 
-	//------------------------
 	//時間の進行とループ判定
-	//------------------------
 	current_animation_time += delta_time;						//経過時間を加算してアニメーションを進める
 	if (current_animation_time > current_animation_duration)	//現在の時間がアニメーションの終了時間を超過した場合
 	{
@@ -179,14 +167,10 @@ float GltfModelAnimation::GetAnimationDuration() const
 	return current_animation_duration;
 }
 
-//========================================================
 //指定した時間のアニメーションを適用しノード情報を更新
-//========================================================
 void GltfModelAnimation::Animate(size_t animation_index, float time)
 {
-	//--------------------------------------------------
 	// アニメーションデータの有無の確認
-	//--------------------------------------------------
 	if (model_data->animations.empty())	// GltfModelData内にアニメーションデータが存在しない場合
 	{
 		return;						// 更新する対象がないため何も処理せずに安全に終了
@@ -201,9 +185,7 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 	const size_t INDEX_OFFSET_NEXT = 1;													// 次の要素を参照するためのインデックスオフセット定数
 	const GltfModelData::animation& animation = model_data->animations.at(animation_index);	// 引数で指定されたアニメーションデータを参照として取得
 
-	//--------------------------------------------------
 	// チャンネル（操作対象）ごとのアニメーション適用
-	//--------------------------------------------------
 	for (const GltfModelData::animation::channel& channel : animation.channels)                   // アニメーションが持つ全チャンネル（誰のどの部位を動かすか）をループ
 	{
 		//サンプラーインデックスの安全な存在確認
@@ -232,9 +214,7 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 		float interpolation_factor = 0.0f;                                                        // 関数から受け取るための補間係数を初期化
 		size_t keyframe_index = GetAnimationKeyframeIndex(timeline, time, interpolation_factor);  // 現在の時間に対応するキーフレーム番号と補間割合を取得
 
-		//--------------------------------------------------
 		// 対象パラメータに応じた数式（補間処理）の実行
-		//--------------------------------------------------
 		if (channel.target_path == "scale")                                                      
 		{
 			auto scale_it = animation.scales.find(sampler.output);
@@ -292,7 +272,7 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 		}
 	}
 
-	// 更新されたノードのグローバル行列を再計算
+	//更新されたノードのグローバル行列を再計算
 	CumulateTransforms();
 }
 

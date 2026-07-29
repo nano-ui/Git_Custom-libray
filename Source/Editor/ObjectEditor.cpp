@@ -213,12 +213,18 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 		return;
 	}
 
+	current_model_path = model_path;
+
 	std::string default_class = cached_class_names[0];
 	GameObject* new_object = ObjectFactory::CreateAndRegister(default_class);
 
 	if (new_object)
 	{
-
+		if (new_object->GetModel())
+		{
+			new_object->GetModel()->Initialize(current_model_path);
+		}
+		else OutputDebugStringA("[エラー] ObjectEditor: CreateTempModelObject - GetModel() が nullptr です。\n");
 		current_selected_object = new_object;
 	}
 	else OutputDebugStringA("[Error] ObjectEditor: CreateTempModelObject - Failed to create object via ObjectFactory!\n");
@@ -346,8 +352,46 @@ void ObjectEditor::DrawClassApplySection()
 	//クラス適用ボタン
 	if (ImGui::Button(u8"選択クラスを適用", ImVec2(-1, 0)))
 	{
-		OutputDebugStringA("[Info] ObjectEditor: クラス適用ボタンが押されました。\n");
+		ApplySelectedClassToObject();
 	}
+}
+
+//選択されたクラスへの置き換え処理
+void ObjectEditor::ApplySelectedClassToObject()
+{
+	if (current_selected_object == nullptr)
+	{
+		OutputDebugStringA("[エラー] ApplySelectedClassToObject: 置換対象のオブジェクトが nullptr です。\n");
+		return;
+	}
+
+	//旧オブジェクトからTransform情報を取得
+	DirectX::XMFLOAT3 pos = current_selected_object->GetPosition();
+	DirectX::XMFLOAT4 rot = current_selected_object->GetRotation();
+	DirectX::XMFLOAT3 scale = current_selected_object->GetScale();
+
+	//指定されたクラスの新規インスタンスを生成
+	const std::string& target_class_name = cached_class_names[inspector_selected_class_index];
+	GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
+
+	if (new_object != nullptr)
+	{
+		//Transform情報を適用
+		new_object->SetPosition(pos);
+		new_object->SetRotation(rot);
+		new_object->SetScale(scale);
+
+		if (!current_model_path.empty() && new_object->GetModel())
+		{
+			new_object->GetModel()->Initialize(current_model_path);
+		}
+
+		//旧オブジェクトの破棄と選択ポインタの差し替え
+		current_selected_object->Destory();
+		current_selected_object = new_object;
+		OutputDebugStringA("[情報] ApplySelectedClassToObject: オブジェクトのクラス置換に成功しました。\n");
+	}
+	else OutputDebugStringA("[エラー] ApplySelectedClassToObject: ObjectFactory によるオブジェクト生成に失敗しました。\n");
 }
 
 //オブジェクトパラメータ編集UI描画

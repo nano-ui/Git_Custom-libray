@@ -325,22 +325,22 @@
       <Filter>Source\Engine\Graphics\Renderers\sprite_batch</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfModel.cpp">
-      <Filter>Source\Engine\Graphics\Resources\GltfModel</Filter>
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelAnimation.cpp">
-      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfModelAnimation</Filter>
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\GltfModelAnimation</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelData.cpp">
-      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfModelData</Filter>
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\GltfModelData</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelRenderer.cpp">
-      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfModelRenderer</Filter>
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\GltfModelRenderer</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfRootMotion.cpp">
-      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfRootMotion</Filter>
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\GltfRootMotion</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\TinygltfImpl.cpp">
-      <Filter>Source\Engine\Graphics\Resources\GltfModel\TinygltfImpl</Filter>
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\TinygltfImpl</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\Resources\geometric_primitive.cpp">
       <Filter>Source\Engine\Graphics\Resources\geometric_primitive</Filter>
@@ -669,19 +669,19 @@
       <Filter>Source\Engine\Graphics\Renderers\sprite_batch</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModel.h">
-      <Filter>Source\Engine\Graphics\Resources\GltfModel</Filter>
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelAnimation.h">
-      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfModelAnimation</Filter>
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\GltfModelAnimation</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelData.h">
-      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfModelData</Filter>
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\GltfModelData</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelRenderer.h">
-      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfModelRenderer</Filter>
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\GltfModelRenderer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfRootMotion.h">
-      <Filter>Source\Engine\Graphics\Resources\GltfModel\GltfRootMotion</Filter>
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\GltfRootMotion</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Resources\geometric_primitive.h">
       <Filter>Source\Engine\Graphics\Resources\geometric_primitive</Filter>
@@ -1098,24 +1098,6 @@
     <Filter Include="Source\Engine\Graphics\Resources">
       <UniqueIdentifier>{d74c98d0-db81-428e-baf8-2a40c3b3d58f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Engine\Graphics\Resources\GltfModel">
-      <UniqueIdentifier>{8cf878da-d2c3-4877-93f9-cf941998eef6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelAnimation">
-      <UniqueIdentifier>{2fc57691-37eb-42c7-ae53-eb7660b43544}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelData">
-      <UniqueIdentifier>{a91dfa58-4eb3-44de-9152-a8bc9afc497b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelRenderer">
-      <UniqueIdentifier>{88391441-9f02-4d5e-ae83-e48ea760cd9a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Resources\GltfModel\GltfRootMotion">
-      <UniqueIdentifier>{f1c6b7af-ea62-42c4-9d8f-1e58bc38ba82}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Resources\GltfModel\TinygltfImpl">
-      <UniqueIdentifier>{a45ed410-4c04-4a7e-9fe0-44f4f41332e0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Engine\Graphics\Resources\geometric_primitive">
       <UniqueIdentifier>{9ad38500-a65a-4b6f-920d-a0aece61fe17}</UniqueIdentifier>
     </Filter>
@@ -1163,6 +1145,24 @@
     </Filter>
     <Filter Include="Source\Engine\Camera\CameraManager">
       <UniqueIdentifier>{c5364b17-b865-43ac-acbf-69002b7db53b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\Model\GltfModel">
+      <UniqueIdentifier>{8cf878da-d2c3-4877-93f9-cf941998eef6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\Model\GltfModel\GltfModelAnimation">
+      <UniqueIdentifier>{2fc57691-37eb-42c7-ae53-eb7660b43544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\Model\GltfModel\GltfModelData">
+      <UniqueIdentifier>{a91dfa58-4eb3-44de-9152-a8bc9afc497b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\Model\GltfModel\GltfModelRenderer">
+      <UniqueIdentifier>{88391441-9f02-4d5e-ae83-e48ea760cd9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\Model\GltfModel\GltfRootMotion">
+      <UniqueIdentifier>{f1c6b7af-ea62-42c4-9d8f-1e58bc38ba82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\Model\GltfModel\TinygltfImpl">
+      <UniqueIdentifier>{a45ed410-4c04-4a7e-9fe0-44f4f41332e0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
