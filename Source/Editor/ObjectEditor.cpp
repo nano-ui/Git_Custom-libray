@@ -7,6 +7,7 @@
 #include "Engine\Core\Input.h"
 #include "ThiedParty\json.hpp"
 #include "Editor/EditorMediator.h"
+#include "FileDialogHelper.h"
 
 #include <imgui.h>
 #include <ImGuizmo.h>
@@ -233,52 +234,6 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 //オブジェクト生成UI描画
 void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_manager)
 {
-	//クラス名リストの取得とリストボックスの描画
-	ImGui::Text(u8"登録クラス");
-	ImGui::Separator();
-
-	if (!cached_class_names.empty())
-	{
-		ImGui::Checkbox("Enable Click Placement Mode", &is_placement_mode);
-		ImGui::Dummy(ImVec2(0.0f, dummy_height_value));
-
-		if (ImGui::BeginListBox("##ClassList", ImVec2(-1.0f, ImGui::GetWindowHeight() * class_list_height_ratio))) 
-		{
-			for (int i = 0; i < static_cast<int>(cached_class_names.size()); ++i)
-			{
-				const bool is_selected = (selected_class_index == i);
-
-				if (ImGui::Selectable(cached_class_names[i].c_str(), is_selected))
-				{
-					selected_class_index = i;
-				}
-
-				if (is_selected)
-				{
-					ImGui::SetItemDefaultFocus();
-				}
-			}
-			ImGui::EndListBox();
-		}
-	}
-
-	//生成ボタン処理
-	if (ImGui::Button(u8"クラス生成", ImVec2(-1, 0)))
-	{
-		const std::string& target_class_name = cached_class_names[selected_class_index];
-		GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
-		if (new_object)
-		{
-			//new_object->Initialize();
-			current_selected_object = new_object;
-		}
-	}
-	else
-	{
-		ImGui::Text("No class registered in ObjectFactory");
-	}
-	ImGui::Dummy(ImVec2(0.0f, dummy_height_value));
-
 	//現在生成されているオブジェクトの一覧リスト描画
 	ImGui::Text(u8"オブジェクトリスト");
 	ImGui::Separator();
@@ -292,13 +247,20 @@ void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_mana
 			if (active_objects[i]->IsActive())
 			{
 				GameObject* obj_ptr = active_objects[i].get();
-				std::string current_class_name = obj_ptr->GetClassName();
-				int current_number = frame_class_counters[current_class_name];
-				frame_class_counters[current_class_name]++;
+
+				std::string display_name = "";
+				if (obj_ptr->GetModel() && !obj_ptr->GetModel()->GetModelPath().empty())
+				{
+					display_name = std::filesystem::path(obj_ptr->GetModel()->GetModelPath()).stem().string();
+				}
+				else display_name = obj_ptr->GetClassNameW();
+
+				int current_number = frame_class_counters[display_name];
+				frame_class_counters[display_name]++;
 				ImGui::PushID(reinterpret_cast<const void*>(obj_ptr));
 
 				char label_buffer[label_buffer_size];
-				snprintf(label_buffer, sizeof(label_buffer), "%s %d", current_class_name.c_str(), current_number);
+				snprintf(label_buffer, sizeof(label_buffer), "%s %d", display_name.c_str(), current_number);
 				const bool is_current = (current_selected_object == obj_ptr);
 				if (ImGui::Selectable(label_buffer, is_current))
 				{
@@ -522,21 +484,58 @@ void ObjectEditor::SaveScene(const std::string& file_path)
 		std::filesystem::create_directories(system_path.parent_path());
 	}
 
-	nlohmann::json scene_json;												//シーン全体のルート階層となるJSONオブジェクト
+	nlohmann::json scene_json;                                               // シーン全体のルートJSON
 	nlohmann::json objects_array = nlohmann::json::array();					//各オブジェクトデータを並べるためのJSON配列
 	const auto& active_object = ObjectManager::Instance().GetGameObjects();	//現在マネージャーが管理している全オブジェクト
+
+	std::unordered_map<std::string, int> save_counters;	//モデル名ごとの連番管理用マップ
 
 	//現在アクティブなオブジェクトを1つずつ走査して情報をパッケージング
 	for (size_t i = 0; i < active_object.size(); i++)
 	{
 		if (active_object[i] != nullptr && active_object[i]->IsActive())
 		{
-			nlohmann::json object_node;	//オブジェクト専用のJSONノード
-			object_node["class_name"] = active_object[i]->GetClassNameW();
-			nlohmann::json data_node;	//パラメータを格納するための配下ノード
-			active_object[i]->SaveToJObject(data_node);
-			object_node["data"] = data_node;
-			objects_array.push_back(object_node);
+			GameObject* obj = active_object[i].get();
+
+			//モデル名(ファイル名)の取得
+			std::string model_name = "";
+			std::string model_path = "";
+			if (obj->GetModel() && !obj->GetModel()->GetModelPath().empty())
+			{
+				model_path = obj->GetModel()->GetModelPath();
+				model_name = std::filesystem::path(model_path).stem().string();
+			}
+			else model_name = obj->GetClassNameW();
+
+			//個別Jsonファイル用パスの設定
+			int current_index = save_counters[model_name]++;
+			std::string detail_dir = "Data/Json/" + model_name;
+			std::string detail_file_path = detail_dir + "/" + model_name + "_" + std::to_string(current_index) + ".json";
+
+			//ディレクトリの生成
+			std::filesystem::create_directories(detail_dir);
+
+			//個別情報Jsonの書き出し
+			nlohmann::json detail_json;
+			obj->SaveToJObject(detail_json);
+
+			std::ofstream detail_file(detail_file_path);
+			if (detail_file.is_open())
+			{
+				detail_file << detail_json.dump(json_indent_space_count);
+				detail_file.close();
+			}
+			else OutputDebugStringA("[エラー] SaveScene: 個別JSONファイルのオープンに失敗しました。\n");
+
+			//シーンJsonへ最小限の情報のみを記録
+			nlohmann::json node;
+			node["class_name"] = obj->GetClassNameW();
+			node["model_path"] = model_path;
+			node["position"] = obj->GetPosition();
+			node["rotation"] = obj->GetRotation();
+			node["scale"] = obj->GetScale();
+			node["detail_json_path"] = detail_file_path;
+			objects_array.push_back(node);
 		}
 	}
 
@@ -549,7 +548,9 @@ void ObjectEditor::SaveScene(const std::string& file_path)
 		output_file << scene_json.dump(json_indent_space_count);
 		output_file.close();
 		SaveEditorConfig(file_path);
+		OutputDebugStringA("[情報] SaveScene: シーンデータと個別データの分離保存が完了しました。\n");
 	}
+	else OutputDebugStringA("[エラー] SaveScene: シーンJSONファイルのオープンに失敗しました。\n");
 }
 
 //ファイルからオブジェクト群を自動生成して状態を復元
@@ -606,44 +607,17 @@ void ObjectEditor::LoadScene(const std::string& file_path)
 //保存先のファイルパスをダイアログから選択取得
 std::string ObjectEditor::SelectSavePath()
 {
-	char absolute_path_buffer[file_path_buffer_size] = "";
-	OPENFILENAMEA open_file_name_struct = {};
-
-	open_file_name_struct.lStructSize = sizeof(open_file_name_struct);
-	open_file_name_struct.hwndOwner = nullptr;
-	open_file_name_struct.lpstrFilter = "JSON Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
-	open_file_name_struct.lpstrFile = absolute_path_buffer;
-	open_file_name_struct.nMaxFile = file_path_buffer_size;
-	open_file_name_struct.lpstrDefExt = "json";
-	open_file_name_struct.Flags = OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR;
-
-	if (GetSaveFileNameA(&open_file_name_struct))
-	{
-		return std::string(absolute_path_buffer);
-	}
-
-	return std::string();
+	PathResult path_result = FileDialogHelper::OpenGenericFileDialog();
+	if (!path_result.relative_path.empty())return path_result.relative_path;
+	return path_result.absolute_path;
 }
 
 //読み込み元のファイルパスをダイアログから選択取得
 std::string ObjectEditor::SelectOpenPath()
 {
-	char absolute_path_buffer[file_path_buffer_size] = "";
-	OPENFILENAMEA open_file_name_struct = {};
-
-	open_file_name_struct.lStructSize = sizeof(open_file_name_struct);
-	open_file_name_struct.hwndOwner = nullptr;
-	open_file_name_struct.lpstrFilter = "JSON Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
-	open_file_name_struct.lpstrFile = absolute_path_buffer;
-	open_file_name_struct.nMaxFile = file_path_buffer_size;
-	open_file_name_struct.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR;
-
-	if (GetOpenFileNameA(&open_file_name_struct))
-	{
-		return std::string(absolute_path_buffer);
-	}
-
-	return std::string();
+	PathResult path_result = FileDialogHelper::OpenGenericFileDialog();
+	if (!path_result.relative_path.empty())return path_result.relative_path;
+	return path_result.absolute_path;
 }
 
 //エディタ設定ファイルの保存
