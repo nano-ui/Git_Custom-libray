@@ -44,7 +44,7 @@ void GltfRootMotion::Update(size_t animation_index, float current_time)
 	}
 
 	//適用中ノードのIDと名前を可視化するデバッグ出力
-	if (current_target_node_index != INVALID_NODE_INDEX)
+	if (current_target_node_index != INVALID_NODE_INDEX && current_target_node_index < model_data->nodes.size())
 	{
 		char active_node_info[256];
 		std::string node_name = model_data->nodes.at(current_target_node_index).name;

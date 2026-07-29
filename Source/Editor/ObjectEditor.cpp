@@ -508,9 +508,8 @@ void ObjectEditor::SaveScene(const std::string& file_path)
 			else model_name = obj->GetClassNameW();
 
 			//個別Jsonファイル用パスの設定
-			int current_index = save_counters[model_name]++;
 			std::string detail_dir = "Data/Json/" + model_name;
-			std::string detail_file_path = detail_dir + "/" + model_name + "_" + std::to_string(current_index) + ".json";
+			std::string detail_file_path = detail_dir + "/" + model_name + ".json";
 
 			//ディレクトリの生成
 			std::filesystem::create_directories(detail_dir);
@@ -559,6 +558,7 @@ void ObjectEditor::LoadScene(const std::string& file_path)
 	std::ifstream input_file(file_path);
 	if (!input_file.is_open())
 	{
+		OutputDebugStringA("[エラー] LoadScene: 指定されたシーンファイルが開けませんでした。\n");
 		return;
 	}
 
@@ -566,10 +566,7 @@ void ObjectEditor::LoadScene(const std::string& file_path)
 	input_file >> scene_json;
 	input_file.close();
 
-	if (!scene_json.contains("object"))
-	{
-		return;
-	}
+	if (!scene_json.contains("object"))return;
 
 	current_selected_object = nullptr;
 
@@ -590,14 +587,40 @@ void ObjectEditor::LoadScene(const std::string& file_path)
 	{
 		const nlohmann::json& object_node = objects_array[i];	//現在のインデックスの配列要素
 
-		if (object_node.contains("class_name") && object_node.contains("data"))
+		if (object_node.contains("class_name"))
 		{
 			std::string class_name = object_node["class_name"].get<std::string>();	//記録されているクラス名
 			GameObject* new_object = ObjectFactory::CreateAndRegister(class_name);
 
-			if (new_object != nullptr)
+			if (new_object)
 			{
-				new_object->LoadFromJObject(object_node["data"]);
+				//Transform 情報の復元
+				if (object_node.contains("position"))new_object->SetPosition(object_node["position"].get<DirectX::XMFLOAT3>());
+				if (object_node.contains("rotation"))new_object->SetRotation(object_node["rotation"].get<DirectX::XMFLOAT4>());
+				if (object_node.contains("scale"))new_object->SetScale(object_node["scale"].get<DirectX::XMFLOAT3>());
+
+				//モデルパスの適用
+				if (object_node.contains("model_path"))
+				{
+					std::string model_path = object_node["model_path"].get<std::string>();
+					if (!model_path.empty() && new_object->GetModel())new_object->GetModel()->Initialize(model_path);
+				}
+
+				//個別JSON情報の復元
+				if (object_node.contains("detail_json_path"))
+				{
+					std::string detail_path = object_node["detail_json_path"].get<std::string>();
+					std::ifstream detail_file(detail_path);
+
+					if (detail_file.is_open())
+					{
+						nlohmann::json detail_json;
+						detail_file >> detail_json;
+						detail_file.close();
+						new_object->LoadFromJObject(detail_json);
+					}
+					else OutputDebugStringA("[エラー] LoadScene: 個別JSONファイルが開けませんでした。\n");
+				}
 			}
 		}
 	}
