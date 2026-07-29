@@ -48,6 +48,9 @@ void GameObject::RenderGui()
 void GameObject::SetupSerialization()
 {
 	serializer = std::make_unique<JsonSerializer>();
+	serializer->RegisterVariable("Position", &position);
+	serializer->RegisterVariable("Rotation", &rotation);
+	serializer->RegisterVariable("Scale", &scale);
 }
 
 //指定されたJSONオブジェクトへ自身のデータを書き込む

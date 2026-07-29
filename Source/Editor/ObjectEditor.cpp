@@ -216,8 +216,19 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 
 	current_model_path = model_path;
 
-	std::string default_class = cached_class_names[0];
-	GameObject* new_object = ObjectFactory::CreateAndRegister(default_class);
+	std::string model_name = std::filesystem::path(model_path).stem().string();
+	std::string target_class_name = cached_class_names[0];
+	for (size_t i = 0; i < cached_class_names.size(); i++)
+	{
+		if (cached_class_names[i] == model_name)
+		{
+			target_class_name = cached_class_names[i];
+			inspector_selected_class_index = static_cast<int>(i);
+			break;
+		}
+	}
+
+	GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
 
 	if (new_object)
 	{
