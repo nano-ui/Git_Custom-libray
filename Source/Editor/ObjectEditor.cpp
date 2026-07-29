@@ -607,7 +607,7 @@ void ObjectEditor::LoadScene(const std::string& file_path)
 //保存先のファイルパスをダイアログから選択取得
 std::string ObjectEditor::SelectSavePath()
 {
-	PathResult path_result = FileDialogHelper::OpenGenericFileDialog();
+	PathResult path_result = FileDialogHelper::SaveGenericFileDialog();
 	if (!path_result.relative_path.empty())return path_result.relative_path;
 	return path_result.absolute_path;
 }
