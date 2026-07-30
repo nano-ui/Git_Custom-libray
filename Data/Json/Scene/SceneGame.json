@@ -1,7 +1,6 @@
 {
     "object": [
         {
-            "class_name": "Stage",
             "detail_json_path": "Data/Json/ExampleStage/ExampleStage.json",
             "model_path": "Data\\Model\\Stage\\ExampleStage.glb",
             "position": {
@@ -22,13 +21,12 @@
             }
         },
         {
-            "class_name": "Player",
             "detail_json_path": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
             "model_path": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
             "position": {
-                "x": 0.0,
+                "x": -0.005182367749512196,
                 "y": 0.0,
-                "z": 0.0
+                "z": -0.017432957887649536
             },
             "rotation": {
                 "w": 1.0,

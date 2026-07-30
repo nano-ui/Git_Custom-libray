@@ -1,6 +1,5 @@
 #include "FollowCameraComponent.h"
 #include "Camera.h"
-#include "Gameplay\GameObjects\GameObject.h"
 #include "Engine\Core\Input.h"
 
 #include <Windows.h>
@@ -39,17 +38,16 @@ void FollowCameraComponent::Update(float elapsed_time)
 		return;
 	}
 
-	std::shared_ptr<const GameObject> target_obj = target_object.lock();
-	if (!target_obj)
+	// 追従対象の位置座標を取得
+	DirectX::XMFLOAT3 target_pos = {};
+	if (!target_position_getter || !target_position_getter(target_pos))
 	{
-		OutputDebugStringA("[FollowCameraComponent] 警告: 追従対象(target_object)が設定されていないか破棄されています。\n");
+		OutputDebugStringA("[FollowCameraComponent エラー] 追従対象の位置座標(target_position_getter)が未設定か、対象が破棄されています。\n");
 		return;
 	}
 
-	DirectX::XMFLOAT3 target_pos = target_obj->GetPosition();
-
 	//座標の非数(NaN)チェック
-	if (std::isnan(target_pos.x) || std::isnan(target_pos.y) || std::isnan(target_pos.z))
+	if (std::isnan(target_pos.x) || std::isnan(target_pos.y) || std::isnan(target_pos.z)) 
 	{
 		OutputDebugStringA("[FollowCameraComponent エラー] 追従対象の座標に NaN が検出されました。\n");
 		return;
@@ -113,10 +111,10 @@ void FollowCameraComponent::RenderGui()
 	}
 }
 
-//対象のGameObject参照の設定
-void FollowCameraComponent::SetTarget(const std::shared_ptr<GameObject>& target_obj)
+//追従対象の位置設定
+void FollowCameraComponent::SetTarget(const std::function<bool(DirectX::XMFLOAT3&)>& getter)
 {
-	target_object = target_obj;
+	target_position_getter = getter;
 }
 
 //制御対象のカメラを設定

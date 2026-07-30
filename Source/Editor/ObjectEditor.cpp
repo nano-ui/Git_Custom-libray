@@ -204,42 +204,83 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 {
 	if (model_path.empty())
 	{
-		OutputDebugStringA("[Error] ObjectEditor: CreateTempModelObject - model_path is empty!\n");
+		OutputDebugStringA("[エラー] CreateTempModelObject: model_path が空です。\n");
 		return;
 	}
 
 	if (cached_class_names.empty())
 	{
-		OutputDebugStringA("[Error] ObjectEditor: CreateTempModelObject - No registered classes available!\n");
+		OutputDebugStringA("[エラー] CreateTempModelObject: 登録されているクラスが存在しません。\n");
 		return;
 	}
 
 	current_model_path = model_path;
 
+	//ドロップされたモデルパスから拡張子を除いたモデル名と対応する個別JSONのパスを生成
 	std::string model_name = std::filesystem::path(model_path).stem().string();
-	std::string target_class_name = cached_class_names[0];
-	for (size_t i = 0; i < cached_class_names.size(); i++)
+	std::string detail_file_path = "Data/Json/" + model_name + "/" + model_name + ".json";
+
+	bool is_json_loaded = false; //個別JSONからの復元に成功したかの判定フラグ
+
+	//個別JSONファイルが存在すれば開いて class_name と設定を自動復元
+	if (std::filesystem::exists(detail_file_path))
 	{
-		if (cached_class_names[i] == model_name)
+		std::ifstream detail_file(detail_file_path);
+		if (detail_file.is_open())
 		{
-			target_class_name = cached_class_names[i];
-			inspector_selected_class_index = static_cast<int>(i);
-			break;
+			nlohmann::json detail_json;
+			detail_file >> detail_json;
+			detail_file.close();
+
+			// JSONから class_name を取得して対応するオブジェクトを生成
+			if (detail_json.contains("class_name"))
+			{
+				std::string target_class_name = detail_json["class_name"].get<std::string>();
+				GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
+
+				if (new_object != nullptr)
+				{
+					// 3Dモデルの初期化
+					if (new_object->GetModel() != nullptr)new_object->GetModel()->Initialize(current_model_path);
+					else OutputDebugStringA("[エラー] CreateTempModelObject: GetModel() が nullptr です。\n");
+
+					// 個別JSONから詳細パラメータを復元
+					new_object->LoadFromJObject(detail_json);
+					current_selected_object = new_object;
+					is_json_loaded = true;
+
+					OutputDebugStringA("[情報] CreateTempModelObject: 個別JSONからクラスと設定の自動復元に成功しました。\n");
+				}
+				else OutputDebugStringA("[エラー] CreateTempModelObject: ObjectFactory によるオブジェクト生成に失敗しました。\n");
+			}
 		}
+		else OutputDebugStringA("[エラー] CreateTempModelObject: 個別JSONファイルが開けませんでした。\n");
 	}
 
-	GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
-
-	if (new_object)
+	//個別JSONが存在しない場合のフォールバック処理（クラス名一致検索またはデフォルト生成）
+	if (!is_json_loaded)
 	{
-		if (new_object->GetModel())
+		std::string target_class_name = cached_class_names[0]; //デフォルトは先頭のクラス
+		for (size_t i = 0; i < cached_class_names.size(); i++)
 		{
-			new_object->GetModel()->Initialize(current_model_path);
+			if (cached_class_names[i] == model_name)
+			{
+				target_class_name = cached_class_names[i];
+				inspector_selected_class_index = static_cast<int>(i); //インスペクター選択と同期
+				break;
+			}
 		}
-		else OutputDebugStringA("[エラー] ObjectEditor: CreateTempModelObject - GetModel() が nullptr です。\n");
-		current_selected_object = new_object;
+
+		GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
+
+		if (new_object != nullptr)
+		{
+			if (new_object->GetModel() != nullptr)new_object->GetModel()->Initialize(current_model_path);
+			else OutputDebugStringA("[エラー] CreateTempModelObject: GetModel() が nullptr です。\n");
+			current_selected_object = new_object;
+		}
+		else OutputDebugStringA("[エラー] CreateTempModelObject: ObjectFactory によるデフォルト生成に失敗しました。\n");
 	}
-	else OutputDebugStringA("[Error] ObjectEditor: CreateTempModelObject - Failed to create object via ObjectFactory!\n");
 }
 
 //オブジェクト生成UI描画
@@ -373,6 +414,9 @@ void ObjectEditor::DrawRightPane()
 	//選択中のオブジェクト情報の表示
 	ImGui::Text(u8"モデル情報");
 	ImGui::Separator();
+
+	//カメラ追従対象への設定ボタン
+
 
 	if (current_selected_object != nullptr)
 	{
@@ -527,6 +571,7 @@ void ObjectEditor::SaveScene(const std::string& file_path)
 
 			//個別情報Jsonの書き出し
 			nlohmann::json detail_json;
+			detail_json["class_name"] = obj->GetClassNameW();
 			obj->SaveToJObject(detail_json);
 
 			std::ofstream detail_file(detail_file_path);
@@ -539,7 +584,6 @@ void ObjectEditor::SaveScene(const std::string& file_path)
 
 			//シーンJsonへ最小限の情報のみを記録
 			nlohmann::json node;
-			node["class_name"] = obj->GetClassNameW();
 			node["model_path"] = model_path;
 			node["position"] = obj->GetPosition();
 			node["rotation"] = obj->GetRotation();
@@ -598,41 +642,46 @@ void ObjectEditor::LoadScene(const std::string& file_path)
 	{
 		const nlohmann::json& object_node = objects_array[i];	//現在のインデックスの配列要素
 
-		if (object_node.contains("class_name"))
+		if (object_node.contains("detail_json_path"))
 		{
-			std::string class_name = object_node["class_name"].get<std::string>();	//記録されているクラス名
-			GameObject* new_object = ObjectFactory::CreateAndRegister(class_name);
+			std::string detail_path = object_node["detail_json_path"].get<std::string>();
+			std::ifstream detail_file(detail_path);
 
-			if (new_object)
+			if (detail_file)
 			{
-				//Transform 情報の復元
-				if (object_node.contains("position"))new_object->SetPosition(object_node["position"].get<DirectX::XMFLOAT3>());
-				if (object_node.contains("rotation"))new_object->SetRotation(object_node["rotation"].get<DirectX::XMFLOAT4>());
-				if (object_node.contains("scale"))new_object->SetScale(object_node["scale"].get<DirectX::XMFLOAT3>());
+				nlohmann::json detail_json;
+				detail_file >> detail_json;
+				detail_file.close();
 
-				//モデルパスの適用
-				if (object_node.contains("model_path"))
+				//個別JSON内に記録されている class_name を取得して生成
+				if (detail_json.contains("class_name"))
 				{
-					std::string model_path = object_node["model_path"].get<std::string>();
-					if (!model_path.empty() && new_object->GetModel())new_object->GetModel()->Initialize(model_path);
-				}
+					std::string class_name = detail_json["class_name"].get<std::string>();
+					GameObject* new_object = ObjectFactory::CreateAndRegister(class_name);
 
-				//個別JSON情報の復元
-				if (object_node.contains("detail_json_path"))
-				{
-					std::string detail_path = object_node["detail_json_path"].get<std::string>();
-					std::ifstream detail_file(detail_path);
-
-					if (detail_file.is_open())
+					if (new_object != nullptr)
 					{
-						nlohmann::json detail_json;
-						detail_file >> detail_json;
-						detail_file.close();
+						//Transform 情報の復元
+						if (object_node.contains("position")) new_object->SetPosition(object_node["position"].get<DirectX::XMFLOAT3>());
+						if (object_node.contains("rotation")) new_object->SetRotation(object_node["rotation"].get<DirectX::XMFLOAT4>());
+						if (object_node.contains("scale"))    new_object->SetScale(object_node["scale"].get<DirectX::XMFLOAT3>());
+
+						//モデルパスの適用
+						if (object_node.contains("model_path"))
+						{
+							std::string model_path = object_node["model_path"].get<std::string>();
+							if (!model_path.empty() && new_object->GetModel() != nullptr)
+							{
+								new_object->GetModel()->Initialize(model_path);
+							}
+						}
+
+						//個別JSONからステータス等の復元
 						new_object->LoadFromJObject(detail_json);
 					}
-					else OutputDebugStringA("[エラー] LoadScene: 個別JSONファイルが開けませんでした。\n");
 				}
 			}
+			else OutputDebugStringA("[エラー] LoadScene: 個別JSONファイルが開けませんでした。\n");
 		}
 	}
 	SaveEditorConfig(file_path);
