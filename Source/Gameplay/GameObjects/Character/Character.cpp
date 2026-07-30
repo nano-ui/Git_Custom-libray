@@ -174,19 +174,42 @@ void Character::Move(float elapsed_time, float vx, float vz, float speed)
 //旋回処理
 void Character::Tuen(float elapsed_time, float vx, float vz, float speed)
 {
-	//回転の計算
-	float rot_speed = speed * elapsed_time;
-	float length = sqrtf(vx * vx + vz * vz);
-	if (length < 0.001f)return;
-	vx /= length;
-	vz /= length;
-	float frontX = sinf(angle.y);
-	float frontZ = cosf(angle.y);
+	//移動入力ベクトルの長さをチェックしてゼロ除算を防止
+	constexpr float min_input_length = 0.001f;
+	float length = std::sqrtf(vx * vx + vz * vz);
+	if (length < min_input_length)return;
 
-	//回転量の決定と適用
-	float dot = (frontX * vx) + (frontZ * vz);
-	float rot = 1.0f - dot;
-	if (rot > rot_speed)rot = rot_speed;
+	//入力ベクトル(vx, vz)から目標となるY軸回転角度(Yaw)を算出
+	float target_angle = std::atan2f(vx, vz);
+
+	//現在の角度と目標角度の差分を計算し、-π ～ +π の範囲に正規化
+	float angle_diff = target_angle - angle.y;
+
+	while (angle_diff > DirectX::XM_PI)  angle_diff -= DirectX::XM_2PI;
+	while (angle_diff < -DirectX::XM_PI) angle_diff += DirectX::XM_2PI;
+
+	//フレームレート依存を防ぐ補間速度計算と角度の更新
+	float rot_speed = speed * elapsed_time;
+
+	if (std::abs(angle_diff) <= rot_speed)
+	{
+		angle.y = target_angle; //差分が回転速度以下なら目標角度に合わせる
+	}
+	else
+	{
+		angle.y += (angle_diff > 0.0f ? rot_speed : -rot_speed); //差分の符号に応じて左右回転
+	}
+
+	//角度(angle.y)を -π ～ +π の範囲に正規化
+	while (angle.y > DirectX::XM_PI)  angle.y -= DirectX::XM_2PI;
+	while (angle.y < -DirectX::XM_PI) angle.y += DirectX::XM_2PI;
+
+	//異常値(NaN)チェック
+	if (std::isnan(angle.y))
+	{
+		OutputDebugStringA("[Character エラー] Tuen: angle.y に NaN が検出されたため 0.0 に補正しました。\n");
+		angle.y = 0.0f;
+	}
 }
 
 //ジャンプ処理

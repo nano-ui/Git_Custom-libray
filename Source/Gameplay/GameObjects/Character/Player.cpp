@@ -2,6 +2,7 @@
 
 #include "Engine\Core\Input.h"
 #include "Engine\Graphics\Renderers\Graphics.h"
+#include "Engine\Camera\CameraManager.h"
 #include "Gameplay/GameObjects/ObjectFactory.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
@@ -143,9 +144,11 @@ void Player::UpdateInput(float elapsed_time)
 	if (Input::Instance().IsKeyPress('A'))move_x -= 1.0f;
 	if (Input::Instance().IsKeyPress('D'))move_x += 1.0f;
 
+	DirectX::XMFLOAT3 move_vec = CameraManager::Instance().CalculateMoveVector(move_x, move_z);
+
 	//移動・旋回処理
-	Character::Move(elapsed_time, move_x, move_z, move_speed);
-	Character::Tuen(elapsed_time, move_x, move_z, move_speed);
+	Character::Move(elapsed_time, move_vec.x, move_vec.z, move_speed);
+	Character::Tuen(elapsed_time, move_vec.x, move_vec.z, move_speed);
 }
 
 //プレイヤーの現在位置と、コライダーの現在位置のズレを出力
