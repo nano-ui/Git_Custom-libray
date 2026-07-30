@@ -76,7 +76,8 @@ void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manage
 	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
-	if (active_scene_type == EditorSceneType::LevelEditor)
+	if (active_scene_type == EditorSceneType::LevelEditor ||
+		active_scene_type == EditorSceneType::StateMachineEditor)
 	{
 		window_flags |= ImGuiWindowFlags_NoBackground;
 	}

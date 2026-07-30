@@ -349,6 +349,7 @@ void TransitionConditionEditor::DrawInputCheckUI(GraphTransitionCondition& condi
 		int current_behavior = static_cast<int>(condition.param_second);	//Œ»İ‚Ì“ü—ÍŒ`®
 		static constexpr int mode_press = 0;	//‰Ÿ‚³‚ê‚Ä‚¢‚éŠÔ
 		static constexpr int mode_trigger = 1;	//‰Ÿ‚³‚ê‚½uŠÔ
+		static constexpr int mode_not_press = 2;//–¢“ü—Í
 
 		ImGui::Text(u8"“ü—Í‚ÌŒŸ’mŒ`®:");
 		ImGui::SameLine();
@@ -360,6 +361,11 @@ void TransitionConditionEditor::DrawInputCheckUI(GraphTransitionCondition& condi
 		if (ImGui::RadioButton(u8"‰Ÿ‚³‚ê‚½uŠÔ(Trigger)", &current_behavior, mode_trigger))
 		{
 			condition.param_second = static_cast<float>(mode_trigger);
+		}
+		ImGui::SameLine();
+		if (ImGui::RadioButton(u8"–¢“ü—Í (Not Press)", &current_behavior, mode_not_press))
+		{
+			condition.param_second = static_cast<float>(mode_not_press);
 		}
 	}
 }
