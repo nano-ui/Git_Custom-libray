@@ -384,6 +384,9 @@
     <ClCompile Include="Source\Engine\Camera\CameraManager.cpp">
       <Filter>Source\Engine\Camera\CameraManager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Camera\CameraController.cpp">
+      <Filter>Source\Engine\Camera\CameraController</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -724,6 +727,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Camera\CameraManager.h">
       <Filter>Source\Engine\Camera\CameraManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Camera\CameraController.h">
+      <Filter>Source\Engine\Camera\CameraController</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1163,6 +1169,9 @@
     </Filter>
     <Filter Include="Source\Engine\Graphics\Resources\Model\GltfModel\TinygltfImpl">
       <UniqueIdentifier>{a45ed410-4c04-4a7e-9fe0-44f4f41332e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Camera\CameraController">
+      <UniqueIdentifier>{798c8268-34bf-48fc-b8ad-fd294fff5411}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@
 
 class ObjectManager;
 class Camera;
+class CameraController;
 class Light;
 class ShapeRenderer;
 class CollisionManager;
@@ -56,7 +57,7 @@ private:
 
 private:
 	std::unique_ptr<ObjectManager> object_manager;	//全ゲームオブジェクトを一括管理
-	std::unique_ptr<Camera> camera;	//カメラ管理
+	std::unique_ptr<CameraController>  camera_controller; //カメラ制御・保持コンポーネント
 	std::unique_ptr<Light> light;	//ライト管理
 	std::unique_ptr<CollisionManager> collision_manager;	//当たり判定管理マネージャー
 	std::unique_ptr<SkyBox> skybox;							//スカイボックスクラス

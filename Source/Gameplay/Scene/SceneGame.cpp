@@ -3,6 +3,7 @@
 #include "Engine\Graphics\Renderers\Graphics.h"
 #include "Engine\Graphics\Device\framebuffer.h"
 #include "Engine/Camera/Camera.h"
+#include "Engine\Camera\CameraController.h"
 #include "Engine/Camera/FreeCamera.h"
 #include "Engine\Graphics\Resources\Light.h"
 #include "Engine\Graphics\Renderers\ShapeRenderer.h"
@@ -21,8 +22,7 @@ SceneGame::SceneGame()
 	ObjectManager::Instance().SetCollisionManager(collision_manager.get());
 
 	collision_experiment = std::make_unique<CollisionExperiment>(collision_manager.get());
-
-	camera = std::make_unique<FreeCamera>();
+	camera_controller = std::make_unique<CameraController>();
 	light = std::make_unique <Light>();
 	skybox = std::make_unique<SkyBox>();
 	skybox->Initialize(
@@ -43,7 +43,25 @@ SceneGame::~SceneGame()
 //初期化
 void SceneGame::Initialize()
 {
-	camera->Initialize();
+	if (camera_controller)
+	{
+		camera_controller->Initialize();
+
+		//Player の位置を取得するコールバックを登録
+		camera_controller->SetTargetPositionGetter([](DirectX::XMFLOAT3& out_pos) -> bool {
+			const auto& game_objects = ObjectManager::Instance().GetGameObjects();
+			for (const auto& obj : game_objects)
+			{
+				if (obj && obj->IsActive() && obj->GetClassNameW() == "Player")
+				{
+					out_pos = obj->GetPosition();
+					return true;
+				}
+			}
+			OutputDebugStringA("[SceneGame 警告] 追従対象の Player オブジェクトが見つかりません。\n");
+			return false;
+			});
+	}
 	DirectX::XMFLOAT4 init_light_dir = { -0.5f, -1.0f, 0.5f, 0.0f };
 	if (light)
 	{
@@ -68,10 +86,6 @@ void SceneGame::Finalize()
 	{
 		object_manager.reset();
 	}
-	if (camera)
-	{
-		camera.reset();
-	}
 	if (light)
 	{
 		light.reset();
@@ -84,47 +98,22 @@ void SceneGame::Update(float elapsed_time)
 	
 #ifdef USE_IMGUI
 	const ImGuiIO& io = ImGui::GetIO();
-	if (camera && !io.WantCaptureMouse)
-	{
-		camera->Update(elapsed_time);
-	}
+	if (camera_controller && !io.WantCaptureMouse)camera_controller->Update(elapsed_time);
 #else
-	if (camera)
-	{
-		camera->Update(elapsed_time);
-	}
+	if (camera_controller)camera_controller->Update(elapsed_time);
 #endif
 	if (editor_manager)editor_manager->Update(elapsed_time);
-
-	if (editor_manager && !editor_manager->IsGameViewportActive())
-	{
-		return;
-	}
-
-	if (SceneManager::Instance().IsPaused())
-	{
-		return;
-	}
-
-	if (object_manager)
-	{
-		object_manager->Update(elapsed_time);
-	}
-
-	if (collision_experiment)
-	{
-		collision_experiment->Update(elapsed_time);
-	}
-
-	if (collision_manager)
-	{
-		collision_manager->ExecuteCollision();
-	}
+	if (editor_manager && !editor_manager->IsGameViewportActive())return;
+	if (SceneManager::Instance().IsPaused())return;
+	if (object_manager)object_manager->Update(elapsed_time);
+	if (collision_experiment)collision_experiment->Update(elapsed_time);
+	if (collision_manager)collision_manager->ExecuteCollision();
 }
 
 //描画処理
 void SceneGame::Render(float elapsed_time)
 {
+	Camera* current_camera = camera_controller ? camera_controller->GetCamera().get() : nullptr;
 	ID3D11DeviceContext* context = Graphics::Instance().GetContext();
 	auto states = Graphics::Instance().GetPipelineStates();
 	framebuffer* shadow_fb = Graphics::Instance().GetShadowFramebuffer();
@@ -150,7 +139,7 @@ void SceneGame::Render(float elapsed_time)
 		const float k_light_far_clip = 300.0f;
 
 		light_dir_vector = light->GetDirection();
-		DirectX::XMFLOAT3 camera_focus = camera->GetFocus();
+		DirectX::XMFLOAT3 camera_focus = current_camera->GetFocus();
 		DirectX::XMVECTOR target_pos = DirectX::XMLoadFloat3(&camera_focus);
 		DirectX::XMVECTOR light_pos = DirectX::XMLoadFloat4(&light_dir_vector);
 		light_pos = DirectX::XMVectorScale(light_pos, -k_light_camera_distance);
@@ -177,7 +166,7 @@ void SceneGame::Render(float elapsed_time)
 	}
 
 	// シャドウマップ（深度バッファ）生成パス
-	if (shadow_fb && camera && light && object_manager)
+	if (shadow_fb && current_camera && light && object_manager)
 	{
 		shadow_fb->clear(context, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f);
 		shadow_fb->activate(context);
@@ -186,7 +175,7 @@ void SceneGame::Render(float elapsed_time)
 		light_scene_constants.view_projection = light_view_projection_matrix;
 		light_scene_constants.light_view_projection = light_view_projection_matrix;
 		light_scene_constants.light_direction = light_dir_vector;
-		light_scene_constants.camera_position = camera->GetPosition();
+		light_scene_constants.camera_position = current_camera->GetPosition();
 		light_scene_constants.light_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		light_scene_constants.ambient_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		Graphics::Instance().UpdateSceneConstantBuffer(light_scene_constants);
@@ -226,11 +215,11 @@ void SceneGame::Render(float elapsed_time)
 	scene_constants constants{};
 
 	// カメラとライトが有効か判定
-	if (camera && light)
+	if (current_camera && light)
 	{
-		constants.view_projection = camera->GetViewProjectionMatrix();
+		constants.view_projection = current_camera->GetViewProjectionMatrix();
 		constants.light_direction = light->GetDirection();
-		constants.camera_position = camera->GetPosition();
+		constants.camera_position = current_camera->GetPosition();
 		constants.light_color = { 1.0f,1.0f,1.0f,1.0f };
 		constants.ambient_color = { 1.0f,1.0f,1.0f,1.0f };
 		constants.light_view_projection = light_view_projection_matrix;
@@ -253,7 +242,7 @@ void SceneGame::Render(float elapsed_time)
 	}
 
 	// レンダラーとカメラが有効か判定
-	if (shape_renderer && camera)
+	if (shape_renderer && current_camera)
 	{
 		const float k_light_debug_distance = 5.0f;
 		DirectX::XMFLOAT4 light_dir = light->GetDirection();
@@ -286,7 +275,7 @@ void SceneGame::Render(float elapsed_time)
 				shape_renderer->DrawCapsule(shape.position, rotation, 0.5f, 3.0f, shape.color, mode);
 			}
 		}
-		shape_renderer->Render(context, camera->GetView(), camera->GetProjection());
+		shape_renderer->Render(context, current_camera->GetView(), current_camera->GetProjection());
 	}
 
 	if (skybox)
@@ -296,6 +285,7 @@ void SceneGame::Render(float elapsed_time)
 
 #ifdef USE_IMGUI
 	RenderGui();
+	editor_manager->RenderGui(current_camera, collision_manager.get());
 #endif
 }
 
@@ -308,8 +298,5 @@ void SceneGame::RenderGui()
 		//object_manager->RenderGui();
 		object_manager->RenderDebug(shape_renderer.get());
 	}
-
-	editor_manager->RenderGui(camera.get(), collision_manager.get());
-
 #endif // USE_IMGUI
 }

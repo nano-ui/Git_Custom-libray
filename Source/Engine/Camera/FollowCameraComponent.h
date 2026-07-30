@@ -54,7 +54,7 @@ private:
 	static constexpr float INITIAL_PITCH_DEGREE = 20.0f;	//初期状態で見下ろす角度（20度）
 	static constexpr float MIN_CAMERA_HEIGHT = 0.5f;		//カメラ最低高度（地面沈み込み防止）
 
-	std::function<bool(DirectX::XMFLOAT3&)>& target_position_getter;	//追従対象の位置座標
+	std::function<bool(DirectX::XMFLOAT3&)> target_position_getter;	//追従対象の位置座標
 	std::weak_ptr<Camera>					target_camera;		//制御対象カメラ
 	bool is_first_frame = true;									//初回・切替直後判定フラグ
 	DirectX::XMFLOAT3						offset_position;	//対象からの相対オフセット位置
