@@ -5,6 +5,9 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
+//ImGuiのWin32メッセージハンドラ宣言
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 //コンストラクタ
 ImGuiManager::ImGuiManager()
 	:is_initialized(false)
@@ -26,7 +29,7 @@ bool ImGuiManager::Initialize(HWND hwnd_window, ID3D11Device* device_ptr, ID3D11
 		return true;
 	}
 
-	if (!hwnd_window || device_ptr || context_ptr)
+	if (!hwnd_window || !device_ptr || !context_ptr)
 	{
 		std::cout << "[ImGuiManager] エラー: ウィンドウハンドルまたはDirectX11デバイスのポインタが不正です。" << std::endl;
 		return false;
@@ -101,8 +104,25 @@ void ImGuiManager::Shutdown()
 	std::cout << "[ImGuiManager] ImGuiの解放処理が完了しました。" << std::endl;
 }
 
+//Win32ウィンドウメッセージ処理
+LRESULT ImGuiManager::ProcessMessage(HWND hwnd_window, UINT message_type, WPARAM w_param, LPARAM l_param)
+{
+	if (is_initialized)return ImGui_ImplWin32_WndProcHandler(hwnd_window, message_type, w_param, l_param);
+	return 0;
+}
+
 //UIの初期スタイル設定
 void ImGuiManager::SetupStyle()
 {
+	ImGuiIO& io = ImGui::GetIO();
+
+	//ドッキング有効化
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+	//日本語フォントの読み込み
+	const ImWchar* glyph_ranges = io.Fonts->GetGlyphRangesJapanese();
+	const float font_size = 18.0f; //フォントの大きさ
+	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msgothic.ttc", font_size, nullptr, glyph_ranges);
+
 	ImGui::StyleColorsDark();
 }

@@ -30,6 +30,9 @@ public:
     //解放処理
     void Shutdown();
 
+    //Win32ウィンドウメッセージ処理
+    LRESULT ProcessMessage(HWND hwnd_window, UINT message_type, WPARAM w_param, LPARAM l_param);
+
 private:
     //UIの初期スタイル設定
     void SetupStyle();
