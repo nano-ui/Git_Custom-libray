@@ -54,7 +54,6 @@ void Character::Update(float elapsed_time)
 
 	blackboard->SetValue(u8"体力", health);
 	blackboard->SetValue(u8"接地フラグ", is_ground);
-	blackboard->SetValue("velocity", velocity);
 	blackboard->SetValue("move_speed", move_speed);
 
 	if (state_machine_component)
@@ -179,11 +178,9 @@ void Character::SetupBlackboard()
 	blackboard->RegisterVariable(u8"体力");
 	blackboard->RegisterVariable("move_speed");
 	blackboard->RegisterVariable(u8"接地フラグ");
-	blackboard->RegisterVariable("velocity");
 
 	blackboard->SetValue(u8"体力", health);
 	blackboard->SetValue(u8"接地フラグ", is_ground);
-	blackboard->SetValue("velocity", velocity);
 	blackboard->SetValue("move_speed", move_speed);
 
 	printf("Character: 共有ブラックボードにを登録します。\n");
