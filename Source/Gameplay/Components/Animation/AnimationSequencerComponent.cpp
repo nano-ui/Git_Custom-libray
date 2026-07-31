@@ -12,6 +12,7 @@ AnimationSequencerComponent::AnimationSequencerComponent(std::weak_ptr<Model> ta
 	, current_sequence_time(0.0f)
 	, is_active(false)
 {
+	animation_blender = std::make_unique<AnimationBlender>();
 }
 
 //デストラクタ
@@ -56,6 +57,7 @@ void AnimationSequencerComponent::Update(float elapsed_time)
 		OutputDebugStringA("[SequencerComponent Error] Update: target_model has been expired!\n");
 		return;
 	}
+	animation_blender->Update(elapsed_time);
 
 	//経過時間を加算
 	current_sequence_time += elapsed_time;
@@ -87,9 +89,10 @@ void AnimationSequencerComponent::Update(float elapsed_time)
 }
 
 //アニメーション切り替え
-void AnimationSequencerComponent::ChangeAnimation(const std::string& anim_name)
+void AnimationSequencerComponent::ChangeAnimation(const std::string& anim_name, float blend_time)
 {
 	if (current_animaiton_name == anim_name)return;
+	if (animation_blender && !current_animaiton_name.empty())animation_blender->StartCrossFade(current_animaiton_name, current_sequence_time, blend_time);
 	current_animaiton_name = anim_name;
 	current_sequence_time = 0.0f;
 }
