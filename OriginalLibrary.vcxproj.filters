@@ -390,6 +390,9 @@
     <ClCompile Include="Source\Engine\Graphics\Renderers\ImGuiManager.cpp">
       <Filter>Source\Engine\Graphics\Renderers\ImGuiManager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\GuiInspector.cpp">
+      <Filter>Source\Editor\GuiInspector</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -736,6 +739,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Renderers\ImGuiManager.h">
       <Filter>Source\Engine\Graphics\Renderers\ImGuiManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\GuiInspector.h">
+      <Filter>Source\Editor\GuiInspector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1181,6 +1187,9 @@
     </Filter>
     <Filter Include="Source\Engine\Graphics\Renderers\ImGuiManager">
       <UniqueIdentifier>{d2a5495e-54e9-4378-871f-0fdb49124306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\GuiInspector">
+      <UniqueIdentifier>{a3a69721-7993-4502-a32f-cfe4154a4c4d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

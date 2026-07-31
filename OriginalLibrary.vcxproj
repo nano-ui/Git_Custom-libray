@@ -236,6 +236,7 @@
     <ClCompile Include="Source\Editor\EditorMenuBar.cpp" />
     <ClCompile Include="Source\Editor\EditorTabBar.cpp" />
     <ClCompile Include="Source\Editor\FileDialogHelper.cpp" />
+    <ClCompile Include="Source\Editor\GuiInspector.cpp" />
     <ClCompile Include="Source\Editor\ObjectEditor.cpp" />
     <ClCompile Include="Source\Editor\PathHelper.cpp" />
     <ClCompile Include="Source\Editor\Preview\ModelPreviewWindow.cpp" />
@@ -346,6 +347,7 @@
     <ClInclude Include="Source\Editor\EditorMenuBar.h" />
     <ClInclude Include="Source\Editor\EditorTabBar.h" />
     <ClInclude Include="Source\Editor\FileDialogHelper.h" />
+    <ClInclude Include="Source\Editor\GuiInspector.h" />
     <ClInclude Include="Source\Editor\ObjectEditor.h" />
     <ClInclude Include="Source\Editor\PathHelper.h" />
     <ClInclude Include="Source\Editor\Preview\ModelPreviewWindow.h" />
