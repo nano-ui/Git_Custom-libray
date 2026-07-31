@@ -1,7 +1,7 @@
 [Project Structure] 
  
 Folder PATH listing for volume Windows
-Volume serial number is 0000004A 0255:C8DA
+Volume serial number is 000000AE 0255:C8DA
 C:.
 Да   .gitignore
 Да   gltf_model_ps.cso
@@ -5582,6 +5582,8 @@ C:.
 Да           Да   BehaviorTree.obj
 Да           Да   BlurShader.obj
 Да           Да   Camera.obj
+Да           Да   CameraController.obj
+Да           Да   CameraManager.obj
 Да           Да   Character.obj
 Да           Да   CircularMove.obj
 Да           Да   CollisionExperiment.obj
@@ -5608,6 +5610,7 @@ C:.
 Да           Да   FbxSkinnedModel.obj
 Да           Да   FbxSkinnedResource.obj
 Да           Да   FileDialogHelper.obj
+Да           Да   FollowCameraComponent.obj
 Да           Да   framebuffer.obj
 Да           Да   framework.obj
 Да           Да   FreeCamera.obj
@@ -5641,6 +5644,8 @@ C:.
 Да           Да   LuminanceExtractionShader.obj
 Да           Да   main.obj
 Да           Да   Model.obj
+Да           Да   ModelComponent.obj
+Да           Да   ModelManager.obj
 Да           Да   ModelPreviewScene.obj
 Да           Да   ModelPreviewWindow.obj
 Да           Да   MoveFactory.obj
@@ -5652,6 +5657,7 @@ C:.
 Да           Да   OriginalLibrary.iobj
 Да           Да   OriginalLibrary.ipdb
 Да           Да   OriginalLibrary.log
+Да           Да   PathHelper.obj
 Да           Да   PipelineStates.obj
 Да           Да   Player.obj
 Да           Да   RandomJugment.obj
@@ -5677,6 +5683,7 @@ C:.
 Да           Да   StandCamera.obj
 Да           Да   State.obj
 Да           Да   StateBlackboard.obj
+Да           Да   StateBlackboardInspectorWindow.obj
 Да           Да   StateGraphConfigManager.obj
 Да           Да   StateGraphDataManager.obj
 Да           Да   StateGraphPaletteWindow.obj
@@ -5702,9 +5709,11 @@ C:.
 Да                   fxc.write.1.tlog
 Да                   link.command.1.tlog
 Да                   link.read.1.tlog
+Да                   link.read.46.tlog
 Да                   link.secondary.1.tlog
 Да                   link.write.1.tlog
 Да                   OriginalLibrary.lastbuildstate
+Да                   unsuccessfulbuild
 Да                   
 ДеДЯДЯДЯShaders
 Да   ДеДЯДЯДЯCompiled

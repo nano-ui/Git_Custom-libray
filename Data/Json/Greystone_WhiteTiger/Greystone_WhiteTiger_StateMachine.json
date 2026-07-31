@@ -22,12 +22,12 @@
                 {
                     "Conditions": [
                         {
-                            "CompOp": 0,
-                            "HashKey": 243,
+                            "CompOp": 5,
+                            "HashKey": 3019011796,
                             "ParamSecond": 2.0,
-                            "RefValue": 1.0,
+                            "RefValue": 0.10000000149011612,
                             "SecondaryHash": 0,
-                            "Type": 4
+                            "Type": 0
                         }
                     ],
                     "EndPinID": 101,

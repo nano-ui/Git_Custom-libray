@@ -153,12 +153,14 @@ bool Character::ApplyDamage(float damage, float invincible_time)
 void Character::SetupBlackboard()
 {
 	blackboard->RegisterVariable(u8"体力");
-	blackboard->RegisterVariable(u8"速度");
+	blackboard->RegisterVariable(u8"最大速度");
 	blackboard->RegisterVariable(u8"接地フラグ");
+	blackboard->RegisterVariable(u8"速度");
 
 	blackboard->SetValue(u8"体力", health);
-	blackboard->SetValue(u8"速度", max_speed);
+	blackboard->SetValue(u8"最大速度", max_speed);
 	blackboard->SetValue(u8"接地フラグ", is_ground);
+	blackboard->SetValue(u8"速度", velocity);
 
 	printf("Character: 共有ブラックボードにを登録します。\n");
 }
