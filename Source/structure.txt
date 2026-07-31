@@ -1,7 +1,7 @@
 [Project Structure] 
  
 Folder PATH listing for volume Windows
-Volume serial number is 0000004F 0255:C8DA
+Volume serial number is 00000090 0255:C8DA
 C:.
 Да   structure.txt
 Да   _dump_structure.bat
@@ -19,6 +19,8 @@ C:.
 Да   Да   EditorTabBar.h
 Да   Да   FileDialogHelper.cpp
 Да   Да   FileDialogHelper.h
+Да   Да   GuiInspector.cpp
+Да   Да   GuiInspector.h
 Да   Да   ObjectEditor.cpp
 Да   Да   ObjectEditor.h
 Да   Да   PathHelper.cpp
@@ -59,6 +61,8 @@ C:.
 Да   ДеДЯДЯДЯCamera
 Да   Да       Camera.cpp
 Да   Да       Camera.h
+Да   Да       CameraController.cpp
+Да   Да       CameraController.h
 Да   Да       CameraManager.cpp
 Да   Да       CameraManager.h
 Да   Да       FollowCameraComponent.cpp
@@ -108,6 +112,8 @@ C:.
 Да       Да       fullscreen_quad.h
 Да       Да       Graphics.cpp
 Да       Да       Graphics.h
+Да       Да       ImGuiManager.cpp
+Да       Да       ImGuiManager.h
 Да       Да       ShapeRenderer.cpp
 Да       Да       ShapeRenderer.h
 Да       Да       sprite.cpp
