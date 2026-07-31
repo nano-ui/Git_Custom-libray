@@ -79,7 +79,7 @@ bool TransitionConditionEditor::DrawConditonSettings(StateGraphDataManager* data
 		//選択されたタイプに応じた関数の呼び出し
 		switch (condition.type)
 		{
-		case ConditionNodeType::NormalCompare: DrawNormalCompareUI(blackboard, condition);	break;
+		case ConditionNodeType::NormalCompare: is_changed |= DrawNormalCompareUI(blackboard, condition); break;
 		case ConditionNodeType::Random:        DrawRandomUI(condition);						break;
 		case ConditionNodeType::Distance:      DrawDistanceUI(blackboard, condition);		break;
 		case ConditionNodeType::Ratio:         DrawRatioUI(blackboard, condition);			break;
@@ -94,8 +94,10 @@ bool TransitionConditionEditor::DrawConditonSettings(StateGraphDataManager* data
 }
 
 //通常比較用のImGui入力UI描画
-void TransitionConditionEditor::DrawNormalCompareUI(StateBlackboard* blackboard, GraphTransitionCondition& condition)
+bool TransitionConditionEditor::DrawNormalCompareUI(StateBlackboard* blackboard, GraphTransitionCondition& condition)
 {
+	bool is_ui_changed = false; // UI上の変更を検知するフラグ
+
 	const char* all_operators[] = { "==","!=",">","<",">=","<=" };	//全ての演算子
 	const char* bool_operators[] = { "==","!=" };					//bool型専用の演算子
 	const int op_total_count = 6;	//全演算子の総数
@@ -174,8 +176,17 @@ void TransitionConditionEditor::DrawNormalCompareUI(StateBlackboard* blackboard,
 
 				ImGui::DragFloat(u8"基準値", &condition.reference_value, val_speed, val_min, val_max, "%.3f");
 			}
+			else if (std::holds_alternative<DirectX::XMFLOAT3>(raw_data))
+			{
+				ImGui::SetNextItemWidth(80.0f);
+				ImGui::Combo(u8"比較演算子", &condition.compare_operator, all_operators, op_total_count);
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(200.0f);
+				ImGui::DragFloat3(u8"基準値(XYZ)", &condition.vector_reference_value.x, val_speed, val_min, val_max, "%.3f");
+			}
 		}
 	}
+	return is_ui_changed;
 }
 
 //確率判定用のImGui入力UI描画

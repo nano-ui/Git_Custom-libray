@@ -22,7 +22,7 @@ public:
 
 private:
 	//’Êí”äŠr—p‚ÌImGui“ü—ÍUI•`‰æ
-	void DrawNormalCompareUI(StateBlackboard* blackboard, GraphTransitionCondition& condition);
+	bool DrawNormalCompareUI(StateBlackboard* blackboard, GraphTransitionCondition& condition);
 
 	//Šm—¦”»’è—p‚ÌImGui“ü—ÍUI•`‰æ
 	void DrawRandomUI(GraphTransitionCondition& condition);

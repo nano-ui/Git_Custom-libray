@@ -50,6 +50,13 @@ void Character::Update(float elapsed_time)
 
 	if (model)model->Update(elapsed_time);
 
+	move_speed = std::sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
+
+	blackboard->SetValue(u8"体力", health);
+	blackboard->SetValue(u8"接地フラグ", is_ground);
+	blackboard->SetValue("velocity", velocity);
+	blackboard->SetValue("move_speed", move_speed);
+
 	if (state_machine_component)
 	{
 		state_machine_component->Update(elapsed_time, blackboard.get());
@@ -83,9 +90,6 @@ void Character::Update(float elapsed_time)
 	DirectX::XMVECTOR q = DirectX::XMQuaternionRotationRollPitchYaw(angle.x, angle.y, angle.z);
 	DirectX::XMStoreFloat4(&rotation, q);
 
-	blackboard->SetValue(u8"体力", health);
-	blackboard->SetValue(u8"速度", move_speed);
-	blackboard->SetValue(u8"接地フラグ", is_ground);
 }
 
 //描画処理
@@ -173,14 +177,14 @@ bool Character::ApplyDamage(float damage, float invincible_time)
 void Character::SetupBlackboard()
 {
 	blackboard->RegisterVariable(u8"体力");
-	blackboard->RegisterVariable(u8"最大速度");
+	blackboard->RegisterVariable("move_speed");
 	blackboard->RegisterVariable(u8"接地フラグ");
-	blackboard->RegisterVariable(u8"速度");
+	blackboard->RegisterVariable("velocity");
 
 	blackboard->SetValue(u8"体力", health);
-	blackboard->SetValue(u8"最大速度", max_speed);
 	blackboard->SetValue(u8"接地フラグ", is_ground);
-	blackboard->SetValue(u8"速度", velocity);
+	blackboard->SetValue("velocity", velocity);
+	blackboard->SetValue("move_speed", move_speed);
 
 	printf("Character: 共有ブラックボードにを登録します。\n");
 }

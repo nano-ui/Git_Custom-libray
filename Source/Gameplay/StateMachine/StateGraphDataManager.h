@@ -1,5 +1,6 @@
 #pragma once
 
+#include "DirectXMath.h"
 #include <vector>
 #include <string>
 #include <cstdint>
@@ -62,6 +63,7 @@ struct GraphTransitionCondition
 	int compare_operator = 0;		//比較演算子識別番号
 	float param_second = 0.0f;		//第2引数パラメータ
 	uint32_t secondary_hash = 0;	//比較対象のハッシュキー
+	DirectX::XMFLOAT3 vector_reference_value = { 0.0f, 0.0f, 0.0f }; // XMFLOAT3用の比較基準値
 };
 
 //ノードを繋ぐ線の情報

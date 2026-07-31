@@ -579,6 +579,17 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 								{
 									cond.reference_value = static_cast<int>(raw_ref_value);
 								}
+								else if (std::holds_alternative<DirectX::XMFLOAT3>(raw_data))
+								{
+									DirectX::XMFLOAT3 vec_ref = { 0.0f,0.0f,0.0f };
+									if (cond_json.contains("VectorRefValue") && cond_json["VectorRefValue"].is_array() && cond_json["VectorRefValue"].size() == 3)
+									{
+										vec_ref.x = cond_json["VectorRefValue"][0].get<float>();
+										vec_ref.y = cond_json["VectorRefValue"][1].get<float>();
+										vec_ref.z = cond_json["VectorRefValue"][2].get<float>();
+									}
+									cond.reference_value = vec_ref;
+								}
 								else
 								{
 									cond.reference_value = raw_ref_value;

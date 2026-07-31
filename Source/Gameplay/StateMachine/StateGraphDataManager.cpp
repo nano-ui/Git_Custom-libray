@@ -94,6 +94,7 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 				cond_json["CompOp"] = cond.compare_operator; // 演算子
 				cond_json["ParamSecond"] = cond.param_second; // 第2数値引数
 				cond_json["SecondaryHash"] = cond.secondary_hash; //副ハッシュキーを保存
+				cond_json["VectorRefValue"] = { cond.vector_reference_value.x, cond.vector_reference_value.y, cond.vector_reference_value.z };
 				conds_array.push_back(cond_json); // 配列へ追加
 			}
 			link_json["Conditions"] = conds_array; // リンクにバインド
@@ -249,6 +250,14 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 				{
 					cond.secondary_hash = cond_json["SecondaryHash"];
 				}
+
+				if (cond_json.contains("VectorRefValue") && cond_json["VectorRefValue"].is_array() && cond_json["VectorRefValue"].size() == 3)
+				{
+					cond.vector_reference_value.x = cond_json["VectorRefValue"][0].get<float>();
+					cond.vector_reference_value.y = cond_json["VectorRefValue"][1].get<float>();
+					cond.vector_reference_value.z = cond_json["VectorRefValue"][2].get<float>();
+				}
+
 				link.conditions.push_back(cond); // リンクに条件を追加
 			}
 			graph.links.push_back(link); // 階層データにリンクを追加

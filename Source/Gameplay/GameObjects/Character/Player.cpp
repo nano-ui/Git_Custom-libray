@@ -157,8 +157,8 @@ void Player::UpdateInput(float elapsed_time)
 	DirectX::XMFLOAT3 move_vec = CameraManager::Instance().CalculateMoveVector(move_x, move_z);
 
 	//移動・旋回処理
-	Character::Move(elapsed_time, move_vec.x, move_vec.z, move_speed);
-	Character::Tuen(elapsed_time, move_vec.x, move_vec.z, move_speed);
+	Character::Move(elapsed_time, move_vec.x, move_vec.z, max_speed);
+	Character::Tuen(elapsed_time, move_vec.x, move_vec.z, max_speed);
 }
 
 //プレイヤーの現在位置と、コライダーの現在位置のズレを出力

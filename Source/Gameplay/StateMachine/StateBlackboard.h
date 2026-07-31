@@ -9,7 +9,8 @@
 #include <cstdint>
 #include <string_view>
 #include <imgui.h>
-#include <vector>
+#include <vector>]
+#include <cmath>
 
 #include "StateGraphDataManager.h"
 
@@ -292,20 +293,44 @@ struct CompareVisitor
 		}
 	}
 
-	//DirectX::XKFLOAT3型用の比較判定処理
+	//DirectX::XMFLOAT3型用の比較判定処理
 	bool operator()(DirectX::XMFLOAT3& val)
 	{
-		const DirectX::XMFLOAT3* ref = std::get_if<DirectX::XMFLOAT3>(&ref_val);	//基準値
+		//基準値が XMFLOAT3 型として格納されているか判定
+		const DirectX::XMFLOAT3* ref_vec = std::get_if<DirectX::XMFLOAT3>(&ref_val);
+		//基準値が float 型（共通閾値）として格納されているか判定
+		const float* ref_float = std::get_if<float>(&ref_val);
 
-		//基準値が違う型だった場合
-		if (!ref) { return false; }
+		//基準値の型がいずれでもない（比較不可能）場合は false
+		if (!ref_vec && !ref_float) { return false; }
 
-		switch (op)
+		//各成分ごとの比較判定を行うラムダ式
+		auto compare_component = [this](float value, float reference) -> bool
 		{
-		case CompareOperator::Equal:		return (val.x == ref->x) && (val.y == ref->y) && (val.z == ref->z); break;
-		case CompareOperator::NotEqual:		return (val.x != ref->x) || (val.y != ref->y) || (val.z != ref->z); break;
-		default:							return false;		break;
-		}
+			constexpr float float_epsilon = 0.0001f; // 浮動小数点数比較時の誤差吸収用定数
+			switch (op)
+			{
+			case CompareOperator::Equal:        return std::abs(value - reference) < float_epsilon;
+			case CompareOperator::NotEqual:     return std::abs(value - reference) >= float_epsilon;
+			case CompareOperator::Greater:      return value > reference;
+			case CompareOperator::Less:         return value < reference;
+			case CompareOperator::GreaterEqual: return value >= reference;
+			case CompareOperator::LessEqual:    return value <= reference;
+			default:                            
+				printf("Error: CompareVisitor - 未定義の比較演算子 (%d) が指定されました。\n", static_cast<int>(op));
+				return false;
+			}
+		};
+
+		//基準値の型に応じて X, Y, Z それぞれの比較ターゲット値を決定
+		float ref_x = ref_vec ? ref_vec->x : *ref_float; // X成分の基準値
+		float ref_y = ref_vec ? ref_vec->y : *ref_float; // Y成分の基準値
+		float ref_z = ref_vec ? ref_vec->z : *ref_float; // Z成分の基準値
+
+		//X, Y, Z の全成分が指定した比較演算子の条件を満たしているか判定
+		return compare_component(val.x, ref_x) &&
+			compare_component(val.y, ref_y) &&
+			compare_component(val.z, ref_z);
 	}
 
 	//比較を行わないためfalseを返す
@@ -338,6 +363,7 @@ struct TransitionCondition
 	CompareOperator compart_op = CompareOperator::Equal;	//比較演算子
 	float param_second = 0.0f;		//第２引数パラメータ
 	uint32_t secondary_hash = 0;	//比較対象のハッシュキー
+	DirectX::XMFLOAT3 vector_reference_value = { 0.0f, 0.0f, 0.0f }; // XMFLOAT3用の比較基準値
 
 	//条件を満たしているか判定
 	bool IsJudgment(const StateBlackboard& blackboard)const;
