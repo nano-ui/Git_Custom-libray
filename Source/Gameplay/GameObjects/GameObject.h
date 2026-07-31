@@ -7,6 +7,7 @@
 #include "Engine\Graphics\Renderers\ShapeRenderer.h"
 #include "Engine\Graphics\Resources\Model.h"
 #include "Serialization\JsonSerializer.h"
+#include "Editor\GuiInspector.h"
 
 struct Collider;
 
@@ -101,6 +102,7 @@ protected:
 protected:
 	std::unique_ptr<Model> model;				//モデルインスタンス
 	std::unique_ptr<JsonSerializer> serializer;	//自身専用のシリアライザ
+	std::unique_ptr<GuiInspector> inspector;	//UI表示用インスペクター
 	DirectX::XMFLOAT3 position;	//位置
 	DirectX::XMFLOAT4 rotation;	//角度
 	DirectX::XMFLOAT3 scale;	//スケール倍率

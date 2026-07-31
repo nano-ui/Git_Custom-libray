@@ -91,6 +91,19 @@ public:
 	//デストラクタ
 	~JsonSerializer();
 
+	//登録データのリセット処理
+	void Clear() { registered_properties.clear(); }
+
+	//セーブ・ロード対象の変数名とポインタを登録
+	template<typename T>
+	void RegisterVariable(const std::string& property_name, T* target_variable)
+	{
+		PropertyData new_data;
+		new_data.name = property_name;
+		new_data.property_interface = std::make_unique<TypedProperty<T>>(target_variable);
+		registered_properties.push_back(std::move(new_data));
+	}
+
 	//JSON形式でデータをファイルへ書き出す
 	void SaveToFile(const std::string& file_path);
 

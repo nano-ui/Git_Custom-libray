@@ -11,6 +11,8 @@ GameObject::GameObject()
 	is_active = true;
 
 	model = std::make_unique<Model>();
+	serializer = std::make_unique<JsonSerializer>();
+	inspector = std::make_unique<GuiInspector>();
 }
 
 //デストラクタ
@@ -35,7 +37,7 @@ DirectX::XMMATRIX GameObject::GetWorldMatrix() const
 //ImGuiデバッグ描画
 void GameObject::RenderGui()
 {
-	if (serializer)serializer->RenderGui();
+	if (inspector)inspector->RenderGui();
 
 	if (model)model->DrawImGui();
 
@@ -47,10 +49,16 @@ void GameObject::RenderGui()
 //シリアライザに登録
 void GameObject::SetupSerialization()
 {
-	serializer = std::make_unique<JsonSerializer>();
-	serializer->RegisterVariable("Position", &position);
-	serializer->RegisterVariable("Rotation", &rotation);
-	serializer->RegisterVariable("Scale", &scale);
+	serializer->Clear();
+	inspector->Clear();
+
+	serializer->RegisterVariable(u8"座標", &position);
+	serializer->RegisterVariable(u8"角度", &rotation);
+	serializer->RegisterVariable(u8"拡大率", &scale);
+
+	inspector->RegisterVariable(u8"位置", &position, u8"トランスフォーム");
+	inspector->RegisterVariable(u8"角度", &rotation, u8"トランスフォーム");
+	inspector->RegisterVariable(u8"拡大率", &scale, u8"トランスフォーム");
 }
 
 //指定されたJSONオブジェクトへ自身のデータを書き込む

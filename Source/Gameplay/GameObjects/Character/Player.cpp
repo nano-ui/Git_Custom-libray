@@ -54,7 +54,6 @@ void Player::Initialize()
 		printf("Error: Player::Initialize - state_machine_component ‚ª nullptr ‚Å‚·B\n");
 	}
 
-	SetupSerialization();
 	position = { 0.0f,0.0f,0.0f };
 
 	//“–‚½‚è”»’è‚Ì‰Šúİ’è

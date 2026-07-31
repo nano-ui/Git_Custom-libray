@@ -100,6 +100,7 @@ public:
 		if constexpr (std::is_same_v<T, int>)					ImGui::Text("%s: %d", property_name.c_str(), *data_pointer);
 		else if constexpr (std::is_same_v<T, float>)			ImGui::Text("%s: %.3f", property_name.c_str(), *data_pointer);
 		else if constexpr (std::is_same_v<T, DirectX::XMFLOAT3>)ImGui::Text("%s: (%.2f, %.2f, %.2f)", property_name.c_str(), data_pointer->x, data_pointer->y, data_pointer->z);
+		else if constexpr (std::is_same_v<T, DirectX::XMFLOAT4>)ImGui::Text("%s: (%.2f, %.2f, %.2f, %.2f)", property_name.c_str(), data_pointer->x, data_pointer->y, data_pointer->z, data_pointer->w);
 		else if constexpr (std::is_same_v<T, bool>)				ImGui::Text("%s: %s", property_name.c_str(), *data_pointer ? "true" : "false");
 		else if constexpr (std::is_same_v<T, std::string>)		ImGui::Text("%s: %s", property_name.c_str(), data_pointer->c_str());
 		else													ImGui::Text("%s: [Text Display Unsupported]", property_name.c_str());
@@ -118,6 +119,9 @@ public:
 	//デストラクタ
 	~GuiInspector();
 
+	//登録データのリセット処理
+	void Clear() { registered_properties.clear(); }
+
 	//編集用変数を登録
 	template <typename T>
 	void RegisterVariable(const std::string& property_name, T* target_variable, const std::string& category_name = u8"デフォルト")
@@ -125,18 +129,18 @@ public:
 		PropertyData new_data;
 		new_data.name = property_name;
 		new_data.category = category_name;
-		new_data.prorerty_interface = std::make_unique<TypedGuiProperty<T>>(target_variable);
+		new_data.property_interface = std::make_unique<TypedGuiProperty<T>>(target_variable);
 		registered_properties.push_back(std::move(new_data));
 	}
 
 	//表示用変数を登録
 	template <typename T>
-	void RegisterText(const std::string& property_name, T* target_variable, const std::string& category_name = u8"デフォルト")
+	void RegisterText(const std::string& property_name, const T* target_variable, const std::string& category_name = u8"デフォルト") 
 	{
 		PropertyData new_data;
 		new_data.name = property_name;
 		new_data.category = category_name;
-		new_data.prorerty_interface = std::make_unique<TextGuiProperty<T>>(target_variable);
+		new_data.property_interface = std::make_unique<TextGuiProperty<T>>(target_variable);
 		registered_properties.push_back(std::move(new_data));
 	}
 
@@ -149,7 +153,7 @@ private:
 	{
 		std::string name;		//名
 		std::string category;	//所属するグループ
-		std::unique_ptr<IGuiProperty> prorerty_interface;	//操作ポインタ
+		std::unique_ptr<IGuiProperty> property_interface;	//操作ポインタ
 	};
 
 private:

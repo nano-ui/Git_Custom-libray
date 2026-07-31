@@ -40,7 +40,6 @@ Character::~Character()
 void Character::Initialize()
 {
 	is_active = true;
-	SetupSerialization();
 	SetupBlackboard();
 }
 
@@ -108,22 +107,43 @@ void Character::RenderDebug(ShapeRenderer* renderer)
 void Character::SetupSerialization()
 {
 	GameObject::SetupSerialization();
+
 	//カテゴリ「基本ステータス」への登録
-	serializer->RegisterVariable(u8"体力", &health, u8"基本ステータス");
-	serializer->RegisterVariable(u8"攻撃力", &attack_power, u8"基本ステータス");
+	serializer->RegisterVariable(u8"体力", &health);
+	serializer->RegisterVariable(u8"攻撃力", &attack_power);
+	inspector->RegisterVariable(u8"体力", &health, u8"基本ステータス");
+	inspector->RegisterVariable(u8"攻撃力", &attack_power, u8"基本ステータス");
 
 	//カテゴリ「移動・物理パラメータ」への登録
-	serializer->RegisterVariable(u8"最高速度", &max_speed, u8"移動・物理パラメータ");
-	serializer->RegisterVariable(u8"現在の移動速度", &move_speed, u8"移動・物理パラメータ");
-	serializer->RegisterVariable(u8"加速度", &acceleration, u8"移動・物理パラメータ");
-	serializer->RegisterVariable(u8"摩擦力", &friction, u8"移動・物理パラメータ");
-	serializer->RegisterVariable(u8"重力", &gravity, u8"移動・物理パラメータ");
-	serializer->RegisterVariable(u8"重量", &weight, u8"移動・物理パラメータ");
+	serializer->RegisterVariable(u8"最高速度", &max_speed);
+	serializer->RegisterVariable(u8"加速度", &acceleration);
+	serializer->RegisterVariable(u8"摩擦力", &friction);
+	serializer->RegisterVariable(u8"重力", &gravity);
+	serializer->RegisterVariable(u8"重量", &weight);
+	serializer->RegisterVariable(u8"空中制御力", &air_control);
+	inspector->RegisterVariable(u8"最高速度", &max_speed, u8"移動・物理パラメータ");
+	inspector->RegisterVariable(u8"加速度", &acceleration, u8"移動・物理パラメータ");
+	inspector->RegisterVariable(u8"摩擦力", &friction, u8"移動・物理パラメータ");
+	inspector->RegisterVariable(u8"重力", &gravity, u8"移動・物理パラメータ");
+	inspector->RegisterVariable(u8"重量", &weight, u8"移動・物理パラメータ");
+	inspector->RegisterVariable(u8"空中制御力", &air_control, u8"移動・物理パラメータ");
 
-	//カテゴリ「当たり判定設定」への登録
-	serializer->RegisterVariable(u8"コライダー半径", &radius, u8"当たり判定設定");
-	serializer->RegisterVariable(u8"コライダー高さ", &height, u8"当たり判定設定");
-	serializer->RegisterVariable(u8"コライダーY軸オフセット", &offset_y, u8"当たり判定設定");
+	//カテゴリ「当たり判定設定」
+	serializer->RegisterVariable(u8"コライダー半径", &radius);
+	serializer->RegisterVariable(u8"コライダー高さ", &height);
+	serializer->RegisterVariable(u8"コライダーY軸オフセット", &offset_y);
+	inspector->RegisterVariable(u8"コライダー半径", &radius, u8"当たり判定設定");
+	inspector->RegisterVariable(u8"コライダー高さ", &height, u8"当たり判定設定");
+	inspector->RegisterVariable(u8"コライダーY軸オフセット", &offset_y, u8"当たり判定設定");
+
+	//カテゴリ「デバッグモニター（物理・移動状態）」
+	inspector->RegisterText(u8"現在の移動速度", &move_speed, u8"デバッグモニター");
+	inspector->RegisterText(u8"移動速度ベクトル", &velocity, u8"デバッグモニター");
+	inspector->RegisterText(u8"角度(Yaw/Pitch/Roll)", &angle, u8"デバッグモニター");
+	inspector->RegisterText(u8"接地フラグ", &is_ground, u8"デバッグモニター");
+	inspector->RegisterText(u8"無敵時間タイマー", &invincible_timer, u8"デバッグモニター");
+	inspector->RegisterText(u8"入力ベクトルX", &move_vecX, u8"デバッグモニター");
+	inspector->RegisterText(u8"入力ベクトルZ", &move_vecZ, u8"デバッグモニター");
 }
 
 //ダメージ処理

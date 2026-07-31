@@ -34,31 +34,31 @@ void GuiInspector::RenderGui()
 		}
 
 		if (!is_duplicate)unique_categories.push_back(current_data.category);
+	}
 
-		//カテゴリごとにグループ化して描画
-		for (size_t cat_idx = 0; cat_idx < unique_categories.size(); cat_idx++)
+	//カテゴリごとにグループ化して描画
+	for (size_t cat_idx = 0; cat_idx < unique_categories.size(); cat_idx++)
+	{
+		const std::string& target_category = unique_categories[cat_idx];
+
+		if (ImGui::CollapsingHeader(target_category.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			const std::string& target_category = unique_categories[cat_idx];
+			ImGui::Indent();
+			ImGui::PushID(target_category.c_str());
 
-			if (ImGui::CollapsingHeader(target_category.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+			for (size_t prop_idx = 0; prop_idx < registered_properties.size(); prop_idx++)
 			{
-				ImGui::Indent();
-				ImGui::PushID(target_category.c_str());
+				const PropertyData& current_data = registered_properties[prop_idx];
 
-				for (size_t prop_idx = 0; prop_idx < registered_properties.size(); prop_idx++)
+				if (current_data.category == target_category)
 				{
-					const PropertyData& current_data = registered_properties[prop_idx];
-
-					if (current_data.category == target_category)
+					if (current_data.property_interface)
 					{
-						if (current_data.prorerty_interface)
-						{
-							ImGui::PushID(static_cast<int>(prop_idx));
-							current_data.prorerty_interface->DrawImGui(current_data.name);
-							ImGui::PopID();
-						}
-						else OutputDebugStringA("[GuiInspector エラー] property_interface が nullptr です。\n");
+						ImGui::PushID(static_cast<int>(prop_idx));
+						current_data.property_interface->DrawImGui(current_data.name);
+						ImGui::PopID();
 					}
+					else OutputDebugStringA("[GuiInspector エラー] property_interface が nullptr です。\n");
 				}
 			}
 			ImGui::PopID();
