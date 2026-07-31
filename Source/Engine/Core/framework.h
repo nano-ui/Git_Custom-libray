@@ -4,6 +4,8 @@
 #include "Engine/Core/high_resolution_timer.h"
 #include "Gameplay/Scene/Scene.h"
 
+class ImGuiManager;
+
 class framework
 {
 public:
@@ -27,4 +29,5 @@ private:
 	high_resolution_timer tictoc;
 	uint32_t frames_per_second{ 0 };
 	float count_by_seconds{ 0.0f };
+	std::unique_ptr<ImGuiManager> imgui_manager;	//ImGuiManagerのスマートポインタ
 };

@@ -17,7 +17,7 @@ ImGuiManager::ImGuiManager()
 //デストラクタ
 ImGuiManager::~ImGuiManager()
 {
-	SetupStyle();
+	Shutdown();
 }
 
 //初期化処理

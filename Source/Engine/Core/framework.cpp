@@ -1,12 +1,14 @@
 ﻿#include "framework.h"
 #include "Engine\Graphics\Renderers\Graphics.h"
+#include "Engine\Graphics\Renderers\ImGuiManager.h"
+#include "Engine\Core\Input.h"
 #include "Gameplay/Scene/SceneTitle.h"
 #include "Gameplay/Scene/SceneManager.h"
-#include "Engine\Core\Input.h"
 
 #include <sstream>
 #include <memory>
 #include <ImGuizmo.h>
+
 
 namespace
 {
@@ -33,29 +35,6 @@ namespace
 	};
 }
 
-//#ifdef USE_IMGUI
-#include "imgui.h"
-#include "imgui_impl_dx11.h"
-#include "imgui_impl_win32.h"
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-namespace
-{
-	struct ImGuiScopeDeleter
-	{
-		void operator()(ImGuiContext* context) const noexcept
-		{
-			if (context)
-			{
-				ImGui_ImplDX11_Shutdown();
-				ImGui_ImplWin32_Shutdown();
-				ImGui::DestroyContext(context);
-			}
-		}
-	};
-}
-//#endif
-
 framework::framework(HWND hwnd):hwnd(hwnd)
 {
 }
@@ -76,28 +55,13 @@ int framework::run()
 		return 0;
 	}
 
-//#ifdef USE_IMGUI
-	std::unique_ptr<ImGuiContext, ImGuiScopeDeleter> imgui_scope;
-	//ImGuiの初期化
-	IMGUI_CHECKVERSION();
-	imgui_scope.reset(ImGui::CreateContext());
-	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	if (!ImGui_ImplWin32_Init(hwnd))
-	{
-		return 0;
-	}
-	if (!ImGui_ImplDX11_Init(graphics_scope->GetDevice(), graphics_scope->GetContext()))
+	//ImGuiManagerの生成と初期化
+	imgui_manager = std::make_unique<ImGuiManager>();
+	if (!imgui_manager->Initialize(hwnd, graphics_scope->GetDevice(), graphics_scope->GetContext()))
 	{
 		return 0;
 	}
 
-	const ImWchar* glyph_ranges = io.Fonts->GetGlyphRangesJapanese();
-	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msgothic.ttc", 18.0f, nullptr, glyph_ranges);
-	
-	ImGui::StyleColorsDark();
-//#endif
 	//初期シーンの登録
 	std::unique_ptr<SceneTitle> title_scene = std::make_unique<SceneTitle>();
 	scene_manager_scope->ChangeScene(std::move(title_scene));
@@ -119,12 +83,8 @@ int framework::run()
 		}
 		if (WM_QUIT != msg.message)
 		{
-//#ifdef USE_IMGUI
-			ImGui_ImplDX11_NewFrame();
-			ImGui_ImplWin32_NewFrame();
-			ImGui::NewFrame();
+			imgui_manager->BeginFrame();
 			ImGuizmo::BeginFrame();
-//#endif // USE_IMGUI
 
 			tictoc.tick();
 			calculate_frame_stats();
@@ -134,15 +94,9 @@ int framework::run()
 			scene_manager_scope->Update(tictoc.time_interval());
 			graphics_scope->BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);
 			scene_manager_scope->Render(tictoc.time_interval());
-//#ifdef USE_IMGUI
-			ImGui::Render();
-			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-			//if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-			//{
-			//	ImGui::UpdatePlatformWindows();
-			//	ImGui::RenderPlatformWindowsDefault();
-			//}
-//#endif // USE_IMGUI
+
+			imgui_manager->EndFrame();
+
 			graphics_scope->EndFrame();
 		}
 	}
@@ -153,10 +107,7 @@ int framework::run()
 
 LRESULT framework::handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//#ifdef  USE_IMGUI
-	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
-		return 1; 
-//#endif //  USE_IMGUI
+	if (imgui_manager && imgui_manager->ProcessMessage(hwnd, msg, wparam, lparam))return 1;
 
 	switch (msg)
 	{

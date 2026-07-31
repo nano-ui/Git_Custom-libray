@@ -33,7 +33,6 @@
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
 #include <malloc.h>
-#include "ImGuiManager.h"
 #endif
 #if !defined(_MSC_VER) && !defined(__MINGW64_VERSION_MAJOR)
 #define _malloca(x) alloca(x)
