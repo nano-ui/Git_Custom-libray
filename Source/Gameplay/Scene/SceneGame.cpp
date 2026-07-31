@@ -118,12 +118,34 @@ void SceneGame::Render(float elapsed_time)
 	auto states = Graphics::Instance().GetPipelineStates();
 	framebuffer* shadow_fb = Graphics::Instance().GetShadowFramebuffer();
 
+	// エディタ画面（レベル以外）がアクティブな場合の描画処理
 	if (editor_manager && !editor_manager->IsGameViewportActive())
 	{
-#ifdef USE_IMGUI
+//#ifdef USE_IMGUI
+		// カメラとライトの定数バッファを更新してプレビューモデルを正しく描画できるようにする
+		if (current_camera && light)
+		{
+			scene_constants constants{};
+			constants.view_projection = current_camera->GetViewProjectionMatrix();
+			constants.light_direction = light->GetDirection();
+			constants.camera_position = current_camera->GetPosition();
+			constants.light_color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			constants.ambient_color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			Graphics::Instance().UpdateSceneConstantBuffer(constants);
+		}
+		else
+		{
+			// 意図しない挙動（カメラまたはライトが nullptr）が発生した場合のデバッグ出力
+			OutputDebugStringA("[SceneGame エラー] エディタ描画時に current_camera または light が nullptr です。\n");
+		}
+
+		// プレビュー用フレームバッファへ描画
 		editor_manager->RenderPreviews(context);
-		RenderGui(); 
-#endif
+
+		// ImGui UI の描画を実行
+		RenderGui();
+		editor_manager->RenderGui(current_camera, collision_manager.get());
+//#endif
 		return;
 	}
 
@@ -283,20 +305,20 @@ void SceneGame::Render(float elapsed_time)
 		skybox->Render(context);
 	}
 
-#ifdef USE_IMGUI
+//#ifdef USE_IMGUI
 	RenderGui();
 	editor_manager->RenderGui(current_camera, collision_manager.get());
-#endif
+//#endif
 }
 
 //ImGuiデバッグ描画
 void SceneGame::RenderGui()
 {
-#ifdef USE_IMGUI
+//#ifdef USE_IMGUI
 	if (object_manager)
 	{
 		//object_manager->RenderGui();
 		object_manager->RenderDebug(shape_renderer.get());
 	}
-#endif // USE_IMGUI
+//#endif // USE_IMGUI
 }

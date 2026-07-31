@@ -36,7 +36,14 @@ const BlackboardData& StateBlackboard::GetAttributeValue(uint32_t hash_key) cons
 	//要素が見つからなかった場合
 	if (iterator == data_map.end())
 	{
-		std::cerr << "Error : 指定されたハッシュキー [" << hash_key << "] のは存在しません。\n";
+		std::cerr << "Error : StateBlackboard::GetAttributeValue - 指定されたハッシュキー [" << hash_key << "] のデータは存在しません。\n";
+
+		if (data_map.empty())
+		{
+			static const BlackboardData default_fallback_data = 0.0f;
+			return default_fallback_data;
+		}
+
 		return data_map.begin()->second.value;
 	}
 	return iterator->second.value;

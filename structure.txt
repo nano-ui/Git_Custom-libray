@@ -1,16 +1,21 @@
 [Project Structure] 
  
 Folder PATH listing for volume Windows
-Volume serial number is 00000011 0255:C8DA
+Volume serial number is 0000004A 0255:C8DA
 C:.
 „    .gitignore
+„    gltf_model_ps.cso
+„    gltf_model_vs.cso
 „    imgui.ini
+„    NodeEditor.json
 „    OriginalLibrary.filters
 „    OriginalLibrary.sln
 „    OriginalLibrary.user
 „    OriginalLibrary.vcxproj
 „    OriginalLibrary.vcxproj.filters
 „    OriginalLibrary.vcxproj.user
+„    sky_box_ps.cso
+„    sky_box_vs.cso
 „    structure.txt
 „    _dump_structure.bat
 „    
@@ -120,55 +125,173 @@ C:.
 „    „¥„Ÿ„Ÿ„ŸEffect
 „    „¥„Ÿ„Ÿ„ŸFont
 „    „¥„Ÿ„Ÿ„ŸJson
-„    „        .json
-„    „        imgui.ini
-„    „        Player.json
-„    „        SceneGame.json
-„    „        Stage.json
-„    „        
+„    „    „    .json
+„    „    „    imgui.ini
+„    „    „    k.json
+„    „    „    Kari.json
+„    „    „    NodeEditor_State.json
+„    „    „    Player.json
+„    „    „    SceneGame.json
+„    „    „    Stage.json
+„    „    „    StateEditorConfig.json
+„    „    „    
+„    „    „¥„Ÿ„Ÿ„ŸData
+„    „    „    „¤„Ÿ„Ÿ„ŸModel
+„    „    „        „¤„Ÿ„Ÿ„ŸCharacter
+„    „    „            „¤„Ÿ„Ÿ„ŸPlayer
+„    „    „                „¤„Ÿ„Ÿ„ŸGreystone_WhiteTiger.gltf
+„    „    „¥„Ÿ„Ÿ„ŸDefault
+„    „    „¥„Ÿ„Ÿ„ŸExampleStage
+„    „    „        ExampleStage.json
+„    „    „        
+„    „    „¥„Ÿ„Ÿ„ŸGreystone_WhiteTiger
+„    „    „        Greystone_WhiteTiger.json
+„    „    „        Greystone_WhiteTiger_Sequence.json
+„    „    „        Greystone_WhiteTiger_StateMachine.json
+„    „    „        
+„    „    „¥„Ÿ„Ÿ„ŸScene
+„    „    „        MainScene.json
+„    „    „        SceneGame.json
+„    „    „        
+„    „    „¤„Ÿ„Ÿ„ŸSystem
+„    „            EditorConfig.json
+„    „            
 „    „¥„Ÿ„Ÿ„ŸModel
+„    „    „    Greystone_Dragonlord.glb
+„    „    „    
 „    „    „¥„Ÿ„Ÿ„ŸCharacter
 „    „    „    „    RPG-Character.glb
+„    „    „    „    RPG-Character.glb.bin
+„    „    „    „    RPG-Character.glb.cerial
 „    „    „    „    unitychan.glb
+„    „    „    „    unitychan.glb.bin
 „    „    „    „    
-„    „    „    „¤„Ÿ„Ÿ„ŸEnemy
-„    „    „            imgui.ini
-„    „    „            MI_SciFi_ToiletMech_Body_Skin3_Inst_Base.png
-„    „    „            MI_SciFi_ToiletMech_Body_Skin3_Inst_Emissive.png
-„    „    „            MI_SciFi_ToiletMech_Body_Skin3_Inst_MetallicRoughness.png
-„    „    „            MI_SciFi_ToiletMech_Body_Skin3_Inst_Normal.png
-„    „    „            MI_SciFi_ToiletMech_Body_Skin3_Inst_Occlusion.png
-„    „    „            MI_SciFi_ToiletMech_Toilet_Skin3_Inst_Base.png
-„    „    „            MI_SciFi_ToiletMech_Toilet_Skin3_Inst_Emissive.png
-„    „    „            MI_SciFi_ToiletMech_Toilet_Skin3_Inst_MetallicRoughness.png
-„    „    „            MI_SciFi_ToiletMech_Toilet_Skin3_Inst_Normal.png
-„    „    „            MI_SciFi_ToiletMech_Toilet_Skin3_Inst_Occlusion.png
-„    „    „            SK_SciFi_ToiletMech_Skin3.bin
-„    „    „            SK_SciFi_ToiletMech_Skin3.cereal
-„    „    „            SK_SciFi_ToiletMech_Skin3.gltf
-„    „    „            SK_SciFi_ToiletMech_Skin3.gltf.bin
+„    „    „    „¥„Ÿ„Ÿ„ŸEnemy
+„    „    „    „        imgui.ini
+„    „    „    „        MI_SciFi_ToiletMech_Body_Skin3_Inst_Base.png
+„    „    „    „        MI_SciFi_ToiletMech_Body_Skin3_Inst_Emissive.png
+„    „    „    „        MI_SciFi_ToiletMech_Body_Skin3_Inst_MetallicRoughness.png
+„    „    „    „        MI_SciFi_ToiletMech_Body_Skin3_Inst_Normal.png
+„    „    „    „        MI_SciFi_ToiletMech_Body_Skin3_Inst_Occlusion.png
+„    „    „    „        MI_SciFi_ToiletMech_Toilet_Skin3_Inst_Base.png
+„    „    „    „        MI_SciFi_ToiletMech_Toilet_Skin3_Inst_Emissive.png
+„    „    „    „        MI_SciFi_ToiletMech_Toilet_Skin3_Inst_MetallicRoughness.png
+„    „    „    „        MI_SciFi_ToiletMech_Toilet_Skin3_Inst_Normal.png
+„    „    „    „        MI_SciFi_ToiletMech_Toilet_Skin3_Inst_Occlusion.png
+„    „    „    „        SK_SciFi_ToiletMech_Skin3.bin
+„    „    „    „        SK_SciFi_ToiletMech_Skin3.cereal
+„    „    „    „        SK_SciFi_ToiletMech_Skin3.gltf
+„    „    „    „        SK_SciFi_ToiletMech_Skin3.gltf.bin
+„    „    „    „        SK_SciFi_ToiletMech_Skin3.gltf.cerial
+„    „    „    „        
+„    „    „    „¥„Ÿ„Ÿ„ŸPlayer
+„    „    „    „        Greystone_WhiteTiger.bin
+„    „    „    „        Greystone_WhiteTiger.gltf
+„    „    „    „        Greystone_WhiteTiger.gltf.cerial
+„    „    „    „        MIC_GreystoneFur_WhiteTiger_Base.DDS
+„    „    „    „        MIC_GreystoneFur_WhiteTiger_Greystone_WhiteTiger_Base.DDS
+„    „    „    „        MIC_GreystoneFur_WhiteTiger_Greystone_WhiteTiger_MetallicRoughness.DDS
+„    „    „    „        MIC_GreystoneFur_WhiteTiger_Greystone_WhiteTiger_Normal.DDS
+„    „    „    „        MIC_GreystoneFur_WhiteTiger_Greystone_WhiteTiger_Occlusion.DDS
+„    „    „    „        MIC_GreystoneFur_WhiteTiger_MetallicRoughness.DDS
+„    „    „    „        MIC_GreystoneFur_WhiteTiger_Normal.DDS
+„    „    „    „        MIC_GreystoneFur_WhiteTiger_Occlusion.DDS
+„    „    „    „        MIC_GreystoneHair_WhiteTiger_Base.DDS
+„    „    „    „        MIC_GreystoneHair_WhiteTiger_Normal.DDS
+„    „    „    „        MIC_GreystoneHair_WhiteTiger_Occlusion.DDS
+„    „    „    „        M_Greystone_arms_WhiteTiger_Base.DDS
+„    „    „    „        M_Greystone_arms_WhiteTiger_MetallicRoughness.DDS
+„    „    „    „        M_Greystone_arms_WhiteTiger_Normal.DDS
+„    „    „    „        M_Greystone_arms_WhiteTiger_Occlusion.DDS
+„    „    „    „        M_Greystone_EyeRefractive_Inst_WhiteTiger_Base.DDS
+„    „    „    „        M_Greystone_EyeRefractive_Inst_WhiteTiger_Normal.DDS
+„    „    „    „        M_Greystone_Flesh_head_Base.DDS
+„    „    „    „        M_Greystone_Flesh_head_MetallicRoughness.DDS
+„    „    „    „        M_Greystone_Flesh_head_Normal.DDS
+„    „    „    „        M_Greystone_Flesh_head_Occlusion.DDS
+„    „    „    „        M_Greystone_legs_WhiteTiger_Base.DDS
+„    „    „    „        M_Greystone_legs_WhiteTiger_MetallicRoughness.DDS
+„    „    „    „        M_Greystone_legs_WhiteTiger_Normal.DDS
+„    „    „    „        M_Greystone_legs_WhiteTiger_Occlusion.DDS
+„    „    „    „        M_Greystone_shield_WhiteTiger_Base.DDS
+„    „    „    „        M_Greystone_shield_WhiteTiger_Emissive.DDS
+„    „    „    „        M_Greystone_shield_WhiteTiger_MetallicRoughness.DDS
+„    „    „    „        M_Greystone_shield_WhiteTiger_Occlusion.DDS
+„    „    „    „        M_Greystone_Torso_WhiteTiger_Base.DDS
+„    „    „    „        M_Greystone_Torso_WhiteTiger_Emissive.DDS
+„    „    „    „        M_Greystone_Torso_WhiteTiger_MetallicRoughness.DDS
+„    „    „    „        M_Greystone_Torso_WhiteTiger_Normal.DDS
+„    „    „    „        M_Greystone_Torso_WhiteTiger_Occlusion.DDS
+„    „    „    „        M_Mouth_MId_color_Base.DDS
+„    „    „    „        M_Mouth_MId_color_MetallicRoughness.DDS
+„    „    „    „        M_Mouth_MId_color_Normal.DDS
+„    „    „    „        M_TearDuct_Darker_Normal.DDS
+„    „    „    „        
+„    „    „    „¥„Ÿ„Ÿ„ŸPlayerRobot
+„    „    „    „    „¤„Ÿ„Ÿ„ŸPlayerRobot
+„    „    „    „¤„Ÿ„Ÿ„Ÿtest
+„    „    „            Greystone_WhiteTiger.bin
+„    „    „            Greystone_WhiteTiger.gltf
+„    „    „            Greystone_WhiteTiger.gltf.cerial
+„    „    „            MIC_GreystoneFur_WhiteTiger_Base.DDS
+„    „    „            MIC_GreystoneFur_WhiteTiger_Greystone_WhiteTiger_Base.DDS
+„    „    „            MIC_GreystoneFur_WhiteTiger_Greystone_WhiteTiger_MetallicRoughness.DDS
+„    „    „            MIC_GreystoneFur_WhiteTiger_Greystone_WhiteTiger_Normal.DDS
+„    „    „            MIC_GreystoneFur_WhiteTiger_Greystone_WhiteTiger_Occlusion.DDS
+„    „    „            MIC_GreystoneFur_WhiteTiger_MetallicRoughness.DDS
+„    „    „            MIC_GreystoneFur_WhiteTiger_Normal.DDS
+„    „    „            MIC_GreystoneFur_WhiteTiger_Occlusion.DDS
+„    „    „            MIC_GreystoneHair_WhiteTiger_Base.DDS
+„    „    „            MIC_GreystoneHair_WhiteTiger_Normal.DDS
+„    „    „            MIC_GreystoneHair_WhiteTiger_Occlusion.DDS
+„    „    „            M_Greystone_arms_WhiteTiger_Base.DDS
+„    „    „            M_Greystone_arms_WhiteTiger_MetallicRoughness.DDS
+„    „    „            M_Greystone_arms_WhiteTiger_Normal.DDS
+„    „    „            M_Greystone_arms_WhiteTiger_Occlusion.DDS
+„    „    „            M_Greystone_EyeRefractive_Inst_WhiteTiger_Base.DDS
+„    „    „            M_Greystone_EyeRefractive_Inst_WhiteTiger_Normal.DDS
+„    „    „            M_Greystone_Flesh_head_Base.DDS
+„    „    „            M_Greystone_Flesh_head_MetallicRoughness.DDS
+„    „    „            M_Greystone_Flesh_head_Normal.DDS
+„    „    „            M_Greystone_Flesh_head_Occlusion.DDS
+„    „    „            M_Greystone_legs_WhiteTiger_Base.DDS
+„    „    „            M_Greystone_legs_WhiteTiger_MetallicRoughness.DDS
+„    „    „            M_Greystone_legs_WhiteTiger_Normal.DDS
+„    „    „            M_Greystone_legs_WhiteTiger_Occlusion.DDS
+„    „    „            M_Greystone_shield_WhiteTiger_Base.DDS
+„    „    „            M_Greystone_shield_WhiteTiger_Emissive.DDS
+„    „    „            M_Greystone_shield_WhiteTiger_MetallicRoughness.DDS
+„    „    „            M_Greystone_shield_WhiteTiger_Occlusion.DDS
+„    „    „            M_Greystone_Torso_WhiteTiger_Base.DDS
+„    „    „            M_Greystone_Torso_WhiteTiger_Emissive.DDS
+„    „    „            M_Greystone_Torso_WhiteTiger_MetallicRoughness.DDS
+„    „    „            M_Greystone_Torso_WhiteTiger_Normal.DDS
+„    „    „            M_Greystone_Torso_WhiteTiger_Occlusion.DDS
+„    „    „            M_Mouth_MId_color_Base.DDS
+„    „    „            M_Mouth_MId_color_MetallicRoughness.DDS
+„    „    „            M_Mouth_MId_color_Normal.DDS
+„    „    „            M_TearDuct_Darker_Normal.DDS
 „    „    „            
 „    „    „¤„Ÿ„Ÿ„ŸStage
 „    „            ExampleStage.glb
+„    „            ExampleStage.glb.bin
+„    „            ExampleStage.glb.cerial
 „    „            
-„    „¥„Ÿ„Ÿ„ŸSprite
-„    „    „    SkyTexture.zip
-„    „    „    
-„    „    „¥„Ÿ„Ÿ„ŸSkyTexture
-„    „    „        diffuse_iem.dds
-„    „    „        lut_charlie.dds
-„    „    „        lut_ggx.dds
-„    „    „        sheen_pmrem.dds
-„    „    „        skybox.dds
-„    „    „        specular_pmrem.dds
-„    „    „        
-„    „    „¥„Ÿ„Ÿ„ŸTitle
-„    „    „        Title.png
-„    „    „        
-„    „    „¤„Ÿ„Ÿ„ŸUI
-„    „¤„Ÿ„Ÿ„ŸSystem
-„            EditorConfig.json
-„            
+„    „¤„Ÿ„Ÿ„ŸSprite
+„        „    SkyTexture.zip
+„        „    
+„        „¥„Ÿ„Ÿ„ŸSkyTexture
+„        „        diffuse_iem.dds
+„        „        lut_charlie.dds
+„        „        lut_ggx.dds
+„        „        sheen_pmrem.dds
+„        „        skybox.dds
+„        „        specular_pmrem.dds
+„        „        
+„        „¥„Ÿ„Ÿ„ŸTitle
+„        „        Title.png
+„        „        
+„        „¤„Ÿ„Ÿ„ŸUI
 „¥„Ÿ„Ÿ„ŸExternal
 „    „    structure.txt
 „    „    _dump_structure.bat
@@ -1361,8 +1484,400 @@ C:.
 „    „                xwbtool_Desktop_2022.vcxproj.filters
 „    „                
 „    „¥„Ÿ„Ÿ„Ÿimgui-docking
-„    „        imconfig.h
-„    „        
+„    „    „    imconfig.h
+„    „    „    
+„    „    „¤„Ÿ„Ÿ„Ÿimgui-docking
+„    „        „    .editorconfig
+„    „        „    .gitattributes
+„    „        „    .gitignore
+„    „        „    imconfig.h
+„    „        „    imgui.cpp
+„    „        „    imgui.h
+„    „        „    imgui_demo.cpp
+„    „        „    imgui_draw.cpp
+„    „        „    imgui_internal.h
+„    „        „    imgui_tables.cpp
+„    „        „    imgui_widgets.cpp
+„    „        „    imstb_rectpack.h
+„    „        „    imstb_textedit.h
+„    „        „    imstb_truetype.h
+„    „        „    LICENSE.txt
+„    „        „    
+„    „        „¥„Ÿ„Ÿ„Ÿ.github
+„    „        „    „    FUNDING.yml
+„    „        „    „    pull_request_template.md
+„    „        „    „    
+„    „        „    „¥„Ÿ„Ÿ„ŸISSUE_TEMPLATE
+„    „        „    „        config.yml
+„    „        „    „        issue_template.yml
+„    „        „    „        
+„    „        „    „¤„Ÿ„Ÿ„Ÿworkflows
+„    „        „            build.yml
+„    „        „            build_windows_vulkan_libs.ps1
+„    „        „            manual.yml
+„    „        „            scheduled.yml
+„    „        „            static-analysis.yml
+„    „        „            
+„    „        „¥„Ÿ„Ÿ„Ÿbackends
+„    „        „    „    imgui_impl_allegro5.cpp
+„    „        „    „    imgui_impl_allegro5.h
+„    „        „    „    imgui_impl_android.cpp
+„    „        „    „    imgui_impl_android.h
+„    „        „    „    imgui_impl_dx10.cpp
+„    „        „    „    imgui_impl_dx10.h
+„    „        „    „    imgui_impl_dx11.cpp
+„    „        „    „    imgui_impl_dx11.h
+„    „        „    „    imgui_impl_dx12.cpp
+„    „        „    „    imgui_impl_dx12.h
+„    „        „    „    imgui_impl_dx9.cpp
+„    „        „    „    imgui_impl_dx9.h
+„    „        „    „    imgui_impl_glfw.cpp
+„    „        „    „    imgui_impl_glfw.h
+„    „        „    „    imgui_impl_glut.cpp
+„    „        „    „    imgui_impl_glut.h
+„    „        „    „    imgui_impl_metal.h
+„    „        „    „    imgui_impl_metal.mm
+„    „        „    „    imgui_impl_null.cpp
+„    „        „    „    imgui_impl_null.h
+„    „        „    „    imgui_impl_opengl2.cpp
+„    „        „    „    imgui_impl_opengl2.h
+„    „        „    „    imgui_impl_opengl3.cpp
+„    „        „    „    imgui_impl_opengl3.h
+„    „        „    „    imgui_impl_opengl3_loader.h
+„    „        „    „    imgui_impl_osx.h
+„    „        „    „    imgui_impl_osx.mm
+„    „        „    „    imgui_impl_sdl2.cpp
+„    „        „    „    imgui_impl_sdl2.h
+„    „        „    „    imgui_impl_sdl3.cpp
+„    „        „    „    imgui_impl_sdl3.h
+„    „        „    „    imgui_impl_sdlgpu3.cpp
+„    „        „    „    imgui_impl_sdlgpu3.h
+„    „        „    „    imgui_impl_sdlgpu3_shaders.h
+„    „        „    „    imgui_impl_sdlrenderer2.cpp
+„    „        „    „    imgui_impl_sdlrenderer2.h
+„    „        „    „    imgui_impl_sdlrenderer3.cpp
+„    „        „    „    imgui_impl_sdlrenderer3.h
+„    „        „    „    imgui_impl_vulkan.cpp
+„    „        „    „    imgui_impl_vulkan.h
+„    „        „    „    imgui_impl_wgpu.cpp
+„    „        „    „    imgui_impl_wgpu.h
+„    „        „    „    imgui_impl_win32.cpp
+„    „        „    „    imgui_impl_win32.h
+„    „        „    „    
+„    „        „    „¥„Ÿ„Ÿ„Ÿsdlgpu3
+„    „        „    „        build_instructions.txt
+„    „        „    „        shader.frag
+„    „        „    „        shader.vert
+„    „        „    „        
+„    „        „    „¤„Ÿ„Ÿ„Ÿvulkan
+„    „        „            build_instructions.txt
+„    „        „            generate_spv.sh
+„    „        „            glsl_shader.frag
+„    „        „            glsl_shader.vert
+„    „        „            
+„    „        „¥„Ÿ„Ÿ„Ÿdocs
+„    „        „        BACKENDS.md
+„    „        „        CHANGELOG.txt
+„    „        „        CONTRIBUTING.md
+„    „        „        EXAMPLES.md
+„    „        „        FAQ.md
+„    „        „        FONTS.md
+„    „        „        README.md
+„    „        „        SECURITY.md
+„    „        „        TODO.txt
+„    „        „        
+„    „        „¥„Ÿ„Ÿ„Ÿexamples
+„    „        „    „    imgui_examples.sln
+„    „        „    „    README.txt
+„    „        „    „    
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_allegro5
+„    „        „    „        example_allegro5.vcxproj
+„    „        „    „        example_allegro5.vcxproj.filters
+„    „        „    „        imconfig_allegro5.h
+„    „        „    „        main.cpp
+„    „        „    „        README.md
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_android_opengl3
+„    „        „    „    „    CMakeLists.txt
+„    „        „    „    „    main.cpp
+„    „        „    „    „    
+„    „        „    „    „¤„Ÿ„Ÿ„Ÿandroid
+„    „        „    „        „    .gitignore
+„    „        „    „        „    build.gradle
+„    „        „    „        „    settings.gradle
+„    „        „    „        „    
+„    „        „    „        „¥„Ÿ„Ÿ„Ÿapp
+„    „        „    „        „    „    build.gradle
+„    „        „    „        „    „    
+„    „        „    „        „    „¤„Ÿ„Ÿ„Ÿsrc
+„    „        „    „        „        „¤„Ÿ„Ÿ„Ÿmain
+„    „        „    „        „            „    AndroidManifest.xml
+„    „        „    „        „            „    
+„    „        „    „        „            „¤„Ÿ„Ÿ„Ÿjava
+„    „        „    „        „                    MainActivity.kt
+„    „        „    „        „                    
+„    „        „    „        „¤„Ÿ„Ÿ„Ÿgradle
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_apple_metal
+„    „        „    „    „    main.mm
+„    „        „    „    „    Makefile
+„    „        „    „    „    README.md
+„    „        „    „    „    
+„    „        „    „    „¥„Ÿ„Ÿ„Ÿexample_apple_metal.xcodeproj
+„    „        „    „    „        project.pbxproj
+„    „        „    „    „        
+„    „        „    „    „¥„Ÿ„Ÿ„ŸiOS
+„    „        „    „    „        Info-iOS.plist
+„    „        „    „    „        LaunchScreen.storyboard
+„    „        „    „    „        
+„    „        „    „    „¤„Ÿ„Ÿ„ŸmacOS
+„    „        „    „            Info-macOS.plist
+„    „        „    „            MainMenu.storyboard
+„    „        „    „            
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_apple_opengl2
+„    „        „    „    „    main.mm
+„    „        „    „    „    Makefile
+„    „        „    „    „    
+„    „        „    „    „¤„Ÿ„Ÿ„Ÿexample_apple_opengl2.xcodeproj
+„    „        „    „            project.pbxproj
+„    „        „    „            
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_glfw_metal
+„    „        „    „        main.mm
+„    „        „    „        Makefile
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_glfw_opengl2
+„    „        „    „        build_win32.bat
+„    „        „    „        example_glfw_opengl2.vcxproj
+„    „        „    „        example_glfw_opengl2.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        Makefile
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_glfw_opengl3
+„    „        „    „        build_win32.bat
+„    „        „    „        example_glfw_opengl3.vcxproj
+„    „        „    „        example_glfw_opengl3.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        Makefile
+„    „        „    „        Makefile.emscripten
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_glfw_vulkan
+„    „        „    „        build_win32.bat
+„    „        „    „        build_win64.bat
+„    „        „    „        CMakeLists.txt
+„    „        „    „        example_glfw_vulkan.vcxproj
+„    „        „    „        example_glfw_vulkan.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        Makefile
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_glfw_wgpu
+„    „        „    „        CMakeLists.txt
+„    „        „    „        main.cpp
+„    „        „    „        Makefile.emscripten
+„    „        „    „        README.md
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_glut_opengl2
+„    „        „    „        example_glut_opengl2.vcxproj
+„    „        „    „        example_glut_opengl2.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        Makefile
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_null
+„    „        „    „        build_win32.bat
+„    „        „    „        example_null.vcxproj
+„    „        „    „        example_null.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        Makefile
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_sdl2_directx11
+„    „        „    „        build_win32.bat
+„    „        „    „        example_sdl2_directx11.vcxproj
+„    „        „    „        example_sdl2_directx11.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_sdl2_metal
+„    „        „    „        main.mm
+„    „        „    „        Makefile
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_sdl2_opengl2
+„    „        „    „        build_win32.bat
+„    „        „    „        example_sdl2_opengl2.vcxproj
+„    „        „    „        example_sdl2_opengl2.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        Makefile
+„    „        „    „        README.md
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_sdl2_opengl3
+„    „        „    „        build_win32.bat
+„    „        „    „        example_sdl2_opengl3.vcxproj
+„    „        „    „        example_sdl2_opengl3.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        Makefile
+„    „        „    „        Makefile.emscripten
+„    „        „    „        README.md
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_sdl2_sdlrenderer2
+„    „        „    „        build_win32.bat
+„    „        „    „        example_sdl2_sdlrenderer2.vcxproj
+„    „        „    „        example_sdl2_sdlrenderer2.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        Makefile
+„    „        „    „        README.md
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_sdl2_vulkan
+„    „        „    „        build_win32.bat
+„    „        „    „        build_win64.bat
+„    „        „    „        example_sdl2_vulkan.vcxproj
+„    „        „    „        example_sdl2_vulkan.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        Makefile
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_sdl2_wgpu
+„    „        „    „        CMakeLists.txt
+„    „        „    „        main.cpp
+„    „        „    „        Makefile.emscripten
+„    „        „    „        README.md
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_sdl3_directx11
+„    „        „    „        build_win32.bat
+„    „        „    „        example_sdl3_directx11.vcxproj
+„    „        „    „        example_sdl3_directx11.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_sdl3_metal
+„    „        „    „        main.mm
+„    „        „    „        Makefile
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_sdl3_opengl3
+„    „        „    „        build_win32.bat
+„    „        „    „        build_win64.bat
+„    „        „    „        example_sdl3_opengl3.vcxproj
+„    „        „    „        example_sdl3_opengl3.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        Makefile
+„    „        „    „        Makefile.emscripten
+„    „        „    „        README.md
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_sdl3_sdlgpu3
+„    „        „    „        build_win64.bat
+„    „        „    „        example_sdl3_sdlgpu3.vcxproj
+„    „        „    „        example_sdl3_sdlgpu3.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        Makefile
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_sdl3_sdlrenderer3
+„    „        „    „        build_win32.bat
+„    „        „    „        example_sdl3_sdlrenderer3.vcxproj
+„    „        „    „        example_sdl3_sdlrenderer3.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        Makefile
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_sdl3_vulkan
+„    „        „    „        build_win32.bat
+„    „        „    „        build_win64.bat
+„    „        „    „        example_sdl3_vulkan.vcxproj
+„    „        „    „        example_sdl3_vulkan.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        Makefile
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_sdl3_wgpu
+„    „        „    „        CMakeLists.txt
+„    „        „    „        main.cpp
+„    „        „    „        Makefile.emscripten
+„    „        „    „        README.md
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_win32_directx10
+„    „        „    „        build_win32.bat
+„    „        „    „        example_win32_directx10.vcxproj
+„    „        „    „        example_win32_directx10.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_win32_directx11
+„    „        „    „        build_win32.bat
+„    „        „    „        example_win32_directx11.vcxproj
+„    „        „    „        example_win32_directx11.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_win32_directx12
+„    „        „    „        build_win32.bat
+„    „        „    „        example_win32_directx12.vcxproj
+„    „        „    „        example_win32_directx12.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_win32_directx9
+„    „        „    „        build_win32.bat
+„    „        „    „        example_win32_directx9.vcxproj
+„    „        „    „        example_win32_directx9.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_win32_opengl3
+„    „        „    „        build_mingw.bat
+„    „        „    „        build_win32.bat
+„    „        „    „        example_win32_opengl3.vcxproj
+„    „        „    „        example_win32_opengl3.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        
+„    „        „    „¥„Ÿ„Ÿ„Ÿexample_win32_vulkan
+„    „        „    „        build_win32.bat
+„    „        „    „        build_win64.bat
+„    „        „    „        example_win32_vulkan.vcxproj
+„    „        „    „        example_win32_vulkan.vcxproj.filters
+„    „        „    „        main.cpp
+„    „        „    „        
+„    „        „    „¤„Ÿ„Ÿ„Ÿlibs
+„    „        „        „¥„Ÿ„Ÿ„Ÿemscripten
+„    „        „        „        emscripten_mainloop_stub.h
+„    „        „        „        shell_minimal.html
+„    „        „        „        
+„    „        „        „¥„Ÿ„Ÿ„Ÿglfw
+„    „        „        „    „    COPYING.txt
+„    „        „        „    „    
+„    „        „        „    „¥„Ÿ„Ÿ„Ÿinclude
+„    „        „        „    „    „¤„Ÿ„Ÿ„ŸGLFW
+„    „        „        „    „            glfw3.h
+„    „        „        „    „            glfw3native.h
+„    „        „        „    „            
+„    „        „        „    „¥„Ÿ„Ÿ„Ÿlib-vc2010-32
+„    „        „        „    „        glfw3.lib
+„    „        „        „    „        
+„    „        „        „    „¤„Ÿ„Ÿ„Ÿlib-vc2010-64
+„    „        „        „            glfw3.lib
+„    „        „        „            
+„    „        „        „¤„Ÿ„Ÿ„Ÿusynergy
+„    „        „                README.txt
+„    „        „                uSynergy.c
+„    „        „                uSynergy.h
+„    „        „                
+„    „        „¤„Ÿ„Ÿ„Ÿmisc
+„    „            „    README.txt
+„    „            „    
+„    „            „¥„Ÿ„Ÿ„Ÿcpp
+„    „            „        imgui_stdlib.cpp
+„    „            „        imgui_stdlib.h
+„    „            „        README.txt
+„    „            „        
+„    „            „¥„Ÿ„Ÿ„Ÿdebuggers
+„    „            „        imgui.gdb
+„    „            „        imgui.natstepfilter
+„    „            „        imgui.natvis
+„    „            „        imgui_lldb.py
+„    „            „        README.txt
+„    „            „        
+„    „            „¥„Ÿ„Ÿ„Ÿfonts
+„    „            „        binary_to_compressed_c.cpp
+„    „            „        Cousine-Regular.ttf
+„    „            „        DroidSans.ttf
+„    „            „        Karla-Regular.ttf
+„    „            „        ProggyClean.ttf
+„    „            „        ProggyTiny.ttf
+„    „            „        Roboto-Medium.ttf
+„    „            „        
+„    „            „¥„Ÿ„Ÿ„Ÿfreetype
+„    „            „        imgui_freetype.cpp
+„    „            „        imgui_freetype.h
+„    „            „        README.md
+„    „            „        
+„    „            „¤„Ÿ„Ÿ„Ÿsingle_file
+„    „                    imgui_single_file.h
+„    „                    
 „    „¥„Ÿ„Ÿ„Ÿimgui-master
 „    „    „¤„Ÿ„Ÿ„Ÿimgui-master
 „    „        „    .editorconfig
@@ -1495,8 +2010,6 @@ C:.
 „    „        „    „        „                    MainActivity.kt
 „    „        „    „        „                    
 „    „        „    „        „¤„Ÿ„Ÿ„Ÿgradle
-„    „        „    „                libs.versions.toml
-„    „        „    „                
 „    „        „    „¥„Ÿ„Ÿ„Ÿexample_apple_metal
 „    „        „    „    „    main.mm
 „    „        „    „    „    Makefile
@@ -1769,6 +2282,8 @@ C:.
 „    „        „    imgui_canvas.h
 „    „        „    imgui_extra_math.h
 „    „        „    imgui_extra_math.inl
+„    „        „    imgui_node_editor.cpp
+„    „        „    imgui_node_editor.h
 „    „        „    imgui_node_editor_api.cpp
 „    „        „    imgui_node_editor_internal.h
 „    „        „    imgui_node_editor_internal.inl
@@ -1918,7 +2433,63 @@ C:.
 „    „                    FindScopeGuard.cmake
 „    „                    Findstb_image.cmake
 „    „                    
-„    „¥„Ÿ„Ÿ„ŸImGuizmo
+„    „¥„Ÿ„Ÿ„ŸImGuizmo-master
+„    „    „¤„Ÿ„Ÿ„ŸImGuizmo-master
+„    „        „    .gitignore
+„    „        „    CMakeLists.txt
+„    „        „    LICENSE
+„    „        „    Makefile
+„    „        „    README.md
+„    „        „    
+„    „        „¥„Ÿ„Ÿ„Ÿ.github
+„    „        „    „    FUNDING.yml
+„    „        „    „    
+„    „        „    „¤„Ÿ„Ÿ„Ÿworkflows
+„    „        „            build.yml
+„    „        „            release.yml
+„    „        „            
+„    „        „¥„Ÿ„Ÿ„Ÿdocs
+„    „        „        documentation.md
+„    „        „        
+„    „        „¥„Ÿ„Ÿ„Ÿexample
+„    „        „        CMakeLists.txt
+„    „        „        ImApp.h
+„    „        „        main.cpp
+„    „        „        
+„    „        „¥„Ÿ„Ÿ„Ÿimages
+„    „        „        bounds.gif
+„    „        „        dialog.png
+„    „        „        ImViewGizmo.gif
+„    „        „        nodeeditor.jpg
+„    „        „        rotation.gif
+„    „        „        sample.png
+„    „        „        sequencer.png
+„    „        „        translation.gif
+„    „        „        vectoreditor.png
+„    „        „        
+„    „        „¥„Ÿ„Ÿ„Ÿsrc
+„    „        „        GraphEditor.cpp
+„    „        „        GraphEditor.h
+„    „        „        ImCurveEdit.cpp
+„    „        „        ImCurveEdit.h
+„    „        „        ImGradient.cpp
+„    „        „        ImGradient.h
+„    „        „        ImGuizmo.cpp
+„    „        „        ImGuizmo.h
+„    „        „        ImLightRig.h
+„    „        „        ImSequencer.cpp
+„    „        „        ImSequencer.h
+„    „        „        ImVectorEditor.cpp
+„    „        „        ImVectorEditor.h
+„    „        „        ImZoomSlider.h
+„    „        „        
+„    „        „¤„Ÿ„Ÿ„Ÿvcpkg-example
+„    „                CMakeLists.txt
+„    „                imgui.ini
+„    „                main.cpp
+„    „                README.md
+„    „                vcpkg.json
+„    „                
 „    „¥„Ÿ„Ÿ„Ÿjson-develop
 „    „    „¤„Ÿ„Ÿ„Ÿjson-develop
 „    „        „    .cirrus.yml
@@ -3341,6 +3912,7 @@ C:.
 „    „                    serve_header.py
 „    „                    serve_header.yml.example
 „    „                    
+„    „¥„Ÿ„Ÿ„Ÿtinygltf
 „    „¤„Ÿ„Ÿ„Ÿtinygltf-release
 „        „¤„Ÿ„Ÿ„Ÿtinygltf-release
 „            „    .clang-format
@@ -4854,17 +5426,37 @@ C:.
 „        „    „    3dgp.log
 „        „    „    3dgp.vcxproj.FileListAbsolute.txt
 „        „    „    ActionState.obj
+„        „    „    AnimationComponent.obj
+„        „    „    AnimationSequencerComponent.obj
+„        „    „    AnimationSequencerEditor.obj
+„        „    „    AnimationSequenceSerializer.obj
+„        „    „    AssetLoader.obj
+„        „    „    BehaviorNode.obj
+„        „    „    BehaviorTree.obj
 „        „    „    BlurShader.obj
 „        „    „    Camera.obj
+„        „    „    CameraController.obj
+„        „    „    CameraManager.obj
 „        „    „    Character.obj
+„        „    „    CharacterMovementComponent.obj
 „        „    „    CircularMove.obj
 „        „    „    CollisionExperiment.obj
 „        „    „    CollisionLogic.obj
 „        „    „    CollisionManager.obj
 „        „    „    CollisionSphere.obj
+„        „    „    ComboJugment.obj
+„        „    „    ContentBrowserEditor.obj
+„        „    „    CooldownJudgment.obj
+„        „    „    crude_json.obj
 „        „    „    CustomShader.obj
+„        „    „    DirectionJudgment.obj
 „        „    „    DirectXDevice.obj
-„        „    „    EditorConponents.obj
+„        „    „    DistanceJugment.obj
+„        „    „    EditorManager.obj
+„        „    „    EditorMediator.obj
+„        „    „    EditorMenuBar.obj
+„        „    „    EditorTabBar.obj
+„        „    „    EditorViewport.obj
 „        „    „    FbxAnimation.obj
 „        „    „    FbxBone.obj
 „        „    „    FbxLoader.obj
@@ -4872,6 +5464,8 @@ C:.
 „        „    „    FbxSkinnedMesh.obj
 „        „    „    FbxSkinnedModel.obj
 „        „    „    FbxSkinnedResource.obj
+„        „    „    FileDialogHelper.obj
+„        „    „    FollowCameraComponent.obj
 „        „    „    framebuffer.obj
 „        „    „    framework.obj
 „        „    „    FreeCamera.obj
@@ -4882,31 +5476,36 @@ C:.
 „        „    „    GltfModelAnimation.obj
 „        „    „    GltfModelData.obj
 „        „    „    GltfModelRenderer.obj
+„        „    „    gltfmodelrenderer.obj.enc
 „        „    „    GltfModelSerializer.obj
+„        „    „    GltfRootMotion.obj
 „        „    „    GpuResourceUtils.obj
 „        „    „    Graphics.obj
-„        „    „    IdleState.obj
-„        „    „    ImCurveEdit.obj
-„        „    „    ImGradient.obj
 „        „    „    imgui.obj
 „        „    „    ImGuizmo.obj
+„        „    „    imgui_canvas.obj
 „        „    „    imgui_demo.obj
 „        „    „    imgui_draw.obj
 „        „    „    imgui_impl_dx11.obj
 „        „    „    imgui_impl_win32.obj
+„        „    „    imgui_node_editor.obj
+„        „    „    imgui_node_editor_api.obj
 „        „    „    imgui_tables.obj
 „        „    „    imgui_widgets.obj
-„        „    „    ImSequencer.obj
 „        „    „    Input.obj
 „        „    „    JsonSerializer.obj
 „        „    „    Light.obj
 „        „    „    LinearMove.obj
-„        „    „    LocamotionState.obj
 „        „    „    LockAtRotation.obj
 „        „    „    LuminanceExtractionShader.obj
 „        „    „    main.obj
 „        „    „    Model.obj
+„        „    „    ModelComponent.obj
+„        „    „    ModelManager.obj
+„        „    „    ModelPreviewScene.obj
+„        „    „    ModelPreviewWindow.obj
 „        „    „    MoveFactory.obj
+„        „    „    NodeStateJugment.obj
 „        „    „    ObjectEditor.obj
 „        „    „    ObjectFactory.obj
 „        „    „    ObjectManager.obj
@@ -4915,14 +5514,21 @@ C:.
 „        „    „    OriginalLibrary.ilk
 „        „    „    OriginalLibrary.log
 „        „    „    OriginalLibrary.vcxproj.FileListAbsolute.txt
+„        „    „    PathHelper.obj
 „        „    „    PipelineStates.obj
 „        „    „    Player.obj
+„        „    „    RandomJugment.obj
+„        „    „    RatioJudgment.obj
+„        „    „    Renderer.obj
 „        „    „    RepulsiveMove.obj
+„        „    „    RootMotionComponent.obj
 „        „    „    RotationFactory.obj
+„        „    „    Scene.obj
 „        „    „    SceneConstantBuffers.obj
 „        „    „    SceneGame.obj
 „        „    „    SceneManager.obj
 „        „    „    SceneTitle.obj
+„        „    „    SelectorNode.obj
 „        „    „    shader.obj
 „        „    „    ShapeRenderer.obj
 „        „    „    SkinnedMeshSerializer.obj
@@ -4934,19 +5540,22 @@ C:.
 „        „    „    StandCamera.obj
 „        „    „    State.obj
 „        „    „    StateBlackboard.obj
+„        „    „    StateBlackboardInspectorWindow.obj
+„        „    „    StateGraphConfigManager.obj
+„        „    „    StateGraphDataManager.obj
+„        „    „    StateGraphPaletteWindow.obj
+„        „    „    StateGraphPropertyWindow.obj
+„        „    „    StateGraphSimulator.obj
 „        „    „    StateMachine.obj
 „        „    „    StateMachineComponent.obj
-„        „    „    StateMachineEditor.obj
 „        „    „    StateMachineGraphEditor.obj
-„        „    „    StateNodeData.obj
 „        „    „    StateTransition.obj
 „        „    „    texture.obj
 „        „    „    TinygltfImpl.obj
-„        „    „    ToIdleTransition.obj
-„        „    „    ToLocomotionTransition.obj
-„        „    „    VariableTransition.obj
+„        „    „    TransitionConditionEditor.obj
 „        „    „    vc143.idb
 „        „    „    vc143.pdb
+„        „    „    WeightedNode.obj
 „        „    „    
 „        „    „¤„Ÿ„Ÿ„ŸOriginalLibrary.tlog
 „        „            CL.command.1.tlog
@@ -4961,9 +5570,16 @@ C:.
 „        „            link.secondary.1.tlog
 „        „            link.write.1.tlog
 „        „            OriginalLibrary.lastbuildstate
-„        „            unsuccessfulbuild
 „        „            
 „        „¤„Ÿ„Ÿ„ŸRelease
+„            „    ActionState.obj
+„            „    AnimationComponent.obj
+„            „    AnimationSequencerComponent.obj
+„            „    AnimationSequencerEditor.obj
+„            „    AnimationSequenceSerializer.obj
+„            „    AssetLoader.obj
+„            „    BehaviorNode.obj
+„            „    BehaviorTree.obj
 „            „    BlurShader.obj
 „            „    Camera.obj
 „            „    Character.obj
@@ -4972,8 +5588,18 @@ C:.
 „            „    CollisionLogic.obj
 „            „    CollisionManager.obj
 „            „    CollisionSphere.obj
+„            „    ComboJugment.obj
+„            „    ContentBrowserEditor.obj
+„            „    CooldownJudgment.obj
+„            „    crude_json.obj
 „            „    CustomShader.obj
+„            „    DirectionJudgment.obj
 „            „    DirectXDevice.obj
+„            „    DistanceJugment.obj
+„            „    EditorManager.obj
+„            „    EditorMediator.obj
+„            „    EditorMenuBar.obj
+„            „    EditorTabBar.obj
 „            „    FbxAnimation.obj
 „            „    FbxBone.obj
 „            „    FbxLoader.obj
@@ -4981,6 +5607,7 @@ C:.
 „            „    FbxSkinnedMesh.obj
 „            „    FbxSkinnedModel.obj
 „            „    FbxSkinnedResource.obj
+„            „    FileDialogHelper.obj
 „            „    framebuffer.obj
 „            „    framework.obj
 „            „    FreeCamera.obj
@@ -4992,22 +5619,32 @@ C:.
 „            „    GltfModelData.obj
 „            „    GltfModelRenderer.obj
 „            „    GltfModelSerializer.obj
+„            „    GltfRootMotion.obj
 „            „    GpuResourceUtils.obj
 „            „    Graphics.obj
 „            „    imgui.obj
+„            „    ImGuizmo.obj
+„            „    imgui_canvas.obj
 „            „    imgui_demo.obj
 „            „    imgui_draw.obj
 „            „    imgui_impl_dx11.obj
 „            „    imgui_impl_win32.obj
+„            „    imgui_node_editor.obj
+„            „    imgui_node_editor_api.obj
+„            „    imgui_tables.obj
 „            „    imgui_widgets.obj
 „            „    Input.obj
+„            „    JsonSerializer.obj
 „            „    Light.obj
 „            „    LinearMove.obj
 „            „    LockAtRotation.obj
 „            „    LuminanceExtractionShader.obj
 „            „    main.obj
 „            „    Model.obj
+„            „    ModelPreviewScene.obj
+„            „    ModelPreviewWindow.obj
 „            „    MoveFactory.obj
+„            „    NodeStateJugment.obj
 „            „    ObjectEditor.obj
 „            „    ObjectFactory.obj
 „            „    ObjectManager.obj
@@ -5017,12 +5654,18 @@ C:.
 „            „    OriginalLibrary.log
 „            „    PipelineStates.obj
 „            „    Player.obj
+„            „    RandomJugment.obj
+„            „    RatioJudgment.obj
+„            „    Renderer.obj
 „            „    RepulsiveMove.obj
+„            „    RootMotionComponent.obj
 „            „    RotationFactory.obj
+„            „    Scene.obj
 „            „    SceneConstantBuffers.obj
 „            „    SceneGame.obj
 „            „    SceneManager.obj
 „            „    SceneTitle.obj
+„            „    SelectorNode.obj
 „            „    shader.obj
 „            „    ShapeRenderer.obj
 „            „    SkinnedMeshSerializer.obj
@@ -5032,9 +5675,22 @@ C:.
 „            „    sprite_batch.obj
 „            „    Stage.obj
 „            „    StandCamera.obj
+„            „    State.obj
+„            „    StateBlackboard.obj
+„            „    StateGraphConfigManager.obj
+„            „    StateGraphDataManager.obj
+„            „    StateGraphPaletteWindow.obj
+„            „    StateGraphPropertyWindow.obj
+„            „    StateGraphSimulator.obj
+„            „    StateMachine.obj
+„            „    StateMachineComponent.obj
+„            „    StateMachineGraphEditor.obj
+„            „    StateTransition.obj
 „            „    texture.obj
 „            „    TinygltfImpl.obj
+„            „    TransitionConditionEditor.obj
 „            „    vc143.pdb
+„            „    WeightedNode.obj
 „            „    
 „            „¤„Ÿ„Ÿ„ŸOriginalLibrary.tlog
 „                    CL.command.1.tlog
@@ -5130,202 +5786,273 @@ C:.
 „    „    structure.txt
 „    „    _dump_structure.bat
 „    „    
-„    „¥„Ÿ„Ÿ„ŸCamera
-„    „        Camera.cpp
-„    „        Camera.h
-„    „        FreeCamera.cpp
-„    „        FreeCamera.h
-„    „        StandCamera.cpp
-„    „        StandCamera.h
-„    „        
-„    „¥„Ÿ„Ÿ„ŸCollision
-„    „        Collider.h
-„    „        CollisionExperiment.cpp
-„    „        CollisionExperiment.h
-„    „        CollisionLogic.cpp
-„    „        CollisionLogic.h
-„    „        CollisionManager.cpp
-„    „        CollisionManager.h
-„    „        CollisionSphere.cpp
-„    „        CollisionSphere.h
-„    „        SpaceDivisionCast.cpp
-„    „        SpaceDivisionCast.h
-„    „        
-„    „¥„Ÿ„Ÿ„ŸCommon
-„    „        high_resolution_timer.h
-„    „        main.cpp
-„    „        misc.h
-„    „        ModelData.h
-„    „        
 „    „¥„Ÿ„Ÿ„ŸEditor
-„    „        ObjectEditor.cpp
-„    „        ObjectEditor.h
-„    „        
-„    „¥„Ÿ„Ÿ„ŸFbxModel
-„    „        FbxAnimation.cpp
-„    „        FbxAnimation.h
-„    „        FbxBone.cpp
-„    „        FbxBone.h
-„    „        FbxLoader.cpp
-„    „        FbxLoader.h
-„    „        FbxMaterial.cpp
-„    „        FbxMaterial.h
-„    „        FbxSkinnedMesh.cpp
-„    „        FbxSkinnedMesh.h
-„    „        FbxSkinnedModel.cpp
-„    „        FbxSkinnedModel.h
-„    „        FbxSkinnedResource.cpp
-„    „        FbxSkinnedResource.h
-„    „        
-„    „¥„Ÿ„Ÿ„ŸGameObjects
-„    „    „    GameObject.cpp
-„    „    „    GameObject.h
-„    „    „    ObjectFactory.cpp
-„    „    „    ObjectFactory.h
-„    „    „    ObjectManager.cpp
-„    „    „    ObjectManager.h
+„    „    „    AssetLoader.cpp
+„    „    „    AssetLoader.h
+„    „    „    EditorManager.cpp
+„    „    „    EditorManager.h
+„    „    „    EditorMediator.cpp
+„    „    „    EditorMediator.h
+„    „    „    EditorMenuBar.cpp
+„    „    „    EditorMenuBar.h
+„    „    „    EditorTabBar.cpp
+„    „    „    EditorTabBar.h
+„    „    „    FileDialogHelper.cpp
+„    „    „    FileDialogHelper.h
+„    „    „    ObjectEditor.cpp
+„    „    „    ObjectEditor.h
+„    „    „    PathHelper.cpp
+„    „    „    PathHelper.h
 „    „    „    
-„    „    „¥„Ÿ„Ÿ„ŸCharacters
-„    „    „        Character.cpp
-„    „    „        Character.h
-„    „    „        Player.cpp
-„    „    „        Player.h
+„    „    „¥„Ÿ„Ÿ„ŸConstentBrowser
+„    „    „        ContentBrowserEditor.cpp
+„    „    „        ContentBrowserEditor.h
 „    „    „        
-„    „    „¤„Ÿ„Ÿ„ŸObjects
-„    „            Stage.cpp
-„    „            Stage.h
+„    „    „¥„Ÿ„Ÿ„ŸPreview
+„    „    „        ModelPreviewWindow.cpp
+„    „    „        ModelPreviewWindow.h
+„    „    „        
+„    „    „¥„Ÿ„Ÿ„ŸSequence
+„    „    „        AnimationSequencerEditor.cpp
+„    „    „        AnimationSequencerEditor.h
+„    „    „        ModelPreviewScene.cpp
+„    „    „        ModelPreviewScene.h
+„    „    „        SequenceSceneBace.h
+„    „    „        
+„    „    „¤„Ÿ„Ÿ„ŸStateMachineEditor
+„    „            StateBlackboardInspectorWindow.cpp
+„    „            StateBlackboardInspectorWindow.h
+„    „            StateGraphConfigManager.cpp
+„    „            StateGraphConfigManager.h
+„    „            StateGraphPaletteWindow.cpp
+„    „            StateGraphPaletteWindow.h
+„    „            StateGraphPropertyWindow.cpp
+„    „            StateGraphPropertyWindow.h
+„    „            StateGraphSimulator.cpp
+„    „            StateGraphSimulator.h
+„    „            StateMachineGraphEditor.cpp
+„    „            StateMachineGraphEditor.h
+„    „            TransitionConditionEditor.cpp
+„    „            TransitionConditionEditor.h
 „    „            
-„    „¥„Ÿ„Ÿ„ŸGltfModel
-„    „        GltfModel.cpp
-„    „        GltfModel.h
-„    „        GltfModelAnimation.cpp
-„    „        GltfModelAnimation.h
-„    „        GltfModelData.cpp
-„    „        GltfModelData.h
-„    „        GltfModelRenderer.cpp
-„    „        GltfModelRenderer.h
-„    „        TinygltfImpl.cpp
-„    „        
-„    „¥„Ÿ„Ÿ„ŸGraphics
-„    „        DirectXDevice.cpp
-„    „        DirectXDevice.h
-„    „        fbx_utility.h
-„    „        framebuffer.cpp
-„    „        framebuffer.h
-„    „        framework.cpp
-„    „        framework.h
-„    „        fullscreen_quad.cpp
-„    „        fullscreen_quad.h
-„    „        Graphics.cpp
-„    „        Graphics.h
-„    „        PipelineStates.cpp
-„    „        PipelineStates.h
-„    „        Renderer.cpp
-„    „        Renderer.h
-„    „        SceneConstantBuffers.cpp
-„    „        SceneConstantBuffers.h
-„    „        shader.cpp
-„    „        shader.h
-„    „        ShapeRenderer.cpp
-„    „        ShapeRenderer.h
-„    „        sprite.cpp
-„    „        sprite.h
-„    „        sprite_batch.cpp
-„    „        sprite_batch.h
-„    „        
-„    „¥„Ÿ„Ÿ„ŸInput
-„    „        Input.cpp
-„    „        Input.h
-„    „        
-„    „¥„Ÿ„Ÿ„ŸLight
-„    „        Light.cpp
-„    „        Light.h
-„    „        
-„    „¥„Ÿ„Ÿ„ŸMove
-„    „        CircularMove.cpp
-„    „        CircularMove.h
-„    „        LinearMove.cpp
-„    „        LinearMove.h
-„    „        MoveBase.h
-„    „        MoveFactory.cpp
-„    „        MoveFactory.h
-„    „        RepulsiveMove.cpp
-„    „        RepulsiveMove.h
-„    „        
-„    „¥„Ÿ„Ÿ„ŸObjectsRender
-„    „        geometric_primitive.cpp
-„    „        geometric_primitive.h
-„    „        GpuResourceUtils.cpp
-„    „        GpuResourceUtils.h
-„    „        Model.cpp
-„    „        Model.h
-„    „        ModelRenderer.h
-„    „        sprite.cpp
-„    „        sprite.h
-„    „        sprite_batch.cpp
-„    „        sprite_batch.h
-„    „        texture.cpp
-„    „        texture.h
-„    „        
-„    „¥„Ÿ„Ÿ„ŸRotation
-„    „        LockAtRotation.cpp
-„    „        LockAtRotation.h
-„    „        RotationBase.h
-„    „        RotationFactory.cpp
-„    „        RotationFactory.h
-„    „        
-„    „¥„Ÿ„Ÿ„ŸScene
-„    „        Scene.cpp
-„    „        Scene.h
-„    „        SceneGame.cpp
-„    „        SceneGame.h
-„    „        SceneManager.cpp
-„    „        SceneManager.h
-„    „        SceneTitle.cpp
-„    „        SceneTitle.h
-„    „        
+„    „¥„Ÿ„Ÿ„ŸEngine
+„    „    „¥„Ÿ„Ÿ„ŸCamera
+„    „    „        Camera.cpp
+„    „    „        Camera.h
+„    „    „        CameraController.cpp
+„    „    „        CameraController.h
+„    „    „        CameraManager.cpp
+„    „    „        CameraManager.h
+„    „    „        FollowCameraComponent.cpp
+„    „    „        FollowCameraComponent.h
+„    „    „        FreeCamera.cpp
+„    „    „        FreeCamera.h
+„    „    „        StandCamera.cpp
+„    „    „        StandCamera.h
+„    „    „        
+„    „    „¥„Ÿ„Ÿ„ŸCollision
+„    „    „        Collider.h
+„    „    „        CollisionExperiment.cpp
+„    „    „        CollisionExperiment.h
+„    „    „        CollisionLogic.cpp
+„    „    „        CollisionLogic.h
+„    „    „        CollisionManager.cpp
+„    „    „        CollisionManager.h
+„    „    „        CollisionSphere.cpp
+„    „    „        CollisionSphere.h
+„    „    „        SpaceDivisionCast.cpp
+„    „    „        SpaceDivisionCast.h
+„    „    „        
+„    „    „¥„Ÿ„Ÿ„ŸCore
+„    „    „        framework.cpp
+„    „    „        framework.h
+„    „    „        high_resolution_timer.h
+„    „    „        Input.cpp
+„    „    „        Input.h
+„    „    „        main.cpp
+„    „    „        misc.h
+„    „    „        
+„    „    „¤„Ÿ„Ÿ„ŸGraphics
+„    „        „¥„Ÿ„Ÿ„ŸDevice
+„    „        „        DirectXDevice.cpp
+„    „        „        DirectXDevice.h
+„    „        „        framebuffer.cpp
+„    „        „        framebuffer.h
+„    „        „        GpuResourceUtils.cpp
+„    „        „        GpuResourceUtils.h
+„    „        „        PipelineStates.cpp
+„    „        „        PipelineStates.h
+„    „        „        SceneConstantBuffers.cpp
+„    „        „        SceneConstantBuffers.h
+„    „        „        
+„    „        „¥„Ÿ„Ÿ„ŸRenderers
+„    „        „        fullscreen_quad.cpp
+„    „        „        fullscreen_quad.h
+„    „        „        Graphics.cpp
+„    „        „        Graphics.h
+„    „        „        ShapeRenderer.cpp
+„    „        „        ShapeRenderer.h
+„    „        „        sprite.cpp
+„    „        „        sprite.h
+„    „        „        sprite_batch.cpp
+„    „        „        sprite_batch.h
+„    „        „        
+„    „        „¥„Ÿ„Ÿ„ŸResources
+„    „        „    „    geometric_primitive.cpp
+„    „        „    „    geometric_primitive.h
+„    „        „    „    Light.cpp
+„    „        „    „    Light.h
+„    „        „    „    Model.cpp
+„    „        „    „    Model.h
+„    „        „    „    ModelManager.cpp
+„    „        „    „    ModelManager.h
+„    „        „    „    texture.cpp
+„    „        „    „    texture.h
+„    „        „    „    
+„    „        „    „¤„Ÿ„Ÿ„ŸGltfModel
+„    „        „            GltfModel.cpp
+„    „        „            GltfModel.h
+„    „        „            GltfModelAnimation.cpp
+„    „        „            GltfModelAnimation.h
+„    „        „            GltfModelData.cpp
+„    „        „            GltfModelData.h
+„    „        „            GltfModelRenderer.cpp
+„    „        „            GltfModelRenderer.h
+„    „        „            GltfRootMotion.cpp
+„    „        „            GltfRootMotion.h
+„    „        „            TinygltfImpl.cpp
+„    „        „            
+„    „        „¤„Ÿ„Ÿ„ŸShaders
+„    „                BlurShader.cpp
+„    „                BlurShader.h
+„    „                CustomShader.cpp
+„    „                CustomShader.h
+„    „                LuminanceExtractionShader.cpp
+„    „                LuminanceExtractionShader.h
+„    „                shader.cpp
+„    „                shader.h
+„    „                SkyBox.cpp
+„    „                SkyBox.h
+„    „                
+„    „¥„Ÿ„Ÿ„ŸGameplay
+„    „    „¥„Ÿ„Ÿ„ŸAI
+„    „    „        ActionNode.h
+„    „    „        BehaviorNode.cpp
+„    „    „        BehaviorNode.h
+„    „    „        BehaviorTree.cpp
+„    „    „        BehaviorTree.h
+„    „    „        ComboJugment.cpp
+„    „    „        ComboJugment.h
+„    „    „        CooldownJudgment.cpp
+„    „    „        CooldownJudgment.h
+„    „    „        DirectionJudgment.cpp
+„    „    „        DirectionJudgment.h
+„    „    „        DistanceJugment.cpp
+„    „    „        DistanceJugment.h
+„    „    „        JudgmentNode.h
+„    „    „        NodeStateJugment.cpp
+„    „    „        NodeStateJugment.h
+„    „    „        RandomJugment.cpp
+„    „    „        RandomJugment.h
+„    „    „        RatioJudgment.cpp
+„    „    „        RatioJudgment.h
+„    „    „        SelectorNode.cpp
+„    „    „        SelectorNode.h
+„    „    „        StateActionNode.h
+„    „    „        WeightedNode.cpp
+„    „    „        WeightedNode.h
+„    „    „        
+„    „    „¥„Ÿ„Ÿ„ŸComponents
+„    „    „    „¥„Ÿ„Ÿ„ŸAnimation
+„    „    „    „        AnimationComponent.cpp
+„    „    „    „        AnimationComponent.h
+„    „    „    „        AnimationSequencerComponent.cpp
+„    „    „    „        AnimationSequencerComponent.h
+„    „    „    „        RootMotionComponent.cpp
+„    „    „    „        RootMotionComponent.h
+„    „    „    „        
+„    „    „    „¥„Ÿ„Ÿ„ŸEditor
+„    „    „    „        StateMachineComponent.cpp
+„    „    „    „        StateMachineComponent.h
+„    „    „    „        
+„    „    „    „¥„Ÿ„Ÿ„ŸModel
+„    „    „    „        ModelComponent.cpp
+„    „    „    „        ModelComponent.h
+„    „    „    „        
+„    „    „    „¤„Ÿ„Ÿ„ŸMovement
+„    „    „        „¥„Ÿ„Ÿ„ŸMove
+„    „    „        „        CircularMove.cpp
+„    „    „        „        CircularMove.h
+„    „    „        „        LinearMove.cpp
+„    „    „        „        LinearMove.h
+„    „    „        „        MoveBase.h
+„    „    „        „        MoveFactory.cpp
+„    „    „        „        MoveFactory.h
+„    „    „        „        RepulsiveMove.cpp
+„    „    „        „        RepulsiveMove.h
+„    „    „        „        
+„    „    „        „¤„Ÿ„Ÿ„ŸRotation
+„    „    „                LockAtRotation.cpp
+„    „    „                LockAtRotation.h
+„    „    „                RotationBase.h
+„    „    „                RotationFactory.cpp
+„    „    „                RotationFactory.h
+„    „    „                
+„    „    „¥„Ÿ„Ÿ„ŸGameObjects
+„    „    „    „    GameObject.cpp
+„    „    „    „    GameObject.h
+„    „    „    „    ObjectFactory.cpp
+„    „    „    „    ObjectFactory.h
+„    „    „    „    ObjectManager.cpp
+„    „    „    „    ObjectManager.h
+„    „    „    „    
+„    „    „    „¥„Ÿ„Ÿ„ŸCharacter
+„    „    „    „        Character.cpp
+„    „    „    „        Character.h
+„    „    „    „        Player.cpp
+„    „    „    „        Player.h
+„    „    „    „        
+„    „    „    „¤„Ÿ„Ÿ„ŸObject
+„    „    „            Stage.cpp
+„    „    „            Stage.h
+„    „    „            
+„    „    „¥„Ÿ„Ÿ„ŸScene
+„    „    „        Scene.cpp
+„    „    „        Scene.h
+„    „    „        SceneGame.cpp
+„    „    „        SceneGame.h
+„    „    „        SceneManager.cpp
+„    „    „        SceneManager.h
+„    „    „        SceneTitle.cpp
+„    „    „        SceneTitle.h
+„    „    „        
+„    „    „¤„Ÿ„Ÿ„ŸStateMachine
+„    „            ActionState.cpp
+„    „            ActionState.h
+„    „            State.cpp
+„    „            State.h
+„    „            StateBlackboard.cpp
+„    „            StateBlackboard.h
+„    „            StateGraphDataManager.cpp
+„    „            StateGraphDataManager.h
+„    „            StateMachine.cpp
+„    „            StateMachine.h
+„    „            StateTransition.cpp
+„    „            StateTransition.h
+„    „            
 „    „¥„Ÿ„Ÿ„ŸSerialization
+„    „        AnimationSequenceSerializer.cpp
+„    „        AnimationSequenceSerializer.h
 „    „        GltfModelSerializer.cpp
 „    „        GltfModelSerializer.h
-„    „        json.hpp
 „    „        JsonSerializer.cpp
 „    „        JsonSerializer.h
-„    „        SkinnedMeshSerializer.cpp
-„    „        SkinnedMeshSerializer.h
 „    „        
-„    „¥„Ÿ„Ÿ„ŸShaders
-„    „        BlurShader.cpp
-„    „        BlurShader.h
-„    „        CustomShader.cpp
-„    „        CustomShader.h
-„    „        LuminanceExtractionShader.cpp
-„    „        LuminanceExtractionShader.h
-„    „        SkyBox.cpp
-„    „        SkyBox.h
-„    „        
-„    „¥„Ÿ„Ÿ„ŸStateMschine
-„    „        ActionState.cpp
-„    „        ActionState.h
-„    „        LocamotionState.cpp
-„    „        LocamotionState.h
-„    „        State.cpp
-„    „        State.h
-„    „        StateBlackboard.cpp
-„    „        StateBlackboard.h
-„    „        StateMachine.cpp
-„    „        StateMachine.h
-„    „        StateMachineGraphEditor.cpp
-„    „        StateMachineGraphEditor.h
-„    „        StateTransition.cpp
-„    „        StateTransition.h
-„    „        
-„    „¤„Ÿ„Ÿ„ŸUniqueSystem
+„    „¤„Ÿ„Ÿ„ŸThiedParty
+„            json.hpp
+„            
 „¤„Ÿ„Ÿ„Ÿx64
     „¥„Ÿ„Ÿ„ŸDebug
-    „        3dgp.exe
-    „        3dgp.exp
-    „        3dgp.lib
-    „        3dgp.pdb
     „        OriginalLibrary.exe
     „        OriginalLibrary.exp
     „        OriginalLibrary.lib

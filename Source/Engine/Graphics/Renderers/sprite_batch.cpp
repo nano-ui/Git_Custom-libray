@@ -2,6 +2,7 @@
 #include "Engine/Core/misc.h"
 #include <sstream>
 #include <WICTextureLoader.h>
+#include <filesystem>
 
 //頂点情報のセット{位置情報,色}
 //vertex vertices[]
@@ -22,7 +23,7 @@ sprite_batch::sprite_batch(
 
 	//頂点バッファオブジェクトの生成
 	D3D11_BUFFER_DESC buffer_desc{};
-	buffer_desc.ByteWidth = sizeof(vertex) * max_vertices;
+	buffer_desc.ByteWidth = static_cast<UINT>(sizeof(vertex) * max_vertices);
 	buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
 	buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -37,11 +38,13 @@ sprite_batch::sprite_batch(
 
 
 
-	//頂点シェーダオブジェクトの生成
-	const char* cso_name{ "Shaders/Compiled/sprite_vs.cso" };
+	// 頂点シェーダオブジェクトの生成
+	const char* cso_name{ "sprite_vs.cso" };
+	std::filesystem::path fpath("Shaders/Compiled");
+	fpath /= cso_name;
 
 	FILE* fp{};
-	fopen_s(&fp, cso_name, "rb");
+	fopen_s(&fp, fpath.string().c_str(), "rb");
 	_ASSERT_EXPR_A(fp, "CSO File not found");
 
 	fseek(fp, 0, SEEK_END);
@@ -52,10 +55,8 @@ sprite_batch::sprite_batch(
 	fread(cso_data.get(), cso_sz, 1, fp);
 	fclose(fp);
 
-	//HRESULT hr{ S_OK };
 	hr = device->CreateVertexShader(cso_data.get(), cso_sz, nullptr, &vertex_shader);
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
 
 
 	//入力レイアウトオブジェクトの生成
@@ -76,21 +77,31 @@ sprite_batch::sprite_batch(
 
 
 	// ピクセルシェーダーの読み込み
-	fopen_s(&fp, "Shaders/Compiled/sprite_ps.cso", "rb");
+	const char* ps_cso_name{ "sprite_ps.cso" };
+	std::filesystem::path ps_fpath("Shaders/Compiled");
+	ps_fpath /= ps_cso_name;
+
+	// 意図しない挙動やパスミスを防ぐための日本語デバッグ出力
+	OutputDebugStringA(("Loading Pixel Shader from: " + ps_fpath.string() + "\n").c_str());
+
+	// ステップ2: 既存の変数 fp を再利用してバイナリ読み込みモードでファイルを開く
+	fp = nullptr;
+	fopen_s(&fp, ps_fpath.string().c_str(), "rb");
 	_ASSERT_EXPR_A(fp, "CSO File not found");
 
+	// ステップ3: 既存の変数 cso_sz にファイルサイズを再代入する
 	fseek(fp, 0, SEEK_END);
-	cso_sz = { ftell(fp) };
+	cso_sz = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
 
-	cso_data = { std::make_unique<unsigned char[]>(cso_sz) };
+	// ステップ4: 既存のスマートポインタ cso_data に新しいメモリ領域を割り当て直す
+	cso_data = std::make_unique<unsigned char[]>(cso_sz);
 	fread(cso_data.get(), cso_sz, 1, fp);
 	fclose(fp);
 
+	// ステップ5: 読み込んだバイナリデータからピクセルシェーダーオブジェクトを生成する
 	hr = device->CreatePixelShader(cso_data.get(), cso_sz, nullptr, &pixel_shader);
-
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
 
 	//テクスチャの読み込み
 	ID3D11Resource* resource{};

@@ -33,7 +33,7 @@ namespace
 	};
 }
 
-#ifdef USE_IMGUI
+//#ifdef USE_IMGUI
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
@@ -54,7 +54,7 @@ namespace
 		}
 	};
 }
-#endif
+//#endif
 
 framework::framework(HWND hwnd):hwnd(hwnd)
 {
@@ -76,7 +76,7 @@ int framework::run()
 		return 0;
 	}
 
-#ifdef USE_IMGUI
+//#ifdef USE_IMGUI
 	std::unique_ptr<ImGuiContext, ImGuiScopeDeleter> imgui_scope;
 	//ImGuiの初期化
 	IMGUI_CHECKVERSION();
@@ -97,7 +97,7 @@ int framework::run()
 	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msgothic.ttc", 18.0f, nullptr, glyph_ranges);
 	
 	ImGui::StyleColorsDark();
-#endif
+//#endif
 	//初期シーンの登録
 	std::unique_ptr<SceneTitle> title_scene = std::make_unique<SceneTitle>();
 	scene_manager_scope->ChangeScene(std::move(title_scene));
@@ -119,12 +119,12 @@ int framework::run()
 		}
 		if (WM_QUIT != msg.message)
 		{
-#ifdef USE_IMGUI
+//#ifdef USE_IMGUI
 			ImGui_ImplDX11_NewFrame();
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
 			ImGuizmo::BeginFrame();
-#endif // USE_IMGUI
+//#endif // USE_IMGUI
 
 			tictoc.tick();
 			calculate_frame_stats();
@@ -134,7 +134,7 @@ int framework::run()
 			scene_manager_scope->Update(tictoc.time_interval());
 			graphics_scope->BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);
 			scene_manager_scope->Render(tictoc.time_interval());
-#ifdef USE_IMGUI
+//#ifdef USE_IMGUI
 			ImGui::Render();
 			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 			//if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -142,7 +142,7 @@ int framework::run()
 			//	ImGui::UpdatePlatformWindows();
 			//	ImGui::RenderPlatformWindowsDefault();
 			//}
-#endif // USE_IMGUI
+//#endif // USE_IMGUI
 			graphics_scope->EndFrame();
 		}
 	}
@@ -153,10 +153,10 @@ int framework::run()
 
 LRESULT framework::handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-#ifdef  USE_IMGUI
+//#ifdef  USE_IMGUI
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
 		return 1; 
-#endif //  USE_IMGUI
+//#endif //  USE_IMGUI
 
 	switch (msg)
 	{

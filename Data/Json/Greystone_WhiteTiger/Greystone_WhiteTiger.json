@@ -2,7 +2,7 @@
     "Position": {
         "x": -0.005182367749512196,
         "y": 0.0,
-        "z": -0.017432957887649536
+        "z": 2.1541666984558105
     },
     "Rotation": {
         "w": 1.0,
@@ -15,7 +15,7 @@
         "y": 0.9999998807907104,
         "z": 0.9999998807907104
     },
-    "StateMachinePath": "Data/Json/Kari.json",
+    "StateMachinePath": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger_StateMachine.json",
     "class_name": "Player",
     "コライダーY軸オフセット": 0.800000011920929,
     "コライダー半径": 0.800000011920929,

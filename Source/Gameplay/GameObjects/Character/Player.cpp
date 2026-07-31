@@ -41,8 +41,19 @@ void Player::Initialize()
 	Character::Initialize();
 	if (state_machine_component)
 	{
+		const std::string model_path = "Data/Model/Character/Player/Greystone_WhiteTiger.gltf";
+		std::filesystem::path path_obj(model_path);
+		std::string model_name = path_obj.stem().string();
+
+		state_machine_component->SetModelName(model_name);
+
 		state_machine_component->Initialize(blackboard.get());
 	}
+	else
+	{
+		printf("Error: Player::Initialize - state_machine_component Ç™ nullptr Ç≈Ç∑ÅB\n");
+	}
+
 	SetupSerialization();
 	position = { 0.0f,0.0f,0.0f };
 

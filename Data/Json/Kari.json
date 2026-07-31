@@ -24,10 +24,10 @@
                         {
                             "CompOp": 0,
                             "HashKey": 0,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
+                            "ParamSecond": 2.0,
+                            "RefValue": 1.0,
                             "SecondaryHash": 0,
-                            "Type": 1
+                            "Type": 4
                         }
                     ],
                     "EndPinID": 101,
@@ -138,35 +138,6 @@
                     "PosX": -18.621337890625,
                     "PosY": 151.908935546875,
                     "SubGraphID": 108
-                },
-                {
-                    "ActionCategory": 0,
-                    "AnimationName": "",
-                    "ID": 239,
-                    "Input": [
-                        {
-                            "ID": 240,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": true,
-                    "IsRootMotion": false,
-                    "IsSubGraph": true,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "新規サブグラフ",
-                    "Output": [
-                        {
-                            "ID": 241,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": -174.42724609375,
-                    "PosY": -54.90185546875,
-                    "SubGraphID": 238
                 }
             ]
         },

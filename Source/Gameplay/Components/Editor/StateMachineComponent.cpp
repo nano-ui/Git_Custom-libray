@@ -160,21 +160,32 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 					constexpr int mode_trigger = 1;   // 押された瞬間を表す定数
 					constexpr int mode_not_press = 2; // 未入力状態を表す定数
 
-					// 入力形式がトリガーモードであるかを判定
+					// 仮想キーコードが未割り当て(0)の場合は意図しない誤遷移を防ぐため条件不成立にする
+					if (v_key == 0)
+					{
+						printf("Error: StateMachineComponent::Update(1パス目) - 仮想キーコードが0(未設定)のため判定を不成立にしました。\n");
+						is_all_conditions_met = false;
+						break;
+					}
+
+					// 入力形式に応じて判定を分岐
 					if (input_behavior == mode_trigger)
 					{
 						is_key_ok = Input::Instance().IsKeyTrigger(v_key);
 					}
-					else if (input_behavior == mode_press) 
+					else if (input_behavior == mode_press)
 					{
 						is_key_ok = Input::Instance().IsKeyPress(v_key);
 					}
 					else if (input_behavior == mode_not_press)
 					{
-						//指定キーが押されていない（離されている）状態かを判定
+						// 指定キーが押されていない（離されている）状態かを判定
 						is_key_ok = !Input::Instance().IsKeyPress(v_key);
 					}
-					else printf("Warning: StateMachineComponent::Update - 未定義の入力モード(%d)が指定されています。\n", input_behavior);
+					else
+					{
+						printf("Warning: StateMachineComponent::Update(1パス目) - 未定義の入力モード(%d)が指定されています。\n", input_behavior);
+					}
 
 					// キー入力条件を満たせなかったかを判定
 					if (!is_key_ok)
@@ -254,16 +265,36 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 					int v_key = static_cast<int>(cond.hash_key); // 仮想キーコード
 					int input_behavior = static_cast<int>(cond.param_second); // キー入力形式
 					bool is_key_ok = false; // 入力クリア判定フラグ
-					constexpr int mode_trigger = 1; // 押された瞬間
 
-					// 入力検知形式がトリガーモードであるかを判定
+					constexpr int mode_press = 0;     // 押下状態を表す定数
+					constexpr int mode_trigger = 1;   // 押された瞬間を表す定数
+					constexpr int mode_not_press = 2; // 未入力状態を表す定数
+
+					// 仮想キーコードが未割り当て(0)の場合は意図しない誤遷移を防ぐため条件不成立にする
+					if (v_key == 0)
+					{
+						printf("Error: StateMachineComponent::Update(2パス目) - 仮想キーコードが0(未設定)のため判定を不成立にしました。\n");
+						is_all_conditions_met = false;
+						break;
+					}
+
+					// 入力検知形式に応じて判定を分岐
 					if (input_behavior == mode_trigger)
 					{
 						is_key_ok = Input::Instance().IsKeyTrigger(v_key);
 					}
-					else
+					else if (input_behavior == mode_press)
 					{
 						is_key_ok = Input::Instance().IsKeyPress(v_key);
+					}
+					else if (input_behavior == mode_not_press)
+					{
+						// 指定キーが押されていない（離されている）状態かを判定
+						is_key_ok = !Input::Instance().IsKeyPress(v_key);
+					}
+					else
+					{
+						printf("Warning: StateMachineComponent::Update(2パス目) - 未定義の入力モード(%d)が指定されています。\n", input_behavior);
 					}
 
 					// キー入力条件を満たせなかったかを判定

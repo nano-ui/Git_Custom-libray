@@ -23,11 +23,11 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 0,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
+                            "HashKey": 243,
+                            "ParamSecond": 2.0,
+                            "RefValue": 1.0,
                             "SecondaryHash": 0,
-                            "Type": 1
+                            "Type": 4
                         }
                     ],
                     "EndPinID": 101,
@@ -78,6 +78,21 @@
                     "EndPinID": 104,
                     "ID": 142,
                     "StartPinID": 102
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 65,
+                            "ParamSecond": 2.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4
+                        }
+                    ],
+                    "EndPinID": 239,
+                    "ID": 244,
+                    "StartPinID": 243
                 }
             ],
             "Nodes": [
@@ -138,6 +153,64 @@
                     "PosX": -18.621337890625,
                     "PosY": 151.908935546875,
                     "SubGraphID": 108
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "ID": 238,
+                    "Input": [
+                        {
+                            "ID": 239,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "新規ステート",
+                    "Output": [
+                        {
+                            "ID": 240,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -419.893310546875,
+                    "PosY": -99.27313232421875,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "ID": 241,
+                    "Input": [
+                        {
+                            "ID": 242,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "新規ステート",
+                    "Output": [
+                        {
+                            "ID": 243,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -632.893310546875,
+                    "PosY": -94.27313232421875,
+                    "SubGraphID": 0
                 }
             ]
         },
@@ -1446,6 +1519,6 @@
             ]
         }
     ],
-    "NextID": 238,
+    "NextID": 245,
     "TargetModelPath": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf"
 }
