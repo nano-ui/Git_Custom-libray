@@ -411,3 +411,53 @@ void GltfModelAnimation::SetNodeTranslation(int node_index, const DirectX::XMFLO
 		animated_nodes.at(node_index).translation = translation;
 	}
 }
+
+//二つのアニメーション姿勢の合成
+void GltfModelAnimation::AnimationBlend(size_t animation_index_a, float time_a, size_t animation_index_b, float time_b, float blend_factor)
+{
+	if (!model_data || model_data->animations.empty())return;
+
+	//ブレンド率を0.0f～1.0fの範囲にクランプ
+	constexpr float min_blend_factor = 0.0f;
+	constexpr float max_blend_factor = 1.0f;
+	float clamped_factor = std::clamp(blend_factor, min_blend_factor, max_blend_factor);
+
+	//アニメーションAの姿勢を算出
+	Animate(animation_index_a, time_a);
+
+	//ブレンド率がほぼ0の場合はアニメーションAのみで終了
+	constexpr float epsilon_threshold = 0.0001f;
+	if (clamped_factor <= epsilon_threshold)return;
+
+	//アニメーションAのノード姿勢を一時保存
+	std::vector<GltfModelData::node> nodes_a = animated_nodes;
+
+	//アニメーションBの姿勢を算出
+	Animate(animation_index_b, time_b);
+	std::vector<GltfModelData::node> nodes_b = animated_nodes;
+
+	//全ボーンノードの平行移動・回転・スケールを合成
+	using namespace DirectX;
+	for (size_t node_idx = 0; node_idx < animated_nodes.size(); node_idx++)
+	{
+		//スケールのLERP合成
+		XMVECTOR scale_a = XMLoadFloat3(&nodes_a[node_idx].scale);
+		XMVECTOR scale_b = XMLoadFloat3(&nodes_b[node_idx].scale);
+		XMVECTOR lerped_scale = XMVectorLerp(scale_a, scale_b, clamped_factor);
+		XMStoreFloat3(&animated_nodes[node_idx].scale, lerped_scale);
+
+		//回転のSLERP合成
+		XMVECTOR rot_a = XMLoadFloat4(&nodes_a[node_idx].rotation);
+		XMVECTOR rot_b = XMLoadFloat4(&nodes_b[node_idx].rotation);
+		XMVECTOR slerped_rot = XMQuaternionNormalize(XMQuaternionSlerp(rot_a, rot_b, clamped_factor));
+		XMStoreFloat4(&animated_nodes[node_idx].rotation, slerped_rot);
+
+		//平行移動のLERP合成
+		XMVECTOR trans_a = XMLoadFloat3(&nodes_a[node_idx].translation);
+		XMVECTOR trans_b = XMLoadFloat3(&nodes_b[node_idx].translation);
+		XMVECTOR lerped_trans = XMVectorLerp(trans_a, trans_b, clamped_factor);
+		XMStoreFloat3(&animated_nodes[node_idx].translation, lerped_trans);
+	}
+	//合成後のローカル姿勢から最終的なワールド変換行列を再計算
+	CumulateTransforms();
+}

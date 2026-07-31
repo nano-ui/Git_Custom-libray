@@ -100,7 +100,7 @@ protected:
 	void AddCollider(Collider* collider) { collideres.push_back(collider); }
 
 protected:
-	std::unique_ptr<Model> model;				//モデルインスタンス
+	std::shared_ptr<Model> model;				//モデルインスタンス
 	std::unique_ptr<JsonSerializer> serializer;	//自身専用のシリアライザ
 	std::unique_ptr<GuiInspector> inspector;	//UI表示用インスペクター
 	DirectX::XMFLOAT3 position;	//位置

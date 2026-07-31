@@ -23,6 +23,9 @@ public:
 	//補完フラグの取得
 	bool IsBlending()const { return is_blending; }
 
+	//ブレンド時間の取得
+	float GetBlendTimer()const { return blend_timer; }
+
 	//補完率の取得
 	float GetBlendFactor()const;
 

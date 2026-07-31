@@ -53,6 +53,9 @@ public:
 	//変更されたノード情報をもとに、グローバル行列を再計算
 	void RecalculateTransforms();
 
+	//アニメーションブレンド
+	void AnimateBlend(const std::string& anim_a, float time_a, const std::string& anim_b, float time_b, float blend_factor);
+
 private:
 	std::shared_ptr<GltfModelData> data;			//リソースデータ
 	std::shared_ptr<GltfModelRenderer> renderer;	//描画命令クラス

@@ -57,41 +57,34 @@ void AnimationSequencerComponent::Update(float elapsed_time)
 		OutputDebugStringA("[SequencerComponent Error] Update: target_model has been expired!\n");
 		return;
 	}
-	animation_blender->Update(elapsed_time);
+	if(animation_blender)animation_blender->Update(elapsed_time);
 
 	//経過時間を加算
 	current_sequence_time += elapsed_time;
 
 	//現在のアニメーションに対応する速度カーブからモデル再生時間を算出
-	float integrated_time = GetIntegratedModelTime(current_sequence_time);
+	float integrated_time_b = GetIntegratedModelTime(current_sequence_time);
 
-	//モーションの終了時にシーケンサ時間をリセット
-	auto it = sequence_map.find(current_animaiton_name);
-	if (it != sequence_map.end())
+	//補完中の場合
+	if (animation_blender && animation_blender->IsBlending())
 	{
-		float anim_duration = it->second.animation_duration;
-		float eff_duration = it->second.effective_duration;
+		std::string prev_name = animation_blender->GetPreviousAnimName();
+		float prev_time = animation_blender->GetPreviousAnimTime() + animation_blender->GetBlendTimer();
+		float blend_factor = animation_blender->GetBlendFactor();
 
-		if ((anim_duration > 0.0f && integrated_time >= anim_duration) ||
-			(eff_duration > 0.0f && current_sequence_time >= eff_duration))
-		{
-			current_sequence_time = 0.0f;
-			integrated_time = 0.0f;
-		}
+		float integrated_time_a = GetIntegratedModelTime(prev_time);
+		shared_model->AnimateBlend(prev_name, integrated_time_a, current_animaiton_name, integrated_time_b, blend_factor);
 	}
-	else
-	{
-		OutputDebugStringA(u8"[SequencerComponent Warning] Update: sequence_map に該当アニメーションデータが存在しません。\n");
-	}
-
-	//計算した時間をモデルへ設定
-	shared_model->SetAnimationTime(integrated_time);
+	else shared_model->SetAnimationTime(integrated_time_b);
 }
 
 //アニメーション切り替え
 void AnimationSequencerComponent::ChangeAnimation(const std::string& anim_name, float blend_time)
 {
 	if (current_animaiton_name == anim_name)return;
+	std::shared_ptr<Model> shared_model = target_model.lock();
+	if (shared_model)shared_model->PlayAnimation(anim_name, true);
+	else OutputDebugStringA("[SequencerComponent 警告] ChangeAnimation: target_model が nullptr のため PlayAnimation を呼び出せませんでした。\n");
 	if (animation_blender && !current_animaiton_name.empty())animation_blender->StartCrossFade(current_animaiton_name, current_sequence_time, blend_time);
 	current_animaiton_name = anim_name;
 	current_sequence_time = 0.0f;

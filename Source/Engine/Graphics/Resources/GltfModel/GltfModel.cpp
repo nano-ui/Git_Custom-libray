@@ -109,3 +109,14 @@ void GltfModel::RecalculateTransforms()
 		animation->CumulateTransforms();
 	}
 }
+
+//アニメーションブレンド
+void GltfModel::AnimateBlend(const std::string& anim_a, float time_a, const std::string& anim_b, float time_b, float blend_factor)
+{
+	if (animation && data)
+	{
+		int index_a = data->GetAnimationIndex(anim_a.c_str());
+		int index_b = data->GetAnimationIndex(anim_b.c_str());
+		if (index_a >= 0 && index_b >= 0.0f)animation->AnimationBlend(static_cast<size_t>(index_a), time_a, static_cast<size_t>(index_b), time_b, blend_factor);
+	}
+}

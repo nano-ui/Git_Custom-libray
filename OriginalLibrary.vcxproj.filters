@@ -393,6 +393,9 @@
     <ClCompile Include="Source\Editor\GuiInspector.cpp">
       <Filter>Source\Editor\GuiInspector</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Animation\AnimationBlender.cpp">
+      <Filter>Source\Gameplay\Components\Animation\AnimationBlender</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -553,9 +556,6 @@
     </ClInclude>
     <ClInclude Include="Source\Serialization\JsonSerializer.h">
       <Filter>Source\Serialization\JsonSerializer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Gameplay\GameObjects\Character\Player.h">
-      <Filter>Source\Gameplay\GameObjects\Character\Player</Filter>
     </ClInclude>
     <ClInclude Include="Source\Editor\AssetLoader.h">
       <Filter>Source\Editor\AssetLoader</Filter>
@@ -742,6 +742,12 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\GuiInspector.h">
       <Filter>Source\Editor\GuiInspector</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Animation\AnimationBlender.h">
+      <Filter>Source\Gameplay\Components\Animation\AnimationBlender</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\GameObjects\Character\Player.h">
+      <Filter>Source\Gameplay\GameObjects\Character\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1190,6 +1196,9 @@
     </Filter>
     <Filter Include="Source\Editor\GuiInspector">
       <UniqueIdentifier>{a3a69721-7993-4502-a32f-cfe4154a4c4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Animation\AnimationBlender">
+      <UniqueIdentifier>{80a000c9-3282-410b-a08d-6d48568d6ab6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@ GameObject::GameObject()
 	color = { 1.0f,1.0f,1.0f,1.0f };
 	is_active = true;
 
-	model = std::make_unique<Model>();
+	model = std::make_shared<Model>();
 	serializer = std::make_unique<JsonSerializer>();
 	inspector = std::make_unique<GuiInspector>();
 }

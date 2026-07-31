@@ -30,6 +30,12 @@ public:
 	//アニメーション切り替え
 	void ChangeAnimation(const std::string& anim_name, float blend_time = DEFAULT_BLEND_TIME);
 
+	//アニメーション名取得
+	std::string GetCurrentAnimationName()const { return current_animaiton_name; }
+
+	//アニメーション再生時間の取得
+	float GetCurrentSequenceTime()const { return current_sequence_time; }
+
 private:
 	//指定時刻上の速度倍率を取得
 	float GetSpeedMultiplierAt(float seq_time)const;

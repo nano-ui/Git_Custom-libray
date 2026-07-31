@@ -38,6 +38,9 @@ public:
 	//指定したノードの移動成分を外部から上書き
 	void SetNodeTranslation(int node_index, const DirectX::XMFLOAT3& translation);
 
+	//二つのアニメーション姿勢の合成
+	void AnimationBlend(size_t animation_index_a, float time_a, size_t animation_index_b, float time_b, float blend_factor);
+
 private:
 	//指定した時間のアニメーションを適用しノード情報を更新
 	void Animate(size_t animation_index, float time);

@@ -80,6 +80,9 @@ public:
 	//姿勢行列の再計算
 	void RecalculateTransforms();
 
+	//アニメーションをブレンド描画
+	void AnimateBlend(const std::string& anim_a, float time_a, const std::string& anim_b, float time_b, float blend_factor);
+
 private:
 	//使いまわさない内部専用のモデルロード処理
 	bool LoadModelInternal(const std::string& file_path);

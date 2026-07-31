@@ -136,7 +136,7 @@
                     "SubGraphID": 0
                 },
                 {
-                    "ActionCategory": 1,
+                    "ActionCategory": 3,
                     "AnimationName": "",
                     "ID": 103,
                     "Input": [
@@ -234,10 +234,175 @@
         {
             "GraphID": 248,
             "GraphName": "攻撃ステート",
-            "Links": [],
-            "Nodes": []
+            "Links": [
+                {
+                    "Conditions": [],
+                    "EndPinID": 260,
+                    "ID": 262,
+                    "StartPinID": 258
+                },
+                {
+                    "Conditions": [],
+                    "EndPinID": 264,
+                    "ID": 266,
+                    "StartPinID": 261
+                },
+                {
+                    "Conditions": [],
+                    "EndPinID": 257,
+                    "ID": 267,
+                    "StartPinID": 265
+                }
+            ],
+            "Nodes": [
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "Attack_A_Slow",
+                    "ID": 256,
+                    "Input": [
+                        {
+                            "ID": 257,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": false,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "右薙ぎ払い",
+                    "Output": [
+                        {
+                            "ID": 258,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 17.0,
+                    "PosY": -73.0,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "Attack_B_Slow",
+                    "ID": 259,
+                    "Input": [
+                        {
+                            "ID": 260,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": false,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "斜め切り",
+                    "Output": [
+                        {
+                            "ID": 261,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 297.0,
+                    "PosY": -65.0,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "",
+                    "ID": 263,
+                    "Input": [
+                        {
+                            "ID": 264,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": false,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "右薙ぎ払い2",
+                    "Output": [
+                        {
+                            "ID": 265,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 20.0,
+                    "PosY": 27.0,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "Ability_R_0",
+                    "ID": 269,
+                    "Input": [
+                        {
+                            "ID": 270,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": false,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "とびかかり",
+                    "Output": [
+                        {
+                            "ID": 271,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -72.33341979980469,
+                    "PosY": -87.33333587646484,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "Attack_RMB",
+                    "ID": 272,
+                    "Input": [
+                        {
+                            "ID": 273,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": false,
+                    "IsRootMotion": true,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "ダッシュ攻撃",
+                    "Output": [
+                        {
+                            "ID": 274,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 410.333251953125,
+                    "PosY": -99.33333587646484,
+                    "SubGraphID": 0
+                }
+            ]
         }
     ],
-    "NextID": 252,
+    "NextID": 275,
     "TargetModelPath": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf"
 }

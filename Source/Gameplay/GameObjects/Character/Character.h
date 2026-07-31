@@ -98,7 +98,10 @@ private:
 protected:
 	std::unique_ptr<StateBlackboard> blackboard;
 	std::unique_ptr<StateMachineComponent> state_machine_component;	//ステートマシン制御
+	std::unique_ptr<AnimationSequencerComponent> sequencer_component;	//アニメーションシーケンサ
 
+	std::string current_animation_name = "";	//現在のアニメーション名
+	float current_animation_time = 0.0f;		//現在のアニメーション再生時間
 	std::string previous_animation_name = "";	//前回のアニメーション名
 	float previous_animation_time = 0.0f;		//前回の再生時間
 	DirectX::XMFLOAT3 angle;	//角度

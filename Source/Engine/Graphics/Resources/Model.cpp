@@ -205,3 +205,9 @@ void Model::RecalculateTransforms()
 {
 	if (model)model->RecalculateTransforms();
 }
+
+//アニメーションをブレンド描画
+void Model::AnimateBlend(const std::string& anim_a, float time_a, const std::string& anim_b, float time_b, float blend_factor)
+{
+	if (model)model->AnimateBlend(anim_a, time_a, anim_b, time_b, blend_factor);
+}

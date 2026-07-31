@@ -29,6 +29,7 @@ Character::Character()
 
 	blackboard = std::make_unique<StateBlackboard>();
 	state_machine_component = std::make_unique<StateMachineComponent>();
+	sequencer_component = std::make_unique<AnimationSequencerComponent>(model);
 }
 
 //デストラクタ
@@ -41,6 +42,7 @@ void Character::Initialize()
 {
 	is_active = true;
 	SetupBlackboard();
+	if (sequencer_component && model)sequencer_component->Initialize(model->GetModelPath());
 }
 
 //更新処理
@@ -61,18 +63,27 @@ void Character::Update(float elapsed_time)
 		state_machine_component->Update(elapsed_time, blackboard.get());
 
 		std::string target_anim_name = state_machine_component->GetCurrentAnimationName();
-		bool target_anim_loop = state_machine_component->GetAnimationLoop();
-
-		//ステートマシンから指定されたアニメーションを Model で再生
-		if (model && !target_anim_name.empty())
+		// アニメーションの変更を検知して補間切り替え命令を発行
+		if (!target_anim_name.empty() && previous_animation_name != target_anim_name)
 		{
-			if (previous_animation_name != target_anim_name)
+			if (sequencer_component)
 			{
-				model->PlayAnimation(target_anim_name, target_anim_loop);
-				previous_animation_name = target_anim_name;
+				constexpr float default_blend_time = 0.2f; // 補間時間 (0.2秒)
+				sequencer_component->ChangeAnimation(target_anim_name, default_blend_time);
+				std::string debug_msg = "[Character デバッグ] アニメーション切り替え: " + previous_animation_name + " -> " + target_anim_name + "\n";
+				printf_s(debug_msg.c_str());
 			}
+			previous_animation_name = target_anim_name;
 		}
 	}
+
+	if (sequencer_component)
+	{
+		sequencer_component->Update(elapsed_time);
+		current_animation_name = sequencer_component->GetCurrentAnimationName();
+		current_animation_time = sequencer_component->GetCurrentSequenceTime();
+	}
+	else OutputDebugStringA("[Character 警告] Update: sequencer_component が nullptr のためアニメーション情報を更新できません。\n");
 
 	//移動処理
 	bool is_rm_enabled = state_machine_component ? state_machine_component->IsCurrentRootMotionEnbled() : false;
@@ -147,6 +158,8 @@ void Character::SetupSerialization()
 	inspector->RegisterText(u8"無敵時間タイマー", &invincible_timer, u8"デバッグモニター");
 	inspector->RegisterText(u8"入力ベクトルX", &move_vecX, u8"デバッグモニター");
 	inspector->RegisterText(u8"入力ベクトルZ", &move_vecZ, u8"デバッグモニター");
+	inspector->RegisterText(u8"現在のアニメーション", &current_animation_name, u8"デバッグモニター");
+	inspector->RegisterText(u8"アニメーション再生時間", &current_animation_time, u8"デバッグモニター");
 }
 
 //ダメージ処理
