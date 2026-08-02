@@ -110,11 +110,18 @@ bool Input::IsKeyPress(int key_code) const
 //キーボードが押された瞬間か判定
 bool Input::IsKeyTrigger(int key_code) const
 {
-	if (key_code < 0 || key_code >= max_keys)return false;
+	if (key_code < 0 || key_code >= max_keys)
+	{
+		OutputDebugStringA("[Input] エラー: 範囲外のキーコードがIsKeyTriggerに渡されました。\n");
+		return false;
+	}
+
 	if (latched_key_trigger[key_code])
 	{
+		latched_key_trigger[key_code] = false;
 		return true;
 	}
+
 	bool is_current_press = (current_key_state[key_code] & key_press_mask) != 0;
 	bool is_prev_press = (prev_key_state[key_code] & key_press_mask) != 0;
 	return  is_current_press && !is_prev_press;
@@ -184,6 +191,12 @@ float Input::GetLeftSticeY() const
 		return 0.0f;
 	}
 	return value;
+}
+
+//全てのキートリガーラッチ状態をクリア
+void Input::ClearKeyTriggers()
+{
+	ZeroMemory(latched_key_trigger, sizeof(latched_key_trigger));
 }
 
 //マウスのX方向の移動量を取得

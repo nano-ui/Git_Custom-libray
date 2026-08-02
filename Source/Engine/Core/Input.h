@@ -41,6 +41,9 @@ public:
 	//コントローラーの左スティックのY軸入力を取得
 	float GetLeftSticeY()const;
 
+	//全てのキートリガーラッチ状態をクリア
+	void ClearKeyTriggers();
+
 	//マウスのX方向の移動量を取得
 	float GetMouseDeltaX()const;
 

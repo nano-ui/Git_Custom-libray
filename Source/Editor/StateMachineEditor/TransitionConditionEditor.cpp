@@ -315,7 +315,10 @@ void TransitionConditionEditor::DrawInputCheckUI(GraphTransitionCondition& condi
 		for (int key_idx = 1; key_idx < 256; key_idx++)
 		{
 			//マウスボタン(左・右・中クリック)の誤作動による登録を除外判定
-			if (key_idx == VK_LBUTTON || key_idx == VK_RBUTTON || key_idx == VK_MBUTTON)
+			if (key_idx == VK_LBUTTON || key_idx == VK_RBUTTON || key_idx == VK_MBUTTON ||
+				key_idx == VK_CAPITAL || key_idx == VK_KANA || key_idx == VK_KANJI ||
+				key_idx == VK_CONVERT || key_idx == VK_NONCONVERT || key_idx == VK_NUMLOCK || key_idx == VK_SCROLL ||
+				key_idx == 0xF0 || key_idx == 0xF2 || key_idx == 0xF3 || key_idx == 0xF4) // VK_DBE_ALPHANUMERIC 等
 			{
 				continue;
 			}
@@ -352,6 +355,7 @@ void TransitionConditionEditor::DrawInputCheckUI(GraphTransitionCondition& condi
 
 		if (ImGui::Button(key_name_buffer, ImVec2(-1.0f, 25.0f)))
 		{
+			Input::Instance().ClearKeyTriggers();
 			waiting_for_key_condition = &condition;
 		}
 		ImGui::PopStyleColor();
