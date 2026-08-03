@@ -269,6 +269,7 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 					constexpr int mode_press = 0;     // 押下状態を表す定数
 					constexpr int mode_trigger = 1;   // 押された瞬間を表す定数
 					constexpr int mode_not_press = 2; // 未入力状態を表す定数
+					constexpr int mode_release = 3;		//離れた瞬間
 
 					// 仮想キーコードが未割り当て(0)の場合は意図しない誤遷移を防ぐため条件不成立にする
 					if (v_key == 0)
@@ -291,6 +292,10 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 					{
 						// 指定キーが押されていない（離されている）状態かを判定
 						is_key_ok = !Input::Instance().IsKeyPress(v_key);
+					}
+					else if (input_behavior == mode_release)
+					{
+						is_key_ok = Input::Instance().IsKeyRelease(v_key);
 					}
 					else
 					{

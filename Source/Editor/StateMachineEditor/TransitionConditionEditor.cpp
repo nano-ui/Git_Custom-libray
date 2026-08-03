@@ -365,22 +365,23 @@ void TransitionConditionEditor::DrawInputCheckUI(GraphTransitionCondition& condi
 		static constexpr int mode_press = 0;	//押されている間
 		static constexpr int mode_trigger = 1;	//押された瞬間
 		static constexpr int mode_not_press = 2;//未入力
+		static constexpr int mode_release = 3;	//離れた瞬間
+
+		//コンボボックス表示用項目
+		const char* behavior_items[] = {
+			u8"押されている間",
+			u8"押された瞬間",
+			u8"未入力",
+			u8"離れた瞬間"
+		};
+		constexpr int total_behavior_count = 4;	//選択肢の総数
 
 		ImGui::Text(u8"入力の検知形式:");
 		ImGui::SameLine();
-		if (ImGui::RadioButton(u8"押されている間(Press)", &current_behavior, mode_press))
+		ImGui::SetNextItemWidth(200.0f);
+		if (ImGui::Combo(u8"##InputBehaviorCombo", &current_behavior, behavior_items, total_behavior_count)) 
 		{
-			condition.param_second = static_cast<float>(mode_press);
-		}
-		ImGui::SameLine();
-		if (ImGui::RadioButton(u8"押された瞬間(Trigger)", &current_behavior, mode_trigger))
-		{
-			condition.param_second = static_cast<float>(mode_trigger);
-		}
-		ImGui::SameLine();
-		if (ImGui::RadioButton(u8"未入力 (Not Press)", &current_behavior, mode_not_press))
-		{
-			condition.param_second = static_cast<float>(mode_not_press);
+			condition.param_second = static_cast<float>(current_behavior);
 		}
 	}
 }
