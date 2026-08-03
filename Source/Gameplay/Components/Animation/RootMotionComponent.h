@@ -48,5 +48,6 @@ private:
 	std::unique_ptr<GltfRootMotion> root_motion;	//ルートモーション計算クラス
 	size_t current_anim_index = 0;					//再生中のアニメーション番号
 	bool is_enabled = true;							//ルートモーション再生フラグ
+	mutable bool is_updated_this_frame = false;		//多重呼び出し防止フラグ
 };
 

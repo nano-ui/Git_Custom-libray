@@ -45,6 +45,12 @@ private:
 	//指定した時間のアニメーションを適用しノード情報を更新
 	void Animate(size_t animation_index, float time);
 
+	//対象のノードがシーンの最上位ルートノードが判定
+	bool IsRootNode(int node_index)const;
+
+	//指定アニメーション内で最も移動量の大きいルートモーション対象ノードのインデックスを取得
+	int GetTargetRootNodeIndex(size_t animation_index) const;
+
 	//行列計算用の再帰呼び出し
 	void TraverseNodeForTransform(int node_index, std::stack<DirectX::XMFLOAT4X4>& parent_global_transforms);
 

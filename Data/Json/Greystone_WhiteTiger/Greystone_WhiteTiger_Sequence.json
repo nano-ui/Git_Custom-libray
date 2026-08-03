@@ -27,6 +27,20 @@
                     "speed_multiplier": 1.0
                 }
             ]
+        },
+        "Roll_Front": {
+            "animation_duration": 1.1666666269302368,
+            "effective_duration": 0.7758563756942749,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.5111111402511597
+                },
+                {
+                    "sequencer_time": 1.1666666269302368,
+                    "speed_multiplier": 1.4888888597488403
+                }
+            ]
         }
     },
     "model_name": "Greystone_WhiteTiger"

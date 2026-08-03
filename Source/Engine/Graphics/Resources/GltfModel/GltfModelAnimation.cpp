@@ -185,6 +185,9 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 	const size_t INDEX_OFFSET_NEXT = 1;													// 次の要素を参照するためのインデックスオフセット定数
 	const GltfModelData::animation& animation = model_data->animations.at(animation_index);	// 引数で指定されたアニメーションデータを参照として取得
 
+	// ルートモーション対象ノードのインデックスを取得
+	int target_root_node_index = GetTargetRootNodeIndex(animation_index);
+
 	// チャンネル（操作対象）ごとのアニメーション適用
 	for (const GltfModelData::animation::channel& channel : animation.channels)                   // アニメーションが持つ全チャンネル（誰のどの部位を動かすか）をループ
 	{
@@ -267,7 +270,12 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 
 			if (static_cast<size_t>(channel.target_node) < animated_nodes.size())
 			{
-				XMStoreFloat3(&animated_nodes.at(channel.target_node).translation, lerped_trans);			
+				if (IsRootNode(channel.target_node) || channel.target_node == target_root_node_index) 
+				{
+					constexpr float ZERO_POSITION = 0.0f;
+					animated_nodes.at(channel.target_node).translation = XMFLOAT3(ZERO_POSITION, ZERO_POSITION, ZERO_POSITION);
+				}
+				else XMStoreFloat3(&animated_nodes.at(channel.target_node).translation, lerped_trans);			
 			}
 		}
 	}
@@ -276,9 +284,76 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 	CumulateTransforms();
 }
 
-//===========================
+//対象のノードがシーンの最上位ルートノードが判定
+bool GltfModelAnimation::IsRootNode(int node_index) const
+{
+	if (!model_data || model_data->scenes.empty())
+	{
+		OutputDebugStringA("[GltfModelAnimation 警告] IsRootNode: model_data または scenes が空です。\n");
+		return false;
+	}
+
+	int scene_index = model_data->default_scene;
+	if (scene_index < 0 || static_cast<size_t>(scene_index) >= model_data->scenes.size())scene_index = 0;
+	const auto& root_nodes = model_data->scenes.at(scene_index).nodes;
+	return std::find(root_nodes.begin(), root_nodes.end(), node_index) != root_nodes.end();
+}
+
+//指定アニメーション内で最も移動量の大きいルートモーション対象ノードのインデックスを取得
+int GltfModelAnimation::GetTargetRootNodeIndex(size_t animation_index) const
+{
+	if (!model_data || animation_index >= model_data->animations.size())
+	{
+		OutputDebugStringA("[GltfModelAnimation 警告] GetTargetRootNodeIndex: model_data が無効またはインデックスが範囲外です。\n");
+		return -1;
+	}
+
+	const GltfModelData::animation& animation = model_data->animations.at(animation_index);
+	int max_movement_node_index = -1;
+	float max_distance = 0.0f;
+
+	//アニメーションの各チャンネルから移動量を解析
+	for (const GltfModelData::animation::channel& channel : animation.channels)
+	{
+		if (channel.target_path == "translation")
+		{
+			if (channel.sampler < 0 || static_cast<size_t>(channel.sampler) >= animation.samplers.size())continue;
+
+			const GltfModelData::animation::sampler& sampler = animation.samplers.at(channel.sampler);
+			auto trans_it = animation.translations.find(sampler.output);
+
+			if (trans_it != animation.translations.end())
+			{
+				const std::vector<DirectX::XMFLOAT3>& translations = trans_it->second;
+				if (translations.size() >= 2)
+				{
+					float current_node_total_distance = 0.0f;
+					for (size_t k = 0; k < translations.size() - 1; k++)
+					{
+						using namespace DirectX;
+						XMVECTOR p0 = XMLoadFloat3(&translations.at(k));
+						XMVECTOR p1 = XMLoadFloat3(&translations.at(k + 1));
+						XMVECTOR move_vec = XMVectorSubtract(p1, p0);
+						XMVECTOR length_vec = XMVector3Length(move_vec);
+
+						float distance = 0.0f;
+						XMStoreFloat(&distance, length_vec);
+						current_node_total_distance += distance;
+					}
+					if (current_node_total_distance > max_distance)
+					{
+						max_distance = current_node_total_distance;
+						max_movement_node_index = channel.target_node;
+					}
+				}
+			}
+		}
+	}
+
+	return max_movement_node_index;
+}
+
 //行列計算用の再帰呼び出し
-//===========================
 void GltfModelAnimation::TraverseNodeForTransform(int node_index, std::stack<DirectX::XMFLOAT4X4>& parent_global_transforms)
 {
 	if (node_index < 0 || static_cast<size_t>(node_index) >= animated_nodes.size())
@@ -286,9 +361,7 @@ void GltfModelAnimation::TraverseNodeForTransform(int node_index, std::stack<Dir
 		return;
 	}
 
-	//--------------------------------------------------
 	// ローカル変換行列の構築とグローバル行列の計算
-	//--------------------------------------------------
 	using namespace DirectX;                                                                                                    // DirectXMathの名前空間を使用し記述を省略
 	GltfModelData::node& current_node = animated_nodes.at(node_index);                                                                   // 対象のノードを参照で取得し更新可能にする
 	XMMATRIX scale_matrix = XMMatrixScaling(current_node.scale.x, current_node.scale.y, current_node.scale.z);                  // XYZのスケール値からスケール行列を作成
@@ -299,9 +372,7 @@ void GltfModelAnimation::TraverseNodeForTransform(int node_index, std::stack<Dir
 	XMMATRIX global_matrix = local_matrix * XMLoadFloat4x4(&parent_global_transforms.top());                                    // スタック最上部にある親の行列を掛けて自身のグローバル行列を算出
 	XMStoreFloat4x4(&current_node.global_transform, global_matrix);                                                             // 算出したグローバル行列をノード構造体に保存
 
-	//--------------------------------------------------
 	// 子ノードに対する再帰処理
-	//--------------------------------------------------
 	for (int child_index : current_node.children)								// ノードが持つ全ての子ノードに対してループ処理
 	{
 		if (child_index >= 0 && static_cast<size_t>(child_index) < animated_nodes.size())
@@ -313,14 +384,10 @@ void GltfModelAnimation::TraverseNodeForTransform(int node_index, std::stack<Dir
 	}
 }
 
-//========================================================
 //アニメーションのキーフレームを取得し補間係数を計算
-//========================================================
 size_t GltfModelAnimation::GetAnimationKeyframeIndex(const std::vector<float>& timelines, float time, float& interpolation_factor)
 {
-	//--------------------------------------------------
 	// 定数の定義
-	//--------------------------------------------------
 	const size_t keyframe_count = timelines.size();		// タイムラインに存在するキーフレームの総数を取得
 	const size_t INDEX_OFFSET_NEXT = 1;					// 次の要素やインデックス計算用のオフセット定数
 	const size_t INDEX_OFFSET_PREV = 2;					// 末尾から2番目を取得するためのオフセット定数
@@ -328,9 +395,7 @@ size_t GltfModelAnimation::GetAnimationKeyframeIndex(const std::vector<float>& t
 	const float INTERPOLATION_MIN = 0.0f;				// 補間係数の最小値（0%）
 	const size_t START_INDEX = 0;						// 配列の開始インデックス
 
-	//--------------------------------------------------
 	// 時間外の境界値判定
-	//--------------------------------------------------
 	if (time > timelines.at(keyframe_count - INDEX_OFFSET_NEXT))	// 指定された時間が最後のキーフレーム時間を超過している場合
 	{
 		interpolation_factor = INTERPOLATION_MAX;					// 補間係数を最大値に固定してアニメーションを末尾で止める
@@ -342,9 +407,7 @@ size_t GltfModelAnimation::GetAnimationKeyframeIndex(const std::vector<float>& t
 		return START_INDEX;											// 一番最初のインデックスを返す
 	}
 
-	//--------------------------------------------------
 	//適切なキーフレームの探索と補間係数の計算
-	//--------------------------------------------------
 	size_t keyframe_index = START_INDEX;																		// 該当するキーフレームのインデックスを初期化
 	for (size_t time_index = INDEX_OFFSET_NEXT; time_index < keyframe_count; time_index++)						// 2番目のキーフレームから最後まで順番にチェック
 	{
@@ -362,9 +425,7 @@ size_t GltfModelAnimation::GetAnimationKeyframeIndex(const std::vector<float>& t
 	return keyframe_index;
 }
 
-//====================================
 //アニメーションの全体の長さを計算
-//====================================
 float GltfModelAnimation::CalculateAnimationDuration(size_t animation_index)
 {
 	if (!model_data || model_data->animations.empty() || animation_index >= model_data->animations.size())

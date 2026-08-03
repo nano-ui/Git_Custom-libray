@@ -83,6 +83,10 @@ void Character::Update(float elapsed_time)
 	}
 	else OutputDebugStringA("[Character 警告] Update: sequencer_component が nullptr のためアニメーション情報を更新できません。\n");
 
+	//回転クォータニオンの更新
+	DirectX::XMVECTOR q = DirectX::XMQuaternionRotationRollPitchYaw(angle.x, angle.y, angle.z);
+	DirectX::XMStoreFloat4(&rotation, q);
+
 	//移動処理
 	bool is_rm_enabled = state_machine_component ? state_machine_component->IsCurrentRootMotionEnbled() : false;
 	debug_root_motion_enabled = is_rm_enabled;
@@ -104,11 +108,6 @@ void Character::Update(float elapsed_time)
 		debug_root_motion_delta = { 0.0f, 0.0f, 0.0f };
 		UpdateVelocity(elapsed_time);
 	}
-
-	//回転クォータニオンの更新
-	DirectX::XMVECTOR q = DirectX::XMQuaternionRotationRollPitchYaw(angle.x, angle.y, angle.z);
-	DirectX::XMStoreFloat4(&rotation, q);
-
 }
 
 //描画処理
@@ -301,7 +300,7 @@ void Character::UpdateRootMotion()
 	// 差分が全く発生していない場合のエラー検知出力
 	if (delta_pos.x == 0.0f && delta_pos.y == 0.0f && delta_pos.z == 0.0f)
 	{
-		OutputDebugStringA("[Character 警告] UpdateRootMotion: 移動差分(delta_pos)が 0 です。RootMotionComponent::Update が呼ばれていない可能性があります。\n");
+		//OutputDebugStringA("[Character 警告] UpdateRootMotion: 移動差分(delta_pos)が 0 です。RootMotionComponent::Update が呼ばれていない可能性があります。\n");
 	}
 
 	DirectX::XMVECTOR local_translation = DirectX::XMLoadFloat3(&delta_pos);
