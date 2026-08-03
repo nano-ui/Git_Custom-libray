@@ -164,7 +164,7 @@ void GltfRootMotion::AnalyzeAnimations()
 		for (const GltfModelData::animation::channel& channel : animation.channels)
 		{
 			//移動値（translation）チャンネルかつ最上位ルート以外のノードであるかの判定
-			if (channel.target_path == "translation" && channel.target_node != base_root_node_index)
+			if (channel.target_path == "translation")
 			{
 				const GltfModelData::animation::sampler& sampler = animation.samplers.at(channel.sampler);
 				auto trans_it = animation.translations.find(sampler.output);
@@ -224,7 +224,7 @@ void GltfRootMotion::ComputeRootPose(size_t animation_index, float time, DirectX
 	// 参照するアニメーションインデックスの範囲外チェック
 	if (animation_index >= model_data->animations.size())
 	{
-		OutputDebugStringA("[GltfRootMotion Error] ComputeRootPose: animation_index out of range!\n");
+		OutputDebugStringA("[GltfRootMotion エラー] ComputeRootPose: 指定されたアニメーションインデックスが範囲外です。\n");
 		return;
 	}
 
@@ -264,10 +264,12 @@ void GltfRootMotion::ComputeRootPose(size_t animation_index, float time, DirectX
 		const std::vector<float>& timeline = timeline_it->second;
 
 		// タイムラインが空の場合はスキップ
-		if (timeline.empty())
-		{
-			continue;
-		}
+		if (timeline.empty())continue;
+
+		//時間のクランプ処理
+		float clamped_time = time;
+		if (clamped_time <= timeline.front())clamped_time = timeline.front();
+		else if (clamped_time >= timeline.back())clamped_time = timeline.back();
 
 		// 位置（translation）の補間計算
 		if (channel.target_path == "translation")
@@ -283,11 +285,11 @@ void GltfRootMotion::ComputeRootPose(size_t animation_index, float time, DirectX
 					float t0 = timeline.at(index);
 					float t1 = timeline.at(index + 1);
 
-					if (time >= t0 && time <= t1)
+					if (clamped_time >= t0 && clamped_time <= t1)
 					{
+						float time_diff = t1 - t0;
 						// 再生時間とキーフレームの時間から補間率を算出する
-						float rate = (time - t0) / (t1 - t0);
-
+						float rate = (time_diff > 0.00001f) ? ((clamped_time - t0) / time_diff) : 0.0f;
 						// 前のキーフレームと次のキーフレームの姿勢を補間
 						DirectX::XMVECTOR V0 = DirectX::XMLoadFloat3(&translations.at(index));
 						DirectX::XMVECTOR V1 = DirectX::XMLoadFloat3(&translations.at(index + 1));
