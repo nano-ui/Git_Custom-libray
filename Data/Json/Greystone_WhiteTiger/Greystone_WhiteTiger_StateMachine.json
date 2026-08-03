@@ -216,7 +216,7 @@
                     "SubGraphID": 0
                 },
                 {
-                    "ActionCategory": 3,
+                    "ActionCategory": 1,
                     "AnimationName": "",
                     "ID": 103,
                     "Input": [
@@ -969,5 +969,5 @@
         }
     ],
     "NextID": 314,
-    "TargetModelPath": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf"
+    "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }

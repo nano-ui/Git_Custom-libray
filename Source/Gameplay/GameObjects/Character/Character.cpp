@@ -160,6 +160,7 @@ void Character::SetupSerialization()
 	inspector->RegisterVariable(u8"コライダーY軸オフセット", &offset_y, u8"当たり判定設定");
 
 	//カテゴリ「デバッグモニター（物理・移動状態）」
+	inspector->RegisterText(u8"ステートマシンパス", &state_machine_component->GetStateMachinePath(), u8"デバッグモニター");
 	inspector->RegisterText(u8"現在の移動速度", &move_speed, u8"デバッグモニター");
 	inspector->RegisterText(u8"移動速度ベクトル", &velocity, u8"デバッグモニター");
 	inspector->RegisterText(u8"角度(Yaw/Pitch/Roll)", &angle, u8"デバッグモニター");
