@@ -260,7 +260,7 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 			auto trans_it = animation.translations.find(sampler.output);
 			if (trans_it == animation.translations.end() || (keyframe_index + INDEX_OFFSET_NEXT) >= trans_it->second.size())
 			{
-				OutputDebugStringA("[GltfModelAnimation Error] Animate: translations key or keyframe index error!\n");
+				OutputDebugStringA("[GltfModelAnimation エラー] Animate: translations キーまたはキーフレームインデックスが不正です。\n");
 				continue;
 			}
 			const std::vector<XMFLOAT3>& translations = trans_it->second;		
@@ -270,10 +270,21 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 
 			if (static_cast<size_t>(channel.target_node) < animated_nodes.size())
 			{
-				if (IsRootNode(channel.target_node) || channel.target_node == target_root_node_index) 
+				if (IsRootNode(channel.target_node)) 
 				{
 					constexpr float ZERO_POSITION = 0.0f;
 					animated_nodes.at(channel.target_node).translation = XMFLOAT3(ZERO_POSITION, ZERO_POSITION, ZERO_POSITION);
+				}
+				else if (channel.target_node == target_root_node_index)
+				{
+					XMFLOAT3 initial_pose_trans = translations.front();
+					XMFLOAT3 final_trans;
+					XMStoreFloat3(&final_trans, lerped_trans);
+
+					final_trans.x = initial_pose_trans.x;
+					final_trans.z = initial_pose_trans.z;
+
+					animated_nodes.at(channel.target_node).translation = final_trans;
 				}
 				else XMStoreFloat3(&animated_nodes.at(channel.target_node).translation, lerped_trans);			
 			}
