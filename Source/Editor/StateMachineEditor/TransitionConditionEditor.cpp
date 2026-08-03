@@ -66,10 +66,18 @@ bool TransitionConditionEditor::DrawConditonSettings(StateGraphDataManager* data
 		GraphTransitionCondition& condition = target_link->conditions[i];	//編集対象の条件情報
 
 		//判定タイプを選択するコンボボックス
-		const char* condition_types[] = { u8"通常比較", u8"確率抽選 (Random)", u8"距離判定 (Distance)", u8"割合判定 (Ratio)", u8"入力チェック (InputCheck)" };		const int total_type_count = 4;
+		const char* condition_types[] = {
+					u8"通常比較",
+					u8"確率抽選 (Random)",
+					u8"距離判定 (Distance)",
+					u8"割合判定 (Ratio)",
+					u8"入力チェック (InputCheck)",
+					u8"アニメーション終了 (AnimationEnd)"
+		};
+
 		int current_type = static_cast<int>(condition.type);
 		ImGui::SetNextItemWidth(180.0f);
-		if (ImGui::Combo(u8"条件判定のタイプ", &current_type, condition_types, 5)) 
+		if (ImGui::Combo(u8"条件判定のタイプ", &current_type, condition_types, 6)) 
 		{
 			condition.type = static_cast<ConditionNodeType>(current_type);
 			is_changed = true;

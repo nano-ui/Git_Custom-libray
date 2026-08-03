@@ -52,6 +52,7 @@ enum class ConditionNodeType
 	Distance,		//距離判定
 	Ratio,			//割合判定
 	InputCheck,		//入力判定
+	AnimationEnd,	//アニメーション終了判定
 };
 
 //遷移条件の編集・保持

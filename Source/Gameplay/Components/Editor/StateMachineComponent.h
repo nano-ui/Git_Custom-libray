@@ -47,7 +47,7 @@ public:
 	void Initialize(StateBlackboard* blackboard);
 
 	//更新
-	void Update(float elapsed_time, StateBlackboard* blackboard);
+	void Update(float elapsed_time, StateBlackboard* blackboard, bool is_anim_finished = false);
 
 	//モデル名設定
 	void SetModelName(const std::string& model_name);
@@ -86,6 +86,10 @@ public:
 	void RequestReload() { is_pending_reload = true; }
 
 private:
+
+	//単一の遷移条件が成立しているか判定
+	bool EvaluateCondition(const TransitionCondition& cond, StateBlackboard* blackboard, bool is_anim_finished)const;
+
 	//ステートマシンJSONからアニメーション対応表を抽出
 	void LoadAnimationMap(StateBlackboard* blackboard);
 

@@ -31,14 +31,14 @@ public:
 		const std::string& model_name,
 		std::unordered_map<std::string, AnimationSequenceData>& out_sequence_map);
 
+	//保存・読み込み用のフルJSONファイルパスを取得
+	static std::string GetFullFilePath(const std::string& clean_model_name);
+
 private:
 	//パスや拡張子から純粋なモデル名を抽出
 	static std::string ExtractCleanModelName(const std::string& raw_model_name);
 
 	//ディレクトリパスを取得し、存在しない場合は自動生成
 	static std::string GetDirectoryPath(const std::string& clean_model_name);
-
-	//保存・読み込み用のフルJSONファイルパスを取得
-	static std::string GetFullFilePath(const std::string& clean_model_name);
 };
 

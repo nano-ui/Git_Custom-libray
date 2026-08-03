@@ -180,6 +180,7 @@ std::string AnimationSequenceSerializer::GetDirectoryPath(const std::string& cle
 //保存・読み込み用のフルJSONファイルパスを取得
 std::string AnimationSequenceSerializer::GetFullFilePath(const std::string& clean_model_name)
 {
+	std::string clean_name = ExtractCleanModelName(clean_model_name);
 	std::string dir_path = GetDirectoryPath(clean_model_name);
 	return dir_path + "/" + clean_model_name + "_Sequence.json";
 }

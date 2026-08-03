@@ -24,6 +24,7 @@ bool AnimationSequencerComponent::Initialize(const std::string& model_name)
 	sequence_map.clear();
 	current_sequence_time = 0.0f;
 	is_active = false;
+	sequence_file_path = AnimationSequenceSerializer::GetFullFilePath(model_name);
 
 	if (model_name.empty())
 	{
@@ -63,15 +64,22 @@ void AnimationSequencerComponent::Update(float elapsed_time)
 	current_sequence_time += elapsed_time;
 
 	float anim_duration = shared_model->GetAnimationDuration();
+	float effective_duration = GetEffectiveDuration();
+
+	float integrated_time_b = GetIntegratedModelTime(current_sequence_time);
+	constexpr float MIN_DURATION_THRESHOLD = 0.0f;
 
 	if (anim_duration > 0.0f)
 	{
-		if (current_sequence_time >= anim_duration)current_sequence_time = std::fmod(current_sequence_time, anim_duration);
+		//積算モデル時間がモデル長に達したか、またはシーケンサ時間が実効総時間に達したかで判定
+		if (integrated_time_b >= anim_duration || (effective_duration > MIN_DURATION_THRESHOLD && current_sequence_time >= effective_duration)) 
+		{
+			ia_animation_finished = true;
+			current_sequence_time = std::fmod(current_sequence_time, anim_duration);
+		}
+		else ia_animation_finished = false;
 	}
 	else OutputDebugStringA("[AnimationSequencerComponent 警告] Update: アニメーションの総再生時間が0以下です。\n");
-
-	//現在のアニメーションに対応する速度カーブからモデル再生時間を算出
-	float integrated_time_b = GetIntegratedModelTime(current_sequence_time);
 
 	//補完中の場合
 	if (animation_blender && animation_blender->IsBlending())
@@ -96,6 +104,7 @@ void AnimationSequencerComponent::ChangeAnimation(const std::string& anim_name, 
 	if (animation_blender && !current_animaiton_name.empty())animation_blender->StartCrossFade(current_animaiton_name, current_sequence_time, blend_time);
 	current_animaiton_name = anim_name;
 	current_sequence_time = 0.0f;
+	ia_animation_finished = false;
 }
 
 //指定時刻上の速度倍率を取得
@@ -152,4 +161,19 @@ float AnimationSequencerComponent::GetIntegratedModelTime(float seq_time) const
 		}
 	}
 	return total_model_time;
+}
+
+//シーケンサ調整後の実効総時間を取得
+float AnimationSequencerComponent::GetEffectiveDuration() const
+{
+	auto iterator = sequence_map.find(current_animaiton_name);
+	constexpr float INVALID_DURATION = 0.0f;
+
+	if (iterator != sequence_map.end() && iterator->second.effective_duration > INVALID_DURATION)
+	{
+		return iterator->second.effective_duration;
+	}
+	std::shared_ptr<Model> shared_model = target_model.lock();
+	if (shared_model)return shared_model->GetAnimationDuration();
+	return INVALID_DURATION;
 }

@@ -63,7 +63,7 @@ void StateMachineComponent::Initialize(StateBlackboard* blackboard)
 }
 
 //更新
-void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboard)
+void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboard, bool is_anim_finished) 
 {
 	//ブラックボードポインタが有効であるかを判定
 	if (!blackboard)
@@ -147,77 +147,17 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 			// リンクに設定されたすべての遷移条件を個別に精査するループ処理
 			for (size_t c = 0; c < link.conditions.size(); c++)
 			{
-				const auto& cond = link.conditions[c]; // 評価対象の遷移条件
-
-				// 条件判定のタイプを入力チェックであるかを判定
-				if (static_cast<int>(cond.type) == static_cast<int>(ConditionNodeType::InputCheck))
+				if (!EvaluateCondition(link.conditions[c], blackboard, is_anim_finished))
 				{
-					int v_key = static_cast<int>(cond.hash_key); // 仮想キーコード
-					int input_behavior = static_cast<int>(cond.param_second); // キー入力形式
-					bool is_key_ok = false; // 入力クリア判定フラグ
-
-					constexpr int mode_press = 0;     // 押下状態を表す定数
-					constexpr int mode_trigger = 1;   // 押された瞬間を表す定数
-					constexpr int mode_not_press = 2; // 未入力状態を表す定数
-					constexpr int mode_release = 3;		//離れた瞬間
-
-					// 仮想キーコードが未割り当て(0)の場合は意図しない誤遷移を防ぐため条件不成立にする
-					if (v_key == 0)
-					{
-						printf("Error: StateMachineComponent::Update(1パス目) - 仮想キーコードが0(未設定)のため判定を不成立にしました。\n");
-						is_all_conditions_met = false;
-						break;
-					}
-
-					// 入力形式に応じて判定を分岐
-					if (input_behavior == mode_trigger)
-					{
-						is_key_ok = Input::Instance().IsKeyTrigger(v_key);
-					}
-					else if (input_behavior == mode_press)
-					{
-						is_key_ok = Input::Instance().IsKeyPress(v_key);
-					}
-					else if (input_behavior == mode_not_press)
-					{
-						// 指定キーが押されていない（離されている）状態かを判定
-						is_key_ok = !Input::Instance().IsKeyPress(v_key);
-					}
-					else if (input_behavior == mode_release)
-					{
-						is_key_ok = Input::Instance().IsKeyRelease(v_key);
-					}
-					else
-					{
-						printf("Warning: StateMachineComponent::Update(1パス目) - 未定義の入力モード(%d)が指定されています。\n", input_behavior);
-					}
-
-					// キー入力条件を満たせなかったかを判定
-					if (!is_key_ok)
-					{
-						is_all_conditions_met = false;
-						break;
-					}
+					is_all_conditions_met = false;
+					break;
 				}
-				else
-				{
-					// ブラックボードの通常判定条件を満たしていないかを判定
-					if (!link.conditions[c].IsJudgment(*blackboard))
-					{
-						is_all_conditions_met = false;
-						break;
-					}
-				}
+				
 			}
 
-			// 該当リンクのすべての条件をクリアできたかを判定
-			if (is_all_conditions_met)
+			if (is_all_conditions_met && link.conditions.size() > global_max_conditions)
 			{
-				// 今回の条件数がこれまでの最大条件数を超えているかを判定
-				if (link.conditions.size() > global_max_conditions)
-				{
-					global_max_conditions = link.conditions.size();
-				}
+				global_max_conditions = link.conditions.size();
 			}
 		}
 	}
@@ -262,66 +202,10 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 			// リンクが持つすべての条件式を個別に精査するループ処理
 			for (size_t c = 0; c < link.conditions.size(); c++)
 			{
-				const auto& cond = link.conditions[c]; // 評価対象の遷移条件
-
-				// 条件判定の種類がキー入力チェックであるかを判定
-				if (static_cast<int>(cond.type) == static_cast<int>(ConditionNodeType::InputCheck))
+				if (!EvaluateCondition(link.conditions[c], blackboard, is_anim_finished))
 				{
-					int v_key = static_cast<int>(cond.hash_key); // 仮想キーコード
-					int input_behavior = static_cast<int>(cond.param_second); // キー入力形式
-					bool is_key_ok = false; // 入力クリア判定フラグ
-
-					constexpr int mode_press = 0;     // 押下状態を表す定数
-					constexpr int mode_trigger = 1;   // 押された瞬間を表す定数
-					constexpr int mode_not_press = 2; // 未入力状態を表す定数
-					constexpr int mode_release = 3;		//離れた瞬間
-
-					// 仮想キーコードが未割り当て(0)の場合は意図しない誤遷移を防ぐため条件不成立にする
-					if (v_key == 0)
-					{
-						printf("Error: StateMachineComponent::Update(2パス目) - 仮想キーコードが0(未設定)のため判定を不成立にしました。\n");
-						is_all_conditions_met = false;
-						break;
-					}
-
-					// 入力検知形式に応じて判定を分岐
-					if (input_behavior == mode_trigger)
-					{
-						is_key_ok = Input::Instance().IsKeyTrigger(v_key);
-					}
-					else if (input_behavior == mode_press)
-					{
-						is_key_ok = Input::Instance().IsKeyPress(v_key);
-					}
-					else if (input_behavior == mode_not_press)
-					{
-						// 指定キーが押されていない（離されている）状態かを判定
-						is_key_ok = !Input::Instance().IsKeyPress(v_key);
-					}
-					else if (input_behavior == mode_release)
-					{
-						is_key_ok = Input::Instance().IsKeyRelease(v_key);
-					}
-					else
-					{
-						printf("Warning: StateMachineComponent::Update(2パス目) - 未定義の入力モード(%d)が指定されています。\n", input_behavior);
-					}
-
-					// キー入力条件を満たせなかったかを判定
-					if (!is_key_ok)
-					{
-						is_all_conditions_met = false;
-						break;
-					}
-				}
-				else
-				{
-					// ブラックボードを用いた通常比較や距離判定などの条件を満たしていないかを判定
-					if (!link.conditions[c].IsJudgment(*blackboard))
-					{
-						is_all_conditions_met = false;
-						break;
-					}
+					is_all_conditions_met = false;
+					break;
 				}
 			}
 
@@ -443,6 +327,37 @@ bool StateMachineComponent::IsCurrentRootMotionEnbled() const
 	}
 
 	return false;
+}
+
+//単一の遷移条件が成立しているか判定
+bool StateMachineComponent::EvaluateCondition(const TransitionCondition& cond, StateBlackboard* blackboard, bool is_anim_finished) const
+{
+	//アニメーション終了判定
+	if (cond.type == ConditionNodeType::AnimationEnd)return is_anim_finished;
+
+	//キー入力判定
+	if (cond.type == ConditionNodeType::InputCheck)
+	{
+		int v_key_code = static_cast<int>(cond.hash_key);
+		int input_behavior_mode = static_cast<int>(cond.param_second);
+
+		constexpr int mode_press = 0;     // 押されている間
+		constexpr int mode_trigger = 1;   // 押された瞬間
+		constexpr int mode_not_press = 2; // 未入力
+		constexpr int mode_release = 3;   // 離された瞬間
+
+		if (v_key_code == 0) return false; // キー未設定時は不成立
+
+		if (input_behavior_mode == mode_trigger)      return Input::Instance().IsKeyTrigger(v_key_code);
+		else if (input_behavior_mode == mode_press)   return Input::Instance().IsKeyPress(v_key_code);
+		else if (input_behavior_mode == mode_not_press) return !Input::Instance().IsKeyPress(v_key_code);
+		else if (input_behavior_mode == mode_release)  return Input::Instance().IsKeyRelease(v_key_code);
+
+		return false;
+	}
+
+	//通常のブラックボード比較
+	if (blackboard)return cond.IsJudgment(*blackboard);
 }
 
 //ステートマシンJSONからアニメーション対応表を抽出

@@ -128,11 +128,11 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 16,
-                            "ParamSecond": 3.0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
-                            "Type": 4,
+                            "Type": 5,
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -168,11 +168,11 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 16,
-                            "ParamSecond": 3.0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
-                            "Type": 4,
+                            "Type": 5,
                             "VectorRefValue": [
                                 0.0,
                                 0.0,

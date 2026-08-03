@@ -58,9 +58,11 @@ void Character::Update(float elapsed_time)
 	blackboard->SetValue(u8"接地フラグ", is_ground);
 	blackboard->SetValue("move_speed", move_speed);
 
+	bool is_anim_finished = sequencer_component ? sequencer_component->IsAnimationFinished() : false;
+
 	if (state_machine_component)
 	{
-		state_machine_component->Update(elapsed_time, blackboard.get());
+		state_machine_component->Update(elapsed_time, blackboard.get(), is_anim_finished);
 
 		std::string target_anim_name = state_machine_component->GetCurrentAnimationName();
 		// アニメーションの変更を検知して補間切り替え命令を発行
