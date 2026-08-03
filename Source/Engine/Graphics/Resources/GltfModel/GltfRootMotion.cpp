@@ -49,7 +49,7 @@ void GltfRootMotion::Update(size_t animation_index, float current_time)
 		char active_node_info[256];
 		std::string node_name = model_data->nodes.at(current_target_node_index).name;
 
-		//sprintf_s(active_node_info, "[RootMotion Active Node] ID: %d | Name: %s\n", current_target_node_index, node_name.c_str());
+		sprintf_s(active_node_info, "[RootMotion Active Node] ID: %d | Name: %s\n", current_target_node_index, node_name.c_str());
 	}
 
 	//ターゲットインデックスの有効チェック

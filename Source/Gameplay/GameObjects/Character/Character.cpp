@@ -70,8 +70,6 @@ void Character::Update(float elapsed_time)
 			{
 				constexpr float default_blend_time = 0.2f; // 補間時間 (0.2秒)
 				sequencer_component->ChangeAnimation(target_anim_name, default_blend_time);
-				std::string debug_msg = "[Character デバッグ] アニメーション切り替え: " + previous_animation_name + " -> " + target_anim_name + "\n";
-				printf_s(debug_msg.c_str());
 			}
 			previous_animation_name = target_anim_name;
 		}
@@ -87,12 +85,23 @@ void Character::Update(float elapsed_time)
 
 	//移動処理
 	bool is_rm_enabled = state_machine_component ? state_machine_component->IsCurrentRootMotionEnbled() : false;
-	if (is_rm_enabled && model)
+	debug_root_motion_enabled = is_rm_enabled;
+	if (model)
 	{
-		UpdateRootMotion();
+		model->SetRootMotionEnable(is_rm_enabled);
+		if (is_rm_enabled)
+		{
+			UpdateRootMotion();
+		}
+		else
+		{
+			debug_root_motion_delta = { 0.0f, 0.0f, 0.0f };
+			UpdateVelocity(elapsed_time);
+		}
 	}
 	else
 	{
+		debug_root_motion_delta = { 0.0f, 0.0f, 0.0f };
 		UpdateVelocity(elapsed_time);
 	}
 
@@ -160,6 +169,8 @@ void Character::SetupSerialization()
 	inspector->RegisterText(u8"入力ベクトルZ", &move_vecZ, u8"デバッグモニター");
 	inspector->RegisterText(u8"現在のアニメーション", &current_animation_name, u8"デバッグモニター");
 	inspector->RegisterText(u8"アニメーション再生時間", &current_animation_time, u8"デバッグモニター");
+	inspector->RegisterText(u8"ルートモーション有効フラグ", &debug_root_motion_enabled, u8"デバッグモニター");
+	inspector->RegisterText(u8"ルートモーション移動差分", &debug_root_motion_delta, u8"デバッグモニター");
 }
 
 //ダメージ処理
@@ -283,6 +294,15 @@ void Character::UpdateRootMotion()
 
 	// Model クラスから最新のルートモーション移動差分を取得
 	DirectX::XMFLOAT3 delta_pos = model->GetDeltaPosition();
+
+	debug_root_motion_delta = delta_pos;
+
+	// 差分が全く発生していない場合のエラー検知出力
+	if (delta_pos.x == 0.0f && delta_pos.y == 0.0f && delta_pos.z == 0.0f)
+	{
+		OutputDebugStringA("[Character 警告] UpdateRootMotion: 移動差分(delta_pos)が 0 です。RootMotionComponent::Update が呼ばれていない可能性があります。\n");
+	}
+
 	DirectX::XMVECTOR local_translation = DirectX::XMLoadFloat3(&delta_pos);
 
 	// ワールド変換行列をもとにキャラクターの向きへ移動量を変換

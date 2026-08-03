@@ -61,6 +61,9 @@ public:
 	DirectX::XMFLOAT3 GetDeltaPosition() const;
 	DirectX::XMFLOAT4 GetDeltaRotation() const;
 
+	//ルートモーション設定フラグ
+	void SetRootMotionEnable(bool enable);
+
 	//描画表示フラグ設定・取得
 	void SetVisible(bool visible) { is_visible = visible; }
 	bool IsVisible() const { return is_visible; }

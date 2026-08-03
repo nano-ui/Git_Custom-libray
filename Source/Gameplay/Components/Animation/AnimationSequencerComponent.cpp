@@ -67,8 +67,8 @@ void AnimationSequencerComponent::Update(float elapsed_time)
 	if (anim_duration > 0.0f)
 	{
 		if (current_sequence_time >= anim_duration)current_sequence_time = std::fmod(current_sequence_time, anim_duration);
-		else OutputDebugStringA("[AnimationSequencerComponent 警告] Update: アニメーションの総再生時間が0以下です。\n");
 	}
+	else OutputDebugStringA("[AnimationSequencerComponent 警告] Update: アニメーションの総再生時間が0以下です。\n");
 
 	//現在のアニメーションに対応する速度カーブからモデル再生時間を算出
 	float integrated_time_b = GetIntegratedModelTime(current_sequence_time);

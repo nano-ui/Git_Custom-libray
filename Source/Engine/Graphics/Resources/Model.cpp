@@ -128,6 +128,12 @@ void Model::LoadFromJObject(const nlohmann::json& object_json)
 void Model::PlayAnimation(const std::string& animation_name, bool is_loop)
 {
 	if (model)model->PlayAnimation(animation_name, is_loop);
+
+	if (root_motion_component)
+	{
+		int anim_index = GetAnimationIndex(animation_name.c_str());
+		if (anim_index >= 0)root_motion_component->OnAnimationChaanged(static_cast<size_t>(anim_index));
+	}
 }
 
 //アニメーション名一覧を取得
@@ -147,7 +153,12 @@ float Model::GetAnimationTime() const
 // アニメーション再生時間を設定
 void Model::SetAnimationTime(float time)
 {
-	if (model)model->SetAnimationTime(time);
+	if (model)
+	{
+		model->SetAnimationTime(time);
+
+		if (root_motion_component)root_motion_component->Update(time);
+	}
 	else OutputDebugStringA("[Model 警告] SetAnimationTime: model インスタンスが nullptr です。\n");
 }
 
@@ -184,6 +195,12 @@ DirectX::XMFLOAT4 Model::GetDeltaRotation() const
 {
 	if (root_motion_component)return root_motion_component->GetDeltaRotation();
 	return { 0.0f, 0.0f, 0.0f, 1.0f };
+}
+
+//ルートモーション設定フラグ
+void Model::SetRootMotionEnable(bool enable)
+{
+	if (root_motion_component)root_motion_component->SetEnable(enable);
 }
 
 // 動的ノード配列取得

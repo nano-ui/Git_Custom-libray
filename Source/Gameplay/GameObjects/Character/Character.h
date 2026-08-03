@@ -104,6 +104,10 @@ protected:
 	float current_animation_time = 0.0f;		//現在のアニメーション再生時間
 	std::string previous_animation_name = "";	//前回のアニメーション名
 	float previous_animation_time = 0.0f;		//前回の再生時間
+
+	bool debug_root_motion_enabled = false;		//ルートモーションの有効状態監視用
+	DirectX::XMFLOAT3 debug_root_motion_delta = { 0.0f, 0.0f, 0.0f }; //ルートモーション移動差分監視用
+
 	DirectX::XMFLOAT3 angle;	//角度
 	float radius;				//半径
 	float gravity;				//重力
