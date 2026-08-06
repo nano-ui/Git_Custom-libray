@@ -1,6 +1,7 @@
 #include "Stage.h"
-#include "Engine\Graphics\Resources\Model.h"
-#include "Engine\Graphics\Renderers\Graphics.h"
+#include "Gameplay/Components/Transform/TransformComponent.h"
+#include "Gameplay/Components/Model/ModelComponent.h"
+#include "Engine/Graphics/Renderers/Graphics.h"
 #include "Engine/Collision/SpaceDivisionCast.h"
 #include "Gameplay/GameObjects/ObjectFactory.h"
 
@@ -22,13 +23,26 @@ Stage::~Stage()
 //初期化
 void Stage::Initialize()
 {
-	//モデル読み込み
 	auto device = Graphics::Instance().GetDevice();
-	model = std::make_unique<Model>();
-	if (!model->Initialize("Data/Model/Stage/ExampleStage.glb"))
+
+	//トランスフォームコンポーネントの追加
+	auto transform = AddComponent<TransformComponent>();
+	if (transform)transform->SetPosition({ 0.0f,0.0f,0.0f });
+
+	//モデルコンポーネントの追加とモデル読み込み
+	auto model_comp = AddComponent<ModelComponent>();
+	if (model_comp)
 	{
-		OutputDebugStringA("[Stage エラー] Initialize: ステージモデルの初期化・読み込みに失敗しました。\n");
+		model_comp->SetTransformComponent(transform);
+		if (!model_comp->LoadModel("Data/Model/Stage/ExampleStage.glb"))
+		{
+			OutputDebugStringA("[Stage エラー] Initialize: ステージモデルの初期化・読み込みに失敗しました。\n");
+		}
 	}
+
+	//全コンポーネントの初期化
+	GameObject::Initialize();
+
 	//空間分割キャストの生成とデータ構築
 	space_division_cast = std::make_unique<SpaceDivisionCast>();
 	BuildCollisionData();
@@ -37,25 +51,20 @@ void Stage::Initialize()
 	space_collider.attribute = ColliderAttribute::Stage;
 	space_collider.is_active = true;
 	AddCollider(&space_collider);
-
 	shape_renderer = std::make_unique<ShapeRenderer>(device);
-
 	SetupSerialization();
 }
 
 //更新処理
 void Stage::Update(float elapsed_time)
 {
-	model->Update(elapsed_time);
+	GameObject::Update(elapsed_time);
 }
 
 //描画処理
 void Stage::Render(ID3D11DeviceContext* context)
 {
-	DirectX::XMMATRIX world_matrix = GetWorldMatrix();
-	DirectX::XMFLOAT4X4 transform_matrix;
-	DirectX::XMStoreFloat4x4(&transform_matrix, world_matrix);
-	model->Render(context, transform_matrix);
+	GameObject::Render(context);
 }
 
 //デバッグ描画
@@ -66,12 +75,18 @@ void Stage::RenderDebug(ShapeRenderer* renderer)
 
 	//境界線データを取得
 	std::vector<DirectX::BoundingBox> bboxes = space_division_cast->GetAreaBoundingBoxes();
-	DirectX::XMMATRIX stage_world = GetWorldMatrix();
+
+	//ワールド行列を取得
+	DirectX::XMMATRIX stage_world = DirectX::XMMatrixIdentity();
+	auto transform = GetComponent<TransformComponent>();
+	if (transform)stage_world = transform->GetWorldMatrix();
 
 	//取得した境界線を全て描画登録
 	if (!renderer)return;
-	DirectX::XMFLOAT4 identity_rotation = { 0.0f,0.0f,0.0f,1.0f };
 	static constexpr float size_multiplier = 2.0f;
+
+	DirectX::XMFLOAT3 scale = transform ? transform->GetScale() : DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+	DirectX::XMFLOAT4 rotation = transform ? transform->GetQuaternion() : DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	//取得した全ての境界線データをループ
 	for (size_t i = 0; i < bboxes.size(); i++)
@@ -106,8 +121,20 @@ SpaceDivisionCast* Stage::GetSpaceDivisionCast()
 //空間分割データの構築処理
 void Stage::BuildCollisionData()
 {
+	auto model_comp = GetComponent<ModelComponent>();
+	if (!model_comp)
+	{
+		OutputDebugStringA("[Stage エラー] BuildCollisionData: ModelComponent がアタッチされていません。\n");
+		return;
+	}
+	std::shared_ptr<const GltfModelData> data = model_comp->GetModelData();
+	if (!data)
+	{
+		OutputDebugStringA("[Stage エラー] BuildCollisionData: GltfModelData の取得に失敗しました。\n");
+		return;
+	}
+
 	//モデルから当たり判定用の頂点とインデックスを抽出
-	std::shared_ptr<const GltfModelData> data = model->GetGltfModelData();
 	std::vector<DirectX::XMFLOAT3> vertices_data = data->GetVertices();
 	std::vector<uint32_t> indices_data = data->GetIndices();
 

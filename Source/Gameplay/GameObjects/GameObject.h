@@ -110,27 +110,6 @@ public:
 	//生存フラグを取得
 	bool IsActive()const { return is_active; }
 
-	//ワールド変換行列の合成、取得
-	DirectX::XMMATRIX GetWorldMatrix()const;
-
-	//座標取得
-	DirectX::XMFLOAT3 GetPosition()const { return position; }
-
-	//座標を設定
-	void SetPosition(DirectX::XMFLOAT3 pos) { position = pos; }
-
-	//回転取得
-	DirectX::XMFLOAT4 GetRotation()const { return rotation; }
-
-	//回転設定
-	void SetRotation(DirectX::XMFLOAT4 rot) { rotation = rot; }
-
-	//スケール取得
-	DirectX::XMFLOAT3 GetScale()const { return scale; }
-
-	//スケール設定
-	void SetScale(DirectX::XMFLOAT3 scl) { scale = scl; }
-
 	//コライダーを取得
 	const std::vector<Collider*>GetColliders()const { return collideres; }
 
@@ -146,21 +125,14 @@ public:
 	//モデル識別ハッシュ値の設定
 	void SetModelHash(uint32_t hash) { model_hash = hash; }
 
-	//モデル取得
-	Model* GetModel()const { return model.get(); }
-
 protected:
 	//コライダーを登録
 	void AddCollider(Collider* collider) { collideres.push_back(collider); }
 
 protected:
-	std::shared_ptr<Model> model;				//モデルインスタンス
 	std::unique_ptr<JsonSerializer> serializer;	//自身専用のシリアライザ
 	std::unique_ptr<GuiInspector> inspector;	//UI表示用インスペクター
 	std::vector<std::shared_ptr<Component>> components;	//コンポーネント群のリスト
-	DirectX::XMFLOAT3 position;	//位置
-	DirectX::XMFLOAT4 rotation;	//角度
-	DirectX::XMFLOAT3 scale;	//スケール倍率
 	DirectX::XMFLOAT4 color;	//色
 	bool is_active;				//生存フラグ
 	std::vector<Collider*> collideres;	//コライダーのリスト

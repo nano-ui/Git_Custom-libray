@@ -7,7 +7,6 @@
 #include <vector>
 #include <DirectXMath.h>
 
-class Model;
 class SpaceDivisionCast;
 
 class Stage : public GameObject
