@@ -96,9 +96,6 @@
     <ClCompile Include="Source\Gameplay\Scene\Scene.cpp">
       <Filter>Source\Gameplay\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Gameplay\GameObjects\GameObject.cpp">
-      <Filter>Source\Gameplay\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Character.cpp">
       <Filter>Source\Gameplay\GameObjects\Character</Filter>
     </ClCompile>
@@ -396,6 +393,12 @@
     <ClCompile Include="Source\Gameplay\Components\Animation\AnimationBlender.cpp">
       <Filter>Source\Gameplay\Components\Animation\AnimationBlender</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Base\Component.cpp">
+      <Filter>Source\Gameplay\Components\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\GameObjects\GameObject.cpp">
+      <Filter>Source\Gameplay\GameObjects\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -427,9 +430,6 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Scene\Scene.h">
       <Filter>Source\Gameplay\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Gameplay\GameObjects\GameObject.h">
-      <Filter>Source\Gameplay\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Character.h">
       <Filter>Source\Gameplay\GameObjects\Character</Filter>
@@ -748,6 +748,12 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Player.h">
       <Filter>Source\Gameplay\GameObjects\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Base\Component.h">
+      <Filter>Source\Gameplay\Components\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\GameObjects\GameObject.h">
+      <Filter>Source\Gameplay\GameObjects\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1199,6 +1205,12 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Animation\AnimationBlender">
       <UniqueIdentifier>{80a000c9-3282-410b-a08d-6d48568d6ab6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Base">
+      <UniqueIdentifier>{7ca0c040-d154-4fa3-bd45-4aa4268afa41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\GameObjects\Base">
+      <UniqueIdentifier>{db6dfd00-d570-40a4-a624-f8ad2bcc1ac8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

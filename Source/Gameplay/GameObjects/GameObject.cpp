@@ -20,6 +20,28 @@ GameObject::~GameObject()
 {
 }
 
+//初期化処理
+void GameObject::Initialize()
+{
+	for (auto& component : components)
+	{
+		if (component)component->Initialize();
+		else OutputDebugStringA("[GameObject 警告] Initialize: リスト内に nullptr のコンポーネントが存在します。\n");
+	}
+}
+
+//更新処理
+void GameObject::Update(float elapsed_time)
+{
+	if (!is_active)return;
+	
+	for (auto& component : components)
+	{
+		if (component)component->Update(elapsed_time);
+		else OutputDebugStringA("[GameObject 警告] Update: リスト内に nullptr のコンポーネントが存在します。\n");
+	}
+}
+
 //ワールド変換行列の合成、取得
 DirectX::XMMATRIX GameObject::GetWorldMatrix() const
 {
@@ -40,6 +62,11 @@ void GameObject::RenderGui()
 	if (inspector)inspector->RenderGui();
 
 	if (model)model->DrawImGui();
+
+	for (auto& component : components)
+	{
+		if (component)component->RenderGui();
+	}
 
 	ImGui::Separator();
 

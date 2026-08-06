@@ -8,6 +8,7 @@
 #include "Engine\Graphics\Resources\Model.h"
 #include "Serialization\JsonSerializer.h"
 #include "Editor\GuiInspector.h"
+#include "Gameplay\Components\Base\Component.h"
 
 struct Collider;
 
@@ -21,10 +22,10 @@ public:
 	virtual ~GameObject();
 
 	//初期化処理
-	virtual void Initialize() = 0;
+	virtual void Initialize();
 
 	//更新処理
-	virtual void Update(float elapsed_time) = 0;
+	virtual void Update(float elapsed_time);
 
 	//描画処理
 	virtual void Render(ID3D11DeviceContext* context) = 0;
@@ -35,6 +36,59 @@ public:
 	//ImGuiデバッグ描画
 	virtual void RenderGui();
 
+	//コンポーネントの追加
+	template<typename T,typename... Args>
+	std::shared_ptr<T> AddComponent(Args&&... args)
+	{
+		static_assert(std::is_base_of<Component, T>::value, "Tは Component の派生クラスである必要があります");
+		std::shared_ptr<T> new_component = std::make_shared<T>(std::forward<Args>(args)...);
+		if (!new_component)
+		{
+			OutputDebugStringA("[GameObject エラー] AddComponent: コンポーネントの生成に失敗しました。\n");
+			return nullptr;
+		}
+		components.push_back(new_component);
+		return new_component;
+	}
+
+	//コンポーネントの取得
+	template<typename T>
+	std::shared_ptr<T> GetComponent()const
+	{
+		static_assert(std::is_base_of<Component, T>::value, "T は Component の派生クラスである必要があります。");
+
+		//アタッチされているコンポーネントを走査して型判定
+		for (const auto& component : components)
+		{
+			if (!component)continue;
+
+			//型チェック
+			std::shared_ptr<T> casted_component = std::dynamic_pointer_cast<T>(component);
+			if (casted_component)return casted_component;
+		}
+		return nullptr;
+	}
+
+	//コンポーネントの削除
+	template <typename T>
+	bool RemoveComponent()
+	{
+		static_assert(std::is_base_of<Component, T>::value, "T は Component の派生クラスである必要があります。");
+
+		for (auto iterator = components.begin(); iterator != components.end(); iterator++)
+		{
+			if (!(iterator))continue;
+			std::shared_ptr<T>casted_component = std::dynamic_pointer_cast<T>(*iterator);
+			if (casted_component)
+			{
+				components.erase(iterator);
+				return true;
+			}
+		}
+		OutputDebugStringA("[GameObject 警告] RemoveComponent: 削除対象のコンポーネントが見つかりませんでした。\n");
+		return false;
+	}
+	
 	//をシリアライザに登録
 	virtual void SetupSerialization();
 
@@ -103,6 +157,7 @@ protected:
 	std::shared_ptr<Model> model;				//モデルインスタンス
 	std::unique_ptr<JsonSerializer> serializer;	//自身専用のシリアライザ
 	std::unique_ptr<GuiInspector> inspector;	//UI表示用インスペクター
+	std::vector<std::shared_ptr<Component>> components;	//コンポーネント群のリスト
 	DirectX::XMFLOAT3 position;	//位置
 	DirectX::XMFLOAT4 rotation;	//角度
 	DirectX::XMFLOAT3 scale;	//スケール倍率
