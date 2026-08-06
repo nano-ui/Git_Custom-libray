@@ -312,6 +312,7 @@
     <ClCompile Include="Source\Gameplay\Components\Movement\Move\RepulsiveMove.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Movement\Rotation\LockAtRotation.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Movement\Rotation\RotationFactory.cpp" />
+    <ClCompile Include="Source\Gameplay\Components\Transform\TransformComponent.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Character.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Player.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\GameObject.cpp" />
@@ -432,6 +433,7 @@
     <ClInclude Include="Source\Gameplay\Components\Movement\Rotation\LockAtRotation.h" />
     <ClInclude Include="Source\Gameplay\Components\Movement\Rotation\RotationBase.h" />
     <ClInclude Include="Source\Gameplay\Components\Movement\Rotation\RotationFactory.h" />
+    <ClInclude Include="Source\Gameplay\Components\Transform\TransformComponent.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Character.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Player.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\GameObject.h" />

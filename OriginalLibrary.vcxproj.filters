@@ -399,6 +399,9 @@
     <ClCompile Include="Source\Gameplay\GameObjects\GameObject.cpp">
       <Filter>Source\Gameplay\GameObjects\Base</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Transform\TransformComponent.cpp">
+      <Filter>Source\Gameplay\Components\Transform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -754,6 +757,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\GameObjects\GameObject.h">
       <Filter>Source\Gameplay\GameObjects\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Transform\TransformComponent.h">
+      <Filter>Source\Gameplay\Components\Transform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1211,6 +1217,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\GameObjects\Base">
       <UniqueIdentifier>{db6dfd00-d570-40a4-a624-f8ad2bcc1ac8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Transform">
+      <UniqueIdentifier>{854af441-d387-44cc-a899-ee4f23f12650}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

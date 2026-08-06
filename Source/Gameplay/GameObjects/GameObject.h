@@ -77,7 +77,7 @@ public:
 
 		for (auto iterator = components.begin(); iterator != components.end(); iterator++)
 		{
-			if (!(iterator))continue;
+			if (!(*iterator))continue;
 			std::shared_ptr<T>casted_component = std::dynamic_pointer_cast<T>(*iterator);
 			if (casted_component)
 			{
