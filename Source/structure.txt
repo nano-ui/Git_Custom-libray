@@ -1,7 +1,7 @@
 [Project Structure] 
  
 Folder PATH listing for volume Windows
-Volume serial number is 00000090 0255:C8DA
+Volume serial number is 0000002D 0255:C8DA
 C:.
 „    structure.txt
 „    _dump_structure.bat
@@ -188,6 +188,8 @@ C:.
 „    „        
 „    „¥„Ÿ„Ÿ„ŸComponents
 „    „    „¥„Ÿ„Ÿ„ŸAnimation
+„    „    „        AnimationBlender.cpp
+„    „    „        AnimationBlender.h
 „    „    „        AnimationComponent.cpp
 „    „    „        AnimationComponent.h
 „    „    „        AnimationSequencerComponent.cpp
