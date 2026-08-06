@@ -73,6 +73,7 @@ void TransformComponent::RenderGui()
 //ç¿ïWÇÃê›íË
 void TransformComponent::SetPosition(const DirectX::XMFLOAT3& pos)
 {
+	if (!is_active)return;
 	position = pos;
 	is_dirty = true;
 }

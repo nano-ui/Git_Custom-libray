@@ -28,7 +28,7 @@ public:
 	virtual void Update(float elapsed_time);
 
 	//描画処理
-	virtual void Render(ID3D11DeviceContext* context) = 0;
+	virtual void Render(ID3D11DeviceContext* context);
 
 	//デバッグ描画処理
 	virtual void RenderDebug(ShapeRenderer* renderer) = 0;

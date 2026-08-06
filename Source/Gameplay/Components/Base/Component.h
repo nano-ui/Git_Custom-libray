@@ -2,6 +2,8 @@
 
 #include <string>
 
+struct ID3D11DeviceContext;
+
 class Component
 {
 public:
@@ -16,6 +18,9 @@ public:
 
 	//更新処理
 	virtual void Update(float elapsed_time) = 0;
+
+	//描画処理
+	virtual void Render(ID3D11DeviceContext* context){}
 
 	//デバッグ描画処理
 	virtual void RenderGui();

@@ -42,6 +42,17 @@ void GameObject::Update(float elapsed_time)
 	}
 }
 
+//描画処理
+void GameObject::Render(ID3D11DeviceContext* context)
+{
+	if (!is_active)return;
+
+	for (auto& component : components)
+	{
+		if (component && component->IsActive())component->Render(context);
+	}
+}
+
 //ワールド変換行列の合成、取得
 DirectX::XMMATRIX GameObject::GetWorldMatrix() const
 {
