@@ -32,19 +32,24 @@ Player::~Player()
 //初期化処理
 void Player::Initialize()
 {
-	model_component = AddComponent<ModelComponent>();
-	transform_component = AddComponent<TransformComponent>();
+	model_component = GetComponent<ModelComponent>();
+	if (!model_component) model_component = AddComponent<ModelComponent>();
+
+	transform_component = GetComponent<TransformComponent>();
+	if (!transform_component) transform_component = AddComponent<TransformComponent>();
 
 	if (model_component && transform_component)
 	{
 		model_component->SetTransformComponent(transform_component);
-		const std::string model_path = "Data/Model/Character/Player/Greystone_WhiteTiger.gltf";
-		if (!model_component->LoadModel(model_path))
+
+		// モデルパスが一切設定されていない場合のみデフォルトモデルを読み込む
+		if (model_component->GetModelPath().empty())
 		{
-			OutputDebugStringA("[Player エラー] Initialize: モデルの読み込みに失敗しました。\n");
+			const std::string default_model_path = "Data/Model/Character/Player/Greystone_WhiteTiger.gltf";
+			model_component->LoadModel(default_model_path);
 		}
 
-		std::filesystem::path path_obj(model_path);
+		std::filesystem::path path_obj(model_component->GetModelPath());
 		std::string model_name = path_obj.stem().string();
 
 		if (state_machine_component)
@@ -55,17 +60,17 @@ void Player::Initialize()
 
 	Character::Initialize();
 
-	state_machine_component->Initialize(blackboard.get());
-	transform_component->SetPosition({ 0.0f, 0.0f, 0.0f });
+	if (state_machine_component && blackboard)
+	{
+		state_machine_component->Initialize(blackboard.get());
+	}
 
-	//当たり判定の初期設定
+	// 当たり判定の初期設定
 	capsule_collider.radius = radius;
 	capsule_collider.attribute = ColliderAttribute::Collision;
 	capsule_collider.listener = this;
 	capsule_collider.is_active = true;
 	AddCollider(&capsule_collider);
-
-	std::weak_ptr<IAnimationListener> null_listener;
 }
 
 //更新処理

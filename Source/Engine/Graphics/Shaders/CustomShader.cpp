@@ -21,17 +21,21 @@ static constexpr BYTE mask_xy = 3;
 static constexpr BYTE mask_xyz = 7;
 static constexpr BYTE mask_xyzw = 15;
 
-//====================================================
 //指定されたファイル名からシェーダーを生成し初期化
-//====================================================
 bool CustomShader::Initialize(
     const std::string& vs_name,                     //頂点シェーダーファイル名
     const std::string& ps_name                     //ピクセルシェーダーファイル名
 )
 {
+    // 開始ログの出力
+    printf_s("--------------------------------------------------\n");
+    printf_s("[CustomShader 情報] シェーダーの初期化を開始します。\n");
+
     //頂点シェーダーと入力レイアウトの生成
     if (!CreateVertexShaderWithReflection(vs_name))
     {
+        printf_s("[CustomShader エラー] 頂点シェーダーの生成に失敗しました。\n");
+        printf_s("--------------------------------------------------\n");
         return false;
     }
 
@@ -46,8 +50,15 @@ bool CustomShader::Initialize(
     );
     if (FAILED(hr))
     {
+        std::string error_msg = "[CustomShader エラー] ピクセルシェーダー(.cso)の読み込みに失敗しました。 ファイル名: " + ps_name + "\n";
+        printf_s(error_msg.c_str());
+        printf_s("--------------------------------------------------\n");
         return false;
     }
+
+    // 終了ログの出力
+    printf_s("[CustomShader 情報] シェーダーの初期化が正常に完了しました。\n");
+    printf_s("--------------------------------------------------\n");
 
     return true;
 }
@@ -99,9 +110,7 @@ void CustomShader::Apply()
     context->PSSetShader(pixel_shader.Get(), nullptr, 0);
 }
 
-//=====================================================================
 //頂点シェーダーを読み込み、リフレクションで入力レイアウトを自動生成
-//=====================================================================
 bool CustomShader::CreateVertexShaderWithReflection(const std::string& vs_name)
 {
     //ファイル読み込み
@@ -109,7 +118,14 @@ bool CustomShader::CreateVertexShaderWithReflection(const std::string& vs_name)
     file_path /= vs_name;
     FILE* file_pointer = nullptr;
     fopen_s(&file_pointer, file_path.string().c_str(), "rb");
-    if (!file_pointer)return false;
+    if (!file_pointer)
+    {
+        // ファイルが開けなかった場合のデバッグ出力
+        std::string debug_msg = "[CustomShader エラー] CSOファイルが開けません。 パス: " + file_path.string() + "\n";
+        OutputDebugStringA(debug_msg.c_str());
+        return false;
+    }
+
     fseek(file_pointer, file_seek_start, SEEK_END);
     long file_size = ftell(file_pointer);
     fseek(file_pointer, file_seek_start, SEEK_SET);
@@ -120,7 +136,12 @@ bool CustomShader::CreateVertexShaderWithReflection(const std::string& vs_name)
     //リフレクションによる解析
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection> reflector;
     HRESULT hr = D3DReflect(shader_data.get(), file_size, IID_ID3D11ShaderReflection, reinterpret_cast<void**>(reflector.GetAddressOf()));
-    if (FAILED(hr))return false;
+    if (FAILED(hr))
+    {
+        OutputDebugStringA("[CustomShader エラー] D3DReflect に失敗しました。\n");
+        return false;
+    }
+
     D3D11_SHADER_DESC shader_desc = {};
     reflector->GetDesc(&shader_desc);
     std::vector<D3D11_INPUT_ELEMENT_DESC> input_elements;
@@ -144,9 +165,18 @@ bool CustomShader::CreateVertexShaderWithReflection(const std::string& vs_name)
     //リソースの生成
     auto device = Graphics::Instance().GetDevice();
     hr = device->CreateVertexShader(shader_data.get(), file_size, nullptr, vertex_shader.GetAddressOf());
-    if (FAILED(hr))return false;
+    if (FAILED(hr))
+    {
+        OutputDebugStringA("[CustomShader エラー] CreateVertexShader に失敗しました。\n");
+        return false;
+    }
+
     hr = device->CreateInputLayout(input_elements.data(), static_cast<UINT>(input_elements.size()), shader_data.get(), file_size, input_layout.GetAddressOf());
-    if (FAILED(hr))return false;
+    if (FAILED(hr))
+    {
+        OutputDebugStringA("[CustomShader エラー] CreateInputLayout に失敗しました。\n");
+        return false;
+    }
 
     return true;
 }

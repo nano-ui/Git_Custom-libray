@@ -8,6 +8,8 @@
 #include <DirectXMath.h>
 
 class SpaceDivisionCast;
+class TransformComponent;
+class ModelComponent;
 
 class Stage : public GameObject
 {
@@ -30,6 +32,12 @@ public:
 	//デバッグ描画
 	void RenderDebug(ShapeRenderer* renderer)override;
 
+	//シリアライザおよび GuiInspector への変数登録
+	void SetupSerialization() override;
+
+	//任意のモデル読み込みと空間分割当たり判定の自動再構築
+	bool LoadStageModel(const std::string& file_path);
+
 	//当たり判定用の空間分割キャストオブジェクトを取得
 	SpaceDivisionCast* GetSpaceDivisionCast();
 
@@ -40,6 +48,9 @@ private:
 	void BuildCollisionData();
 
 private:
+	std::shared_ptr<TransformComponent> transform_component;
+	std::shared_ptr<ModelComponent> model_component;
+	std::shared_ptr<const GltfModelData> current_model_data = nullptr; //構築済みモデルデータのキャッシュ
 	std::unique_ptr<ShapeRenderer> shape_renderer;			//デバッグ描画クラス
 	std::unique_ptr<SpaceDivisionCast> space_division_cast;	//当たり判定空間分割クラス
 	bool is_draw_areas = false;

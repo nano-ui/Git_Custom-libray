@@ -4,6 +4,9 @@
 
 //コンストラクタ
 GameObject::GameObject()
+	:is_active(true)
+	, class_name("GameObject")
+	, model_hash(0)
 {
 	//基本情報の設定
 	serializer = std::make_unique<JsonSerializer>();

@@ -116,16 +116,42 @@ void ObjectEditor::Update(Camera* camera, CollisionManager* collision_manager)
 		
 		if (collision_manager->RayCastSpace(ray_start, ray_end, hit_position))
 		{
-			const std::string& target_class_name = cached_class_names[selected_class_index];	//選択中のクラス名
-			GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);		//新しいオブジェクト
+			const std::string& target_class_name = cached_class_names[selected_class_index];
+			printf("[デバッグログ] クリック配置実行: 選択クラス = %s\n", target_class_name.c_str());
+
+			GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
 
 			if (new_object)
 			{
+				new_object->Initialize();
+
 				auto transform_component = new_object->GetComponent<TransformComponent>();
-				if (transform_component)transform_component->SetPosition(hit_position);
-				else OutputDebugStringA("[ObjectEditor エラー] Update: 対象の GameObject に TransformComponent が存在しません。\n");
+				if (transform_component)
+				{
+					transform_component->SetPosition(hit_position);
+				}
+
+				// 配置モードでモデルパスが保持されている場合は読み込む
+				if (!current_model_path.empty())
+				{
+					auto model_comp = new_object->GetComponent<ModelComponent>();
+					if (model_comp)
+					{
+						bool success = model_comp->LoadModel(current_model_path);
+						printf("[デバッグログ] クリック配置モデルロード結果: %s (パス: %s)\n", success ? "成功" : "失敗", current_model_path.c_str());
+					}
+				}
+
 				current_selected_object = new_object;
 			}
+			else
+			{
+				printf("[デバッグ エラー] クリック配置での ObjectFactory 生成失敗 (クラス: %s)\n", target_class_name.c_str());
+			}
+		}
+		else
+		{
+			printf("[デバッグ 警告] レイキャストがヒットしなかったため生成をキャンセルしました。\n");
 		}
 	}
 }
@@ -206,29 +232,27 @@ void ObjectEditor::LoadSceneWithDialog()
 //仮オブジェクト生成
 void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 {
-	if (model_path.empty())
-	{
-		OutputDebugStringA("[エラー] CreateTempModelObject: model_path が空です。\n");
-		return;
-	}
+	printf("\n==========================================\n");
+	printf("[デバッグログ] CreateTempModelObject 開始\n");
+	printf("[デバッグログ] ドロップされたモデルパス: %s\n", model_path.c_str());
 
-	if (cached_class_names.empty())
+	if (model_path.empty() || cached_class_names.empty())
 	{
-		OutputDebugStringA("[エラー] CreateTempModelObject: 登録されているクラスが存在しません。\n");
+		printf("[デバッグ エラー] model_path または cached_class_names が空です。\n");
+		printf("==========================================\n\n");
 		return;
 	}
 
 	current_model_path = model_path;
-
-	//ドロップされたモデルパスから拡張子を除いたモデル名と対応する個別JSONのパスを生成
 	std::string model_name = std::filesystem::path(model_path).stem().string();
 	std::string detail_file_path = "Data/Json/" + model_name + "/" + model_name + ".json";
 
-	bool is_json_loaded = false; //個別JSONからの復元に成功したかの判定フラグ
+	bool is_json_loaded = false;
 
-	//個別JSONファイルが存在すれば開いて class_name と設定を自動復元
+	// 1. 個別JSONファイルの存在チェック
 	if (std::filesystem::exists(detail_file_path))
 	{
+		printf("[デバッグログ] 既存の個別JSONを発見しました: %s\n", detail_file_path.c_str());
 		std::ifstream detail_file(detail_file_path);
 		if (detail_file.is_open())
 		{
@@ -236,61 +260,81 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 			detail_file >> detail_json;
 			detail_file.close();
 
-			// JSONから class_name を取得して対応するオブジェクトを生成
 			if (detail_json.contains("class_name"))
 			{
 				std::string target_class_name = detail_json["class_name"].get<std::string>();
-				GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
+				printf("[デバッグログ] JSON記録クラス名: %s\n", target_class_name.c_str());
 
+				// クラスの生成
+				GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
 				if (new_object != nullptr)
 				{
-					// 3Dモデルの初期化
+					new_object->Initialize();
 					auto model_component = new_object->GetComponent<ModelComponent>();
 					if (model_component != nullptr)
 					{
-						model_component->LoadModel(current_model_path);
+						bool success = model_component->LoadModel(current_model_path);
+						printf("[デバッグログ] ModelComponent::LoadModel (%s): %s\n", current_model_path.c_str(), success ? "成功" : "失敗");
 					}
-					else OutputDebugStringA("[エラー] CreateTempModelObject: ModelComponent インスタンスが nullptr です。\n");					// 個別JSONから詳細パラメータを復元
+					else
+					{
+						printf("[デバッグ 警告] 生成されたオブジェクト (%s) に ModelComponent がアタッチされていません。\n", target_class_name.c_str());
+					}
+
 					new_object->LoadFromJObject(detail_json);
 					current_selected_object = new_object;
 					is_json_loaded = true;
-
-					OutputDebugStringA("[情報] CreateTempModelObject: 個別JSONからクラスと設定の自動復元に成功しました。\n");
 				}
-				else OutputDebugStringA("[エラー] CreateTempModelObject: ObjectFactory によるオブジェクト生成に失敗しました。\n");
+				else
+				{
+					printf("[デバッグ エラー] ObjectFactory でクラス (%s) のインスタンス生成に失敗しました。\n", target_class_name.c_str());
+				}
 			}
 		}
-		else OutputDebugStringA("[エラー] CreateTempModelObject: 個別JSONファイルが開けませんでした。\n");
 	}
 
-	//個別JSONが存在しない場合のフォールバック処理（クラス名一致検索またはデフォルト生成）
+	// 2. 個別JSONが存在しない場合の生成処理
 	if (!is_json_loaded)
 	{
-		std::string target_class_name = cached_class_names[0]; //デフォルトは先頭のクラス
+		std::string target_class_name = "Stage"; // デフォルトを Stage に設定
 		for (size_t i = 0; i < cached_class_names.size(); i++)
 		{
 			if (cached_class_names[i] == model_name)
 			{
 				target_class_name = cached_class_names[i];
-				inspector_selected_class_index = static_cast<int>(i); //インスペクター選択と同期
+				inspector_selected_class_index = static_cast<int>(i);
 				break;
 			}
 		}
 
-		GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
+		printf("[デバッグログ] JSON未検出のため適用予定クラス: %s\n", target_class_name.c_str());
 
+		// オブジェクトの生成
+		GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
 		if (new_object != nullptr)
 		{
+			printf("[デバッグログ] ObjectFactory 生成成功: %s\n", target_class_name.c_str());
+			new_object->Initialize();
+
 			auto model_component = new_object->GetComponent<ModelComponent>();
 			if (model_component != nullptr)
 			{
-				model_component->LoadModel(current_model_path);
+				bool success = model_component->LoadModel(current_model_path);
+				printf("[デバッグログ] ModelComponent::LoadModel (%s): %s\n", current_model_path.c_str(), success ? "成功" : "失敗");
 			}
-			else OutputDebugStringA("[エラー] CreateTempModelObject: ModelComponent インスタンスが nullptr です。\n");	
+			else
+			{
+				printf("[デバッグ 警告] 生成されたオブジェクト (%s) に ModelComponent がアタッチされていません。\n", target_class_name.c_str());
+			}
+
 			current_selected_object = new_object;
 		}
-		else OutputDebugStringA("[エラー] CreateTempModelObject: ObjectFactory によるデフォルト生成に失敗しました。\n");
+		else
+		{
+			printf("[デバッグ エラー] ObjectFactory でクラス (%s) のインスタンス生成に失敗しました。\n", target_class_name.c_str());
+		}
 	}
+	printf("==========================================\n\n");
 }
 
 //オブジェクト生成UI描画
@@ -352,13 +396,13 @@ void ObjectEditor::DrawClassApplySection()
 	}
 	ImGui::Text(u8"クラスの適用");
 
-	//インデックス範囲の安全確認
+	// インデックス範囲の安全確認
 	if (inspector_selected_class_index < 0 || inspector_selected_class_index >= static_cast<int>(cached_class_names.size()))
 	{
 		inspector_selected_class_index = 0;
 	}
 
-	//登録されているクラス一覧のコンボボックス描画
+	// 登録されているクラス一覧のコンボボックス描画
 	const std::string& current_combo_preview = cached_class_names[inspector_selected_class_index];
 	if (ImGui::BeginCombo("##ApplyClassCombo", current_combo_preview.c_str()))
 	{
@@ -369,11 +413,12 @@ void ObjectEditor::DrawClassApplySection()
 			{
 				inspector_selected_class_index = i;
 			}
-			if (is_selected)ImGui::SetItemDefaultFocus();
+			if (is_selected) ImGui::SetItemDefaultFocus();
 		}
 		ImGui::EndCombo();
 	}
-	//クラス適用ボタン
+
+	//ボタンが押された瞬間のみ置換処理を1回だけ呼び出す
 	if (ImGui::Button(u8"選択クラスを適用", ImVec2(-1, 0)))
 	{
 		ApplySelectedClassToObject();
@@ -383,45 +428,75 @@ void ObjectEditor::DrawClassApplySection()
 //選択されたクラスへの置き換え処理
 void ObjectEditor::ApplySelectedClassToObject()
 {
+	printf("\n==========================================\n");
+	printf("[デバッグログ] ApplySelectedClassToObject (クラス置換) 開始\n");
+
 	if (current_selected_object == nullptr)
 	{
-		OutputDebugStringA("[エラー] ApplySelectedClassToObject: 置換対象のオブジェクトが nullptr です。\n");
+		printf("[デバッグ エラー] 置換対象の current_selected_object が nullptr です。\n");
+		printf("==========================================\n\n");
 		return;
 	}
 
-	//旧オブジェクトからTransform情報を取得
+	// 旧オブジェクトから Transform 情報を取得
 	auto old_transform = current_selected_object->GetComponent<TransformComponent>();
 	DirectX::XMFLOAT3 pos = old_transform ? old_transform->GetPosition() : DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-	DirectX::XMFLOAT3 rot = old_transform ? old_transform->GetRotation() : DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT4 rot = old_transform ? old_transform->GetQuaternion() : DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	DirectX::XMFLOAT3 scale = old_transform ? old_transform->GetScale() : DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 
-	//指定されたクラスの新規インスタンスを生成
+	// 旧オブジェクトからモデルパスを取得
+	std::string kept_model_path = "";
+	auto old_model_comp = current_selected_object->GetComponent<ModelComponent>();
+	if (old_model_comp)
+	{
+		kept_model_path = old_model_comp->GetModelPath();
+	}
+	if (kept_model_path.empty())
+	{
+		kept_model_path = current_model_path; // ドロップ時のキャッシュパスを使用
+	}
+
 	const std::string& target_class_name = cached_class_names[inspector_selected_class_index];
+	printf("[デバッグログ] 変更前クラス: %s -> 変更後クラス: %s\n", current_selected_object->GetClassNameW().c_str(), target_class_name.c_str());
+	printf("[デバッグログ] 引き継ぐモデルパス: %s\n", kept_model_path.c_str());
+
+	// 適用したいクラスの新規インスタンスを生成
 	GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
 
 	if (new_object != nullptr)
 	{
-		//Transform情報を適用
+		auto new_model_comp = new_object->GetComponent<ModelComponent>();
+		if (!new_model_comp)
+		{
+			new_model_comp = new_object->AddComponent<ModelComponent>();
+		}
+
+		if (!kept_model_path.empty() && new_model_comp)
+		{
+			bool success = new_model_comp->LoadModel(kept_model_path);
+			printf("[デバッグログ] 新オブジェクトへのモデルロード結果: %s\n", success ? "成功" : "失敗");
+		}
+
+		new_object->Initialize();
+
 		auto new_transform = new_object->GetComponent<TransformComponent>();
 		if (new_transform)
 		{
 			new_transform->SetPosition(pos);
-			new_transform->SetRotation(rot);
+			new_transform->SetRotationQuaternion(rot);
 			new_transform->SetScale(scale);
 		}
 
-		auto new_model_component = new_object->GetComponent<ModelComponent>();
-		if (!current_model_path.empty() && new_model_component != nullptr)
-		{
-			new_model_component->LoadModel(current_model_path);
-		}
-
-		//旧オブジェクトの破棄と選択ポインタの差し替え
+		// 旧オブジェクトの破棄とポインタ差し替え
 		current_selected_object->Destory();
 		current_selected_object = new_object;
-		OutputDebugStringA("[情報] ApplySelectedClassToObject: オブジェクトのクラス置換に成功しました。\n");
+		printf("[デバッグログ] クラス置換処理が完了しました。\n");
 	}
-	else OutputDebugStringA("[エラー] ApplySelectedClassToObject: ObjectFactory によるオブジェクト生成に失敗しました。\n");
+	else
+	{
+		printf("[デバッグ エラー] ObjectFactory による新クラス (%s) の生成に失敗しました。\n", target_class_name.c_str());
+	}
+	printf("==========================================\n\n");
 }
 
 //オブジェクトパラメータ編集UI描画
@@ -779,13 +854,12 @@ std::string ObjectEditor::LoadEditorConfig()
 //ドラッグターゲットの監視処理
 void ObjectEditor::HandleDragDropTarget(Camera* camera, CollisionManager* collision_manager)
 {
-	// ドラッグ&ドロップの送信中のみ全画面の背景ドロップ領域を生成
 	if (ImGui::GetDragDropPayload() != nullptr)
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
 		ImGui::SetNextWindowSize(io.DisplaySize);
-		ImGui::SetNextWindowBgAlpha(0.0f); // 背景を透明に設定
+		ImGui::SetNextWindowBgAlpha(0.0f);
 
 		constexpr ImGuiWindowFlags viewport_flags =
 			ImGuiWindowFlags_NoTitleBar |
@@ -798,7 +872,6 @@ void ObjectEditor::HandleDragDropTarget(Camera* camera, CollisionManager* collis
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
-		// 全画面の透明ウィンドウを作成して背景に配置
 		if (ImGui::Begin("##ViewportDropTarget", nullptr, viewport_flags))
 		{
 			ImGui::InvisibleButton("##ViewportDropArea", io.DisplaySize);
@@ -811,13 +884,12 @@ void ObjectEditor::HandleDragDropTarget(Camera* camera, CollisionManager* collis
 					{
 						std::string model_path(static_cast<const char*>(payload->Data));
 
-						// Mediator経由で仮オブジェクト作成を呼び出し
+						// Mediator 経由で単一のモデル配置を実行 (CreateTempModelObject)
 						EditorMediator::Instance().OnModelDropped(model_path);
 
-						// ドロップ位置へのレイキャスト計算と座標設定
+						// ドロップ位置のレイキャスト計算と座標反映
 						if (current_selected_object != nullptr && camera != nullptr && collision_manager != nullptr)
 						{
-							// 画面座標からNDCへの変換
 							const float screen_width = io.DisplaySize.x;
 							const float screen_height = io.DisplaySize.y;
 							const float mouse_x = io.MousePos.x;
@@ -828,7 +900,6 @@ void ObjectEditor::HandleDragDropTarget(Camera* camera, CollisionManager* collis
 							const float ndc_x = (ndc_multiplier * mouse_x) / screen_width - ndc_offset;
 							const float ndc_y = ndc_offset - (ndc_multiplier * mouse_y) / screen_height;
 
-							// 逆行列を用いた光線の生成
 							DirectX::XMFLOAT4X4 vp_float4x4 = camera->GetViewProjectionMatrix();
 							DirectX::XMMATRIX view_proj_matrix = DirectX::XMLoadFloat4x4(&vp_float4x4);
 							DirectX::XMMATRIX inv_view_proj = DirectX::XMMatrixInverse(nullptr, view_proj_matrix);
@@ -848,18 +919,14 @@ void ObjectEditor::HandleDragDropTarget(Camera* camera, CollisionManager* collis
 							DirectX::XMStoreFloat3(&ray_start, near_point);
 							DirectX::XMStoreFloat3(&ray_end, far_point);
 
-							DirectX::XMFLOAT3 hit_position = {};
-							if (collision_manager->RayCastSpace(ray_start, ray_end, hit_position))
+							DirectX::XMFLOAT3 hit_position = { 0.0f, 0.0f, 0.0f };
+							bool is_hit = collision_manager->RayCastSpace(ray_start, ray_end, hit_position);
+
+							// 配置したオブジェクトの TransformComponent に位置を反映
+							auto transform = current_selected_object->GetComponent<TransformComponent>();
+							if (transform)
 							{
-								// ドロップ位置を TransformComponent へ反映
-								if (auto transform_component = current_selected_object->GetComponent<TransformComponent>())
-								{
-									transform_component->SetPosition(hit_position);
-								}
-								else
-								{
-									OutputDebugStringA("[ObjectEditor エラー] HandleDragDropTarget: TransformComponent が存在しません。\n");
-								}
+								transform->SetPosition(hit_position);
 							}
 						}
 					}
