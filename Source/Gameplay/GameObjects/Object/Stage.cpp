@@ -156,12 +156,25 @@ void Stage::BuildCollisionData()
 		space_collider.space_cast = space_division_cast.get();
 	}
 
-	std::vector<DirectX::XMFLOAT3> vertices_data = data->GetVertices();
+	std::vector<DirectX::XMFLOAT3> local_vertices = data->GetVertices();
 	std::vector<uint32_t> indices_data = data->GetIndices();
 
-	if (!vertices_data.empty() && !indices_data.empty())
+	if (local_vertices.empty() || indices_data.empty())return;
+
+	DirectX::XMMATRIX world_matrix = transform_component->GetWorldMatrix();
+
+	std::vector<DirectX::XMFLOAT3> world_vertices;
+	world_vertices.reserve(local_vertices.size());
+
+	for (const auto& local_pos : local_vertices)
 	{
-		space_division_cast->Build(vertices_data, indices_data);
-		OutputDebugStringA("[Stage 情報] BuildCollisionData: 後付けモデルから空間分割当たり判定データを構築しました。\n");
+		DirectX::XMVECTOR v_local = DirectX::XMLoadFloat3(&local_pos);
+		DirectX::XMVECTOR v_world = DirectX::XMVector3TransformCoord(v_local, world_matrix);
+		DirectX::XMFLOAT3 world_pos;
+		DirectX::XMStoreFloat3(&world_pos, v_world);
+		world_vertices.push_back(world_pos);
 	}
+
+	space_division_cast->Build(world_vertices, indices_data);
+	printf_s("[Stage 情報] BuildCollisionData: ワールド行列を反映して当たり判定を構築しました。\n");
 }

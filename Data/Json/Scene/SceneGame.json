@@ -1,32 +1,32 @@
 {
     "object": [
         {
-            "detail_json_path": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
-            "model_path": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
-            "position": {
-                "x": 11.209383964538574,
-                "y": 0.0,
-                "z": -11.81008529663086
-            },
-            "rotation": {
-                "w": 0.709691047668457,
-                "x": 0.0,
-                "y": 0.7045130133628845,
-                "z": 0.0
-            },
-            "scale": {
-                "x": 0.9999996423721313,
-                "y": 0.9999998807907104,
-                "z": 0.9999998807907104
-            }
-        },
-        {
             "detail_json_path": "Data/Json/ExampleStage/ExampleStage.json",
             "model_path": "Data\\Model\\Stage\\ExampleStage.glb",
             "position": {
                 "x": 1.5348312854766846,
                 "y": 0.0,
                 "z": 3.3014981746673584
+            },
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "model_path": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
             },
             "rotation": {
                 "w": 1.0,

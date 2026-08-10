@@ -3,17 +3,13 @@
 #include <cmath>
 #include <algorithm>
 
-//===========================
 //空間分割データを構築
-//===========================
 void SpaceDivisionCast::Build(const std::vector<DirectX::XMFLOAT3>& vertices_data, const std::vector<uint32_t>& indices_data)
 {
 	DirectX::XMVECTOR vol_min = DirectX::XMVectorReplicate(std::numeric_limits<float>::max());		//最小値を最大値で初期化
 	DirectX::XMVECTOR vol_max = DirectX::XMVectorReplicate(std::numeric_limits<float>::lowest());	//最大値を最小値で初期化
 
-	//------------------------------------
 	//三角形データの生成と全体AABBの計算
-	//------------------------------------
 	for (size_t i = 0; i < indices_data.size(); i += 3)
 	{
 		uint32_t index_a = indices_data.at(i + 0);	//頂点インデックスAを取得
@@ -50,9 +46,7 @@ void SpaceDivisionCast::Build(const std::vector<DirectX::XMFLOAT3>& vertices_dat
 		vol_max = DirectX::XMVectorMax(vol_max, vec_c);	//頂点Cで最大座標を更新
 	}
 
-	//---------------------
 	//エリア生成処理
-	//---------------------
 	
 	//計算した最小値をXMFLOAT3に変換
 	DirectX::XMFLOAT3 float_min;
@@ -66,9 +60,7 @@ void SpaceDivisionCast::Build(const std::vector<DirectX::XMFLOAT3>& vertices_dat
 	is_built = true;	//構築完了フラグを立てる
 }
 
-//=========================
 //レイキャストを実行
-//=========================
 bool SpaceDivisionCast::Raycast(const DirectX::XMFLOAT3& start_pos, const DirectX::XMFLOAT3& end_pos, DirectX::XMFLOAT3& hit_position, DirectX::XMFLOAT3& hit_normal)
 {
 	if (!is_built)return false;	//構築されていない場合はfalseを返す
@@ -82,9 +74,7 @@ bool SpaceDivisionCast::Raycast(const DirectX::XMFLOAT3& start_pos, const Direct
 	bool is_hit = false;					//ヒットしたかのフラグ
 	float closest_distance = max_distance;	//最短ヒット距離をレイの長さに初期化
 
-	//-------------------------
 	//エリアごとの交差判定
-	//-------------------------
 	//登録されたすべてのエリアに対してループ処理を行う
 	for (const Area& area : areas_list)	
 	{
@@ -125,9 +115,7 @@ bool SpaceDivisionCast::Raycast(const DirectX::XMFLOAT3& start_pos, const Direct
 	return is_hit;	//判定結果を返す
 }
 
-//-------------------------------
 //疑似スフィアキャストを実行
-//-------------------------------
 bool SpaceDivisionCast::PsseudoSpheraCast(const DirectX::XMFLOAT3& start_pos, const DirectX::XMFLOAT3& end_pos, float radius, DirectX::XMFLOAT3& hit_position, DirectX::XMFLOAT3& hit_normal)
 {
 	if (!is_built) return false;	//未構築の場合は処理を中断
@@ -139,9 +127,7 @@ bool SpaceDivisionCast::PsseudoSpheraCast(const DirectX::XMFLOAT3& start_pos, co
 	if (max_distance <= 0.0001f)return false;										//長さが0の場合は移動していないためヒットしないとみなし終了
 	DirectX::XMVECTOR v_norm_dir = DirectX::XMVector3Normalize(v_dir);				//レイの方向を正規化
 
-	//-----------------------------
 	//基準となる軸ベクトルの算出
-	//-----------------------------
 	DirectX::XMVECTOR v_world_up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);	//進行方向に対する上方向の基準ベクトルを仮設定
 
 	//進行方向が真上や真下に近い場合は、基準ベクトルをX軸に変更
@@ -156,9 +142,7 @@ bool SpaceDivisionCast::PsseudoSpheraCast(const DirectX::XMFLOAT3& start_pos, co
 	constexpr int CIRCLE_RAY_COUNT = 8;	//円周上に配置するレイの本数
 	constexpr float ANGLE_STEP = DirectX::XM_2PI / CIRCLE_RAY_COUNT;	//1本あたりの角度間隔を計算
 
-	//------------------------------
 	//複数レイによるキャスト処理
-	//------------------------------
 	//中心1本 ＋ 周囲のレイ で判定
 	for (int i = 0; i <= CIRCLE_RAY_COUNT; i++)
 	{
