@@ -6,6 +6,8 @@
 #include "Gameplay/GameObjects/ObjectFactory.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
+#include "Gameplay\Components\Transform\TransformComponent.h"
+#include "Gameplay\Components\Model\ModelComponent.h"
 
 #include <imgui.h>
 #include <filesystem>
@@ -15,18 +17,10 @@ static AutoRegister<Player> auto_register_player("Player");
 //コンストラクタ
 Player::Player()
 {
-	auto device = Graphics::Instance().GetDevice();
 	move_speed = 5.0f;
 	height = 0.8f;
 	radius = 0.4f;
 	offset_y = 0.5f;
-	const std::string model_path = "Data/Model/Character/Player/Greystone_WhiteTiger.gltf";
-	model->Initialize(model_path);
-	std::filesystem::path path_obj(model_path);
-	std::string model_name = path_obj.stem().string();
-
-	if (state_machine_component)state_machine_component->SetModelName(model_name);
-	else printf("Error: Player::Player - state_machine_component が nullptr です。\n");
 }
 
 //デストラクタ
@@ -38,23 +32,31 @@ Player::~Player()
 //初期化処理
 void Player::Initialize()
 {
-	Character::Initialize();
-	if (state_machine_component)
+	model_component = AddComponent<ModelComponent>();
+	transform_component = AddComponent<TransformComponent>();
+
+	if (model_component && transform_component)
 	{
+		model_component->SetTransformComponent(transform_component);
 		const std::string model_path = "Data/Model/Character/Player/Greystone_WhiteTiger.gltf";
+		if (!model_component->LoadModel(model_path))
+		{
+			OutputDebugStringA("[Player エラー] Initialize: モデルの読み込みに失敗しました。\n");
+		}
+
 		std::filesystem::path path_obj(model_path);
 		std::string model_name = path_obj.stem().string();
 
-		state_machine_component->SetModelName(model_name);
-
-		state_machine_component->Initialize(blackboard.get());
-	}
-	else
-	{
-		printf("Error: Player::Initialize - state_machine_component が nullptr です。\n");
+		if (state_machine_component)
+		{
+			state_machine_component->SetModelName(model_name);
+		}
 	}
 
-	position = { 0.0f,0.0f,0.0f };
+	Character::Initialize();
+
+	state_machine_component->Initialize(blackboard.get());
+	transform_component->SetPosition({ 0.0f, 0.0f, 0.0f });
 
 	//当たり判定の初期設定
 	capsule_collider.radius = radius;
@@ -69,18 +71,21 @@ void Player::Initialize()
 //更新処理
 void Player::Update(float elapsed_time)
 {
-	capsule_collider.old_start_center = position;
-	capsule_collider.old_start_center.y = position.y + offset_y;
-	capsule_collider.old_end_center = position;
+	DirectX::XMFLOAT3 pos = transform_component ? transform_component->GetPosition() : DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+	capsule_collider.old_start_center = pos;
+	capsule_collider.old_start_center.y = pos.y + offset_y;
+	capsule_collider.old_end_center = pos;
 	capsule_collider.old_end_center.y += height + offset_y;
 
 	UpdateInput(elapsed_time);
 	Character::Update(elapsed_time);
 	
+	pos = transform_component ? transform_component->GetPosition() : DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 
-	capsule_collider.start_center = position;
-	capsule_collider.start_center.y = position.y + offset_y;
-	capsule_collider.end_center = position;
+	capsule_collider.start_center = pos;
+	capsule_collider.start_center.y = pos.y + offset_y;
+	capsule_collider.end_center = pos;
 	capsule_collider.end_center.y += height + offset_y;
 	CheckColliderSyncDebug();
 }
@@ -88,23 +93,24 @@ void Player::Update(float elapsed_time)
 //デバッグ描画
 void Player::RenderDebug(ShapeRenderer* renderer)
 {
-	if (!capsule_collider.is_active || !renderer) return;
+	if (!capsule_collider.is_active || !renderer || !transform_component) return;
 
-	//ShapeRendererの仕様に合わせたパラメータの変換
+	DirectX::XMFLOAT3 pos = transform_component->GetPosition();
+	DirectX::XMFLOAT4 rot = transform_component->GetQuaternion();
+
 	DirectX::XMFLOAT3 cap_center = {
-		position.x,
-		position.y + offset_y + (height * 0.5f),
-		position.z
+		pos.x,
+		pos.y + offset_y + (height * 0.5f),
+		pos.z
 	};
 	float total_height = height + (capsule_collider.radius * 2.0f);
 
 	capsule_collider.radius = radius;
 
-	//既存関数の呼び出し
 	DirectX::XMFLOAT4 color = { 0.0f, 1.0f, 0.0f, 1.0f };
 	renderer->DrawCapsule(
 		cap_center,
-		rotation,
+		rot,
 		capsule_collider.radius,
 		total_height,
 		color,
@@ -164,20 +170,23 @@ void Player::UpdateInput(float elapsed_time)
 //プレイヤーの現在位置と、コライダーの現在位置のズレを出力
 void Player::CheckColliderSyncDebug() const
 {
-	const float diffX = position.x - capsule_collider.start_center.x;
-	const float diffY = position.y - capsule_collider.start_center.y;
-	const float diffZ = position.z - capsule_collider.start_center.z;
+	if (!transform_component) return;
+
+	DirectX::XMFLOAT3 pos = transform_component->GetPosition();
+	const float diffX = pos.x - capsule_collider.start_center.x;
+	const float diffY = pos.y - capsule_collider.start_center.y;
+	const float diffZ = pos.z - capsule_collider.start_center.z;
 
 	const float tolerance = 0.001f;
 
 	if (std::abs(diffX) > tolerance || std::abs(diffY) > tolerance || std::abs(diffZ) > tolerance)
 	{
-		const int bufferSize = 256;
+		constexpr int bufferSize = 256;
 		char debugStr[bufferSize];
 
 		std::snprintf(debugStr, bufferSize,
 			"Sync Warning! Player(%.3f, %.3f, %.3f) Collider(%.3f, %.3f, %.3f)\n",
-			position.x, position.y, position.z,
+			pos.x, pos.y, pos.z,
 			capsule_collider.start_center.x,
 			capsule_collider.start_center.y,
 			capsule_collider.start_center.z);

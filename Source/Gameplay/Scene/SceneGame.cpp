@@ -11,6 +11,7 @@
 #include "Engine/Collision/CollisionManager.h"
 #include "Engine/Collision/CollisionExperiment.h"
 #include "Gameplay/GameObjects/Character/Character.h"
+#include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Engine/Graphics/Shaders/SkyBox.h"
 #include "SceneManager.h"
 
@@ -54,8 +55,17 @@ void SceneGame::Initialize()
 			{
 				if (obj && obj->IsActive() && obj->GetClassNameW() == "Player")
 				{
-					out_pos = obj->GetPosition();
-					return true;
+					//TransformComponent 経由で位置を取得
+					auto transform = obj->GetComponent<TransformComponent>();
+					if (transform)
+					{
+						out_pos = transform->GetPosition();
+						return true;
+					}
+					else
+					{
+						OutputDebugStringA("[SceneGame 警告] Player オブジェクトに TransformComponent が存在しません。\n");
+					}
 				}
 			}
 			OutputDebugStringA("[SceneGame 警告] 追従対象の Player オブジェクトが見つかりません。\n");

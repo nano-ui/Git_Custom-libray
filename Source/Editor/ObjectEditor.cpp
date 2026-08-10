@@ -2,9 +2,12 @@
 #include "Gameplay/GameObjects/ObjectFactory.h"
 #include "Gameplay/GameObjects/GameObject.h"
 #include "Gameplay/GameObjects/ObjectManager.h"
+#include "Gameplay\Components\Transform\TransformComponent.h"
+#include "Gameplay\Components\Model\ModelComponent.h"
 #include "Engine/Collision/CollisionManager.h"
 #include "Engine/Camera/Camera.h"
 #include "Engine\Core\Input.h"
+#include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
 #include "ThiedParty\json.hpp"
 #include "Editor/EditorMediator.h"
 #include "FileDialogHelper.h"
@@ -118,8 +121,9 @@ void ObjectEditor::Update(Camera* camera, CollisionManager* collision_manager)
 
 			if (new_object)
 			{
-				//new_object->Initialize();
-				new_object->SetPosition(hit_position);
+				auto transform_component = new_object->GetComponent<TransformComponent>();
+				if (transform_component)transform_component->SetPosition(hit_position);
+				else OutputDebugStringA("[ObjectEditor エラー] Update: 対象の GameObject に TransformComponent が存在しません。\n");
 				current_selected_object = new_object;
 			}
 		}
@@ -241,10 +245,12 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 				if (new_object != nullptr)
 				{
 					// 3Dモデルの初期化
-					if (new_object->GetModel() != nullptr)new_object->GetModel()->Initialize(current_model_path);
-					else OutputDebugStringA("[エラー] CreateTempModelObject: GetModel() が nullptr です。\n");
-
-					// 個別JSONから詳細パラメータを復元
+					auto model_component = new_object->GetComponent<ModelComponent>();
+					if (model_component != nullptr)
+					{
+						model_component->LoadModel(current_model_path);
+					}
+					else OutputDebugStringA("[エラー] CreateTempModelObject: ModelComponent インスタンスが nullptr です。\n");					// 個別JSONから詳細パラメータを復元
 					new_object->LoadFromJObject(detail_json);
 					current_selected_object = new_object;
 					is_json_loaded = true;
@@ -275,8 +281,12 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 
 		if (new_object != nullptr)
 		{
-			if (new_object->GetModel() != nullptr)new_object->GetModel()->Initialize(current_model_path);
-			else OutputDebugStringA("[エラー] CreateTempModelObject: GetModel() が nullptr です。\n");
+			auto model_component = new_object->GetComponent<ModelComponent>();
+			if (model_component != nullptr)
+			{
+				model_component->LoadModel(current_model_path);
+			}
+			else OutputDebugStringA("[エラー] CreateTempModelObject: ModelComponent インスタンスが nullptr です。\n");	
 			current_selected_object = new_object;
 		}
 		else OutputDebugStringA("[エラー] CreateTempModelObject: ObjectFactory によるデフォルト生成に失敗しました。\n");
@@ -301,12 +311,12 @@ void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_mana
 				GameObject* obj_ptr = active_objects[i].get();
 
 				std::string display_name = "";
-				if (obj_ptr->GetModel() && !obj_ptr->GetModel()->GetModelPath().empty())
+				auto model_component = obj_ptr->GetComponent<ModelComponent>();
+				if (model_component != nullptr && !model_component->GetModelPath().empty())
 				{
-					display_name = std::filesystem::path(obj_ptr->GetModel()->GetModelPath()).stem().string();
+					display_name = std::filesystem::path(model_component->GetModelPath()).stem().string();
 				}
 				else display_name = obj_ptr->GetClassNameW();
-
 				int current_number = frame_class_counters[display_name];
 				frame_class_counters[display_name]++;
 				ImGui::PushID(reinterpret_cast<const void*>(obj_ptr));
@@ -380,9 +390,10 @@ void ObjectEditor::ApplySelectedClassToObject()
 	}
 
 	//旧オブジェクトからTransform情報を取得
-	DirectX::XMFLOAT3 pos = current_selected_object->GetPosition();
-	DirectX::XMFLOAT4 rot = current_selected_object->GetRotation();
-	DirectX::XMFLOAT3 scale = current_selected_object->GetScale();
+	auto old_transform = current_selected_object->GetComponent<TransformComponent>();
+	DirectX::XMFLOAT3 pos = old_transform ? old_transform->GetPosition() : DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT3 rot = old_transform ? old_transform->GetRotation() : DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT3 scale = old_transform ? old_transform->GetScale() : DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 
 	//指定されたクラスの新規インスタンスを生成
 	const std::string& target_class_name = cached_class_names[inspector_selected_class_index];
@@ -391,13 +402,18 @@ void ObjectEditor::ApplySelectedClassToObject()
 	if (new_object != nullptr)
 	{
 		//Transform情報を適用
-		new_object->SetPosition(pos);
-		new_object->SetRotation(rot);
-		new_object->SetScale(scale);
-
-		if (!current_model_path.empty() && new_object->GetModel())
+		auto new_transform = new_object->GetComponent<TransformComponent>();
+		if (new_transform)
 		{
-			new_object->GetModel()->Initialize(current_model_path);
+			new_transform->SetPosition(pos);
+			new_transform->SetRotation(rot);
+			new_transform->SetScale(scale);
+		}
+
+		auto new_model_component = new_object->GetComponent<ModelComponent>();
+		if (!current_model_path.empty() && new_model_component != nullptr)
+		{
+			new_model_component->LoadModel(current_model_path);
 		}
 
 		//旧オブジェクトの破棄と選択ポインタの差し替え
@@ -470,13 +486,20 @@ void ObjectEditor::DrawGizmo(Camera* camera)
 	ImGuizmo::SetDrawlist(ImGui::GetBackgroundDrawList());
 	ImGuizmo::SetRect(0.0f, 0.0f, screen_width, screen_height);
 
+	auto transform = current_selected_object->GetComponent<TransformComponent>();
+	if (!transform)
+	{
+		OutputDebugStringA("[ObjectEditor エラー] DrawGizmo: 対象オブジェクトに TransformComponent がありません。\n");
+		return;
+	}
+
 	//行列データの取得とDirectXMathによる合成
 	DirectX::XMFLOAT4X4 view_matrix = camera->GetView();		//カメラのビュー行列
 	DirectX::XMFLOAT4X4 proj_matrix = camera->GetProjection();	//カメラのプロジェクション行列
 
-	DirectX::XMFLOAT3 pos = current_selected_object->GetPosition();	//座標
-	DirectX::XMFLOAT4 rot = current_selected_object->GetRotation();	//角度
-	DirectX::XMFLOAT3 scale = current_selected_object->GetScale();	//大きさ
+	DirectX::XMFLOAT3 pos = transform->GetPosition();	// 座標
+	DirectX::XMFLOAT4 rot = transform->GetQuaternion();	// クォータニオン角度
+	DirectX::XMFLOAT3 scale = transform->GetScale();	// 大きさ
 
 	DirectX::XMVECTOR v_pos = DirectX::XMLoadFloat3(&pos);		//座標ベクトル
 	DirectX::XMVECTOR v_rot = DirectX::XMLoadFloat4(&rot);		//クォータニオンベクトル
@@ -522,9 +545,9 @@ void ObjectEditor::DrawGizmo(Camera* camera)
 			DirectX::XMStoreFloat4(&new_rot, out_rot_quat);
 			DirectX::XMStoreFloat3(&new_scale, out_scale);
 
-			current_selected_object->SetPosition(new_pos);
-			current_selected_object->SetRotation(new_rot);
-			current_selected_object->SetScale(new_scale);
+			transform->SetPosition(new_pos);
+			transform->SetRotationQuaternion(new_rot);
+			transform->SetScale(new_scale);
 		}
 	}
 }
@@ -551,13 +574,15 @@ void ObjectEditor::SaveScene(const std::string& file_path)
 		if (active_object[i] != nullptr && active_object[i]->IsActive())
 		{
 			GameObject* obj = active_object[i].get();
+			auto model_component = obj->GetComponent<ModelComponent>();
+			auto transform_component = obj->GetComponent<TransformComponent>();
 
 			//モデル名(ファイル名)の取得
 			std::string model_name = "";
 			std::string model_path = "";
-			if (obj->GetModel() && !obj->GetModel()->GetModelPath().empty())
+			if (model_component != nullptr && !model_component->GetModelPath().empty())
 			{
-				model_path = obj->GetModel()->GetModelPath();
+				model_path = model_component->GetModelPath();
 				model_name = std::filesystem::path(model_path).stem().string();
 			}
 			else model_name = obj->GetClassNameW();
@@ -585,9 +610,9 @@ void ObjectEditor::SaveScene(const std::string& file_path)
 			//シーンJsonへ最小限の情報のみを記録
 			nlohmann::json node;
 			node["model_path"] = model_path;
-			node["position"] = obj->GetPosition();
-			node["rotation"] = obj->GetRotation();
-			node["scale"] = obj->GetScale();
+			node["position"] = transform_component ? transform_component->GetPosition() : DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+			node["rotation"] = transform_component ? transform_component->GetQuaternion() : DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+			node["scale"] = transform_component ? transform_component->GetScale() : DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 			node["detail_json_path"] = detail_file_path;
 			objects_array.push_back(node);
 		}
@@ -661,18 +686,24 @@ void ObjectEditor::LoadScene(const std::string& file_path)
 
 					if (new_object != nullptr)
 					{
+						auto transform_component = new_object->GetComponent<TransformComponent>();
+						auto model_component = new_object->GetComponent<ModelComponent>();
+
 						//Transform 情報の復元
-						if (object_node.contains("position")) new_object->SetPosition(object_node["position"].get<DirectX::XMFLOAT3>());
-						if (object_node.contains("rotation")) new_object->SetRotation(object_node["rotation"].get<DirectX::XMFLOAT4>());
-						if (object_node.contains("scale"))    new_object->SetScale(object_node["scale"].get<DirectX::XMFLOAT3>());
+						if (transform_component)
+						{
+							if (object_node.contains("position")) transform_component->SetPosition(object_node["position"].get<DirectX::XMFLOAT3>());
+							if (object_node.contains("rotation")) transform_component->SetRotationQuaternion(object_node["rotation"].get<DirectX::XMFLOAT4>());
+							if (object_node.contains("scale"))    transform_component->SetScale(object_node["scale"].get<DirectX::XMFLOAT3>());
+						}
 
 						//モデルパスの適用
 						if (object_node.contains("model_path"))
 						{
 							std::string model_path = object_node["model_path"].get<std::string>();
-							if (!model_path.empty() && new_object->GetModel() != nullptr)
+							if (!model_path.empty() && model_component != nullptr)
 							{
-								new_object->GetModel()->Initialize(model_path);
+								model_component->LoadModel(model_path);
 							}
 						}
 
@@ -818,7 +849,18 @@ void ObjectEditor::HandleDragDropTarget(Camera* camera, CollisionManager* collis
 							DirectX::XMStoreFloat3(&ray_end, far_point);
 
 							DirectX::XMFLOAT3 hit_position = {};
-							if (collision_manager->RayCastSpace(ray_start, ray_end, hit_position))current_selected_object->SetPosition(hit_position);
+							if (collision_manager->RayCastSpace(ray_start, ray_end, hit_position))
+							{
+								// ドロップ位置を TransformComponent へ反映
+								if (auto transform_component = current_selected_object->GetComponent<TransformComponent>())
+								{
+									transform_component->SetPosition(hit_position);
+								}
+								else
+								{
+									OutputDebugStringA("[ObjectEditor エラー] HandleDragDropTarget: TransformComponent が存在しません。\n");
+								}
+							}
 						}
 					}
 					else OutputDebugStringA("[Error] ObjectEditor: HandleDragDropTarget - payload data is nullptr!\n");

@@ -1,6 +1,9 @@
 #include "Character.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
+#include "Gameplay\Components\Transform\TransformComponent.h"
+#include "Gameplay\Components\Model\ModelComponent.h"
+#include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
 
 #include <imgui.h>
 #include <cmath>
@@ -29,7 +32,7 @@ Character::Character()
 
 	blackboard = std::make_unique<StateBlackboard>();
 	state_machine_component = std::make_unique<StateMachineComponent>();
-	sequencer_component = std::make_unique<AnimationSequencerComponent>(model);
+	root_motion_component = std::make_unique<RootMotionComponent>();
 }
 
 //デストラクタ
@@ -41,8 +44,29 @@ Character::~Character()
 void Character::Initialize()
 {
 	is_active = true;
+	transform_component = GetComponent<TransformComponent>();
+	if (!transform_component)transform_component = AddComponent<TransformComponent>();
+
+	model_component = GetComponent<ModelComponent>();
+	if (!model_component)model_component = AddComponent<ModelComponent>();
+	model_component->SetTransformComponent(transform_component);
+
+	GameObject::Initialize();
+
 	SetupBlackboard();
-	if (sequencer_component && model)sequencer_component->Initialize(model->GetModelPath());
+
+	if (model_component->GetModel())
+	{
+		sequencer_component = std::make_unique<AnimationSequencerComponent>(model_component);
+		sequencer_component->Initialize(model_component->GetModelPath());
+
+		// RootMotionComponent の初期化 (モデルデータ GltfModelData の適用)
+		if (root_motion_component && model_component->GetModelData())
+		{
+			root_motion_component->Initialize(model_component->GetModelData());
+		}
+	}
+	else OutputDebugStringA("[Character 警告] Initialize: model_component または Model が未初期化のためアニメーションシーケンサを準備できませんでした。\n");
 }
 
 //更新処理
@@ -50,7 +74,7 @@ void Character::Update(float elapsed_time)
 {
 	UpdateInvincibleTimer(elapsed_time);
 
-	if (model)model->Update(elapsed_time);
+	GameObject::Update(elapsed_time);
 
 	move_speed = std::sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
 
@@ -85,16 +109,13 @@ void Character::Update(float elapsed_time)
 	}
 	else OutputDebugStringA("[Character 警告] Update: sequencer_component が nullptr のためアニメーション情報を更新できません。\n");
 
-	//回転クォータニオンの更新
-	DirectX::XMVECTOR q = DirectX::XMQuaternionRotationRollPitchYaw(angle.x, angle.y, angle.z);
-	DirectX::XMStoreFloat4(&rotation, q);
-
 	//移動処理
 	bool is_rm_enabled = state_machine_component ? state_machine_component->IsCurrentRootMotionEnbled() : false;
 	debug_root_motion_enabled = is_rm_enabled;
-	if (model)
+
+	if (root_motion_component)
 	{
-		model->SetRootMotionEnable(is_rm_enabled);
+		root_motion_component->SetEnable(is_rm_enabled);
 		if (is_rm_enabled)
 		{
 			UpdateRootMotion();
@@ -115,10 +136,7 @@ void Character::Update(float elapsed_time)
 //描画処理
 void Character::Render(ID3D11DeviceContext* context)
 {
-	DirectX::XMMATRIX world_matrix = GetWorldMatrix();
-	DirectX::XMFLOAT4X4 transform_matrix;
-	DirectX::XMStoreFloat4x4(&transform_matrix, world_matrix);
-	model->Render(context, transform_matrix);
+	GameObject::Render(context);
 }
 
 //デバッグ描画
@@ -223,42 +241,45 @@ void Character::Move(float elapsed_time, float vx, float vz, float speed)
 //旋回処理
 void Character::Tuen(float elapsed_time, float vx, float vz, float speed)
 {
-	//移動入力ベクトルの長さをチェックしてゼロ除算を防止
+	if (!transform_component)
+	{
+		OutputDebugStringA("[Character エラー] Tuen: transform_component が nullptr です。\n");
+		return;
+	}
+
 	constexpr float min_input_length = 0.001f;
 	float length = std::sqrtf(vx * vx + vz * vz);
-	if (length < min_input_length)return;
+	if (length < min_input_length) return;
 
-	//入力ベクトル(vx, vz)から目標となるY軸回転角度(Yaw)を算出
 	float target_angle = std::atan2f(vx, vz);
-
-	//現在の角度と目標角度の差分を計算し、-π ～ +π の範囲に正規化
-	float angle_diff = target_angle - angle.y;
+	DirectX::XMFLOAT3 current_rot = transform_component->GetRotation();
+	float angle_diff = target_angle - current_rot.y;
 
 	while (angle_diff > DirectX::XM_PI)  angle_diff -= DirectX::XM_2PI;
 	while (angle_diff < -DirectX::XM_PI) angle_diff += DirectX::XM_2PI;
 
-	//フレームレート依存を防ぐ補間速度計算と角度の更新
 	float rot_speed = speed * elapsed_time;
 
 	if (std::abs(angle_diff) <= rot_speed)
 	{
-		angle.y = target_angle; //差分が回転速度以下なら目標角度に合わせる
+		current_rot.y = target_angle;
 	}
 	else
 	{
-		angle.y += (angle_diff > 0.0f ? rot_speed : -rot_speed); //差分の符号に応じて左右回転
+		current_rot.y += (angle_diff > 0.0f ? rot_speed : -rot_speed);
 	}
 
-	//角度(angle.y)を -π ～ +π の範囲に正規化
-	while (angle.y > DirectX::XM_PI)  angle.y -= DirectX::XM_2PI;
-	while (angle.y < -DirectX::XM_PI) angle.y += DirectX::XM_2PI;
+	while (current_rot.y > DirectX::XM_PI)  current_rot.y -= DirectX::XM_2PI;
+	while (current_rot.y < -DirectX::XM_PI) current_rot.y += DirectX::XM_2PI;
 
-	//異常値(NaN)チェック
-	if (std::isnan(angle.y))
+	if (std::isnan(current_rot.y))
 	{
-		OutputDebugStringA("[Character エラー] Tuen: angle.y に NaN が検出されたため 0.0 に補正しました。\n");
-		angle.y = 0.0f;
+		OutputDebugStringA("[Character エラー] Tuen: current_rot.y に NaN が検出されたため 0.0 に補正しました。\n");
+		current_rot.y = 0.0f;
 	}
+
+	// TransformComponent へ書き戻し
+	transform_component->SetRotation(current_rot);
 }
 
 //ジャンプ処理
@@ -288,37 +309,30 @@ void Character::UpdateInvincibleTimer(float elapsed_time)
 //ルートモーション更新
 void Character::UpdateRootMotion()
 {
-	if (!model)
+	if (!model_component || !model_component->GetModel() || !transform_component)
 	{
-		OutputDebugStringA("[Character 警告] UpdateRootMotion: model が nullptr です。\n");
+		OutputDebugStringA("[Character 警告] UpdateRootMotion: 必要なコンポーネントまたは Model が nullptr です。\n");
 		return;
 	}
 
 	// Model クラスから最新のルートモーション移動差分を取得
-	DirectX::XMFLOAT3 delta_pos = model->GetDeltaPosition();
-
+	DirectX::XMFLOAT3 delta_pos = root_motion_component->GetDeltaPosition();
 	debug_root_motion_delta = delta_pos;
 
-	// 差分が全く発生していない場合のエラー検知出力
-	if (delta_pos.x == 0.0f && delta_pos.y == 0.0f && delta_pos.z == 0.0f)
-	{
-		//OutputDebugStringA("[Character 警告] UpdateRootMotion: 移動差分(delta_pos)が 0 です。RootMotionComponent::Update が呼ばれていない可能性があります。\n");
-	}
-
 	DirectX::XMVECTOR local_translation = DirectX::XMLoadFloat3(&delta_pos);
-
-	// ワールド変換行列をもとにキャラクターの向きへ移動量を変換
-	DirectX::XMMATRIX world_transform = GetWorldMatrix();
+	DirectX::XMMATRIX world_transform = transform_component->GetWorldMatrix();
 	DirectX::XMVECTOR world_translation = DirectX::XMVector3TransformNormal(local_translation, world_transform);
 	world_translation = DirectX::XMVectorSetY(world_translation, 0.0f); // Y軸補正
 
 	DirectX::XMFLOAT3 final_movement = {};
 	DirectX::XMStoreFloat3(&final_movement, world_translation);
 
-	// 位置座標へ加算
-	position.x += final_movement.x;
-	position.y += final_movement.y;
-	position.z += final_movement.z;
+	//TransformComponent から現在座標を取得して加算更新
+	DirectX::XMFLOAT3 pos = transform_component->GetPosition();
+	pos.x += final_movement.x;
+	pos.y += final_movement.y;
+	pos.z += final_movement.z;
+	transform_component->SetPosition(pos);
 }
 
 //ステージとの衝突処理
@@ -328,6 +342,7 @@ void Character::ResolveStageCollision(
 	float cap_height,
 	float offset_y)
 {
+	DirectX::XMFLOAT3 position = transform_component->GetPosition();
 	//押し出しベクトルの逆算
 	float push_x = result.safe_position.x - collider.start_center.x;
 	float push_y = result.safe_position.y - collider.start_center.y;
@@ -374,6 +389,7 @@ void Character::ResolveStageCollision(
 	collider.start_center.y += offset_y;
 	collider.end_center = position;
 	collider.end_center.y += cap_height + offset_y;
+	transform_component->SetPosition(position);
 }
 
 //動的オブジェクトとの衝突処理
@@ -409,6 +425,7 @@ void Character::ResolveDynamicCollision(
 		push_ratio = 0.0f;
 	}
 
+	DirectX::XMFLOAT3 position = transform_component->GetPosition();
 	//貫通量に割合を掛けて座標を補正
 	position.x += result.penetration_vector.x * push_ratio;
 	position.y += result.penetration_vector.y * push_ratio;
@@ -419,6 +436,8 @@ void Character::ResolveDynamicCollision(
 	collider.start_center.y += offset_y;
 	collider.end_center = position;
 	collider.end_center.y += cap_height + offset_y;
+
+	transform_component->SetPosition(position);
 }
 
 //垂直方向の移動速度更新
@@ -430,13 +449,15 @@ void Character::UpdateVerticalVelocity(float elapsed_time)
 //垂直方向の座標更新処理
 void Character::UpdateVerticalMove(float elapsed_time)
 {
-	position.y += velocity.y * elapsed_time;
+	if (!transform_component) return;
 
-	//接地判定処理
-	if (position.y < 0.0f)
+	DirectX::XMFLOAT3 pos = transform_component->GetPosition();
+	pos.y += velocity.y * elapsed_time;
+
+	if (pos.y < 0.0f)
 	{
-		position.y = 0.0f;
-		if (!is_ground)OnLanding();
+		pos.y = 0.0f;
+		if (!is_ground) OnLanding();
 		is_ground = true;
 		velocity.y = 0.0f;
 	}
@@ -445,6 +466,7 @@ void Character::UpdateVerticalMove(float elapsed_time)
 		is_ground = false;
 	}
 
+	transform_component->SetPosition(pos);
 }
 
 //水平方向の速度更新処理
@@ -498,6 +520,10 @@ void Character::UpdateHorizontalVelocity(float elapsed_time)
 //水平方向の座標更新処理
 void Character::UpdateHorizontalMove(float elapsed_time)
 {
-	position.x += velocity.x * elapsed_time;
-	position.z += velocity.z * elapsed_time;
+	if (!transform_component) return;
+
+	DirectX::XMFLOAT3 pos = transform_component->GetPosition();
+	pos.x += velocity.x * elapsed_time;
+	pos.z += velocity.z * elapsed_time;
+	transform_component->SetPosition(pos);
 }

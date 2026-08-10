@@ -37,6 +37,9 @@ public:
 	//クォータニオンの取得
 	const DirectX::XMFLOAT4& GetQuaternion()const { return quaternion; }
 
+	//クォータニオンの設定
+	void SetRotationQuaternion(const DirectX::XMFLOAT4& rot);
+
 	//スケールの取得
 	const DirectX::XMFLOAT3 GetScale()const { return scale; }
 

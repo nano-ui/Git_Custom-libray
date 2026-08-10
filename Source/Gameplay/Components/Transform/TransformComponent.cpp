@@ -91,6 +91,13 @@ void TransformComponent::SetRotation(const DirectX::XMFLOAT3& rot)
 	is_dirty = true;
 }
 
+//クォータニオンの設定
+void TransformComponent::SetRotationQuaternion(const DirectX::XMFLOAT4& rot)
+{
+	quaternion = rot;
+	is_dirty = true;
+}
+
 //スケールの設定
 void TransformComponent::SetScale(const DirectX::XMFLOAT3& scl)
 {

@@ -7,7 +7,8 @@
 #include <string>
 #include <unordered_map>
 
-class Model;
+class ModelComponent;
+class GltfModel;
 
 class AnimationSequencerComponent
 {
@@ -16,7 +17,7 @@ public:
 	static constexpr float DEFAULT_BLEND_TIME = 0.2f;
 
 	//コンストラクタ
-	explicit AnimationSequencerComponent(std::weak_ptr<Model> target_model);
+	explicit AnimationSequencerComponent(std::weak_ptr<ModelComponent> target_model_component);
 
 	//デストラクタ
 	~AnimationSequencerComponent();
@@ -53,7 +54,7 @@ private:
 	float GetEffectiveDuration()const;
 
 private:
-	std::weak_ptr<Model> target_model;	//対象のモデル
+	std::weak_ptr<ModelComponent> target_model_component;	//対象のモデルコンポーネント
 	std::unique_ptr<AnimationBlender> animation_blender;					//補完計算クラス
 	std::unordered_map <std::string, AnimationSequenceData> sequence_map;	//全アニメーションのシーケンス情報
 	std::string current_animaiton_name;										//現在のアニメーション名

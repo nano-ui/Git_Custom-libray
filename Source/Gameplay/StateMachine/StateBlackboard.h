@@ -9,7 +9,7 @@
 #include <cstdint>
 #include <string_view>
 #include <imgui.h>
-#include <vector>]
+#include <vector>
 #include <cmath>
 
 #include "StateGraphDataManager.h"

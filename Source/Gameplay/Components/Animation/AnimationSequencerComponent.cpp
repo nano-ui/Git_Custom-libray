@@ -1,5 +1,6 @@
 #include "AnimationSequencerComponent.h"
-#include "Engine\Graphics\Resources\Model.h"
+#include "Gameplay\Components\Model\ModelComponent.h"
+#include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
 
 #include <windows.h>
 #include <cstdio>
@@ -7,8 +8,8 @@
 static constexpr float DEFAULT_SPEED_MULTIPLIER = 1.0f;	//標準速度倍率
 
 //コンストラクタ
-AnimationSequencerComponent::AnimationSequencerComponent(std::weak_ptr<Model> target_model)
-	:target_model(target_model)
+AnimationSequencerComponent::AnimationSequencerComponent(std::weak_ptr<ModelComponent> target_model_component)
+	: target_model_component(target_model_component)
 	, current_sequence_time(0.0f)
 	, is_active(false)
 {
@@ -52,18 +53,19 @@ void AnimationSequencerComponent::Update(float elapsed_time)
 	if (!is_active || current_animaiton_name.empty())return;
 
 	//スマートポインタの昇格確認
-	std::shared_ptr<Model> shared_model = target_model.lock();
-	if (!shared_model)
+	std::shared_ptr<ModelComponent> shared_model_comp = target_model_component.lock();
+	if (!shared_model_comp || !shared_model_comp->GetModel())
 	{
-		OutputDebugStringA("[SequencerComponent Error] Update: target_model has been expired!\n");
+		OutputDebugStringA("[SequencerComponent Error] Update: target_model_component または GltfModel が無効です!\n");
 		return;
 	}
+	GltfModel* model = shared_model_comp->GetModel();
 	if(animation_blender)animation_blender->Update(elapsed_time);
 
 	//経過時間を加算
 	current_sequence_time += elapsed_time;
 
-	float anim_duration = shared_model->GetAnimationDuration();
+	float anim_duration = model->GetAnimationDuration();
 	float effective_duration = GetEffectiveDuration();
 
 	float integrated_time_b = GetIntegratedModelTime(current_sequence_time);
@@ -89,19 +91,31 @@ void AnimationSequencerComponent::Update(float elapsed_time)
 		float blend_factor = animation_blender->GetBlendFactor();
 
 		float integrated_time_a = GetIntegratedModelTime(prev_time);
-		shared_model->AnimateBlend(prev_name, integrated_time_a, current_animaiton_name, integrated_time_b, blend_factor);
+		model->AnimateBlend(prev_name, integrated_time_a, current_animaiton_name, integrated_time_b, blend_factor);
 	}
-	else shared_model->SetAnimationTime(integrated_time_b);
+	else model->SetAnimationTime(integrated_time_b);
 }
 
 //アニメーション切り替え
 void AnimationSequencerComponent::ChangeAnimation(const std::string& anim_name, float blend_time)
 {
-	if (current_animaiton_name == anim_name)return;
-	std::shared_ptr<Model> shared_model = target_model.lock();
-	if (shared_model)shared_model->PlayAnimation(anim_name, true);
-	else OutputDebugStringA("[SequencerComponent 警告] ChangeAnimation: target_model が nullptr のため PlayAnimation を呼び出せませんでした。\n");
-	if (animation_blender && !current_animaiton_name.empty())animation_blender->StartCrossFade(current_animaiton_name, current_sequence_time, blend_time);
+	if (current_animaiton_name == anim_name) return;
+
+	std::shared_ptr<ModelComponent> shared_model_comp = target_model_component.lock();
+	if (shared_model_comp && shared_model_comp->GetModel())
+	{
+		shared_model_comp->GetModel()->PlayAnimation(anim_name, true);
+	}
+	else
+	{
+		OutputDebugStringA("[SequencerComponent 警告] ChangeAnimation: target_model_component または GltfModel が nullptr のため PlayAnimation を呼び出せませんでした。\n");
+	}
+
+	if (animation_blender && !current_animaiton_name.empty())
+	{
+		animation_blender->StartCrossFade(current_animaiton_name, current_sequence_time, blend_time);
+	}
+
 	current_animaiton_name = anim_name;
 	current_sequence_time = 0.0f;
 	ia_animation_finished = false;
@@ -173,7 +187,11 @@ float AnimationSequencerComponent::GetEffectiveDuration() const
 	{
 		return iterator->second.effective_duration;
 	}
-	std::shared_ptr<Model> shared_model = target_model.lock();
-	if (shared_model)return shared_model->GetAnimationDuration();
+
+	std::shared_ptr<ModelComponent> shared_model_comp = target_model_component.lock();
+	if (shared_model_comp && shared_model_comp->GetModel())
+	{
+		return shared_model_comp->GetModel()->GetAnimationDuration();
+	}
 	return INVALID_DURATION;
 }

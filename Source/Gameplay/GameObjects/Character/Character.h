@@ -11,6 +11,8 @@
 
 class StateBlackboard;
 class StateMachineComponent;
+class TransformComponent;
+class ModelComponent;
 
 class Character : public GameObject, public IAnimationListener
 {
@@ -99,6 +101,10 @@ protected:
 	std::unique_ptr<StateBlackboard> blackboard;
 	std::unique_ptr<StateMachineComponent> state_machine_component;	//ステートマシン制御
 	std::unique_ptr<AnimationSequencerComponent> sequencer_component;	//アニメーションシーケンサ
+	std::unique_ptr<RootMotionComponent> root_motion_component;        //ルートモーション計算コンポーネント
+
+	std::shared_ptr<TransformComponent> transform_component;
+	std::shared_ptr<ModelComponent> model_component;
 
 	std::string current_animation_name = "";	//現在のアニメーション名
 	float current_animation_time = 0.0f;		//現在のアニメーション再生時間
