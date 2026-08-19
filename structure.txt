@@ -1,7 +1,7 @@
 [Project Structure] 
  
 Folder PATH listing for volume Windows
-Volume serial number is 000000CE 0255:C8DA
+Volume serial number is 00000076 0255:C8DA
 C:.
 „    .gitignore
 „    gltf_model_ps.cso
@@ -137,9 +137,11 @@ C:.
 „    „    „    
 „    „    „¥„Ÿ„Ÿ„ŸData
 „    „    „    „¤„Ÿ„Ÿ„ŸModel
-„    „    „        „¤„Ÿ„Ÿ„ŸCharacter
-„    „    „            „¤„Ÿ„Ÿ„ŸPlayer
-„    „    „                „¤„Ÿ„Ÿ„ŸGreystone_WhiteTiger.gltf
+„    „    „        „¥„Ÿ„Ÿ„ŸCharacter
+„    „    „        „    „¤„Ÿ„Ÿ„ŸPlayer
+„    „    „        „        „¤„Ÿ„Ÿ„ŸGreystone_WhiteTiger.gltf
+„    „    „        „¤„Ÿ„Ÿ„ŸStage
+„    „    „            „¤„Ÿ„Ÿ„ŸExampleStage.glb
 „    „    „¥„Ÿ„Ÿ„ŸDefault
 „    „    „¥„Ÿ„Ÿ„ŸExampleStage
 „    „    „        ExampleStage.json
@@ -149,6 +151,7 @@ C:.
 „    „    „        Greystone_WhiteTiger_Sequence.json
 „    „    „        Greystone_WhiteTiger_StateMachine.json
 „    „    „        
+„    „    „¥„Ÿ„Ÿ„ŸRPG-Character
 „    „    „¥„Ÿ„Ÿ„ŸScene
 „    „    „        MainScene.json
 „    „    „        SceneGame.json
@@ -5426,6 +5429,7 @@ C:.
 „        „    „    3dgp.log
 „        „    „    3dgp.vcxproj.FileListAbsolute.txt
 „        „    „    ActionState.obj
+„        „    „    AnimationBlender.obj
 „        „    „    AnimationComponent.obj
 „        „    „    AnimationSequencerComponent.obj
 „        „    „    AnimationSequencerEditor.obj
@@ -5445,6 +5449,7 @@ C:.
 „        „    „    CollisionManager.obj
 „        „    „    CollisionSphere.obj
 „        „    „    ComboJugment.obj
+„        „    „    Component.obj
 „        „    „    ContentBrowserEditor.obj
 „        „    „    CooldownJudgment.obj
 „        „    „    crude_json.obj
@@ -5479,8 +5484,10 @@ C:.
 „        „    „    gltfmodelrenderer.obj.enc
 „        „    „    GltfModelSerializer.obj
 „        „    „    GltfRootMotion.obj
+„        „    „    gltfrootmotion.obj.enc
 „        „    „    GpuResourceUtils.obj
 „        „    „    Graphics.obj
+„        „    „    GuiInspector.obj
 „        „    „    imgui.obj
 „        „    „    ImGuiManager.obj
 „        „    „    ImGuizmo.obj
@@ -5553,6 +5560,7 @@ C:.
 „        „    „    StateTransition.obj
 „        „    „    texture.obj
 „        „    „    TinygltfImpl.obj
+„        „    „    TransformComponent.obj
 „        „    „    TransitionConditionEditor.obj
 „        „    „    vc143.idb
 „        „    „    vc143.pdb
@@ -5574,6 +5582,7 @@ C:.
 „        „            
 „        „¤„Ÿ„Ÿ„ŸRelease
 „            „    ActionState.obj
+„            „    AnimationBlender.obj
 „            „    AnimationComponent.obj
 „            „    AnimationSequencerComponent.obj
 „            „    AnimationSequencerEditor.obj
@@ -5626,7 +5635,9 @@ C:.
 „            „    GltfRootMotion.obj
 „            „    GpuResourceUtils.obj
 „            „    Graphics.obj
+„            „    GuiInspector.obj
 „            „    imgui.obj
+„            „    ImGuiManager.obj
 „            „    ImGuizmo.obj
 „            „    imgui_canvas.obj
 „            „    imgui_demo.obj
@@ -5710,11 +5721,9 @@ C:.
 „                    fxc.write.1.tlog
 „                    link.command.1.tlog
 „                    link.read.1.tlog
-„                    link.read.46.tlog
 „                    link.secondary.1.tlog
 „                    link.write.1.tlog
 „                    OriginalLibrary.lastbuildstate
-„                    unsuccessfulbuild
 „                    
 „¥„Ÿ„Ÿ„ŸShaders
 „    „¥„Ÿ„Ÿ„ŸCompiled
@@ -5809,6 +5818,8 @@ C:.
 „    „    „    EditorTabBar.h
 „    „    „    FileDialogHelper.cpp
 „    „    „    FileDialogHelper.h
+„    „    „    GuiInspector.cpp
+„    „    „    GuiInspector.h
 „    „    „    ObjectEditor.cpp
 „    „    „    ObjectEditor.h
 „    „    „    PathHelper.cpp
@@ -5976,12 +5987,18 @@ C:.
 „    „    „        
 „    „    „¥„Ÿ„Ÿ„ŸComponents
 „    „    „    „¥„Ÿ„Ÿ„ŸAnimation
+„    „    „    „        AnimationBlender.cpp
+„    „    „    „        AnimationBlender.h
 „    „    „    „        AnimationComponent.cpp
 „    „    „    „        AnimationComponent.h
 „    „    „    „        AnimationSequencerComponent.cpp
 „    „    „    „        AnimationSequencerComponent.h
 „    „    „    „        RootMotionComponent.cpp
 „    „    „    „        RootMotionComponent.h
+„    „    „    „        
+„    „    „    „¥„Ÿ„Ÿ„ŸBase
+„    „    „    „        Component.cpp
+„    „    „    „        Component.h
 „    „    „    „        
 „    „    „    „¥„Ÿ„Ÿ„ŸEditor
 „    „    „    „        StateMachineComponent.cpp
@@ -5991,25 +6008,29 @@ C:.
 „    „    „    „        ModelComponent.cpp
 „    „    „    „        ModelComponent.h
 „    „    „    „        
-„    „    „    „¤„Ÿ„Ÿ„ŸMovement
-„    „    „        „¥„Ÿ„Ÿ„ŸMove
-„    „    „        „        CircularMove.cpp
-„    „    „        „        CircularMove.h
-„    „    „        „        LinearMove.cpp
-„    „    „        „        LinearMove.h
-„    „    „        „        MoveBase.h
-„    „    „        „        MoveFactory.cpp
-„    „    „        „        MoveFactory.h
-„    „    „        „        RepulsiveMove.cpp
-„    „    „        „        RepulsiveMove.h
-„    „    „        „        
-„    „    „        „¤„Ÿ„Ÿ„ŸRotation
-„    „    „                LockAtRotation.cpp
-„    „    „                LockAtRotation.h
-„    „    „                RotationBase.h
-„    „    „                RotationFactory.cpp
-„    „    „                RotationFactory.h
-„    „    „                
+„    „    „    „¥„Ÿ„Ÿ„ŸMovement
+„    „    „    „    „¥„Ÿ„Ÿ„ŸMove
+„    „    „    „    „        CircularMove.cpp
+„    „    „    „    „        CircularMove.h
+„    „    „    „    „        LinearMove.cpp
+„    „    „    „    „        LinearMove.h
+„    „    „    „    „        MoveBase.h
+„    „    „    „    „        MoveFactory.cpp
+„    „    „    „    „        MoveFactory.h
+„    „    „    „    „        RepulsiveMove.cpp
+„    „    „    „    „        RepulsiveMove.h
+„    „    „    „    „        
+„    „    „    „    „¤„Ÿ„Ÿ„ŸRotation
+„    „    „    „            LockAtRotation.cpp
+„    „    „    „            LockAtRotation.h
+„    „    „    „            RotationBase.h
+„    „    „    „            RotationFactory.cpp
+„    „    „    „            RotationFactory.h
+„    „    „    „            
+„    „    „    „¤„Ÿ„Ÿ„ŸTransform
+„    „    „            TransformComponent.cpp
+„    „    „            TransformComponent.h
+„    „    „            
 „    „    „¥„Ÿ„Ÿ„ŸGameObjects
 „    „    „    „    GameObject.cpp
 „    „    „    „    GameObject.h
