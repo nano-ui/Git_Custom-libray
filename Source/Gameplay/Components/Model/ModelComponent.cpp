@@ -9,6 +9,7 @@
 #include <Windows.h>
 #include <vector>
 #include <imgui.h>
+#include "MovementComponent.h"
 
 //コンストラクタ
 ModelComponent::ModelComponent()

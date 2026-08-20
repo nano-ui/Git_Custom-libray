@@ -402,6 +402,9 @@
     <ClCompile Include="Source\Gameplay\Components\Transform\TransformComponent.cpp">
       <Filter>Source\Gameplay\Components\Transform</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Movement\MovementComponent.cpp">
+      <Filter>Source\Gameplay\Components\Movement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -760,6 +763,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Transform\TransformComponent.h">
       <Filter>Source\Gameplay\Components\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Movement\MovementComponent.h">
+      <Filter>Source\Gameplay\Components\Movement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
