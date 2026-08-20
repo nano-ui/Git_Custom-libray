@@ -69,7 +69,7 @@ protected:
 	void UnregisterFromManager();
 
 protected:
-	std::weak_ptr<TransformComponent> target_transform;	//‘ÎÛ‚ÌTransform
+	std::weak_ptr<TransformComponent> target_transform;		//‘ÎÛ‚ÌTransform
 	DirectX::XMFLOAT3 offset;								//‘Š‘Î•Î‚èÀ•W
 	float weight;											//“–‚½‚è”»’è‚Ìd‚³
 	ColliderAttribute attribute;							//“–‚½‚è”»’è‚Ì‘®«

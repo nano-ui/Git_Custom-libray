@@ -2,6 +2,8 @@
 
 #include <string>
 
+class JsonSerializer;
+class GuiInspector;
 struct ID3D11DeviceContext;
 
 class Component
