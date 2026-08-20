@@ -72,6 +72,9 @@ public:
 	//全オブジェクトの強制削除処理
 	void Clear();
 
+	//当たり判定マネージャーの取得
+	CollisionManager* GetCollisionManager()const { return collision_manager; }
+
 	//当たり判定マネージャーの連携
 	void SetCollisionManager(CollisionManager* manager) { collision_manager = manager; }
 

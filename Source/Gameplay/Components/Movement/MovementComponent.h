@@ -28,10 +28,10 @@ public:
 	void RenderGui()override;
 
 	//JSON•Û‘¶•Ï”“o˜^
-	void SetupSerialization(JsonSerializer* serializer);
+	void SetupSerialization(JsonSerializer* serializer)override;
 
 	//inspector“o˜^
-	void SetupInspector(GuiInspector* inspector);
+	void SetupInspector(GuiInspector* inspector)override;
 
 	//‘ÎÛ‚ÌTeansformComponent‚ğw’è
 	void SetTransformComponent(const std::shared_ptr<TransformComponent>& transform);

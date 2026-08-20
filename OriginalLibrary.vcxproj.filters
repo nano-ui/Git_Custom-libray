@@ -405,6 +405,9 @@
     <ClCompile Include="Source\Gameplay\Components\Movement\MovementComponent.cpp">
       <Filter>Source\Gameplay\Components\Movement</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Collision\ColliderComponent.cpp">
+      <Filter>Source\Gameplay\Components\Collision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -766,6 +769,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Movement\MovementComponent.h">
       <Filter>Source\Gameplay\Components\Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Collision\ColliderComponent.h">
+      <Filter>Source\Gameplay\Components\Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1226,6 +1232,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Transform">
       <UniqueIdentifier>{854af441-d387-44cc-a899-ee4f23f12650}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Collision">
+      <UniqueIdentifier>{84e76591-c7fb-4f27-a738-15d07959f12b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
