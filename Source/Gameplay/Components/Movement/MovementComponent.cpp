@@ -109,7 +109,7 @@ void MovementComponent::Turn(float elapsed_time, float vx, float vz, float speed
 	float angle_diff = target_angle - current_rot.y;
 
 	while (angle_diff > DirectX::XM_PI)angle_diff -= DirectX::XM_2PI;
-	while (angle_diff > -DirectX::XM_PI)angle_diff += DirectX::XM_2PI;
+	while (angle_diff < -DirectX::XM_PI)angle_diff += DirectX::XM_2PI;
 
 	float rot_speed = speed * elapsed_time;
 
@@ -117,7 +117,7 @@ void MovementComponent::Turn(float elapsed_time, float vx, float vz, float speed
 	else current_rot.y += (angle_diff > 0.0f ? rot_speed : -rot_speed);
 
 	while (current_rot.y > DirectX::XM_PI)current_rot.y -= DirectX::XM_2PI;
-	while (current_rot.y > -DirectX::XM_PI)current_rot.y += DirectX::XM_2PI;
+	while (current_rot.y < -DirectX::XM_PI)current_rot.y += DirectX::XM_2PI;
 
 	if (std::isnan(current_rot.y))
 	{
@@ -145,18 +145,6 @@ void MovementComponent::ResolveStageCollision(const CollisionResult& result, Col
 
 	//貫入ベクトルの取得
 	DirectX::XMFLOAT3 push = result.penetration_vector;
-
-	//safe_positionが有効な時はそちらの差分を優先
-	if (my_collider)
-	{
-		float diff_x = result.safe_position.x - current_pos.x;
-		float diff_y = result.safe_position.y - current_pos.y;
-		float diff_z = result.safe_position.z - current_pos.z;
-		if (std::abs(diff_x) > 0.0001f || std::abs(diff_y) > 0.0001f || std::abs(diff_z) > 0.0001f)
-		{
-			push = { diff_x,diff_y,diff_z };
-		}
-	}
 
 	//法線に基づいた床・天井・壁の判定と座標補正
 	if (result.hit_normal.y > SLOPE_THRESHOLD)
