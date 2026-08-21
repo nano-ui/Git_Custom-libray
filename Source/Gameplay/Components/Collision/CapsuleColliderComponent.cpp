@@ -26,6 +26,10 @@ void CapsuleColliderComponent::SetupInspector(GuiInspector* inspector)
 	ColliderComponent::SetupInspector(inspector);
 	inspector->RegisterVariable(u8"コライダー半径", &radius, GetComponentName());
 	inspector->RegisterVariable(u8"コライダー高さ", &height, GetComponentName());
+	inspector->RegisterText(u8"カプセルの始点", &capsule_collider.start_center, GetComponentName());
+	inspector->RegisterText(u8"カプセルの終点", &capsule_collider.end_center, GetComponentName());
+	inspector->RegisterText(u8"前回の始点", &capsule_collider.old_start_center, GetComponentName());
+	inspector->RegisterText(u8"前回の終点", &capsule_collider.old_end_center, GetComponentName());
 }
 
 //半径の設定

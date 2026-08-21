@@ -304,6 +304,7 @@
     <ClCompile Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Animation\RootMotionComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Base\Component.cpp" />
+    <ClCompile Include="Source\Gameplay\Components\Collision\CapsuleColliderComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Collision\ColliderComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Editor\StateMachineComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Model\ModelComponent.cpp" />
@@ -425,6 +426,7 @@
     <ClInclude Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Animation\RootMotionComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Base\Component.h" />
+    <ClInclude Include="Source\Gameplay\Components\Collision\CapsuleColliderComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Collision\ColliderComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Editor\StateMachineComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Model\ModelComponent.h" />

@@ -45,6 +45,12 @@ public:
 	//ジャンプ処理
 	void Jump(float speed);
 
+	//ステージ（静的メッシュ）との衝突押し出し処理
+	void ResolveStageCollision(const CollisionResult& result, Collider* my_collider);
+
+	//動的オブジェクトとの衝突押し出し
+	void ResolveDynamicCollision(const CollisionResult& result, Collider* my_collider);
+
 	//ゲッター群
 	bool IsGround()const { return is_graund; }
 	float GetMoveSpeed()const { return move_speed; }
@@ -61,6 +67,9 @@ private:
 	void UpdateVericalMove(float elapsed_time);
 	void UpdateHorizontalVelocity(float elapsed_time);
 	void UpdateHorizontalMove(float elapsed_time);
+
+	//コライダーの形状ごとに現在座標を同期
+	void SyncColliderPosition(Collider* collider, const DirectX::XMFLOAT3& new_pos, const DirectX::XMFLOAT3& move_delta);
 
 private:
 	std::weak_ptr<TransformComponent> target_transform;	//対象の行列

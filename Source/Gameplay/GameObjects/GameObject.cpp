@@ -69,8 +69,27 @@ void GameObject::RenderGui()
 //シリアライザに登録
 void GameObject::SetupSerialization()
 {
+	if (!serializer) return;
 	serializer->Clear();
+
+	// アタッチされた全コンポーネントのシリアライズ登録を一括実行
+	for (auto& component : components)
+	{
+		if (component) component->SetupSerialization(serializer.get());
+	}
+}
+
+//GuiInspectorに登録
+void GameObject::SetupInspector()
+{
+	if (!inspector) return;
 	inspector->Clear();
+
+	// アタッチされた全コンポーネントのインスペクター登録を一括実行
+	for (auto& component : components)
+	{
+		if (component) component->SetupInspector(inspector.get());
+	}
 }
 
 //指定されたJSONオブジェクトへ自身のデータを書き込む

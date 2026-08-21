@@ -13,6 +13,7 @@ class StateBlackboard;
 class StateMachineComponent;
 class TransformComponent;
 class ModelComponent;
+class MovementComponent;
 
 class Character : public GameObject, public IAnimationListener
 {
@@ -35,8 +36,9 @@ public:
 	//デバッグ描画
 	void RenderDebug(ShapeRenderer* renderer)override;
 
-	//をシリアライザに登録
-	void SetupSerialization()override;
+	// シリアライズ・インスペクター登録
+	void SetupSerialization() override;
+	void SetupInspector() override;
 
 	//ダメージ処理
 	bool ApplyDamage(float damage, float invincible_time);
@@ -60,9 +62,6 @@ protected:
 	//ジャンプ処理
 	void Jump(float speed);
 
-	//速度と座標の更新処理
-	void UpdateVelocity(float elapsed_time);
-
 	//無敵時間更新処理
 	void UpdateInvincibleTimer(float elapsed_time);
 
@@ -78,33 +77,15 @@ protected:
 	//死亡時イベント
 	virtual void OnDead() {}
 
-	//ステージとの衝突処理
-	void ResolveStageCollision(const CollisionResult& result, CapsuleCollider& collider, float cap_height, float offset_y);
-
-	//動的オブジェクトとの衝突処理
-	void ResolveDynamicCollision(const CollisionResult& result, CapsuleCollider& collider, float cap_height, float offset_y);
-
-private:
-	//垂直方向の移動速度更新
-	void UpdateVerticalVelocity(float elapsed_time);
-
-	//垂直方向の座標更新処理
-	void UpdateVerticalMove(float elapsed_time);
-
-	//水平方向の速度更新処理
-	void UpdateHorizontalVelocity(float elapsed_time);
-
-	//水平方向の座標更新処理
-	void UpdateHorizontalMove(float elapsed_time);
-
 protected:
 	std::unique_ptr<StateBlackboard> blackboard;
 	std::unique_ptr<StateMachineComponent> state_machine_component;	//ステートマシン制御
 	std::unique_ptr<AnimationSequencerComponent> sequencer_component;	//アニメーションシーケンサ
 	std::unique_ptr<RootMotionComponent> root_motion_component;        //ルートモーション計算コンポーネント
 
-	std::shared_ptr<TransformComponent> transform_component;
-	std::shared_ptr<ModelComponent> model_component;
+	std::shared_ptr<TransformComponent> transform_component;//行列コンポーネント
+	std::shared_ptr<ModelComponent> model_component;		//モデルコンポーネント
+	std::shared_ptr<MovementComponent> movement_component;	//移動コンポーネント
 
 	std::string current_animation_name = "";	//現在のアニメーション名
 	float current_animation_time = 0.0f;		//現在のアニメーション再生時間
@@ -114,23 +95,8 @@ protected:
 	bool debug_root_motion_enabled = false;		//ルートモーションの有効状態監視用
 	DirectX::XMFLOAT3 debug_root_motion_delta = { 0.0f, 0.0f, 0.0f }; //ルートモーション移動差分監視用
 
-	DirectX::XMFLOAT3 angle;	//角度
-	float radius;				//半径
-	float gravity;				//重力
-	DirectX::XMFLOAT3 velocity;	//移動速度ベクトル
-	float move_vecX;			//移動ベクトルX
-	float move_vecZ;			//移動ベクトルZ
-	bool is_ground;				//接地判定フラグ
-	float height;				//高さ
 	float invincible_timer;		//無敵時間
-	float acceleration;			//加速度
-	float max_speed;			//最大移動速度
 	float attack_power;			//攻撃力
-	float friction;				//摩擦力
-	float air_control;			//空中での制御力
-	float offset_y;				//当たり判定のY軸オフセット
-	float weight;				//キャラクターの重さ
 	float health;				//生命力	
-	float move_speed;			//移動速度
 };
 

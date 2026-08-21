@@ -2,6 +2,8 @@
 #include "Character.h"
 #include "Engine/Collision/Collider.h"
 
+class CapsuleColliderComponent;
+
 class Player : public Character, public ICollisionListener
 {
 public:
@@ -23,8 +25,8 @@ public:
 	//をシリアライザに登録
 	void SetupSerialization() override;
 
-	//当たり判定情報の取得
-	CapsuleCollider* GetCapsuleCollider() { return &capsule_collider; }
+	// コライダーコンポーネント取得
+	CapsuleColliderComponent* GetCapsuleColliderComponent() const { return collider_component.get(); }
 
 	//衝突処理
 	void OnCollisionHit(const CollisionResult& result)override;
@@ -36,10 +38,7 @@ private:
 	//入力更新処理
 	void UpdateInput(float elapsed_time);
 
-	//プレイヤーの現在位置と、コライダーの現在位置のズレを出力
-	void CheckColliderSyncDebug() const;
-
 private:
-	CapsuleCollider capsule_collider;	//カプセルの当たり判定
+	std::shared_ptr<CapsuleColliderComponent> collider_component;	//カプセルコライダーコンポーネント
 };
 

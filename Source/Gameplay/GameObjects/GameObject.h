@@ -89,8 +89,9 @@ public:
 		return false;
 	}
 	
-	//をシリアライザに登録
+	// シリアライズ・インスペクター登録
 	virtual void SetupSerialization();
+	virtual void SetupInspector();
 
 	//指定されたJSONオブジェクトへ自身のデータを書き込む
 	virtual void SaveToJObject(nlohmann::json& object_json);

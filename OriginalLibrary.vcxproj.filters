@@ -406,7 +406,10 @@
       <Filter>Source\Gameplay\Components\Movement</Filter>
     </ClCompile>
     <ClCompile Include="Source\Gameplay\Components\Collision\ColliderComponent.cpp">
-      <Filter>Source\Gameplay\Components\Collision</Filter>
+      <Filter>Source\Gameplay\Components\Collision\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Collision\CapsuleColliderComponent.cpp">
+      <Filter>Source\Gameplay\Components\Collision\CapsuleColliderComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -771,7 +774,10 @@
       <Filter>Source\Gameplay\Components\Movement</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Collision\ColliderComponent.h">
-      <Filter>Source\Gameplay\Components\Collision</Filter>
+      <Filter>Source\Gameplay\Components\Collision\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Collision\CapsuleColliderComponent.h">
+      <Filter>Source\Gameplay\Components\Collision\CapsuleColliderComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1235,6 +1241,12 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Collision">
       <UniqueIdentifier>{84e76591-c7fb-4f27-a738-15d07959f12b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Collision\Base">
+      <UniqueIdentifier>{fc9c9a8c-3024-4933-8bd5-ca702503cd36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Collision\CapsuleColliderComponent">
+      <UniqueIdentifier>{1f31d924-8e81-4f64-8e66-c6309e7ce0fe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
