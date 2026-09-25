@@ -228,3 +228,21 @@ void Model::AnimateBlend(const std::string& anim_a, float time_a, const std::str
 {
 	if (model)model->AnimateBlend(anim_a, time_a, anim_b, time_b, blend_factor);
 }
+
+//ノード名からインデックスを検索
+int Model::FindNodeIndex(const std::string& node_name) const
+{
+	if (model)model->FindNodeIndex(node_name);
+}
+
+//ノード名からモデル空間のグローバル行列を取得
+bool Model::GetNodeGlobalTransform(const std::string& node_name, DirectX::XMFLOAT4X4& out_transform) const
+{
+	if (model)model->GetNodeGlobalTransform(node_name, out_transform);
+}
+
+//ノードインデックスからモデル空間のグローバル行列を取得
+bool Model::GetNodeGlobalTransform(int node_index, DirectX::XMFLOAT4X4& out_transform) const
+{
+	if (model)model->GetNodeGlobalTransform(node_index, out_transform);
+}

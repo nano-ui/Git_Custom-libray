@@ -86,6 +86,15 @@ public:
 	//アニメーションをブレンド描画
 	void AnimateBlend(const std::string& anim_a, float time_a, const std::string& anim_b, float time_b, float blend_factor);
 
+	//ノード名からインデックスを検索
+	int FindNodeIndex(const std::string& node_name)const;
+
+	//ノード名からモデル空間のグローバル行列を取得
+	bool GetNodeGlobalTransform(const std::string& node_name, DirectX::XMFLOAT4X4& out_transform)const;
+
+	//ノードインデックスからモデル空間のグローバル行列を取得
+	bool GetNodeGlobalTransform(int node_index, DirectX::XMFLOAT4X4& out_transform)const;
+
 private:
 	//使いまわさない内部専用のモデルロード処理
 	bool LoadModelInternal(const std::string& file_path);

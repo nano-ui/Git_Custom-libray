@@ -61,6 +61,15 @@ public:
 	//モデル取得
 	GltfModel* GetModel() const { return model.get(); }
 
+	//ボーンインデックス検索
+	int FindNodeIndex(const std::string& bone_name)const;
+
+	//ボーン名からワールド行列を取得
+	bool GetBoneWorldTransform(const std::string& bone_name, DirectX::XMFLOAT4X4& out_world_transform)const;
+
+	//ボーン名からワールド座標を取得
+	bool GetBoneWorldPosition(const std::string& bone_name, DirectX::XMFLOAT3& out_world_position)const;
+
 private:
 	//モデルの描画処理
 	void RenderInternal(ID3D11DeviceContext* context);

@@ -163,7 +163,9 @@ bool GltfModel::GetNodeGlobalTransform(int node_index, DirectX::XMFLOAT4X4& out_
 	const std::vector<GltfModelData::node>& nodes = GetAnimatedNodes();
 	if (node_index < 0 || static_cast<size_t>(node_index) >= nodes.size())
 	{
+		printf_s("------------------------------------------------------\n");
 		printf_s("[GltfModel エラー] GetNodeGlobalTransform: 指定されたインデックスが範囲外です。\n");
+		printf_s("------------------------------------------------------\n");
 		return false;
 	}
 	

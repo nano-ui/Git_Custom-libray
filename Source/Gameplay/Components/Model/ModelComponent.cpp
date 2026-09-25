@@ -155,3 +155,61 @@ void ModelComponent::RenderInternal(ID3D11DeviceContext* context)
 
 	model->Render(context, world_matrix);
 }
+
+//ボーンインデックス検索
+int ModelComponent::FindNodeIndex(const std::string& bone_name)const
+{
+	if (!model)
+	{
+		OutputDebugStringA("[ModelComponent 警告] FindNodeIndex: model が nullptr です。\n");
+		return -1;
+	}
+	return model->FindNodeIndex(bone_name);
+}
+
+//ボーン名からワールド行列を取得
+bool ModelComponent::GetBoneWorldTransform(const std::string& bone_name, DirectX::XMFLOAT4X4& out_world_transform) const
+{
+	if (!model)
+	{
+		OutputDebugStringA("[ModelComponent 警告] GetBoneWorldTransform: model が nullptr です。\n");
+		return false;
+	}
+
+	std::shared_ptr<TransformComponent> transform = target_transform.lock();
+	if (!transform)
+	{
+		OutputDebugStringA("[ModelComponent 警告] GetBoneWorldTransform: target_transform が無効です。\n");
+		return false;
+	}
+
+	DirectX::XMFLOAT4X4 local_transform = {};
+	if (!model->GetNodeGlobalTransform(bone_name, local_transform))
+	{
+		return false;
+	}
+
+	//ボーンのモデルローカル行列*モデルのワールド行列
+	DirectX::XMMATRIX bone_local = DirectX::XMLoadFloat4x4(&local_transform);
+	DirectX::XMMATRIX owner_world = transform->GetWorldMatrix();
+	DirectX::XMMATRIX bone_world = DirectX::XMMatrixMultiply(bone_local, owner_world);
+
+	DirectX::XMStoreFloat4x4(&out_world_transform, bone_world);
+	return true;
+}
+
+//ボーン名からワールド座標を取得
+bool ModelComponent::GetBoneWorldPosition(const std::string& bone_name, DirectX::XMFLOAT3& out_world_position) const
+{
+	DirectX::XMFLOAT4X4 bone_world = {};
+	if (!GetBoneWorldTransform(bone_name, bone_world))
+	{
+		return false;
+	}
+
+	//行列の平行移動成分
+	out_world_position.x = bone_world._41;
+	out_world_position.y = bone_world._42;
+	out_world_position.x = bone_world._43;
+	return true;
+}
