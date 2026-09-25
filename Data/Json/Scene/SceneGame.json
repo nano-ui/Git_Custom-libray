@@ -21,26 +21,6 @@
             }
         },
         {
-            "detail_json_path": "Data/Json/Rampage_Elemental/Rampage_Elemental.json",
-            "model_path": "Data\\Model\\Character\\Enemy\\Rampage_Elemental.gltf",
-            "position": {
-                "x": 1.4073121547698975,
-                "y": -0.018384933471679688,
-                "z": 17.119115829467773
-            },
-            "rotation": {
-                "w": -1.1920928955078125e-07,
-                "x": 0.0,
-                "y": 0.9999998807907104,
-                "z": -0.0
-            },
-            "scale": {
-                "x": 2.0,
-                "y": 2.0,
-                "z": 2.0
-            }
-        },
-        {
             "detail_json_path": "Data/Json/ExampleStage/ExampleStage.json",
             "model_path": "Data\\Model\\Stage\\ExampleStage.glb",
             "position": {
@@ -58,6 +38,26 @@
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/Rampage_Elemental/Rampage_Elemental.json",
+            "model_path": "Data\\Model\\Character\\Enemy\\Rampage_Elemental.gltf",
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 10.0
+            },
+            "rotation": {
+                "w": -1.1920928955078125e-07,
+                "x": 0.0,
+                "y": 0.9999998807907104,
+                "z": -0.0
+            },
+            "scale": {
+                "x": 3.0,
+                "y": 3.0,
+                "z": 3.0
             }
         }
     ]

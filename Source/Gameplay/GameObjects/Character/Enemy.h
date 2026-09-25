@@ -7,8 +7,9 @@
 
 class CollisionSphere;
 class CapsuleColliderComponent;
+class BoneCapsuleColliderComponent;
 
-class Enemy :public Character
+class Enemy :public Character, public ICollisionListener
 {
 public:
 	//コンストラクタ
@@ -32,13 +33,29 @@ public:
 	//インスペクター登録
 	void SetupInspector()override;
 
+	// アニメーション終了イベント
+	void OnAnimationEnd(uint32_t state_key) override;
+
+	//衝突コールバック処理
+	void OnCollisionHit(const CollisionResult& result)override;
+
 private:
+	//コンポーネント群のセットアップ
+	void SetupComponent();
+
+	//部位別ボーン追従コライダーのセットアップ
+	void SetupColliders();
+
 	//コライダー更新処理
 	void UpdateCollider();
 
 private:
-	std::shared_ptr<CapsuleColliderComponent> collider_component;	//カプセルコライダーコンポーネント
-	float collider_radius = 1.0f;	//コライダーの半径
-	DirectX::XMFLOAT3 collider_offset = { 0.0f,1.0f,0.0f };	//コライダーのオフセット
+	std::shared_ptr<BoneCapsuleColliderComponent> head_collider_component;	//頭部用ボーン追従カプセルコライダー
+	std::shared_ptr<BoneCapsuleColliderComponent> body_collider_component;	//胴体用ボーン追従カプセルコライダー
+
+	// 初期設定用定数
+	static constexpr float head_collider_radius = 0.35f; // 頭部コライダー半径
+	static constexpr float head_collider_height = 0.2f;  // 頭部コライダー高さ
+	static constexpr float body_collider_radius = 0.5f;  // 胴体コライダー半径
 };
 

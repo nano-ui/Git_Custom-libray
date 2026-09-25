@@ -65,6 +65,12 @@ private:
 	//UIコントロール描画
 	void DrawControlPanel();
 
+	//ボーン階層ImGui描画
+	void DrawBoneHierarchyGui();
+
+	//ボーンツリーの再帰描画
+	void DrawBoneNodeRecursive(int node_index);
+
 private:
 	std::unique_ptr<framebuffer> frame_buffer;		//描画結果を保存
 	std::unique_ptr<Camera> camera;					//フリーカメラ

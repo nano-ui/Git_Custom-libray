@@ -433,12 +433,12 @@ void ObjectEditor::ApplySelectedClassToObject()
 
 	if (current_selected_object == nullptr)
 	{
-		printf("[デバッグ エラー] 置換対象の current_selected_object が nullptr です。\n");
+		OutputDebugStringA("[ObjectEditor 警告] ApplySelectedClassToObject: 置換対象の current_selected_object が nullptr です。\n");
 		printf("==========================================\n\n");
 		return;
 	}
 
-	// 旧オブジェクトから Transform 情報を取得
+	// 旧オブジェクトから姿勢情報（Transform）を取得
 	auto old_transform = current_selected_object->GetComponent<TransformComponent>();
 	DirectX::XMFLOAT3 pos = old_transform ? old_transform->GetPosition() : DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	DirectX::XMFLOAT4 rot = old_transform ? old_transform->GetQuaternion() : DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -457,7 +457,7 @@ void ObjectEditor::ApplySelectedClassToObject()
 	}
 
 	const std::string& target_class_name = cached_class_names[inspector_selected_class_index];
-	printf("[デバッグログ] 変更前クラス: %s -> 変更後クラス: %s\n", current_selected_object->GetClassNameW().c_str(), target_class_name.c_str());
+	printf("[デバッグログ] 変更前クラス: %s -> 変更後クラス: %s\n", current_selected_object->GetClassName().c_str(), target_class_name.c_str());
 	printf("[デバッグログ] 引き継ぐモデルパス: %s\n", kept_model_path.c_str());
 
 	// 適用したいクラスの新規インスタンスを生成
@@ -465,21 +465,12 @@ void ObjectEditor::ApplySelectedClassToObject()
 
 	if (new_object != nullptr)
 	{
-		auto new_model_comp = new_object->GetComponent<ModelComponent>();
-		if (!new_model_comp)
-		{
-			new_model_comp = new_object->AddComponent<ModelComponent>();
-		}
-
-		if (!kept_model_path.empty() && new_model_comp)
-		{
-			bool success = new_model_comp->LoadModel(kept_model_path);
-			printf("[デバッグログ] 新オブジェクトへのモデルロード結果: %s\n", success ? "成功" : "失敗");
-		}
-
-		new_object->Initialize();
-
+		// 姿勢コンポーネントの確保と引き継ぎ
 		auto new_transform = new_object->GetComponent<TransformComponent>();
+		if (!new_transform)
+		{
+			new_transform = new_object->AddComponent<TransformComponent>();
+		}
 		if (new_transform)
 		{
 			new_transform->SetPosition(pos);
@@ -487,14 +478,38 @@ void ObjectEditor::ApplySelectedClassToObject()
 			new_transform->SetScale(scale);
 		}
 
-		// 旧オブジェクトの破棄とポインタ差し替え
+		// モデルコンポーネントの確保とモデル読み込み
+		auto new_model_comp = new_object->GetComponent<ModelComponent>();
+		if (!new_model_comp)
+		{
+			new_model_comp = new_object->AddComponent<ModelComponent>();
+		}
+
+		if (new_model_comp && new_transform)
+		{
+			new_model_comp->SetTransformComponent(new_transform);
+			if (!kept_model_path.empty())
+			{
+				bool success = new_model_comp->LoadModel(kept_model_path);
+				if (!success)
+				{
+					OutputDebugStringA("[ObjectEditor エラー] 新オブジェクトへのモデルロードに失敗しました。\n");
+				}
+			}
+		}
+
+		// 全コンポーネントが揃った状態で初期化
+		new_object->Initialize();
+
+		// 旧オブジェクトの破棄と選択ポインタの切り替え
 		current_selected_object->Destory();
 		current_selected_object = new_object;
+
 		printf("[デバッグログ] クラス置換処理が完了しました。\n");
 	}
 	else
 	{
-		printf("[デバッグ エラー] ObjectFactory による新クラス (%s) の生成に失敗しました。\n", target_class_name.c_str());
+		OutputDebugStringA("[ObjectEditor エラー] ObjectFactory による新クラスの生成に失敗しました。\n");
 	}
 	printf("==========================================\n\n");
 }

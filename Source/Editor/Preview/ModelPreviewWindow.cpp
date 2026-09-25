@@ -176,6 +176,7 @@ void ModelPreviewWindow::RenderGui()
 	ImGui::End();
 
 	DrawControlPanel();
+	DrawBoneHierarchyGui();
 }
 
 //アニメーション再生命令
@@ -374,4 +375,95 @@ void ModelPreviewWindow::DrawControlPanel()
 		ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), u8"Gltf、Glbモデルをダブルクリックしてモデル読み込みをしてください");
 	}
 	ImGui::End();
+}
+
+//ボーン階層ImGui描画
+void ModelPreviewWindow::DrawBoneHierarchyGui()
+{
+	ImGui::SetNextWindowSize(ImVec2(300.0f, 400.0f), ImGuiCond_FirstUseEver);
+	if (!ImGui::Begin(u8"ボーン階層"))
+	{
+		ImGui::End();
+		return;
+	}
+
+	//モデルが読み込まれていない場合
+	if (!model)
+	{
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), u8"モデルが読み込まれていません。");
+		ImGui::End();
+		return;
+	}
+
+	//アニメーション適用済みのノード情報を取得
+	const std::vector<GltfModelData::node>& nodes = model->GetAnimatedNodes();
+	if (nodes.empty())
+	{
+		OutputDebugStringA("[ModelPreviewWindow 警告] DrawBoneHierarchyGui: ノード配列が空です。\n");
+		ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.0f, 1.0f), u8"ボーンノードが存在しません。");
+		ImGui::End();
+		return;
+	}
+
+	//ルートノードを起点に再帰描画
+	for (int i = 0; i < static_cast<int>(nodes.size()); i++)
+	{
+		//親ノードが存在しないノードをルート階層として処理
+		if (nodes[i].parent_index < 0)
+		{
+			DrawBoneNodeRecursive(i);
+		}
+	}
+
+	ImGui::End();
+}
+
+//ボーンツリーの再帰描画
+void ModelPreviewWindow::DrawBoneNodeRecursive(int node_index)
+{
+	if (!model) return;
+
+	const std::vector<GltfModelData::node>& nodes = model->GetAnimatedNodes();
+
+	//範囲外アクセスのチェック
+	if (node_index < 0 || node_index >= static_cast<int>(nodes.size()))
+	{
+		OutputDebugStringA("[ModelPreviewWindow エラー] DrawBoneNodeRecursive: 不正なノードインデックスを参照しました。\n");
+		return;
+	}
+
+	const GltfModelData::node& current_node = nodes[node_index];
+
+	//子ノードの有無によってツリーフラグを切り替え
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+	bool has_children = !current_node.children.empty();
+	if (current_node.children.empty())
+	{
+		flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+	}
+
+	//表示名
+	std::string display_name = current_node.name.empty() ? ("Node_" + std::to_string(node_index)) : current_node.name;
+
+	//ノードの開閉状態を判定
+	bool is_opened = ImGui::TreeNodeEx(reinterpret_cast<void*>(static_cast<intptr_t>(node_index)), flags, "%s", display_name.c_str());
+
+	//ホバー時にツールチップでボーンインデックスを表示
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::SetTooltip(u8"インデックス: %d\n子ノード数: %zu", node_index, current_node.children.size());
+	}
+
+	//開かれており、かつ子ノードを持つ場合は再起処理
+	if (is_opened)
+	{
+		if (has_children)
+		{
+			for (int child_index : current_node.children)
+			{
+				DrawBoneNodeRecursive(child_index);
+			}
+			ImGui::TreePop();
+		}
+	}
 }

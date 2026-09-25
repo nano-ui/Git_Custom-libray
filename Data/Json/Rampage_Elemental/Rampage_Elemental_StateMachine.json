@@ -1,0 +1,645 @@
+{
+    "Layers": [
+        {
+            "GraphID": 0,
+            "GraphName": "ルート",
+            "Links": [
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 2,
+                            "HashKey": 4203995948,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.05000000074505806,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 104,
+                    "ID": 109,
+                    "StartPinID": 102
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 3,
+                            "HashKey": 4203995948,
+                            "ParamSecond": 2.0,
+                            "RefValue": 0.05000000074505806,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 101,
+                    "ID": 119,
+                    "StartPinID": 105
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 65,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 104,
+                    "ID": 140,
+                    "StartPinID": 102
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 83,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 104,
+                    "ID": 141,
+                    "StartPinID": 102
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 68,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 104,
+                    "ID": 142,
+                    "StartPinID": 102
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 16,
+                            "ParamSecond": 1.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 284,
+                    "ID": 286,
+                    "StartPinID": 102
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 5,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 101,
+                    "ID": 293,
+                    "StartPinID": 285
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 16,
+                            "ParamSecond": 1.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 284,
+                    "ID": 300,
+                    "StartPinID": 105
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 5,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 104,
+                    "ID": 313,
+                    "StartPinID": 285
+                }
+            ],
+            "Nodes": [
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "Idle",
+                    "ID": 100,
+                    "Input": [
+                        {
+                            "ID": 101,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "待機状態",
+                    "Output": [
+                        {
+                            "ID": 102,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 100.0,
+                    "PosY": 100.0,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 1,
+                    "AnimationName": "",
+                    "ID": 103,
+                    "Input": [
+                        {
+                            "ID": 104,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": true,
+                    "LinkColorB": 0.3129798173904419,
+                    "LinkColorG": 0.3129798173904419,
+                    "LinkColorR": 0.953667938709259,
+                    "Name": "移動ステート",
+                    "Output": [
+                        {
+                            "ID": 105,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -18.621337890625,
+                    "PosY": 151.908935546875,
+                    "SubGraphID": 108
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "ID": 249,
+                    "Input": [
+                        {
+                            "ID": 250,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": true,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "攻撃ステート",
+                    "Output": [
+                        {
+                            "ID": 251,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 288.035400390625,
+                    "PosY": -161.4360809326172,
+                    "SubGraphID": 248
+                },
+                {
+                    "ActionCategory": 4,
+                    "AnimationName": "",
+                    "ID": 283,
+                    "Input": [
+                        {
+                            "ID": 284,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": true,
+                    "LinkColorB": 0.1295747011899948,
+                    "LinkColorG": 0.8185328245162964,
+                    "LinkColorR": 0.1987365484237671,
+                    "Name": "回避",
+                    "Output": [
+                        {
+                            "ID": 285,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -214.33334350585938,
+                    "PosY": -99.66667175292969,
+                    "SubGraphID": 282
+                }
+            ]
+        },
+        {
+            "GraphID": 108,
+            "GraphName": "移動ステート",
+            "Links": [],
+            "Nodes": [
+                {
+                    "ActionCategory": 1,
+                    "AnimationName": "Run_Front",
+                    "ID": 245,
+                    "Input": [
+                        {
+                            "ID": 246,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "前移動",
+                    "Output": [
+                        {
+                            "ID": 247,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -75.96469116210938,
+                    "PosY": -41.43595886230469,
+                    "SubGraphID": 0
+                }
+            ]
+        },
+        {
+            "GraphID": 248,
+            "GraphName": "攻撃ステート",
+            "Links": [
+                {
+                    "Conditions": [],
+                    "EndPinID": 260,
+                    "ID": 262,
+                    "StartPinID": 258
+                },
+                {
+                    "Conditions": [],
+                    "EndPinID": 264,
+                    "ID": 266,
+                    "StartPinID": 261
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 257,
+                    "ID": 267,
+                    "StartPinID": 265
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 279,
+                    "ID": 281,
+                    "StartPinID": 277
+                }
+            ],
+            "Nodes": [
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "Attack_A_Slow",
+                    "ID": 256,
+                    "Input": [
+                        {
+                            "ID": 257,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": false,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "右薙ぎ払い",
+                    "Output": [
+                        {
+                            "ID": 258,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 17.0,
+                    "PosY": -73.0,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "Attack_B_Slow",
+                    "ID": 259,
+                    "Input": [
+                        {
+                            "ID": 260,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": false,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "斜め切り",
+                    "Output": [
+                        {
+                            "ID": 261,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 297.0,
+                    "PosY": -65.0,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "",
+                    "ID": 263,
+                    "Input": [
+                        {
+                            "ID": 264,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": false,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "右薙ぎ払い2",
+                    "Output": [
+                        {
+                            "ID": 265,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 20.0,
+                    "PosY": 27.0,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "Ability_R_0",
+                    "ID": 269,
+                    "Input": [
+                        {
+                            "ID": 270,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": false,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "とびかかり",
+                    "Output": [
+                        {
+                            "ID": 271,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -72.33341979980469,
+                    "PosY": -87.33333587646484,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "Attack_RMB",
+                    "ID": 272,
+                    "Input": [
+                        {
+                            "ID": 273,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": false,
+                    "IsRootMotion": true,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "ダッシュ攻撃",
+                    "Output": [
+                        {
+                            "ID": 274,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 410.333251953125,
+                    "PosY": -99.33333587646484,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "ID": 275,
+                    "Input": [
+                        {
+                            "ID": 276,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "新規ステート",
+                    "Output": [
+                        {
+                            "ID": 277,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 490.0,
+                    "PosY": -194.0,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "ID": 278,
+                    "Input": [
+                        {
+                            "ID": 279,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "新規ステート",
+                    "Output": [
+                        {
+                            "ID": 280,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 749.0,
+                    "PosY": -191.0,
+                    "SubGraphID": 0
+                }
+            ]
+        },
+        {
+            "GraphID": 282,
+            "GraphName": "回避",
+            "Links": [],
+            "Nodes": [
+                {
+                    "ActionCategory": 4,
+                    "AnimationName": "Roll_Front",
+                    "ID": 314,
+                    "Input": [
+                        {
+                            "ID": 315,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": true,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "前回避",
+                    "Output": [
+                        {
+                            "ID": 316,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 16.0,
+                    "PosY": -79.0,
+                    "SubGraphID": 0
+                }
+            ]
+        }
+    ],
+    "NextID": 317,
+    "TargetModelPath": "Data\\Model\\Character\\Enemy\\Rampage_Elemental.gltf"
+}

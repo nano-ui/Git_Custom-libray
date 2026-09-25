@@ -638,6 +638,23 @@ void GltfModelData::FetchNodes(const tinygltf::Model& gltf_model)
 
 		ConvertNodeAxisSystem(node);
 	}
+
+	//全ノードの子ノード情報から親インデックスを設定
+	for (size_t parent_idx = 0; parent_idx < nodes.size(); parent_idx++)
+	{
+		for (int child_idx : nodes[parent_idx].children)
+		{
+			//範囲外アクセスのチェック
+			if (child_idx >= 0 && static_cast<size_t>(child_idx) < nodes.size())
+			{
+				nodes[child_idx].parent_index = static_cast<int>(parent_idx);
+			}
+			else
+			{
+				OutputDebugStringA("[GltfModelData 警告] FetchNodes: 不正な子ノードインデックスが指定されています。\n");
+			}
+		}
+	}
 }
 
 //tinygltfのモデルからマテリアルデータを抽出
