@@ -120,3 +120,53 @@ void GltfModel::AnimateBlend(const std::string& anim_a, float time_a, const std:
 		if (index_a >= 0 && index_b >= 0.0f)animation->AnimationBlend(static_cast<size_t>(index_a), time_a, static_cast<size_t>(index_b), time_b, blend_factor);
 	}
 }
+
+//ノード名からインデックスを検索
+int GltfModel::FindNodeIndex(const std::string& node_name) const
+{
+	if (node_name.empty())
+	{
+		printf_s("------------------------------------------------------\n");
+		printf_s("[GltfModel 警告] FindNodeIndex: ノード名が空です。\n");
+		printf_s("------------------------------------------------------\n");
+		return -1;
+	}
+
+	const std::vector<GltfModelData::node>& nodes = GetAnimatedNodes();
+	for (size_t i = 0; i < nodes.size(); i++)
+	{
+		if (nodes[i].name == node_name)
+		{
+			return static_cast<int>(i);
+		}
+	}
+
+	printf_s("------------------------------------------------------\n");
+	std::string debug_msg = "[GltfModel 警告] FindNodeIndex: ノード '" + node_name + "' が見つかりませんでした。\n";
+	printf_s(debug_msg.c_str());
+	printf_s("------------------------------------------------------\n");
+
+	return -1;
+}
+
+//ノード名からモデル空間のグローバル行列を取得
+bool GltfModel::GetNodeGlobalTransform(const std::string& node_name, DirectX::XMFLOAT4X4& out_transform) const
+{
+	int index = FindNodeIndex(node_name);
+	if (index < 0)return false;
+	return GetNodeGlobalTransform(index, out_transform);
+}
+
+//ノードインデックスからモデル空間のグローバル行列を取得
+bool GltfModel::GetNodeGlobalTransform(int node_index, DirectX::XMFLOAT4X4& out_transform) const
+{
+	const std::vector<GltfModelData::node>& nodes = GetAnimatedNodes();
+	if (node_index < 0 || static_cast<size_t>(node_index) >= nodes.size())
+	{
+		printf_s("[GltfModel エラー] GetNodeGlobalTransform: 指定されたインデックスが範囲外です。\n");
+		return false;
+	}
+	
+	out_transform = nodes[static_cast<size_t>(node_index)].global_transform;
+	return true;
+}

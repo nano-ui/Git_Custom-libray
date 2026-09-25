@@ -1,7 +1,7 @@
 [Project Structure] 
  
 Folder PATH listing for volume Windows
-Volume serial number is 00000076 0255:C8DA
+Volume serial number is 0000003A 0255:C8DA
 C:.
 Да   .gitignore
 Да   gltf_model_ps.cso
@@ -151,6 +151,9 @@ C:.
 Да   Да   Да       Greystone_WhiteTiger_Sequence.json
 Да   Да   Да       Greystone_WhiteTiger_StateMachine.json
 Да   Да   Да       
+Да   Да   ДеДЯДЯДЯRampage_Elemental
+Да   Да   Да       Rampage_Elemental.json
+Да   Да   Да       
 Да   Да   ДеДЯДЯДЯRPG-Character
 Да   Да   ДеДЯДЯДЯScene
 Да   Да   Да       MainScene.json
@@ -170,22 +173,30 @@ C:.
 Да   Да   Да   Да   unitychan.glb.bin
 Да   Да   Да   Да   
 Да   Да   Да   ДеДЯДЯДЯEnemy
-Да   Да   Да   Да       imgui.ini
-Да   Да   Да   Да       MI_SciFi_ToiletMech_Body_Skin3_Inst_Base.png
-Да   Да   Да   Да       MI_SciFi_ToiletMech_Body_Skin3_Inst_Emissive.png
-Да   Да   Да   Да       MI_SciFi_ToiletMech_Body_Skin3_Inst_MetallicRoughness.png
-Да   Да   Да   Да       MI_SciFi_ToiletMech_Body_Skin3_Inst_Normal.png
-Да   Да   Да   Да       MI_SciFi_ToiletMech_Body_Skin3_Inst_Occlusion.png
-Да   Да   Да   Да       MI_SciFi_ToiletMech_Toilet_Skin3_Inst_Base.png
-Да   Да   Да   Да       MI_SciFi_ToiletMech_Toilet_Skin3_Inst_Emissive.png
-Да   Да   Да   Да       MI_SciFi_ToiletMech_Toilet_Skin3_Inst_MetallicRoughness.png
-Да   Да   Да   Да       MI_SciFi_ToiletMech_Toilet_Skin3_Inst_Normal.png
-Да   Да   Да   Да       MI_SciFi_ToiletMech_Toilet_Skin3_Inst_Occlusion.png
-Да   Да   Да   Да       SK_SciFi_ToiletMech_Skin3.bin
-Да   Да   Да   Да       SK_SciFi_ToiletMech_Skin3.cereal
-Да   Да   Да   Да       SK_SciFi_ToiletMech_Skin3.gltf
-Да   Да   Да   Да       SK_SciFi_ToiletMech_Skin3.gltf.bin
-Да   Да   Да   Да       SK_SciFi_ToiletMech_Skin3.gltf.cerial
+Да   Да   Да   Да       M_RampageElemental_Arms_Inst_BaseColor.png
+Да   Да   Да   Да       M_RampageElemental_Arms_Inst_Emissive.png
+Да   Да   Да   Да       M_RampageElemental_Arms_Inst_MetallicRoughness.png
+Да   Да   Да   Да       M_RampageElemental_Arms_Inst_Normal.png
+Да   Да   Да   Да       M_RampageElemental_Arms_Inst_Occlusion.png
+Да   Да   Да   Да       M_RampageV001_Legs_Inst_BaseColor.png
+Да   Да   Да   Да       M_RampageV001_Legs_Inst_Emissive.png
+Да   Да   Да   Да       M_RampageV001_Legs_Inst_MetallicRoughness.png
+Да   Да   Да   Да       M_RampageV001_Legs_Inst_Normal.png
+Да   Да   Да   Да       M_RampageV001_Legs_Inst_Occlusion.png
+Да   Да   Да   Да       M_RampageV001_MASTER_Inst_BaseColor.png
+Да   Да   Да   Да       M_RampageV001_MASTER_Inst_Emissive.png
+Да   Да   Да   Да       M_RampageV001_MASTER_Inst_MetallicRoughness.png
+Да   Да   Да   Да       M_RampageV001_MASTER_Inst_Normal.png
+Да   Да   Да   Да       M_RampageV001_MASTER_Inst_Occlusion.png
+Да   Да   Да   Да       M_RampageV001_Torso_Inst_BaseColor.png
+Да   Да   Да   Да       M_RampageV001_Torso_Inst_Emissive.png
+Да   Да   Да   Да       M_RampageV001_Torso_Inst_MetallicRoughness.png
+Да   Да   Да   Да       M_RampageV001_Torso_Inst_Normal.png
+Да   Да   Да   Да       M_RampageV001_Torso_Inst_Occlusion.png
+Да   Да   Да   Да       M_Rampage_Elemental_FireSplines_Rampage_Elemental_BaseColor.png
+Да   Да   Да   Да       Rampage_Elemental.bin
+Да   Да   Да   Да       Rampage_Elemental.gltf
+Да   Да   Да   Да       Rampage_Elemental.gltf.cerial
 Да   Да   Да   Да       
 Да   Да   Да   ДеДЯДЯДЯPlayer
 Да   Да   Да   Да       Greystone_WhiteTiger.bin
@@ -5441,9 +5452,11 @@ C:.
 Да       Да   Да   Camera.obj
 Да       Да   Да   CameraController.obj
 Да       Да   Да   CameraManager.obj
+Да       Да   Да   CapsuleColliderComponent.obj
 Да       Да   Да   Character.obj
 Да       Да   Да   CharacterMovementComponent.obj
 Да       Да   Да   CircularMove.obj
+Да       Да   Да   ColliderComponent.obj
 Да       Да   Да   CollisionExperiment.obj
 Да       Да   Да   CollisionLogic.obj
 Да       Да   Да   CollisionManager.obj
@@ -5513,6 +5526,7 @@ C:.
 Да       Да   Да   ModelPreviewScene.obj
 Да       Да   Да   ModelPreviewWindow.obj
 Да       Да   Да   MoveFactory.obj
+Да       Да   Да   MovementComponent.obj
 Да       Да   Да   NodeStateJugment.obj
 Да       Да   Да   ObjectEditor.obj
 Да       Да   Да   ObjectFactory.obj
@@ -6000,6 +6014,12 @@ C:.
 Да   Да   Да   Да       Component.cpp
 Да   Да   Да   Да       Component.h
 Да   Да   Да   Да       
+Да   Да   Да   ДеДЯДЯДЯCollision
+Да   Да   Да   Да       CapsuleColliderComponent.cpp
+Да   Да   Да   Да       CapsuleColliderComponent.h
+Да   Да   Да   Да       ColliderComponent.cpp
+Да   Да   Да   Да       ColliderComponent.h
+Да   Да   Да   Да       
 Да   Да   Да   ДеДЯДЯДЯEditor
 Да   Да   Да   Да       StateMachineComponent.cpp
 Да   Да   Да   Да       StateMachineComponent.h
@@ -6009,6 +6029,9 @@ C:.
 Да   Да   Да   Да       ModelComponent.h
 Да   Да   Да   Да       
 Да   Да   Да   ДеДЯДЯДЯMovement
+Да   Да   Да   Да   Да   MovementComponent.cpp
+Да   Да   Да   Да   Да   MovementComponent.h
+Да   Да   Да   Да   Да   
 Да   Да   Да   Да   ДеДЯДЯДЯMove
 Да   Да   Да   Да   Да       CircularMove.cpp
 Да   Да   Да   Да   Да       CircularMove.h
@@ -6042,6 +6065,8 @@ C:.
 Да   Да   Да   ДеДЯДЯДЯCharacter
 Да   Да   Да   Да       Character.cpp
 Да   Да   Да   Да       Character.h
+Да   Да   Да   Да       Enemy.cpp
+Да   Да   Да   Да       Enemy.h
 Да   Да   Да   Да       Player.cpp
 Да   Да   Да   Да       Player.h
 Да   Да   Да   Да       
