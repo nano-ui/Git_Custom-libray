@@ -414,6 +414,9 @@
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Enemy.cpp">
       <Filter>Source\Gameplay\GameObjects\Character\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Collision\BoneCapsuleColliderComponent.cpp">
+      <Filter>Source\Gameplay\Components\Collision\BoneCapsuleCollider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -784,6 +787,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Enemy.h">
       <Filter>Source\Gameplay\GameObjects\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Collision\BoneCapsuleColliderComponent.h">
+      <Filter>Source\Gameplay\Components\Collision\BoneCapsuleCollider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1256,6 +1262,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\GameObjects\Character\Enemy">
       <UniqueIdentifier>{b060e6d4-4b5c-475f-b31f-57946a7f1108}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Collision\BoneCapsuleCollider">
+      <UniqueIdentifier>{669ad626-2877-4e64-b5be-3aa70c385d2e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -210,6 +210,6 @@ bool ModelComponent::GetBoneWorldPosition(const std::string& bone_name, DirectX:
 	//s—ñ‚Ì•½sˆÚ“®¬•ª
 	out_world_position.x = bone_world._41;
 	out_world_position.y = bone_world._42;
-	out_world_position.x = bone_world._43;
+	out_world_position.z = bone_world._43;
 	return true;
 }
