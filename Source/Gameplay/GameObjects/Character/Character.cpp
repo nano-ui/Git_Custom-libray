@@ -133,7 +133,7 @@ void Character::RenderDebug(ShapeRenderer* renderer)
 
 }
 
-//をシリアライザに登録
+//シリアライザに登録
 void Character::SetupSerialization()
 {
 	GameObject::SetupSerialization();
