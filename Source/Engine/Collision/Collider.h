@@ -36,6 +36,7 @@ public:
 	virtual void OnCollisionHit(const CollisionResult& result) = 0;
 };
 
+//Œ`ó‘®«
 enum class ColliderType
 {
 	Sphere,

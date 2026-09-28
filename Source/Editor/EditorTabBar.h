@@ -7,6 +7,7 @@ enum class EditorSceneType
 	LevelEditor,		//レベル
 	StateMachineEditor,	//ステートマシンエディタ
 	AnimationSequencer,	//アニメーションシーケンサエディタ
+	ColliderAttachment,	//コライダーアタッチメントエディタ
 };
 
 class EditorTabBar

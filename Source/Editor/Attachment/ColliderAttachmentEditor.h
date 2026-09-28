@@ -27,6 +27,7 @@ public:
 		serializer->RegisterVariable(u8"半径", &radius);
 		serializer->RegisterVariable(u8"長さ", &height);
 		serializer->RegisterVariable(u8"オフセット", &offset);
+		serializer->RegisterVariable(u8"角度", &rotation);
 		serializer->RegisterVariable(u8"２ボーン連携フラグ", &is_two_bone_link);
 		serializer->RegisterVariable(u8"有効フラグ", &is_active);
 	}
@@ -37,6 +38,7 @@ public:
 	float radius = 0.2f;
 	float height = 0.5f;
 	DirectX::XMFLOAT3 offset = { 0.0f,0.0f,0.0f };
+	DirectX::XMFLOAT3 rotation = { 0.0f,0.0f,0.0f };
 	bool is_two_bone_link = false;
 	bool is_active = true;
 };
@@ -52,6 +54,9 @@ public:
 
 	//初期化処理
 	void Initialize();
+
+	//更新処理
+	void Update(ModelPreviewWindow* preview_wnidow);
 
 	//ImGui描画及びレイキャストによる選択処理
 	void RenderGui(ModelPreviewWindow* preview_window);
@@ -69,8 +74,8 @@ private:
 	//ビューポートクリック時のレイキャスト判定
 	void HandleRaycastSelection(ModelPreviewWindow* preview_window, const ImVec2& image_pos, const ImVec2& image_size);
 
-	//ヒットしたノードから親階層の最も上のノードを探す
-	int FindTopHierarchyNodeIndex(int hit_node_index, Model* model);
+	//ヒットしたノード群の中から最も親側（最上位）にあるノードを探す
+	int FindHighestAmongHitNodes(const std::vector<int>& hit_node_indices, Model* model);
 
 	//カプセル座標の計算
 	bool CalculateCapsuleWorld(
@@ -83,9 +88,24 @@ private:
 	);
 
 private:
+	//アタッチ対象のボーンスロット種別
+	enum class BoneSelectSlot
+	{
+		Start,	//基準ボーン
+		End		//終点ボーン
+	};
+
+private:
 	std::unique_ptr<CollisionLogic> collision_logic;						//当たり判定計算
 	std::vector<std::unique_ptr<ColliderAttachmentItem>> collider_items;	//設定データリスト
 	int selected_item_index = -1;											//選択インデックス
 	std::string save_file_path = "";										//保存先のパス
+
+	bool is_draw_colliders = true;											//アタッチ済みコライダーの描画フラグ
+	bool is_draw_node_spheres = false;										//ボーンノード当たり判定球の描画フラグ
+
+	float node_radio = 2.0f;
+
+	BoneSelectSlot current_select_slot = BoneSelectSlot::Start;				//現在クリックで設定する対象スロット
 };
 

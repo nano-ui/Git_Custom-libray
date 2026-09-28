@@ -44,6 +44,7 @@ EditorSceneType EditorTabBar::Draw()
 			DrawTabItem(u8"レベル", EditorSceneType::LevelEditor, tab_button_width);
 			DrawTabItem(u8"ステートマシン", EditorSceneType::StateMachineEditor, tab_button_width);
 			DrawTabItem(u8"シーケンサ", EditorSceneType::AnimationSequencer, tab_button_width);
+			DrawTabItem(u8"アタッチメント", EditorSceneType::ColliderAttachment, tab_button_width);
 			ImGui::EndMenuBar();
 		}
 	}

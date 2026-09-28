@@ -7,6 +7,7 @@
 #include "Engine\Camera\Camera.h"
 #include "Engine\Collision\CollisionManager.h"
 #include "Preview\ModelPreviewWindow.h"
+#include "Attachment\ColliderAttachmentEditor.h"
 #include "EditorMediator.h"
 #include "Gameplay\GameObjects\Character\Character.h"
 #include "Engine\Core\Input.h"
@@ -36,11 +37,23 @@ void EditorManager::Initialize()
 	menu_bar = std::make_unique<EditorMenuBar>();
 	content_browser_editor = std::make_unique<ContentBrowserEditor>();
 	tab_bar = std::make_unique<EditorTabBar>();
+	collider_attachment_editor = std::make_unique<ColliderAttachmentEditor>();
 
 	object_editor->Initialize();
 	animation_sequencer_editor->Initialize();
 	content_browser_editor->Initialize();
 	tab_bar->Initialize();
+	collider_attachment_editor->Initialize();
+
+	//ModelPreviewWindowの描画パスにコライダーエディタのデバッグ描画をバインド
+	model_preview_window->SetExternalDebugRender([this](ShapeRenderer* renderer)
+		{
+			if (active_scene_type == EditorSceneType::ColliderAttachment && collider_attachment_editor)
+			{
+				collider_attachment_editor->RenderDebug(renderer, model_preview_window.get());
+			}
+		});
+
 	EditorMediator::Instance().RegisterModelPreviewWindow(model_preview_window.get());
 }
 
@@ -49,6 +62,11 @@ void EditorManager::Update(float elapsed_time)
 {
 	model_preview_window->Update(elapsed_time);
 	animation_sequencer_editor->Update(elapsed_time);
+
+	if (active_scene_type == EditorSceneType::ColliderAttachment && collider_attachment_editor)
+	{
+		collider_attachment_editor->Update(model_preview_window.get());
+	}
 }
 
 //Gui描画、レイアウト構築
@@ -140,8 +158,15 @@ void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manage
 		content_browser_editor->RenderGui();
 		break;
 	}
+	case EditorSceneType::ColliderAttachment:
+	{
+		model_preview_window->RenderGui();
+		collider_attachment_editor->RenderGui(model_preview_window.get());
+		content_browser_editor->RenderGui();
+		break;
+	}
 	default:
-		OutputDebugStringA("[Error] EditorManager::RenderGui: Unknown active_scene_type detected!\n");
+		//OutputDebugStringA("[Error] EditorManager::RenderGui: Unknown active_scene_type detected!\n");
 		break;
 	}
 }

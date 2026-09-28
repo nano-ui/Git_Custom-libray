@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <DirectXMath.h>
+#include <imgui.h>
+#include <functional>
 
 class framebuffer;
 class Camera;
@@ -70,6 +72,21 @@ public:
 	//アニメーション名を取得
 	std::string GetAnimationName();
 
+	//ビューポート画像の左上スクリーン座標を取得
+	ImVec2 GetViewportImagePos() const { return viewport_image_pos; }
+
+	//ビューポート画像の表示サイズを取得
+	ImVec2 GetViewportImageSize()const { return viewport_image_size; }
+
+	//ビューポート画像上で左クリックされたか取得
+	bool IsViewportImageClicked()const { return is_viewport_image_clicked; }
+
+	//外部デバッグ描画コールバックの設定
+	void SetExternalDebugRender(const std::function<void(ShapeRenderer*)>& callback)
+	{
+		external_debug_render = callback;
+	}
+
 private:
 	//UIコントロール描画
 	void DrawControlPanel();
@@ -81,6 +98,7 @@ private:
 	void DrawBoneNodeRecursive(int node_index);
 
 private:
+	std::function<void(ShapeRenderer*)> external_debug_render = nullptr; //デバッグ描画フック
 	std::unique_ptr<framebuffer> frame_buffer;		//描画結果を保存
 	std::unique_ptr<Camera> camera;					//フリーカメラ
 	std::unique_ptr<Model> model;					//3Dモデル
@@ -89,6 +107,10 @@ private:
 
 	std::string current_model_path = "";		//現在のモデルパス
 	std::vector<std::string> animation_names;	//アニメーションリスト
+
+	ImVec2 viewport_image_pos = { 0.0f, 0.0f };		//プレビュー画像の左上スクリーン座標
+	ImVec2 viewport_image_size = { 0.0f, 0.0f };	//プレビュー画像の描画サイズ
+	bool is_viewport_image_clicked = false;			//プレビュー画像上の左クリック検知フラグ
 
 	DirectX::XMFLOAT3 model_position = { 0.0f, 0.0f, 0.0f };//座標
 	DirectX::XMFLOAT3 model_rotation = { 0.0f,180.0f,0.0f };	//角度

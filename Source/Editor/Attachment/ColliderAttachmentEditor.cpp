@@ -9,6 +9,7 @@
 #include <Windows.h>
 #include <imgui.h>
 #include <algorithm>
+#include <fstream>
 
 //コンストラクタ
 ColliderAttachmentEditor::ColliderAttachmentEditor()
@@ -24,6 +25,20 @@ void ColliderAttachmentEditor::Initialize()
 {
 	collider_items.clear();
 	selected_item_index = -1;
+}
+
+//更新処理
+void ColliderAttachmentEditor::Update(ModelPreviewWindow* preview_wnidow)
+{
+	if (!preview_wnidow)return;
+
+	//左クリック時レイキャスト判定
+	if (preview_wnidow->IsViewportImageClicked())
+	{
+		ImVec2 img_pos = preview_wnidow->GetViewportImagePos();
+		ImVec2 img_size = preview_wnidow->GetViewportImageSize();
+		HandleRaycastSelection(preview_wnidow, img_pos, img_size);
+	}
 }
 
 //ImGui描画及びレイキャストによる選択処理
@@ -46,6 +61,13 @@ void ColliderAttachmentEditor::RenderGui(ModelPreviewWindow* preview_window)
 
 	ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.8f, 1.0f), u8"ビューポート上のモデルをクリックすると、");
 	ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.8f, 1.0f), u8"当たった個所の最上位階層ノードが自動でアタッチされます");
+
+	ImGui::Spacing();
+
+	ImGui::Checkbox(u8"アタッチコライダーを表示", &is_draw_colliders);
+	ImGui::SameLine();
+	ImGui::Checkbox(u8"ノード当たり判定を表示", &is_draw_node_spheres);
+	ImGui::Separator();
 
 	if (ImGui::Button(u8"新規コライダー追加"))
 	{
@@ -77,8 +99,8 @@ void ColliderAttachmentEditor::RenderGui(ModelPreviewWindow* preview_window)
 			{
 				selected_item_index = i;
 			}
-			ImGui::EndListBox();
 		}
+		ImGui::EndListBox();
 	}
 
 	ImGui::Separator();
@@ -97,15 +119,46 @@ void ColliderAttachmentEditor::RenderGui(ModelPreviewWindow* preview_window)
 
 		ImGui::Text(u8"アタッチ中ノード: %s", item->start_bone_name.empty() ? u8"(未設定)" : item->start_bone_name.c_str());
 		ImGui::Checkbox(u8"有効", &item->is_active);
-		ImGui::Checkbox(u8"2ボーン連携", &item->is_two_bone_link);
+		if (ImGui::Checkbox(u8"2ボーン連携", &item->is_two_bone_link))
+		{
+			//連携ONに切り替えた際に、終点が空なら終点選択モードに移行
+			if (item->is_two_bone_link && item->end_bone_name.empty())
+			{
+				current_select_slot = BoneSelectSlot::End;
+			}
+			else
+			{
+				current_select_slot = BoneSelectSlot::Start;
+			}
+		}
 
+		ImGui::Spacing();
+
+		//始点ボーンスロット
+		bool is_slot_start = (current_select_slot == BoneSelectSlot::Start);
+		if (ImGui::RadioButton(u8"始点ボーンを選択中", is_slot_start))
+		{
+			current_select_slot = BoneSelectSlot::Start;
+		}
+		ImGui::SameLine();
+		ImGui::TextColored(is_slot_start ? ImVec4(1.0f, 1.0f, 0.2f, 1.0f) : ImVec4(0.7f, 0.7f, 0.7f, 1.0f),
+			"[%s]", item->start_bone_name.empty() ? u8"未設定" : item->start_bone_name.c_str());
+
+		//終点ボーンスロット
 		if (item->is_two_bone_link)
 		{
-			char end_bone_buf[128] = {};
-			strncat_s(end_bone_buf, item->end_bone_name.c_str(), sizeof(end_bone_buf) - 1);
-			if (ImGui::InputText(u8"終点ボーン名", end_bone_buf, sizeof(end_bone_buf)))
+			bool is_slot_end = (current_select_slot == BoneSelectSlot::End);
+			if (ImGui::RadioButton(u8"終点ボーンを選択中", is_slot_end))
 			{
-				item->end_bone_name = end_bone_buf;
+				current_select_slot = BoneSelectSlot::End;
+			}
+			ImGui::SameLine();
+			ImGui::TextColored(is_slot_end ? ImVec4(1.0f, 1.0f, 0.2f, 1.0f) : ImVec4(0.7f, 0.7f, 0.7f, 1.0f),
+				"[%s]", item->end_bone_name.empty() ? u8"未設定" : item->end_bone_name.c_str());
+
+			if (item->start_bone_name.empty() || item->end_bone_name.empty())
+			{
+				ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.2f, 1.0f), u8"※モデル上をクリックして両方のボーンを設定してください。");
 			}
 		}
 
@@ -114,8 +167,11 @@ void ColliderAttachmentEditor::RenderGui(ModelPreviewWindow* preview_window)
 		{
 			ImGui::DragFloat(u8"カプセルの長さ", &item->height, 0.01f, 0.0f, 20.0f);
 			ImGui::DragFloat3(u8"ローカルオフセット", &item->offset.x, 0.01f, -10.0f, 10.0f);
+			ImGui::DragFloat3(u8"角度", &item->rotation.x, 0.5f, -360.0f, 360.0f);
 		}
 	}
+	ImGui::DragFloat(u8"ノード半径", &node_radio);
+
 
 	ImGui::Separator();
 	ImGui::Spacing();
@@ -195,9 +251,8 @@ void ColliderAttachmentEditor::HandleRaycastSelection(ModelPreviewWindow* previe
 	DirectX::XMFLOAT4X4 world_f4 = preview_window->GetModelWorldMatrix();
 	DirectX::XMMATRIX model_world = DirectX::XMLoadFloat4x4(&world_f4);
 
-	float closest_distance = FLT_MAX;
-	int hit_node_index = -1;
-	constexpr float hit_sphere_radius = 0.25f; //ノード判定用スフィア半径
+	//レイが当たったすべてのノードインデックスを収集する配列
+	std::vector<int> hit_nodes;
 
 	for (int i = 0; i < static_cast<int>(nodes.size()); ++i)
 	{
@@ -210,25 +265,54 @@ void ColliderAttachmentEditor::HandleRaycastSelection(ModelPreviewWindow* previe
 
 		//CollisionLogicを用いたレイとスフィアの交差判定
 		float hit_t = 0.0f;
-		if (collision_logic->RaySphere(start_f3, dir_f3, sphere_center, hit_sphere_radius, hit_t))
+		if (collision_logic->RaySphere(start_f3, dir_f3, sphere_center, node_radio, hit_t))
 		{
-			if (hit_t < closest_distance)
-			{
-				closest_distance = hit_t;
-				hit_node_index = i;
-			}
+			hit_nodes.push_back(i);
 		}
 	}
 
-	//当たったノードの最上位階層ノードを検索して適用
-	if (hit_node_index >= 0)
+	//レイが当たったノード群の中から最も上位の階層ノードを特定
+	if (!hit_nodes.empty())
 	{
-		int top_node_index = FindTopHierarchyNodeIndex(hit_node_index, model);
-		std::string chosen_node_name = nodes[top_node_index].name;
+		int chosen_node_index = FindHighestAmongHitNodes(hit_nodes, model);
+		if (chosen_node_index < 0 || chosen_node_index >= static_cast<int>(nodes.size()))
+		{
+			OutputDebugStringA("[ColliderAttachmentEditor エラー] 不正なノードインデックスが選択されました。\n");
+			return;
+		}
+		std::string chosen_node_name = nodes[chosen_node_index].name;
 
 		if (selected_item_index >= 0 && selected_item_index < static_cast<int>(collider_items.size()))
 		{
-			collider_items[selected_item_index]->start_bone_name = chosen_node_name;
+			ColliderAttachmentItem* item = collider_items[selected_item_index].get();
+
+			//2ボーン連携が有効な場合
+			if (item->is_two_bone_link)
+			{
+				if (current_select_slot == BoneSelectSlot::Start)
+				{
+					item->start_bone_name = chosen_node_name;
+					//終点が未設定なら自動的に終点選択へ遷移
+					if (item->end_bone_name.empty())
+					{
+						current_select_slot = BoneSelectSlot::End;
+					}
+					OutputDebugStringA("[ColliderAttachmentEditor] 始点ボーンを設定しました。次は終点ボーンをクリックしてください。\n");
+				}
+				else
+				{
+					item->end_bone_name = chosen_node_name;
+					// 終点設定完了後は始点選択に戻す
+					current_select_slot = BoneSelectSlot::Start;
+					OutputDebugStringA("[ColliderAttachmentEditor] 終点ボーンを設定しました。2ボーン連携当たり判定が設定されました。\n");
+				}
+			}
+			else
+			{
+				// 単一ボーン設定
+				item->start_bone_name = chosen_node_name;
+				OutputDebugStringA("[ColliderAttachmentEditor] 単一ボーンをアタッチしました。\n");
+			}
 		}
 		else
 		{
@@ -242,25 +326,47 @@ void ColliderAttachmentEditor::HandleRaycastSelection(ModelPreviewWindow* previe
 	}
 }
 
-//ヒットしたノードから親階層（ルート方向）の最も上のノードを探す
-int ColliderAttachmentEditor::FindTopHierarchyNodeIndex(int hit_node_index, Model* model)
+int ColliderAttachmentEditor::FindHighestAmongHitNodes(const std::vector<int>& hit_node_indices, Model* model)
 {
-	if (!model) return -1;
-	const auto& nodes = model->GetAnimatedNodes();
-	if (hit_node_index < 0 || hit_node_index >= static_cast<int>(nodes.size())) return -1;
+	if (!model || hit_node_indices.empty())return -1;
 
-	int current_index = hit_node_index;
-	//parent_index が 0 以上の間、親を遡る
-	while (nodes[current_index].parent_index >= 0)
+	const auto& nodes = model->GetAnimatedNodes();
+	int best_node_index = hit_node_indices[0];
+	int min_depth = INT_MAX;
+
+	for (int candidate_index : hit_node_indices)
 	{
-		int parent = nodes[current_index].parent_index;
-		if (parent >= static_cast<int>(nodes.size()) || parent == current_index)
+		//範囲外アクセスのチェック
+		if (candidate_index < 0 || candidate_index >= static_cast<int>(nodes.size()))
 		{
-			break;
+			OutputDebugStringA("[ColliderAttachmentEditor 警告] FindHighestAmongHitNodes: 候補ノードが範囲外です。\n");
+			continue;
 		}
-		current_index = parent;
+
+		//親をたどってルートまでの階層の深さを算出
+		int depth = 0;
+		int current = candidate_index;
+		constexpr int MAX_HIERARCHY_LOOP = 256;
+
+		while (nodes[current].parent_index >= 0 && depth < MAX_HIERARCHY_LOOP)
+		{
+			int parent = nodes[current].parent_index;
+			if (parent < 0 || parent >= static_cast<int>(nodes.size()) || parent == current)
+			{
+				break;
+			}
+			current = parent;
+			depth++;
+		}
+
+		//ヒットしたノード同士の中で最も深さが浅いノードを採用
+		if (depth < min_depth)
+		{
+			min_depth = depth;
+			best_node_index = candidate_index;
+		}
 	}
-	return current_index;
+	return best_node_index;
 }
 
 //JSON保存
@@ -268,17 +374,32 @@ void ColliderAttachmentEditor::SaveToJson(const std::string& file_path)
 {
 	if (file_path.empty()) return;
 
-	JsonSerializer serializer;
-	int item_count = static_cast<int>(collider_items.size());
-	serializer.RegisterVariable(u8"登録数", &item_count);
+	// 全コライダーを格納するルート配列
+	nlohmann::json root_array = nlohmann::json::array();
 
 	for (size_t i = 0; i < collider_items.size(); ++i)
 	{
-		collider_items[i]->SetupSerialization(&serializer);
+		// コライダーごとに個別のシリアライザーを用意してオブジェクト化
+		JsonSerializer item_serializer;
+		collider_items[i]->SetupSerialization(&item_serializer);
+
+		nlohmann::json item_json;
+		item_serializer.SaveToObject(item_json);
+		root_array.push_back(item_json);
 	}
 
-	serializer.SaveToFile(file_path);
-	OutputDebugStringA("[ColliderAttachmentEditor] JsonSerializer による保存が成功しました。\n");
+	std::ofstream output_file(file_path);
+	if (output_file.is_open())
+	{
+		constexpr int json_indent_space = 4;
+		output_file << root_array.dump(json_indent_space);
+		output_file.close();
+		OutputDebugStringA("[ColliderAttachmentEditor] 全コライダーの保存に成功しました。\n");
+	}
+	else
+	{
+		OutputDebugStringA("[ColliderAttachmentEditor エラー] SaveToJson: 保存先ファイルのオープンに失敗しました。\n");
+	}
 }
 
 //JSON読み込み
@@ -286,30 +407,39 @@ void ColliderAttachmentEditor::LoadFromJson(const std::string& file_path)
 {
 	if (file_path.empty()) return;
 
-	JsonSerializer serializer;
-	int item_count = 0;
-	serializer.RegisterVariable(u8"登録数", &item_count);
-
-	if (!serializer.LoadFromFile(file_path))
+	std::ifstream input_file(file_path);
+	if (!input_file.is_open())
 	{
-		OutputDebugStringA("[ColliderAttachmentEditor エラー] LoadFromJson: ファイルの読み込みに失敗しました。\n");
+		OutputDebugStringA("[ColliderAttachmentEditor エラー] LoadFromJson: ファイルのオープンに失敗しました。\n");
+		return;
+	}
+
+	nlohmann::json root_array;
+	input_file >> root_array;
+	input_file.close();
+
+	if (!root_array.is_array())
+	{
+		OutputDebugStringA("[ColliderAttachmentEditor エラー] LoadFromJson: JSONデータが配列形式ではありません。\n");
 		return;
 	}
 
 	collider_items.clear();
-	serializer.Clear();
-	serializer.RegisterVariable(u8"登録数", &item_count);
 
-	for (int i = 0; i < item_count; ++i)
+	// 配列の各要素からコライダーを1つずつ復元
+	for (const auto& item_json : root_array)
 	{
 		auto new_item = std::make_unique<ColliderAttachmentItem>();
-		new_item->SetupSerialization(&serializer);
+
+		JsonSerializer item_serializer;
+		new_item->SetupSerialization(&item_serializer);
+		item_serializer.LoadFromObject(item_json);
+
 		collider_items.push_back(std::move(new_item));
 	}
 
-	serializer.LoadFromFile(file_path);
 	selected_item_index = collider_items.empty() ? -1 : 0;
-	OutputDebugStringA("[ColliderAttachmentEditor] JsonSerializer による読み込みが成功しました。\n");
+	OutputDebugStringA("[ColliderAttachmentEditor] 全コライダーの読み込みが成功しました。\n");
 }
 
 //プレビュー用コライダー描画
@@ -319,24 +449,49 @@ void ColliderAttachmentEditor::RenderDebug(ShapeRenderer* renderer, ModelPreview
 	Model* model = preview_window->GetModel();
 	if (!model) return;
 
-	DirectX::XMFLOAT4X4 model_world = preview_window->GetModelWorldMatrix();
+	DirectX::XMFLOAT4X4 world_f4 = preview_window->GetModelWorldMatrix();
+	DirectX::XMMATRIX model_world = DirectX::XMLoadFloat4x4(&world_f4);
+	const auto& nodes = model->GetAnimatedNodes();
 
-	for (size_t i = 0; i < collider_items.size(); ++i)
+	// 各ボーンノードの当たり判定球の可視化
+	if (is_draw_node_spheres)
 	{
-		const auto& item = collider_items[i];
-		if (!item->is_active) continue;
+		constexpr DirectX::XMFLOAT4 sphere_color = { 0.2f, 0.9f, 0.9f, 0.6f }; // 水色半透明
 
-		DirectX::XMFLOAT3 center = {};
-		DirectX::XMFLOAT4 rotation = {};
-		float total_height = 0.0f;
-
-		if (CalculateCapsuleWorld(*item, model, model_world, center, rotation, total_height))
+		for (size_t i = 0; i < nodes.size(); ++i)
 		{
-			DirectX::XMFLOAT4 color = (selected_item_index == static_cast<int>(i))
-				? DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f)
-				: DirectX::XMFLOAT4(1.0f, 0.2f, 0.2f, 1.0f);
+			DirectX::XMFLOAT4X4 bone_local = {};
+			if (!model->GetNodeGlobalTransform(static_cast<int>(i), bone_local)) continue;
 
-			renderer->DrawCapsule(center, rotation, item->radius, total_height, color, ShapeDrawMode::Wireframe);
+			DirectX::XMMATRIX m_bone_world = DirectX::XMMatrixMultiply(DirectX::XMLoadFloat4x4(&bone_local), model_world);
+			DirectX::XMFLOAT3 sphere_center = {};
+			DirectX::XMStoreFloat3(&sphere_center, m_bone_world.r[3]);
+
+			renderer->DrawSphere(sphere_center, node_radio, sphere_color, ShapeDrawMode::Wireframe);
+		}
+	}
+
+	// アタッチされたカプセルコライダーの可視化
+	if (is_draw_colliders)
+	{
+		for (size_t i = 0; i < collider_items.size(); ++i)
+		{
+			const auto& item = collider_items[i];
+			if (!item->is_active) continue;
+
+			DirectX::XMFLOAT3 center = {};
+			DirectX::XMFLOAT4 rotation = {};
+			float total_height = 0.0f;
+
+			if (CalculateCapsuleWorld(*item, model, world_f4, center, rotation, total_height))
+			{
+				// 選択中のコライダーは黄色、未選択は赤色
+				DirectX::XMFLOAT4 color = (selected_item_index == static_cast<int>(i))
+					? DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f)
+					: DirectX::XMFLOAT4(1.0f, 0.2f, 0.2f, 1.0f);
+
+				renderer->DrawCapsule(center, rotation, item->radius, total_height, color, ShapeDrawMode::Wireframe);
+			}
 		}
 	}
 }
@@ -353,13 +508,72 @@ bool ColliderAttachmentEditor::CalculateCapsuleWorld(
 	if (!model || item.start_bone_name.empty()) return false;
 	DirectX::XMMATRIX mat_model = DirectX::XMLoadFloat4x4(&model_world);
 
+	// 2ボーン連携モード（始点と終点の両方が指定されている場合）
+	if (item.is_two_bone_link && !item.end_bone_name.empty())
+	{
+		DirectX::XMFLOAT4X4 start_local = {};
+		DirectX::XMFLOAT4X4 end_local = {};
+
+		if (!model->GetNodeGlobalTransform(item.start_bone_name, start_local) ||
+			!model->GetNodeGlobalTransform(item.end_bone_name, end_local))
+		{
+			return false;
+		}
+
+		// 始点と終点のワールド座標を算出
+		DirectX::XMMATRIX m_start_world = DirectX::XMMatrixMultiply(DirectX::XMLoadFloat4x4(&start_local), mat_model);
+		DirectX::XMMATRIX m_end_world = DirectX::XMMatrixMultiply(DirectX::XMLoadFloat4x4(&end_local), mat_model);
+
+		DirectX::XMVECTOR v_start = m_start_world.r[3];
+		DirectX::XMVECTOR v_end = m_end_world.r[3];
+
+		// 中心座標
+		DirectX::XMVECTOR v_center = DirectX::XMVectorScale(DirectX::XMVectorAdd(v_start, v_end), 0.5f);
+		DirectX::XMStoreFloat3(&out_center, v_center);
+
+		// 線分の長さとカプセルの全体長さ
+		DirectX::XMVECTOR diff = DirectX::XMVectorSubtract(v_end, v_start);
+		float actual_len = DirectX::XMVectorGetX(DirectX::XMVector3Length(diff));
+		out_total_height = actual_len + (item.radius * 2.0f);
+
+		// カプセルの向き（Y軸基準から終点方向への回転クォータニオン）
+		DirectX::XMVECTOR default_up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+		DirectX::XMVECTOR dir = (actual_len > 1e-4f) ? DirectX::XMVector3Normalize(diff) : default_up;
+
+		DirectX::XMVECTOR rot_quat = DirectX::XMQuaternionIdentity();
+		DirectX::XMVECTOR rot_axis = DirectX::XMVector3Cross(default_up, dir);
+		float dot = DirectX::XMVectorGetX(DirectX::XMVector3Dot(default_up, dir));
+
+		if (dot < -0.9999f)
+		{
+			rot_quat = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), DirectX::XM_PI);
+		}
+		else if (dot < 0.9999f)
+		{
+			float angle = acosf(dot);
+			rot_quat = DirectX::XMQuaternionRotationAxis(DirectX::XMVector3Normalize(rot_axis), angle);
+		}
+		DirectX::XMStoreFloat4(&out_rotation, rot_quat);
+		return true;
+	}
+
+	// 単一ボーンモード（始点ボーン + 長さ・オフセット）
 	DirectX::XMFLOAT4X4 bone_local = {};
 	if (!model->GetNodeGlobalTransform(item.start_bone_name, bone_local)) return false;
 
 	DirectX::XMMATRIX m_bone = DirectX::XMMatrixMultiply(DirectX::XMLoadFloat4x4(&bone_local), mat_model);
 
+	//オイラー角(度数)をラジアンに変換して回転行列を作成
+	DirectX::XMMATRIX mat_rot = DirectX::XMMatrixRotationRollPitchYaw(
+		DirectX::XMConvertToRadians(item.rotation.x),
+		DirectX::XMConvertToRadians(item.rotation.y),
+		DirectX::XMConvertToRadians(item.rotation.z)
+	);
+	// カプセルの長さ方向（標準はY軸方向）ベクトルを回転
+	DirectX::XMVECTOR local_dir = DirectX::XMVector3TransformNormal(DirectX::XMVectorSet(0.0f, item.height, 0.0f, 0.0f), mat_rot);
+
 	DirectX::XMVECTOR local_start = DirectX::XMVectorSet(item.offset.x, item.offset.y, item.offset.z, 1.0f);
-	DirectX::XMVECTOR local_end = DirectX::XMVectorSet(item.offset.x, item.offset.y + item.height, item.offset.z, 1.0f);
+	DirectX::XMVECTOR local_end = DirectX::XMVectorAdd(local_start, local_dir);
 
 	DirectX::XMVECTOR v_start = DirectX::XMVector3TransformCoord(local_start, m_bone);
 	DirectX::XMVECTOR v_end = DirectX::XMVector3TransformCoord(local_end, m_bone);

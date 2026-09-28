@@ -8,7 +8,6 @@
 #include "Editor\EditorMediator.h"
 
 #include <windows.h>
-#include <imgui.h>
 
 static constexpr uint32_t preview_buffer_width = 1280;   //プレビュー用レンダーテクスチャの解像度（幅）
 static constexpr uint32_t preview_buffer_height = 720;   //プレビュー用レンダーテクスチャの解像度（高さ）
@@ -138,6 +137,16 @@ void ModelPreviewWindow::Render(ID3D11DeviceContext* immediate_context)
 		shape_renderer->Render(immediate_context, camera->GetView(), camera->GetProjection());
 	}
 
+	if (shape_renderer && external_debug_render)
+	{
+		external_debug_render(shape_renderer.get());
+	}
+
+	if (shape_renderer)
+	{
+		shape_renderer->Render(immediate_context, camera->GetView(), camera->GetProjection());
+	}
+
 	skybox->Render(immediate_context);
 	frame_buffer->deactivate(immediate_context);
 }
@@ -159,6 +168,15 @@ void ModelPreviewWindow::RenderGui()
 				reinterpret_cast<ImTextureID>(srv),
 				ImVec2(avail_width, avail_height)
 			);
+
+			viewport_image_pos = ImGui::GetItemRectMin();
+			viewport_image_size = ImGui::GetItemRectSize();
+
+			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+			{
+				is_viewport_image_clicked = true;
+			}
+
 			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
 			{
 				is_viewport_active = true;
