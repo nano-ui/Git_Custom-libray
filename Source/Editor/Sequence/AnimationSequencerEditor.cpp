@@ -30,17 +30,21 @@ void AnimationSequencerEditor::Initialize()
 //更新処理
 void AnimationSequencerEditor::Update(float elapsed_time)
 {
-	//プレビューモデル側からロード中のアニメーション総時間を取得
+	//プレビューモデル側からロード中のアニメーション総時間および現在のアニメーション名を取得
 	float duration = EditorMediator::Instance().GetModelAnimationDuration();
+	std::string new_anim_name = EditorMediator::Instance().GetModelAnimationName();
+	std::string new_model_name = EditorMediator::Instance().GetModelName();
 
-	//アニメーション総時間の変更（新しいアニメーションのロード完了）を検知
-	if (duration > 0.0f && animation_duration != duration)
+	//アニメーション総時間の変更、またはアニメーション自体の変更を検知
+	bool is_duration_changed = (duration > 0.0f && animation_duration != duration);
+	bool is_anim_changed = (!new_anim_name.empty() && current_animation_name != new_anim_name);
+
+	if (is_duration_changed || is_anim_changed)
 	{
+		//切り替え前に現在のアニメーションシーケンス（速度＋コライダー区間）を保存
 		SaveCurrentSequenceDataToMap();
-		animation_duration = duration;
 
-		std::string new_model_name = EditorMediator::Instance().GetModelName();
-		std::string new_anim_name = EditorMediator::Instance().GetModelAnimationName();
+		animation_duration = duration;
 
 		if (!new_model_name.empty())
 		{
@@ -51,10 +55,23 @@ void AnimationSequencerEditor::Update(float elapsed_time)
 			}
 		}
 
-		if (!new_anim_name.empty())current_animation_name = new_anim_name;
+		if (!new_anim_name.empty())
+		{
+			current_animation_name = new_anim_name;
+		}
 
-		if (all_sequences_map.find(current_animation_name) != all_sequences_map.end())LoadCurrentSequenceDataFromMap();
-		else InitializerTimeMap();
+		//新しいアニメーションのデータをマップから復元、無ければ初期化
+		if (all_sequences_map.find(current_animation_name) != all_sequences_map.end())
+		{
+			LoadCurrentSequenceDataFromMap();
+		}
+		else
+		{
+			InitializerTimeMap();
+			collider_tracks.clear(); //新規アニメーション時はコライダートラックをクリア
+			selected_collider_trank_index = -1;
+			current_time = 0.0f;
+		}
 
 		EditorMediator::Instance().SetModelAnimationPlaying(false);
 	}
@@ -89,6 +106,7 @@ void AnimationSequencerEditor::Update(float elapsed_time)
 		//取得した時間をプレビューウィンドウ内の3Dモデルに直接強制適用
 		EditorMediator::Instance().SetModelAnimationTime(integrated_model_time);
 
+		//更新された再生時間に合わせてコライダーの有効状態を同期
 		UpdateColliderActiveStates(current_time);
 	}
 }
@@ -263,217 +281,260 @@ void AnimationSequencerEditor::DrawColliderTracksGui()
 
 	const auto* attached_colliders = EditorMediator::Instance().GetAttachmentColliderItems();
 
-	// 最初に対象コライダーを選択
-	static std::string current_selected_collider_name = "";
-	if (attached_colliders && !attached_colliders->empty())
-	{
-		if (current_selected_collider_name.empty())
-		{
-			current_selected_collider_name = (*attached_colliders)[0]->name;
-		}
-
-		if (ImGui::BeginCombo(u8"対象コライダー", current_selected_collider_name.c_str()))
-		{
-			for (const auto& item : *attached_colliders)
-			{
-				if (!item) continue;
-				bool is_sel = (current_selected_collider_name == item->name);
-				if (ImGui::Selectable(item->name.c_str(), is_sel))
-				{
-					current_selected_collider_name = item->name;
-				}
-			}
-			ImGui::EndCombo();
-		}
-	}
-	else
+	// アタッチメントエディタにコライダーが存在しない場合のセーフガード
+	if (!attached_colliders || attached_colliders->empty())
 	{
 		ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), u8"※アタッチメントエディタにコライダーが登録されていません。");
 		return;
 	}
 
-	// 選択中コライダーのトラックデータを取得（存在しない場合は作成可能にする）
-	ColliderActiveTrack* current_track = nullptr;
-	int track_index = -1;
-	for (size_t i = 0; i < collider_tracks.size(); ++i)
+	// 新しい区間セットを下部に追加するボタン
+	if (ImGui::Button(u8"＋ 新しい有効区間を追加"))
 	{
-		if (collider_tracks[i].collider_name == current_selected_collider_name)
-		{
-			current_track = &collider_tracks[i];
-			track_index = static_cast<int>(i);
-			break;
-		}
-	}
+		ColliderActiveTrack new_track;
+		// 初期値として先頭のコライダー名を割り当て
+		new_track.collider_name = (*attached_colliders)[0]->name;
 
-	if (!current_track)
-	{
-		if (ImGui::Button(u8"このコライダーの有効区間を追加"))
-		{
-			ColliderActiveTrack new_track;
-			new_track.collider_name = current_selected_collider_name;
-			new_track.start_time = 0.0f;
-			new_track.end_time = (std::min)(0.5f, animation_duration);
-			collider_tracks.push_back(new_track);
-		}
-		return;
-	}
+		constexpr float default_interval = 0.4f;
+		new_track.start_time = 0.0f;
+		new_track.end_time = (std::min)(default_interval, animation_duration);
 
-	ImGui::SameLine();
-	if (ImGui::Button(u8"区間を削除"))
-	{
-		if (track_index >= 0)
-		{
-			collider_tracks.erase(collider_tracks.begin() + track_index);
-			drag_mode = DragMode::None;
-			return;
-		}
-	}
-
-	// アニメーション全体のベースバーと、その中に実行時間を表すバーを描画
-	ImDrawList* draw_list = ImGui::GetWindowDrawList();
-	ImVec2 canvas_pos = ImGui::GetCursorScreenPos();
-	float bar_width = ImGui::GetContentRegionAvail().x - 20.0f;
-	constexpr float bar_height = 36.0f;
-	constexpr float edge_handle_width = 8.0f; // 端の伸縮用判定幅
-
-	if (bar_width < 100.0f) bar_width = 100.0f;
-
-	// 背景アニメーションバー（アニメーション総時間）
-	ImVec2 bg_min = canvas_pos;
-	ImVec2 bg_max = ImVec2(canvas_pos.x + bar_width, canvas_pos.y + bar_height);
-	draw_list->AddRectFilled(bg_min, bg_max, IM_COL32(35, 35, 40, 255), 4.0f);
-	draw_list->AddRect(bg_min, bg_max, IM_COL32(80, 80, 85, 255), 4.0f);
-
-	// 時間からX座標への比率変換
-	float duration = (animation_duration > 0.0f) ? animation_duration : 1.0f;
-	float active_start_x = bg_min.x + (current_track->start_time / duration) * bar_width;
-	float active_end_x = bg_min.x + (current_track->end_time / duration) * bar_width;
-
-	// 実行時間を表すバー
-	ImVec2 active_min = ImVec2(active_start_x, bg_min.y + 4.0f);
-	ImVec2 active_max = ImVec2(active_end_x, bg_max.y - 4.0f);
-
-	// マウス操作と当たり判定
-	ImGuiIO& io = ImGui::GetIO();
-	ImVec2 mouse_pos = io.MousePos;
-
-	bool is_hovered_start_edge = (mouse_pos.x >= active_min.x - edge_handle_width * 0.5f &&
-		mouse_pos.x <= active_min.x + edge_handle_width * 0.5f &&
-		mouse_pos.y >= active_min.y && mouse_pos.y <= active_max.y);
-
-	bool is_hovered_end_edge = (mouse_pos.x >= active_max.x - edge_handle_width * 0.5f &&
-		mouse_pos.x <= active_max.x + edge_handle_width * 0.5f &&
-		mouse_pos.y >= active_min.y && mouse_pos.y <= active_max.y);
-
-	bool is_hovered_body = (mouse_pos.x > active_min.x + edge_handle_width * 0.5f &&
-		mouse_pos.x < active_max.x - edge_handle_width * 0.5f &&
-		mouse_pos.y >= active_min.y && mouse_pos.y <= active_max.y);
-
-	// マウスカーソルの形状変更
-	if (is_hovered_start_edge || is_hovered_end_edge || drag_mode == DragMode::StartEdge || drag_mode == DragMode::EndEdge)
-	{
-		ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
-	}
-	else if (is_hovered_body || drag_mode == DragMode::Move)
-	{
-		ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
-	}
-
-	// ドラッグ開始
-	if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-	{
-		if (is_hovered_start_edge)
-		{
-			drag_mode = DragMode::StartEdge;
-			drag_start_mouse_x = mouse_pos.x;
-			drag_initial_start_time = current_track->start_time;
-		}
-		else if (is_hovered_end_edge)
-		{
-			drag_mode = DragMode::EndEdge;
-			drag_start_mouse_x = mouse_pos.x;
-			drag_initial_end_time = current_track->end_time;
-		}
-		else if (is_hovered_body)
-		{
-			drag_mode = DragMode::Move;
-			drag_start_mouse_x = mouse_pos.x;
-			drag_initial_start_time = current_track->start_time;
-			drag_initial_end_time = current_track->end_time;
-		}
-	}
-
-	// ドラッグ解除
-	if (!ImGui::IsMouseDown(ImGuiMouseButton_Left))
-	{
-		drag_mode = DragMode::None;
-	}
-
-	// ドラッグ中：移動量から時間を再計算
-	if (drag_mode != DragMode::None)
-	{
-		float delta_x = mouse_pos.x - drag_start_mouse_x;
-		float delta_time = (delta_x / bar_width) * duration;
-		constexpr float min_interval = 0.05f;
-
-		if (drag_mode == DragMode::StartEdge)
-		{
-			current_track->start_time = std::clamp(drag_initial_start_time + delta_time, 0.0f, current_track->end_time - min_interval);
-		}
-		else if (drag_mode == DragMode::EndEdge)
-		{
-			current_track->end_time = std::clamp(drag_initial_end_time + delta_time, current_track->start_time + min_interval, duration);
-		}
-		else if (drag_mode == DragMode::Move)
-		{
-			float track_len = drag_initial_end_time - drag_initial_start_time;
-			float new_start = drag_initial_start_time + delta_time;
-			if (new_start < 0.0f) new_start = 0.0f;
-			if (new_start + track_len > duration) new_start = duration - track_len;
-
-			current_track->start_time = new_start;
-			current_track->end_time = new_start + track_len;
-		}
-
+		collider_tracks.push_back(new_track);
+		selected_collider_trank_index = static_cast<int>(collider_tracks.size() - 1);
 		UpdateColliderActiveStates(current_time);
 	}
 
-	// 有効バー本体の描画（オレンジ色、ドラッグ中は明るく）
-	ImU32 bar_color = (drag_mode != DragMode::None) ? IM_COL32(255, 160, 40, 240) : IM_COL32(230, 120, 20, 220);
-	draw_list->AddRectFilled(active_min, active_max, bar_color, 3.0f);
-	draw_list->AddRect(active_min, active_max, IM_COL32(255, 255, 255, 180), 3.0f);
-
-	// 左右の伸縮ハンドル（白い細線）
-	draw_list->AddLine(ImVec2(active_min.x + 2.0f, active_min.y + 4.0f), ImVec2(active_min.x + 2.0f, active_max.y - 4.0f), IM_COL32(255, 255, 255, 255), 2.0f);
-	draw_list->AddLine(ImVec2(active_max.x - 2.0f, active_min.y + 4.0f), ImVec2(active_max.x - 2.0f, active_max.y - 4.0f), IM_COL32(255, 255, 255, 255), 2.0f);
-
-	// バー中央に時間ラベル表示
-	char time_text[64];
-	sprintf_s(time_text, "%.2fs - %.2fs", current_track->start_time, current_track->end_time);
-	ImVec2 text_size = ImGui::CalcTextSize(time_text);
-	if (active_max.x - active_min.x > text_size.x)
+	if (collider_tracks.empty())
 	{
-		float text_x = active_min.x + ((active_max.x - active_min.x) - text_size.x) * 0.5f;
-		float text_y = active_min.y + ((active_max.y - active_min.y) - text_size.y) * 0.5f;
-		draw_list->AddText(ImVec2(text_x, text_y), IM_COL32(255, 255, 255, 255), time_text);
+		ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), u8"有効区間がありません。「＋ 新しい有効区間を追加」を押してください。");
+		return;
 	}
 
-	// シーケンサの現在再生時刻を示す縦線（赤い縦線）
-	float playhead_x = bg_min.x + (current_time / duration) * bar_width;
-	if (playhead_x >= bg_min.x && playhead_x <= bg_max.x)
+	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+	float bar_width = ImGui::GetContentRegionAvail().x - 20.0f;
+	constexpr float bar_height = 26.0f;
+	constexpr float edge_handle_width = 8.0f;
+	float duration = (animation_duration > 0.0f) ? animation_duration : 1.0f;
+
+	if (bar_width < 100.0f) bar_width = 100.0f;
+
+	ImGuiIO& io = ImGui::GetIO();
+	ImVec2 mouse_pos = io.MousePos;
+
+	// 左クリック解除でドラッグ操作を終了
+	if (!ImGui::IsMouseDown(ImGuiMouseButton_Left))
 	{
-		draw_list->AddLine(ImVec2(playhead_x, bg_min.y - 2.0f), ImVec2(playhead_x, bg_max.y + 2.0f), IM_COL32(255, 50, 50, 255), 2.0f);
+		drag_mode = DragMode::None;
+		active_drag_track_index = -1;
 	}
 
-	// ImGuiのレイアウトカーソルを進める
-	ImGui::Dummy(ImVec2(bar_width, bar_height + 10.0f));
+	int delete_target_index = -1; // ループ中の安全な削除用
 
-	// 数値での微調整入力も下に併設
-	ImGui::PushItemWidth(120.0f);
-	ImGui::DragFloat(u8"開始時間 (s)", &current_track->start_time, 0.01f, 0.0f, current_track->end_time);
-	ImGui::SameLine();
-	ImGui::DragFloat(u8"終了時間 (s)", &current_track->end_time, 0.01f, current_track->start_time, duration);
-	ImGui::PopItemWidth();
+	// 各区間セットを下に連続して生成・描画
+	for (int i = 0; i < static_cast<int>(collider_tracks.size()); ++i)
+	{
+		ColliderActiveTrack& track = collider_tracks[i];
+
+		ImGui::PushID(i); // トラックごとに一意なIDスコープを作成
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		// その区間専用のコライダー選択コンボボックス
+		ImGui::SetNextItemWidth(180.0f);
+		if (ImGui::BeginCombo("##ColliderCombo", track.collider_name.c_str()))
+		{
+			for (const auto& item : *attached_colliders)
+			{
+				if (!item) continue;
+				bool is_sel = (track.collider_name == item->name);
+				if (ImGui::Selectable(item->name.c_str(), is_sel))
+				{
+					track.collider_name = item->name;
+					UpdateColliderActiveStates(current_time);
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		ImGui::SameLine();
+
+		// その区間専用の削除ボタン
+		if (ImGui::Button(u8"区間削除"))
+		{
+			delete_target_index = i;
+		}
+
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "[%d] %.2fs - %.2fs", i + 1, track.start_time, track.end_time);
+
+		// その区間専用のタイムラインバー描画
+		ImVec2 canvas_pos = ImGui::GetCursorScreenPos();
+		ImVec2 bg_min = canvas_pos;
+		ImVec2 bg_max = ImVec2(canvas_pos.x + bar_width, canvas_pos.y + bar_height);
+
+		// 背景バースロット
+		draw_list->AddRectFilled(bg_min, bg_max, IM_COL32(30, 30, 35, 255), 3.0f);
+		draw_list->AddRect(bg_min, bg_max, (selected_collider_trank_index == i) ? IM_COL32(255, 220, 0, 255) : IM_COL32(70, 70, 75, 255), 3.0f);
+
+		// バーの位置算出
+		float active_start_x = bg_min.x + (track.start_time / duration) * bar_width;
+		float active_end_x = bg_min.x + (track.end_time / duration) * bar_width;
+
+		ImVec2 active_min = ImVec2(active_start_x, bg_min.y + 2.0f);
+		ImVec2 active_max = ImVec2(active_end_x, bg_max.y - 2.0f);
+
+		// ホバー判定
+		bool is_hovered_start_edge = (mouse_pos.x >= active_min.x - edge_handle_width * 0.5f &&
+			mouse_pos.x <= active_min.x + edge_handle_width * 0.5f &&
+			mouse_pos.y >= active_min.y && mouse_pos.y <= active_max.y);
+
+		bool is_hovered_end_edge = (mouse_pos.x >= active_max.x - edge_handle_width * 0.5f &&
+			mouse_pos.x <= active_max.x + edge_handle_width * 0.5f &&
+			mouse_pos.y >= active_min.y && mouse_pos.y <= active_max.y);
+
+		bool is_hovered_body = (mouse_pos.x > active_min.x + edge_handle_width * 0.5f &&
+			mouse_pos.x < active_max.x - edge_handle_width * 0.5f &&
+			mouse_pos.y >= active_min.y && mouse_pos.y <= active_max.y);
+
+		// マウスカーソル形状の変更
+		if (active_drag_track_index == i || active_drag_track_index == -1)
+		{
+			if (is_hovered_start_edge || is_hovered_end_edge ||
+				(active_drag_track_index == i && (drag_mode == DragMode::StartEdge || drag_mode == DragMode::EndEdge)))
+			{
+				ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
+			}
+			else if (is_hovered_body || (active_drag_track_index == i && drag_mode == DragMode::Move))
+			{
+				ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+			}
+		}
+
+		// ドラッグ開始
+		if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && drag_mode == DragMode::None)
+		{
+			if (is_hovered_start_edge)
+			{
+				drag_mode = DragMode::StartEdge;
+				active_drag_track_index = i;
+				selected_collider_trank_index = i;
+				drag_start_mouse_x = mouse_pos.x;
+				drag_initial_start_time = track.start_time;
+			}
+			else if (is_hovered_end_edge)
+			{
+				drag_mode = DragMode::EndEdge;
+				active_drag_track_index = i;
+				selected_collider_trank_index = i;
+				drag_start_mouse_x = mouse_pos.x;
+				drag_initial_end_time = track.end_time;
+			}
+			else if (is_hovered_body)
+			{
+				drag_mode = DragMode::Move;
+				active_drag_track_index = i;
+				selected_collider_trank_index = i;
+				drag_start_mouse_x = mouse_pos.x;
+				drag_initial_start_time = track.start_time;
+				drag_initial_end_time = track.end_time;
+			}
+			else if (mouse_pos.x >= bg_min.x && mouse_pos.x <= bg_max.x &&
+				mouse_pos.y >= bg_min.y && mouse_pos.y <= bg_max.y)
+			{
+				selected_collider_trank_index = i;
+			}
+		}
+
+		// ドラッグ操作による時間再計算
+		if (drag_mode != DragMode::None && active_drag_track_index == i)
+		{
+			float delta_x = mouse_pos.x - drag_start_mouse_x;
+			float delta_time = (delta_x / bar_width) * duration;
+			constexpr float min_interval = 0.05f;
+
+			if (drag_mode == DragMode::StartEdge)
+			{
+				track.start_time = std::clamp(drag_initial_start_time + delta_time, 0.0f, track.end_time - min_interval);
+			}
+			else if (drag_mode == DragMode::EndEdge)
+			{
+				track.end_time = std::clamp(drag_initial_end_time + delta_time, track.start_time + min_interval, duration);
+			}
+			else if (drag_mode == DragMode::Move)
+			{
+				float track_len = drag_initial_end_time - drag_initial_start_time;
+				float new_start = drag_initial_start_time + delta_time;
+				if (new_start < 0.0f) new_start = 0.0f;
+				if (new_start + track_len > duration) new_start = duration - track_len;
+
+				track.start_time = new_start;
+				track.end_time = new_start + track_len;
+			}
+
+			UpdateColliderActiveStates(current_time);
+		}
+
+		// 有効区間バー本体の描画
+		ImU32 bar_color = (active_drag_track_index == i && drag_mode != DragMode::None)
+			? IM_COL32(255, 170, 50, 240)
+			: ((selected_collider_trank_index == i) ? IM_COL32(240, 130, 20, 230) : IM_COL32(180, 95, 20, 200));
+
+		draw_list->AddRectFilled(active_min, active_max, bar_color, 2.0f);
+		draw_list->AddRect(active_min, active_max, IM_COL32(255, 255, 255, 180), 2.0f);
+
+		// 左右伸縮ハンドル線
+		draw_list->AddLine(ImVec2(active_min.x + 2.0f, active_min.y + 3.0f), ImVec2(active_min.x + 2.0f, active_max.y - 3.0f), IM_COL32(255, 255, 255, 230), 1.5f);
+		draw_list->AddLine(ImVec2(active_max.x - 2.0f, active_min.y + 3.0f), ImVec2(active_max.x - 2.0f, active_max.y - 3.0f), IM_COL32(255, 255, 255, 230), 1.5f);
+
+		// バー中央テキスト表示
+		char time_text[96];
+		sprintf_s(time_text, "%s (%.2fs - %.2fs)", track.collider_name.c_str(), track.start_time, track.end_time);
+		ImVec2 text_size = ImGui::CalcTextSize(time_text);
+		if (active_max.x - active_min.x > text_size.x)
+		{
+			float text_x = active_min.x + ((active_max.x - active_min.x) - text_size.x) * 0.5f;
+			float text_y = active_min.y + ((active_max.y - active_min.y) - text_size.y) * 0.5f;
+			draw_list->AddText(ImVec2(text_x, text_y), IM_COL32(255, 255, 255, 255), time_text);
+		}
+		else
+		{
+			draw_list->AddText(ImVec2(active_max.x + 6.0f, active_min.y), IM_COL32(200, 200, 200, 255), time_text);
+		}
+
+		// 赤い再生ヘッド（現在の再生位置）
+		float playhead_x = bg_min.x + (current_time / duration) * bar_width;
+		if (playhead_x >= bg_min.x && playhead_x <= bg_max.x)
+		{
+			draw_list->AddLine(ImVec2(playhead_x, bg_min.y - 1.0f), ImVec2(playhead_x, bg_max.y + 1.0f), IM_COL32(255, 50, 50, 255), 1.5f);
+		}
+
+		ImGui::Dummy(ImVec2(bar_width, bar_height + 4.0f));
+
+		// その区間専用の数値微調整スライダー
+		ImGui::PushItemWidth(120.0f);
+		if (ImGui::DragFloat(u8"開始時間 (s)", &track.start_time, 0.01f, 0.0f, track.end_time))
+		{
+			UpdateColliderActiveStates(current_time);
+		}
+		ImGui::SameLine();
+		if (ImGui::DragFloat(u8"終了時間 (s)", &track.end_time, 0.01f, track.start_time, duration))
+		{
+			UpdateColliderActiveStates(current_time);
+		}
+		ImGui::PopItemWidth();
+
+		ImGui::PopID(); // トラックIDの終了
+	}
+
+	// 削除要求があった場合のリストからの安全な除去
+	if (delete_target_index >= 0 && delete_target_index < static_cast<int>(collider_tracks.size()))
+	{
+		collider_tracks.erase(collider_tracks.begin() + delete_target_index);
+		selected_collider_trank_index = -1;
+		drag_mode = DragMode::None;
+		active_drag_track_index = -1;
+		UpdateColliderActiveStates(current_time);
+	}
 }
 
 //現在の再生時刻に基づいてコライダー有効状態を同期

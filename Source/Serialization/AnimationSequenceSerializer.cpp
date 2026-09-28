@@ -40,6 +40,19 @@ bool AnimationSequenceSerializer::SaveToFile(
 			keyframes_array.push_back(kf_json);
 		}
 		anim_json["keyframes"] = keyframes_array;
+
+		//各アニメーションに紐づくコライダートラックをJSON配列として出力
+		nlohmann::json colliders_array = nlohmann::json::array();
+		for (const auto& ct : seq_data.collider_tracks)
+		{
+			nlohmann::json ct_json;
+			ct_json["collider_name"] = ct.collider_name;
+			ct_json["start_time"] = ct.start_time;
+			ct_json["end_time"] = ct.end_time;
+			colliders_array.push_back(ct_json);
+		}
+		anim_json["collider_tracks"] = colliders_array;
+
 		sequences_json[anim_name] = anim_json;
 	}
 	
@@ -134,6 +147,28 @@ bool AnimationSequenceSerializer::LoadFromFile(
 					kf.speed_multiplier = kf_json["speed_multiplier"].get<float>();
 				}
 				seq_data.keyframes.push_back(kf);
+			}
+		}
+
+		//アニメーションに紐づくコライダートラックを復元
+		if (anim_json.contains("collider_tracks") && anim_json["collider_tracks"].is_array())
+		{
+			for (const auto& ct_json : anim_json["collider_tracks"])
+			{
+				SequenceColliderTrack ct;
+				if (ct_json.contains("collider_name"))
+				{
+					ct.collider_name = ct_json["collider_name"].get<std::string>();
+				}
+				if (ct_json.contains("start_time"))
+				{
+					ct.start_time = ct_json["start_time"].get<float>();
+				}
+				if (ct_json.contains("end_time"))
+				{
+					ct.end_time = ct_json["end_time"].get<float>();
+				}
+				seq_data.collider_tracks.push_back(ct);
 			}
 		}
 

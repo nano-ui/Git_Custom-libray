@@ -2,6 +2,7 @@
     "animation_sequences": {
         "Attack_Biped_Melee_A": {
             "animation_duration": 1.0,
+            "collider_tracks": [],
             "effective_duration": 1.0,
             "keyframes": [
                 {
@@ -16,6 +17,7 @@
         },
         "Attack_GroundSmash_Loop": {
             "animation_duration": 0.03333333507180214,
+            "collider_tracks": [],
             "effective_duration": 0.03333333507180214,
             "keyframes": [
                 {
@@ -30,6 +32,7 @@
         },
         "Attack_Melee_A": {
             "animation_duration": 0.966666579246521,
+            "collider_tracks": [],
             "effective_duration": 0.966666579246521,
             "keyframes": [
                 {
@@ -42,8 +45,35 @@
                 }
             ]
         },
+        "Attack_RMB_Smash": {
+            "animation_duration": 1.1666666269302368,
+            "collider_tracks": [
+                {
+                    "collider_name": "攻撃判定_右腕",
+                    "end_time": 0.3499999940395355,
+                    "start_time": 0.10000000149011612
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.550000011920929,
+                    "start_time": 0.44999998807907104
+                }
+            ],
+            "effective_duration": 1.1666666269302368,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 1.1666666269302368,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
         "Attack_RipNToss_Rip": {
             "animation_duration": 1.1333332061767578,
+            "collider_tracks": [],
             "effective_duration": 1.1333332061767578,
             "keyframes": [
                 {
@@ -58,6 +88,7 @@
         },
         "Attack_RipNToss_Toss": {
             "animation_duration": 0.8666666746139526,
+            "collider_tracks": [],
             "effective_duration": 0.8666666746139526,
             "keyframes": [
                 {
@@ -72,6 +103,7 @@
         },
         "Idle": {
             "animation_duration": 7.666666030883789,
+            "collider_tracks": [],
             "effective_duration": 7.666666030883789,
             "keyframes": [
                 {
@@ -80,6 +112,51 @@
                 },
                 {
                     "sequencer_time": 7.666666030883789,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
+        "Move_Front_Start": {
+            "animation_duration": 2.0,
+            "collider_tracks": [],
+            "effective_duration": 2.0,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 2.0,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
+        "Move_Left_Start": {
+            "animation_duration": 2.0,
+            "collider_tracks": [],
+            "effective_duration": 2.0,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 2.0,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
+        "Move_Right_Stop": {
+            "animation_duration": 3.3333330154418945,
+            "collider_tracks": [],
+            "effective_duration": 3.3333330154418945,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 3.3333330154418945,
                     "speed_multiplier": 1.0
                 }
             ]

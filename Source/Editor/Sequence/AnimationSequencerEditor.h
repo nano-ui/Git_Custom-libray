@@ -90,6 +90,7 @@ private:
 		EndEdge		//終了時間の伸縮
 	};
 	DragMode drag_mode = DragMode::None;	//現在のドラッグ状態
+	int active_drag_track_index = -1;		//走査中のトラック番号
 	float drag_start_mouse_x = 0.0f;		//ドラッグ開始時のマウスX座標
 	float drag_initial_start_time = 0.0f;	//ドラッグ開始時の始点時間
 	float drag_initial_end_time = 0.0f;		//ドラッグ開始時の終点時間
