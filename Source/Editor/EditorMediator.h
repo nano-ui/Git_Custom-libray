@@ -1,10 +1,14 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include <memory>
 
 class GameObject;
 class ObjectEditor;
 class StateMachineGraphEditor;
+class ColliderAttachmentEditor;
+class ColliderAttachmentItem; 
 class ModelPreviewWindow;
 
 class EditorMediator
@@ -21,6 +25,15 @@ public:
 
 	//オブジェクトエディタのポインタを仲介用に登録
 	void RegisterObjectEditor(ObjectEditor* editor);
+
+	//アタッチメントエディタの登録
+	void RegisterCollisionAttachmentEditor(ColliderAttachmentEditor* editor);
+
+	//アタッチメントエディタコライダー一覧の参照取得
+	const std::vector<std::unique_ptr<ColliderAttachmentItem>>* GetAttachmentColliderItems()const;
+
+	//コライダー名を指定して有効状態を中継設定
+	void SetColliderActiveByName(const std::string& collider_name, bool is_active);
 
 	//モデルファイルがドロップした際のイベント
 	void OnModelDropped(const std::string& file_path);
@@ -73,5 +86,6 @@ private:
 	GameObject* last_selected_object = nullptr;						//前回選択オブジェクト
 	ModelPreviewWindow* model_preview_window = nullptr;				//モデルプレビュー
 	ObjectEditor* object_editor = nullptr;							//オブジェクトエディタのポインタ
+	ColliderAttachmentEditor* collider_attachment_editor = nullptr;	//コライダーアタッチメントエディタのポインタ
 };
 

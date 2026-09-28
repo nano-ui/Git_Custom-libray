@@ -5,7 +5,9 @@
 #include "Gameplay/GameObjects/Character/Character.h"
 #include "StateMachineEditor\StateMachineGraphEditor.h"
 #include "Preview\ModelPreviewWindow.h"
+#include "Attachment\ColliderAttachmentEditor.h"
 
+#include <Windows.h>
 #include <iostream>
 
 //シングルトンインスタンスの取得
@@ -42,6 +44,44 @@ void EditorMediator::RegisterObjectEditor(ObjectEditor* editor)
 {
 	if (editor)object_editor = editor;
 	else OutputDebugStringA("[Warning] EditorMediator::RegisterObjectEditor: Passed editor is null!\n");
+}
+
+//アタッチメントエディタの登録
+void EditorMediator::RegisterCollisionAttachmentEditor(ColliderAttachmentEditor* editor)
+{
+	if (editor)
+	{
+		collider_attachment_editor = editor;
+	}
+	else
+	{
+		OutputDebugStringA("[EditorMediator 警告] RegisterColliderAttachmentEditor: 渡されたエディタポインタが nullptr です。\n");
+	}
+}
+
+//アタッチメントエディタコライダー一覧の参照取得
+const std::vector<std::unique_ptr<ColliderAttachmentItem>>* EditorMediator::GetAttachmentColliderItems() const
+{
+	if (collider_attachment_editor)
+	{
+		return &collider_attachment_editor->GetColliderItems();
+	}
+
+	OutputDebugStringA("[EditorMediator エラー] GetAttachmentColliderItems: ColliderAttachmentEditor が未登録です。\n");
+	return nullptr;
+}
+
+// コライダー名を指定して有効状態を中継設定
+void EditorMediator::SetColliderActiveByName(const std::string& collider_name, bool is_active)
+{
+	if (collider_attachment_editor)
+	{
+		collider_attachment_editor->SetColliderActiveByName(collider_name, is_active);
+	}
+	else
+	{
+		OutputDebugStringA("[EditorMediator エラー] SetColliderActiveByName: ColliderAttachmentEditor が未登録です。\n");
+	}
 }
 
 //モデルファイルがドロップした際のイベント

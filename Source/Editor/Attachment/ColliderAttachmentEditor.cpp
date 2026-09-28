@@ -119,6 +119,21 @@ void ColliderAttachmentEditor::RenderGui(ModelPreviewWindow* preview_window)
 
 		ImGui::Text(u8"アタッチ中ノード: %s", item->start_bone_name.empty() ? u8"(未設定)" : item->start_bone_name.c_str());
 		ImGui::Checkbox(u8"有効", &item->is_active);
+
+		//当たり判定の属性選択コンボボックス
+		static const char* attribute_names[] = {
+			u8"なし(None)",
+			u8"地形(Stage)",
+			u8"動的衝突(Collision)",
+			u8"攻撃判定(Attack)"
+		};
+		int current_attr_idx = static_cast<int>(item->attribute);
+		if (ImGui::Combo(u8"当たり判定属性", &current_attr_idx, attribute_names,IM_ARRAYSIZE(attribute_names)))
+		{
+			item->attribute = static_cast<ColliderAttribute>(current_attr_idx);
+			item->attribute_int = current_attr_idx;
+		}
+
 		if (ImGui::Checkbox(u8"2ボーン連携", &item->is_two_bone_link))
 		{
 			//連携ONに切り替えた際に、終点が空なら終点選択モードに移行
@@ -206,6 +221,26 @@ void ColliderAttachmentEditor::RenderGui(ModelPreviewWindow* preview_window)
 		ImGui::TextWrapped(u8"現在のファイル: %s", save_file_path.c_str());
 	}
 	ImGui::End();
+}
+
+//コライダー名を指定してON/OFF切り替え
+void ColliderAttachmentEditor::SetColliderActiveByName(const std::string& target_name, bool is_active)
+{
+	bool is_found = false;
+	for (auto& item : collider_items)
+	{
+		if (item && item->name == target_name)
+		{
+			item->is_active = is_active;
+			is_found = true;
+			break;
+		}
+	}
+
+	if (!is_found)
+	{
+		OutputDebugStringA("[ColliderAttachmentEditor 警告] SetColliderActiveByName: 指定されたコライダー名が見つかりません。\n");
+	}
 }
 
 //ビューポートクリック時のレイキャスト判定
@@ -434,7 +469,7 @@ void ColliderAttachmentEditor::LoadFromJson(const std::string& file_path)
 		JsonSerializer item_serializer;
 		new_item->SetupSerialization(&item_serializer);
 		item_serializer.LoadFromObject(item_json);
-
+		new_item->OnDeserialized();
 		collider_items.push_back(std::move(new_item));
 	}
 
@@ -477,7 +512,7 @@ void ColliderAttachmentEditor::RenderDebug(ShapeRenderer* renderer, ModelPreview
 		for (size_t i = 0; i < collider_items.size(); ++i)
 		{
 			const auto& item = collider_items[i];
-			if (!item->is_active) continue;
+			//if (!item->is_active) continue;
 
 			DirectX::XMFLOAT3 center = {};
 			DirectX::XMFLOAT4 rotation = {};
@@ -485,13 +520,76 @@ void ColliderAttachmentEditor::RenderDebug(ShapeRenderer* renderer, ModelPreview
 
 			if (CalculateCapsuleWorld(*item, model, world_f4, center, rotation, total_height))
 			{
-				// 選択中のコライダーは黄色、未選択は赤色
-				DirectX::XMFLOAT4 color = (selected_item_index == static_cast<int>(i))
-					? DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f)
-					: DirectX::XMFLOAT4(1.0f, 0.2f, 0.2f, 1.0f);
+				DirectX::XMFLOAT4 color = { 0.2f, 0.7f, 1.0f, 1.0f }; // デフォルト: 動的衝突（青）
+
+				if (selected_item_index == static_cast<int>(i))
+				{
+					color = { 1.0f, 1.0f, 0.0f, 1.0f }; // 選択中: 黄色
+				}
+				else
+				{
+					switch (item->attribute)
+					{
+					case ColliderAttribute::Attack:
+						color = { 1.0f, 0.2f, 0.2f, 1.0f }; // 攻撃判定: 赤
+						break;
+					case ColliderAttribute::Stage:
+						color = { 0.2f, 1.0f, 0.2f, 1.0f }; // 地形・壁: 緑
+						break;
+					case ColliderAttribute::Collision:
+						color = { 0.2f, 0.6f, 1.0f, 1.0f }; // 動的衝突: 青
+						break;
+					case ColliderAttribute::None:
+					default:
+						color = { 0.6f, 0.6f, 0.6f, 1.0f }; // なし: 灰色
+						break;
+					}
+				}
 
 				renderer->DrawCapsule(center, rotation, item->radius, total_height, color, ShapeDrawMode::Wireframe);
 			}
+		}
+	}
+}
+
+//シーケンサプレビュー用コライダー描画
+void ColliderAttachmentEditor::RenderDebugForSequencer(ShapeRenderer* renderer, ModelPreviewWindow* prevew_window)
+{
+	if (!renderer || !prevew_window)return;
+	Model* model = prevew_window->GetModel();
+	if (!model)return;
+
+	DirectX::XMFLOAT4X4 world_f4 = prevew_window->GetModelWorldMatrix();
+
+	for (size_t i = 0; i < collider_items.size(); i++)
+	{
+		const auto& item = collider_items[i];
+		if (!item || !item->is_active)continue;
+
+		DirectX::XMFLOAT3 center = {};
+		DirectX::XMFLOAT4 rotation = {};
+		float total_height = 0.0f;
+
+		if (CalculateCapsuleWorld(*item, model, world_f4, center, rotation, total_height))
+		{
+			DirectX::XMFLOAT4 color = { 0.2f,0.7f,1.0f,1.0f };
+
+			switch (item->attribute)
+			{
+			case ColliderAttribute::Attack:
+				color = { 1.0f,0.2f,0.2f,1.0f };
+				break;
+			case ColliderAttribute::Stage:
+				color = { 0.2f,1.0f,0.2f,1.0f };
+				break;
+			case ColliderAttribute::Collision:
+				color = { 0.2f,0.7f,1.0f,1.0f };
+				break;
+			default:
+				color = { 0.6f,0.6f,0.6f,1.0f };
+				break;
+			}
+			renderer->DrawCapsule(center, rotation, item->radius, total_height, color);
 		}
 	}
 }

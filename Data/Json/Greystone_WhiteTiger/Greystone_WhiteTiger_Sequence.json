@@ -1,5 +1,19 @@
 {
     "animation_sequences": {
+        "Attack_A_Slow": {
+            "animation_duration": 0.800000011920929,
+            "effective_duration": 0.800000011920929,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 0.800000011920929,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
         "Attack_RMB": {
             "animation_duration": 3.0333330631256104,
             "effective_duration": 3.0333330631256104,

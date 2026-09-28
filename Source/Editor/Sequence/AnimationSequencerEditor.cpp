@@ -1,38 +1,39 @@
-#include "AnimationSequencerEditor.h"
+ï»¿#include "AnimationSequencerEditor.h"
 #include "Engine\Graphics\Renderers\Graphics.h"
 #include "Editor\FileDialogHelper.h"
 #include "Editor\EditorMediator.h"
+#include "Editor\Attachment\ColliderAttachmentEditor.h"
 
 #include <windows.h>
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <algorithm>
 
-static constexpr float MIN_KEYFRAME_INTERVAL = 0.02f;	//ƒL[ƒtƒŒ[ƒ€ŠÔ‚ÌÅ¬ŠÔ·
-static constexpr float MIN_SPEED_MULTIPLIER = 0.0f;		//Å¬‘¬“x”{—¦
-static constexpr float DEFAULT_SPEED_MULTIPLIER = 1.0f;	//•W€‘¬“x”{—¦
-static constexpr float MAX_SPEED_MULTIPLIER = 2.0f;		//Å‘å‘¬“x”{—¦
+static constexpr float MIN_KEYFRAME_INTERVAL = 0.02f;	//ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ é–“ã®æœ€å°æ™‚é–“å·®
+static constexpr float MIN_SPEED_MULTIPLIER = 0.0f;		//æœ€å°é€Ÿåº¦å€ç‡
+static constexpr float DEFAULT_SPEED_MULTIPLIER = 1.0f;	//æ¨™æº–é€Ÿåº¦å€ç‡
+static constexpr float MAX_SPEED_MULTIPLIER = 2.0f;		//æœ€å¤§é€Ÿåº¦å€ç‡
 
-//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 AnimationSequencerEditor::AnimationSequencerEditor()
 {
 }
 
-//ƒfƒXƒgƒ‰ƒNƒ^
+//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 AnimationSequencerEditor::~AnimationSequencerEditor() = default;
 
-//‰Šú‰»ˆ—
+//åˆæœŸåŒ–å‡¦ç†
 void AnimationSequencerEditor::Initialize()
 {
 }
 
-//XVˆ—
+//æ›´æ–°å‡¦ç†
 void AnimationSequencerEditor::Update(float elapsed_time)
 {
-	//ƒvƒŒƒrƒ…[ƒ‚ƒfƒ‹‘¤‚©‚çƒ[ƒh’†‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‘ŠÔ‚ğæ“¾
+	//ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ãƒ¢ãƒ‡ãƒ«å´ã‹ã‚‰ãƒ­ãƒ¼ãƒ‰ä¸­ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç·æ™‚é–“ã‚’å–å¾—
 	float duration = EditorMediator::Instance().GetModelAnimationDuration();
 
-	//ƒAƒjƒ[ƒVƒ‡ƒ“‘ŠÔ‚Ì•ÏXiV‚µ‚¢ƒAƒjƒ[ƒVƒ‡ƒ“‚Ìƒ[ƒhŠ®—¹j‚ğŒŸ’m
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç·æ™‚é–“ã®å¤‰æ›´ï¼ˆæ–°ã—ã„ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ­ãƒ¼ãƒ‰å®Œäº†ï¼‰ã‚’æ¤œçŸ¥
 	if (duration > 0.0f && animation_duration != duration)
 	{
 		SaveCurrentSequenceDataToMap();
@@ -62,15 +63,15 @@ void AnimationSequencerEditor::Update(float elapsed_time)
 
 	float effective_duration = GetEffectiveDuration();
 
-	//ƒAƒjƒ[ƒVƒ‡ƒ“‚ªƒ[ƒhÏ‚İA‚©‚ÂƒV[ƒPƒ“ƒT‚ªÄ¶’†‚Ìê‡‚Ì‚İƒV[ƒPƒ“ƒTŠÔ‚ği‚ß‚é
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒãƒ­ãƒ¼ãƒ‰æ¸ˆã¿ã€ã‹ã¤ã‚·ãƒ¼ã‚±ãƒ³ã‚µãŒå†ç”Ÿä¸­ã®å ´åˆã®ã¿ã‚·ãƒ¼ã‚±ãƒ³ã‚µæ™‚é–“ã‚’é€²ã‚ã‚‹
 	if (animation_duration > 0.0f && is_playing)
 	{
-		//Ä¶‘¬“x‚ğl—¶‚µ‚½ƒfƒ‹ƒ^Œo‰ßŠÔ‚ğƒV[ƒPƒ“ƒTŠÔ‚Ö‰ÁZ
+		//å†ç”Ÿé€Ÿåº¦ã‚’è€ƒæ…®ã—ãŸãƒ‡ãƒ«ã‚¿çµŒéæ™‚é–“ã‚’ã‚·ãƒ¼ã‚±ãƒ³ã‚µæ™‚é–“ã¸åŠ ç®—
 		current_time += elapsed_time * playback_speed;
 
 		float integrated_model_time = GetIntegratedModelTime(current_time);
 
-		//ƒ^ƒCƒ€ƒ‰ƒCƒ“‚ÌI’[‚É’B‚µ‚½ê‡‚Ìƒ‹[ƒv/’â~ˆ—
+		//ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã®çµ‚ç«¯ã«é”ã—ãŸå ´åˆã®ãƒ«ãƒ¼ãƒ—/åœæ­¢å‡¦ç†
 		if (integrated_model_time >= animation_duration || current_time >= effective_duration)
 		{
 			if (is_loop)
@@ -85,23 +86,25 @@ void AnimationSequencerEditor::Update(float elapsed_time)
 			}
 		}
 
-		//æ“¾‚µ‚½ŠÔ‚ğƒvƒŒƒrƒ…[ƒEƒBƒ“ƒhƒE“à‚Ì3Dƒ‚ƒfƒ‹‚É’¼Ú‹­§“K—p
+		//å–å¾—ã—ãŸæ™‚é–“ã‚’ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å†…ã®3Dãƒ¢ãƒ‡ãƒ«ã«ç›´æ¥å¼·åˆ¶é©ç”¨
 		EditorMediator::Instance().SetModelAnimationTime(integrated_model_time);
+
+		UpdateColliderActiveStates(current_time);
 	}
 }
 
-//•`‰æˆ—
+//æç”»å‡¦ç†
 void AnimationSequencerEditor::Render(ID3D11DeviceContext* immediate_context)
 {
 }
 
-//ImGui•`‰æˆ—
+//ImGuiæç”»å‡¦ç†
 void AnimationSequencerEditor::RenderGui()
 {
-	// ƒV[ƒPƒ“ƒTê—p‚ÌƒhƒbƒLƒ“ƒOƒXƒy[ƒXID‚ğ’è‹`
+	// ã‚·ãƒ¼ã‚±ãƒ³ã‚µå°‚ç”¨ã®ãƒ‰ãƒƒã‚­ãƒ³ã‚°ã‚¹ãƒšãƒ¼ã‚¹IDã‚’å®šç¾©
 	const ImGuiID dockspace_id = ImGui::GetID("SequencerDockSpace");
 
-	// ¶’[ƒTƒCƒhƒo[‚Ì•i80pxj‚ğ”ğ‚¯‚é‚½‚ßAƒƒCƒ“ƒrƒ…[ƒ|[ƒg‚Ì‰E‘¤—Ìˆæ‚ÉƒhƒbƒLƒ“ƒOƒXƒy[ƒX‚ğ”z’u
+	// å·¦ç«¯ã‚µã‚¤ãƒ‰ãƒãƒ¼ã®å¹…ï¼ˆ80pxï¼‰ã‚’é¿ã‘ã‚‹ãŸã‚ã€ãƒ¡ã‚¤ãƒ³ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®å³å´é ˜åŸŸã«ãƒ‰ãƒƒã‚­ãƒ³ã‚°ã‚¹ãƒšãƒ¼ã‚¹ã‚’é…ç½®
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImVec2 dock_pos = viewport->Pos;
 	dock_pos.x += 80.0f;
@@ -112,7 +115,7 @@ void AnimationSequencerEditor::RenderGui()
 	ImGui::SetNextWindowSize(dock_size);
 	ImGui::SetNextWindowViewport(viewport->ID);
 
-	// ƒhƒbƒLƒ“ƒOƒXƒy[ƒX‚Ì“y‘äƒEƒBƒ“ƒhƒE‚ğ•\¦
+	// ãƒ‰ãƒƒã‚­ãƒ³ã‚°ã‚¹ãƒšãƒ¼ã‚¹ã®åœŸå°ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¡¨ç¤º
 	const ImGuiWindowFlags host_window_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus |
 		ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
@@ -120,13 +123,13 @@ void AnimationSequencerEditor::RenderGui()
 	ImGui::Begin("SequencerHostWindow", nullptr, host_window_flags);
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
 
-	// ‰‰ñ‹N“®‚Ì‚İƒŒƒCƒAƒEƒg‚ğ4•ªŠ„‚É‹­§\’z‚·‚é”»’è
+	// åˆå›èµ·å‹•æ™‚ã®ã¿ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã‚’4åˆ†å‰²ã«å¼·åˆ¶æ§‹ç¯‰ã™ã‚‹åˆ¤å®š
 	static bool is_first_frame = true;
 	if (is_first_frame)
 	{
 		is_first_frame = false;
 
-		// Šù‘¶‚ÌƒŒƒCƒAƒEƒg\‘¢‚ğˆê“xƒŠƒZƒbƒg
+		// æ—¢å­˜ã®ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆæ§‹é€ ã‚’ä¸€åº¦ãƒªã‚»ãƒƒãƒˆ
 		ImGui::DockBuilderRemoveNode(dockspace_id);
 		ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_PassthruCentralNode | ImGuiDockNodeFlags_DockSpace);
 		ImGui::DockBuilderSetNodeSize(dockspace_id, dock_size);
@@ -135,36 +138,36 @@ void AnimationSequencerEditor::RenderGui()
 		ImGuiID dock_left_id;
 		ImGuiID dock_down_id;
 
-		// ‰æ–Ê‘S‘Ì‚ğã‰º‚É•ªŠ„i‰º•”‚Éƒ^ƒCƒ€ƒ‰ƒCƒ“—p—Ìˆæ‚ğŠm•ÛB‘S‘Ì‚Ì–ñ30%‚Ì”ä—¦j
+		// ç”»é¢å…¨ä½“ã‚’ä¸Šä¸‹ã«åˆ†å‰²ï¼ˆä¸‹éƒ¨ã«ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ç”¨é ˜åŸŸã‚’ç¢ºä¿ã€‚å…¨ä½“ã®ç´„30%ã®æ¯”ç‡ï¼‰
 		dock_main_id = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.30f, &dock_down_id, &dock_main_id);
 
-		// c‚Á‚½ã•”ƒGƒŠƒA‚ğ¶‰E‚É•ªŠ„i¶‘¤‚ÉƒRƒ“ƒgƒ[ƒ‹EƒŠƒXƒg—p—Ìˆæ‚ğŠm•ÛB•–ñ25%‚Ì”ä—¦j
+		// æ®‹ã£ãŸä¸Šéƒ¨ã‚¨ãƒªã‚¢ã‚’å·¦å³ã«åˆ†å‰²ï¼ˆå·¦å´ã«ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ãƒ»ãƒªã‚¹ãƒˆç”¨é ˜åŸŸã‚’ç¢ºä¿ã€‚å¹…ç´„25%ã®æ¯”ç‡ï¼‰
 		ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.25f, &dock_left_id, &dock_main_id);
 
 		ImGuiID dock_left_top_id;
 		ImGuiID dock_left_bottom_id;
 
-		// ¶‘¤ƒGƒŠƒA‚ğ‚³‚ç‚Éã‰º‚É‹Ï“™•ªŠ„iã‚ªƒ{ƒ^ƒ“A‰º‚ªƒAƒjƒ[ƒVƒ‡ƒ“ˆê——j
+		// å·¦å´ã‚¨ãƒªã‚¢ã‚’ã•ã‚‰ã«ä¸Šä¸‹ã«å‡ç­‰åˆ†å‰²ï¼ˆä¸ŠãŒãƒœã‚¿ãƒ³ã€ä¸‹ãŒã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ä¸€è¦§ï¼‰
 		ImGui::DockBuilderSplitNode(dock_left_id, ImGuiDir_Up, 0.50f, &dock_left_top_id, &dock_left_bottom_id);
 
-		// Šeƒm[ƒhID‚É‘Î‚µ‚ÄA‘Î‰‚·‚éƒEƒBƒ“ƒhƒE–¼‚ğ•R•t‚¯iƒhƒbƒLƒ“ƒOj
-		ImGui::DockBuilderDockWindow(u8"‘€ìƒpƒlƒ‹", dock_left_top_id);
-		ImGui::DockBuilderDockWindow(u8"ƒAƒjƒ[ƒVƒ‡ƒ“ˆê——", dock_left_bottom_id);
-		ImGui::DockBuilderDockWindow(u8"ƒ^ƒCƒ€ƒ‰ƒCƒ“", dock_down_id);
+		// å„ãƒãƒ¼ãƒ‰IDã«å¯¾ã—ã¦ã€å¯¾å¿œã™ã‚‹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦åã‚’ç´ä»˜ã‘ï¼ˆãƒ‰ãƒƒã‚­ãƒ³ã‚°ï¼‰
+		ImGui::DockBuilderDockWindow(u8"æ“ä½œãƒ‘ãƒãƒ«", dock_left_top_id);
+		ImGui::DockBuilderDockWindow(u8"ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ä¸€è¦§", dock_left_bottom_id);
+		ImGui::DockBuilderDockWindow(u8"ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³", dock_down_id);
 		ImGui::DockBuilderDockWindow("Animation Preview", dock_main_id);
 
-		// \’z‚µ‚½ƒŒƒCƒAƒEƒg‚ğŠm’è
+		// æ§‹ç¯‰ã—ãŸãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã‚’ç¢ºå®š
 		ImGui::DockBuilderFinish(dockspace_id);
 	}
 	ImGui::End();
 
-	// ƒ^ƒCƒ€ƒ‰ƒCƒ“ƒEƒBƒ“ƒhƒE‚Ì•`‰æ
-	if (ImGui::Begin(u8"ƒ^ƒCƒ€ƒ‰ƒCƒ“", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) 
+	// ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®æç”»
+	if (ImGui::Begin(u8"ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) 
 	{
-		// ƒvƒŒƒrƒ…[’†‚Ìƒ‚ƒfƒ‹‚©‚çƒAƒjƒ[ƒVƒ‡ƒ“‘ŠÔ‚ğæ“¾
+		// ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ä¸­ã®ãƒ¢ãƒ‡ãƒ«ã‹ã‚‰ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç·æ™‚é–“ã‚’å–å¾—
 		animation_duration = EditorMediator::Instance().GetModelAnimationDuration();
 
-		// ƒAƒjƒ[ƒVƒ‡ƒ“‚ª‘¶İ‚µ‚È‚¢ê‡‚Í‘€ì‚ğ§ŒÀ‚·‚éƒZ[ƒtƒK[ƒh
+		// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯æ“ä½œã‚’åˆ¶é™ã™ã‚‹ã‚»ãƒ¼ãƒ•ã‚¬ãƒ¼ãƒ‰
 		bool is_disabled = (animation_duration <= 0.0f);
 		if (is_disabled)
 		{
@@ -173,12 +176,12 @@ void AnimationSequencerEditor::RenderGui()
 
 		float effective_duration = GetEffectiveDuration();
 
-		// yŒÅ’èƒGƒŠƒAFã•”ƒRƒ“ƒgƒ[ƒ‹•ƒV[ƒNƒo[z
+		// ã€å›ºå®šã‚¨ãƒªã‚¢ï¼šä¸Šéƒ¨ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ï¼†ã‚·ãƒ¼ã‚¯ãƒãƒ¼ã€‘
 		ImGui::BeginChild("TimelineControl", ImVec2(0, 65), false, ImGuiWindowFlags_NoScrollbar);
 		{
-			if (ImGui::Button(u8"•Û‘¶", ImVec2(80.0f, 0.0f))) 
+			if (ImGui::Button(u8"ä¿å­˜", ImVec2(80.0f, 0.0f))) 
 			{
-				// Œ»İ‚Ì•ÒWó‘Ô‚ğƒ}ƒbƒv‚Ö”½‰f‚µ‚Ä‚©‚çJSONƒtƒ@ƒCƒ‹‚ÖˆêŠ‡•Û‘¶
+				// ç¾åœ¨ã®ç·¨é›†çŠ¶æ…‹ã‚’ãƒãƒƒãƒ—ã¸åæ˜ ã—ã¦ã‹ã‚‰JSONãƒ•ã‚¡ã‚¤ãƒ«ã¸ä¸€æ‹¬ä¿å­˜
 				SaveCurrentSequenceDataToMap();
 				if (AnimationSequenceSerializer::SaveToFile(current_model_name, all_sequences_map))
 				{
@@ -192,9 +195,9 @@ void AnimationSequencerEditor::RenderGui()
 
 			ImGui::SameLine();
 
-			if (ImGui::Button(u8"“Ç‚İ‚İ", ImVec2(80.0f, 0.0f))) 
+			if (ImGui::Button(u8"èª­ã¿è¾¼ã¿", ImVec2(80.0f, 0.0f)))
 			{
-				// JSONƒtƒ@ƒCƒ‹‚©‚çˆêŠ‡“Ç‚İ‚İ‚µ‚ÄŒ»İ‚Ìƒ^ƒCƒ€ƒ‰ƒCƒ“‚Ö‘¦”½‰f
+				// JSONãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ä¸€æ‹¬èª­ã¿è¾¼ã¿ã—ã¦ç¾åœ¨ã®ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã¸å³æ™‚åæ˜ 
 				if (AnimationSequenceSerializer::LoadFromFile(current_model_name, all_sequences_map))
 				{
 					LoadCurrentSequenceDataFromMap();
@@ -208,8 +211,8 @@ void AnimationSequencerEditor::RenderGui()
 
 			ImGui::Spacing();
 
-			// Ä¶ / ˆê’â~ƒ{ƒ^ƒ“
-			if (ImGui::Button(is_playing ? u8"ˆê’â~" : u8"Ä¶"))
+			// å†ç”Ÿ / ä¸€æ™‚åœæ­¢ãƒœã‚¿ãƒ³
+			if (ImGui::Button(is_playing ? u8"ä¸€æ™‚åœæ­¢" : u8"å†ç”Ÿ"))
 			{
 				is_playing = !is_playing;
 				EditorMediator::Instance().SetModelAnimationPlaying(is_playing);
@@ -222,57 +225,308 @@ void AnimationSequencerEditor::RenderGui()
 			char progress_label[64];
 			sprintf_s(progress_label, "%.2f s / %.2f s", current_time, effective_duration);
 
-			// ƒ}ƒEƒX‚Åˆø‚Á’£‚Á‚ÄŠÔ‚ğ•Ï‚¦‚ç‚ê‚éƒV[ƒNƒo[ƒXƒ‰ƒCƒ_[
+			// ãƒã‚¦ã‚¹ã§å¼•ã£å¼µã£ã¦æ™‚é–“ã‚’å¤‰ãˆã‚‰ã‚Œã‚‹ã‚·ãƒ¼ã‚¯ãƒãƒ¼ã‚¹ãƒ©ã‚¤ãƒ€ãƒ¼
 			if (ImGui::SliderFloat("##TimelineSeek", &current_time, 0.0f, effective_duration, progress_label))
 			{
 				float remapped_time = GetRemappedTime(current_time);
 				EditorMediator::Instance().SetModelAnimationTime(remapped_time);
 			}
 		}
-		ImGui::EndChild(); // ŒÅ’èƒRƒ“ƒgƒ[ƒ‹ƒGƒŠƒA‚ÌI—¹
+		ImGui::EndChild(); // å›ºå®šã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã‚¨ãƒªã‚¢ã®çµ‚äº†
 
-		// ƒRƒ“ƒgƒ[ƒ‹•”•ª‚Æ‰º•”ƒXƒNƒ[ƒ‹ƒRƒ“ƒeƒ“ƒc‚Ì‹«ŠEü
+		// ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«éƒ¨åˆ†ã¨ä¸‹éƒ¨ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã®å¢ƒç•Œç·š
 		ImGui::Separator();
 
-		// ‚±‚±‚©‚ç‰º‚Ì—Ìˆæ‚Íƒ}ƒEƒX‚ÅƒXƒNƒ[ƒ‹‚µ‚Ä‚àAã‹L‚ÌƒRƒ“ƒgƒ[ƒ‹•”•ª‚Íˆê”Ôã‚ÉŒÅ’è•\¦
+		// ã“ã“ã‹ã‚‰ä¸‹ã®é ˜åŸŸã¯ãƒã‚¦ã‚¹ã§ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã—ã¦ã‚‚ã€ä¸Šè¨˜ã®ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«éƒ¨åˆ†ã¯ä¸€ç•ªä¸Šã«å›ºå®šè¡¨ç¤º
 		ImGui::BeginChild("TimelineDetails", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 		{
 			DrawTimelineTracks();
+			ImGui::Separator();
+			DrawColliderTracksGui();
 		}
-		ImGui::EndChild(); // ‰Â“®ƒGƒŠƒA‚ÌI—¹
+		ImGui::EndChild(); // å¯å‹•ã‚¨ãƒªã‚¢ã®çµ‚äº†
 
 		if (is_disabled)
 		{
 			ImGui::EndDisabled();
-			ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), u8"¦ƒAƒjƒ[ƒVƒ‡ƒ“ƒf[ƒ^‚ªƒ[ƒh‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB");
+			ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), u8"â€»ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿ãŒãƒ­ãƒ¼ãƒ‰ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚");
 		}
 	}
 	ImGui::End();
 }
 
-//ƒL[ƒtƒŒ[ƒ€‚Ì‰Šú‰»
+//ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼æœ‰åŠ¹åŒºé–“è¨­å®šç”¨UIæç”»
+void AnimationSequencerEditor::DrawColliderTracksGui()
+{
+	ImGui::Spacing();
+	ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.3f, 1.0f), u8"ã€ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼æœ‰åŠ¹åŒºé–“ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã€‘");
+
+	const auto* attached_colliders = EditorMediator::Instance().GetAttachmentColliderItems();
+
+	// æœ€åˆã«å¯¾è±¡ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’é¸æŠ
+	static std::string current_selected_collider_name = "";
+	if (attached_colliders && !attached_colliders->empty())
+	{
+		if (current_selected_collider_name.empty())
+		{
+			current_selected_collider_name = (*attached_colliders)[0]->name;
+		}
+
+		if (ImGui::BeginCombo(u8"å¯¾è±¡ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼", current_selected_collider_name.c_str()))
+		{
+			for (const auto& item : *attached_colliders)
+			{
+				if (!item) continue;
+				bool is_sel = (current_selected_collider_name == item->name);
+				if (ImGui::Selectable(item->name.c_str(), is_sel))
+				{
+					current_selected_collider_name = item->name;
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+	else
+	{
+		ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), u8"â€»ã‚¢ã‚¿ãƒƒãƒãƒ¡ãƒ³ãƒˆã‚¨ãƒ‡ã‚£ã‚¿ã«ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ãŒç™»éŒ²ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚");
+		return;
+	}
+
+	// é¸æŠä¸­ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®ãƒˆãƒ©ãƒƒã‚¯ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ï¼ˆå­˜åœ¨ã—ãªã„å ´åˆã¯ä½œæˆå¯èƒ½ã«ã™ã‚‹ï¼‰
+	ColliderActiveTrack* current_track = nullptr;
+	int track_index = -1;
+	for (size_t i = 0; i < collider_tracks.size(); ++i)
+	{
+		if (collider_tracks[i].collider_name == current_selected_collider_name)
+		{
+			current_track = &collider_tracks[i];
+			track_index = static_cast<int>(i);
+			break;
+		}
+	}
+
+	if (!current_track)
+	{
+		if (ImGui::Button(u8"ã“ã®ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®æœ‰åŠ¹åŒºé–“ã‚’è¿½åŠ "))
+		{
+			ColliderActiveTrack new_track;
+			new_track.collider_name = current_selected_collider_name;
+			new_track.start_time = 0.0f;
+			new_track.end_time = (std::min)(0.5f, animation_duration);
+			collider_tracks.push_back(new_track);
+		}
+		return;
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button(u8"åŒºé–“ã‚’å‰Šé™¤"))
+	{
+		if (track_index >= 0)
+		{
+			collider_tracks.erase(collider_tracks.begin() + track_index);
+			drag_mode = DragMode::None;
+			return;
+		}
+	}
+
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å…¨ä½“ã®ãƒ™ãƒ¼ã‚¹ãƒãƒ¼ã¨ã€ãã®ä¸­ã«å®Ÿè¡Œæ™‚é–“ã‚’è¡¨ã™ãƒãƒ¼ã‚’æç”»
+	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+	ImVec2 canvas_pos = ImGui::GetCursorScreenPos();
+	float bar_width = ImGui::GetContentRegionAvail().x - 20.0f;
+	constexpr float bar_height = 36.0f;
+	constexpr float edge_handle_width = 8.0f; // ç«¯ã®ä¼¸ç¸®ç”¨åˆ¤å®šå¹…
+
+	if (bar_width < 100.0f) bar_width = 100.0f;
+
+	// èƒŒæ™¯ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒãƒ¼ï¼ˆã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç·æ™‚é–“ï¼‰
+	ImVec2 bg_min = canvas_pos;
+	ImVec2 bg_max = ImVec2(canvas_pos.x + bar_width, canvas_pos.y + bar_height);
+	draw_list->AddRectFilled(bg_min, bg_max, IM_COL32(35, 35, 40, 255), 4.0f);
+	draw_list->AddRect(bg_min, bg_max, IM_COL32(80, 80, 85, 255), 4.0f);
+
+	// æ™‚é–“ã‹ã‚‰Xåº§æ¨™ã¸ã®æ¯”ç‡å¤‰æ›
+	float duration = (animation_duration > 0.0f) ? animation_duration : 1.0f;
+	float active_start_x = bg_min.x + (current_track->start_time / duration) * bar_width;
+	float active_end_x = bg_min.x + (current_track->end_time / duration) * bar_width;
+
+	// å®Ÿè¡Œæ™‚é–“ã‚’è¡¨ã™ãƒãƒ¼
+	ImVec2 active_min = ImVec2(active_start_x, bg_min.y + 4.0f);
+	ImVec2 active_max = ImVec2(active_end_x, bg_max.y - 4.0f);
+
+	// ãƒã‚¦ã‚¹æ“ä½œã¨å½“ãŸã‚Šåˆ¤å®š
+	ImGuiIO& io = ImGui::GetIO();
+	ImVec2 mouse_pos = io.MousePos;
+
+	bool is_hovered_start_edge = (mouse_pos.x >= active_min.x - edge_handle_width * 0.5f &&
+		mouse_pos.x <= active_min.x + edge_handle_width * 0.5f &&
+		mouse_pos.y >= active_min.y && mouse_pos.y <= active_max.y);
+
+	bool is_hovered_end_edge = (mouse_pos.x >= active_max.x - edge_handle_width * 0.5f &&
+		mouse_pos.x <= active_max.x + edge_handle_width * 0.5f &&
+		mouse_pos.y >= active_min.y && mouse_pos.y <= active_max.y);
+
+	bool is_hovered_body = (mouse_pos.x > active_min.x + edge_handle_width * 0.5f &&
+		mouse_pos.x < active_max.x - edge_handle_width * 0.5f &&
+		mouse_pos.y >= active_min.y && mouse_pos.y <= active_max.y);
+
+	// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã®å½¢çŠ¶å¤‰æ›´
+	if (is_hovered_start_edge || is_hovered_end_edge || drag_mode == DragMode::StartEdge || drag_mode == DragMode::EndEdge)
+	{
+		ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
+	}
+	else if (is_hovered_body || drag_mode == DragMode::Move)
+	{
+		ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+	}
+
+	// ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹
+	if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+	{
+		if (is_hovered_start_edge)
+		{
+			drag_mode = DragMode::StartEdge;
+			drag_start_mouse_x = mouse_pos.x;
+			drag_initial_start_time = current_track->start_time;
+		}
+		else if (is_hovered_end_edge)
+		{
+			drag_mode = DragMode::EndEdge;
+			drag_start_mouse_x = mouse_pos.x;
+			drag_initial_end_time = current_track->end_time;
+		}
+		else if (is_hovered_body)
+		{
+			drag_mode = DragMode::Move;
+			drag_start_mouse_x = mouse_pos.x;
+			drag_initial_start_time = current_track->start_time;
+			drag_initial_end_time = current_track->end_time;
+		}
+	}
+
+	// ãƒ‰ãƒ©ãƒƒã‚°è§£é™¤
+	if (!ImGui::IsMouseDown(ImGuiMouseButton_Left))
+	{
+		drag_mode = DragMode::None;
+	}
+
+	// ãƒ‰ãƒ©ãƒƒã‚°ä¸­ï¼šç§»å‹•é‡ã‹ã‚‰æ™‚é–“ã‚’å†è¨ˆç®—
+	if (drag_mode != DragMode::None)
+	{
+		float delta_x = mouse_pos.x - drag_start_mouse_x;
+		float delta_time = (delta_x / bar_width) * duration;
+		constexpr float min_interval = 0.05f;
+
+		if (drag_mode == DragMode::StartEdge)
+		{
+			current_track->start_time = std::clamp(drag_initial_start_time + delta_time, 0.0f, current_track->end_time - min_interval);
+		}
+		else if (drag_mode == DragMode::EndEdge)
+		{
+			current_track->end_time = std::clamp(drag_initial_end_time + delta_time, current_track->start_time + min_interval, duration);
+		}
+		else if (drag_mode == DragMode::Move)
+		{
+			float track_len = drag_initial_end_time - drag_initial_start_time;
+			float new_start = drag_initial_start_time + delta_time;
+			if (new_start < 0.0f) new_start = 0.0f;
+			if (new_start + track_len > duration) new_start = duration - track_len;
+
+			current_track->start_time = new_start;
+			current_track->end_time = new_start + track_len;
+		}
+
+		UpdateColliderActiveStates(current_time);
+	}
+
+	// æœ‰åŠ¹ãƒãƒ¼æœ¬ä½“ã®æç”»ï¼ˆã‚ªãƒ¬ãƒ³ã‚¸è‰²ã€ãƒ‰ãƒ©ãƒƒã‚°ä¸­ã¯æ˜ã‚‹ãï¼‰
+	ImU32 bar_color = (drag_mode != DragMode::None) ? IM_COL32(255, 160, 40, 240) : IM_COL32(230, 120, 20, 220);
+	draw_list->AddRectFilled(active_min, active_max, bar_color, 3.0f);
+	draw_list->AddRect(active_min, active_max, IM_COL32(255, 255, 255, 180), 3.0f);
+
+	// å·¦å³ã®ä¼¸ç¸®ãƒãƒ³ãƒ‰ãƒ«ï¼ˆç™½ã„ç´°ç·šï¼‰
+	draw_list->AddLine(ImVec2(active_min.x + 2.0f, active_min.y + 4.0f), ImVec2(active_min.x + 2.0f, active_max.y - 4.0f), IM_COL32(255, 255, 255, 255), 2.0f);
+	draw_list->AddLine(ImVec2(active_max.x - 2.0f, active_min.y + 4.0f), ImVec2(active_max.x - 2.0f, active_max.y - 4.0f), IM_COL32(255, 255, 255, 255), 2.0f);
+
+	// ãƒãƒ¼ä¸­å¤®ã«æ™‚é–“ãƒ©ãƒ™ãƒ«è¡¨ç¤º
+	char time_text[64];
+	sprintf_s(time_text, "%.2fs - %.2fs", current_track->start_time, current_track->end_time);
+	ImVec2 text_size = ImGui::CalcTextSize(time_text);
+	if (active_max.x - active_min.x > text_size.x)
+	{
+		float text_x = active_min.x + ((active_max.x - active_min.x) - text_size.x) * 0.5f;
+		float text_y = active_min.y + ((active_max.y - active_min.y) - text_size.y) * 0.5f;
+		draw_list->AddText(ImVec2(text_x, text_y), IM_COL32(255, 255, 255, 255), time_text);
+	}
+
+	// ã‚·ãƒ¼ã‚±ãƒ³ã‚µã®ç¾åœ¨å†ç”Ÿæ™‚åˆ»ã‚’ç¤ºã™ç¸¦ç·šï¼ˆèµ¤ã„ç¸¦ç·šï¼‰
+	float playhead_x = bg_min.x + (current_time / duration) * bar_width;
+	if (playhead_x >= bg_min.x && playhead_x <= bg_max.x)
+	{
+		draw_list->AddLine(ImVec2(playhead_x, bg_min.y - 2.0f), ImVec2(playhead_x, bg_max.y + 2.0f), IM_COL32(255, 50, 50, 255), 2.0f);
+	}
+
+	// ImGuiã®ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã‚«ãƒ¼ã‚½ãƒ«ã‚’é€²ã‚ã‚‹
+	ImGui::Dummy(ImVec2(bar_width, bar_height + 10.0f));
+
+	// æ•°å€¤ã§ã®å¾®èª¿æ•´å…¥åŠ›ã‚‚ä¸‹ã«ä½µè¨­
+	ImGui::PushItemWidth(120.0f);
+	ImGui::DragFloat(u8"é–‹å§‹æ™‚é–“ (s)", &current_track->start_time, 0.01f, 0.0f, current_track->end_time);
+	ImGui::SameLine();
+	ImGui::DragFloat(u8"çµ‚äº†æ™‚é–“ (s)", &current_track->end_time, 0.01f, current_track->start_time, duration);
+	ImGui::PopItemWidth();
+}
+
+//ç¾åœ¨ã®å†ç”Ÿæ™‚åˆ»ã«åŸºã¥ã„ã¦ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼æœ‰åŠ¹çŠ¶æ…‹ã‚’åŒæœŸ
+void AnimationSequencerEditor::UpdateColliderActiveStates(float current_seq_time)
+{
+	const auto* attached_colliders = EditorMediator::Instance().GetAttachmentColliderItems();
+	if (!attached_colliders)return;
+
+	//ã‚¢ã‚¿ãƒƒãƒãƒ¡ãƒ³ãƒˆå´ã®å…¨ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã«ã¤ã„ã¦ç¾åœ¨ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã‹åˆ¤å®š
+	for (const auto& item : *attached_colliders)
+	{
+		if (!item)continue;
+
+		bool should_be_active = false;
+		for (const auto& track : collider_tracks)
+		{
+			if (track.collider_name == item->name)
+			{
+				if (current_seq_time >= track.start_time && current_seq_time <= track.end_time)
+				{
+					should_be_active = true;
+					break;
+				}
+			}
+		}
+		//çŠ¶æ…‹å¤‰åŒ–ãŒã‚ã‚Œã°MediatorçµŒç”±ã§æ›´æ–°
+		EditorMediator::Instance().SetColliderActiveByName(item->name, should_be_active);
+	}
+}
+
+//ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã®åˆæœŸåŒ–
 void AnimationSequencerEditor::InitializerTimeMap()
 {
 	time_map_keyframes.clear();
 
 	if (animation_duration <= 0.0f)return;
 
-	//ƒAƒjƒ[ƒVƒ‡ƒ“ŠJn‚ÌƒL[ƒtƒŒ[ƒ€
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é–‹å§‹æ™‚ã®ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ 
 	TimeMapKeyframe start_kf = { 0.0f,DEFAULT_SPEED_MULTIPLIER };
 	time_map_keyframes.push_back(start_kf);
 
-	//ƒAƒjƒ[ƒVƒ‡ƒ“I—¹‚ÌƒL[ƒtƒŒ[ƒ€
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†æ™‚ã®ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ 
 	TimeMapKeyframe end_kf = { animation_duration,DEFAULT_SPEED_MULTIPLIER };
 	time_map_keyframes.push_back(end_kf);
 }
 
-//ƒ‚ƒfƒ‹ŠÔ‚ğüŒ`•âŠÔ‚µ‚ÄZo
+//ãƒ¢ãƒ‡ãƒ«æ™‚é–“ã‚’ç·šå½¢è£œé–“ã—ã¦ç®—å‡º
 float AnimationSequencerEditor::GetRemappedTime(float seq_time) const
 {
 	return GetIntegratedModelTime(seq_time);
 }
 
-//w’è‚É‚¨‚¯‚é‘¬“x”{—¦‚ğæ“¾
+//æŒ‡å®šæ™‚åˆ»ã«ãŠã‘ã‚‹é€Ÿåº¦å€ç‡ã‚’å–å¾—
 float AnimationSequencerEditor::GetSpeedMultiplierAt(float seq_time) const
 {
 	if (time_map_keyframes.empty())
@@ -302,7 +556,7 @@ float AnimationSequencerEditor::GetSpeedMultiplierAt(float seq_time) const
 	return DEFAULT_SPEED_MULTIPLIER;
 }
 
-//‘äŒ`Œö®‚ğ—p‚¢‚Ä0•b‚©‚çw’è‚Ü‚Å‚Ì‘¬“x”{—¦‚ğÏZ‚µAƒ‚ƒfƒ‹Ä¶ŠÔ‚ğZo
+//å°å½¢å…¬å¼ã‚’ç”¨ã„ã¦0ç§’ã‹ã‚‰æŒ‡å®šæ™‚åˆ»ã¾ã§ã®é€Ÿåº¦å€ç‡ã‚’ç©ç®—ã—ã€ãƒ¢ãƒ‡ãƒ«å†ç”Ÿæ™‚é–“ã‚’ç®—å‡º
 float AnimationSequencerEditor::GetIntegratedModelTime(float seq_time) const
 {
 	if (time_map_keyframes.empty())
@@ -313,16 +567,16 @@ float AnimationSequencerEditor::GetIntegratedModelTime(float seq_time) const
 
 	float total_model_time = 0.0f;
 
-	//w’èŠÔ‚Ü‚Å‚Ì‹æŠÔ‚ğ„‰ñ‚µ‚Ä‘äŒ`Œö®‚Å–ÊÏ‚ğ‰ÁZ
+	//æŒ‡å®šæ™‚é–“ã¾ã§ã®åŒºé–“ã‚’å·¡å›ã—ã¦å°å½¢å…¬å¼ã§é¢ç©ã‚’åŠ ç®—
 	for (size_t i = 0; i < time_map_keyframes.size() - 1; ++i) 
 	{
 		const TimeMapKeyframe& kf0 = time_map_keyframes[i];
 		const TimeMapKeyframe& kf1 = time_map_keyframes[i + 1];
 
-		//w’èŠÔ‚ğ’´‚¦‚½‚çI—¹
+		//æŒ‡å®šæ™‚é–“ã‚’è¶…ãˆãŸã‚‰çµ‚äº†
 		if (seq_time <= kf0.sequencer_time)break;
 
-		//‹æŠÔ‚ÌI’[ŠÔ‚ğŒvZ
+		//åŒºé–“ã®çµ‚ç«¯æ™‚é–“ã‚’è¨ˆç®—
 		float t_start = kf0.sequencer_time;
 		float t_end = (seq_time < kf1.sequencer_time) ? seq_time : kf1.sequencer_time;
 		float dt = t_end - t_start;
@@ -338,14 +592,14 @@ float AnimationSequencerEditor::GetIntegratedModelTime(float seq_time) const
 	return total_model_time;
 }
 
-//‘¬“xƒJ[ƒu‚©‚çƒ‚ƒfƒ‹‚ªŠ®‘–‚·‚é‚Ì‚É•K—v‚ÈÀÛ‚Ì‡ŒvŠÔiÀŒø‘ŠÔj‚ğZo
+//é€Ÿåº¦ã‚«ãƒ¼ãƒ–ã‹ã‚‰ãƒ¢ãƒ‡ãƒ«ãŒå®Œèµ°ã™ã‚‹ã®ã«å¿…è¦ãªå®Ÿéš›ã®åˆè¨ˆæ™‚é–“ï¼ˆå®ŸåŠ¹ç·æ™‚é–“ï¼‰ã‚’ç®—å‡º
 float AnimationSequencerEditor::GetEffectiveDuration() const
 {
 	if (time_map_keyframes.empty() || animation_duration <= 0.0f)return animation_duration;
 
 	float accumulated_model_time = 0.0f;
 
-	//ŠeƒL[ƒtƒŒ[ƒ€‹æŠÔ‚ğ’H‚èAƒ‚ƒfƒ‹‚Ì–Ú•WŠÔ(animation_duration)‚É’B‚·‚éuŠÔ‚ğ‹tZ
+	//å„ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ åŒºé–“ã‚’è¾¿ã‚Šã€ãƒ¢ãƒ‡ãƒ«ã®ç›®æ¨™æ™‚é–“(animation_duration)ã«é”ã™ã‚‹ç¬é–“ã‚’é€†ç®—
 	for (size_t i = 0; i < time_map_keyframes.size() - 1; i++)
 	{
 		const TimeMapKeyframe& kf0 = time_map_keyframes[i];
@@ -357,22 +611,22 @@ float AnimationSequencerEditor::GetEffectiveDuration() const
 		float s0 = kf0.speed_multiplier;
 		float s1 = kf1.speed_multiplier;
 
-		//‹æŠÔ“à‚Åi‚Şƒ‚ƒfƒ‹ŠÔ
+		//åŒºé–“å†…ã§é€²ã‚€ãƒ¢ãƒ‡ãƒ«æ™‚é–“
 		float segment_model_time = ((s0 + s1) * 0.5f) * dt;
 
-		//‚±‚Ì‹æŠÔ“à‚Åƒ‚ƒfƒ‹ŠÔ‚ª–Ú•W‚É’B‚·‚éê‡
+		//ã“ã®åŒºé–“å†…ã§ãƒ¢ãƒ‡ãƒ«æ™‚é–“ãŒç›®æ¨™ã«é”ã™ã‚‹å ´åˆ
 		if (accumulated_model_time + segment_model_time >= animation_duration)
 		{
 			float rem_model_time = animation_duration - accumulated_model_time;
 
-			//‘¬“x•Ï‰»‚ª‚È‚¢ê‡
+			//é€Ÿåº¦å¤‰åŒ–ãŒãªã„å ´åˆ
 			if (fabs(s1 - s0) < 0.0001f)
 			{
 				if (s0 > 0.0001f)return kf0.sequencer_time + (rem_model_time / s0);
 				return kf0.sequencer_time;
 			}
 
-			//‘¬“x•Ï‰»‚ª‚ ‚éê‡
+			//é€Ÿåº¦å¤‰åŒ–ãŒã‚ã‚‹å ´åˆ
 			float accel = (s1 - s0) / dt;
 			float discriminant = (s0 * s0) + (2.0f * accel * rem_model_time);
 			if (discriminant >= 0.0f)
@@ -384,7 +638,7 @@ float AnimationSequencerEditor::GetEffectiveDuration() const
 		}
 		accumulated_model_time += segment_model_time;
 	}
-	//ƒL[ƒtƒŒ[ƒ€––”ö‚É’B‚µ‚Ä‚àŠ®—¹‚µ‚Ä‚¢‚È‚¢ê‡
+	//ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ æœ«å°¾ã«é”ã—ã¦ã‚‚å®Œäº†ã—ã¦ã„ãªã„å ´åˆ
 	const TimeMapKeyframe& last_kf = time_map_keyframes.back();
 	float last_speed = last_kf.speed_multiplier;
 
@@ -397,7 +651,7 @@ float AnimationSequencerEditor::GetEffectiveDuration() const
 	return last_kf.sequencer_time;
 }
 
-//Œ»İ•ÒW’†‚Ìƒ^ƒCƒ€ƒ‰ƒCƒ“ƒL[ƒtƒŒ[ƒ€‚ğƒ}ƒbƒv\‘¢‘Ì‚Ö‘Ş”ğE“¯Šú
+//ç¾åœ¨ç·¨é›†ä¸­ã®ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’ãƒãƒƒãƒ—æ§‹é€ ä½“ã¸é€€é¿ãƒ»åŒæœŸ
 void AnimationSequencerEditor::SaveCurrentSequenceDataToMap()
 {
 	if (animation_duration <= 0.0f || time_map_keyframes.empty())return;
@@ -406,7 +660,7 @@ void AnimationSequencerEditor::SaveCurrentSequenceDataToMap()
 	seq_data.animation_duration = animation_duration;
 	seq_data.effective_duration = GetEffectiveDuration();
 
-	//ƒ^ƒCƒ€ƒ‰ƒCƒ“‚ÌƒL[ƒtƒŒ[ƒ€‚ğƒVƒŠƒAƒ‰ƒCƒU—p\‘¢‘Ì‚Ö•ÏŠ·‚µ‚ÄŠi”[
+	//ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã®ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚¶ç”¨æ§‹é€ ä½“ã¸å¤‰æ›ã—ã¦æ ¼ç´
 	for (size_t i = 0; i < time_map_keyframes.size(); i++)
 	{
 		const auto& kf = time_map_keyframes[i];
@@ -415,10 +669,21 @@ void AnimationSequencerEditor::SaveCurrentSequenceDataToMap()
 		seq_kf.speed_multiplier = kf.speed_multiplier;
 		seq_data.keyframes.push_back(seq_kf);
 	}
+
+	//ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ãƒˆãƒ©ãƒƒã‚¯ã®æ ¼ç´
+	for (size_t i = 0; i < collider_tracks.size(); i++)
+	{
+		SequenceColliderTrack track;
+		track.collider_name = collider_tracks[i].collider_name;
+		track.start_time = collider_tracks[i].start_time;
+		track.end_time = collider_tracks[i].end_time;
+		seq_data.collider_tracks.push_back(track);
+	}
+
 	all_sequences_map[current_animation_name] = seq_data;
 }
 
-//ƒ}ƒbƒv\‘¢‘Ì‚©‚çŒ»İ‘I‘ğ’†‚ÌƒAƒjƒ[ƒVƒ‡ƒ“ƒL[ƒtƒŒ[ƒ€‚Ö•œŒ³
+//ãƒãƒƒãƒ—æ§‹é€ ä½“ã‹ã‚‰ç¾åœ¨é¸æŠä¸­ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã¸å¾©å…ƒ
 void AnimationSequencerEditor::LoadCurrentSequenceDataFromMap()
 {
 	auto it = all_sequences_map.find(current_animation_name);
@@ -431,7 +696,7 @@ void AnimationSequencerEditor::LoadCurrentSequenceDataFromMap()
 	const AnimationSequenceData& seq_data = it->second;
 	time_map_keyframes.clear();
 
-	//ƒVƒŠƒAƒ‰ƒCƒU—p\‘¢‘Ì‚©‚çƒ^ƒCƒ€ƒ‰ƒCƒ“ƒL[ƒtƒŒ[ƒ€‚Ö•ÏŠ·‚µ‚Ä•œŒ³
+	//ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚¶ç”¨æ§‹é€ ä½“ã‹ã‚‰ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã¸å¤‰æ›ã—ã¦å¾©å…ƒ
 	for (size_t i = 0; i < seq_data.keyframes.size(); i++)
 	{
 		const auto& seq_kf = seq_data.keyframes[i];
@@ -440,28 +705,41 @@ void AnimationSequencerEditor::LoadCurrentSequenceDataFromMap()
 		kf.speed_multiplier = seq_kf.speed_multiplier;
 		time_map_keyframes.push_back(kf);
 	}
+
+	//ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ãƒˆãƒ©ãƒƒã‚¯ã®å¾©å…ƒ
+	for (size_t i = 0; i < seq_data.collider_tracks.size(); i++)
+	{
+		const auto& track = seq_data.collider_tracks[i];
+		ColliderActiveTrack ct;
+		ct.collider_name = track.collider_name;
+		ct.start_time = track.start_time;
+		ct.end_time = track.end_time;
+		collider_tracks.push_back(ct);
+	}
+
+	selected_collider_trank_index = collider_tracks.empty() ? -1 : 0;
 	current_time = 0.0f;
 }
 
-//ƒ^ƒCƒ€ƒ‰ƒCƒ“Ú×ƒgƒ‰ƒbƒN‚ğ•`‰æ‚µAƒhƒ‰ƒbƒO‚È‚Ç‚Ìƒ}ƒEƒX‘€ì‚ğs‚¤
+//ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³è©³ç´°ãƒˆãƒ©ãƒƒã‚¯ã‚’æç”»ã—ã€ãƒ‰ãƒ©ãƒƒã‚°ãªã©ã®ãƒã‚¦ã‚¹æ“ä½œã‚’è¡Œã†
 void AnimationSequencerEditor::DrawTimelineTracks()
 {
-	//ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì’·‚³‚ª–¢İ’èA‚Ü‚½‚Íƒf[ƒ^‚ª‚¨‚©‚µ‚¢ê‡‚Í•`‰æ‚ğƒXƒLƒbƒv
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®é•·ã•ãŒæœªè¨­å®šã€ã¾ãŸã¯ãƒ‡ãƒ¼ã‚¿ãŒãŠã‹ã—ã„å ´åˆã¯æç”»ã‚’ã‚¹ã‚­ãƒƒãƒ—
 	if (animation_duration <= 0.0f || time_map_keyframes.empty())
 	{
-		ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), u8"¦ƒAƒjƒ[ƒVƒ‡ƒ“‚ğ“Ç‚İ‚ñ‚Å‚­‚¾‚³‚¢B");
+		ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), u8"â€»ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’èª­ã¿è¾¼ã‚“ã§ãã ã•ã„ã€‚");
 		return;
 	}
 
-	ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), u8"‘¬“x”{—¦ƒJ[ƒui’†‰›F1.0x “™‘¬ / ãF”{‘¬ / ‰ºFƒXƒ[E’â~j");
+	ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), u8"é€Ÿåº¦å€ç‡ã‚«ãƒ¼ãƒ–ï¼ˆä¸­å¤®ï¼š1.0x ç­‰é€Ÿ / ä¸Šï¼šå€é€Ÿ / ä¸‹ï¼šã‚¹ãƒ­ãƒ¼ãƒ»åœæ­¢ï¼‰");
 	ImGui::Spacing();
 
-	//ƒJƒXƒ^ƒ€•`‰æ—p‚Ì—Ìˆæ•‚ÆÀ•Wî•ñ‚ğZo
+	//ã‚«ã‚¹ã‚¿ãƒ æç”»ç”¨ã®é ˜åŸŸå¹…ã¨åº§æ¨™æƒ…å ±ã‚’ç®—å‡º
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
 	ImVec2 canvas_pos = ImGui::GetCursorScreenPos();
 	ImVec2 canvas_size = ImGui::GetContentRegionAvail();
 
-	//ƒgƒ‰ƒbƒN•`‰æƒGƒŠƒA‚Ì‚‚³
+	//ãƒˆãƒ©ãƒƒã‚¯æç”»ã‚¨ãƒªã‚¢ã®é«˜ã•
 	float track_height = 120.0f;
 	if (canvas_size.y < track_height)
 	{
@@ -469,7 +747,7 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 	}
 	canvas_size.y = track_height;
 
-	//ŠO˜g‚Ì”wŒi˜g‚ğ•`‰æ
+	//å¤–æ ã®èƒŒæ™¯æ ã‚’æç”»
 	ImVec2 canvas_end = ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y);
 	draw_list->AddRectFilled(canvas_pos, canvas_end, IM_COL32(40, 40, 45, 255));
 	draw_list->AddRect(canvas_pos, canvas_end, IM_COL32(100, 100, 110, 255));
@@ -479,34 +757,34 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 	float usable_width = canvas_size.x - (padding_x * 2.0f);
 	float usable_height = canvas_size.y - (padding_y * 2.0f);
 
-	//1.0”{‘¬‚ğ•\‚·’†‰›‚ÌŠî€ü‚ğ”jü/”¼“§–¾•`‰æ
+	//1.0å€é€Ÿã‚’è¡¨ã™ä¸­å¤®ã®åŸºæº–ç·šã‚’ç ´ç·š/åŠé€æ˜æç”»
 	float default_y = canvas_pos.y + canvas_size.y - padding_y - (((DEFAULT_SPEED_MULTIPLIER - MIN_SPEED_MULTIPLIER) / (MAX_SPEED_MULTIPLIER - MIN_SPEED_MULTIPLIER)) * usable_height);
 	draw_list->AddLine(ImVec2(canvas_pos.x, default_y), ImVec2(canvas_end.x, default_y), IM_COL32(120, 120, 130, 180), 1.0f);
 	
-	//Œ»İ‚ÌÄ¶icurrent_timej‚É‘Î‰‚·‚éXƒsƒNƒZƒ‹À•W‚ğZo
+	//ç¾åœ¨ã®å†ç”Ÿæ™‚åˆ»ï¼ˆcurrent_timeï¼‰ã«å¯¾å¿œã™ã‚‹Xãƒ”ã‚¯ã‚»ãƒ«åº§æ¨™ã‚’ç®—å‡º
 	float current_x = canvas_pos.x + padding_x + ((current_time / animation_duration) * usable_width);
 
-	//ƒgƒ‰ƒbƒN—Ìˆæ‚Ìã‰º‚¢‚Á‚Ï‚¢‚ÉŒ»İ‚ÌÄ¶ˆÊ’u‚ğ¦‚·u”’‚¢cüv‚ğ•`‰æ
+	//ãƒˆãƒ©ãƒƒã‚¯é ˜åŸŸã®ä¸Šä¸‹ã„ã£ã±ã„ã«ç¾åœ¨ã®å†ç”Ÿä½ç½®ã‚’ç¤ºã™ã€Œç™½ã„ç¸¦ç·šã€ã‚’æç”»
 	draw_list->AddLine(
 		ImVec2(current_x, canvas_pos.y),
 		ImVec2(current_x, canvas_pos.y + canvas_size.y),
 		IM_COL32(255, 255, 255, 255),
-		2.0f // ü‚Ì‘¾‚³
+		2.0f // ç·šã®å¤ªã•
 	);
 
-	//ƒ}ƒEƒX“ü—ÍƒCƒxƒ“ƒg
+	//ãƒã‚¦ã‚¹å…¥åŠ›ã‚¤ãƒ™ãƒ³ãƒˆ
 	ImGuiIO& io = ImGui::GetIO();
 	ImVec2 mouse_pos = io.MousePos;
 
-	//y“–‚½‚è”»’è‚Æ“ü—Íˆ—‚ÌŠÇ—z
+	//ã€å½“ãŸã‚Šåˆ¤å®šã¨å…¥åŠ›å‡¦ç†ã®ç®¡ç†ã€‘
 	if (!ImGui::IsMouseDown(ImGuiMouseButton_Left))selected_keyframe_index = -1;
 
-	//ŠeƒL[ƒtƒŒ[ƒ€‚ğƒ‹[ƒv‚µ‚ÄA“–‚½‚è”»’è‚¨‚æ‚Ñ•`‰æ
+	//å„ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’ãƒ«ãƒ¼ãƒ—ã—ã¦ã€å½“ãŸã‚Šåˆ¤å®šãŠã‚ˆã³æç”»
 	for (int i = 0; i < static_cast<int>(time_map_keyframes.size()); i++)
 	{
 		TimeMapKeyframe& kf = time_map_keyframes[i];
 
-		//§Œä“_‚ÌƒsƒNƒZƒ‹À•W‚ğZo
+		//åˆ¶å¾¡ç‚¹ã®ãƒ”ã‚¯ã‚»ãƒ«åº§æ¨™ã‚’ç®—å‡º
 		float t_rate_x = kf.sequencer_time / animation_duration;
 		float speed_rate_y = (kf.speed_multiplier - MIN_SPEED_MULTIPLIER) / (MAX_SPEED_MULTIPLIER - MIN_SPEED_MULTIPLIER);
 
@@ -514,72 +792,72 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 		float kf_y = canvas_pos.y + canvas_size.y - padding_y - (speed_rate_y * usable_height);
 		ImVec2 pt(kf_x, kf_y);
 
-		//§Œä“_iŠÛj‚Æƒ}ƒEƒX‚Ì‹——£‚ğ‘ª‚Á‚ÄA“–‚½‚è”»’èƒ`ƒFƒbƒN
+		//åˆ¶å¾¡ç‚¹ï¼ˆä¸¸ï¼‰ã¨ãƒã‚¦ã‚¹ã®è·é›¢ã‚’æ¸¬ã£ã¦ã€å½“ãŸã‚Šåˆ¤å®šãƒã‚§ãƒƒã‚¯
 		float dx = mouse_pos.x - pt.x;
 		float dy = mouse_pos.y - pt.y;
 		float dist_sq = (dx * dx) + (dy * dy);
 		bool is_hovered = (dist_sq < 8.0f * 8.0f);
 		ImU32 dot_color = is_hovered ? IM_COL32(255, 220, 0, 255) : IM_COL32(0, 190, 255, 255);
 
-		//yƒhƒ‰ƒbƒO‘€ì‚É‚æ‚éŠÔ’²®z
+		//ã€ãƒ‰ãƒ©ãƒƒã‚°æ“ä½œã«ã‚ˆã‚‹æ™‚é–“èª¿æ•´ã€‘
 		if (is_hovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left))selected_keyframe_index = i;
 
 		if (selected_keyframe_index == i && ImGui::IsMouseDragging(ImGuiMouseButton_Left))
 		{
-			//ƒhƒ‰ƒbƒO‚É‚æ‚éƒ}ƒEƒX‚ÌˆÚ“®æ‚©‚çV‚µ‚¢ŠÔ‚ğ‹tZ
+			//ãƒ‰ãƒ©ãƒƒã‚°ã«ã‚ˆã‚‹ãƒã‚¦ã‚¹ã®ç§»å‹•å…ˆã‹ã‚‰æ–°ã—ã„æ™‚é–“ã‚’é€†ç®—
 			float relative_mouse_x = mouse_pos.x - (canvas_pos.x + padding_x);
 			float relative_mouse_y = (canvas_pos.y + canvas_size.y - padding_x) - mouse_pos.y;
 			float new_seq_time = (relative_mouse_x / usable_width) * animation_duration;
 			float new_speed = MIN_SPEED_MULTIPLIER + (relative_mouse_y / usable_height) * (MAX_SPEED_MULTIPLIER - MIN_SPEED_MULTIPLIER);
 
-			//ŠÔ‚ª”ÍˆÍŠO‚É‚Í‚İo‚È‚¢‚æ‚¤‚ÉƒNƒ‰ƒ“ƒv§ŒÀ
+			//æ™‚é–“ãŒç¯„å›²å¤–ã«ã¯ã¿å‡ºãªã„ã‚ˆã†ã«ã‚¯ãƒ©ãƒ³ãƒ—åˆ¶é™
 			if (new_seq_time < 0.0f)new_seq_time = 0.0f;
 			if (new_seq_time > animation_duration)new_seq_time = animation_duration;
 
 			if (new_speed < MIN_SPEED_MULTIPLIER) new_speed = MIN_SPEED_MULTIPLIER;
 			if (new_speed > MAX_SPEED_MULTIPLIER) new_speed = MAX_SPEED_MULTIPLIER;
 
-			//‘OŒã‚ÌƒL[ƒtƒŒ[ƒ€‚ğ’Ç‚¢‰z‚³‚È‚¢‚æ‚¤‚ÉˆÚ“®‰Â”\ŒÀŠE‚ğİ
+			//å‰å¾Œã®ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’è¿½ã„è¶Šã•ãªã„ã‚ˆã†ã«ç§»å‹•å¯èƒ½é™ç•Œã‚’è¨­
 			float min_seq = (i > 0) ? time_map_keyframes[i - 1].sequencer_time + MIN_KEYFRAME_INTERVAL : 0.0f;
 			float max_seq = (i < static_cast<int>(time_map_keyframes.size()) - 1) ? time_map_keyframes[i + 1].sequencer_time - MIN_KEYFRAME_INTERVAL : animation_duration;
 			
-			//Å‰‚ÆÅŒã‚ÌƒL[ƒtƒŒ[ƒ€‚ÍA•âŠÔŠÖŒWˆÛ‚Ì‚½‚ß‚ÉuƒV[ƒPƒ“ƒTŠÔ(‰¡²)v‚ÌˆÚ“®‚ÍƒƒbƒN
+			//æœ€åˆã¨æœ€å¾Œã®ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã¯ã€è£œé–“é–¢ä¿‚ç¶­æŒã®ãŸã‚ã«ã€Œã‚·ãƒ¼ã‚±ãƒ³ã‚µæ™‚é–“(æ¨ªè»¸)ã€ã®ç§»å‹•ã¯ãƒ­ãƒƒã‚¯
 			if (i == 0)kf.sequencer_time = 0.0f;
 			else if (i == static_cast<int>(time_map_keyframes.size()) - 1)kf.sequencer_time = animation_duration;
 			else kf.sequencer_time = (std::max)(min_seq, (std::min)(new_seq_time, max_seq));
 
-			//c²iƒ‚ƒfƒ‹‚ÌÀÛ‚ÌÄ¶ŠÔj‚ÍA§ŒÀ‚È‚­ƒhƒ‰ƒbƒOˆÚ“®
+			//ç¸¦è»¸ï¼ˆãƒ¢ãƒ‡ãƒ«ã®å®Ÿéš›ã®å†ç”Ÿæ™‚é–“ï¼‰ã¯ã€åˆ¶é™ãªããƒ‰ãƒ©ãƒƒã‚°ç§»å‹•
 			kf.speed_multiplier = new_speed;
 
-			//ƒ‚ƒfƒ‹‘¤‚É•ÏX‚³‚ê‚½ŠÔ‚ğ‘¦’Ê’m‚µ‚ÄA3Dƒrƒ…[‚ğƒhƒ‰ƒbƒO‚É’Ç]
+			//ãƒ¢ãƒ‡ãƒ«å´ã«å¤‰æ›´ã•ã‚ŒãŸæ™‚é–“ã‚’å³æ™‚é€šçŸ¥ã—ã¦ã€3Dãƒ“ãƒ¥ãƒ¼ã‚’ãƒ‰ãƒ©ãƒƒã‚°ã«è¿½å¾“
 			float current_remapped = GetRemappedTime(current_time);
 			EditorMediator::Instance().SetModelAnimationTime(current_remapped);
 		}
-		//y‰EƒNƒŠƒbƒN‚É‚æ‚éƒL[ƒtƒŒ[ƒ€íœz
+		//ã€å³ã‚¯ãƒªãƒƒã‚¯ã«ã‚ˆã‚‹ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ å‰Šé™¤ã€‘
 		if (is_hovered && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
 		{
-			// Å‰‚ÆÅŒã‚ÌƒtƒŒ[ƒ€‚Íƒ^ƒCƒ€ƒŠƒ}ƒbƒv‚ÌŠî€“_‚Æ‚È‚é‚½‚ßAíœ•s‰Â
+			// æœ€åˆã¨æœ€å¾Œã®ãƒ•ãƒ¬ãƒ¼ãƒ ã¯ã‚¿ã‚¤ãƒ ãƒªãƒãƒƒãƒ—ã®åŸºæº–ç‚¹ã¨ãªã‚‹ãŸã‚ã€å‰Šé™¤ä¸å¯
 			if (i > 0 && i < static_cast<int>(time_map_keyframes.size()) - 1)
 			{
 				time_map_keyframes.erase(time_map_keyframes.begin() + i);
 				selected_keyframe_index = -1;
 
-				// ŒxƒƒO‚ğƒfƒoƒbƒOo—Í
+				// è­¦å‘Šãƒ­ã‚°ã‚’ãƒ‡ãƒãƒƒã‚°å‡ºåŠ›
 				OutputDebugStringA("[Sequencer] Keyframe deleted via right-click.\n");
-				break; //ƒCƒeƒŒ[ƒ^‚Ì”j’]‚ğ–h‚®‚½‚ßƒ‹[ƒv‚ğ”²‚é
+				break; //ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã®ç ´ç¶»ã‚’é˜²ããŸã‚ãƒ«ãƒ¼ãƒ—ã‚’æŠœã‚‹
 			}
 		}
-		//§Œä“_iŠÛj‚ğ•`‰æ
+		//åˆ¶å¾¡ç‚¹ï¼ˆä¸¸ï¼‰ã‚’æç”»
 		draw_list->AddCircleFilled(pt, 6.0f, dot_color);
 		draw_list->AddCircle(pt, 7.0f, IM_COL32(0, 0, 0, 200), 0, 1.5f);
 
-		//ŠÔ•\¦‚ÌƒeƒLƒXƒg‚ğƒI[ƒo[ƒŒƒC
+		//æ™‚é–“è¡¨ç¤ºã®ãƒ†ã‚­ã‚¹ãƒˆã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ¬ã‚¤
 		char kf_text[32];
 		sprintf_s(kf_text, "%.1fs\n%.2fx", kf.sequencer_time, kf.speed_multiplier);
 		draw_list->AddText(ImVec2(pt.x - 15.0f, pt.y - 30.0f), IM_COL32(220, 220, 220, 255), kf_text);
 	}
 
-	//y§Œä“_‚ğŒq‚®Ü‚êü‚Ì•`‰æz
+	//ã€åˆ¶å¾¡ç‚¹ã‚’ç¹‹ãæŠ˜ã‚Œç·šã®æç”»ã€‘
 	for (size_t i = 0; i < time_map_keyframes.size() - 1; ++i)
 	{
 		const auto& kf0 = time_map_keyframes[i];
@@ -593,7 +871,7 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 
 		draw_list->AddLine(ImVec2(x0, y0), ImVec2(x1, y1), IM_COL32(0, 220, 100, 255), 2.0f);
 	}
-	//yƒ_ƒuƒ‹ƒNƒŠƒbƒN‚É‚æ‚éƒL[ƒtƒŒ[ƒ€’Ç‰Áz
+	//ã€ãƒ€ãƒ–ãƒ«ã‚¯ãƒªãƒƒã‚¯ã«ã‚ˆã‚‹ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ è¿½åŠ ã€‘
 	if (ImGui::IsMouseHoveringRect(canvas_pos, canvas_end) && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 	{
 		float relative_click_x = mouse_pos.x - (canvas_pos.x + padding_x);
@@ -604,25 +882,25 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 
 		if (click_seq_time > 0.0f && click_seq_time < animation_duration)
 		{
-			// V‹KƒL[ƒtƒŒ[ƒ€‚ğ’Ç‰Á
+			// æ–°è¦ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’è¿½åŠ 
 			TimeMapKeyframe new_kf = { click_seq_time, click_speed };
 			time_map_keyframes.push_back(new_kf);
 
-			// ’Ç‰ÁŒã‚ÉƒV[ƒPƒ“ƒTŠÔ‚Ì¸‡‚É‚È‚é‚æ‚¤‚É”z—ñ‚ğ‹­§“I‚Éƒ\[ƒg
+			// è¿½åŠ å¾Œã«ã‚·ãƒ¼ã‚±ãƒ³ã‚µæ™‚é–“ã®æ˜‡é †ã«ãªã‚‹ã‚ˆã†ã«é…åˆ—ã‚’å¼·åˆ¶çš„ã«ã‚½ãƒ¼ãƒˆ
 			std::sort(time_map_keyframes.begin(), time_map_keyframes.end(), CompareKeyframes);
 
-			// ƒfƒoƒbƒOƒƒO‚ğo—Í
+			// ãƒ‡ãƒãƒƒã‚°ãƒ­ã‚°ã‚’å‡ºåŠ›
 			char added_log[256];
 			sprintf_s(added_log, "[Sequencer] Added Speed Keyframe at Time: %.2fs -> Speed: %.2fx\n", click_seq_time, click_speed);
 			OutputDebugStringA(added_log);
 		}
 	}
 
-	// •`‰æ—Ìˆæ‚ğŸ‚Éi‚ß‚é‚½‚ß‚Ì ImGui ƒJ[ƒ\ƒ‹i‚ßˆ—
+	// æç”»é ˜åŸŸã‚’æ¬¡ã«é€²ã‚ã‚‹ãŸã‚ã® ImGui ã‚«ãƒ¼ã‚½ãƒ«é€²ã‚å‡¦ç†
 	ImGui::Dummy(canvas_size);
 }
 
-//ƒL[ƒtƒŒ[ƒ€‚ğƒV[ƒPƒ“ƒTŠÔ‚Ì¸‡‚Åƒ\[ƒg
+//ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’ã‚·ãƒ¼ã‚±ãƒ³ã‚µæ™‚é–“ã®æ˜‡é †ã§ã‚½ãƒ¼ãƒˆ
 bool AnimationSequencerEditor::CompareKeyframes(const TimeMapKeyframe& a, const TimeMapKeyframe& b)
 {
 	return a.sequencer_time < b.sequencer_time;

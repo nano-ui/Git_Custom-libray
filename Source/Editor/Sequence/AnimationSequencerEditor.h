@@ -19,6 +19,14 @@ public:
 		float speed_multiplier;		//再生速度倍率
 	};
 
+	//コライダー有効区間トラック
+	struct ColliderActiveTrack
+	{
+		std::string collider_name = "";	//コライダー名
+		float start_time = 0.0f;		//開始時間
+		float end_time = 0.0f;			//終了時間
+	};
+
 public:
 	//コンストラクタ
 	AnimationSequencerEditor();
@@ -37,6 +45,9 @@ public:
 
 	//ImGui描画
 	void RenderGui();
+
+	//現在の再生時刻に基づいてコライダー有効状態を同期
+	void UpdateColliderActiveStates(float current_seq_time);
 
 private:
 	//キーフレームの初期化
@@ -66,6 +77,22 @@ private:
 	//キーフレームをシーケンサ時間の昇順でソート
 	static bool CompareKeyframes(const TimeMapKeyframe& a, const TimeMapKeyframe& b);
 
+	//コライダー有効区間設定用UI描画
+	void DrawColliderTracksGui();
+
+private:
+	//バーのドラッグ操作種別
+	enum class DragMode
+	{
+		None,		//操作なし
+		Move,		//バー全体の水平移動
+		StartEdge,	//開始時間の伸縮
+		EndEdge		//終了時間の伸縮
+	};
+	DragMode drag_mode = DragMode::None;	//現在のドラッグ状態
+	float drag_start_mouse_x = 0.0f;		//ドラッグ開始時のマウスX座標
+	float drag_initial_start_time = 0.0f;	//ドラッグ開始時の始点時間
+	float drag_initial_end_time = 0.0f;		//ドラッグ開始時の終点時間
 
 private:
 	std::shared_ptr<SequenceSceneBace> active_scene;	//現在の画面
@@ -82,5 +109,8 @@ private:
 	std::unordered_map<std::string, AnimationSequenceData> all_sequences_map;	//モデルの全アニメーションシーケンス設定を保持
 	std::string current_model_name = "DefaultModel";		//現在ロード中のモデル
 	std::string current_animation_name = "DefaultAnim";		//現在再生中のアニメーション
+
+	std::vector<ColliderActiveTrack> collider_tracks;		//コライダー有効区間トラック配列
+	int selected_collider_trank_index = -1;					//選択中のコライダートラック番号
 };
 

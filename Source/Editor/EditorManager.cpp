@@ -45,12 +45,18 @@ void EditorManager::Initialize()
 	tab_bar->Initialize();
 	collider_attachment_editor->Initialize();
 
+	EditorMediator::Instance().RegisterCollisionAttachmentEditor(collider_attachment_editor.get());
+
 	//ModelPreviewWindowの描画パスにコライダーエディタのデバッグ描画をバインド
 	model_preview_window->SetExternalDebugRender([this](ShapeRenderer* renderer)
 		{
 			if (active_scene_type == EditorSceneType::ColliderAttachment && collider_attachment_editor)
 			{
 				collider_attachment_editor->RenderDebug(renderer, model_preview_window.get());
+			}
+			else if (active_scene_type == EditorSceneType::AnimationSequencer && animation_sequencer_editor)
+			{
+				collider_attachment_editor->RenderDebugForSequencer(renderer, model_preview_window.get());
 			}
 		});
 

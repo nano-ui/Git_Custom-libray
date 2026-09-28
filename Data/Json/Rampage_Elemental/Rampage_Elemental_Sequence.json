@@ -1,0 +1,89 @@
+{
+    "animation_sequences": {
+        "Attack_Biped_Melee_A": {
+            "animation_duration": 1.0,
+            "effective_duration": 1.0,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 1.0,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
+        "Attack_GroundSmash_Loop": {
+            "animation_duration": 0.03333333507180214,
+            "effective_duration": 0.03333333507180214,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 0.03333333507180214,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
+        "Attack_Melee_A": {
+            "animation_duration": 0.966666579246521,
+            "effective_duration": 0.966666579246521,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 0.966666579246521,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
+        "Attack_RipNToss_Rip": {
+            "animation_duration": 1.1333332061767578,
+            "effective_duration": 1.1333332061767578,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 1.1333332061767578,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
+        "Attack_RipNToss_Toss": {
+            "animation_duration": 0.8666666746139526,
+            "effective_duration": 0.8666666746139526,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 0.8666666746139526,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
+        "Idle": {
+            "animation_duration": 7.666666030883789,
+            "effective_duration": 7.666666030883789,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 7.666666030883789,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        }
+    },
+    "model_name": "Rampage_Elemental"
+}

@@ -4,6 +4,8 @@
 #include <vector>
 #include <unordered_map>
 
+#include "Serialization\JsonSerializer.h"
+
 //速度キーフレーム
 struct SequenceKeyframe
 {
@@ -11,12 +13,29 @@ struct SequenceKeyframe
 	float speed_multiplier;	//速度倍率
 };
 
+struct SequenceColliderTrack
+{
+	std::string collider_name = "";	//コライダー名
+	float start_time = 0.0f;		//開始時間
+	float end_time = 0.0f;			//終了時間
+
+	//JsonSerializerへの登録処理
+	void SetupSerialization(JsonSerializer* serializer)
+	{
+		if (!serializer)return;
+		serializer->RegisterVariable(u8"コライダー名", &collider_name);
+		serializer->RegisterVariable(u8"開始時間", &start_time);
+		serializer->RegisterVariable(u8"終了時間", &end_time);
+	}
+};
+
 //1つのアニメーションのシーケンスデータ
 struct AnimationSequenceData
 {
 	float animation_duration = 0.0f;	//元のアニメーション総時間
 	float effective_duration = 0.0f;	//速度カーブ適用後の実行総時間
-	std::vector<SequenceKeyframe> keyframes;	//速度キーフレーム配列
+	std::vector<SequenceKeyframe> keyframes;			//速度キーフレーム配列
+	std::vector<SequenceColliderTrack> collider_tracks;	//コライダー有効区間リスト
 };
 
 class AnimationSequenceSerializer

@@ -28,9 +28,17 @@ public:
 		serializer->RegisterVariable(u8"長さ", &height);
 		serializer->RegisterVariable(u8"オフセット", &offset);
 		serializer->RegisterVariable(u8"角度", &rotation);
+		serializer->RegisterVariable(u8"属性", &attribute_int);
 		serializer->RegisterVariable(u8"２ボーン連携フラグ", &is_two_bone_link);
 		serializer->RegisterVariable(u8"有効フラグ", &is_active);
 	}
+
+	//復元後にintからenumに反映
+	void OnDeserialized()
+	{
+		attribute = static_cast<ColliderAttribute>(attribute_int);
+	}
+
 public:
 	std::string name = "NewCollider";
 	std::string start_bone_name = "";
@@ -39,6 +47,8 @@ public:
 	float height = 0.5f;
 	DirectX::XMFLOAT3 offset = { 0.0f,0.0f,0.0f };
 	DirectX::XMFLOAT3 rotation = { 0.0f,0.0f,0.0f };
+	ColliderAttribute attribute = ColliderAttribute::Collision;
+	int attribute_int = 2;
 	bool is_two_bone_link = false;
 	bool is_active = true;
 };
@@ -64,11 +74,20 @@ public:
 	//プレビュー用コライダー描画
 	void RenderDebug(ShapeRenderer* renderer, ModelPreviewWindow* preview_window);
 
+	//シーケンサプレビュー用コライダー描画
+	void RenderDebugForSequencer(ShapeRenderer* renderer, ModelPreviewWindow* prevew_window);
+
 	//JSON保存
 	void SaveToJson(const std::string& file_path);
 
 	//JSON読み込み
 	void LoadFromJson(const std::string& file_path);
+
+	//登録されている全コライダーアイテムのリストを取得
+	const std::vector<std::unique_ptr<ColliderAttachmentItem>>& GetColliderItems()const { return collider_items; }
+
+	//コライダー名を指定してON/OFF切り替え
+	void SetColliderActiveByName(const std::string& target_name, bool is_active);
 
 private:
 	//ビューポートクリック時のレイキャスト判定
@@ -104,7 +123,7 @@ private:
 	bool is_draw_colliders = true;											//アタッチ済みコライダーの描画フラグ
 	bool is_draw_node_spheres = false;										//ボーンノード当たり判定球の描画フラグ
 
-	float node_radio = 2.0f;
+	float node_radio = 0.3f;
 
 	BoneSelectSlot current_select_slot = BoneSelectSlot::Start;				//現在クリックで設定する対象スロット
 };
