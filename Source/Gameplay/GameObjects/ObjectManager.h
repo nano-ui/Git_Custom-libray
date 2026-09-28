@@ -24,6 +24,14 @@ public:
 	//シングルトンの取得
 	static ObjectManager& Instance() { return *instance_ptr; }
 
+	//インスタンスの存在チェック・ポインタ取得
+	static ObjectManager* GetInstancePtr()
+	{
+		static bool is_destroyed = false;
+		if (is_destroyed) return nullptr;
+		return &Instance();
+	}
+
 	//オブジェクトの生成・初期化・自動登録
 	template <class T, class... Args>
 	T* Instantiate(Args&&... args) 

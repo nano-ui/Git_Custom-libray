@@ -74,5 +74,6 @@ protected:
 	float weight;											//当たり判定の重さ
 	ColliderAttribute attribute;							//当たり判定の属性
 	bool is_registered = false;								//登録フラグ
+	Collider* collider_ptr = nullptr;						//実体コライダーポインタ
 };
 

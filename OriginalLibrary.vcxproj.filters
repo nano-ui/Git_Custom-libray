@@ -417,6 +417,9 @@
     <ClCompile Include="Source\Gameplay\Components\Collision\BoneCapsuleColliderComponent.cpp">
       <Filter>Source\Gameplay\Components\Collision\BoneCapsuleCollider</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\Attachment\ColliderAttachmentEditor.cpp">
+      <Filter>Source\Editor\Attachment</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -790,6 +793,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Collision\BoneCapsuleColliderComponent.h">
       <Filter>Source\Gameplay\Components\Collision\BoneCapsuleCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Attachment\ColliderAttachmentEditor.h">
+      <Filter>Source\Editor\Attachment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1265,6 +1271,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Collision\BoneCapsuleCollider">
       <UniqueIdentifier>{669ad626-2877-4e64-b5be-3aa70c385d2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Attachment">
+      <UniqueIdentifier>{148ac5f4-e857-4e31-80fa-bd085ea9fb09}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -115,11 +115,26 @@ void ColliderComponent::RegisterToManager()
 void ColliderComponent::UnregisterFromManager()
 {
 	if (!is_registered)return;
-	Collider* raw_collider = GetRawCollider();
-	CollisionManager* col_manager = ObjectManager::Instance().GetCollisionManager();
+
+	ObjectManager* object_manager = ObjectManager::GetInstancePtr();
+	if (!object_manager)
+	{
+		// 終了処理等でマネージャーが既に破棄されている場合は、メモリ解放のみで安全に終了
+		OutputDebugStringA("[ColliderComponent 警告] ObjectManager が既に破棄されているため解除をスキップしました。\n");
+		is_registered = false;
+		return;
+	}
+
+	Collider* raw_collider = collider_ptr ? collider_ptr : GetRawCollider();
+	CollisionManager* col_manager = object_manager->GetCollisionManager();
+
 	if (raw_collider && col_manager)
 	{
 		col_manager->Remove(raw_collider);
 		is_registered = false;
+	}
+	else
+	{
+		OutputDebugStringA("[ColliderComponent 警告] コライダーの解除に失敗しました。\n");
 	}
 }

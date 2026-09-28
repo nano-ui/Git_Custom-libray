@@ -265,6 +265,24 @@ void ModelPreviewWindow::SetAnimationTime(float time)
 	if (model)model->SetAnimationTime(time);
 }
 
+//モデルのワールド変換行列取得
+DirectX::XMFLOAT4X4 ModelPreviewWindow::GetModelWorldMatrix() const
+{
+	//スケール、回転(度数からラジアンに変換)、位置のワールド変換行列を合成
+	DirectX::XMMATRIX scaling = DirectX::XMMatrixScaling(model_scale.x, model_scale.y, model_scale.z);
+	DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationRollPitchYaw(
+		DirectX::XMConvertToRadians(model_rotation.x),
+		DirectX::XMConvertToRadians(model_rotation.y),
+		DirectX::XMConvertToRadians(model_rotation.z)
+	);
+	DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(model_position.x, model_position.y, model_position.z);
+	DirectX::XMMATRIX world = scaling * rotation * translation;
+
+	DirectX::XMFLOAT4X4 world_matrix;
+	DirectX::XMStoreFloat4x4(&world_matrix, world);
+	return world_matrix;
+}
+
 //現在の再生経過時間を取得
 float  ModelPreviewWindow::GetAnimationCurrentTime() const
 {

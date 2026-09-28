@@ -10,6 +10,7 @@ CapsuleColliderComponent::CapsuleColliderComponent()
 	SetComponentName(u8"カプセルコライダーコンポーネント");
 	capsule_collider.type = ColliderType::Capsule;
 	capsule_collider.radius = radius;
+	collider_ptr = &capsule_collider;
 }
 
 //シリアライズ登録

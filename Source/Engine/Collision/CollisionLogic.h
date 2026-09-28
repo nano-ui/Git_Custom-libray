@@ -10,6 +10,15 @@ public:
 	//コンストラクタ
 	CollisionLogic() {};
 
+	//レイとスフェアの当たり判定
+	bool RaySphere(
+		const DirectX::XMFLOAT3& ray_start,
+		const DirectX::XMFLOAT3& ray_dir,
+		const DirectX::XMFLOAT3& sphere_center,
+		float sphere_radius,
+		float& out_t
+	);
+
 	//カプセルとスフィアの当たり判定
 	bool IsCapsuleSphereCollision(const DirectX::XMFLOAT3& capsule_start, const DirectX::XMFLOAT3& capsule_end, float capsule_radius, const DirectX::XMFLOAT3& sphere_center, float sphere_radius);
 

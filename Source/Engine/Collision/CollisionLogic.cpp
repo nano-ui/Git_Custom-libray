@@ -2,6 +2,38 @@
 #include <cmath>
 #include <algorithm>
 
+//レイとスフェアの当たり判定
+bool CollisionLogic::RaySphere(
+    const DirectX::XMFLOAT3& ray_start,
+    const DirectX::XMFLOAT3& ray_dir,
+    const DirectX::XMFLOAT3& sphere_center,
+    float sphere_radius,
+    float& out_t)
+{
+    DirectX::XMVECTOR v_start = DirectX::XMLoadFloat3(&ray_start);
+    DirectX::XMVECTOR v_dir = DirectX::XMLoadFloat3(&ray_dir);
+    DirectX::XMVECTOR v_center = DirectX::XMLoadFloat3(&sphere_center);
+
+    //球の中心からレイ始点へのベクトル
+    DirectX::XMVECTOR m = DirectX::XMVectorSubtract(v_start, v_center);
+    float b = DirectX::XMVectorGetX(DirectX::XMVector3Dot(m, v_dir));
+    float c = DirectX::XMVectorGetX(DirectX::XMVector3Dot(m, m)) - (sphere_radius * sphere_radius);
+
+    //レイの始点が球の外側にあり、レイが球から離れる方向を向いている場合
+    if (c > 0.0f && b > 0.0f)return false;
+
+    float discriminant = b * b - c;
+
+    //判別式が負の場合は交差しない
+    if (discriminant < 0.0f)return false;
+
+    //手前の交差距離を算出
+    out_t = -b - std::sqrtf(discriminant);
+    if (out_t < 0.0f)out_t = 0.0f;
+
+    return true;
+}
+
 //カプセルとスフィアの当たり判定
 bool CollisionLogic::IsCapsuleSphereCollision(
     const DirectX::XMFLOAT3& capsule_start,

@@ -49,6 +49,15 @@ public:
 	//アニメーション時間設定
 	void SetAnimationTime(float time);
 
+	//カメラ取得
+	Camera* GetCamera() { return camera.get(); }
+
+	//モデル取得
+	Model* GetModel() { return model.get(); }
+
+	//モデルのワールド変換行列取得
+	DirectX::XMFLOAT4X4 GetModelWorldMatrix() const;
+
 	//現在の再生経過時間を取得
 	float GetAnimationCurrentTime() const;
 
