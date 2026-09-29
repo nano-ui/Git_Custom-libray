@@ -195,9 +195,6 @@
     <ClCompile Include="Source\Gameplay\StateMachine\StateBlackboard.cpp">
       <Filter>Source\Gameplay\StateMachine\StateBlackboard</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Gameplay\StateMachine\StateGraphDataManager.cpp">
-      <Filter>Source\Gameplay\StateMachine\StateGraphDataManager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Gameplay\StateMachine\StateTransition.cpp">
       <Filter>Source\Gameplay\StateMachine\StateTransition</Filter>
     </ClCompile>
@@ -423,6 +420,9 @@
     <ClCompile Include="Source\Gameplay\Components\Editor\AttachmentColliderComponent.cpp">
       <Filter>Source\Gameplay\Components\Editor\AttachmentCollider</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphDataManager.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphDataManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -568,9 +568,6 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\StateMachine\StateBlackboard.h">
       <Filter>Source\Gameplay\StateMachine\StateBlackboard</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Gameplay\StateMachine\StateGraphDataManager.h">
-      <Filter>Source\Gameplay\StateMachine\StateGraphDataManager</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\StateMachine\StateTransition.h">
       <Filter>Source\Gameplay\StateMachine\StateTransition</Filter>
@@ -803,6 +800,9 @@
     <ClInclude Include="Source\Gameplay\Components\Editor\AttachmentColliderComponent.h">
       <Filter>Source\Gameplay\Components\Editor\AttachmentCollider</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphDataManager.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphDataManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli">
@@ -1007,9 +1007,6 @@
     </Filter>
     <Filter Include="Source\Gameplay\StateMachine\StateBlackboard">
       <UniqueIdentifier>{27b87f48-8ff4-4664-ae85-5b350a248a74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\StateMachine\StateGraphDataManager">
-      <UniqueIdentifier>{6b493f1c-76e3-4bfd-9dde-391ed8956c2c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Gameplay\StateMachine\StateTransition">
       <UniqueIdentifier>{676c54d2-9bbe-421c-80ad-cf3730c02814}</UniqueIdentifier>
@@ -1283,6 +1280,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Editor\AttachmentCollider">
       <UniqueIdentifier>{576a7e7d-cd53-4ad3-81e8-ecff08ed0607}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphDataManager">
+      <UniqueIdentifier>{6b493f1c-76e3-4bfd-9dde-391ed8956c2c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

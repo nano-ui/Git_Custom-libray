@@ -2,7 +2,7 @@
 
 #include "StateMachineGraphEditor.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
-#include "Gameplay/StateMachine/StateGraphDataManager.h"
+#include "Editor\StateMachineEditor\StateGraphDataManager.h"
 #include "Gameplay/GameObjects/ObjectManager.h"
 #include "Editor/FileDialogHelper.h"
 #include "Editor/EditorMediator.h"
