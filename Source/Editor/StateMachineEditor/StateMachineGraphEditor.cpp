@@ -10,6 +10,7 @@
 #include "StateGraphPropertyWindow.h"
 #include "StateGraphConfigManager.h"
 #include "StateNodeRenderer.h"
+#include "StateLinkRenderer.h"
 #include "StateBlackboardInspectorWindow.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Editor\AssetLoader.h"
@@ -44,6 +45,7 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	editor_dummy_blackboard = std::make_unique<StateBlackboard>();
 	blackboard_inspector = std::make_unique<StateBlackboardInspectorWindow>();
 	state_node_renderer = std::make_unique<StateNodeRenderer>();
+	state_link_renderer = std::make_unique<StateLinkRenderer>();
 
 	target_model_hash = 0;
 
@@ -113,18 +115,24 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 	uint32_t& current_active_node_id = graph_active_nodes[current_graph_id]; // 階層固有のアクティブID
 
-	if (runtime_active_node_id != UINT32_MAX)
+	// ゲーム側の実行ノードIDが前フレームから変化した瞬間を直接検知
+	if (runtime_active_node_id != UINT32_MAX && previous_active_node_id != 0 && previous_active_node_id != runtime_active_node_id)
 	{
-		current_active_node_id = runtime_active_node_id;
-	}
-	else
-	{
-		// ゲーム非実行時：アクティブノードが未設定（0）の場合は先頭ノードをデフォルト設定
-		if (current_active_node_id == 0 && !current_graph->nodes.empty())
-		{
-			current_active_node_id = current_graph->nodes.front().id;
-		}
+		flow_src_node_id = previous_active_node_id;
+		flow_dst_node_id = runtime_active_node_id;
+		constexpr float default_flow_duration = 0.35f; // 強調表示時間（秒）
+		flow_effect_timer = default_flow_duration;     // 実機遷移時にもタイマーをセット
+		has_flow_requsted = true;
 
+		// デバッグ出力で遷移検知とノードIDを確認
+		printf("StateMachineGraphEditor: 実機遷移を検知しました。ノードID: %u -> %u (タイマー: %.2f秒)\n",
+			flow_src_node_id, flow_dst_node_id, flow_effect_timer);
+
+		// リアルタイム追尾機能が有効であるかを判定
+		if (is_tracking_active_node)
+		{
+			g_pending_focus_node_id = runtime_active_node_id;
+		}
 	}
 
 	// 擬似シミュレーションがONになっている場合、条件評価を行ってアクティブノードを自動更新
@@ -136,20 +144,20 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 	SyncActiveNodeAnimation(current_graph, current_active_node_id);
 
-	// ゲーム側の実行ノードIDが前フレームから変化した瞬間を直接検知
-	if (runtime_active_node_id != UINT32_MAX && previous_active_node_id != 0 && previous_active_node_id != runtime_active_node_id)
-	{
-		flow_src_node_id = previous_active_node_id;
-		flow_dst_node_id = runtime_active_node_id;
-		has_flow_requsted = true;
-		//printf("StateMachineGraphEditor: 純粋なステート遷移を検知しました。ノードID: %d -> %d\n", flow_src_node_id, flow_dst_node_id);
+	//// ゲーム側の実行ノードIDが前フレームから変化した瞬間を直接検知
+	//if (runtime_active_node_id != UINT32_MAX && previous_active_node_id != 0 && previous_active_node_id != runtime_active_node_id)
+	//{
+	//	flow_src_node_id = previous_active_node_id;
+	//	flow_dst_node_id = runtime_active_node_id;
+	//	has_flow_requsted = true;
+	//	//printf("StateMachineGraphEditor: 純粋なステート遷移を検知しました。ノードID: %d -> %d\n", flow_src_node_id, flow_dst_node_id);
 
-		// リアルタイム追尾機能が有効であるかを判定
-		if (is_tracking_active_node)
-		{
-			g_pending_focus_node_id = runtime_active_node_id;
-		}
-	}
+	//	// リアルタイム追尾機能が有効であるかを判定
+	//	if (is_tracking_active_node)
+	//	{
+	//		g_pending_focus_node_id = runtime_active_node_id;
+	//	}
+	//}
 
 	// 有効な実行中IDが届いている場合のみ、次フレーム用の比較元として保存
 	if (runtime_active_node_id != UINT32_MAX)
@@ -334,6 +342,8 @@ void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, 
 	{
 		flow_src_node_id = prev_node_id;
 		flow_dst_node_id = new_active_node_id;
+		constexpr float default_flow_duration = 0.35f;
+		flow_effect_timer = default_flow_duration;
 		has_flow_requsted = true;
 	}
 
@@ -604,79 +614,30 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 	for (size_t n = 0; n < current_graph->nodes.size(); n++)
 	{
 		const GraphNode& node = current_graph->nodes[n]; // ループ対象ノード
-		PinCacheData cache; // 一時構造体
-		cache.node_id = node.id;
-		cache.color_r = node.link_color_r;
-		cache.color_g = node.link_color_g;
-		cache.color_b = node.link_color_b;
+		bool is_active_now = (node.id == graph_active_nodes[current_graph_id]);
 
-		for (size_t p = 0; p < node.inputs.size(); p++)
+		if (state_node_renderer)
 		{
-			pin_cache_map[node.inputs[p].id] = cache;
+			state_node_renderer->DrawNode(node, is_active_now);
 		}
-
-		for (size_t p = 0; p < node.outputs.size(); p++)
+		else
 		{
-			pin_cache_map[node.outputs[p].id] = cache;
+			printf("Error: DrawCenterCanvas - state_node_renderer が nullptr です。\n");
 		}
 	}
 
-	constexpr float FIXED_FLOW_COLOR_R = 0.2f;
-	constexpr float FIXED_FLOW_COLOR_G = 0.6f;
-	constexpr float FIXED_FLOW_COLOR_B = 0.4f;
-
-	// 階層内の全リンクを巡回するループ処理
-	for (size_t i = 0; i < current_graph->links.size(); i++)
+	if (state_link_renderer)
 	{
-		const GraphLink& link = current_graph->links[i]; // リンク参照
-
-		float r = 1.0f; // 通常時赤成分用
-		float g = 1.0f; // 通常時緑成分用
-		float b = 1.0f; // 通常時青成分用
-		uint32_t src_node_id = 0; // 出発ノードID用
-
-		auto start_it = pin_cache_map.find(link.start_pin_id); // 検索イテレーター
-
-		// 開始ピンがハッシュマップ内に存在するかを判定分岐
-		if (start_it != pin_cache_map.end())
-		{
-			src_node_id = start_it->second.node_id;
-			r = start_it->second.color_r;
-			g = start_it->second.color_g;
-			b = start_it->second.color_b;
-		}
-
-		bool is_last_transition_link = false; // 直近の遷移リンクであるかを保持するフラグ
-		uint32_t dst_node_id = 0; // 接続先ノードID用
-		auto end_it = pin_cache_map.find(link.end_pin_id); // 検索イテレーター
-
-		// 終了ピンがハッシュマップ内に存在するかを判定分岐
-		if (end_it != pin_cache_map.end())
-		{
-			dst_node_id = end_it->second.node_id;
-		}
-
-		// このリンクが直近で遷移したノード間を結ぶものかを判定分岐
-		if (src_node_id == flow_src_node_id && dst_node_id == flow_dst_node_id)
-		{
-			is_last_transition_link = true;
-		}
-
-		// エディタ標準のキャッシュカラーを優先させるため、色は元の色のまま描画を実行
-		ed::Link(link.id, link.start_pin_id, link.end_pin_id, ImVec4(r, g, b, 1.0f));
-
-		// 直近の遷移経路として選ばれているリンクであるかを判定分岐（常時エフェクト維持方式へ変更）
-		if (is_last_transition_link)
-		{
-			// 画像から存在が確認できた StyleColor_Flow を用いて、パルスの光の色を上品な緑色に上書きする処理
-			ed::PushStyleColor(ed::StyleColor_Flow, ImVec4(FIXED_FLOW_COLOR_R, FIXED_FLOW_COLOR_G, FIXED_FLOW_COLOR_B, 1.0f));
-
-			// 次の遷移が起きるまで毎フレームエフェクトを流し続けるために、無条件でFlowを実行
-			ed::Flow(link.id);
-
-			// 上書きしたエフェクトの色を安全に復元するポップ処理
-			ed::PopStyleColor();
-		}
+		state_link_renderer->DrawLinks(
+			data_manager.get(),
+			current_graph,
+			flow_src_node_id,
+			flow_dst_node_id,
+			flow_effect_timer);
+	}
+	else
+	{
+		printf("Error: DrawCenterCanvas - state_link_renderer が nullptr です。\n");
 	}
 
 	if (ed::BeginCreate())

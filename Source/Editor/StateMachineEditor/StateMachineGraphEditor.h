@@ -17,6 +17,7 @@ class StateMachineComponent;
 class AssetLoader;
 class StateBlackboardInspectorWindow;
 class StateNodeRenderer;
+class StateLinkRenderer;
 
 struct GraphData;
 struct GraphLink;
@@ -102,6 +103,7 @@ private:
 	std::unique_ptr<StateGraphPaletteWindow> palette_window;		//左ペイン：パレット描画クラス
 	std::unique_ptr<StateGraphPropertyWindow> property_window;		//右ペイン：プロパティ描画クラス
 	std::unique_ptr<StateNodeRenderer> state_node_renderer;			//ステートノード描画クラス
+	std::unique_ptr<StateLinkRenderer> state_link_renderer;			//ステートリンク描画クラス
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::unique_ptr<StateGraphConfigManager> config_manager;
 	std::unique_ptr<AssetLoader> asset_loader;								//モデル読み込みクラス
