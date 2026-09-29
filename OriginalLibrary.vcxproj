@@ -308,6 +308,7 @@
     <ClCompile Include="Source\Gameplay\Components\Collision\BoneCapsuleColliderComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Collision\CapsuleColliderComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Collision\ColliderComponent.cpp" />
+    <ClCompile Include="Source\Gameplay\Components\Editor\AttachmentColliderComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Editor\StateMachineComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Model\ModelComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Movement\MovementComponent.cpp" />
@@ -433,6 +434,7 @@
     <ClInclude Include="Source\Gameplay\Components\Collision\BoneCapsuleColliderComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Collision\CapsuleColliderComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Collision\ColliderComponent.h" />
+    <ClInclude Include="Source\Gameplay\Components\Editor\AttachmentColliderComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Editor\StateMachineComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Model\ModelComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Movement\MovementComponent.h" />

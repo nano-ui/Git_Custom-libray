@@ -420,6 +420,9 @@
     <ClCompile Include="Source\Editor\Attachment\ColliderAttachmentEditor.cpp">
       <Filter>Source\Editor\Attachment</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Editor\AttachmentColliderComponent.cpp">
+      <Filter>Source\Gameplay\Components\Editor\AttachmentCollider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -796,6 +799,9 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\Attachment\ColliderAttachmentEditor.h">
       <Filter>Source\Editor\Attachment</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Editor\AttachmentColliderComponent.h">
+      <Filter>Source\Gameplay\Components\Editor\AttachmentCollider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1274,6 +1280,9 @@
     </Filter>
     <Filter Include="Source\Editor\Attachment">
       <UniqueIdentifier>{148ac5f4-e857-4e31-80fa-bd085ea9fb09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Editor\AttachmentCollider">
+      <UniqueIdentifier>{576a7e7d-cd53-4ad3-81e8-ecff08ed0607}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

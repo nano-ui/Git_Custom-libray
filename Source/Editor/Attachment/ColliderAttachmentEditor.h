@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <DirectXMath.h>
+#include <filesystem>
 
 #include "Engine\Collision\Collider.h"
 #include "Serialization\JsonSerializer.h"
@@ -105,6 +106,9 @@ private:
 		DirectX::XMFLOAT4& out_rotation,
 		float& out_total_height
 	);
+
+	//モデル名に基づいて保存/読み込みファイルパスを管理
+	std::string GetDefaultFilePath(ModelPreviewWindow* preview_window)const;
 
 private:
 	//アタッチ対象のボーンスロット種別

@@ -191,6 +191,34 @@ void ColliderAttachmentEditor::RenderGui(ModelPreviewWindow* preview_window)
 	ImGui::Separator();
 	ImGui::Spacing();
 
+	//現在のモデル名からデフォルトパスを算出
+	std::string default_path = GetDefaultFilePath(preview_window);
+
+	if (!default_path.empty())
+	{
+		ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), u8"[モデル連動ファイル入出力]");
+
+		if (ImGui::Button(u8"保存"))
+		{
+			save_file_path = default_path;
+			SaveToJson(save_file_path);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button(u8"読み込み"))
+		{
+			save_file_path = default_path;
+			LoadFromJson(save_file_path);
+		}
+		ImGui::TextWrapped(u8"対象パス: %s", default_path.c_str());
+		ImGui::Spacing();
+	}
+	else
+	{
+		ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.2f, 1.0f), u8"※モデルがロードされていないため、デフォルトパスを特定できません。");
+	}
+	
+	ImGui::Separator();
+
 	//ファイル保存
 	if (ImGui::Button(u8"ダイアログから保存"))
 	{
@@ -701,4 +729,34 @@ bool ColliderAttachmentEditor::CalculateCapsuleWorld(
 	}
 	DirectX::XMStoreFloat4(&out_rotation, rot_quat);
 	return true;
+}
+
+//モデル名に基づいて保存/読み込みファイルパスを管理
+std::string ColliderAttachmentEditor::GetDefaultFilePath(ModelPreviewWindow* preview_window) const
+{
+	if (!preview_window)return "";
+
+	std::string raw_model_path = preview_window->GetModelName();
+	if (raw_model_path.empty())return "";
+
+	std::filesystem::path path_obj(raw_model_path);
+	std::string model_name = path_obj.stem().string();
+
+	if (model_name.empty())return "";
+
+	//ベースディレクトリ:Data/Json/モデル名/
+	std::string dir_path = "Data/Json/" + model_name;
+	std::error_code ec;
+
+	//ディレクトリが存在しない場合は自動生成
+	if (!std::filesystem::exists(dir_path, ec))
+	{
+		std::filesystem::create_directories(dir_path);
+		if (ec)
+		{
+			OutputDebugStringA("[ColliderAttachmentEditor エラー] フォルダ作成に失敗しました。\n");
+		}
+	}
+
+	return dir_path + "/" + model_name + "_Attach.json";
 }
