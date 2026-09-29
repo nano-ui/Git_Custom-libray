@@ -5,6 +5,7 @@
 #include <string>
 #include <cstdint>
 #include <unordered_map>
+#include <unordered_set>
 #include "ThiedParty\json.hpp"
 
 //ピンの種類
@@ -150,6 +151,10 @@ public:
 
 	//指定されたノードIDを出発基とする全てのリンクのポインタを取得
 	std::vector<GraphLink*> GetLinkesFromNode(uint32_t graph_id, uint32_t node_id);
+
+private:
+	//candidate_graph_id が target_graph_id の祖先（または同一）かを判定
+	bool IsAncestorGraph(uint32_t target_graph_id, uint32_t candidate_graph_id);
 
 private:
 	std::vector<GraphData> layer_datas;	//全ての階層データのリスト

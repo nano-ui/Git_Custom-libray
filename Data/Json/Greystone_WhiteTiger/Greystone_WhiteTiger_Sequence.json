@@ -1,7 +1,29 @@
 {
     "animation_sequences": {
+        "Ability_R_0": {
+            "animation_duration": 1.8666666746139526,
+            "collider_tracks": [
+                {
+                    "collider_name": "剣攻撃判定",
+                    "end_time": 1.100000023841858,
+                    "start_time": 0.800000011920929
+                }
+            ],
+            "effective_duration": 1.8666666746139526,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 1.8666666746139526,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
         "Attack_A_Slow": {
             "animation_duration": 0.800000011920929,
+            "collider_tracks": [],
             "effective_duration": 0.800000011920929,
             "keyframes": [
                 {
@@ -16,6 +38,7 @@
         },
         "Attack_RMB": {
             "animation_duration": 3.0333330631256104,
+            "collider_tracks": [],
             "effective_duration": 3.0333330631256104,
             "keyframes": [
                 {
@@ -30,6 +53,7 @@
         },
         "Idle": {
             "animation_duration": 29.96666717529297,
+            "collider_tracks": [],
             "effective_duration": 29.96666717529297,
             "keyframes": [
                 {
@@ -44,6 +68,7 @@
         },
         "Roll_Front": {
             "animation_duration": 1.1666666269302368,
+            "collider_tracks": [],
             "effective_duration": 0.7758563756942749,
             "keyframes": [
                 {

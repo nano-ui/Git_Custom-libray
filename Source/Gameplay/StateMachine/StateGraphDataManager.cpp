@@ -637,13 +637,89 @@ std::vector<GraphLink*> StateGraphDataManager::GetLinkesFromNode(uint32_t graph_
 	return result_linkes;
 }
 
+//candidate_graph_id が target_graph_id の祖先（または同一）かを判定
+bool StateGraphDataManager::IsAncestorGraph(uint32_t target_graph_id, uint32_t candidate_graph_id)
+{
+	//同一グラフ自信を下位に追加しようとしている場合は循環
+	if (target_graph_id == candidate_graph_id)
+	{
+		return true;
+	}
+
+	uint32_t trace_id = target_graph_id;
+	std::unordered_set<uint32_t> visited_graphs;	//無限ループ防止用の探索済みコンテナ
+
+	while (trace_id != 0)
+	{
+		if (visited_graphs.find(trace_id) == visited_graphs.end())
+		{
+			// 既に巡回済みの場合は不正なループ構造が存在する
+			printf("Error: IsAncestorGraph - 階層構造内に既に循環参照が存在します。グラフID: %u\n", trace_id);
+			return true;
+		}
+		visited_graphs.insert(trace_id);
+
+		uint32_t parent_id = 0;
+		bool found_parent = false;
+
+		//trace_idをサブグラフとして保持している親階層を探索
+		for (size_t g = 0; g < layer_datas.size(); g++)
+		{
+			for (size_t n = 0; n < layer_datas[g].nodes.size(); n++)
+			{
+				if (layer_datas[g].nodes[n].is_sub_graph &&
+					layer_datas[g].nodes[n].sub_graph_id == trace_id)
+				{
+					parent_id = layer_datas[n].id;
+					found_parent = true;
+					break;
+				}
+			}
+			if (found_parent)
+			{
+				break;
+			}
+		}
+
+		if (!found_parent)
+		{
+			break;
+		}
+
+		if (parent_id == candidate_graph_id)
+		{
+			return true;
+		}
+		trace_id = parent_id;
+	}
+	return false;
+}
+
 //サブグラフノードの生成
 void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, float click_y, const std::string& name)
 {
 	std::string sub_graph_name = name;	//サブグラフの名前
-	uint32_t real_sub_graph_id = CreateNewSubGraph(sub_graph_name);	//新しい下位階層グラフ
-
 	const GraphData* src_graph = nullptr;	//コピー元の階層ポインタ
+
+	//コピー元となる既存階層を検索
+	for (size_t g = 0; g < layer_datas.size(); g++)
+	{
+		if (layer_datas[g].name == sub_graph_name)
+		{
+			src_graph = &layer_datas[g];
+			break;
+		}
+	}
+
+	//循環参照チェック: コピー元階層が、配置先階層の祖先である場合は追加を中断
+	if (src_graph && IsAncestorGraph(graph_id, src_graph->id))
+	{
+		printf("Error: AddSubGrapNode - 上位階層「%s」(ID:%u) を下位階層(ID:%u) 内に配置することは循環参照となるため禁止されています。\n",
+			sub_graph_name.c_str(), src_graph->id, graph_id);
+		return;
+	}
+
+	uint32_t real_sub_graph_id = CreateNewSubGraph(sub_graph_name);	//新しい下位階層グラフ
 
 	//全階層情報を走査して、名前が一致する既存のコピー元階層を検索
 	for (size_t g = 0; g < layer_datas.size(); g++)
