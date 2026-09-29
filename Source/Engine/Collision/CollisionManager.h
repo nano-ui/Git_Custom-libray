@@ -90,6 +90,9 @@ private:
 	//スフィア同士の総当たり判定
 	void CheckSphereVsSphere();
 
+	//カプセル同士の総当たり判定
+	void CheckCapsuleVsCapsule();
+
 	//グリッド登録用の補助関数
 	void AddColluderToGrid(Collider* collider);
 
@@ -102,7 +105,7 @@ private:
 private:
 	struct GridElement
 	{
-		SphereCollider* sphere;	//登録されたスフィアへのポインタ
+		Collider* collider;	//登録されたスフィアへのポインタ
 		int next_index;			//同じセルに属する次の要素へのリンクインデックス
 	};
 

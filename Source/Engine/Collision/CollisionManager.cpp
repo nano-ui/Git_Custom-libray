@@ -136,6 +136,7 @@ void CollisionManager::ExecuteCollision()
     //各判定の呼び出し
     CheckDynamicVsSpace();
     CheckSphereVsSphere();
+    CheckCapsuleVsCapsule();
 
     //計測終了と時間算出
     auto end_time = std::chrono::high_resolution_clock::now();
@@ -370,7 +371,7 @@ bool CollisionManager::RayCastSpace(
 void CollisionManager::CheckSphereVsSphere()
 {
     //コライダーが2つ未満の場合は判定不要
-    if (sphere_colliders.size() < 2)return;
+    if (sphere_colliders.size() < 2) return;
 
     //セルベースの詳細判定
     for (auto it = grid_heads.begin(); it != grid_heads.end(); it++)
@@ -378,21 +379,25 @@ void CollisionManager::CheckSphereVsSphere()
         const GridKey& current_key = it->first;
         int head_index = it->second;
 
-        if (head_index == -1 || grid_elements[head_index].next_index == -1)continue;
+        if (head_index == -1 || grid_elements[head_index].next_index == -1) continue;
 
         int idx_a = head_index;
         while (idx_a != -1)
         {
-            SphereCollider* sphere_a = grid_elements[idx_a].sphere;
+            Collider* col_a = grid_elements[idx_a].collider;
             int idx_b = grid_elements[idx_a].next_index;
-            if (sphere_a->is_active)
+
+            if (col_a && col_a->is_active && col_a->type == ColliderType::Sphere)
             {
+                SphereCollider* sphere_a = static_cast<SphereCollider*>(col_a);
                 GridRange range_a = CalculateGridRenge(sphere_a);
+
                 while (idx_b != -1)
                 {
-                    SphereCollider* sphere_b = grid_elements[idx_b].sphere;
-                    if (sphere_b->is_active && sphere_a != sphere_b)
+                    Collider* col_b = grid_elements[idx_b].collider;
+                    if (col_b && col_b->is_active && col_b->type == ColliderType::Sphere && sphere_a != col_b)
                     {
+                        SphereCollider* sphere_b = static_cast<SphereCollider*>(col_b);
                         GridRange range_b = CalculateGridRenge(sphere_b);
 
                         //タイブレーク処理
@@ -427,11 +432,94 @@ void CollisionManager::CheckSphereVsSphere()
                                 }
                             }
                         }
-                        idx_b = grid_elements[idx_b].next_index;
                     }
+                    idx_b = grid_elements[idx_b].next_index;
                 }
-                idx_a = grid_elements[idx_a].next_index;
             }
+            idx_a = grid_elements[idx_a].next_index;
+        }
+    }
+}
+
+//カプセル同士の総当たり判定
+void CollisionManager::CheckCapsuleVsCapsule()
+{
+    if (capsule_colliders.size() < 2)return;
+
+    for (auto it = grid_heads.begin(); it != grid_heads.end(); it++)
+    {
+        const GridKey& current_key = it->first;
+        int head_index = it->second;
+
+        if (head_index == -1 || grid_elements[head_index].next_index == -1)continue;
+
+        int idx_a = head_index;
+        while (idx_a != -1)
+        {
+            Collider* col_a = grid_elements[idx_a].collider;
+            int idx_b = grid_elements[idx_a].next_index;
+
+            //コライダーAが有効なカプセルの場合
+            if (col_a && col_a->is_active && col_a->type == ColliderType::Capsule)
+            {
+                CapsuleCollider* capsule_a = static_cast<CapsuleCollider*>(col_a);
+                GridRange range_a = CalculateGridRenge(capsule_a);
+
+                while (idx_b != -1)
+                {
+                    Collider* col_b = grid_elements[idx_b].collider;
+
+                    if (col_b && col_b->is_active && col_b->type == ColliderType::Capsule && col_a != col_b)
+                    {
+                        CapsuleCollider* capsule_b = static_cast<CapsuleCollider*>(col_b);
+                        GridRange range_b = CalculateGridRenge(capsule_b);
+
+                        //複数セルにまたがる重複判定防止用のタイブレーク処理
+                        GridKey overlap_min_key;
+                        overlap_min_key.x = std::max(range_a.min_key.x, range_b.min_key.x);
+                        overlap_min_key.y = std::max(range_a.min_key.y, range_b.min_key.y);
+                        overlap_min_key.z = std::max(range_a.min_key.z, range_b.min_key.z);
+
+                        if (current_key == overlap_min_key)
+                        {
+                            CollisionResult result_a;
+                            bool is_hit = collision_logic->IsCapsuleCapsuleCollision(capsule_a, capsule_b, result_a);
+
+                            if (is_hit)
+                            {
+                                // カプセルAへの衝突通知
+                                if (capsule_a->listener)
+                                {
+                                    result_a.hit_attribute = capsule_b->attribute;
+                                    result_a.hit_collider = capsule_b;
+                                    capsule_a->listener->OnCollisionHit(result_a);
+                                }
+                                //カプセルBへの衝突処理
+                                if (capsule_b->listener)
+                                {
+                                    CollisionResult result_b = result_a;
+                                    result_b.hit_normal.x = -result_a.hit_normal.x;
+                                    result_b.hit_normal.y = -result_a.hit_normal.y;
+                                    result_b.hit_normal.z = -result_a.hit_normal.z;
+                                    result_b.penetration_vector.x = -result_a.penetration_vector.x;
+                                    result_b.penetration_vector.y = -result_a.penetration_vector.y;
+                                    result_b.penetration_vector.z = -result_a.penetration_vector.z;
+                                    result_b.hit_attribute = capsule_a->attribute;
+                                    result_b.hit_collider = capsule_a;
+
+                                    DirectX::XMVECTOR v_start_b = DirectX::XMLoadFloat3(&capsule_a->start_center);
+                                    DirectX::XMVECTOR v_push_b = DirectX::XMLoadFloat3(&result_b.penetration_vector);
+                                    DirectX::XMStoreFloat3(&result_b.safe_position, DirectX::XMVectorAdd(v_start_b, v_push_b));
+                                
+                                    capsule_b->listener->OnCollisionHit(result_b);
+                                }
+                            }                            
+                        }
+                    }
+                    idx_b = grid_elements[idx_b].next_index;
+                }
+            }
+            idx_a = grid_elements[idx_a].next_index;
         }
     }
 }
@@ -453,7 +541,7 @@ void CollisionManager::AddColluderToGrid(Collider* collider)
 
                 //チェインマップ登録
                 GridElement elem;
-                elem.sphere = static_cast<SphereCollider*>(collider);
+                elem.collider = collider;
                 auto it = grid_heads.find(key);
                 elem.next_index = (it != grid_heads.end()) ? it->second : -1;
                 int new_elem_index = static_cast<int>(grid_elements.size());

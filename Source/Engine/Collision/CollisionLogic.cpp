@@ -134,8 +134,8 @@ bool CollisionLogic::IsCapsuleCapsuleCollision(
     CollisionResult& out_result)
 {
     //引数の有効判定
-    if (!capsule_a || capsule_a->is_active) return false;
-    if (!capsule_b || capsule_b->is_active) return false;
+    if (!capsule_a || !capsule_a->is_active) return false;
+    if (!capsule_b || !capsule_b->is_active) return false;
 
     //ベクトルの準備
     DirectX::XMVECTOR start_a = DirectX::XMLoadFloat3(&capsule_a->start_center);
