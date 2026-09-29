@@ -183,6 +183,22 @@ void AttachmentColliderComponent::SetColliderActive(const std::string& target_na
 	}
 }
 
+//攻撃判定属性のコライダーのみ一括で有効/無効切り替え
+void AttachmentColliderComponent::SetAttackCollidersActive(bool is_active)
+{
+	for (size_t i = 0; i < collider_items.size() && i < runtime_colliders.size(); i++)
+	{
+		if (!collider_items[i] || !runtime_colliders[i])continue;
+
+		//攻撃属性のみを対象に切り替える
+		if (collider_items[i]->attribute == ColliderAttribute::Attack)
+		{
+			collider_items[i]->is_active = is_active;
+			runtime_colliders[i]->is_active = is_active;
+		}
+	}
+}
+
 //全コライダーの一括有効/無効切り替え
 void AttachmentColliderComponent::SetAllColluderActive(bool is_active)
 {

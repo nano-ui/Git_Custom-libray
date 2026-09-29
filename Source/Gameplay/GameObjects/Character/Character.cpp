@@ -1,6 +1,7 @@
 #include "Character.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
+#include "Gameplay\Components\Editor\AttachmentColliderComponent.h"
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Gameplay\Components\Model\ModelComponent.h"
 #include "Gameplay\Components\Movement\MovementComponent.h"
@@ -56,6 +57,27 @@ void Character::Initialize()
 		{
 			root_motion_component->Initialize(model_component->GetModelData());
 		}
+
+		//アタッチメントコライダーコンポーネントの生成と初期化
+		attachment_collider_component = AddComponent<AttachmentColliderComponent>();
+		if (attachment_collider_component)
+		{
+			attachment_collider_component->Initializa(
+				model_component->GetModelPath(),
+				model_component,
+				transform_component
+			);
+
+			//生成されたコライダーをGameObjectのコライダー配列に登録
+			for (const auto& capsule : attachment_collider_component->GetRuntimeCollider())
+			{
+				if (capsule)
+				{
+					capsule->listener = this;
+					AddCollider(capsule.get());
+				}
+			}
+		}
 	}
 
 	SetupSerialization();
@@ -101,6 +123,7 @@ void Character::Update(float elapsed_time)
 		sequencer_component->Update(elapsed_time);
 		current_animation_name = sequencer_component->GetCurrentAnimationName();
 		current_animation_time = sequencer_component->GetCurrentSequenceTime();
+		UpdateColliderSequencer();
 	}
 
 	// ルートモーション判定
@@ -121,6 +144,34 @@ void Character::Update(float elapsed_time)
 	}
 }
 
+//衝突処理
+void Character::OnCollisionHit(const CollisionResult& result)
+{
+	if (!movement_component)
+	{
+		OutputDebugStringA("[Character 警告] OnCollisionHit: movement_component が存在しないため衝突解決をスキップします。\n");
+		return;
+	}
+
+	//衝突した自身のコライダー実体を取得
+	Collider* self_collider = result.hit_collider;
+
+	if (result.hit_attribute == ColliderAttribute::Stage)
+	{
+		movement_component->ResolveStageCollision(result, self_collider);
+	}
+	// 動的オブジェクト衝突（他キャラなど）
+	else if (result.hit_attribute == ColliderAttribute::Collision)
+	{
+		movement_component->ResolveDynamicCollision(result, self_collider);
+	}
+	// 攻撃判定の被弾処理
+	else if (result.hit_attribute == ColliderAttribute::Attack)
+	{
+		OutputDebugStringA("[Character] 攻撃判定がヒットしました。\n");
+	}
+}
+
 //描画処理
 void Character::Render(ID3D11DeviceContext* context)
 {
@@ -130,7 +181,10 @@ void Character::Render(ID3D11DeviceContext* context)
 //デバッグ描画
 void Character::RenderDebug(ShapeRenderer* renderer)
 {
-
+	if (attachment_collider_component)
+	{
+		attachment_collider_component->RenderDebug(renderer);
+	}
 }
 
 //シリアライザに登録
@@ -248,4 +302,31 @@ void Character::UpdateRootMotion()
 	pos.y += final_movement.y;
 	pos.z += final_movement.z;
 	transform_component->SetPosition(pos);
+}
+
+//アニメーションシーケンス時間に合わせて当たり判定の有効状態を更新
+void Character::UpdateColliderSequencer()
+{
+	if (!attachment_collider_component || !sequencer_component)return;
+
+	//攻撃判定コライダーをすべて非アクティブ
+	attachment_collider_component->SetAllColluderActive(true);
+	attachment_collider_component->SetAttackCollidersActive(false);
+
+	//現在のアニメーションシーケンスデータを取得
+	const auto* sequence_data = sequencer_component->GetCurrentSequenceData();
+	if (!sequence_data || sequence_data->collider_tracks.empty())
+	{
+		return;
+	}
+
+	//有効時間帯に入っているコライダーのみをアクティブ化
+	for (const auto& track : sequence_data->collider_tracks)
+	{
+		bool is_in_range = (current_animation_time >= track.start_time && current_animation_time <= track.end_time);
+		if (is_in_range)
+		{
+			attachment_collider_component->SetColliderActive(track.collider_name, true);
+		}
+	}
 }

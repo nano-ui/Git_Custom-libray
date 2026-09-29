@@ -14,8 +14,9 @@ class StateMachineComponent;
 class TransformComponent;
 class ModelComponent;
 class MovementComponent;
+class AttachmentColliderComponent;
 
-class Character : public GameObject, public IAnimationListener
+class Character : public GameObject, public IAnimationListener, public ICollisionListener
 {
 public:
 	//コンストラクタ
@@ -29,6 +30,9 @@ public:
 
 	//更新処理
 	void Update(float elapsed_time)override;
+
+	//衝突処理
+	void OnCollisionHit(const CollisionResult& result)override;
 
 	//描画処理
 	void Render(ID3D11DeviceContext* context)override;
@@ -68,6 +72,9 @@ protected:
 	//ルートモーション更新
 	void UpdateRootMotion();
 
+	//アニメーションシーケンス時間に合わせて当たり判定の有効状態を更新
+	void UpdateColliderSequencer();
+
 	//接地時イベント
 	virtual void OnLanding() {}
 
@@ -86,6 +93,7 @@ protected:
 	std::shared_ptr<TransformComponent> transform_component;//行列コンポーネント
 	std::shared_ptr<ModelComponent> model_component;		//モデルコンポーネント
 	std::shared_ptr<MovementComponent> movement_component;	//移動コンポーネント
+	std::shared_ptr<AttachmentColliderComponent> attachment_collider_component;	//当たり判定コンポーネント
 
 	std::string current_animation_name = "";	//現在のアニメーション名
 	float current_animation_time = 0.0f;		//現在のアニメーション再生時間

@@ -37,6 +37,9 @@ public:
 	//コライダー名を指定して有効/無効切り替え
 	void SetColliderActive(const std::string& target_name, bool is_active);
 
+	//攻撃判定属性のコライダーのみ一括で有効/無効切り替え
+	void SetAttackCollidersActive(bool is_active);
+
 	//全コライダーの一括有効/無効切り替え
 	void SetAllColluderActive(bool is_active);
 

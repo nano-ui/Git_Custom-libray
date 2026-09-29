@@ -9,7 +9,6 @@
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Gameplay\Components\Model\ModelComponent.h"
 #include "Gameplay\Components\Movement\MovementComponent.h"
-#include "Gameplay\Components\Collision\CapsuleColliderComponent.h"
 
 #include <imgui.h>
 #include <filesystem>
@@ -30,7 +29,7 @@ Player::~Player()
 //初期化処理
 void Player::Initialize()
 {
-	// 1. 基本コンポーネントの追加・設定
+	// 基本コンポーネントの追加・設定
 	model_component = GetComponent<ModelComponent>();
 	if (!model_component) model_component = AddComponent<ModelComponent>();
 
@@ -56,24 +55,7 @@ void Player::Initialize()
 		}
 	}
 
-	// 2. カプセルコライダーコンポーネントの追加とセットアップ
-	collider_component = GetComponent<CapsuleColliderComponent>();
-	if (!collider_component) collider_component = AddComponent<CapsuleColliderComponent>();
-
-	if (collider_component)
-	{
-		collider_component->SetTransformComponent(transform_component);
-		collider_component->SetRadius(0.4f);
-		collider_component->SetHeight(0.8f);
-		collider_component->SetOffset({ 0.0f, 0.5f, 0.0f });
-		collider_component->SetAttribute(ColliderAttribute::Collision);
-		collider_component->SetWeight(10.0f);
-
-		// 衝突通知先として自身 (ICollisionListener) を登録
-		collider_component->SetListener(this);
-	}
-
-	// 3. 基底クラス初期化（MovementComponent 等のセットアップ）
+	// 基底クラス初期化（MovementComponent 等のセットアップ）
 	Character::Initialize();
 
 	if (state_machine_component && blackboard)
@@ -92,34 +74,7 @@ void Player::Update(float elapsed_time)
 //デバッグ描画
 void Player::RenderDebug(ShapeRenderer* renderer)
 {
-	if (!collider_component || !renderer || !transform_component) return;
-
-	CapsuleCollider* cap = collider_component->GetCapsuleCollider();
-	if (!cap || !cap->is_active) return;
-
-	DirectX::XMFLOAT3 pos = transform_component->GetPosition();
-	DirectX::XMFLOAT4 rot = transform_component->GetQuaternion();
-	DirectX::XMFLOAT3 offset = collider_component->GetOffset();
-
-	float radius = collider_component->GetRadius();
-	float height = collider_component->GetHeight();
-
-	DirectX::XMFLOAT3 cap_center = {
-		pos.x + offset.x,
-		pos.y + offset.y + (height * 0.5f),
-		pos.z + offset.z
-	};
-	float total_height = height + (radius * 2.0f);
-
-	constexpr DirectX::XMFLOAT4 color = { 0.0f, 1.0f, 0.0f, 1.0f };
-	renderer->DrawCapsule(
-		cap_center,
-		rot,
-		radius,
-		total_height,
-		color,
-		ShapeDrawMode::Wireframe
-	);
+	Character::RenderDebug(renderer);
 }
 
 //シリアライズ登録
@@ -129,25 +84,6 @@ void Player::SetupSerialization()
 	if (state_machine_component && serializer)
 	{
 		state_machine_component->SetupSerialization(serializer.get());
-	}
-}
-
-//衝突処理
-void Player::OnCollisionHit(const CollisionResult& result)
-{
-	if (!movement_component || !collider_component) return;
-
-	Collider* raw_collider = collider_component->GetRawCollider();
-
-	// ステージ衝突（壁・床・坂道）
-	if (result.hit_attribute == ColliderAttribute::Stage)
-	{
-		movement_component->ResolveStageCollision(result, raw_collider);
-	}
-	// 動的オブジェクト衝突（他キャラなど）
-	else if (result.hit_attribute == ColliderAttribute::Collision)
-	{
-		movement_component->ResolveDynamicCollision(result, raw_collider);
 	}
 }
 

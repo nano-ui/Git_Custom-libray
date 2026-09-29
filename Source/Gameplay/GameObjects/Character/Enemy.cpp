@@ -28,21 +28,18 @@ void Enemy::Initialize()
 
 	//基底クラスの初期化
 	Character::Initialize();
-
-	SetupColliders();
 }
 
 //更新処理
 void Enemy::Update(float elapsed_time)
 {
 	Character::Update(elapsed_time);
-	UpdateCollider();
 }
 
 //デバッグ描画
 void Enemy::RenderDebug(ShapeRenderer* renderer)
 {
-
+	Character::RenderDebug(renderer);
 }
 
 //シリアライズ登録
@@ -94,44 +91,4 @@ void Enemy::SetupComponent()
 	{
 		OutputDebugStringA("[Enemy エラー] SetupComponents: 必要な基本コンポーネントの生成に失敗しました。\n");
 	}
-}
-
-//部位別ボーン追従コライダーのセットアップ
-void Enemy::SetupColliders()
-{
-	//ボーンの追従カプセルコライダーなどのセットアップ
-
-}
-
-//コライダー更新処理
-void Enemy::UpdateCollider()
-{
-	if (!model_component)
-	{
-		OutputDebugStringA("[Enemy 警告] SetupColliders: model_component が nullptr のためコライダーを設定できません。\n");
-		return;
-	}
-
-	//頭部用カプセルコライダーの生成とボーンの紐づけ
-	head_collider_component = GetComponent<BoneCapsuleColliderComponent>();
-	if (!head_collider_component)
-	{
-		head_collider_component = AddComponent<BoneCapsuleColliderComponent>();
-	}
-
-	if (head_collider_component)
-	{
-		head_collider_component->SetModelComponent(model_component);
-		head_collider_component->SetAttachBone("rock_spikes_01_mid_top");
-		head_collider_component->SetRadius(head_collider_radius);
-		head_collider_component->SetHeight(head_collider_height);
-		head_collider_component->SetAttribute(ColliderAttribute::Collision);
-		head_collider_component->SetListener(this);
-		AddCollider(head_collider_component->GetRawCollider());
-	}
-	else
-	{
-		OutputDebugStringA("[Enemy エラー] SetupColliders: head_collider_component の生成に失敗しました。\n");
-	}
-
 }

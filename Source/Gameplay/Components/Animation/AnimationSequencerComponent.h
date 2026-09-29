@@ -37,6 +37,9 @@ public:
 	//アニメーション再生時間の取得
 	float GetCurrentSequenceTime()const { return current_sequence_time; }
 
+	//保存再生中のアニメーションに対応するシーケンスデータを取得
+	const AnimationSequenceData* GetCurrentSequenceData()const;
+
 	//シーケンサ基準のアニメーション終了判定を取得
 	bool IsAnimationFinished()const { return ia_animation_finished; }
 

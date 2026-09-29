@@ -9,7 +9,7 @@ class CollisionSphere;
 class CapsuleColliderComponent;
 class BoneCapsuleColliderComponent;
 
-class Enemy :public Character, public ICollisionListener
+class Enemy :public Character
 {
 public:
 	//コンストラクタ
@@ -42,12 +42,6 @@ public:
 private:
 	//コンポーネント群のセットアップ
 	void SetupComponent();
-
-	//部位別ボーン追従コライダーのセットアップ
-	void SetupColliders();
-
-	//コライダー更新処理
-	void UpdateCollider();
 
 private:
 	std::shared_ptr<BoneCapsuleColliderComponent> head_collider_component;	//頭部用ボーン追従カプセルコライダー

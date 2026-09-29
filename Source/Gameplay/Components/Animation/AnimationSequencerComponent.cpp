@@ -121,6 +121,24 @@ void AnimationSequencerComponent::ChangeAnimation(const std::string& anim_name, 
 	ia_animation_finished = false;
 }
 
+//保存再生中のアニメーションに対応するシーケンスデータを取得
+const AnimationSequenceData* AnimationSequencerComponent::GetCurrentSequenceData() const
+{
+	if (current_animaiton_name.empty())
+	{
+		return nullptr;
+	}
+
+	auto it = sequence_map.find(current_animaiton_name);
+	if (it != sequence_map.end())
+	{
+		return &it->second;
+	}
+
+	OutputDebugStringA("[AnimationSequencerComponent 警告] GetCurrentSequenceData: 現在のアニメーションシーケンスデータが見つかりません。\n");
+	return nullptr;
+}
+
 //指定時刻上の速度倍率を取得
 float AnimationSequencerComponent::GetSpeedMultiplierAt(float seq_time) const
 {
