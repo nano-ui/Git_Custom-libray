@@ -242,6 +242,7 @@
     <ClCompile Include="Source\Editor\PathHelper.cpp" />
     <ClCompile Include="Source\Editor\Preview\ModelPreviewWindow.cpp" />
     <ClCompile Include="Source\Editor\Sequence\AnimationSequencerEditor.cpp" />
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateNodeRenderer.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateBlackboardInspectorWindow.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphConfigManager.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphDataManager.cpp" />
@@ -364,6 +365,7 @@
     <ClInclude Include="Source\Editor\Preview\ModelPreviewWindow.h" />
     <ClInclude Include="Source\Editor\Sequence\AnimationSequencerEditor.h" />
     <ClInclude Include="Source\Editor\Sequence\SequenceSceneBace.h" />
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateNodeRenderer.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateBlackboardInspectorWindow.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphConfigManager.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphDataManager.h" />

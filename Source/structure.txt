@@ -46,10 +46,14 @@ C:.
 „    „        SequenceSceneBace.h
 „    „        
 „    „¤„Ÿ„Ÿ„ŸStateMachineEditor
+„            NodeRenderer.cpp
+„            NodeRenderer.h
 „            StateBlackboardInspectorWindow.cpp
 „            StateBlackboardInspectorWindow.h
 „            StateGraphConfigManager.cpp
 „            StateGraphConfigManager.h
+„            StateGraphDataManager.cpp
+„            StateGraphDataManager.h
 „            StateGraphPaletteWindow.cpp
 „            StateGraphPaletteWindow.h
 „            StateGraphPropertyWindow.cpp
@@ -286,8 +290,6 @@ C:.
 „            State.h
 „            StateBlackboard.cpp
 „            StateBlackboard.h
-„            StateGraphDataManager.cpp
-„            StateGraphDataManager.h
 „            StateMachine.cpp
 „            StateMachine.h
 „            StateTransition.cpp

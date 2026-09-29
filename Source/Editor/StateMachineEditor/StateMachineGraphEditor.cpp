@@ -9,6 +9,7 @@
 #include "StateGraphPaletteWindow.h"
 #include "StateGraphPropertyWindow.h"
 #include "StateGraphConfigManager.h"
+#include "StateNodeRenderer.h"
 #include "StateBlackboardInspectorWindow.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Editor\AssetLoader.h"
@@ -42,6 +43,7 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	state_machine_component = std::make_unique<StateMachineComponent>();
 	editor_dummy_blackboard = std::make_unique<StateBlackboard>();
 	blackboard_inspector = std::make_unique<StateBlackboardInspectorWindow>();
+	state_node_renderer = std::make_unique<StateNodeRenderer>();
 
 	target_model_hash = 0;
 
@@ -576,61 +578,16 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 
 	for (size_t i = 0; i < current_graph->nodes.size(); i++)
 	{
-		const GraphNode& node = current_graph->nodes[i]; // 現在描画対象となっているノードデータの参照
+		const GraphNode& node = current_graph->nodes[i];
+		bool is_active_now = (node.id == graph_active_nodes[current_graph_id]);
 
-		int pushed_style_count = 0; // スタイルカラーのプッシュ総数
-
-		bool is_active_now = (node.id == graph_active_nodes[current_graph_id]); // アクティブ状態フラグ
-		if (is_active_now)
+		if (state_node_renderer)
 		{
-			const ImVec4 gold_glow_color = ImVec4(0.0f, 1.0f, 0.3f, 1.0f); // ライムグリーン
-			ed::PushStyleColor(ed::StyleColor_NodeBorder, gold_glow_color);
-			pushed_style_count++;
+			state_node_renderer->DrawNode(node, is_active_now);
 		}
-
-		if (node.is_sub_graph)
+		else
 		{
-			const ImVec4 sub_bg_color = ImVec4(0.1f, 0.2f, 0.4f, 0.85f); // サブグラフ用背景色
-			const ImVec4 sub_sel_color = ImVec4(0.3f, 0.6f, 1.0f, 1.0f); // サブグラフ選択枠色
-
-			ed::PushStyleColor(ed::StyleColor_NodeBg, sub_bg_color);
-			ed::PushStyleColor(ed::StyleColor_SelNodeBorder, sub_sel_color);
-			pushed_style_count += 2;
-		}
-		ed::BeginNode(node.id);
-
-		ImGui::Text("%s", node.name.c_str());
-		ImGui::Spacing();
-
-		ImGui::BeginGroup();
-		for (size_t in_idx = 0; in_idx < node.inputs.size(); in_idx++)
-		{
-			const GraphPin& pin = node.inputs[in_idx]; // 入力ピンデータ
-			ed::BeginPin(pin.id, ed::PinKind::Input);
-			ImGui::Text("->%s", pin.name.c_str());
-			ed::EndPin();
-		}
-		ImGui::EndGroup();
-
-		ImGui::SameLine();
-		const float middle_spacer_width = 40.0f; // 余白幅
-		ImGui::Dummy(ImVec2(middle_spacer_width, 0.0f));
-		ImGui::SameLine();
-
-		ImGui::BeginGroup();
-		for (size_t out_idx = 0; out_idx < node.outputs.size(); out_idx++)
-		{
-			const GraphPin& pin = node.outputs[out_idx]; // 出力ピンデータ
-			ed::BeginPin(pin.id, ed::PinKind::Output);
-			ImGui::Text("%s ->", pin.name.c_str());
-			ed::EndPin();
-		}
-		ImGui::EndGroup();
-
-		ed::EndNode();
-		for (int color_idx = 0; color_idx < pushed_style_count; color_idx++)
-		{
-			ed::PopStyleColor();
+			printf("Error: DrawCenterCanvas - node_renderer が nullptr です。\n");
 		}
 	}
 

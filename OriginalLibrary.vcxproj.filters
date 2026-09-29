@@ -423,6 +423,9 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphDataManager.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\StateGraphDataManager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateNodeRenderer.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateNodeRenderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -802,6 +805,9 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphDataManager.h">
       <Filter>Source\Editor\StateMachineGraphEditor\StateGraphDataManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateNodeRenderer.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateNodeRenderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1283,6 +1289,9 @@
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphDataManager">
       <UniqueIdentifier>{6b493f1c-76e3-4bfd-9dde-391ed8956c2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\StateNodeRenderer">
+      <UniqueIdentifier>{06ffc5e8-b3ed-4d2b-8902-48aa8de9ab0c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
