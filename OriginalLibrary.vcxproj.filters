@@ -429,6 +429,9 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\StateLinkRenderer.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\StateLinkRenderer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphNavigator.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphNavigator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -814,6 +817,9 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\StateLinkRenderer.h">
       <Filter>Source\Editor\StateMachineGraphEditor\StateLinkRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphNavigator.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphNavigator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1301,6 +1307,9 @@
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\StateLinkRenderer">
       <UniqueIdentifier>{649663a6-eb8a-4c2e-a634-f50e66dca2f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphNavigator">
+      <UniqueIdentifier>{86fadef6-82d1-456f-bdbc-c3d5eb17e4b0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -12,6 +12,7 @@
 #include "StateNodeRenderer.h"
 #include "StateLinkRenderer.h"
 #include "StateBlackboardInspectorWindow.h"
+#include "StateGraphNavigator.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Editor\AssetLoader.h"
 #include "Editor\PathHelper.h"
@@ -46,6 +47,7 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	blackboard_inspector = std::make_unique<StateBlackboardInspectorWindow>();
 	state_node_renderer = std::make_unique<StateNodeRenderer>();
 	state_link_renderer = std::make_unique<StateLinkRenderer>();
+	state_graph_navigator = std::make_unique<StateGraphNavigator>();
 
 	target_model_hash = 0;
 
@@ -542,11 +544,19 @@ bool StateMachineGraphEditor::DrawTopMenuBar(StateBlackboard* blackboard)
 
 	ImGui::Spacing();
 
-	if (DrawHeaderNavigation())
+	if (state_graph_navigator)
 	{
-		ImGui::End();
-		return true;
+		if (state_graph_navigator->DrawHeaderNavigation(data_manager.get(), current_graph_id))
+		{
+			ImGui::End();
+			return true;
+		}
 	}
+	else
+	{
+		printf("Error: DrawTopMenuBar - state_graph_navigator が nullptr です。\n");
+	}
+
 	return false;
 }
 
@@ -766,7 +776,14 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 	}
 	ed::EndDelete();
 
-	CheckNavigateToSubGraph(current_graph);
+	if (state_graph_navigator)
+	{
+		state_graph_navigator->CheckNavigateToSubGraph(current_graph, current_graph_id);
+	}
+	else
+	{
+		printf("Error: DrawCenterCanvas - state_graph_navigator が nullptr です。\n");
+	}
 
 	ed::End();
 
@@ -882,151 +899,6 @@ void StateMachineGraphEditor::DrawRightSidebar(GraphData* current_graph, StateBl
 
 	ed::SetCurrentEditor(nullptr);
 	ImGui::End();
-}
-
-//サブグラフへの階層移動を検知・処理
-void StateMachineGraphEditor::CheckNavigateToSubGraph(GraphData* current_graph)
-{
-	if (!current_graph)
-	{
-		printf("Error: StateMachineGraphEditor::CheckNavigateToSubGraph - current_graph が nullptr です。\n");
-		return;
-	}
-
-	ed::NodeId double_clicked_node_id = ed::GetDoubleClickedNode();	//ダブルクリックされたノードID
-
-	if (double_clicked_node_id)
-	{
-		uint32_t clicked_id = static_cast<uint32_t>(double_clicked_node_id.Get());	//ダブルクリックされたID
-
-		for (size_t i = 0; i < current_graph->nodes.size(); i++)
-		{
-			const GraphNode& node = current_graph->nodes[i];	//比較対象のノード
-
-			if (node.id == clicked_id)
-			{
-				if (node.is_sub_graph)
-				{
-					current_graph_id = node.sub_graph_id;
-					//printf("StateMachineGraphEditor: サブグラフ「%s」の内部に入ります。階層ID: %d へ切り替えました。\n",
-						//node.name.c_str(), current_graph_id);
-				}
-				break;
-			}
-		}
-	}
-}
-
-//階層ナビゲーションを描画
-bool StateMachineGraphEditor::DrawHeaderNavigation()
-{
-	ImVec2 window_pos = ImGui::GetWindowPos(); // 描画位置
-	float title_bar_height = ImGui::GetFrameHeight(); // タイトルバーの高さ
-	const float button_margin_y = 35.0f;
-	ImVec2 bar_pos = ImVec2(window_pos.x, window_pos.y + title_bar_height + button_margin_y);
-	const float bar_height_size = 35.0f;
-	ImVec2 bar_size = ImVec2(ImGui::GetWindowWidth(), bar_height_size);
-
-	ImDrawList* draw_list = ImGui::GetWindowDrawList(); // 描画リスト取得
-	draw_list->AddRectFilled(bar_pos, ImVec2(bar_pos.x + bar_size.x, bar_pos.y + bar_size.y), IM_COL32(35, 35, 35, 255));
-
-	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
-	ImGui::SetWindowFontScale(1.2f);
-	ImGui::SetCursorScreenPos(ImVec2(bar_pos.x + 15.0f, bar_pos.y + 8.0f));
-
-	ImGui::Text(u8"現在の階層ID：%d", current_graph_id);
-	ImGui::SameLine();
-
-	uint32_t target_navigate_id = current_graph_id;	//IDを一時保存
-
-	if (ImGui::Selectable(u8" / ルート", current_graph_id == 0, ImGuiSelectableFlags_None, ImGui::CalcTextSize(u8" / ルート")))
-	{
-		target_navigate_id = 0;																		// 階層IDをルートへ変更
-		//printf("StateMachineGraphEditor: ナビゲーションバーの文字クリックによりルート階層へ復帰しました。\n");
-	}
-
-	if (current_graph_id != 0)
-	{
-		ImGui::SameLine();
-
-		std::vector<uint32_t> breadcurmbs;		//経路IDを保存するリスト
-		uint32_t trace_id = current_graph_id;	//探索用の現在のID
-
-		while (trace_id != 0)
-		{
-			breadcurmbs.push_back(trace_id);
-			uint32_t parent_id = 0;			//親のID
-			bool found_parent = false;		//親が見つかったかのフラグ
-
-			for (size_t g = 0; g < data_manager->GetLayerDatas().size(); g++)
-			{
-				for (size_t n = 0; n < data_manager->GetLayerDatas()[g].nodes.size(); n++)
-				{
-					if (data_manager->GetLayerDatas()[g].nodes[n].is_sub_graph && data_manager->GetLayerDatas()[g].nodes[n].sub_graph_id == trace_id)
-					{
-						parent_id = data_manager->GetLayerDatas()[g].id;
-						found_parent = true;
-						break;
-					}
-				}
-
-				if (found_parent)
-				{
-					break;
-				}
-			}
-			if (found_parent)
-			{
-				trace_id = parent_id;
-			}
-			else
-			{
-				//printf("Warning: StateMachineGraphEditor - 階層ID %d の親が見つかりませんでした。\n", trace_id);
-				break;
-			}
-		}
-
-		for (int i = static_cast<int>(breadcurmbs.size()) - 1; i >= 0; i--)
-		{
-			uint32_t path_id = breadcurmbs[i];	//描画する階層ID
-			std::string path_name = "Unknown";	//階層名
-			for (size_t g = 0; g < data_manager->GetLayerDatas().size(); g++)
-			{
-				if (data_manager->GetLayerDatas()[g].id == path_id)
-				{
-					path_name = data_manager->GetLayerDatas()[g].name;
-					break;
-				}
-			}
-
-			std::string display_text = " / " + path_name;	//表示するテキスト名
-			std::string selectable_label = display_text + "##" + std::to_string(path_id);
-			ImVec2 text_size = ImGui::CalcTextSize(display_text.c_str());	//文字の大きさ
-
-			ImGui::SameLine();
-
-			if (ImGui::Selectable(selectable_label.c_str(), path_id == current_graph_id, ImGuiSelectableFlags_None, text_size))
-			{
-				target_navigate_id = path_id;
-				//printf("StateMachineGraphEditor: ナビゲーションパスにより階層ID: %d へ移動しました。\n", target_navigate_id);
-			}
-		}
-	}
-	bool is_navigated = (current_graph_id != target_navigate_id); // 移動検知フラグ
-	current_graph_id = target_navigate_id;
-
-	ImGui::PopStyleColor();
-	ImGui::SetWindowFontScale(1.0f);
-
-	ImGui::SameLine();
-	const float offset_position_x = 400.0f;	//ボタンを右側に寄せるためのオフセット値
-	ImGui::SetCursorScreenPos(ImVec2(bar_pos.x + offset_position_x, bar_pos.y + 5.0f));
-
-	ImGui::SetWindowFontScale(1.0f);
-	ImGui::SetCursorPos(ImVec2(0.0f, title_bar_height + bar_size.y + 5.0f));
-	ImGui::Dummy(ImVec2(0.0f, 1.0f));
-
-	return is_navigated;
 }
 
 //接続線の作成を検知してデータに追加

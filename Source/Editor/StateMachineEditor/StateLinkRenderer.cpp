@@ -165,6 +165,5 @@ bool StateLinkRenderer::IsMatchTransitionDestination(
 			}
 		}
 	}
-
 	return false;
 }

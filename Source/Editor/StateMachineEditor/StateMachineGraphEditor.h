@@ -18,6 +18,7 @@ class AssetLoader;
 class StateBlackboardInspectorWindow;
 class StateNodeRenderer;
 class StateLinkRenderer;
+class StateGraphNavigator;
 
 struct GraphData;
 struct GraphLink;
@@ -64,12 +65,6 @@ private:
 	//右プロパティウインドウ
 	void DrawRightSidebar(GraphData* current_graph, StateBlackboard* blackboard, float width, float height);
 
-	//サブグラフへの階層移動を検知・処理
-	void CheckNavigateToSubGraph(GraphData* current_graph);
-
-	//階層ナビゲーションを描画
-	bool DrawHeaderNavigation();
-
 	//ノードの削除
 	void DeleteNode(GraphData* current_graph);
 
@@ -104,6 +99,7 @@ private:
 	std::unique_ptr<StateGraphPropertyWindow> property_window;		//右ペイン：プロパティ描画クラス
 	std::unique_ptr<StateNodeRenderer> state_node_renderer;			//ステートノード描画クラス
 	std::unique_ptr<StateLinkRenderer> state_link_renderer;			//ステートリンク描画クラス
+	std::unique_ptr<StateGraphNavigator> state_graph_navigator;		//階層ナビゲーションバーの描画およびサブグラフへの潜り込み判定クラス
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::unique_ptr<StateGraphConfigManager> config_manager;
 	std::unique_ptr<AssetLoader> asset_loader;								//モデル読み込みクラス
