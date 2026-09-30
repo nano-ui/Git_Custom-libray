@@ -432,6 +432,9 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphNavigator.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\StateGraphNavigator</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateCanvasInteractionHandler.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateCanvasInteractionHandler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -820,6 +823,9 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphNavigator.h">
       <Filter>Source\Editor\StateMachineGraphEditor\StateGraphNavigator</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateCanvasInteractionHandler.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateCanvasInteractionHandler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1310,6 +1316,9 @@
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphNavigator">
       <UniqueIdentifier>{86fadef6-82d1-456f-bdbc-c3d5eb17e4b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\StateCanvasInteractionHandler">
+      <UniqueIdentifier>{e504f0ad-d3d9-495e-80be-d4442e348184}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

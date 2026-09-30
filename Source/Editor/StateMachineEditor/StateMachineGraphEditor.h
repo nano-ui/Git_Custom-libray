@@ -19,6 +19,7 @@ class StateBlackboardInspectorWindow;
 class StateNodeRenderer;
 class StateLinkRenderer;
 class StateGraphNavigator;
+class StateCanvasInteractionHandler;
 
 struct GraphData;
 struct GraphLink;
@@ -65,12 +66,6 @@ private:
 	//右プロパティウインドウ
 	void DrawRightSidebar(GraphData* current_graph, StateBlackboard* blackboard, float width, float height);
 
-	//ノードの削除
-	void DeleteNode(GraphData* current_graph);
-
-	//接続線の削除
-	void DeleteLink(GraphData* current_graph);
-
 	//接続線の作成を検知してデータに追加
 	void CreateNewLink(GraphData* current_graph);
 
@@ -100,6 +95,9 @@ private:
 	std::unique_ptr<StateNodeRenderer> state_node_renderer;			//ステートノード描画クラス
 	std::unique_ptr<StateLinkRenderer> state_link_renderer;			//ステートリンク描画クラス
 	std::unique_ptr<StateGraphNavigator> state_graph_navigator;		//階層ナビゲーションバーの描画およびサブグラフへの潜り込み判定クラス
+	std::unique_ptr<StateCanvasInteractionHandler> canvas_interaction_handler;	//キャンバス操作・ユーザー入力ハンドラー
+
+
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::unique_ptr<StateGraphConfigManager> config_manager;
 	std::unique_ptr<AssetLoader> asset_loader;								//モデル読み込みクラス

@@ -13,6 +13,7 @@
 #include "StateLinkRenderer.h"
 #include "StateBlackboardInspectorWindow.h"
 #include "StateGraphNavigator.h"
+#include "StateCanvasInteractionHandler.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Editor\AssetLoader.h"
 #include "Editor\PathHelper.h"
@@ -48,6 +49,7 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	state_node_renderer = std::make_unique<StateNodeRenderer>();
 	state_link_renderer = std::make_unique<StateLinkRenderer>();
 	state_graph_navigator = std::make_unique<StateGraphNavigator>();
+	canvas_interaction_handler = std::make_unique<StateCanvasInteractionHandler>();
 
 	target_model_hash = 0;
 
@@ -656,125 +658,24 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 	}
 	ed::EndCreate();
 
-	static ImVec2 popup_click_pos = ImVec2(0.0f, 0.0f); // クリック位置
-	static ed::NodeId context_node_id = 0; // コンテキストノードID
-
-	ed::Suspend();
-
-	if (ed::ShowBackgroundContextMenu())
+	//-------------------------------------------------------------
+	//ユーザー操作処理をハンドラーへ委譲
+	//-------------------------------------------------------------
+	if (canvas_interaction_handler)
 	{
-		ImGui::OpenPopup("Create New Node Context Menu");
-		popup_click_pos = ed::ScreenToCanvas(ImGui::GetMousePos());
-	}
+		// 右クリックコンテキストメニュー（ステート追加、サブグラフ追加・変換）の処理
+		canvas_interaction_handler->HandleContextMenu(data_manager.get(), current_graph, current_graph_id);
 
-	if (ed::ShowNodeContextMenu(&context_node_id))
+		// パレットウィンドウ側で保留されている追加ノードの配置処理
+		canvas_interaction_handler->HandlePendingPaletteNode(data_manager.get(), palette_window.get(), current_graph, current_graph_id);
+
+		// ノードおよびリンクの削除クエリ処理
+		canvas_interaction_handler->HandleDeletion(data_manager.get(), current_graph, current_graph_id);
+	}
+	else
 	{
-		ed::SelectNode(context_node_id, true);
-		ImGui::OpenPopup("Node Context Menu");
+		printf("Error: DrawCenterCanvas - canvas_interaction_handler が nullptr です。\n"); // 日本語エラーログ出力
 	}
-
-	if (ImGui::BeginPopup("Create New Node Context Menu"))
-	{
-		if (ImGui::MenuItem(u8"ステート追加"))
-		{
-			trigger_add_node = true;
-		}
-		if (ImGui::MenuItem(u8"サブグラフ追加"))
-		{
-			trigger_add_subgraph = true;
-		}
-		ImGui::EndPopup();
-	}
-
-	if (ImGui::BeginPopup("Node Context Menu"))
-	{
-		if (ImGui::MenuItem(u8"サブグラフへ変換"))
-		{
-			trigger_convert_subgraph = true;
-		}
-		ImGui::EndPopup();
-	}
-
-	ed::Resume();
-
-	if (palette_window->HasPendingAddNode())
-	{
-		ImVec2 center_pos = ImGui::GetMainViewport()->GetCenter(); // 画面中心
-		ImVec2 canvas_pos = ed::ScreenToCanvas(center_pos); // キャンバス座標
-
-		if (palette_window->IsPendingSubGraph())
-		{
-			data_manager->AddNode(
-				current_graph,
-				static_cast<float>(canvas_pos.x),
-				static_cast<float>(canvas_pos.y),
-				palette_window->GetPendingNodeName()
-			);
-
-			for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
-			{
-				if (data_manager->GetLayerDatas()[i].id == current_graph_id)
-				{
-					current_graph = &data_manager->GetLayerDatas()[i];
-					break;
-				}
-			}
-		}
-		else
-		{
-			data_manager->AddNode(
-				current_graph,
-				static_cast<float>(canvas_pos.x),
-				static_cast<float>(canvas_pos.y),
-				palette_window->GetPendingNodeName()
-			);
-		}
-
-		uint32_t new_state_id = current_graph->nodes.back().id; // 新しいノードID
-		ed::SetNodePosition(new_state_id, canvas_pos);
-
-		palette_window->ClearPendingNode();
-	}
-
-	if (trigger_add_node)
-	{
-		data_manager->AddNode(
-			current_graph, 
-			static_cast<float>(popup_click_pos.x),
-			static_cast<float>(popup_click_pos.y));
-		uint32_t new_state_id = current_graph->nodes.back().id; // 追加ノードID
-		ed::SetNodePosition(new_state_id, popup_click_pos);
-	}
-	if (trigger_add_subgraph)
-	{
-		data_manager->AddSubGrapNode(
-			current_graph_id,
-			static_cast<float>(popup_click_pos.x),
-			static_cast<float>(popup_click_pos.y));
-
-		for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
-		{
-			if (data_manager->GetLayerDatas()[i].id == current_graph_id)
-			{
-				current_graph = &data_manager->GetLayerDatas()[i];
-				break;
-			}
-		}
-		uint32_t new_node_id = current_graph->nodes.back().id; // サブグラフノードID
-		ed::SetNodePosition(new_node_id, popup_click_pos);
-	}
-	if (trigger_convert_subgraph)
-	{
-		uint32_t raw_node_id = static_cast<uint32_t>(context_node_id.Get()); // キャストID
-		data_manager->ConvertToSubGraph(current_graph_id, raw_node_id);
-	}
-
-	if (ed::BeginDelete())
-	{
-		DeleteNode(current_graph);
-		DeleteLink(current_graph);
-	}
-	ed::EndDelete();
 
 	if (state_graph_navigator)
 	{
@@ -787,53 +688,12 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 
 	ed::End();
 
-	if (ImGui::BeginDragDropTarget())
+	//-------------------------------------------------------------
+	//ドラッグ＆ドロップ受け取り処理をハンドラーへ委譲
+	//-------------------------------------------------------------
+	if (canvas_interaction_handler)
 	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_PAYLOAD_NORMAL"))
-		{
-			const char* dropped_node_name = static_cast<const char*>(payload->Data); // ノード名
-			ImVec2 drap_mouse_screen_pos = ImGui::GetMousePos(); // マウス画面座標
-			ImVec2 drop_mouse_canvas_pos = ed::ScreenToCanvas(drap_mouse_screen_pos); // キャンバス座標
-
-			data_manager->AddNode(
-				current_graph, 
-				static_cast<float>(drop_mouse_canvas_pos.x), 
-				static_cast<float>(drop_mouse_canvas_pos.y), 
-				dropped_node_name);
-
-			uint32_t new_node_id = current_graph->nodes.back().id; // 新しいノードID
-			ed::SetNodePosition(new_node_id, drop_mouse_canvas_pos);
-
-			printf("StateMachineGraphEditor: 通常ステート「%s」をドラッグ＆ドロップで配置しました。\n", dropped_node_name);
-		}
-
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_PAYLOAD_SUB"))
-		{
-			const char* dropped_sub_name = static_cast<const char*>(payload->Data); // ノード名
-			ImVec2 drap_mouse_screen_pos = ImGui::GetMousePos(); // マウス画面座標
-			ImVec2 drop_mouse_canvas_pos = ed::ScreenToCanvas(drap_mouse_screen_pos); // キャンバス座標
-
-			data_manager->AddSubGrapNode(
-				current_graph_id,
-				static_cast<float>(drop_mouse_canvas_pos.x),
-				static_cast<float>(drop_mouse_canvas_pos.y),
-				dropped_sub_name);
-
-			for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
-			{
-				if (data_manager->GetLayerDatas()[i].id == current_graph_id)
-				{
-					current_graph = &data_manager->GetLayerDatas()[i];
-					break;
-				}
-			}
-
-			uint32_t new_node_id = current_graph->nodes.back().id; // 新しいノードID
-			ed::SetNodePosition(new_node_id, drop_mouse_canvas_pos);
-
-			printf("StateMachineGraphEditor: サブグラフ「%s」をドラッグ＆ドロップで完全複製配置しました。\n", dropped_sub_name);
-		}
-		ImGui::EndDragDropTarget();
+		canvas_interaction_handler->HandleDragAndDrop(data_manager.get(), current_graph, current_graph_id);
 	}
 
 	if (g_pending_focus_node_id != 0)
@@ -940,34 +800,6 @@ void StateMachineGraphEditor::CreateNewLink(GraphData* current_graph)
 		{
 			const ImVec4 reject_color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); // 失敗色 
 			ed::RejectNewItem(reject_color, 2.0f);
-		}
-	}
-}
-
-//ノードの削除
-void StateMachineGraphEditor::DeleteNode(GraphData* current_graph)
-{
-	ed::NodeId delete_node_id; // 対象ノードID
-	while (ed::QueryDeletedNode(&delete_node_id))
-	{
-		if (ed::AcceptDeletedItem())
-		{
-			uint32_t target_id = static_cast<uint32_t>(delete_node_id.Get()); // キャストID
-			data_manager->DeleteNode(current_graph_id, target_id);
-		}
-	}
-}
-
-//接続線の削除
-void StateMachineGraphEditor::DeleteLink(GraphData* current_graph)
-{
-	ed::LinkId delete_link_id; // 対象リンクID
-	while (ed::QueryDeletedLink(&delete_link_id))
-	{
-		if (ed::AcceptDeletedItem())
-		{
-			uint32_t target_id = static_cast<uint32_t>(delete_link_id.Get()); // キャストID
-			data_manager->DeleteLink(current_graph_id, target_id);
 		}
 	}
 }
