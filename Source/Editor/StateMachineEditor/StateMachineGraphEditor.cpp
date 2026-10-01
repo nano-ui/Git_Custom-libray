@@ -15,6 +15,7 @@
 #include "StateGraphNavigator.h"
 #include "StateCanvasInteractionHandler.h"
 #include "StateLinkConnectionHandler.h"
+#include "StateGraphCameraController.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Editor\AssetLoader.h"
 #include "Editor\PathHelper.h"
@@ -52,6 +53,7 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	state_graph_navigator = std::make_unique<StateGraphNavigator>();
 	canvas_interaction_handler = std::make_unique<StateCanvasInteractionHandler>();
 	link_connection_handler = std::make_unique<StateLinkConnectionHandler>();
+	camera_controller = std::make_unique<StateGraphCameraController>();
 
 	target_model_hash = 0;
 
@@ -126,18 +128,15 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	{
 		flow_src_node_id = previous_active_node_id;
 		flow_dst_node_id = runtime_active_node_id;
-		constexpr float default_flow_duration = 0.35f; // 強調表示時間（秒）
-		flow_effect_timer = default_flow_duration;     // 実機遷移時にもタイマーをセット
+		constexpr float default_flow_duration = 0.35f;
+		flow_effect_timer = default_flow_duration;
 		has_flow_requsted = true;
 
-		// デバッグ出力で遷移検知とノードIDを確認
-		printf("StateMachineGraphEditor: 実機遷移を検知しました。ノードID: %u -> %u (タイマー: %.2f秒)\n",
-			flow_src_node_id, flow_dst_node_id, flow_effect_timer);
-
 		// リアルタイム追尾機能が有効であるかを判定
-		if (is_tracking_active_node)
+		if (is_tracking_active_node && camera_controller)
 		{
-			g_pending_focus_node_id = runtime_active_node_id;
+			// カメラコントローラーへフォーカス要求を発行
+			camera_controller->RequestFocusNode(runtime_active_node_id);
 		}
 	}
 
@@ -555,9 +554,9 @@ void StateMachineGraphEditor::DrawLeftSidebar(GraphData* current_graph, float wi
 	ImGui::BeginChild("LeftSidebarZone##Child", ImVec2(width, height), true);
 	uint32_t focus_node_id = 0; //受け取り用のフォーカスID
 	palette_window->DrawPalette(data_manager.get(), current_graph, focus_node_id);
-	if (focus_node_id != 0)
+	if (focus_node_id != 0 && camera_controller)
 	{
-		g_pending_focus_node_id = focus_node_id;
+		camera_controller->RequestFocusNode(focus_node_id);
 	}
 
 	ImGui::EndChild();
@@ -652,13 +651,8 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 	//-------------------------------------------------------------
 	if (canvas_interaction_handler)
 	{
-		// 右クリックコンテキストメニュー（ステート追加、サブグラフ追加・変換）の処理
 		canvas_interaction_handler->HandleContextMenu(data_manager.get(), current_graph, current_graph_id);
-
-		// パレットウィンドウ側で保留されている追加ノードの配置処理
 		canvas_interaction_handler->HandlePendingPaletteNode(data_manager.get(), palette_window.get(), current_graph, current_graph_id);
-
-		// ノードおよびリンクの削除クエリ処理
 		canvas_interaction_handler->HandleDeletion(data_manager.get(), current_graph, current_graph_id);
 	}
 	else
@@ -677,55 +671,27 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 
 	ed::End();
 
-	//-------------------------------------------------------------
-	//ドラッグ＆ドロップ受け取り処理をハンドラーへ委譲
-	//-------------------------------------------------------------
+	//----------------------------------
+	//ドラッグ＆ドロップ受け取り処理
+	//----------------------------------
 	if (canvas_interaction_handler)
 	{
 		canvas_interaction_handler->HandleDragAndDrop(data_manager.get(), current_graph, current_graph_id);
 	}
 
-	if (g_pending_focus_node_id != 0)
+	//------------------------------
+	//カメラフォーカスの更新処理
+	//------------------------------
+	if (camera_controller)
 	{
-		uint32_t focus_target_id = g_pending_focus_node_id; // 対象IDのローカル退避
-		ed::SelectNode(focus_target_id, false);
-
-		auto* internal_context = reinterpret_cast<ax::NodeEditor::Detail::EditorContext*>(ed::GetCurrentEditor()); // 内部コンテキスト
-		bool is_node_in_screen = false; // 画面内存在判定フラグ
-
-		if (internal_context)
-		{
-			ImRect view_rect = internal_context->GetViewRect(); // 表示領域矩形
-			auto* internal_node = internal_context->FindNode(focus_target_id); // 内部ノード
-
-			if (internal_node)
-			{
-				ImRect node_rect = internal_node->m_Bounds; // ノード領域矩形
-
-				if ((view_rect.Min.x + focus_margin) <= node_rect.Min.x &&
-					(view_rect.Max.x - focus_margin) >= node_rect.Max.x &&
-					(view_rect.Min.y + focus_margin) <= node_rect.Min.y &&
-					(view_rect.Max.y - focus_margin) >= node_rect.Max.y)
-				{
-					is_node_in_screen = true;
-				}
-			}
-		}
-
-		if (!is_node_in_screen)
-		{
-			ed::NavigateToSelection(is_zoom_correction_enabled, focus_duration_time);
-
-			if (focus_duration_time > 0.0f)
-			{
-				printf("StateMachineGraphEditor: ノード ID:%d が画面外のためカメラフォーカスを実行しました。\n", focus_target_id);
-			}
-		}
-
-		g_pending_focus_node_id = 0;
+		camera_controller->UpdateCameraFocus();
+	}
+	else
+	{
+		printf("Error: DrawCenterCanvas - camera_controller が nullptr です。\n"); 
 	}
 
-	if (has_flow_requsted)
+	if (has_flow_requsted) 
 	{
 		has_flow_requsted = false;
 	}

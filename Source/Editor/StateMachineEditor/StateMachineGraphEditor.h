@@ -21,6 +21,7 @@ class StateLinkRenderer;
 class StateGraphNavigator;
 class StateCanvasInteractionHandler;
 class StateLinkConnectionHandler;
+class StateGraphCameraController;
 
 struct GraphData;
 struct GraphLink;
@@ -92,6 +93,7 @@ private:
 	std::unique_ptr<StateGraphNavigator> state_graph_navigator;		//階層ナビゲーションバーの描画およびサブグラフへの潜り込み判定クラス
 	std::unique_ptr<StateCanvasInteractionHandler> canvas_interaction_handler;	//キャンバス操作・ユーザー入力ハンドラー
 	std::unique_ptr<StateLinkConnectionHandler> link_connection_handler;	//リンク接続・検証ハンドラー
+	std::unique_ptr<StateGraphCameraController> camera_controller;          //カメラ・ビューポート制御クラス
 
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::unique_ptr<StateGraphConfigManager> config_manager;
@@ -112,11 +114,8 @@ private:
 	uint32_t flow_dst_node_id = 0;								//遷移エフェクトの遷移先となったノードID
 	float flow_effect_timer = 0.0f;								//遷移エフェクトの残り表示時間（秒）
 	bool is_tracking_active_node = false;						//実行中のアクティブノードを自動で追尾する状態フラグ
-	bool is_zoom_correction_enabled = false;					//追尾カメラ移動時にズーム倍率を最適化する状態フラグ
 	bool is_simulation_active = false;							//エディタ上での擬似シミュレーション実行フラグ
 	uint32_t last_tracked_runtime_node_id = UINT32_MAX;			//直前に追尾処理を行ったゲーム側のアクティブノードID
 	uint32_t last_synced_node_id = UINT32_MAX;					//直前に同期を行ったノードID
-	float focus_duration_time = 0;								//カメラフォーカス時の補間アニメーション時間
-	float focus_margin = 50.0f;									//ノードの画面内判定に用いる安全マージン
 	bool has_flow_requsted = false;								//エフェクトリクエスト
 };

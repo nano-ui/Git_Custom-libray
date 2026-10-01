@@ -7,7 +7,7 @@
 
 class StateGraphDataManager;
 class StateGraphPaletteWindow;
-class GraphData;
+struct GraphData;
 
 class StateCanvasInteractionHandler
 {
