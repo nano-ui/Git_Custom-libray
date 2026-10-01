@@ -14,6 +14,7 @@
 #include "StateBlackboardInspectorWindow.h"
 #include "StateGraphNavigator.h"
 #include "StateCanvasInteractionHandler.h"
+#include "StateLinkConnectionHandler.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Editor\AssetLoader.h"
 #include "Editor\PathHelper.h"
@@ -50,6 +51,7 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	state_link_renderer = std::make_unique<StateLinkRenderer>();
 	state_graph_navigator = std::make_unique<StateGraphNavigator>();
 	canvas_interaction_handler = std::make_unique<StateCanvasInteractionHandler>();
+	link_connection_handler = std::make_unique<StateLinkConnectionHandler>();
 
 	target_model_hash = 0;
 
@@ -147,21 +149,6 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	}
 
 	SyncActiveNodeAnimation(current_graph, current_active_node_id);
-
-	//// ゲーム側の実行ノードIDが前フレームから変化した瞬間を直接検知
-	//if (runtime_active_node_id != UINT32_MAX && previous_active_node_id != 0 && previous_active_node_id != runtime_active_node_id)
-	//{
-	//	flow_src_node_id = previous_active_node_id;
-	//	flow_dst_node_id = runtime_active_node_id;
-	//	has_flow_requsted = true;
-	//	//printf("StateMachineGraphEditor: 純粋なステート遷移を検知しました。ノードID: %d -> %d\n", flow_src_node_id, flow_dst_node_id);
-
-	//	// リアルタイム追尾機能が有効であるかを判定
-	//	if (is_tracking_active_node)
-	//	{
-	//		g_pending_focus_node_id = runtime_active_node_id;
-	//	}
-	//}
 
 	// 有効な実行中IDが届いている場合のみ、次フレーム用の比較元として保存
 	if (runtime_active_node_id != UINT32_MAX)
@@ -652,12 +639,14 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 		printf("Error: DrawCenterCanvas - state_link_renderer が nullptr です。\n");
 	}
 
-	if (ed::BeginCreate())
+	if (link_connection_handler)
 	{
-		CreateNewLink(current_graph);
+		link_connection_handler->HandleLinkCreation(data_manager.get(), current_graph, current_graph_id);
 	}
-	ed::EndCreate();
-
+	else
+	{
+		printf("Error: DrawCenterCanvas - link_connection_handler が nullptr です。\n"); // 日本語エラーログ出力
+	}
 	//-------------------------------------------------------------
 	//ユーザー操作処理をハンドラーへ委譲
 	//-------------------------------------------------------------
@@ -759,93 +748,6 @@ void StateMachineGraphEditor::DrawRightSidebar(GraphData* current_graph, StateBl
 
 	ed::SetCurrentEditor(nullptr);
 	ImGui::End();
-}
-
-//接続線の作成を検知してデータに追加
-void StateMachineGraphEditor::CreateNewLink(GraphData* current_graph)
-{
-	if (!current_graph)
-	{
-		printf("Error: StateMachineGraphEditor::CreateNewLink - current_graph が nullptr です。\n");
-		return;
-	}
-
-	ed::PinId start_pin_id;	//接続元のピン
-	ed::PinId end_pin_id;	//接続先のピン
-
-	if (ed::QueryNewLink(&start_pin_id, &end_pin_id))
-	{
-		uint32_t start_id = static_cast<uint32_t>(start_pin_id.Get());	//接続元のID
-		uint32_t end_id = static_cast<uint32_t>(end_pin_id.Get());		//接続先のID
-
-		if (data_manager->CheckCanConnect(current_graph_id, start_id, end_id))
-		{
-			const ImVec4 success_color = ImVec4(0.0f, 1.0f, 0.0f, 1.0f); // 成功色 
-
-			if (ed::AcceptNewItem(success_color, 2.0f))
-			{
-				GraphLink new_link;	//新しい接続情報
-				new_link.id = data_manager->FetchAndIncrementId();
-				new_link.start_pin_id = static_cast<uint32_t>(start_pin_id.Get());
-				new_link.end_pin_id = static_cast<uint32_t>(end_pin_id.Get());
-				current_graph->links.push_back(new_link);
-
-				OnLinkCreated(current_graph, new_link);
-
-				//printf("StateMachineGraphEditor: リンクを作成しました。ID: %d, 出力ピン: %d -> 入力ピン: %d\n",
-				//	new_link.id, new_link.start_pin_id, new_link.end_pin_id);
-			}
-		}
-		else
-		{
-			const ImVec4 reject_color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); // 失敗色 
-			ed::RejectNewItem(reject_color, 2.0f);
-		}
-	}
-}
-
-//遷移条件を構築
-void StateMachineGraphEditor::OnLinkCreated(GraphData* current_graph, const GraphLink& new_link)
-{
-	if (!current_graph)
-	{
-		return;
-	}
-
-	uint32_t source_node_id = 0;	//遷移元のID
-	uint32_t target_node_id = 0;	//遷移先のID
-
-	for (size_t i = 0; i < current_graph->nodes.size(); i++)
-	{
-		const GraphNode& node = current_graph->nodes[i];	//検索対象のノード
-
-		for (size_t p = 0; p < node.outputs.size(); p++)
-		{
-			if (node.outputs[p].id == new_link.start_pin_id)
-			{
-				source_node_id = node.id;
-				break;
-			}
-		}
-
-		for (size_t p = 0; p < node.inputs.size(); p++)
-		{
-			if (node.inputs[p].id == new_link.end_pin_id)
-			{
-				target_node_id = node.id;
-				break;
-			}
-		}
-	}
-
-	if (source_node_id == 0 || target_node_id == 0)
-	{
-		printf("Error: OnLinkCreated - 接続されたピンに対応するノードが見つかりませんでした。\n");
-		return;
-	}
-
-	//printf("StateMachineGraphEditor: 遷移関係を構築しました。[ステートID:%d] ==(遷移)==> [ステートID:%d]\n",
-	//	source_node_id, target_node_id);
 }
 
 //最後に使用したファイルパスを設定ファイルへ保存

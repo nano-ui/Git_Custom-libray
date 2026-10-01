@@ -244,6 +244,7 @@
     <ClCompile Include="Source\Editor\Sequence\AnimationSequencerEditor.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateCanvasInteractionHandler.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphNavigator.cpp" />
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateLinkConnectionHandler.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateLinkRenderer.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateNodeRenderer.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateBlackboardInspectorWindow.cpp" />
@@ -370,6 +371,7 @@
     <ClInclude Include="Source\Editor\Sequence\SequenceSceneBace.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateCanvasInteractionHandler.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphNavigator.h" />
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateLinkConnectionHandler.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateLinkRenderer.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateNodeRenderer.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateBlackboardInspectorWindow.h" />
