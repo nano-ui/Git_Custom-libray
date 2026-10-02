@@ -309,6 +309,21 @@
                 }
             ]
         },
+        "Move_Front_Loop": {
+            "animation_duration": 0.5333333611488342,
+            "collider_tracks": [],
+            "effective_duration": 0.5333333611488342,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 0.5333333611488342,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
         "Move_Front_Start": {
             "animation_duration": 2.0,
             "collider_tracks": [],
@@ -324,6 +339,21 @@
                 }
             ]
         },
+        "Move_Left_Loop": {
+            "animation_duration": 0.5333333611488342,
+            "collider_tracks": [],
+            "effective_duration": 0.5333333611488342,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 0.5333333611488342,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
         "Move_Left_Start": {
             "animation_duration": 2.0,
             "collider_tracks": [],
@@ -335,6 +365,21 @@
                 },
                 {
                     "sequencer_time": 2.0,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
+        "Move_Right_Loop": {
+            "animation_duration": 0.5333333611488342,
+            "collider_tracks": [],
+            "effective_duration": 0.5333333611488342,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 0.5333333611488342,
                     "speed_multiplier": 1.0
                 }
             ]
