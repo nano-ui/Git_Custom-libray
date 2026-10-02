@@ -444,6 +444,9 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphToolbar.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\StateGraphToolbar</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphSimulator.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphSimulator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -844,6 +847,9 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphToolbar.h">
       <Filter>Source\Editor\StateMachineGraphEditor\StateGraphToolbar</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphSimulator.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphSimulator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1346,6 +1352,9 @@
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphToolbar">
       <UniqueIdentifier>{25aa04e7-79a2-4a36-a7a2-c4d00cf9f1ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphSimulator">
+      <UniqueIdentifier>{aba319c5-3254-4b1d-baf4-42debca99e0b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

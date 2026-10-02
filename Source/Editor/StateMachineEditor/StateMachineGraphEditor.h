@@ -23,6 +23,7 @@ class StateCanvasInteractionHandler;
 class StateLinkConnectionHandler;
 class StateGraphCameraController;
 class StateGraphToolbar;
+class StateGraphSimulator;
 
 struct GraphData;
 struct GraphLink;
@@ -66,12 +67,6 @@ private:
 	//右プロパティウインドウ
 	void DrawRightSidebar(GraphData* current_graph, StateBlackboard* blackboard, float width, float height);
 
-	//最後に使用したファイルパスを設定ファイルへ保存
-	void SaveEditorCondig();
-
-	//設定ファイルから最後に使用したファイルパスを読み込む
-	void LoadEditorCondig();
-
 	//アニメーションマップを構築して送信
 	void TriggerHotReload();
 
@@ -93,6 +88,7 @@ private:
 	std::unique_ptr<StateLinkConnectionHandler> link_connection_handler;	//リンク接続・検証ハンドラー
 	std::unique_ptr<StateGraphCameraController> camera_controller;          //カメラ・ビューポート制御クラス
 	std::unique_ptr<StateGraphToolbar> toolbar;								//上部ツールバー及びファイル・アセット操作クラス
+	std::unique_ptr<StateGraphSimulator> state_graph_simulator;				//ステートマシン共通シミュレータ
 
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::unique_ptr<StateGraphConfigManager> config_manager;
@@ -103,7 +99,6 @@ private:
 
 	uint32_t current_graph_id;									//現在の階層のグラフID
 	std::unordered_map<uint32_t, uint32_t> graph_active_nodes;	//各階層ごとのアクティブノードIDを個別に保持
-	uint32_t previous_active_node_id = 0;						//前フレームのアクティブノードID
 	uint32_t current_active_node_id = 0;						//現在のアクティブノードID
 	std::string current_loaded_file_path = "";					//現在エディタで開いているファイルのパス名
 	uint32_t target_model_hash = 0;								//対象モデルのハッシュ値

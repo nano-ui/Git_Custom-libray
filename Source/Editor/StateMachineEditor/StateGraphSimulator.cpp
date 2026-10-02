@@ -1,151 +1,373 @@
 #include "StateGraphSimulator.h"
-#include "Gameplay/StateMachine/StateGraphDataManager.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
 #include "Engine\Core\Input.h"
 
-#include <imgui.h>
-#include <windows.h>
+#include <cstdio>
 
-//現在の階層におけるステートの遷移をブラックボードをもとに評価・更新
-bool StateGraphSimulator::UpdateSimulation(
-	StateGraphDataManager* data_manager,
-	StateBlackboard* blackboard,
-	GraphData* current_graph,
-	uint32_t& in_out_active_node_id,
-	uint32_t& out_flowing_link_id
-)
+//コンストラクタ
+StateGraphSimulator::StateGraphSimulator()
+	:current_node_id(UINT32_MAX)
+	, current_animation_name("")
+	, current_animation_loop(true)
 {
-	if (!data_manager || !current_graph)	//必要なデータポインタが安全であるかを判定
+}
+
+//デストラクタ
+StateGraphSimulator::~StateGraphSimulator() = default;
+
+//グラフデータのセットアップ
+void StateGraphSimulator::SetupRuntimeGraph(
+	const std::vector<SimulatorRuntimeNode>& in_nodes,
+	const std::vector<SimulatorRuntimeLink>& in_links,
+	const std::unordered_map<uint32_t, uint32_t>& in_layer_entries)
+{
+	//メンバ変数へのコピー
+	runtime_nodes = in_nodes;
+	runtime_links = in_links;
+	layer_entry_nades = in_layer_entries;
+
+	//ピン逆引きマップの構築
+	pin_to_node_map.clear();
+
+	for (size_t n = 0; n < runtime_nodes.size(); n++)
+	{
+		const SimulatorRuntimeNode& node = runtime_nodes[n];
+
+		//入力ピンの登録
+		for (size_t p = 0; p < node.inputs.size(); p++)
+		{
+			pin_to_node_map[node.inputs[p]] = node.id;
+		}
+
+		//出力ピンの登録
+		for (size_t p = 0; p < node.outputs.size(); p++)
+		{
+			pin_to_node_map[node.outputs[p]] = node.id;
+		}
+	}
+}
+
+//更新処理
+bool StateGraphSimulator::UpdateSimulation(float elapsed_time, StateBlackboard* blackboard, bool is_anim_finished)
+{
+	//--------------------------------------
+	//事前検証と初期アクティブノードの確定
+	//--------------------------------------
+	//ブラックボードポインタの有効性、ノード配列およびリンク配列が空でないかを検証
+	if (!blackboard || runtime_nodes.empty() || runtime_links.empty())
 	{
 		return false;
 	}
 
-	std::unordered_map<uint32_t, uint32_t> pin_cache_map;	//ピンIDから所属ノードIDを逆引き
-
-	//階層内の全ノードを1回だけ巡回してピンと親ノードのペアをキャッシュするループ処理
-	for (size_t n = 0; n < current_graph->nodes.size(); n++)	
+	//現在のアクティブノードが無効値であるかを判定
+	if (current_node_id == UINT32_MAX)
 	{
-		const GraphNode& node = current_graph->nodes[n];	//走査対象ノードのデータ
+		constexpr uint32_t root_layer_id = 0;	//ルート階層ID
+		auto entry_it = layer_entry_nades.find(root_layer_id);	//エントリーノード検索イテレーター
 
-		//入力ピンのIDをハッシュマップへ登録するループ処理
-		for (size_t p = 0; p < node.inputs.size(); p++)	
+		//ルートレイヤーのエントリーノードが登録されているかを判定
+		if (entry_it != layer_entry_nades.end())
 		{
-			pin_cache_map[node.inputs[p].id] = node.id;
+			current_node_id = entry_it->second;
+		}
+		else
+		{
+			current_node_id = runtime_nodes.front().id;
 		}
 
-		//出力ピンのIDをハッシュマップへ登録するループ処理
-		for (size_t p = 0; p < node.outputs.size(); p++)	
+		//初期ノードのアニメーション情報を反映するための走査ループ処理
+		for (size_t n = 0; n < runtime_nodes.size(); n++)
 		{
-			pin_cache_map[node.outputs[p].id] = node.id;
+			//ノードIDが初期ノードIDと一致したか判定
+			if (runtime_nodes[n].id == current_node_id)
+			{
+				current_animation_name = runtime_nodes[n].animation_name;
+				current_animation_loop = runtime_nodes[n].is_loop;
+				break;
+			}
 		}
 	}
 
-	bool is_state_changed = false;	//ステートが遷移したかを表すフラグ
-	const GraphLink* best_link = nullptr;	//最も多くの条件を満たした最適なリンク
-	size_t max_conditions = 0;				//満たされた条件の最大数
+	uint32_t current_parent_node_id = GetParentNodeId(current_node_id);	//親サブグラフノード
+	size_t global_max_conditions = 0;	//条件を満たしたリンクの最大件数
 
-	//現在の階層に存在するすべてのリンク条件を走査
-	for (size_t i = 0; i < current_graph->links.size(); i++)	
+	//----------------------------------------------
+	//同一階層内における最大条件数の算出(第一パス)
+	//----------------------------------------------
+	for (size_t i = 0; i < runtime_links.size(); i++)
 	{
-		const GraphLink& link = current_graph->links[i];	//対象のリンク情報の参照を格納
-		uint32_t src_node_id = 0;	//リンクの出発元ノードIDを保持
+		const SimulatorRuntimeLink& link = runtime_links[i];	//精査対象のリンク
+		const uint32_t src_node_id = GetNodeIdFromPinId(link.start_pin_id);
 
-		auto start_it = pin_cache_map.find(link.start_pin_id);	//開始ピンIDからキャッシュを探索した結果イテレーター
-
-		//開始ピンのキャッシュ情報がマップ内に存在するかを判定
-		if (start_it != pin_cache_map.end())	
+		//出発元ノードの親階層が現在の階層と一致するか判定
+		if (GetParentNodeId(src_node_id) == current_parent_node_id)
 		{
-			src_node_id = start_it->second;
-		}
+			bool is_all_conditions_mat = !link.conditions.empty();	//全条件を満たしたフラグ
 
-		//リンクの出発元が現在の実行中アクティブノードと一致するかを判定
-		if (src_node_id != in_out_active_node_id)	
+			//リンクに設定された全ての遷移条件を個別に精査
+			for (size_t c = 0; c < link.conditions.size(); c++)
+			{
+				//単一の遷移条件が成立しているか判定
+				if (!EvaluateCondition(link.conditions[c], blackboard, is_anim_finished))
+				{
+					is_all_conditions_mat = false;
+					break;
+				}
+			}
+
+			//すべての条件をクリアし、かつ条件数が最大値を超えているか判定
+			if (is_all_conditions_mat && link.conditions.size() > global_max_conditions)
+			{
+				global_max_conditions = link.conditions.size();
+			}
+		}
+	}
+
+	//-----------------------------
+	//遷移先リンクの決定(第2パス)
+	//-----------------------------
+	//最適なリンク候補を保持する変数の準備
+	const SimulatorRuntimeLink* best_link = nullptr;	//最も適合度の高いリンク
+	size_t max_conditions = 0;								//成立条件数の最大値
+	uint32_t next_node_id = current_node_id;			//遷移先となるノードID
+	bool is_transition_triggered = false;				//遷移発生フラグ
+
+	//全リンク走査による最適遷移リンクの探索処理
+	for (size_t i = 0; i < runtime_links.size(); i++)
+	{
+		const SimulatorRuntimeLink& link = runtime_links[i];			//精査対象のリンク
+		uint32_t src_node_id = GetNodeIdFromPinId(link.start_pin_id);	//接続元のノード
+
+		if (src_node_id == UINT32_MAX)
 		{
 			continue;
 		}
 
-		bool is_all_condition_met = true;	//すべての条件を満たしたかを表す判定フラグ
-
-		for (size_t c = 0; c < link.conditions.size(); c++)	//リンクが持つすべての遷移条件を個別に精査するループ処理
+		//アクティブツリーへの包含チェック
+		bool is_active_tree = false;
+		uint32_t curr = current_node_id;	//探索用ID
+		
+		while (curr != UINT32_MAX)
 		{
-			const GraphTransitionCondition& graph_cond = link.conditions[c];    //評価先の条件
-
-			//キー入力判定 (InputCheck) の場合の処理
-			if (graph_cond.type == ConditionNodeType::InputCheck)
+			if (curr == src_node_id)
 			{
-				int v_key_code = static_cast<int>(graph_cond.hash_key); // 仮想キーコード
-				int input_behavior_mode = static_cast<int>(graph_cond.param_second); // 0:Press, 1:Trigger
-
-				constexpr int mode_trigger_val = 1; // マジックナンバーの回避：トリガーモード
-				bool is_key_satisfied = false;
-
-				if (input_behavior_mode == mode_trigger_val)
-				{
-					is_key_satisfied = Input::Instance().IsKeyTrigger(v_key_code);
-				}
-				else
-				{
-					is_key_satisfied = Input::Instance().IsKeyPress(v_key_code);
-				}
-
-				if (!is_key_satisfied)
-				{
-					is_all_condition_met = false;
-					break;
-				}
+				is_active_tree = true;
+				break;
 			}
-			else
-			{
-				TransitionCondition runtime_cond;   //実行時判定
-				runtime_cond.type = graph_cond.type;
-				runtime_cond.hash_key = graph_cond.hash_key;
-				runtime_cond.reference_value = graph_cond.reference_value;
-				runtime_cond.compart_op = static_cast<CompareOperator>(graph_cond.compare_operator);
-				runtime_cond.param_second = graph_cond.param_second;
-				runtime_cond.secondary_hash = graph_cond.secondary_hash;
+			curr = GetParentNodeId(curr);
+		}
 
-				//条件を満たしていないか判定
-				if (!runtime_cond.IsJudgment(*blackboard))
-				{
-					is_all_condition_met = false;
-					break;
-				}
+		if (!is_active_tree)
+		{
+			continue;
+		}
+
+		//第1パスの最大条件数を用いた同一階層の足切り判定
+		if (GetParentNodeId(src_node_id) == current_parent_node_id)
+		{
+			if (link.conditions.size() < global_max_conditions)
+			{
+				continue;
 			}
 		}
 
-		if (is_all_condition_met)	//すべての遷移条件を完全にクリアしたかを判定
+		if (link.conditions.empty())
 		{
-			//リンクの条件数が最大値よりも大きいか、または最初の適合リンクか判定
-			if (!best_link || link.conditions.size() > max_conditions)
+			continue;
+		}
+
+		//遷移条件の個別評価
+		bool is_all_mat = !link.conditions.empty();	//全条件成立フラグ
+
+		for (size_t i = 0; i < link.conditions.size(); i++)
+		{
+			if (!EvaluateCondition(link.conditions[i], blackboard, is_anim_finished))
+			{
+				is_all_mat = false;
+				break;
+			}
+		}
+
+		//最良リンクの更新と遷移先ノードの仮決定
+		if (is_all_mat && link.conditions.size() >= max_conditions)
+		{
+			uint32_t dst_node_id = GetNodeIdFromPinId(link.end_pin_id);	//遷移先ノードID
+			if (dst_node_id != UINT32_MAX)
 			{
 				best_link = &link;
 				max_conditions = link.conditions.size();
+				next_node_id = dst_node_id;
+				is_transition_triggered = true;
 			}
 		}
 	}
 
-	//条件を満たす最適な遷移リンクが見つかったか判定
-	if (best_link)
+	//状態遷移の実行とコールバック通知
+	if (is_transition_triggered && next_node_id != current_node_id)
 	{
-		uint32_t dst_node_id = 0;	//遷移先のノードID
-		auto end_it = pin_cache_map.find(best_link->end_pin_id);	//終了ピンIDからキャッシュを探索した結果イテレーター
-
-		//終了ピンのキャッシュ情報がマップ内に存在するか判定
-		if (end_it != pin_cache_map.end())
+		if (on_transition_link_callback && best_link)
 		{
-			dst_node_id = end_it->second;
+			on_transition_link_callback(best_link->id);
+		}
+		current_node_id = next_node_id;
+
+		//サブグラフの自動潜り込み処理
+		bool check_sub_graph = true;	//サブグラフの展開継続フラグ
+
+		while (check_sub_graph)
+		{
+			check_sub_graph = false;
+
+			for (size_t n = 0; n < runtime_nodes.size(); n++)
+			{
+				if (current_node_id == runtime_nodes[n].id)
+				{
+					if (runtime_nodes[n].is_sub_graph)
+					{
+						auto sub_graph_entry = layer_entry_nades.find(runtime_nodes[n].sub_graph_id);	//下位グラフのエントリーノード検索イテレーター
+
+						if (sub_graph_entry != layer_entry_nades.end())
+						{
+							current_node_id = sub_graph_entry->second;
+							check_sub_graph = true;
+						}
+						else
+						{
+							printf("Warning: StateGraphSimulator::UpdateSimulation - サブグラフ ID:%u にエントリーノードが設定されていません。\n", runtime_nodes[n].sub_graph_id);
+						}
+					}
+					break;
+				}
+			}
 		}
 
-		//不正なピン定義
-		if (dst_node_id == 0)
+		//アニメーション情報の同期と結果返却
+		for (size_t n = 0; n < runtime_nodes.size(); n++)
 		{
-			OutputDebugStringA("[StateGraphSimulator] Error: 終了ピンに対応するノードIDがキャッシュに存在しません。\n");
+			if (current_node_id == runtime_nodes[n].id)
+			{
+				current_animation_name = runtime_nodes[n].animation_name;
+				current_animation_loop = runtime_nodes[n].is_loop;
+				break;
+			}
 		}
+		return true;
+	}
+	return false;
+}
 
-		in_out_active_node_id = dst_node_id;
-		out_flowing_link_id = best_link->id;
-		is_state_changed = true;
+//ルートモーション有効フラグ取得
+bool StateGraphSimulator::GetRootMotionEnabled() const
+{
+	//全実行時ノードを巡回して現在のアクティブノードを探索
+	for (size_t n = 0; n < runtime_nodes.size(); n++)
+	{
+		//走査対象ノードの固有IDが現在のアクティブノードIDと一致するか判定
+		if (runtime_nodes[n].id == current_node_id)
+		{
+			return runtime_nodes[n].is_root_motion;
+		}
+	}
+	return false;
+}
+
+//単一の遷移条件の評価
+bool StateGraphSimulator::EvaluateCondition(
+	const TransitionCondition& cond,
+	StateBlackboard* blackboard,
+	bool is_anim_finished)const
+{
+	//-----------------------------------
+	//アニメーション再生完了条件の判定
+	//-----------------------------------
+	if (cond.type == ConditionNodeType::AnimationEnd)
+	{
+		return is_anim_finished;
 	}
 
-	return is_state_changed;
+	//--------------------
+	//キー入力条件の判定
+	//--------------------
+	if (cond.type == ConditionNodeType::InputCheck)
+	{
+		const int v_key_code = static_cast<int>(cond.hash_key);					//判定対象の仮想キーコード
+		const int input_behavior_mode = static_cast<int>(cond.param_second);	//入力挙動モード
+
+		constexpr int mode_press = 0;		//押されている間
+		constexpr int mode_trigger = 1;		//押された瞬間
+		constexpr int mode_not_press = 2;	//未入力状態
+		constexpr int mode_release = 3;		//離れた瞬間
+
+		//キーが未設定の場合は早期リターン
+		if (v_key_code == 0)
+		{
+			return false;
+		}
+
+		// 各モードに応じた入力判定の分岐実行
+		if (input_behavior_mode == mode_trigger)
+		{
+			return Input::Instance().IsKeyTrigger(v_key_code);
+		}
+		else if (input_behavior_mode == mode_press)
+		{
+			return Input::Instance().IsKeyPress(v_key_code);
+		}
+		else if (input_behavior_mode == mode_not_press)
+		{
+			return !Input::Instance().IsKeyPress(v_key_code);
+		}
+		else if (input_behavior_mode == mode_release)
+		{
+			return Input::Instance().IsKeyRelease(v_key_code);
+		}
+		return false;
+	}
+
+	//--------------------
+	//値の比較条件の判定
+	//--------------------
+	if (blackboard)
+	{
+		return cond.IsJudgment(*blackboard);
+	}
+
+	printf("Warning: StateGraphSimulator::EvaluateCondition - blackboard が nullptr です。\n");
+	return false;
+}
+
+
+//ピンIDから所属ノードIDを逆引き検索
+uint32_t StateGraphSimulator::GetNodeIdFromPinId(uint32_t pin_id)const
+{
+	//キャッシュマップからピンIDを検索
+	auto it = pin_to_node_map.find(pin_id);
+
+	//見つかった場合は対応するノードIDを返却
+	if (it != pin_to_node_map.end())
+	{
+		return it->second;
+	}
+
+	//見つからなかった場合
+	return UINT32_MAX;
+}
+
+//ノードIDから所属サブグラフノードIDを逆引き検索
+uint32_t StateGraphSimulator::GetParentNodeId(uint32_t node_id)const
+{
+	//---------------------------------------------------
+	//全実行時のノードから指定されたノードIDを線形探索
+	//---------------------------------------------------
+	for (size_t i = 0; i < runtime_nodes.size(); i++)
+	{
+		const SimulatorRuntimeNode& node = runtime_nodes[i];	//対象ノード
+
+		//目的のノードIDと一致するか判定
+		if (node.id == node_id)
+		{
+			return node.parent_node_id;
+		}
+	}
+	return UINT32_MAX;
 }

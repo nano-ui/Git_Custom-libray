@@ -28,8 +28,6 @@
 
 namespace ed = ax::NodeEditor;
 
-static uint32_t g_pending_focus_node_id = 0;
-
 //コンストラクタ
 StateMachineGraphEditor::StateMachineGraphEditor()
 {
@@ -59,7 +57,8 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 
 	target_model_hash = 0;
 
-	LoadEditorCondig();
+	config_manager->LoadEditorConfig();
+	current_loaded_file_path = config_manager->GetCurrentLoadedFilePath();
 
 	bool is_success = false; //成功判定フラグ
 
@@ -126,9 +125,8 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	uint32_t& current_active_node_id = graph_active_nodes[current_graph_id]; // 階層固有のアクティブID
 
 	// ゲーム側の実行ノードIDが前フレームから変化した瞬間を直接検知
-	if (runtime_active_node_id != UINT32_MAX && previous_active_node_id != 0 && previous_active_node_id != runtime_active_node_id)
+	if (runtime_active_node_id != UINT32_MAX)
 	{
-		flow_src_node_id = previous_active_node_id;
 		flow_dst_node_id = runtime_active_node_id;
 		constexpr float default_flow_duration = 0.35f;
 		flow_effect_timer = default_flow_duration;
@@ -150,12 +148,6 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 	}
 
 	SyncActiveNodeAnimation(current_graph, current_active_node_id);
-
-	// 有効な実行中IDが届いている場合のみ、次フレーム用の比較元として保存
-	if (runtime_active_node_id != UINT32_MAX)
-	{
-		previous_active_node_id = runtime_active_node_id;
-	}
 
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 
@@ -261,7 +253,9 @@ bool StateMachineGraphEditor::LoadGraphFromFile(const std::string& file_path)
 		current_graph_id = reset_root_id;
 		current_loaded_file_path = file_path;
 		if (state_machine_component)state_machine_component->SetStateMachinePath(current_loaded_file_path);
-		SaveEditorCondig();
+		
+		config_manager->SetCurrentLoadedFilePath(current_loaded_file_path);
+		config_manager->SaveEditorConfig(current_loaded_file_path);
 
 		//読み込んだデータにモデルパスが記録されているか判定
 		if (!data_manager->GetTargetModelPath().empty())
@@ -597,52 +591,6 @@ void StateMachineGraphEditor::DrawRightSidebar(GraphData* current_graph, StateBl
 
 	ed::SetCurrentEditor(nullptr);
 	ImGui::End();
-}
-
-//最後に使用したファイルパスを設定ファイルへ保存
-void StateMachineGraphEditor::SaveEditorCondig()
-{
-	nlohmann::json config_json;
-	config_json["LastOpenedFilePath"] = current_loaded_file_path;
-	const std::string config_file_path = "Data/Json/StateEditorConfig.json";
-	std::ofstream file_out(config_file_path);
-	if (file_out.is_open())
-	{
-		const int indent_space_size = 4;
-		file_out << std::setw(indent_space_size) << config_json << std::endl;
-		//printf("StateMachineGraphEditor: 環境設定ファイルへ最後に開いたパスを記憶しました。\n");
-	}
-	else
-	{
-		printf("Error: SaveEditorConfig - 環境設定ファイル「%s」を開けませんでした。\n", config_file_path.c_str());
-	}
-}
-
-//設定ファイルから最後に使用したファイルパスを読み込む
-void StateMachineGraphEditor::LoadEditorCondig()
-{
-	const std::string config_file_path = "Data/Json/StateEditorConfig.json";
-	std::ifstream file_in(config_file_path);
-
-	if (!file_in.is_open())
-	{
-		printf("StateMachineGraphEditor: 環境設定ファイルがないため、初回デフォルト設定で起動します。\n");
-		current_loaded_file_path = "";
-		return;
-	}
-	nlohmann::json config_json;
-	file_in >> config_json;
-
-	if (config_json.find("LastOpenedFilePath") != config_json.end())
-	{
-		current_loaded_file_path = config_json["LastOpenedFilePath"].get<std::string>();
-		printf("StateMachineGraphEditor: 前回の終了ファイルパス「%s」を自動検出しました。\n", current_loaded_file_path.c_str());
-	}
-	else
-	{
-		printf("Warning: LoadEditorConfig - 設定ファイルのキー構造が不正です。パスを初期化します。\n");
-		current_loaded_file_path = "";
-	}
 }
 
 //アニメーションマップを構築して送信

@@ -132,7 +132,7 @@ void StateCanvasInteractionHandler::HandlePendingPaletteNode(
 	//-----------------------------
 	//ポインタの健全性チェック
 	//-----------------------------
-	if (!data_manager || !palette_window || current_graph)
+	if (!data_manager || !palette_window || !current_graph)
 	{
 		printf("Error: StateCanvasInteractionHandler::HandlePendingPaletteNode - 渡されたポインタのいずれかが nullptr です。\n");
 		return;
