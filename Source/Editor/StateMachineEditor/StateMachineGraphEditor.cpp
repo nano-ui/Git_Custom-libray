@@ -16,6 +16,7 @@
 #include "StateCanvasInteractionHandler.h"
 #include "StateLinkConnectionHandler.h"
 #include "StateGraphCameraController.h"
+#include "StateGraphToolbar.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Editor\AssetLoader.h"
 #include "Editor\PathHelper.h"
@@ -54,6 +55,7 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	canvas_interaction_handler = std::make_unique<StateCanvasInteractionHandler>();
 	link_connection_handler = std::make_unique<StateLinkConnectionHandler>();
 	camera_controller = std::make_unique<StateGraphCameraController>();
+	toolbar = std::make_unique<StateGraphToolbar>();
 
 	target_model_hash = 0;
 
@@ -157,9 +159,31 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 
-	if (DrawTopMenuBar(active_blackboard))
+	if (toolbar)
 	{
-		return;
+		ToolbarContext toolbar_context = {
+			data_manager.get(),
+			config_manager.get(),
+			asset_loader.get(),
+			state_machine_component.get(),
+			active_blackboard,
+			state_graph_navigator.get(),
+			current_loaded_file_path,
+			current_graph_id,
+			target_model_hash,
+			is_tracking_active_node,
+			is_simulation_active,
+			last_synced_node_id
+		};
+
+		if (toolbar->DrawToolbar(toolbar_context)) 
+		{
+			return;
+		}
+	}
+	else
+	{
+		printf("Error: DrawEditor - state_graph_toolbar が nullptr です。\n");
 	}
 
 	const float pane_top_margin_y = 10.0f; // 上部マージン
@@ -405,147 +429,6 @@ void StateMachineGraphEditor::SyncActiveNodeAnimation(GraphData* current_graph, 
 	{
 		EditorMediator::Instance().PlayModelAnimation(target_node->animation_name, target_node->is_loop);
 	}
-}
-
-//上部メニューとナビゲーション
-bool StateMachineGraphEditor::DrawTopMenuBar(StateBlackboard* blackboard)
-{
-	ImGui::Begin(u8"ステートマシンエディタ");
-
-	const ImVec4 save_btn_color = ImVec4(0.2f, 0.5f, 0.2f, 1.0f);
-	ImGui::PushStyleColor(ImGuiCol_Button, save_btn_color);
-
-	const float upper_btn_width = 200.0f;
-	const float upper_btn_height = 25.0f;
-
-	if (ImGui::Button(u8"保存", ImVec2(upper_btn_width, upper_btn_height)))
-	{
-		std::string save_target_path = current_loaded_file_path; // 保存先パス
-
-		//現在の保存先パスが空で、紐付けモデルが存在する場合に自動パスを構築
-		if (save_target_path.empty() && !data_manager->GetTargetModelPath().empty())
-		{
-			std::filesystem::path path_obj(data_manager->GetTargetModelPath());
-			std::string model_name = path_obj.stem().string(); //拡張子なしのモデル名
-			const std::string suffix_name = "_StateMachine";    //接尾辞定数
-
-			save_target_path = PathHelper::GenerateJsonFilePath(model_name, suffix_name);
-		}
-
-		//それでもパスが決まらない場合（モデル未設定時）はファイルダイアログを表示
-		if (save_target_path.empty())
-		{
-			save_target_path = FileDialogHelper::SaveFileDialog();
-		}
-
-		//有効な保存先パスが確定したか判定
-		if (!save_target_path.empty())
-		{
-			data_manager->SaveToFile(save_target_path);
-			current_loaded_file_path = save_target_path;
-			SaveEditorCondig();
-			printf("StateMachineGraphEditor: ファイル「%s」へ保存を完了しました。\n", current_loaded_file_path.c_str());
-		}
-		else
-		{
-			// 意図しない挙動（保存先パス未指定）が発生した場合のデバッグ出力
-			printf("Error: StateMachineGraphEditor - 保存先のパスが指定されなかったため保存をキャンセルしました。\n");
-		}
-	}
-	ImGui::PopStyleColor();
-
-	ImGui::SameLine();
-
-	const ImVec4 load_btn_color = ImVec4(0.2f, 0.4f, 0.6f, 1.0f);
-	ImGui::PushStyleColor(ImGuiCol_Button, load_btn_color);
-
-	if (ImGui::Button(u8"モデル読み込み", ImVec2(upper_btn_width, upper_btn_height)))
-	{
-		PathResult path_result = FileDialogHelper::OpenGenericFileDialog(); 
-		if (!path_result.absolute_path.empty())
-		{
-			if (asset_loader->LoadModelAnimations(path_result.relative_path))
-			{
-				data_manager->SetTargetModelPath(path_result.relative_path); 
-					std::filesystem::path path_obj(path_result.relative_path); 
-					std::string model_name = path_obj.stem().string();
-
-				//モデル名と接尾辞から対応するJSONパスを自動構築
-				const std::string suffix_name = "_StateMachine"; // ファイル接尾辞の定数化
-				std::string auto_json_path = PathHelper::GenerateJsonFilePath(model_name, suffix_name); 
-
-					//生成されたパスが有効か検証
-					if (!auto_json_path.empty())
-					{
-						current_loaded_file_path = auto_json_path;
-						data_manager->LoadFromFile(current_loaded_file_path);
-						printf("StateMachineGraphEditor: モデル「%s」のJsonパス「%s」を自動構築して読み込みました。\n",
-								model_name.c_str(), current_loaded_file_path.c_str());
-					}
-					else
-					{
-						printf("Error: StateMachineGraphEditor - PathHelperでのパス生成に失敗しました。\n");
-					}
-
-				target_model_hash = StateBlackboard::CalculateHash(model_name); 
-					EditorMediator::Instance().OnModelDubleClied(path_result.relative_path); 
-					printf("StateMachineGraphEditor: モデル読み込み完了: %s\n", path_result.relative_path.c_str()); 
-					TriggerHotReload(); 
-			}
-		}
-	}
-	ImGui::PopStyleColor();
-	ImGui::SameLine();
-
-	//モデル読み込みの成否を判定
-	if (!asset_loader->GetLoadedModelPath().empty())
-	{
-		ImGui::SameLine();
-		ImGui::Text(u8" 紐付けモデル: %s", asset_loader->GetLoadedModelPath().c_str());
-	}
-
-	ImGui::SameLine();
-
-	//追尾設定チェックボックスが変更されたかを判定
-	if (ImGui::Checkbox(u8"追尾", &is_tracking_active_node))
-	{
-		printf("StateMachineGraphEditor: 追尾モードが %s に切り替わりました。\n", is_tracking_active_node ? "ON" : "OFF");
-	}
-
-	ImGui::SameLine();
-
-	if (ImGui::Checkbox(u8"シミュレーション", &is_simulation_active))
-	{
-		last_synced_node_id = UINT32_MAX;
-		// シミュレーション開始時に最新のグラフ構造を保存・リロードして初期化
-		if (is_simulation_active && state_machine_component)
-		{
-			if (!current_loaded_file_path.empty())
-			{
-				data_manager->SaveToFile(current_loaded_file_path);
-				state_machine_component->SetStateMachinePath(current_loaded_file_path);
-			}
-			state_machine_component->RequestReload();
-			state_machine_component->Initialize(blackboard);
-		}
-	}
-
-	ImGui::Spacing();
-
-	if (state_graph_navigator)
-	{
-		if (state_graph_navigator->DrawHeaderNavigation(data_manager.get(), current_graph_id))
-		{
-			ImGui::End();
-			return true;
-		}
-	}
-	else
-	{
-		printf("Error: DrawTopMenuBar - state_graph_navigator が nullptr です。\n");
-	}
-
-	return false;
 }
 
 //左パレットとノードリスト

@@ -441,6 +441,9 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphCameraController.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\StateGraphCameraController</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphToolbar.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphToolbar</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -838,6 +841,9 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphCameraController.h">
       <Filter>Source\Editor\StateMachineGraphEditor\StateGraphCameraController</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphToolbar.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphToolbar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1337,6 +1343,9 @@
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphCameraController">
       <UniqueIdentifier>{87831ad8-22e4-40a8-9f2d-0198933429a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphToolbar">
+      <UniqueIdentifier>{25aa04e7-79a2-4a36-a7a2-c4d00cf9f1ad}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -22,6 +22,7 @@ class StateGraphNavigator;
 class StateCanvasInteractionHandler;
 class StateLinkConnectionHandler;
 class StateGraphCameraController;
+class StateGraphToolbar;
 
 struct GraphData;
 struct GraphLink;
@@ -55,9 +56,6 @@ private:
 
 	//アクティブノードのアニメーション同期
 	void SyncActiveNodeAnimation(GraphData* current_graph, uint32_t active_node_id); 
-
-	//上部メニューとナビゲーション
-	bool DrawTopMenuBar(StateBlackboard* blackboard);
 
 	//左パレットとノードリスト
 	void DrawLeftSidebar(GraphData* current_graph, float width, float height);
@@ -94,6 +92,7 @@ private:
 	std::unique_ptr<StateCanvasInteractionHandler> canvas_interaction_handler;	//キャンバス操作・ユーザー入力ハンドラー
 	std::unique_ptr<StateLinkConnectionHandler> link_connection_handler;	//リンク接続・検証ハンドラー
 	std::unique_ptr<StateGraphCameraController> camera_controller;          //カメラ・ビューポート制御クラス
+	std::unique_ptr<StateGraphToolbar> toolbar;								//上部ツールバー及びファイル・アセット操作クラス
 
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::unique_ptr<StateGraphConfigManager> config_manager;
