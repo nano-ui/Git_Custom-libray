@@ -62,7 +62,6 @@ public:
 			{
 				cooldown->NotifyExecution(TimeManager::Instance().GetTotalTime());
 			}
-			std::string current_anim = chara->GetModel()->GetCurrentAnimationName();
 			this->current_step++;	//次のフレームからは待機判定を行うためステップを進める
 			return NodeState::Running;	//現在は実行中であるとして返す
 		}
@@ -78,7 +77,7 @@ public:
 			}
 			else //行動時間がマイナスに指定されている（アニメーションの終了を待つ）場合
 			{
-				if (chara->GetModel()->IsAnimationEnd())	//アニメーションの再生が完了しているか確認する
+				if (chara->GetModel()->IsAnimationFinished())	//アニメーションの再生が完了しているか確認する
 				{
 					this->ResetState();	//次回のために状態をリセットする
 
