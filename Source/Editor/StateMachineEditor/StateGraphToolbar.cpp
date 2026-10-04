@@ -93,7 +93,6 @@ bool StateGraphToolbar::DrawToolbar(ToolbarContext& context)
 				context.state_machine_component->SetStateMachinePath(context.current_loaded_file_path);
 			}
 			context.state_machine_component->RequestReload();
-			context.state_machine_component->Initialize(context.blackboard);
 		}
 	}
 

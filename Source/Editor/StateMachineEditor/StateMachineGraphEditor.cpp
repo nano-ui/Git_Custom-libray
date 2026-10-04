@@ -617,8 +617,4 @@ void StateMachineGraphEditor::EditorContexDeleter::operator()(ax::NodeEditor::Ed
 	{
 		ed::DestroyEditor(context);
 	}
-
-	std::vector<SimulatorRuntimeNode> runtime_node;						//シミュレータ実行時ノード配列
-	std::vector<SimulatorRuntimeLink> runtime_link;						//シミュレータ実行時リンク配列
-	std::unordered_map<uint32_t, uint32_t> layer_entry_map;				//各レイヤーごとのエントリーノードIDマップ
 }
