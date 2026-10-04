@@ -325,7 +325,6 @@ void StateMachineGraphEditor::UpdateRuntimeTracking()
 //擬似シミュレーション更新
 void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, GraphData* current_graph, uint32_t& current_active_node_id)
 {
-	//意図しない挙動の防止：ポインタの健全性チェック
 	if (!state_machine_component || !current_graph)
 	{
 		printf("Error: StateMachineGraphEditor::UpdateSimulationMode - state_machine_component または current_graph が nullptr です。\n");
@@ -338,36 +337,39 @@ void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, 
 		return;
 	}
 
-	float delta_time = ImGui::GetIO().DeltaTime;
-	uint32_t prev_node_id = state_machine_component->GetCurrentNodeId();
+	// 前フレームのアクティブステートIDを取得
+	const uint32_t prev_node_id = state_machine_component->GetCurrentNodeId();
+	const float delta_time = ImGui::GetIO().DeltaTime;
 
+	// StateMachineComponent 内部の StateGraphSimulator による遷移シミュレーションを実行
 	state_machine_component->Update(delta_time, blackboard);
 
-	uint32_t new_active_node_id = state_machine_component->GetCurrentNodeId();
+	// シミュレーション後のアクティブステートIDを取得
+	const uint32_t new_active_node_id = state_machine_component->GetCurrentNodeId();
 
-	//ステート遷移が成立した場合
+	// ステート遷移が発生したかを判定
 	if (new_active_node_id != UINT32_MAX && new_active_node_id != prev_node_id)
 	{
 		flow_src_node_id = prev_node_id;
 		flow_dst_node_id = new_active_node_id;
+
 		constexpr float default_flow_duration = 0.35f;
 		flow_effect_timer = default_flow_duration;
-		has_flow_requsted = true;
 	}
 
-	// 現在の確定アクティブノードIDを反映
+	// 現在の確定アクティブノードIDをエディタ側へ反映
 	if (new_active_node_id != UINT32_MAX)
 	{
 		current_active_node_id = new_active_node_id;
 
 		// 追尾モードが有効な場合、アクティブノードが所属する階層へ表示を自動切り替え
-		if (is_tracking_active_node)
+		if (is_tracking_active_node && data_manager)
 		{
-			uint32_t target_graph_id = data_manager->GetGraphIdFromNodeId(new_active_node_id);
+			const uint32_t target_graph_id = data_manager->GetGraphIdFromNodeId(new_active_node_id);
 			if (target_graph_id != UINT32_MAX && target_graph_id != current_graph_id)
 			{
 				current_graph_id = target_graph_id;
-				printf("StateMachineGraphEditor: サブステート追尾により表示階層を ID:%d へ自動切り替えしました。\n", current_graph_id);
+				printf("StateMachineGraphEditor: サブステート追尾により表示階層を ID:%u へ自動切り替えしました。\n", current_graph_id);
 			}
 		}
 	}
@@ -600,6 +602,11 @@ void StateMachineGraphEditor::TriggerHotReload()
 	{
 		data_manager->SaveToFile(current_loaded_file_path);
 		EditorMediator::Instance().NotifyGraphChanged(current_loaded_file_path);
+
+		if (state_machine_component)
+		{
+			state_machine_component->RequestReload();
+		}
 	}
 }
 
@@ -610,4 +617,8 @@ void StateMachineGraphEditor::EditorContexDeleter::operator()(ax::NodeEditor::Ed
 	{
 		ed::DestroyEditor(context);
 	}
+
+	std::vector<SimulatorRuntimeNode> runtime_node;						//シミュレータ実行時ノード配列
+	std::vector<SimulatorRuntimeLink> runtime_link;						//シミュレータ実行時リンク配列
+	std::unordered_map<uint32_t, uint32_t> layer_entry_map;				//各レイヤーごとのエントリーノードIDマップ
 }

@@ -1017,9 +1017,6 @@
     <Filter Include="Source\Gameplay\AI\NodeStateJugment">
       <UniqueIdentifier>{653b9f71-d4be-4d36-9821-ab66e2e16794}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Gameplay\AI\RandomJugment">
-      <UniqueIdentifier>{b0f6c6b3-ae49-445d-962a-ab9eb5248c0e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Gameplay\AI\RatioJudgment">
       <UniqueIdentifier>{195216a8-e8d3-45d5-90ea-ea610ef0603a}</UniqueIdentifier>
     </Filter>
@@ -1355,6 +1352,9 @@
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphSimulator">
       <UniqueIdentifier>{aba319c5-3254-4b1d-baf4-42debca99e0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\RandomJugment">
+      <UniqueIdentifier>{b0f6c6b3-ae49-445d-962a-ab9eb5248c0e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

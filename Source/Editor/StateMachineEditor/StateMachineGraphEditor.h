@@ -23,7 +23,6 @@ class StateCanvasInteractionHandler;
 class StateLinkConnectionHandler;
 class StateGraphCameraController;
 class StateGraphToolbar;
-class StateGraphSimulator;
 
 struct GraphData;
 struct GraphLink;
@@ -88,7 +87,6 @@ private:
 	std::unique_ptr<StateLinkConnectionHandler> link_connection_handler;	//リンク接続・検証ハンドラー
 	std::unique_ptr<StateGraphCameraController> camera_controller;          //カメラ・ビューポート制御クラス
 	std::unique_ptr<StateGraphToolbar> toolbar;								//上部ツールバー及びファイル・アセット操作クラス
-	std::unique_ptr<StateGraphSimulator> state_graph_simulator;				//ステートマシン共通シミュレータ
 
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::unique_ptr<StateGraphConfigManager> config_manager;
