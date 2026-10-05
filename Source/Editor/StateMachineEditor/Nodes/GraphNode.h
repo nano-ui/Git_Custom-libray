@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-
 class GraphNode
 {
 public:
@@ -27,12 +26,23 @@ public:
 	//出力ピン追加
 	void AddOutputPin(const std::string& pin_name);
 
+	//指定されたピンを検索
+	bool HasPin(uint32_t pin_id)const;
+
+	//ノード情報を取得
+	const NodeBasicData GetNodeBasicData() const { return node_basic_data; }
+
+	//入力ピン情報を取得
+	const std::vector<PinData> GetInputPins()const { return input_pins; }
+
+	//出力ピン情報を取得
+	const std::vector<PinData> GetOutputPins()const { return output_pins; }
 
 private:
 	NodeBasicData node_basic_data;		//基本ノード情報
-	bool is_initialized;				//初期化フラグ
-	uint32_t next_pin_id;				//次のピンID
 	std::vector<PinData> input_pins;	//入力ピン配列
 	std::vector<PinData> output_pins;	//出力ピン配列
+	bool is_initialized;				//初期化フラグ
+	uint32_t next_pin_id;				//次のピンID
 };
 

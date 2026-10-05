@@ -1,4 +1,6 @@
 #include "Editor\StateMachineEditor\Data\StateGraphDataManager.h"
+#include "Editor\StateMachineEditor\Nodes\GraphNode.h"
+#include "Editor\StateMachineEditor\Nodes\StateGraphNode.h"
 
 #include <cstdio>
 #include <fstream>
@@ -11,7 +13,7 @@ StateGraphDataManager::StateGraphDataManager()
 	GraphData root_graph;	//ルート階層情報
 	root_graph.id = 0;
 	root_graph.name = u8"ルート";
-	layer_datas.push_back(root_graph);
+	layer_datas.push_back(std::move(root_graph));
 }
 
 //ファイルに保存
@@ -278,13 +280,13 @@ void StateGraphDataManager::AddNode(GraphData* current_graph, float click_x, flo
 		return;
 	}
 
-	GraphNode new_node;	//新しいノード情報
+	NodeBasicData new_node;	//新しいノード
 
 	//ノードのパラメータ設定
 	new_node.id = next_id++;
 	new_node.name = node_name;
-	new_node.position_x = click_x;
-	new_node.position_y = click_y;
+	new_node.position.x = click_x;
+	new_node.position.y = click_y;
 	new_node.is_sub_graph = false;
 	new_node.sub_graph_id = 0;
 

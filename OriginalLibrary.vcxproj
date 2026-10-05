@@ -385,6 +385,7 @@
     <ClInclude Include="Source\Editor\StateMachineEditor\Handlers\StateGraphSimulator.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Handlers\StateLinkConnectionHandler.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Nodes\GraphNode.h" />
+    <ClInclude Include="Source\Editor\StateMachineEditor\Nodes\GraphNodeData.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Renderers\StateLinkRenderer.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Renderers\StateNodeRenderer.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Views\StateBlackboardInspectorWindow.h" />

@@ -56,3 +56,25 @@ void GraphNode::AddOutputPin(const std::string& pin_name)
 	output_pins.push_back(new_pin_data);
 	next_pin_id++;
 }
+
+//w’è‚³‚ê‚½ƒsƒ“‚ğŒŸõ
+bool GraphNode::HasPin(uint32_t pin_id) const
+{
+	for (size_t n = 0; n < input_pins.size(); n++)
+	{
+		if (pin_id == input_pins[n].pin_id)
+		{
+			return true;
+		}
+	}
+
+	for (size_t n = 0; n < output_pins.size(); n++)
+	{
+		if (pin_id == output_pins[n].pin_id)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}

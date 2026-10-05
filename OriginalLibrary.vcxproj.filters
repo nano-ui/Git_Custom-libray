@@ -866,6 +866,9 @@
     <ClInclude Include="Source\Editor\StateMachineEditor\Nodes\GraphNode.h">
       <Filter>Source\Editor\StateMachineGraphEditor\Node</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Nodes\GraphNodeData.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Node</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli">
