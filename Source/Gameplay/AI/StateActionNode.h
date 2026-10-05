@@ -60,7 +60,7 @@ public:
 			current_timer = 0.0f;	// タイマーを0にリセットする
 			if (cooldown)
 			{
-				cooldown->NotifyExecution(TimeManager::Instance().GetTotalTime());
+				cooldown->StartCooldown();
 			}
 			this->current_step++;	//次のフレームからは待機判定を行うためステップを進める
 			return NodeState::Running;	//現在は実行中であるとして返す

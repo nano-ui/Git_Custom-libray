@@ -76,7 +76,11 @@ float CooldownJudgment::GetCooldownProgress() const
 	}
 
 	float total_elapsed_time = current_duration - remaining_cooldown_time;	//経過時間
+
+	//進行度 = 経過時間/全体時間
 	float progress = total_elapsed_time / current_duration;					//進行度
+
+	//最終的な進行度 = min(1.0f, max(0.0f,進行度))
 	float final_progress = std::min(1.0f, std::max(0.0f, progress));		//最終的な進行度
 	
 	return final_progress;

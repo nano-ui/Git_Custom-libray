@@ -1,5 +1,5 @@
 #include "StateGraphPaletteWindow.h"
-#include "Gameplay/StateMachine/StateGraphDataManager.h"
+#include "Editor\StateMachineEditor\StateGraphDataManager.h"
 
 #include <imgui.h>
 #include <cstdio>
