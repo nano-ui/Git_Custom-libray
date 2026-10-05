@@ -411,12 +411,6 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\Core\StateMachineGraphEditor.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\Core\StateMachineGraphEditor</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\Data\StateGraphConfigManager.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphCameraController</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\Data\StateGraphDataManager.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphConfigManager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Editor\StateMachineEditor\Renderers\StateLinkRenderer.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\Renderers\StateLinkRenderer</Filter>
     </ClCompile>
@@ -446,6 +440,15 @@
     </ClCompile>
     <ClCompile Include="Source\Editor\StateMachineEditor\Views\TransitionConditionEditor.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\Views\TransitionConditionEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Data\StateGraphDataManager.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphDataManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Data\StateGraphConfigManager.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphConfigManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Data\StateGraphCameraController.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphCameraController</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -818,9 +821,6 @@
     <ClInclude Include="Source\Editor\StateMachineEditor\Data\StateGraphCameraController.h">
       <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphCameraController</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\Data\StateGraphConfigManager.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphConfigManager</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\Renderers\StateLinkRenderer.h">
       <Filter>Source\Editor\StateMachineGraphEditor\Renderers\StateLinkRenderer</Filter>
     </ClInclude>
@@ -850,6 +850,12 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\Views\TransitionConditionEditor.h">
       <Filter>Source\Editor\StateMachineGraphEditor\Views\TransitionConditionEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Data\StateGraphDataManager.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphDataManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Data\StateGraphConfigManager.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphConfigManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1373,6 +1379,9 @@
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\Views\TransitionConditionEditor">
       <UniqueIdentifier>{d569a77c-1b19-45c9-bf45-a39d20e35002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Data\StateGraphDataManager">
+      <UniqueIdentifier>{ab43c0f7-4f2d-4313-9dad-0ac2472f41b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

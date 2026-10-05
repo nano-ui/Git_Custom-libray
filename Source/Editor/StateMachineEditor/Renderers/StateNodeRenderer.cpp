@@ -1,5 +1,5 @@
 #include "Editor\StateMachineEditor\Renderers\StateNodeRenderer.h"
-#include "Editor\StateMachineEditor\StateGraphDataManager.h"
+#include "Editor\StateMachineEditor\Data\StateGraphDataManager.h"
 
 #include <imgui.h>
 #include <imgui_node_editor.h>

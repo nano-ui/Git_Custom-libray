@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <unordered_map>
 #include "Gameplay\StateMachine\StateBlackboard.h"
-#include "Editor\StateMachineEditor\StateGraphSimulator.h"
+#include "Editor\StateMachineEditor\Handlers\StateGraphSimulator.h"
 
 class StateBlackboard;
 class JsonSerializer;

@@ -3,7 +3,7 @@
 #include "Gameplay/GameObjects/GameObject.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Gameplay/GameObjects/Character/Character.h"
-#include "StateMachineEditor\StateMachineGraphEditor.h"
+#include "Editor\StateMachineEditor\Core\StateMachineGraphEditor.h"
 #include "Preview\ModelPreviewWindow.h"
 #include "Attachment\ColliderAttachmentEditor.h"
 

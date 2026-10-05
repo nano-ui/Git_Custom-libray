@@ -11,6 +11,7 @@
 #include "ThiedParty\json.hpp"
 #include "Editor/EditorMediator.h"
 #include "FileDialogHelper.h"
+#include "Editor\StateMachineEditor\Data\StateGraphConfigManager.h"
 
 #include <imgui.h>
 #include <ImGuizmo.h>
@@ -20,7 +21,6 @@
 #include <filesystem>
 #include <windows.h>
 #include <commdlg.h>
-#include "StateMachineEditor\StateGraphConfigManager.h"
 
 static const std::string editor_config_path = "Data/Json/System/EditorConfig.json";
 static const std::string config_key_scene_path = "last_opened_scene";

@@ -1,5 +1,5 @@
 #include "Editor\StateMachineEditor\Handlers\StateCanvasInteractionHandler.h"
-#include "Editor\StateMachineEditor\StateGraphDataManager.h"
+#include "Editor\StateMachineEditor\Data\StateGraphDataManager.h"
 #include "Editor\StateMachineEditor\Views\StateGraphPaletteWindow.h"
 
 #include <cstdio>

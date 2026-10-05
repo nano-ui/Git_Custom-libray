@@ -1,6 +1,6 @@
 #include "EditorManager.h"
 #include "ObjectEditor.h"
-#include "StateMachineEditor\StateMachineGraphEditor.h"
+#include "Editor\StateMachineEditor\Core\StateMachineGraphEditor.h"
 #include "Sequence\AnimationSequencerEditor.h"
 #include "EditorMenuBar.h"
 #include "ConstentBrowser\ContentBrowserEditor.h"

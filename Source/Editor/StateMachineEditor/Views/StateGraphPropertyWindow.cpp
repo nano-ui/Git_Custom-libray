@@ -1,5 +1,5 @@
 #include "Editor\StateMachineEditor\Views\StateGraphPropertyWindow.h"
-#include "Editor\StateMachineEditor\StateGraphDataManager.h"
+#include "Editor\StateMachineEditor\Data\StateGraphDataManager.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
 #include "Engine\Core\Input.h"
 #include "TransitionConditionEditor.h"

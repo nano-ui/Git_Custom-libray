@@ -2,7 +2,7 @@
 
 #include "StateMachineGraphEditor.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
-#include "Editor\StateMachineEditor\StateGraphDataManager.h"
+#include "Editor\StateMachineEditor\Data\StateGraphDataManager.h"
 #include "Gameplay/GameObjects/ObjectManager.h"
 #include "Editor/FileDialogHelper.h"
 #include "Editor/EditorMediator.h"
@@ -14,7 +14,7 @@
 #include "Editor\StateMachineEditor\Views\StateBlackboardInspectorWindow.h"
 #include "Editor\StateMachineEditor\Core\StateGraphNavigator.h"
 #include "Editor\StateMachineEditor\Handlers\StateCanvasInteractionHandler.h"
-#include "Editor\StateMachineEditor\StateLinkConnectionHandler.h"
+#include "Editor\StateMachineEditor\Handlers\StateLinkConnectionHandler.h"
 #include "StateGraphCameraController.h"
 #include "Editor\StateMachineEditor\Views\StateGraphToolbar.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"

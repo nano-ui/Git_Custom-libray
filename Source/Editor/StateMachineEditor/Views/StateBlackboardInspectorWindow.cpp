@@ -1,5 +1,5 @@
 #include "Editor\StateMachineEditor\Views\StateBlackboardInspectorWindow.h"
-#include "Editor\StateMachineEditor\StateGraphDataManager.h"
+#include "Editor\StateMachineEditor\Data\StateGraphDataManager.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
 
 #include <imgui.h>

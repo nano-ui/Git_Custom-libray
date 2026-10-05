@@ -245,6 +245,7 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\Core\StateGraphCameraController.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Core\StateGraphNavigator.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Core\StateMachineGraphEditor.cpp" />
+    <ClCompile Include="Source\Editor\StateMachineEditor\Data\StateGraphCameraController.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Data\StateGraphConfigManager.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Data\StateGraphDataManager.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Handlers\StateCanvasInteractionHandler.cpp" />
@@ -377,6 +378,7 @@
     <ClInclude Include="Source\Editor\StateMachineEditor\Core\StateMachineGraphEditor.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Data\StateGraphCameraController.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Data\StateGraphConfigManager.h" />
+    <ClInclude Include="Source\Editor\StateMachineEditor\Data\StateGraphDataManager.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Handlers\StateCanvasInteractionHandler.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Handlers\StateGraphSimulator.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Handlers\StateLinkConnectionHandler.h" />
