@@ -213,21 +213,6 @@
     <ClCompile Include="Source\Editor\EditorMediator.cpp">
       <Filter>Source\Editor\EditorMediator</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphConfigManager.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphConfigManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphPaletteWindow.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPaletteWindow</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphPropertyWindow.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\TransitionConditionEditor</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Editor\Sequence\AnimationSequencerEditor.cpp">
       <Filter>Source\Editor\Sequence\AnimationSequenceEditor</Filter>
     </ClCompile>
@@ -278,9 +263,6 @@
     </ClCompile>
     <ClCompile Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.cpp">
       <Filter>Source\Gameplay\Components\Animation\AnimationSequencerComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateBlackboardInspectorWindow.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateBlackboardInspectorWindow</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Core\Input.cpp">
       <Filter>Source\Engine\Core\Input</Filter>
@@ -420,32 +402,50 @@
     <ClCompile Include="Source\Gameplay\Components\Editor\AttachmentColliderComponent.cpp">
       <Filter>Source\Gameplay\Components\Editor\AttachmentCollider</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphDataManager.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphDataManager</Filter>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Core\StateGraphCameraController.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Core\StateGraphCameraController</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateNodeRenderer.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateNodeRenderer</Filter>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Core\StateGraphNavigator.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Core\StateGraphNavigator</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateLinkRenderer.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateLinkRenderer</Filter>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Core\StateMachineGraphEditor.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Core\StateMachineGraphEditor</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphNavigator.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphNavigator</Filter>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Data\StateGraphConfigManager.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphCameraController</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateCanvasInteractionHandler.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateCanvasInteractionHandler</Filter>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Data\StateGraphDataManager.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphConfigManager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateLinkConnectionHandler.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateLinkConnectionHandler</Filter>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Renderers\StateLinkRenderer.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Renderers\StateLinkRenderer</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphCameraController.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphCameraController</Filter>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Renderers\StateNodeRenderer.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Renderers\StateNodeRenderer</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphToolbar.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphToolbar</Filter>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Handlers\StateCanvasInteractionHandler.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Handlers\StateCanvasInteractionHandler</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphSimulator.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphSimulator</Filter>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Handlers\StateGraphSimulator.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Handlers\StateGraphSimulator</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Handlers\StateLinkConnectionHandler.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Handlers\StateLinkConnectionHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Views\StateBlackboardInspectorWindow.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Views\StateBlackboardInspectorWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Views\StateGraphPaletteWindow.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Views\StateGraphPaletteWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Views\StateGraphPropertyWindow.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Views\StateGraphPropertyWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Views\StateGraphToolbar.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Views\StateGraphToolbar</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Views\TransitionConditionEditor.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Views\TransitionConditionEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -608,21 +608,6 @@
     <ClInclude Include="Source\Editor\EditorMediator.h">
       <Filter>Source\Editor\EditorMediator</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.h">
-      <Filter>Source\Editor\StateMachineGraphEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphConfigManager.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphConfigManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphPaletteWindow.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPaletteWindow</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphPropertyWindow.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\TransitionConditionEditor</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Editor\Sequence\SequenceSceneBace.h">
       <Filter>Source\Editor\Sequence\SequenceSceneBace</Filter>
     </ClInclude>
@@ -682,9 +667,6 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.h">
       <Filter>Source\Gameplay\Components\Animation\AnimationSequencerComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateBlackboardInspectorWindow.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateBlackboardInspectorWindow</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Core\Input.h">
       <Filter>Source\Engine\Core\Input</Filter>
@@ -824,32 +806,50 @@
     <ClInclude Include="Source\Gameplay\Components\Editor\AttachmentColliderComponent.h">
       <Filter>Source\Gameplay\Components\Editor\AttachmentCollider</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphDataManager.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphDataManager</Filter>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Core\StateGraphCameraController.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Core\StateGraphCameraController</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateNodeRenderer.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateNodeRenderer</Filter>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Core\StateGraphNavigator.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Core\StateGraphNavigator</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateLinkRenderer.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateLinkRenderer</Filter>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Core\StateMachineGraphEditor.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Core\StateMachineGraphEditor</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphNavigator.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphNavigator</Filter>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Data\StateGraphCameraController.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphCameraController</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateCanvasInteractionHandler.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateCanvasInteractionHandler</Filter>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Data\StateGraphConfigManager.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphConfigManager</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateLinkConnectionHandler.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateLinkConnectionHandler</Filter>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Renderers\StateLinkRenderer.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Renderers\StateLinkRenderer</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphCameraController.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphCameraController</Filter>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Renderers\StateNodeRenderer.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Renderers\StateNodeRenderer</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphToolbar.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphToolbar</Filter>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Handlers\StateCanvasInteractionHandler.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Handlers\StateCanvasInteractionHandler</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphSimulator.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\StateGraphSimulator</Filter>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Handlers\StateGraphSimulator.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Handlers\StateGraphSimulator</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Handlers\StateLinkConnectionHandler.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Handlers\StateLinkConnectionHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Views\StateBlackboardInspectorWindow.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Views\StateBlackboardInspectorWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Views\StateGraphPaletteWindow.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Views\StateGraphPaletteWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Views\StateGraphPropertyWindow.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Views\StateGraphPropertyWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Views\StateGraphToolbar.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Views\StateGraphToolbar</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Views\TransitionConditionEditor.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Views\TransitionConditionEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1068,23 +1068,11 @@
     <Filter Include="Source\Gameplay\GameObjects\Character\Player">
       <UniqueIdentifier>{d157c02a-a75f-451b-825d-7a3bf1003046}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphPaletteWindow">
-      <UniqueIdentifier>{c006caec-1341-4dfe-9f09-d669570f632b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphPropertyWindow">
-      <UniqueIdentifier>{aabe0601-df02-464c-8504-67c6fe465159}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphConfigManager">
-      <UniqueIdentifier>{2c81925d-dc39-4651-a01d-e32dbc45db76}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Editor\AssetLoader">
       <UniqueIdentifier>{2ce713aa-1b04-437f-9f70-10e9a227942b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Editor\EditorMediator">
       <UniqueIdentifier>{8f615b74-2187-4561-bbe4-f46cdeb5c2ac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\TransitionConditionEditor">
-      <UniqueIdentifier>{8b97f2da-592b-430d-8cc7-25f87ffbacb0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Editor\Sequence">
       <UniqueIdentifier>{c6302ddf-12a4-444f-9777-619672e570b1}</UniqueIdentifier>
@@ -1169,9 +1157,6 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent">
       <UniqueIdentifier>{62862072-ccba-4c48-8074-6bac9cf6dcd9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\StateBlackboardInspectorWindow">
-      <UniqueIdentifier>{caad47d4-db15-4457-a477-b3d10c215e54}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Engine\Core\Input">
       <UniqueIdentifier>{f40482a3-25b2-458e-aa90-3985baf32073}</UniqueIdentifier>
@@ -1326,35 +1311,68 @@
     <Filter Include="Source\Gameplay\Components\Editor\AttachmentCollider">
       <UniqueIdentifier>{576a7e7d-cd53-4ad3-81e8-ecff08ed0607}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphDataManager">
-      <UniqueIdentifier>{6b493f1c-76e3-4bfd-9dde-391ed8956c2c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\StateNodeRenderer">
-      <UniqueIdentifier>{06ffc5e8-b3ed-4d2b-8902-48aa8de9ab0c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\StateLinkRenderer">
-      <UniqueIdentifier>{649663a6-eb8a-4c2e-a634-f50e66dca2f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphNavigator">
-      <UniqueIdentifier>{86fadef6-82d1-456f-bdbc-c3d5eb17e4b0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\StateCanvasInteractionHandler">
-      <UniqueIdentifier>{e504f0ad-d3d9-495e-80be-d4442e348184}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\StateLinkConnectionHandler">
-      <UniqueIdentifier>{29016187-5089-49fa-acd3-78dd12459a8a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphCameraController">
-      <UniqueIdentifier>{87831ad8-22e4-40a8-9f2d-0198933429a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphToolbar">
-      <UniqueIdentifier>{25aa04e7-79a2-4a36-a7a2-c4d00cf9f1ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphSimulator">
-      <UniqueIdentifier>{aba319c5-3254-4b1d-baf4-42debca99e0b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Gameplay\AI\RandomJugment">
       <UniqueIdentifier>{b0f6c6b3-ae49-445d-962a-ab9eb5248c0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Core">
+      <UniqueIdentifier>{04cb4eb8-c7f7-4700-a3ba-3462c000f235}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Core\StateGraphCameraController">
+      <UniqueIdentifier>{ad5cc2c1-2ab0-49e0-9c79-2295b7e18e7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Core\StateGraphNavigator">
+      <UniqueIdentifier>{3e16fa69-cc0e-46cc-82c8-e3e26c163104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Core\StateMachineGraphEditor">
+      <UniqueIdentifier>{187d362b-5ef2-4c81-8501-0cc54ff1a87d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Data">
+      <UniqueIdentifier>{63202272-b141-4203-8744-5f7c9d9334bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Data\StateGraphCameraController">
+      <UniqueIdentifier>{16331222-e605-4ddd-9d82-80e507ea1adf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Data\StateGraphConfigManager">
+      <UniqueIdentifier>{e8380a8b-ce38-4ef5-9edc-32b42c863e10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Renderers">
+      <UniqueIdentifier>{bf89334b-1ab1-4734-9f21-9b3da5cf93a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Renderers\StateLinkRenderer">
+      <UniqueIdentifier>{7facfde6-045d-4a53-8bf6-fbd51bb415f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Renderers\StateNodeRenderer">
+      <UniqueIdentifier>{cb71f104-a85c-4377-96b7-30a9fc674da9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Handlers">
+      <UniqueIdentifier>{1f9dddfa-b4d3-41f7-8d65-c0542ae8136b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Handlers\StateCanvasInteractionHandler">
+      <UniqueIdentifier>{a664e74f-60e4-47e1-9403-080d31304d24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Handlers\StateGraphSimulator">
+      <UniqueIdentifier>{cd9dd229-3f8e-428f-831b-f3d1b0513e46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Handlers\StateLinkConnectionHandler">
+      <UniqueIdentifier>{25ed22f8-bb6f-409d-93a5-f0bfa7236cb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Views">
+      <UniqueIdentifier>{8c2ce7bd-2f5c-4721-9689-76f25c42a953}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Views\StateBlackboardInspectorWindow">
+      <UniqueIdentifier>{28e6ec52-798d-4630-8d8b-1deb9d62aa6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Views\StateGraphPaletteWindow">
+      <UniqueIdentifier>{d6916a50-d2c7-4574-b5bb-e11ffce8bcb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Views\StateGraphPropertyWindow">
+      <UniqueIdentifier>{bbdf3f77-39f0-46a7-9b71-77bdd77b98df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Views\StateGraphToolbar">
+      <UniqueIdentifier>{65229b1b-3508-451d-82aa-a47dade13727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Views\TransitionConditionEditor">
+      <UniqueIdentifier>{d569a77c-1b19-45c9-bf45-a39d20e35002}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
