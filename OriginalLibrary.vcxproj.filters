@@ -450,6 +450,9 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\Data\StateGraphCameraController.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphCameraController</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Nodes\GraphNode.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Node</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -856,6 +859,12 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\Data\StateGraphConfigManager.h">
       <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphConfigManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Data\AnimationData.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Data\AnimationData</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Nodes\GraphNode.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Node</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1382,6 +1391,12 @@
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\Data\StateGraphDataManager">
       <UniqueIdentifier>{ab43c0f7-4f2d-4313-9dad-0ac2472f41b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Data\AnimationData">
+      <UniqueIdentifier>{65c7ae2a-c6df-4198-b91e-9a1316754552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Node">
+      <UniqueIdentifier>{1d0b474e-c64b-42da-a745-6e51d6aaf2d2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
