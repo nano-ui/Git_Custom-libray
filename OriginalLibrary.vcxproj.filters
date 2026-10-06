@@ -451,7 +451,13 @@
       <Filter>Source\Editor\StateMachineGraphEditor\Data\StateGraphCameraController</Filter>
     </ClCompile>
     <ClCompile Include="Source\Editor\StateMachineEditor\Nodes\GraphNode.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\Node</Filter>
+      <Filter>Source\Editor\StateMachineGraphEditor\Node\GraphNode</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Nodes\StateGraphNode.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Node\StateGraphNode</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\Data\GraphDataManager.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\Data\GraphDataManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -864,10 +870,16 @@
       <Filter>Source\Editor\StateMachineGraphEditor\Data\AnimationData</Filter>
     </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\Nodes\GraphNode.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\Node</Filter>
+      <Filter>Source\Editor\StateMachineGraphEditor\Node\GraphNode</Filter>
     </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\Nodes\GraphNodeData.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\Node</Filter>
+      <Filter>Source\Editor\StateMachineGraphEditor\Node\GraphNode</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Nodes\StateGraphNode.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Node\StateGraphNode</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\Data\GraphDataManager.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\Data\GraphDataManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1353,15 +1365,6 @@
     <Filter Include="Source\Editor\StateMachineGraphEditor\Data\StateGraphConfigManager">
       <UniqueIdentifier>{e8380a8b-ce38-4ef5-9edc-32b42c863e10}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\Renderers">
-      <UniqueIdentifier>{bf89334b-1ab1-4734-9f21-9b3da5cf93a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\Renderers\StateLinkRenderer">
-      <UniqueIdentifier>{7facfde6-045d-4a53-8bf6-fbd51bb415f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\Renderers\StateNodeRenderer">
-      <UniqueIdentifier>{cb71f104-a85c-4377-96b7-30a9fc674da9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\Handlers">
       <UniqueIdentifier>{1f9dddfa-b4d3-41f7-8d65-c0542ae8136b}</UniqueIdentifier>
     </Filter>
@@ -1399,7 +1402,25 @@
       <UniqueIdentifier>{65c7ae2a-c6df-4198-b91e-9a1316754552}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\Node">
+      <UniqueIdentifier>{b8576479-36ba-467b-b698-153ba53ff3d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Renderers">
+      <UniqueIdentifier>{bf89334b-1ab1-4734-9f21-9b3da5cf93a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Renderers\StateLinkRenderer">
+      <UniqueIdentifier>{7facfde6-045d-4a53-8bf6-fbd51bb415f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Renderers\StateNodeRenderer">
+      <UniqueIdentifier>{cb71f104-a85c-4377-96b7-30a9fc674da9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Node\GraphNode">
       <UniqueIdentifier>{1d0b474e-c64b-42da-a745-6e51d6aaf2d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Node\StateGraphNode">
+      <UniqueIdentifier>{b886d1a6-94f4-4a86-9131-69c6ac7cff28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\Data\GraphDataManager">
+      <UniqueIdentifier>{9fc37dac-4151-435c-93c6-183962d101cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

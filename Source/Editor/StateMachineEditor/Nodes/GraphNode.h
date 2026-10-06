@@ -29,6 +29,9 @@ public:
 	//指定されたピンを検索
 	bool HasPin(uint32_t pin_id)const;
 
+	//ピンの属性を取得
+	PinType GetPinType(uint32_t pin_id)const;
+
 	//ノード情報を取得
 	const NodeBasicData GetNodeBasicData() const { return node_basic_data; }
 

@@ -245,6 +245,7 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\Core\StateGraphCameraController.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Core\StateGraphNavigator.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Core\StateMachineGraphEditor.cpp" />
+    <ClCompile Include="Source\Editor\StateMachineEditor\Data\GraphDataManager.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Data\StateGraphCameraController.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Data\StateGraphConfigManager.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Data\StateGraphDataManager.cpp" />
@@ -252,6 +253,7 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\Handlers\StateGraphSimulator.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Handlers\StateLinkConnectionHandler.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Nodes\GraphNode.cpp" />
+    <ClCompile Include="Source\Editor\StateMachineEditor\Nodes\StateGraphNode.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Renderers\StateLinkRenderer.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Renderers\StateNodeRenderer.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\Views\StateBlackboardInspectorWindow.cpp" />
@@ -378,6 +380,7 @@
     <ClInclude Include="Source\Editor\StateMachineEditor\Core\StateGraphNavigator.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Core\StateMachineGraphEditor.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Data\AnimationData.h" />
+    <ClInclude Include="Source\Editor\StateMachineEditor\Data\GraphDataManager.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Data\StateGraphCameraController.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Data\StateGraphConfigManager.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Data\StateGraphDataManager.h" />
@@ -386,6 +389,7 @@
     <ClInclude Include="Source\Editor\StateMachineEditor\Handlers\StateLinkConnectionHandler.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Nodes\GraphNode.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Nodes\GraphNodeData.h" />
+    <ClInclude Include="Source\Editor\StateMachineEditor\Nodes\StateGraphNode.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Renderers\StateLinkRenderer.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Renderers\StateNodeRenderer.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\Views\StateBlackboardInspectorWindow.h" />

@@ -78,3 +78,24 @@ bool GraphNode::HasPin(uint32_t pin_id) const
 
 	return false;
 }
+
+//ƒsƒ“‚Ì‘®«‚ğæ“¾
+PinType GraphNode::GetPinType(uint32_t pin_id) const
+{
+	for (size_t n = 0; n < input_pins.size(); n++)
+	{
+		if (pin_id == input_pins[n].pin_id)
+		{
+			return input_pins[n].pin_type;
+		}
+	}
+
+	for (size_t n = 0; n < output_pins.size(); n++)
+	{
+		if (pin_id == output_pins[n].pin_id)
+		{
+			return output_pins[n].pin_type;
+		}
+	}
+	return PinType::None;
+}
