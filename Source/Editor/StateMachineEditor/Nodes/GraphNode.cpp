@@ -1,4 +1,5 @@
 #include "GraphNode.h"
+#include "Serialization\JsonSerializer.h"
 
 #include <Windows.h>
 
@@ -31,6 +32,21 @@ void GraphNode::Initialize(const NodeBasicData& basic_data)
 	SetupPins();
 
 	is_initialized = true;
+}
+
+//保存変数登録処理
+void GraphNode::SetupSerializer(JsonSerializer* serializer)
+{
+	if (!serializer)return;
+	serializer->RegisterVariable(u8"ノードID", &node_basic_data.id);
+	serializer->RegisterVariable(u8"ノード名", &node_basic_data.name);
+	serializer->RegisterVariable(u8"座標", &node_basic_data.position);
+	serializer->RegisterVariable(u8"サブグラフフラグ", &node_basic_data.is_sub_graph);
+	serializer->RegisterVariable(u8"サブグラフID", &node_basic_data.sub_graph_id);
+	serializer->RegisterVariable(u8"ノード属性", &node_basic_data.node_type);
+	serializer->RegisterVariable(u8"次のピンID", &next_pin_id);
+	serializer->RegisterVector(u8"入力ピン", &input_pins);
+	serializer->RegisterVector(u8"出力ピン", &output_pins);
 }
 
 //入力ピン追加

@@ -11,6 +11,17 @@
 //DirectXMathの型をJSONで自動変換するための定義
 namespace nlohmann
 {
+	inline void to_json(json& json_data, const DirectX::XMFLOAT2& float2_data)
+	{
+		json_data = json{ {"x", float2_data.x}, {"y", float2_data.y}};
+	}
+
+	inline void from_json(const json& json_data, DirectX::XMFLOAT2& float2_data)
+	{
+		json_data.at("x").get_to(float2_data.x);
+		json_data.at("y").get_to(float2_data.y);
+	}
+
 	inline void to_json(json& json_data, const DirectX::XMFLOAT3& float3_data)
 	{
 		json_data = json{ {"x", float3_data.x}, {"y", float3_data.y}, {"z", float3_data.z} };
@@ -82,6 +93,48 @@ private:
 	T* data_pointer;	//対象のポインタ
 };
 
+template <typename T>
+class VectorProperty :public IProperty
+{
+public:
+	//コンストラクタ
+	VectorProperty(std::vector<T>* target_pointer)
+	{
+		data_pointer = target_pointer;
+	}
+
+	//デストラクタ
+	~VectorProperty()override = default;
+
+	//値をJSONオブジェクトへ保存
+	void SaveTo(nlohmann::json& json_data, const std::string& property_name)override
+	{
+		nlohmann::json::array();
+
+		for (auto data : *data_pointer)
+		{
+			json_data[property_name].push_back(data);
+		}
+	}
+
+	//JSONオブジェクトから値を復元
+	void LoadFrom(const nlohmann::json& json_data, const std::string& property_name)override
+	{
+		if (json_data.contains(property_name) && json_data[property_name].is_array())
+		{
+			data_pointer->clear();
+
+			for (const auto& data : json_data[property_name])
+			{
+				data_pointer->push_back(data.get<T>());
+			}
+		}
+	}
+
+private:
+	std::vector<T>* data_pointer;	//対象の配列ポインタ
+};
+
 class JsonSerializer
 {
 public:
@@ -101,6 +154,16 @@ public:
 		PropertyData new_data;
 		new_data.name = property_name;
 		new_data.property_interface = std::make_unique<TypedProperty<T>>(target_variable);
+		registered_properties.push_back(std::move(new_data));
+	}
+
+	//セーブ・ロード対象の変数名と配列ポインタを登録
+	template<typename T>
+	void RegisterVector(const std::string& property_name, std::vector<T>* target_vector)
+	{
+		PropertyData new_data;
+		new_data.name = property_name;
+		new_data.property_interface = std::make_unique<VectorProperty<T>>(target_vector);
 		registered_properties.push_back(std::move(new_data));
 	}
 

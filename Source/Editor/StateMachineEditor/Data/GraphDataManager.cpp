@@ -2,6 +2,7 @@
 #include "Editor\StateMachineEditor\Nodes\GraphNode.h"
 
 #include <cstdio>
+#include <unordered_set>
 
 //コンストラクタ
 GraphDataManager::GraphDataManager()
@@ -11,7 +12,7 @@ GraphDataManager::GraphDataManager()
 	GraphData root_graph;
 	root_graph.id = 0;
 	root_graph.name = u8"ルート";
-	layer_datas.push_back(std::move(root_graph));
+	graph_datas.push_back(std::move(root_graph));
 }
 
 //ID発行処理
@@ -72,21 +73,36 @@ void GraphDataManager::DeleteLink(uint32_t graph_id, uint32_t target_link_id)
 	printf("GraphDataManager::DeleteLink: 削除対象が存在しません。 ID: %d\n", target_link_id);
 }
 
+//サブグラフの追加
+uint32_t GraphDataManager::CreateSubGraph(const std::string& name)
+{
+	GraphData graph_data = {};
+	graph_data.id = FetchAndIncrementId();
+	graph_data.name = name;
+	graph_datas.push_back(std::move(graph_data));
+
+	printf("GraphDataManager::CreateSubGraph - サブグラフを作成しました。 名前: %s ID%u\n",
+		graph_datas.back().name.c_str(),
+		graph_datas.back().id);
+
+	return graph_datas.back().id;
+}
+
 //指定されたノードIDが所属する階層のIDを検索して取得
 uint32_t GraphDataManager::GetGraphIdFromNodeId(uint32_t node_id)
 {
 	uint32_t target_graph_id = UINT32_MAX;	//検索結果のグラフID
 
 	//全ての階層データを巡回
-	for (size_t g = 0; g < layer_datas.size(); g++)
+	for (size_t g = 0; g < graph_datas.size(); g++)
 	{
 		//階層内の全ノードを走査
-		for (size_t n = 0; n < layer_datas[g].nodes.size(); n++)
+		for (size_t n = 0; n < graph_datas[g].nodes.size(); n++)
 		{
 			//目的のノードIDと一致したかを判定
-			if (layer_datas[g].nodes[n]->GetNodeBasicData().id == node_id)
+			if (graph_datas[g].nodes[n]->GetNodeBasicData().id == node_id)
 			{
-				target_graph_id = layer_datas[g].id;
+				target_graph_id = graph_datas[g].id;
 				return target_graph_id;
 			}
 		}
@@ -116,6 +132,30 @@ uint32_t GraphDataManager::GetNodeIdFromPinId(uint32_t graph_id, uint32_t pin_id
 	return UINT32_MAX;
 }
 
+//指定されたノードIDを出発基とする全てのリンクのポインタを取得
+std::vector<GraphLink*> GraphDataManager::GetLinkesFromNode(uint32_t graph_id, uint32_t node_id)
+{
+	std::vector<GraphLink*> result_linkes = {}; // 出発元のリンク配列
+
+	// 該当する階層情報を特定
+	GraphData* graph_data = FindGraphData(graph_id);
+	if (!graph_data)
+	{
+		printf("GraphDataManager::GetLinkesFromNode - 階層が見つかりませんでした。階層ID: %u\n", graph_id);
+		return result_linkes;
+	}
+
+	for (auto& link : graph_data->links)
+	{
+		uint32_t src_node_id = GetNodeIdFromPinId(graph_id, link.start_pin_id);
+		if (src_node_id == node_id)
+		{
+			result_linkes.push_back(&link);
+		}
+	}
+	return result_linkes;
+}
+
 //グラフ情報の取得
 const GraphData* GraphDataManager::GetGraphData(uint32_t graph_id)const
 {
@@ -132,11 +172,11 @@ const GraphData* GraphDataManager::GetGraphData(uint32_t graph_id)const
 GraphData* GraphDataManager::FindGraphData(uint32_t graph_id)
 {
 	//階層配列の走査
-	for (size_t l = 0; l < layer_datas.size(); l++)
+	for (size_t l = 0; l < graph_datas.size(); l++)
 	{
-		if (graph_id == layer_datas[l].id)
+		if (graph_id == graph_datas[l].id)
 		{
-			return &layer_datas[l];
+			return &graph_datas[l];
 		}
 	}
 	return nullptr;
@@ -146,11 +186,11 @@ GraphData* GraphDataManager::FindGraphData(uint32_t graph_id)
 const GraphData* GraphDataManager::FindGraphData(uint32_t graph_id) const
 {
 	//階層配列の走査
-	for (size_t l = 0; l < layer_datas.size(); l++)
+	for (size_t l = 0; l < graph_datas.size(); l++)
 	{
-		if (graph_id == layer_datas[l].id)
+		if (graph_id == graph_datas[l].id)
 		{
-			return &layer_datas[l];
+			return &graph_datas[l];
 		}
 	}
 
@@ -276,5 +316,65 @@ bool GraphDataManager::DeleteNode(uint32_t graph_id, uint32_t node_id)
 		graph_id,
 		node_id);
 
+	return false;
+}
+
+//階層構造を上に辿って循環参照
+bool GraphDataManager::IsAncestorGraph(uint32_t target_graph_id, uint32_t candidate_graph_id)
+{
+	//即時判定と探索準備
+	if (target_graph_id == candidate_graph_id)
+	{
+		return true;
+	}
+
+	uint32_t trace_id = target_graph_id;
+	std::unordered_set<uint32_t> visited_graphs;	//無限ループ防止用の探索済みコンテナ
+
+	//循環チェックと親ノードの探索
+	while (trace_id != 0)
+	{
+		if (visited_graphs.find(trace_id) != visited_graphs.end())
+		{
+			// 既に巡回済みの場合は不正なループ構造が存在する
+			printf("Error: IsAncestorGraph - 階層構造内に既に循環参照が存在します。グラフID: %u\n", trace_id);
+			return true;
+		}
+		visited_graphs.insert(trace_id);
+
+		uint32_t parent_id = 0;
+		bool found_parent = false;
+
+		//trace_idをサブグラフとして保持している親階層を探索
+		for (size_t g = 0; g < graph_datas.size(); g++)
+		{
+			for (size_t n = 0; n < graph_datas[g].nodes.size(); n++)
+			{
+				if (graph_datas[g].nodes[n]->GetNodeBasicData().is_sub_graph &&
+					graph_datas[g].nodes[n]->GetNodeBasicData().sub_graph_id == trace_id)
+				{
+					parent_id = graph_datas[g].id;
+					found_parent = true;
+					break;
+				}
+			}
+			if (found_parent)
+			{
+				break;
+			}
+		}
+
+		if (!found_parent)
+		{
+			break;
+		}
+
+		//親の一致判定と階層の遡上
+		if (parent_id == candidate_graph_id)
+		{
+			return true;
+		}
+		trace_id = parent_id;
+	}
 	return false;
 }
