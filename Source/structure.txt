@@ -46,37 +46,60 @@ C:.
 „    „        SequenceSceneBace.h
 „    „        
 „    „¤„Ÿ„Ÿ„ŸStateMachineEditor
-„            StateBlackboardInspectorWindow.cpp
-„            StateBlackboardInspectorWindow.h
-„            StateCanvasInteractionHandler.cpp
-„            StateCanvasInteractionHandler.h
-„            StateGraphCameraController.cpp
-„            StateGraphCameraController.h
-„            StateGraphConfigManager.cpp
-„            StateGraphConfigManager.h
-„            StateGraphDataManager.cpp
-„            StateGraphDataManager.h
-„            StateGraphNavigator.cpp
-„            StateGraphNavigator.h
-„            StateGraphPaletteWindow.cpp
-„            StateGraphPaletteWindow.h
-„            StateGraphPropertyWindow.cpp
-„            StateGraphPropertyWindow.h
-„            StateGraphSimulator.cpp
-„            StateGraphSimulator.h
-„            StateGraphToolbar.cpp
-„            StateGraphToolbar.h
-„            StateLinkConnectionHandler.cpp
-„            StateLinkConnectionHandler.h
-„            StateLinkRenderer.cpp
-„            StateLinkRenderer.h
-„            StateMachineGraphEditor.cpp
-„            StateMachineGraphEditor.h
-„            StateNodeRenderer.cpp
-„            StateNodeRenderer.h
-„            TransitionConditionEditor.cpp
-„            TransitionConditionEditor.h
-„            
+„        „¥„Ÿ„Ÿ„ŸCore
+„        „        StateGraphCameraController.cpp
+„        „        StateGraphCameraController.h
+„        „        StateGraphNavigator.cpp
+„        „        StateGraphNavigator.h
+„        „        StateMachineGraphEditor.cpp
+„        „        StateMachineGraphEditor.h
+„        „        
+„        „¥„Ÿ„Ÿ„ŸData
+„        „        AnimationData.h
+„        „        CheckCanConnect.cpp
+„        „        CheckCanConnect.h
+„        „        GraphDataManager.cpp
+„        „        GraphDataManager.h
+„        „        StateGraphCameraController.cpp
+„        „        StateGraphCameraController.h
+„        „        StateGraphConfigManager.cpp
+„        „        StateGraphConfigManager.h
+„        „        StateGraphDataManager.cpp
+„        „        StateGraphDataManager.h
+„        „        
+„        „¥„Ÿ„Ÿ„ŸHandlers
+„        „        StateCanvasInteractionHandler.cpp
+„        „        StateCanvasInteractionHandler.h
+„        „        StateGraphSimulator.cpp
+„        „        StateGraphSimulator.h
+„        „        StateLinkConnectionHandler.cpp
+„        „        StateLinkConnectionHandler.h
+„        „        
+„        „¥„Ÿ„Ÿ„ŸNodes
+„        „        GraphNode.cpp
+„        „        GraphNode.h
+„        „        GraphNodeData.h
+„        „        StateGraphNode.cpp
+„        „        StateGraphNode.h
+„        „        
+„        „¥„Ÿ„Ÿ„ŸRenderers
+„        „        StateLinkRenderer.cpp
+„        „        StateLinkRenderer.h
+„        „        StateNodeRenderer.cpp
+„        „        StateNodeRenderer.h
+„        „        
+„        „¤„Ÿ„Ÿ„ŸViews
+„                StateBlackboardInspectorWindow.cpp
+„                StateBlackboardInspectorWindow.h
+„                StateGraphPaletteWindow.cpp
+„                StateGraphPaletteWindow.h
+„                StateGraphPropertyWindow.cpp
+„                StateGraphPropertyWindow.h
+„                StateGraphToolbar.cpp
+„                StateGraphToolbar.h
+„                TransitionConditionEditor.cpp
+„                TransitionConditionEditor.h
+„                
 „¥„Ÿ„Ÿ„ŸEngine
 „    „¥„Ÿ„Ÿ„ŸCamera
 „    „        Camera.cpp
