@@ -1,5 +1,6 @@
 #include "Editor\StateMachineEditor\Handlers\StateLinkConnectionHandler.h"
 #include "Editor\StateMachineEditor\Data\StateGraphDataManager.h"
+#include "Editor\StateMachineEditor\Nodes\StateGraphNode.h"
 
 #include <imgui.h>
 #include <imgui_node_editor.h>
@@ -73,9 +74,9 @@ bool StateLinkConnectionHandler::CanConnect(
 	uint32_t start_pin_id,					//接続元ピンID
 	uint32_t end_pin_id)					//接続先ピンID
 {
-	const GraphPin* start_pin = nullptr;	//接続元のピンポインタ
-	const GraphPin* end_pin = nullptr;		//接続先のピンポインタ
-	const auto& layers = data_manager->GetLayerDatas();	//全階層データ
+	const PinData* start_pin = nullptr;	//接続元のピンポインタ
+	const PinData* end_pin = nullptr;		//接続先のピンポインタ
+	const auto& layers = data_manager->GetGraphDatas();	//全階層データ
 
 	//全階層を巡回
 	for (size_t g_idx = 0; g_idx < layers.size(); g_idx++)
@@ -89,13 +90,14 @@ bool StateLinkConnectionHandler::CanConnect(
 		//階層内の全ノードからピンを検索
 		for (size_t n_idx = 0; n_idx < layers[g_idx].nodes.size(); n_idx++)
 		{
-			const GraphNode& node = layers[g_idx].nodes[n_idx];	//参照ノード
-
+			const GraphNode* node = layers[g_idx].nodes[n_idx].get();	//参照ノード
+			
 			//入力ピンから検索
-			for (size_t p_idx = 0; p_idx < node.inputs.size(); p_idx++)
+			for (size_t p_idx = 0; p_idx < node->GetInputPins().size(); p_idx++)
 			{
-				if (node.inputs[p_idx].id == start_pin_id) start_pin = &node.inputs[p_idx];
-				if (node.inputs[p_idx].id == end_pin_id) end_pin = &node.inputs[p_idx];
+				PinData pin = node->GetInputPins()[p_idx];
+				if (pin.pin_id == start_pin_id) start_pin = &pin;
+				if (pin.pin_id == end_pin_id) end_pin = &pin;
 			}
 
 			//出力ピンから検索

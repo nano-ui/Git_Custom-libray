@@ -881,6 +881,9 @@
     <ClInclude Include="Source\Editor\StateMachineEditor\Data\GraphDataManager.h">
       <Filter>Source\Editor\StateMachineGraphEditor\Data\GraphDataManager</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Serialization\JsonTypeTraits.h">
+      <Filter>Source\Serialization\JsonTypeTraits</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli">
@@ -1421,6 +1424,9 @@
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\Data\GraphDataManager">
       <UniqueIdentifier>{9fc37dac-4151-435c-93c6-183962d101cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Serialization\JsonTypeTraits">
+      <UniqueIdentifier>{b36bf9f4-f817-4112-a7f2-1d25740b7c16}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -493,6 +493,7 @@
     <ClInclude Include="Source\Serialization\AnimationSequenceSerializer.h" />
     <ClInclude Include="Source\Serialization\GltfModelSerializer.h" />
     <ClInclude Include="Source\Serialization\JsonSerializer.h" />
+    <ClInclude Include="Source\Serialization\JsonTypeTraits.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli" />

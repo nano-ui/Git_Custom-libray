@@ -1,5 +1,6 @@
 #include "Editor\StateMachineEditor\Views\StateGraphPaletteWindow.h"
 #include "Editor\StateMachineEditor\Data\StateGraphDataManager.h"
+#include "Editor\StateMachineEditor\Nodes\StateGraphNode.h"
 
 #include <imgui.h>
 #include <cstdio>
@@ -59,17 +60,19 @@ void StateGraphPaletteWindow::DrawHierarchyNodeList(GraphData* current_graph, ui
 	//現在の階層内の全ノードを走査してリストアップ
 	for (size_t i = 0; i < current_graph->nodes.size(); i++)
 	{
-		const GraphNode& node = current_graph->nodes[i];	//ノード情報
-		ImGui::Text("ID : %d[%s]", node.id, node.name.c_str());
+		const GraphNode* node = current_graph->nodes[i].get();	//ノード情報
+		NodeBasicData basic_data = node->GetNodeBasicData();
+		if (!node)continue;
+		ImGui::Text("ID : %d[%s]", basic_data.id, basic_data.name.c_str());
 		ImGui::SameLine(ImGui::GetWindowWidth() - 115.0f);
-		std::string button_label = u8"フォーカス##" + std::to_string(node.id);	//ボタンラベル
+		std::string button_label = u8"フォーカス##" + std::to_string(basic_data.id);	//ボタンラベル
 
 		//ボタンがクリックされたか判定
 		if (ImGui::Button(button_label.c_str()))
 		{
-			out_focus_node_id = node.id;
+			out_focus_node_id = basic_data.id;
 			printf("StateGraphPaletteWindow: ノード ID:%d (%s) へのフォーカスを予約しました。\n",
-			node.id, node.name.c_str());
+				basic_data.id, basic_data.name.c_str());
 		}
 	}
 	ImGui::EndChild();
@@ -222,17 +225,18 @@ std::vector<std::string> StateGraphPaletteWindow::GetExistingNormalStateNames(St
 	if (!data_manager) return unique_names;
 
 	//全ての階層情報を巡回して通常ノード名を収集
-	for (size_t g = 0; g < data_manager->GetLayerDatas().size(); g++)
+	for (size_t g = 0; g < data_manager->GetGraphDatas().size(); g++)
 	{
-		const GraphData& graph = data_manager->GetLayerDatas()[g];	//対象の階層
+		const GraphData& graph = data_manager->GetGraphDatas()[g];	//対象の階層
 
 		//階層内のすべてのノードを巡回
 		for (size_t n = 0; n < graph.nodes.size(); n++)
 		{
+			const NodeBasicData basic_data = graph.nodes[n]->GetNodeBasicData();
 			//通常ステートのみを抽出
-			if (!graph.nodes[n].is_sub_graph)
+			if (!basic_data.is_sub_graph)
 			{
-				const std::string& node_name = graph.nodes[n].name;	//ノード名
+				const std::string& node_name = basic_data.name;	//ノード名
 				bool is_duplicate = false;	//重複管理フラグ
 
 				//コンテナを巡回
@@ -266,17 +270,19 @@ std::vector<std::string> StateGraphPaletteWindow::GetExistingSubGraphNames(State
 	if (!data_manager) return unique_names;
 
 	//全ての階層情報を巡回してサブグラフノード名を収集
-	for (size_t g = 0; g < data_manager->GetLayerDatas().size(); g++)
+	for (size_t g = 0; g < data_manager->GetGraphDatas().size(); g++)
 	{
-		const GraphData& graph = data_manager->GetLayerDatas()[g];	//対象の階層
+		const GraphData& graph = data_manager->GetGraphDatas()[g];	//対象の階層
 
 		//階層内のすべてのノードを巡回
 		for (size_t n = 0; n < graph.nodes.size(); n++)
 		{
+			const NodeBasicData basic_bast = graph.nodes[n]->GetNodeBasicData();
+
 			//サブグラフステートのみを抽出
-			if (graph.nodes[n].is_sub_graph)
+			if (basic_bast.is_sub_graph)
 			{
-				const std::string& node_name = graph.nodes[n].name;	//ノード名
+				const std::string& node_name = basic_bast.name;	//ノード名
 				bool is_duplicate = false;	//重複管理フラグ
 
 				//コンテナを巡回

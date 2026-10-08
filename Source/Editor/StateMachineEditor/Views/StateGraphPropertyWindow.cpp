@@ -1,16 +1,18 @@
 #include "Editor\StateMachineEditor\Views\StateGraphPropertyWindow.h"
 #include "Editor\StateMachineEditor\Data\StateGraphDataManager.h"
+#include "Editor\StateMachineEditor\Nodes\GraphNode.h"
+#include "Editor\StateMachineEditor\Nodes\StateGraphNode.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
 #include "Engine\Core\Input.h"
 #include "TransitionConditionEditor.h"
-
 #include <imgui.h>
 #include <imgui_node_editor.h>
 #include <cstdio>
+#include <Windows.h>
 
 namespace ed = ax::NodeEditor;
 
-//コンストラクタ
+// コンストラクタ
 StateGraphPropertyWindow::StateGraphPropertyWindow()
 {
 	condition_editor = std::make_unique<TransitionConditionEditor>();
@@ -18,55 +20,54 @@ StateGraphPropertyWindow::StateGraphPropertyWindow()
 	selected_output_link_index = 0;
 }
 
-//デストラクタ
+// デストラクタ
 StateGraphPropertyWindow::~StateGraphPropertyWindow() = default;
 
-//プロパティウィンドウの全体描画
+// プロパティウィンドウ描画
 bool StateGraphPropertyWindow::DrawProperty(
 	StateGraphDataManager* data_manager,
-	GraphData* current_graph, 
+	GraphData* current_graph,
 	StateBlackboard* blackboard,
 	const std::vector<std::string>& anim_names)
 {
-	//グラフデータが渡されているか確認
 	if (!current_graph)
 	{
 		printf("Error: StateGraphPropertyWindow::DrawProperty - current_graph が nullptr です。\n");
 		return false;
 	}
 
-	bool is_changed = false;	//変更検知フラグ
-
-	ImGui::Text(u8"【ステートプロパティ】");
+	bool is_changed = false;
+	ImGui::Text(u8"詳細設定");
 	ImGui::Spacing();
 
-	const int max_count = 1;	//取得要求の最大ノード数
-	ed::NodeId selected_nodes[max_count];	//ノードのID格納コンテナ
-	int select_count = ed::GetSelectedNodes(selected_nodes, max_count);	//取得数
+	const int max_count = 1;
+	ed::NodeId selected_nodes[max_count];
+	int select_count = ed::GetSelectedNodes(selected_nodes, max_count);
 
-	ed::LinkId selected_links[max_count];	//選択中のリンクID配列
-	int select_link_count = ed::GetSelectedLinks(selected_links, max_count); // 取得数
+	ed::LinkId selected_links[max_count];
+	int select_link_count = ed::GetSelectedLinks(selected_links, max_count);
 
-	//選択されているノードがあるか確認
+	// ノード選択時のプロパティ表示
 	if (select_count > 0)
 	{
-		uint32_t selected_node_id = static_cast<uint32_t>(selected_nodes[0].Get()); //キャストID
+		uint32_t selected_node_id = static_cast<uint32_t>(selected_nodes[0].Get());
 		is_changed = DrawNodeProperty(data_manager, current_graph, selected_node_id, blackboard, anim_names);
 	}
+	// リンク選択時のプロパティ表示
 	else if (select_link_count > 0)
 	{
-		uint32_t selected_link_id = static_cast<uint32_t>(selected_links[0].Get()); //キャストID
+		uint32_t selected_link_id = static_cast<uint32_t>(selected_links[0].Get());
 		is_changed = DrawLinkProperty(data_manager, current_graph, selected_link_id, blackboard);
 	}
 	else
 	{
-		ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), u8"キャンバス上の要素を\n選択すると詳細が表示されます");
+		ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), u8"ノードまたは接続線を選択してください");
 	}
 
 	return is_changed;
 }
 
-//ノード選択時の詳細プロパティ描画
+// ノードプロパティ描画
 bool StateGraphPropertyWindow::DrawNodeProperty(
 	StateGraphDataManager* data_manager,
 	GraphData* current_graph,
@@ -74,14 +75,12 @@ bool StateGraphPropertyWindow::DrawNodeProperty(
 	StateBlackboard* blackboard,
 	const std::vector<std::string>& anim_names)
 {
-	GraphNode* target_node = nullptr;	//編集対象ノード
-
-	//階層データ内から該当ノードを検索
+	StateGraphNode* target_node = nullptr;
 	for (size_t i = 0; i < current_graph->nodes.size(); i++)
 	{
-		if (current_graph->nodes[i].id == node_id)
+		if (current_graph->nodes[i] && current_graph->nodes[i]->GetNodeBasicData().id == node_id)
 		{
-			target_node = &current_graph->nodes[i];
+			target_node = dynamic_cast<StateGraphNode*>(current_graph->nodes[i].get());
 			break;
 		}
 	}
@@ -91,30 +90,32 @@ bool StateGraphPropertyWindow::DrawNodeProperty(
 		return false;
 	}
 
-	bool is_changed = false;	//値変更フラグ
+	bool is_changed = false;
+	NodeBasicData basic_data = target_node->GetNodeBasicData();
 
-	ImGui::Text(u8"【ステート設定(ID：%d)】", target_node->id);
+	ImGui::Text(u8"ステート設定 (ID:%d)", basic_data.id);
 	ImGui::Spacing();
 
-	const size_t name_buffer_size = 128;	//バッファサイズ
-	char name_input_buffer[name_buffer_size] = {};	//入力バッファ
-
-	strcpy_s(name_input_buffer, name_buffer_size, target_node->name.c_str());
+	const size_t name_buffer_size = 128;
+	char name_input_buffer[name_buffer_size] = {};
+	strcpy_s(name_input_buffer, name_buffer_size, basic_data.name.c_str());
 
 	ImGui::SetNextItemWidth(-1.0f);
 	if (ImGui::InputText(u8"##StateNameInput1", name_input_buffer, name_buffer_size))
 	{
-		target_node->name = name_input_buffer;
+		basic_data.name = name_input_buffer;
+		target_node->SetNodeBasicData(basic_data);
 		is_changed = true;
 
-		//サブグラフ名との同期
-		if (target_node->is_sub_graph && data_manager)
+		// サブグラフの場合は階層名も同期更新
+		if (basic_data.is_sub_graph && data_manager)
 		{
-			for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
+			auto& layers = data_manager->GetGraphDatas();
+			for (size_t i = 0; i < layers.size(); i++)
 			{
-				if (data_manager->GetLayerDatas()[i].id == target_node->sub_graph_id)
+				if (layers[i].id == basic_data.sub_graph_id)
 				{
-					data_manager->GetLayerDatas()[i].name = target_node->name;
+					layers[i].name = basic_data.name;
 					break;
 				}
 			}
@@ -127,12 +128,12 @@ bool StateGraphPropertyWindow::DrawNodeProperty(
 
 	if (ImGui::BeginTabBar("NodePropertyTabBar"))
 	{
-		if (ImGui::BeginTabItem(u8"アクション・アニメーション"))
+		if (ImGui::BeginTabItem(u8"アクション"))
 		{
 			is_changed |= DeawNodeActionSettings(target_node, anim_names);
 			ImGui::EndTabItem();
 		}
-		if (ImGui::BeginTabItem(u8"遷移条件"))
+		if (ImGui::BeginTabItem(u8"遷移設定"))
 		{
 			is_changed |= DrawNodeTransitionSettings(data_manager, current_graph, target_node, blackboard);
 			ImGui::EndTabItem();
@@ -140,69 +141,73 @@ bool StateGraphPropertyWindow::DrawNodeProperty(
 		ImGui::EndTabBar();
 	}
 
-
-	//削除ボタン
 	ImGui::Spacing();
 	ImGui::Spacing();
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	const ImVec4 red_button_color = ImVec4(0.6f, 0.2f, 0.2f, 1.0f); // 削除ボタン用の赤色
+	const ImVec4 red_button_color = ImVec4(0.6f, 0.2f, 0.2f, 1.0f);
 	ImGui::PushStyleColor(ImGuiCol_Button, red_button_color);
-
-	//プロパティウィンドウ内に配置する削除実行ボタン
-	if (ImGui::Button(u8"ステートを削除する", ImVec2(-1.0f, 30.0f)))
+	if (ImGui::Button(u8"このノードを削除", ImVec2(-1.0f, 30.0f)))
 	{
-		uint32_t remove_node_id = target_node->id;	//削除対象の確定ID
+		uint32_t remove_node_id = basic_data.id;
 		ed::DeleteNode(remove_node_id);
-		printf("StateGraphPropertyWindow: プロパティ画面からノード ID:%d (%s) の削除要求を発行しました。\n",
-			remove_node_id, target_node->name.c_str());
+		printf("StateGraphPropertyWindow: ノード ID:%d (%s) の削除を要求しました。\n", remove_node_id, basic_data.name.c_str());
 	}
 	ImGui::PopStyleColor();
 
 	return is_changed;
 }
 
-//ノードのアクションとアニメーション設定に関するUI描画
-bool StateGraphPropertyWindow::DeawNodeActionSettings(GraphNode* target_node, const std::vector<std::string>& anim_names)
+// ノードのアクション・アニメーション設定UI
+bool StateGraphPropertyWindow::DeawNodeActionSettings(StateGraphNode* target_node, const std::vector<std::string>& anim_names)
 {
-	bool is_changed = false;	//値変更フラグ
-
-	ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), u8"[アクションとアニメーション]");
-
-	const char* action_ui_names[] = { u8"待機",u8"移動",u8"空中",u8"攻撃",u8"回避",u8"固有技" };	//UIリスト
-	const int total_action_count = 6;	//アクション総数
-
-	ImGui::Text(u8"アクション");
-	ImGui::SetNextItemWidth(-1.0f);
-	if (ImGui::Combo(u8"ActionCategoryCombo", &target_node->action_category, action_ui_names, total_action_count))
+	if (!target_node)
 	{
+		return false;
+	}
+
+	bool is_changed = false;
+	ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), u8"[アクション設定]");
+
+	const char* action_ui_names[] = {
+		u8"待機 (Idle)",
+		u8"移動 (Move)",
+		u8"攻撃 (Attack)",
+		u8"回避 (Dodge)",
+		u8"被弾 (Damage)",
+		u8"死亡 (Dead)"
+	};
+	constexpr int total_action_count = 6;
+
+	int current_category = static_cast<int>(target_node->GetActionCategory());
+	ImGui::Text(u8"アクションカテゴリー:");
+	ImGui::SetNextItemWidth(-1.0f);
+	if (ImGui::Combo(u8"ActionCategoryCombo", &current_category, action_ui_names, total_action_count))
+	{
+		target_node->SetActionCategory(static_cast<ActionCategory>(current_category));
 		is_changed = true;
 	}
 
 	ImGui::Spacing();
 
-	ImGui::Text(u8"再生アニメーション");
+	AnimationData anim_data = target_node->GetAnimationData();
+	ImGui::Text(u8"再生アニメーション:");
 	ImGui::SetNextItemWidth(-1.0f);
 
 	if (!anim_names.empty())
 	{
-		// モデルから直接抽出されたアニメーション名をドロップダウンリストで描画
-		if (ImGui::BeginCombo(u8"##AnimNameCombo", target_node->animation_name.c_str()))
+		if (ImGui::BeginCombo(u8"##AnimNameCombo", anim_data.animation_name.c_str()))
 		{
-			// リストに含まれる全アニメーション名をループ走査
 			for (size_t i = 0; i < anim_names.size(); i++)
 			{
-				bool is_selected = (target_node->animation_name == anim_names[i]);	// 現在選択されている項目か判定
-
-				// ドロップダウン内の項目が選択されたか判定
+				bool is_selected = (anim_data.animation_name == anim_names[i]);
 				if (ImGui::Selectable(anim_names[i].c_str(), is_selected))
 				{
-					target_node->animation_name = anim_names[i];
+					anim_data.animation_name = anim_names[i];
+					target_node->SetAnimationData(anim_data);
 					is_changed = true;
 				}
-
-				// 現在選択中の項目に初期フォーカスを合わせるか判定
 				if (is_selected)
 				{
 					ImGui::SetItemDefaultFocus();
@@ -215,33 +220,33 @@ bool StateGraphPropertyWindow::DeawNodeActionSettings(GraphNode* target_node, co
 	{
 		const size_t anim_buffer_size = 128;
 		char anim_input_buffer[anim_buffer_size] = {};
-		strcpy_s(anim_input_buffer, anim_buffer_size, target_node->animation_name.c_str());
-
+		strcpy_s(anim_input_buffer, anim_buffer_size, anim_data.animation_name.c_str());
 		if (ImGui::InputText(u8"##AnimNameInput", anim_input_buffer, anim_buffer_size))
 		{
-			target_node->animation_name = anim_input_buffer;
+			anim_data.animation_name = anim_input_buffer;
+			target_node->SetAnimationData(anim_data);
 			is_changed = true;
 		}
-		ImGui::TextColored(ImVec4(1.0f, 0.6f, 0.2f, 1.0f), u8"※モデルが未選択です。上部メニューからモデルを選択してください");
+		ImGui::TextColored(ImVec4(1.0f, 0.6f, 0.2f, 1.0f), u8"モデルアニメーションが未ロードです");
 	}
 
 	ImGui::Spacing();
-
-	if (ImGui::Checkbox(u8"アニメーションをループ再生", &target_node->is_loop))
+	if (ImGui::Checkbox(u8"ループ再生", &anim_data.is_loop))
 	{
+		target_node->SetAnimationData(anim_data);
 		is_changed = true;
 	}
 
 	ImGui::Spacing();
-
-	//ルートモーションのオンオフを切り替えるチェックボックス
-	if (ImGui::Checkbox(u8"ルートモーションを適用", &target_node->is_root_motion))
+	if (ImGui::Checkbox(u8"ルートモーション適用", &anim_data.is_root_motion))
 	{
+		target_node->SetAnimationData(anim_data);
 		is_changed = true;
 
 		char debug_message_buffer[256];
-		sprintf_s(debug_message_buffer, sizeof(debug_message_buffer), "[StateGraphPropertyWindow] Node ID: %d, RootMotion changed to: %s\n",
-			target_node->id, target_node->is_root_motion ? "ON" : "OFF");
+		sprintf_s(debug_message_buffer, sizeof(debug_message_buffer),
+			"[StateGraphPropertyWindow] Node ID: %d, RootMotion changed to: %s\n",
+			target_node->GetNodeBasicData().id, anim_data.is_root_motion ? "ON" : "OFF");
 		OutputDebugStringA(debug_message_buffer);
 	}
 
@@ -249,90 +254,84 @@ bool StateGraphPropertyWindow::DeawNodeActionSettings(GraphNode* target_node, co
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	constexpr size_t color_element_count = 3;	//カラーバッファの要素数
-	float imgui_color_buffer[color_element_count] = { target_node->link_color_r, target_node->link_color_g, target_node->link_color_b };	//色編集用のバッファ配列
-
-	ImGui::Text(u8"出発リンクの色設定");
+	DirectX::XMFLOAT3 color = target_node->GetLinkColor();
+	float imgui_color_buffer[3] = { color.x, color.y, color.z };
+	ImGui::Text(u8"接続線の色:");
 	ImGui::SetNextItemWidth(-1.0f);
-
-	//カラーピッカーで色が変更されたかを判定
-	if (ImGui::ColorEdit3(u8"##NodeLinkColorPicker", imgui_color_buffer))	
+	if (ImGui::ColorEdit3(u8"##NodeLinkColorPicker", imgui_color_buffer))
 	{
-		target_node->link_color_r = imgui_color_buffer[0];
-		target_node->link_color_g = imgui_color_buffer[1];
-		target_node->link_color_b = imgui_color_buffer[2];
+		target_node->SetLinkColor({ imgui_color_buffer[0], imgui_color_buffer[1], imgui_color_buffer[2] });
 		is_changed = true;
 	}
 
 	return is_changed;
 }
 
-//ノードから出発する遷移線とその条件に関するUI描画
-bool StateGraphPropertyWindow::DrawNodeTransitionSettings(StateGraphDataManager* data_manager, GraphData* current_graph, GraphNode* target_node, StateBlackboard* blackboard)
+// ノードからの遷移リンク設定UI
+bool StateGraphPropertyWindow::DrawNodeTransitionSettings(
+	StateGraphDataManager* data_manager,
+	GraphData* current_graph,
+	StateGraphNode* target_node,
+	StateBlackboard* blackboard)
 {
-	bool is_changed = false;	//値変更フラグ
+	if (!target_node)
+	{
+		return false;
+	}
 
-	static uint32_t last_node_id = 0;	//前回処理したノードのID
+	bool is_changed = false;
+	const uint32_t current_node_id = target_node->GetNodeBasicData().id;
 
-	//ノードの新規選択切り替えを検知
-	if (last_node_id != target_node->id)
+	static uint32_t last_node_id = 0;
+	if (last_node_id != current_node_id)
 	{
 		selected_output_link_index = 0;
-		last_node_id = target_node->id;
 	}
+	last_node_id = current_node_id;
 
 	ImGui::Spacing();
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.9f, 1.0f), u8"【出発する遷移線の条件設定】");
+	ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.9f, 1.0f), u8"出力リンク一覧");
 
-	//データマネージャーの有効性を確認
 	if (data_manager)
 	{
-		std::vector<GraphLink*> departure_links = data_manager->GetLinkesFromNode(current_graph->id, target_node->id); //出発元のリンクポインタを格納
+		std::vector<GraphLink*> departure_links = data_manager->GetLinkesFromNode(current_graph->id, current_node_id);
 
-		//リンクが1つ以上存在するかを確認
 		if (!departure_links.empty())
 		{
-			//インデックスの最大範囲外をチェック
 			if (selected_output_link_index >= static_cast<int>(departure_links.size()))
 			{
 				selected_output_link_index = 0;
 			}
-			//インデックスが負の範囲外かをチェック
 			if (selected_output_link_index < 0)
 			{
 				selected_output_link_index = 0;
 			}
 
-			constexpr float list_box_height_size = 80.0f;	//リストボックスの縦幅
-
-			//リストボックスの描画スコープが有効かをチェック
+			constexpr float list_box_height_size = 80.0f;
 			if (ImGui::BeginListBox(u8"##DepartureLinksList", ImVec2(-1.0f, list_box_height_size)))
 			{
-				//取得したリンクの数だけループ
 				for (int link_idx = 0; link_idx < static_cast<int>(departure_links.size()); link_idx++)
 				{
-					bool is_link_selected = (selected_output_link_index == link_idx);	//在選択中の項目かどうかの判定フラグ
-					uint32_t dest_node_id = data_manager->GetNodeIdFromPinId(current_graph->id, departure_links[link_idx]->end_pin_id);	//遷移先のノードIDを逆引き
-					std::string dest_node_name = u8"不明なステート";	//遷移先のステート名
+					bool is_link_selected = (selected_output_link_index == link_idx);
+					uint32_t dest_node_id = data_manager->GetNodeIdFromPinId(current_graph->id, departure_links[link_idx]->end_pin_id);
+					std::string dest_node_name = u8"不明";
 
-					//階層内の全ノードを走査
 					for (size_t node_idx = 0; node_idx < current_graph->nodes.size(); node_idx++)
 					{
-						//目的の遷移先IDと一致したかを判定
-						if (current_graph->nodes[node_idx].id == dest_node_id)
+						if (current_graph->nodes[node_idx] && current_graph->nodes[node_idx]->GetNodeBasicData().id == dest_node_id)
 						{
-							dest_node_name = current_graph->nodes[node_idx].name;
+							dest_node_name = current_graph->nodes[node_idx]->GetNodeBasicData().name;
 							break;
 						}
 					}
-					constexpr size_t text_buffer_capacity = 128;	//文字バッファの容量
-					char item_label_buffer[text_buffer_capacity];	//表示文字を格納
-					sprintf_s(item_label_buffer, sizeof(item_label_buffer), u8"遷移線 [%d] -> %s (ID:%d)", link_idx, dest_node_name.c_str(), departure_links[link_idx]->id);
 
-					//項目がクリックされたかを判定
+					char item_label_buffer[128];
+					sprintf_s(item_label_buffer, sizeof(item_label_buffer), u8"[%d] -> %s (LinkID:%d)",
+						link_idx, dest_node_name.c_str(), departure_links[link_idx]->id);
+
 					if (ImGui::Selectable(item_label_buffer, is_link_selected))
 					{
 						selected_output_link_index = link_idx;
@@ -340,30 +339,33 @@ bool StateGraphPropertyWindow::DrawNodeTransitionSettings(StateGraphDataManager*
 				}
 				ImGui::EndListBox();
 			}
-			ImGui::Spacing();
-			ImGui::Text(u8"選択中の遷移線の条件編集:");
 
-			//条件エディターインスタンスの有効性を確認
+			ImGui::Spacing();
+			ImGui::Text(u8"選択中リンクの遷移条件:");
 			if (condition_editor)
 			{
-				is_changed |= condition_editor->DrawConditonSettings(data_manager, blackboard, current_graph->id, departure_links[selected_output_link_index]);
+				is_changed |= condition_editor->DrawConditonSettings(
+					data_manager, blackboard, current_graph->id, departure_links[selected_output_link_index]);
 			}
 		}
 		else
 		{
-			ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), u8"このステートから出発する遷移線はありません。\nキャンバス上で出力ピンから次のノードへ線を引いてください。");
+			ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), u8"このノードからの出力リンクはありません。");
 			selected_output_link_index = -1;
 		}
 	}
+
 	return is_changed;
 }
 
-//リンク選択時の詳細プロパティ
-bool StateGraphPropertyWindow::DrawLinkProperty(StateGraphDataManager* data_manager, GraphData* current_graph, uint32_t link_id, StateBlackboard* blackboard)
+// リンクプロパティ描画
+bool StateGraphPropertyWindow::DrawLinkProperty(
+	StateGraphDataManager* data_manager,
+	GraphData* current_graph,
+	uint32_t link_id,
+	StateBlackboard* blackboard)
 {
-	GraphLink* target_link = nullptr;	//編集対象リンク
-
-	//階層データ内から該当リンクを検索
+	GraphLink* target_link = nullptr;
 	for (size_t i = 0; i < current_graph->links.size(); i++)
 	{
 		if (current_graph->links[i].id == link_id)
@@ -375,13 +377,12 @@ bool StateGraphPropertyWindow::DrawLinkProperty(StateGraphDataManager* data_mana
 
 	if (!target_link)
 	{
-		printf("Warning: 選択されたリンクID: %d がデータ内に見つかりません。\n", link_id);
+		printf("Warning: リンクID: %d が見つかりませんでした。\n", link_id);
 		return false;
 	}
-	bool is_changed = false;	//変更検知フラグ
 
-	//遷移条件プロパティのUI描画
-	ImGui::Text(u8"遷移線設定(ID：%d)", target_link->id);
+	bool is_changed = false;
+	ImGui::Text(u8"接続線設定 (ID:%d)", target_link->id);
 	ImGui::Spacing();
 
 	if (condition_editor && data_manager)
@@ -393,24 +394,16 @@ bool StateGraphPropertyWindow::DrawLinkProperty(StateGraphDataManager* data_mana
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	const ImVec4 red_button_color = ImVec4(0.6f, 0.2f, 0.2f, 1.0f); // 削除ボタン用の赤色
+	const ImVec4 red_button_color = ImVec4(0.6f, 0.2f, 0.2f, 1.0f);
 	ImGui::PushStyleColor(ImGuiCol_Button, red_button_color);
-
-	//プロパティウィンドウ内に配置するリンクの削除実行ボタン
-	if (ImGui::Button(u8"遷移線を削除する", ImVec2(-1.0f, 30.0f)))
+	if (ImGui::Button(u8"この接続線を削除", ImVec2(-1.0f, 30.0f)))
 	{
-		uint32_t remove_link_id = target_link->id; // 削除対象となる確定リンクID
+		uint32_t remove_link_id = target_link->id;
 		ed::DeleteLink(remove_link_id);
-		printf("StateGraphPropertyWindow: プロパティ画面からリンク ID:%d の削除要求を発行しました。\n", remove_link_id);
+		printf("StateGraphPropertyWindow: リンク ID:%d の削除を要求しました。\n", remove_link_id);
 		is_changed = true;
 	}
 	ImGui::PopStyleColor();
 
 	return is_changed;
-}
-
-//入力チェック条件専用のImGui入力UI描画
-void StateGraphPropertyWindow::DrawInputCompareUI(GraphTransitionCondition& conditon)
-{
-
 }

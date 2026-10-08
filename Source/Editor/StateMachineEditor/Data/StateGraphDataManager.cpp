@@ -1,5 +1,6 @@
 #include "Editor\StateMachineEditor\Data\StateGraphDataManager.h"
 #include "Editor\StateMachineEditor\Nodes\StateGraphNode.h"
+#include "Serialization\JsonSerializer.h"
 
 #include <cstdio>
 #include <fstream>
@@ -8,7 +9,6 @@
 //コンストラクタ
 StateGraphDataManager::StateGraphDataManager()
 {
-	state_graph_node = std::make_unique<StateGraphNode>();
 }
 
 //ファイルに保存
@@ -32,43 +32,23 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 		//現在の階層のすべてのノードを走査
 		for (size_t n = 0; n < graph.nodes.size(); n++)
 		{
-			const StateGraphNode& node = *graph.nodes[n];	//ループ対象のノードデータ
-			nlohmann::json node_json;	//単一ノード格納用のJSON
-
-
-			node_json["ID"] = node.GetNodeBasicData().id; // ノードID
-			node_json["Name"] = node.GetNodeBasicData().name; // ステート名
-			node_json["PosX"] = node.GetNodeBasicData().position.x; // 座標X
-			node_json["PosY"] = node.GetNodeBasicData().position.y; // 座標Y
-			node_json["IsSubGraph"] = node.GetNodeBasicData().is_sub_graph; // サブグラフフラグ
-			node_json["SubGraphID"] = node.GetNodeBasicData().sub_graph_id; // 紐付く下位階層ID
-			//node_json["ActionCategory"] = node.action_category;	// アクション値
-			//node_json["AnimationName"] = node.animation_name;	// アニメ名
-			//node_json["IsLoop"] = node.is_loop;					// 再生フラグ
-			//node_json["IsRootMotion"] = node.is_root_motion;	
-			//node_json["LinkColorR"] = node.link_color_r;
-			//node_json["LinkColorG"] = node.link_color_g;
-			//node_json["LinkColorB"] = node.link_color_b;
-
-			//入力ピンのシリアライズ
-			nlohmann::json inputs_array = nlohmann::json::array(); // 入力ピン用の一時配列
-			for (const auto& pin : node.GetInputPins())
+			GraphNode* node = graph.nodes[n].get();
+			if (!node)
 			{
-				inputs_array.push_back({ {"ID", pin.pin_id}, {"Name", pin.pin_name}, {"Kind", static_cast<int>(pin.pin_type)} });
+				continue;
 			}
-			node_json["Input"] = inputs_array; // ノードデータにバインド
 
-			//出力ピンのシリアライズ
-			nlohmann::json output_array = nlohmann::json::array(); // 出力ピン用の一時配列
-			for (const auto& pin : node.GetOutputPins())
-			{
-				output_array.push_back({ {"ID", pin.pin_id}, {"Name", pin.pin_name}, {"Kind", static_cast<int>(pin.pin_type)} });
-			}
-			node_json["Output"] = output_array; // ノードデータにバインド
+			// JsonSerializer を介してノード自身の保存関数を利用
+			JsonSerializer serializer;
+			node->SetupSerializer(&serializer);
+
+			nlohmann::json node_json;
+			serializer.SaveToObject(node_json);
 
 			nodes_array.push_back(node_json); // 階層用ノード配列へプッシュ
 		}
 		graph_json["Nodes"] = nodes_array;
+
 		nlohmann::json links_array = nlohmann::json::array();	//接続線を格納する一時配列
 
 		//現在の階層の全てのリンクを走査
@@ -86,29 +66,29 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 			for (const auto& cond : link.conditions)
 			{
 				nlohmann::json cond_json;	//単一条件格納用のJSON
-				cond_json["Type"] = static_cast<int>(cond.type); // 判定ノードの種類
-				cond_json["HashKey"] = cond.hash_key; // 主ハッシュキー
-				cond_json["RefValue"] = cond.reference_value; // 基準値
-				cond_json["CompOp"] = cond.compare_operator; // 演算子
-				cond_json["ParamSecond"] = cond.param_second; // 第2数値引数
-				cond_json["SecondaryHash"] = cond.secondary_hash; //副ハッシュキーを保存
+				cond_json["Type"] = static_cast<int>(cond.type); 
+				cond_json["HashKey"] = cond.hash_key;
+				cond_json["RefValue"] = cond.reference_value; 
+				cond_json["CompOp"] = cond.compare_operator;
+				cond_json["ParamSecond"] = cond.param_second; 
+				cond_json["SecondaryHash"] = cond.secondary_hash;
 				cond_json["VectorRefValue"] = { cond.vector_reference_value.x, cond.vector_reference_value.y, cond.vector_reference_value.z };
-				conds_array.push_back(cond_json); // 配列へ追加
+				conds_array.push_back(cond_json); 
 			}
-			link_json["Conditions"] = conds_array; // リンクにバインド
-			links_array.push_back(link_json); // 階層用リンク配列へプッシュ
+			link_json["Conditions"] = conds_array; 
+			links_array.push_back(link_json);
 		}
 		graph_json["Links"] = links_array;
 		layers_array.push_back(graph_json);
 	}
-	root_json["Layers"] = layers_array; // 大元に階層リストを格納
+	root_json["Layers"] = layers_array;
 
 	//物理ファイルへの書き出し処理
 	std::ofstream file_stream(file_path); // 保存用ファイルストリーム
-	if (file_stream.is_open()) // オープン成功判定
+	if (file_stream.is_open()) 
 	{
 		const int indent_space_count = 4; // インデント用のスペース幅定数
-		file_stream << std::setw(indent_space_count) << root_json << std::endl; 
+		file_stream << std::setw(indent_space_count) << root_json << std::endl;
 		printf("StateGraphDataManager: グラフデータをファイル「%s」へ正常に保存しました。\n", file_path.c_str());
 	}
 	else
@@ -127,7 +107,7 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 	if (!file_stream.is_open())
 	{
 		printf("Warning: LoadFromFile - 「%s」が存在しないため新規作成用の状態を維持します。\n", file_path.c_str());
-		return false; // 読み込み処理のスキップ
+		return false;
 	}
 
 	nlohmann::json root_json;	//パース用ルートオブジェクト
@@ -137,11 +117,11 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 	if (root_json.find("NextID") == root_json.end() || root_json.find("Layers") == root_json.end())
 	{
 		printf("Error: LoadFromFile - 「%s」のデータ構造が不正です。\n", file_path.c_str());
-		return false; // 読み込み中断
+		return false;
 	}
 
-	graph_datas.clear(); // 既存のコンテナのクリア
-	next_id = root_json["NextID"]; // IDカウンターの復元
+	graph_datas.clear();
+	next_id = root_json["NextID"];
 
 	//JSON内にモデルパスのキーが存在するか確認
 	if (root_json.find("TargetModelPath") != root_json.end())
@@ -159,100 +139,34 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 		// Layers の中に Nodes キーが正しく書き込まれているか事前精査 
 		if (graph_json.find("Nodes") == graph_json.end() || graph_json.find("Links") == graph_json.end())
 		{
-			printf("Error: LoadFromFile - 階層データのキー構造が壊れているため復元をスキップします。\n"); // 原因の可視化 [cite: 2026-01-06]
+			printf("Error: LoadFromFile - 階層データのキー構造が壊れているため復元をスキップします。\n"); // 原因の可視化
 			return false;
 		}
 
 		GraphData graph;	//復元先の階層インスタンス
-		graph.id = graph_json["GraphID"]; // 階層ID
-		graph.name = graph_json["GraphName"]; // 階層名
+		graph.id = graph_json["GraphID"];
+		graph.name = graph_json["GraphName"];
 
 		//ノード群の復元展開
 		for (const auto& node_json : graph_json["Nodes"])
 		{
-			NodeBasicData basic_data = {};
-			basic_data.id = node_json["ID"];
-			basic_data.name = node_json["Name"];
-			basic_data.position.x = node_json["PosX"];
-			basic_data.position.y = node_json["PosY"];
-			basic_data.is_sub_graph = node_json["IsSubGraph"];
-			basic_data.sub_graph_id = node_json["SubGraphID"];
-			basic_data.node_type = GraphNodeType::StateNode;
+			// StateGraphNode インスタンスを生成し、復元処理を実行
+			std::unique_ptr<StateGraphNode> state_node = std::make_unique<StateGraphNode>();
 
-			AnimationData animation_data = {};
-			animation_data.is_loop = node_json["IsLoop"];
-			animation_data.is_root_motion = node_json["IsRootMotion"];
+			JsonSerializer serializer;
+			state_node->SetupSerializer(&serializer);
+			serializer.LoadFromObject(node_json);
 
-			DirectX::XMFLOAT3 link_color = state_graph_node->GetLinkColor();
-			link_color.x = node_json["LinkColorR"];
-			link_color.y = node_json["LinkColorG"];
-			link_color.z = node_json["LinkColorB"];
-
-			state_graph_node->SetActionCategory(node_json["ActionCategory"]);
-
-			//GraphNode* node	//復元先のノードインスタンス
-			//node->GetNodeBasicData().id = node_json["ID"]; // ID
-			//node.name = node_json["Name"]; // 名前
-			//node.position_x = node_json["PosX"]; // 座標X
-			//node_json["PosY"].get_to(node.position_y); // 座標Y
-			//node.is_sub_graph = node_json["IsSubGraph"]; // フラグ
-			//node.sub_graph_id = node_json["SubGraphID"]; // 下位ID
-			//node.is_loop = node_json.contains("IsLoop") ? node_json["IsLoop"].get<bool>() : true;
-
-			////互換性維持のためのキー存在チェック
-			//if (node_json.contains("IsRootMotion"))
-			//{
-			//	node.is_root_motion = node_json["IsRootMotion"];
-			//}
-			//else
-			//{
-			//	node.is_root_motion = false;
-			//}
-
-			node.link_color_r = node_json.contains("LinkColorR") ? node_json["LinkColorR"].get<float>() : 1.0f;
-			node.link_color_g = node_json.contains("LinkColorG") ? node_json["LinkColorG"].get<float>() : 1.0f;
-			node.link_color_b = node_json.contains("LinkColorB") ? node_json["LinkColorB"].get<float>() : 1.0f;
-			
-			if (node_json.find("ActionCategory") != node_json.end())
-			{
-				node.action_category = node_json["ActionCategory"];
-			}
-			if (node_json.find("AnimationName") != node_json.end())
-			{
-				node.animation_name = node_json["AnimationName"];
-			}
-
-			//入力ピンの復元
-			for (const auto& pin_json : node_json["Input"])
-			{
-				GraphPin pin; // ピン構造体 
-				pin.id = pin_json["ID"];
-				pin.name = pin_json["Name"];
-				pin.kind = static_cast<PinKind>(pin_json["Kind"].get<int>());
-				pin.node_id = node.id;
-				node.inputs.push_back(pin); // コンテナへ追加
-			}
-
-			//出力ピンの復元
-			for (const auto& pin_json : node_json["Output"])
-			{
-				GraphPin pin; // ピン構造体 
-				pin.id = pin_json["ID"];
-				pin.name = pin_json["Name"];
-				pin.kind = static_cast<PinKind>(pin_json["Kind"].get<int>());
-				pin.node_id = node.id;
-				node.outputs.push_back(pin); // コンテナへ追加
-			}
-			graph.nodes.push_back(node); // 階層データにノードを追加
+			graph.nodes.push_back(std::move(state_node));
 		}
 
 		//接続線リンク及び遷移条件の復元展開
 		for (const auto& link_json : graph_json["Links"])
 		{
 			GraphLink link;	//復元先のリンクインスタンス
-			link.id = link_json["ID"]; // リンクID
-			link.start_pin_id = link_json["StartPinID"]; // 開始ピン
-			link.end_pin_id = link_json["EndPinID"]; // 終了ピン
+			link.id = link_json["ID"];
+			link.start_pin_id = link_json["StartPinID"];
+			link.end_pin_id = link_json["EndPinID"];
 
 			//各条件式の復元
 			for (const auto& cond_json : link_json["Conditions"])
@@ -276,20 +190,34 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 					cond.vector_reference_value.z = cond_json["VectorRefValue"][2].get<float>();
 				}
 
-				link.conditions.push_back(cond); // リンクに条件を追加
+				link.conditions.push_back(cond);
 			}
-			graph.links.push_back(link); // 階層データにリンクを追加
+			graph.links.push_back(link);
 		}
-		graph_datas.push_back(graph); // マネージャーに階層を追加
+		graph_datas.push_back(std::move(graph)); 
 	}
 	printf("StateGraphDataManager: ファイル「%s」から全階層データを正常に復元ロードしました。\n", file_path.c_str());
-	return true; // 読込成功
+	return true;
+}
+
+//ステートノード追加
+uint32_t StateGraphDataManager::AddStateNode(uint32_t graph_id, DirectX::XMFLOAT2 click, const std::string name = u8"新規ステート")
+{
+	NodeBasicData basic_data = {};
+	basic_data.id = FetchAndIncrementId();
+	basic_data.name = name;
+	basic_data.position = click;
+	basic_data.is_sub_graph = false;
+	basic_data.sub_graph_id = 0;
+	basic_data.node_type = GraphNodeType::StateNode;
+
+	std::unique_ptr<StateGraphNode> state_node = std::make_unique<StateGraphNode>();
 }
 
 //階層が空の場合に初期ノードを構築
 void StateGraphDataManager::CheckAndInitDefaultNode(uint32_t graph_id)
 {
-	//初期ノードの構築判定と生成
+	// 初期ノードの構築判定と生成
 	for (size_t g = 0; g < graph_datas.size(); g++)
 	{
 		if (graph_datas[g].id != graph_id)
@@ -297,25 +225,29 @@ void StateGraphDataManager::CheckAndInitDefaultNode(uint32_t graph_id)
 			continue;
 		}
 
-		//既にノードがある場合
+		// 既にノードが存在する場合はスキップ
 		if (!graph_datas[g].nodes.empty())
 		{
 			return;
 		}
 
+		// ノードの基本パラメータを構築
 		NodeBasicData basic_data = {};
 		basic_data.id = FetchAndIncrementId();
 		basic_data.name = u8"待機状態";
-		basic_data.position = { 100.0f,100.0f };
+		basic_data.position = { 100.0f, 100.0f };
 		basic_data.is_sub_graph = false;
 		basic_data.sub_graph_id = 0;
 		basic_data.node_type = GraphNodeType::StateNode;
 
+		// StateGraphNodeのインスタンスを生成
 		std::unique_ptr<StateGraphNode> graph_node = std::make_unique<StateGraphNode>();
+		// 基本データの設定とピンのセットアップ(仮想関数SetupPinsが実行される)
 		graph_node->Initialize(basic_data);
+
+		// 基底クラス管理のノード配列へ所有権を移動して追加
 		graph_datas[g].nodes.push_back(std::move(graph_node));
 
-		state_graph_node->SetupPins();
 		printf("StateGraphDataManager: 階層ID %d に初期ノード(待機状態)を作成しました。\n", graph_id);
 		return;
 	}
@@ -386,10 +318,9 @@ void StateGraphDataManager::DeleteConditionFromLink(uint32_t graph_id, uint32_t 
 //サブグラフノードの生成
 void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, float click_y, const std::string& name)
 {
-	std::string sub_graph_name = name;	//サブグラフの名前
-	const GraphData* src_graph = nullptr;	//コピー元の階層ポインタ
+	std::string sub_graph_name = name;
+	const GraphData* src_graph = nullptr;
 
-	//コピー元となる既存階層を検索
 	for (size_t g = 0; g < graph_datas.size(); g++)
 	{
 		if (graph_datas[g].name == sub_graph_name)
@@ -399,7 +330,7 @@ void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, flo
 		}
 	}
 
-	//循環参照チェック: コピー元階層が、配置先階層の祖先である場合は追加を中断
+	// 循環参照チェック
 	if (src_graph && IsAncestorGraph(graph_id, src_graph->id))
 	{
 		printf("Error: AddSubGrapNode - 上位階層「%s」(ID:%u) を下位階層(ID:%u) 内に配置することは循環参照となるため禁止されています。\n",
@@ -407,9 +338,8 @@ void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, flo
 		return;
 	}
 
-	uint32_t real_sub_graph_id = CreateSubGraph(sub_graph_name);	//新しい下位階層グラフ
+	uint32_t real_sub_graph_id = CreateSubGraph(sub_graph_name);
 
-	//全階層情報を走査して、名前が一致する既存のコピー元階層を検索
 	for (size_t g = 0; g < graph_datas.size(); g++)
 	{
 		if (graph_datas[g].id != real_sub_graph_id && graph_datas[g].name == sub_graph_name)
@@ -419,139 +349,109 @@ void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, flo
 		}
 	}
 
-	//コピー元階層が見つかったか判定
+	// コピー元の階層が存在する場合は内部ノード・リンクを複製
 	if (src_graph)
 	{
-		GraphData* dst_graph = &graph_datas.back();	//コピー先となる階層ポインタ
-		std::unordered_map<uint32_t, uint32_t> pin_id_map;	//古いピンIDと新しいピンIDのハッシュマップ
+		GraphData* dst_graph = &graph_datas.back();
+		std::unordered_map<uint32_t, uint32_t> pin_id_map;
 
-		// コピー元のすべてのノードをループして複製
 		for (size_t n = 0; n < src_graph->nodes.size(); n++)
 		{
-			const GraphNode& src_node = src_graph->nodes[n]; // コピー元のノード
-			GraphNode copied_node;	// 複製先の新しいノード 
-
-			// 基本情報のコピーとIDの割り当て
-			copied_node.id = FetchAndIncrementId(); // 新しいノードIDを一意に発行
-			copied_node.name = src_node.name;
-			copied_node.position_x = src_node.position_x;
-			copied_node.position_y = src_node.position_y;
-			copied_node.is_sub_graph = src_node.is_sub_graph;
-			copied_node.action_category = src_node.action_category;
-			copied_node.animation_name = src_node.animation_name;
-			copied_node.link_color_r = src_node.link_color_r;
-			copied_node.link_color_g = src_node.link_color_g;
-			copied_node.link_color_b = src_node.link_color_b;
-
-			// 内部ノードがさらにサブグラフを持っているか判定
-			if (src_node.is_sub_graph)
+			const StateGraphNode* src_state_node = dynamic_cast<const StateGraphNode*>(src_graph->nodes[n].get());
+			if (!src_state_node)
 			{
-				copied_node.sub_graph_id = CreateSubGraph(src_node.name); // ネスト階層の新設
+				continue;
+			}
+
+			NodeBasicData copied_basic = src_state_node->GetNodeBasicData();
+			copied_basic.id = FetchAndIncrementId();
+			if (copied_basic.is_sub_graph)
+			{
+				copied_basic.sub_graph_id = CreateSubGraph(copied_basic.name);
 			}
 			else
 			{
-				const uint32_t default_sub_id = 0; // 下位階層なし時の判定値 
-				copied_node.sub_graph_id = default_sub_id;
+				constexpr uint32_t default_sub_id = 0;
+				copied_basic.sub_graph_id = default_sub_id;
 			}
 
-			// 入力ピンの複製とID登録
-			for (size_t pin_idx = 0; pin_idx < src_node.inputs.size(); pin_idx++)
+			std::unique_ptr<StateGraphNode> copied_node = std::make_unique<StateGraphNode>();
+			copied_node->Initialize(copied_basic);
+			copied_node->SetAnimationData(src_state_node->GetAnimationData());
+			copied_node->SetLinkColor(src_state_node->GetLinkColor());
+			copied_node->SetActionCategory(src_state_node->GetActionCategory());
+
+			// ピンの複製とIDマッピング
+			for (const auto& pin : src_state_node->GetInputPins())
 			{
-				const GraphPin& src_pin = src_node.inputs[pin_idx];	// コピー元のピン
-				GraphPin new_pin;	// 新しいピン 
-
-				new_pin.id = FetchAndIncrementId(); // 新しいピンIDを発行
-				new_pin.name = src_pin.name;
-				new_pin.kind = src_pin.kind;
-				new_pin.node_id = copied_node.id; // 新しい親ノードIDを紐付け
-
-				copied_node.inputs.push_back(new_pin);
-				pin_id_map[src_pin.id] = new_pin.id; // ハッシュマップへ即時登録
+				PinData new_pin;
+				new_pin.pin_id = FetchAndIncrementId();
+				new_pin.pin_name = pin.pin_name;
+				new_pin.pin_type = pin.pin_type;
+				copied_node->SetInputPin(new_pin);
+				pin_id_map[pin.pin_id] = new_pin.pin_id;
 			}
-
-			// 出力ピンの複製とID登録
-			for (size_t pin_idx = 0; pin_idx < src_node.outputs.size(); pin_idx++)
+			for (const auto& pin : src_state_node->GetOutputPins())
 			{
-				const GraphPin& src_pin = src_node.outputs[pin_idx];	// コピー元のピン
-				GraphPin new_pin;	// 新しいピン 
-
-				new_pin.id = FetchAndIncrementId(); // 新しいピンIDを発行
-				new_pin.name = src_pin.name;
-				new_pin.kind = src_pin.kind;
-				new_pin.node_id = copied_node.id; // 新しい親ノードIDを紐付け
-
-				copied_node.outputs.push_back(new_pin);
-				pin_id_map[src_pin.id] = new_pin.id; // ハッシュマップへ即時登録
+				PinData new_pin;
+				new_pin.pin_id = FetchAndIncrementId();
+				new_pin.pin_name = pin.pin_name;
+				new_pin.pin_type = pin.pin_type;
+				copied_node->SetOutputPin(new_pin);
+				pin_id_map[pin.pin_id] = new_pin.pin_id;
 			}
-			dst_graph->nodes.push_back(copied_node); // ノードの複製を登録
+
+			dst_graph->nodes.push_back(std::move(copied_node));
 		}
 
-		// ハッシュマップ参照による接続線リンクの複製
+		// リンクの複製
 		for (size_t l = 0; l < src_graph->links.size(); l++)
 		{
-			const GraphLink& src_link = src_graph->links[l];	// コピー元のリンク
-			GraphLink copied_link;	// 新しいリンク 
-			copied_link.id = FetchAndIncrementId(); // 新しいリンクIDを発行
+			const GraphLink& src_link = src_graph->links[l];
+			GraphLink copied_link;
+			copied_link.id = FetchAndIncrementId();
 
-			const uint32_t invalid_id = 0;	// ID未発見・無効時の判定値 
+			constexpr uint32_t invalid_id = 0;
 			copied_link.start_pin_id = invalid_id;
 			copied_link.end_pin_id = invalid_id;
 
-			auto start_it = pin_id_map.find(src_link.start_pin_id);	// 開始ピンの参照イテレーター 
+			auto start_it = pin_id_map.find(src_link.start_pin_id);
 			if (start_it != pin_id_map.end())
 			{
-				copied_link.start_pin_id = start_it->second; // 新しい開始ピンIDを取得
+				copied_link.start_pin_id = start_it->second;
 			}
-
-			auto end_it = pin_id_map.find(src_link.end_pin_id);	// 終了ピンの参照イテレーター 
+			auto end_it = pin_id_map.find(src_link.end_pin_id);
 			if (end_it != pin_id_map.end())
 			{
-				copied_link.end_pin_id = end_it->second; // 新しい終了ピンIDを取得
+				copied_link.end_pin_id = end_it->second;
 			}
 
-			// 両方のピンが新しいIDにマッピングされたか判定
 			if (copied_link.start_pin_id != invalid_id && copied_link.end_pin_id != invalid_id)
 			{
 				copied_link.conditions = src_link.conditions;
-				dst_graph->links.push_back(copied_link); // リンクの複製を登録
+				dst_graph->links.push_back(copied_link);
 			}
 		}
 	}
 
-	//現在の階層へのサブグラフ親ノードの生成と登録
-	GraphNode new_node;	//サブグラフの親ノードデータ
-	// パラメータ設定
-	new_node.id = FetchAndIncrementId(); // ノード自体のIDを発行
-	new_node.name = sub_graph_name;      // 指定されたステート名を設定
-	new_node.position_x = click_x;       // 配置初期X座標
-	new_node.position_y = click_y;       // 配置初期Y座標
-	new_node.is_sub_graph = true;        // サブグラフ属性を有効化
-	new_node.sub_graph_id = real_sub_graph_id; // 完全コピーが完了した内部の階層IDをリンク紐付け
-	
+	// 現在の階層へ親サブグラフノードを生成
+	NodeBasicData sub_node_data = {};
+	sub_node_data.id = FetchAndIncrementId();
+	sub_node_data.name = sub_graph_name;
+	sub_node_data.position = { click_x, click_y };
+	sub_node_data.is_sub_graph = true;
+	sub_node_data.sub_graph_id = real_sub_graph_id;
+	sub_node_data.node_type = GraphNodeType::StateNode;
 
-	// キャンバスに表示される親ノード用の入力ピン設定
-	GraphPin new_input;	// 新しい入力ピン情報 
-	new_input.id = FetchAndIncrementId();
-	new_input.name = u8"入力";
-	new_input.kind = PinKind::Input;
-	new_input.node_id = new_node.id;
-	new_node.inputs.push_back(new_input);
+	std::unique_ptr<StateGraphNode> new_node = std::make_unique<StateGraphNode>();
+	new_node->Initialize(sub_node_data);
 
-	// キャンバスに表示される親ノード用の出力ピン設定
-	GraphPin new_output;	// 新しい出力ピン情報 
-	new_output.id = FetchAndIncrementId();
-	new_output.name = u8"出力";
-	new_output.kind = PinKind::Output;
-	new_output.node_id = new_node.id;
-	new_node.outputs.push_back(new_output);
-
-	// 全ての階層情報から、指定された現在のグラフIDと一致するものを検索してノードを追加
 	for (size_t g = 0; g < graph_datas.size(); g++)
 	{
 		if (graph_datas[g].id == graph_id)
 		{
-			graph_datas[g].nodes.push_back(new_node); // 現在の階層に登録してキャンバスに可視化させる
-			printf("StateGraphDataManager: サブグラフノードを内部データごと完全複製して配置しました。ID: %d\n", new_node.id);
+			graph_datas[g].nodes.push_back(std::move(new_node));
+			printf("StateGraphDataManager: サブグラフノードを配置しました。ID: %u\n", sub_node_data.id);
 			return;
 		}
 	}
@@ -561,7 +461,6 @@ void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, flo
 //既存のノードをサブグラフに変換
 void StateGraphDataManager::ConvertToSubGraph(uint32_t graph_id, uint32_t node_id)
 {
-	//現在のグラフ内の全ノードを走査して対象のノードを検索
 	for (size_t g = 0; g < graph_datas.size(); g++)
 	{
 		if (graph_datas[g].id != graph_id)
@@ -569,31 +468,31 @@ void StateGraphDataManager::ConvertToSubGraph(uint32_t graph_id, uint32_t node_i
 			continue;
 		}
 
-		//該当する階層情報内で対象ノードを検索
 		for (size_t n = 0; n < graph_datas[g].nodes.size(); n++)
 		{
-			GraphNode& target_node = graph_datas[g].nodes[n];	//対象ノード
-
-			//変換対象のノードIDが一致したか確認
-			if (target_node.id == node_id)
+			GraphNode* target_node = graph_datas[g].nodes[n].get();
+			if (!target_node || target_node->GetNodeBasicData().id != node_id)
 			{
-				//既にサブグラフ化されている場合は早期リターン
-				if (target_node.is_sub_graph)
-				{
-					printf("StateGraphDataManager: ノード ID:%d は既にサブグラフです。\n", node_id);
-					return;
-				}
+				continue;
+			}
 
-				std::string original_name = target_node.name;	//対象のノード名
-				uint32_t new_sub_graph_id = CreateSubGraph(original_name);	//新しいサブグラフID
-				graph_datas[g].nodes[n].is_sub_graph = true;
-				graph_datas[g].nodes[n].sub_graph_id = new_sub_graph_id;
-				graph_datas[g].nodes[n].name = original_name + u8"サブステート";
-
-				printf("StateGraphDataManager: ノード「%s」(ID:%d) をサブグラフ(階層ID:%d)へ変換完了。\n",
-					graph_datas[g].nodes[n].name.c_str(), node_id, new_sub_graph_id);
+			NodeBasicData basic = target_node->GetNodeBasicData();
+			if (basic.is_sub_graph)
+			{
+				printf("StateGraphDataManager: ノード ID:%d は既にサブグラフです。\n", node_id);
 				return;
 			}
+
+			std::string original_name = basic.name;
+			uint32_t new_sub_graph_id = CreateSubGraph(original_name);
+			basic.is_sub_graph = true;
+			basic.sub_graph_id = new_sub_graph_id;
+			basic.name = original_name + u8"サブステート";
+			target_node->SetNodeBasicData(basic);
+
+			printf("StateGraphDataManager: ノード「%s」(ID:%d) をサブグラフ(階層ID:%d)へ変換完了。\n",
+				basic.name.c_str(), node_id, new_sub_graph_id);
+			return;
 		}
 	}
 }

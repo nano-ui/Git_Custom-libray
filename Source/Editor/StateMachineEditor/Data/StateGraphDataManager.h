@@ -27,6 +27,9 @@ public:
 	//ファイル読み込み
 	bool LoadFromFile(const std::string& file_path);
 
+	//ステートノード追加
+	uint32_t AddStateNode(uint32_t graph_id, DirectX::XMFLOAT2 click, const std::string name = u8"新規ステート");
+
 	//サブグラフノードの生成
 	void AddSubGrapNode(uint32_t graph_id, float click_x, float click_y, const std::string& name = u8"新規サブグラフ");
 
@@ -53,6 +56,5 @@ public:
 
 private:
 	std::string target_model_path = "";	//紐づけ対象のパス
-	std::unique_ptr<StateGraphNode> state_graph_node;
 };
 

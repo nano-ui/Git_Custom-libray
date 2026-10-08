@@ -8,21 +8,19 @@
 class StateGraphDataManager;
 class StateBlackboard;
 class TransitionConditionEditor;
-
+class StateGraphNode;
 struct GraphData;
-struct GraphNode;
 struct GraphTransitionCondition;
 
 class StateGraphPropertyWindow
 {
 public:
-	//コンストラクタ
+	// コンストラクタ
 	StateGraphPropertyWindow();
-
-	//デストラクタ
+	// デストラクタ
 	~StateGraphPropertyWindow();
 
-	//プロパティウィンドウの全体描画
+	// プロパティウィンドウ描画
 	bool DrawProperty(
 		StateGraphDataManager* data_manager,
 		GraphData* current_graph,
@@ -30,7 +28,7 @@ public:
 		const std::vector<std::string>& anim_names);
 
 private:
-	//ノード選択時の詳細プロパティ描画
+	// ノードプロパティ描画
 	bool DrawNodeProperty(
 		StateGraphDataManager* data_manager,
 		GraphData* current_graph,
@@ -38,21 +36,28 @@ private:
 		StateBlackboard* blackboard,
 		const std::vector<std::string>& anim_names);
 
-	//ノードのアクションとアニメーション設定に関するUI描画
-	bool DeawNodeActionSettings(GraphNode* target_node, const std::vector<std::string>& anim_names);
+	// ノードのアクション・アニメーション設定UI
+	bool DeawNodeActionSettings(StateGraphNode* target_node, const std::vector<std::string>& anim_names);
 
-	//ノードから出発する遷移線とその条件に関するUI描画
-	bool DrawNodeTransitionSettings(StateGraphDataManager* data_manager, GraphData* current_graph, GraphNode* target_node, StateBlackboard* blackboard);
+	// ノードからの遷移リンク設定UI
+	bool DrawNodeTransitionSettings(
+		StateGraphDataManager* data_manager,
+		GraphData* current_graph,
+		StateGraphNode* target_node,
+		StateBlackboard* blackboard);
 
-	//リンク選択時の詳細プロパティ
-	bool DrawLinkProperty(StateGraphDataManager* data_manager, GraphData* current_graph, uint32_t node_id, StateBlackboard* blackboard);
+	// リンクプロパティ描画
+	bool DrawLinkProperty(
+		StateGraphDataManager* data_manager,
+		GraphData* current_graph,
+		uint32_t link_id,
+		StateBlackboard* blackboard);
 
-	//入力チェック条件専用のImGui入力UI描画
+	// 入力比較用UI
 	void DrawInputCompareUI(GraphTransitionCondition& conditon);
 
 private:
-	std::unique_ptr<TransitionConditionEditor> condition_editor;	//条件遷移UI
-	GraphTransitionCondition* waiting_for_key_conditon = nullptr;	//入力条件のポインタ
-	int selected_output_link_index = -1;	//現在ノードプロパティ内で選択されている出発リンクのインデックス
+	std::unique_ptr<TransitionConditionEditor> condition_editor;
+	GraphTransitionCondition* waiting_for_key_conditon = nullptr;
+	int selected_output_link_index = -1;
 };
-

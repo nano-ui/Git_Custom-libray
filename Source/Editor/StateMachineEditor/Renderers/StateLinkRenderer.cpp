@@ -1,5 +1,6 @@
 #include "Editor\StateMachineEditor\Renderers\StateLinkRenderer.h"
 #include "Editor\StateMachineEditor\Data\StateGraphDataManager.h"
+#include "Editor\StateMachineEditor\Nodes\StateGraphNode.h"
 
 #include <imgui.h>
 #include <imgui_node_editor.h>
@@ -33,26 +34,37 @@ void StateLinkRenderer::DrawLinks(
 
 //グラフ内の全ノードからピンキャッシュを構築
 void StateLinkRenderer::BilidPinCache(
-	const std::vector<GraphNode>& nodes,
+	const std::vector<std::unique_ptr<GraphNode>>& nodes,
 	std::unordered_map<uint32_t, PinCacheData>& out_pin_cache_map)
 {
 	for (size_t n = 0; n < nodes.size(); n++)
 	{
-		const GraphNode& node = nodes[n];
-		PinCacheData cache;
-		cache.node_id = node.id;
-		cache.color_r = node.link_color_r;
-		cache.color_g = node.link_color_g;
-		cache.color_b = node.link_color_b;
+		const GraphNode* base_node = nodes[n].get();
+		if (!base_node)continue;
 
-		for (size_t p = 0; p < node.inputs.size(); p++)
+
+		PinCacheData cache;
+		cache.node_id = base_node->GetNodeBasicData().id;
+
+		const StateGraphNode* state_node = dynamic_cast<const StateGraphNode*>(base_node);
+		if (state_node)
 		{
-			out_pin_cache_map[node.inputs[p].id] = cache;
+			const DirectX::XMFLOAT3 color = state_node->GetLinkColor();
+			cache.color_r = color.x;
+			cache.color_g = color.y;
+			cache.color_b = color.z;
 		}
 
-		for (size_t p = 0; p < node.outputs.size(); p++)
+		const auto& input_pins = base_node->GetInputPins();
+		for (size_t p = 0; p < input_pins.size(); p++)
 		{
-			out_pin_cache_map[node.outputs[p].id] = cache;
+			out_pin_cache_map[input_pins[p].pin_id] = cache;
+		}
+
+		const auto& output_pins = base_node->GetOutputPins();
+		for (size_t p = 0; p < output_pins.size(); p++)
+		{
+			out_pin_cache_map[output_pins[p].pin_id] = cache;
 		}
 	}
 }
@@ -128,42 +140,43 @@ bool StateLinkRenderer::IsMatchTransitionDestination(
 	uint32_t dst_node_id,
 	uint32_t target_active_id)
 {
-	//完全一致
 	if (dst_node_id == target_active_id)
 	{
 		return true;
 	}
-
 	if (!data_manager)
 	{
 		return false;
 	}
 
-	//target_active_idが所属する階層IDを逆引き取得
 	uint32_t target_graph_id = data_manager->GetGraphIdFromNodeId(target_active_id);
 	if (target_active_id == UINT32_MAX || target_active_id == 0)
 	{
 		return false;
 	}
 
-	//その階層をサブグラフとして持っている親ノードを探索
-	const auto& layers = data_manager->GetLayerDatas();
+	const auto& layers = data_manager->GetGraphDatas();
 	for (size_t g = 0; g < layers.size(); g++)
 	{
 		for (size_t n = 0; n < layers[g].nodes.size(); n++)
 		{
-			const GraphNode& node = layers[g].nodes[n];
-			if (node.is_sub_graph && node.sub_graph_id == target_graph_id)
+			const GraphNode* node = layers[g].nodes[n].get();
+			if (!node)
 			{
-				//親サブグラフノードのIDがリンク接続先と一致したか判定
-				if (node.id == dst_node_id)
+				continue;
+			}
+
+			const NodeBasicData basic_data = node->GetNodeBasicData();
+			if (basic_data.is_sub_graph && basic_data.sub_graph_id == target_graph_id)
+			{
+				if (basic_data.id == dst_node_id)
 				{
 					return true;
 				}
-				//さらに上位の階層がある場合は再帰的に判定
-				return IsMatchTransitionDestination(data_manager, dst_node_id, node.id);
+				return IsMatchTransitionDestination(data_manager, dst_node_id, basic_data.id);
 			}
 		}
 	}
+
 	return false;
 }

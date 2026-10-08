@@ -1,5 +1,6 @@
 #include "Editor\StateMachineEditor\Core\StateGraphNavigator.h"
 #include "Editor\StateMachineEditor\Data\StateGraphDataManager.h"
+#include "Editor\StateMachineEditor\Nodes\StateGraphNode.h"
 
 #include <imgui.h>
 #include <imgui_node_editor.h>
@@ -60,7 +61,7 @@ bool StateGraphNavigator::DrawHeaderNavigation(StateGraphDataManager* data_manag
 			const uint32_t path_id = breadcurbs[i];
 			std::string path_name = "Unknown";
 
-			const auto& layers = data_manager->GetLayerDatas();
+			const auto& layers = data_manager->GetGraphDatas();
 			for (size_t g = 0; g < layers.size(); g++)
 			{
 				if (layers[g].id == path_id)
@@ -112,15 +113,16 @@ void StateGraphNavigator::CheckNavigateToSubGraph(const GraphData* current_graph
 
 		for (size_t i = 0; i < current_graph->nodes.size(); i++)
 		{
-			const GraphNode& node = current_graph->nodes[i];
+			const GraphNode* node = current_graph->nodes[i].get();
+			NodeBasicData basic_data = node->GetNodeBasicData();
 
-			if (node.id == clicked_id)
+			if (basic_data.id == clicked_id)
 			{
-				if (node.is_sub_graph)
+				if (basic_data.is_sub_graph)
 				{
-					in_out_graph_id = node.sub_graph_id;
+					in_out_graph_id = basic_data.sub_graph_id;
 					printf("StateGraphNavigator: サブグラフ「%s」(階層ID:%u) の内部へ移動しました。\n",
-						node.name.c_str(), in_out_graph_id);
+						basic_data.name.c_str(), in_out_graph_id);
 				}
 				break;
 			}
@@ -148,12 +150,12 @@ std::vector<uint32_t> StateGraphNavigator::BuildBreadcrumbPath(StateGraphDataMan
 		uint32_t parent_id = 0;
 		bool found_parent = false;
 
-		const auto& layers = data_manager->GetLayerDatas();
+		const auto& layers = data_manager->GetGraphDatas();
 		for (size_t g = 0; g < layers.size(); g++)
 		{
 			for (size_t n = 0; n < layers[g].nodes.size(); n++)
 			{
-				if (layers[g].nodes[n].is_sub_graph && layers[g].nodes[n].sub_graph_id == trace_id)
+				if (layers[g].nodes[n] && layers[g].nodes[n]->GetNodeBasicData().sub_graph_id == trace_id)
 				{
 					parent_id = layers[g].id;
 					found_parent = true;

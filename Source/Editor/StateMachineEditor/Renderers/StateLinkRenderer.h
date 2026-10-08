@@ -36,7 +36,7 @@ private:
 
 	//グラフ内の全ノードからピンキャッシュを構築
 	void BilidPinCache(
-		const std::vector<GraphNode>& nodes,
+		const std::vector<std::unique_ptr<GraphNode>>& nodes,
 		std::unordered_map<uint32_t, PinCacheData>& out_pin_cache_map
 	);
 
