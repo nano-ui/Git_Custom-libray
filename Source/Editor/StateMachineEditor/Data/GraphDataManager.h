@@ -5,7 +5,7 @@
 #include <memory>
 #include <DirectXMath.h>
 
-class GraphNode;
+struct GraphNode;
 
 //”»’èƒm[ƒh‚Ìí—Ş
 enum class ConditionNodeType

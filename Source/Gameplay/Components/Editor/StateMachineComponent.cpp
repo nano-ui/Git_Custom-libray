@@ -185,7 +185,6 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 
 	if (!input_file.is_open())
 	{
-		//std::cerr << "Warning: StateMachineComponent - ファイルを開けませんでした: " << state_machine_path << std::endl;
 		return;
 	}
 
@@ -200,39 +199,61 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 
 	std::unordered_map<uint32_t, uint32_t> sub_graph_to_parent_map;
 
-	if(root_json.is_object() && root_json.contains("Layers") && root_json["Layers"].is_array())
+	if (root_json.is_object() && root_json.contains("Layers") && root_json["Layers"].is_array())
 	{
-		// すべてのサブグラフノードの親子関係（所属レイヤー）を事前に高速スキャンしてマップへ先行登録
+		//------------------------------------------------------------
+		// 1パス目: サブグラフの親子関係（所属レイヤー）を先行スキャン
+		//------------------------------------------------------------
 		for (size_t i = 0; i < root_json["Layers"].size(); i++)
 		{
-			const auto& layer = root_json["Layers"][i]; // スキャン用一時レイヤー
+			const auto& layer = root_json["Layers"][i];
 
 			if (layer.contains("Nodes") && layer["Nodes"].is_array())
 			{
 				for (size_t j = 0; j < layer["Nodes"].size(); j++)
 				{
-					const auto& node_json = layer["Nodes"][j]; // スキャン用一時ノード
+					const auto& node_json = layer["Nodes"][j];
+					if (!node_json.is_object()) continue;
 
-					if (node_json.is_object() && node_json.contains("IsSubGraph") && node_json["IsSubGraph"].get<bool>())
+					// サブグラフフラグ判定 (新形式: "サブグラフフラグ" / 旧形式: "IsSubGraph")
+					bool is_sub_graph = false;
+					if (node_json.contains(u8"サブグラフフラグ")) is_sub_graph = node_json[u8"サブグラフフラグ"].get<bool>();
+					else if (node_json.contains("IsSubGraph")) is_sub_graph = node_json["IsSubGraph"].get<bool>();
+
+					if (is_sub_graph)
 					{
-						sub_graph_to_parent_map[node_json["SubGraphID"].get<uint32_t>()] = node_json["ID"].get<uint32_t>();
+						// サブグラフID取得 (新形式: "サブグラフID" / 旧形式: "SubGraphID")
+						uint32_t sub_graph_id = UINT32_MAX;
+						if (node_json.contains(u8"サブグラフID")) sub_graph_id = node_json[u8"サブグラフID"].get<uint32_t>();
+						else if (node_json.contains("SubGraphID")) sub_graph_id = node_json["SubGraphID"].get<uint32_t>();
+
+						// ノードID取得 (新形式: "ノードID" / 旧形式: "ID")
+						uint32_t node_id = UINT32_MAX;
+						if (node_json.contains(u8"ノードID")) node_id = node_json[u8"ノードID"].get<uint32_t>();
+						else if (node_json.contains("ID")) node_id = node_json["ID"].get<uint32_t>();
+
+						if (sub_graph_id != UINT32_MAX && node_id != UINT32_MAX)
+						{
+							sub_graph_to_parent_map[sub_graph_id] = node_id;
+						}
 					}
 				}
 			}
 		}
 
-		// 本番パース。1パス目で集計した親子関係マップから親IDを割り出しながらアロケーション
+		//------------------------------------------------------------
+		// 2パス目: 本番ノード・リンクのパース
+		//------------------------------------------------------------
 		for (size_t i = 0; i < root_json["Layers"].size(); i++)
 		{
 			const auto& layer = root_json["Layers"][i];
 			uint32_t layer_graph_id = layer["GraphID"].get<uint32_t>();
 
-			uint32_t parent_id = UINT32_MAX; // 所属する親サブグラフノードIDの初期化
-			auto parent_it = sub_graph_to_parent_map.find(layer_graph_id); // 自分のレイヤーの親を検索
-
+			uint32_t parent_id = UINT32_MAX;
+			auto parent_it = sub_graph_to_parent_map.find(layer_graph_id);
 			if (parent_it != sub_graph_to_parent_map.end())
 			{
-				parent_id = parent_it->second; // 親サブグラフのノードIDを代入
+				parent_id = parent_it->second;
 			}
 
 			if (layer.contains("Nodes") && layer["Nodes"].is_array())
@@ -244,28 +265,61 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 					if (node_json.is_object())
 					{
 						SimulatorRuntimeNode node;
-						node.id = node_json["ID"].get<uint32_t>();
-						node.name = node_json["Name"].get<std::string>();
-						node.animation_name = node_json.contains("AnimationName") ? node_json["AnimationName"].get<std::string>() : "";
-						node.is_sub_graph = node_json["IsSubGraph"].get<bool>();
-						node.sub_graph_id = node_json["SubGraphID"].get<uint32_t>();
-						node.is_loop = node_json.contains("IsLoop") ? node_json["IsLoop"].get<bool>() : true;
-						node.is_root_motion = node_json.contains("IsRootMotion") ? node_json["IsRootMotion"].get<bool>() : false;
+
+						// ノードID (新形式: "ノードID" / 旧形式: "ID")
+						if (node_json.contains(u8"ノードID")) node.id = node_json[u8"ノードID"].get<uint32_t>();
+						else if (node_json.contains("ID")) node.id = node_json["ID"].get<uint32_t>();
+
+						// ノード名 (新形式: "ノード名" / 旧形式: "Name")
+						if (node_json.contains(u8"ノード名")) node.name = node_json[u8"ノード名"].get<std::string>();
+						else if (node_json.contains("Name")) node.name = node_json["Name"].get<std::string>();
+
+						// アニメーション名 (新形式: "アニメーション名" / 旧形式: "AnimationName")
+						if (node_json.contains(u8"アニメーション名")) node.animation_name = node_json[u8"アニメーション名"].get<std::string>();
+						else if (node_json.contains("AnimationName")) node.animation_name = node_json["AnimationName"].get<std::string>();
+						else node.animation_name = "";
+
+						// サブグラフフラグ
+						if (node_json.contains(u8"サブグラフフラグ")) node.is_sub_graph = node_json[u8"サブグラフフラグ"].get<bool>();
+						else if (node_json.contains("IsSubGraph")) node.is_sub_graph = node_json["IsSubGraph"].get<bool>();
+
+						// サブグラフID
+						if (node_json.contains(u8"サブグラフID")) node.sub_graph_id = node_json[u8"サブグラフID"].get<uint32_t>();
+						else if (node_json.contains("SubGraphID")) node.sub_graph_id = node_json["SubGraphID"].get<uint32_t>();
+
+						// ループフラグ
+						if (node_json.contains(u8"ループフラグ")) node.is_loop = node_json[u8"ループフラグ"].get<bool>();
+						else if (node_json.contains("IsLoop")) node.is_loop = node_json["IsLoop"].get<bool>();
+						else node.is_loop = true;
+
+						// ルートモーションフラグ
+						if (node_json.contains(u8"ルートモーションフラグ")) node.is_root_motion = node_json[u8"ルートモーションフラグ"].get<bool>();
+						else if (node_json.contains("IsRootMotion")) node.is_root_motion = node_json["IsRootMotion"].get<bool>();
+						else node.is_root_motion = false;
+
 						node.parent_node_id = parent_id;
 
-						if (node_json.contains("Input") && node_json["Input"].is_array())
+						// 入力ピン (新形式: "入力ピン" / 旧形式: "Input")
+						const char* input_key = node_json.contains(u8"入力ピン") ? u8"入力ピン" : (node_json.contains("Input") ? "Input" : nullptr);
+						if (input_key && node_json[input_key].is_array())
 						{
-							for (size_t p = 0; p < node_json["Input"].size(); p++)
+							for (size_t p = 0; p < node_json[input_key].size(); p++)
 							{
-								node.inputs.push_back(node_json["Input"][p]["ID"].get<uint32_t>());
+								const auto& pin_obj = node_json[input_key][p];
+								uint32_t pin_id = pin_obj.contains(u8"ピンID") ? pin_obj[u8"ピンID"].get<uint32_t>() : pin_obj["ID"].get<uint32_t>();
+								node.inputs.push_back(pin_id);
 							}
 						}
 
-						if (node_json.contains("Output") && node_json["Output"].is_array())
+						// 出力ピン (新形式: "出力ピン" / 旧形式: "Output")
+						const char* output_key = node_json.contains(u8"出力ピン") ? u8"出力ピン" : (node_json.contains("Output") ? "Output" : nullptr);
+						if (output_key && node_json[output_key].is_array())
 						{
-							for (size_t p = 0; p < node_json["Output"].size(); p++)
+							for (size_t p = 0; p < node_json[output_key].size(); p++)
 							{
-								node.outputs.push_back(node_json["Output"][p]["ID"].get<uint32_t>());
+								const auto& pin_obj = node_json[output_key][p];
+								uint32_t pin_id = pin_obj.contains(u8"ピンID") ? pin_obj[u8"ピンID"].get<uint32_t>() : pin_obj["ID"].get<uint32_t>();
+								node.outputs.push_back(pin_id);
 							}
 						}
 
@@ -284,6 +338,7 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 				}
 			}
 
+			// リンク・条件のパース
 			if (layer.contains("Links") && layer["Links"].is_array())
 			{
 				for (size_t j = 0; j < layer["Links"].size(); j++)
@@ -324,7 +379,7 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 								}
 								else if (std::holds_alternative<DirectX::XMFLOAT3>(raw_data))
 								{
-									DirectX::XMFLOAT3 vec_ref = { 0.0f,0.0f,0.0f };
+									DirectX::XMFLOAT3 vec_ref = { 0.0f, 0.0f, 0.0f };
 									if (cond_json.contains("VectorRefValue") && cond_json["VectorRefValue"].is_array() && cond_json["VectorRefValue"].size() == 3)
 									{
 										vec_ref.x = cond_json["VectorRefValue"][0].get<float>();
@@ -363,7 +418,7 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 			state_machine_path.c_str(), runtime_nodes.size(), runtime_links.size());
 	}
 
-	//シミュレータへのグラフデータ移譲
+	// シミュレータへのグラフデータ移譲
 	if (state_graph_simulator)
 	{
 		state_graph_simulator->SetupRuntimeGraph(runtime_nodes, runtime_links, layer_entry_nodes);

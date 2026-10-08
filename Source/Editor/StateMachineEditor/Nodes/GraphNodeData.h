@@ -41,3 +41,22 @@ struct PinData
 	std::string pin_name;	//ピン名
 	PinType pin_type;		//ピン属性
 };
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_NAMES
+(
+	NodeBasicData,
+	u8"識別ID",id,
+	u8"ノード名",name,
+	u8"座標",position,
+	u8"サブグラフフラグ",is_sub_graph,
+	u8"サブグラフID",sub_graph_id,
+	u8"ノード属性",node_type
+)
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_NAMES
+(
+	PinData,
+	u8"ピンID",pin_id,
+	u8"ピン名",pin_name,
+	u8"ピン属性",pin_type
+)

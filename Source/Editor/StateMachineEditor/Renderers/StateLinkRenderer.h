@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include <cstdint>
+#include <memory>
 
 struct GraphData;
 struct GraphLink;

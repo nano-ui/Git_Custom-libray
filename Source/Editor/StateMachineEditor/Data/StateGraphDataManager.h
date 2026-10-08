@@ -28,7 +28,7 @@ public:
 	bool LoadFromFile(const std::string& file_path);
 
 	//ステートノード追加
-	uint32_t AddStateNode(uint32_t graph_id, DirectX::XMFLOAT2 click, const std::string name = u8"新規ステート");
+	uint32_t AddStateNode(uint32_t graph_id, float click_x, float click_y, const std::string& name = u8"新規ステート");
 
 	//サブグラフノードの生成
 	void AddSubGrapNode(uint32_t graph_id, float click_x, float click_y, const std::string& name = u8"新規サブグラフ");

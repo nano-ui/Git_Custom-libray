@@ -20,6 +20,7 @@
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Editor\AssetLoader.h"
 #include "Editor\PathHelper.h"
+#include "Editor\StateMachineEditor\Nodes\StateGraphNode.h"
 
 #include <imgui_node_editor_internal.h>
 #include <cassert>
@@ -108,49 +109,50 @@ StateMachineGraphEditor::~StateMachineGraphEditor() = default;
 void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 {
 	UpdateRuntimeTracking();
-
 	StateBlackboard* active_blackboard = blackboard ? blackboard : editor_dummy_blackboard.get();
 
-	GraphData* current_graph = nullptr; // 現在の階層情報
-
-	for (size_t i = 0; i < data_manager->GetLayerDatas().size(); i++)
+	GraphData* current_graph = nullptr;
+	for (size_t i = 0; i < data_manager->GetGraphDatas().size(); i++)
 	{
-		if (data_manager->GetLayerDatas()[i].id == current_graph_id)
+		if (data_manager->GetGraphDatas()[i].id == current_graph_id)
 		{
-			current_graph = &data_manager->GetLayerDatas()[i];
+			current_graph = &data_manager->GetGraphDatas()[i];
 			break;
 		}
 	}
 
-	uint32_t& current_active_node_id = graph_active_nodes[current_graph_id]; // 階層固有のアクティブID
+	if (!current_graph)
+	{
+		return;
+	}
 
-	// ゲーム側の実行ノードIDが前フレームから変化した瞬間を直接検知
+	uint32_t& current_active_node_id = graph_active_nodes[current_graph_id];
+
 	if (runtime_active_node_id != UINT32_MAX)
 	{
 		flow_dst_node_id = runtime_active_node_id;
 		constexpr float default_flow_duration = 0.35f;
 		flow_effect_timer = default_flow_duration;
 		has_flow_requsted = true;
-
-		// リアルタイム追尾機能が有効であるかを判定
-		if (is_tracking_active_node && camera_controller)
-		{
-			// カメラコントローラーへフォーカス要求を発行
-			camera_controller->RequestFocusNode(runtime_active_node_id);
-		}
 	}
 
-	// 擬似シミュレーションがONになっている場合、条件評価を行ってアクティブノードを自動更新
+	if (is_tracking_active_node && camera_controller)
+	{
+		camera_controller->RequestFocusNode(runtime_active_node_id);
+	}
+
 	if (is_simulation_active)
 	{
-		if (blackboard_inspector)blackboard_inspector->SyncBlackboardVariablesFromGraph(current_graph, active_blackboard);
+		if (blackboard_inspector)
+		{
+			blackboard_inspector->SyncBlackboardVariablesFromGraph(current_graph, active_blackboard);
+		}
 		UpdateSimulationMode(active_blackboard, current_graph, current_active_node_id);
 	}
 
 	SyncActiveNodeAnimation(current_graph, current_active_node_id);
 
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
-
 	if (toolbar)
 	{
 		ToolbarContext toolbar_context = {
@@ -168,67 +170,42 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 			last_synced_node_id
 		};
 
-		if (toolbar->DrawToolbar(toolbar_context)) 
+		if (toolbar->DrawToolbar(toolbar_context))
 		{
 			return;
 		}
 	}
-	else
-	{
-		printf("Error: DrawEditor - state_graph_toolbar が nullptr です。\n");
-	}
 
-	const float pane_top_margin_y = 10.0f; // 上部マージン
+	const float pane_top_margin_y = 10.0f;
 	ImGui::Dummy(ImVec2(0.0f, pane_top_margin_y));
 
-	static float dynamic_left_width = 470.0f; // マウス変更可能な左サイドバー横幅
-	static float dynamic_right_width = 500.0f; // マウス変更可能な右サイドバー横幅
+	static float dynamic_left_width = 470.0f;
+	static float dynamic_right_width = 500.0f;
+	const float min_pane_width = 100.0f;
+	const float min_pane_height = 100.0f;
+	const float separator_line_width = 6.0f;
 
-	const float min_pane_width = 100.0f; // 各ペインの最小横幅制限
-	const float min_pane_height = 100.0f; // 各ペインの最小縦幅制限
-	const float separator_line_width = 6.0f; // セパレーターの掴み幅
+	float total_available_width = ImGui::GetContentRegionAvail().x;
+	float canvas_width = total_available_width - dynamic_left_width - dynamic_right_width - (separator_line_width * 2.0f);
+	if (canvas_width < min_pane_width) canvas_width = min_pane_width;
 
-	float total_available_width = ImGui::GetContentRegionAvail().x; // 全体の有効横幅
-
-	float canvas_width = total_available_width - dynamic_left_width - dynamic_right_width - (separator_line_width * 2.0f); // キャンバス横幅
-
-	if (canvas_width < min_pane_width)
-	{
-		canvas_width = min_pane_width;
-	}
-
-	float canvas_height = ImGui::GetContentRegionAvail().y; // 全体の有効縦幅
-	if (canvas_height < min_pane_height)
-	{
-		canvas_height = min_pane_height;
-	}
+	float canvas_height = ImGui::GetContentRegionAvail().y;
+	if (canvas_height < min_pane_height) canvas_height = min_pane_height;
 
 	DrawLeftSidebar(current_graph, dynamic_left_width, canvas_height);
-
 	ImGui::SameLine();
-
 	ImGui::Button("##LeftSplitter", ImVec2(separator_line_width, canvas_height));
-	if (ImGui::IsItemActive())
-	{
-		dynamic_left_width += ImGui::GetIO().MouseDelta.x;
-		if (dynamic_left_width < min_pane_width) dynamic_left_width = min_pane_width;
-	}
+	if (ImGui::IsItemActive()) dynamic_left_width += ImGui::GetIO().MouseDelta.x;
+	if (dynamic_left_width < min_pane_width) dynamic_left_width = min_pane_width;
 
 	ImGui::SameLine();
-
 	DrawCenterCanvas(current_graph, canvas_width, canvas_height);
-
 	ImGui::SameLine();
-
 	ImGui::Button("##RightSplitter", ImVec2(separator_line_width, canvas_height));
-	if (ImGui::IsItemActive())
-	{
-		dynamic_right_width -= ImGui::GetIO().MouseDelta.x;
-		if (dynamic_right_width < min_pane_width) dynamic_right_width = min_pane_width;
-	}
+	if (ImGui::IsItemActive()) dynamic_right_width -= ImGui::GetIO().MouseDelta.x;
+	if (dynamic_right_width < min_pane_width) dynamic_right_width = min_pane_width;
 
 	ImGui::SameLine();
-
 	DrawRightSidebar(current_graph, active_blackboard, dynamic_right_width, canvas_height);
 
 	blackboard_inspector->DrawInspector(active_blackboard);
@@ -407,23 +384,21 @@ void StateMachineGraphEditor::SyncActiveNodeAnimation(GraphData* current_graph, 
 	// 手動選択時（シミュレーション非実行時）の同期処理
 	if (active_node_id == last_synced_node_id) return;
 
-	const GraphNode* target_node = nullptr;
+	const StateGraphNode* target_node = nullptr;
 	for (size_t i = 0; i < current_graph->nodes.size(); i++)
 	{
-		if (current_graph->nodes[i].id == active_node_id)
+		if (current_graph->nodes[i] && current_graph->nodes[i]->GetNodeBasicData().id == active_node_id)
 		{
-			target_node = &current_graph->nodes[i];
+			target_node = dynamic_cast<const StateGraphNode*>(current_graph->nodes[i].get());
 			break;
 		}
 	}
-
 	if (!target_node) return;
-
 	last_synced_node_id = active_node_id;
-
-	if (!target_node->animation_name.empty())
+	AnimationData anim_data = target_node->GetAnimationData();
+	if (!anim_data.animation_name.empty())
 	{
-		EditorMediator::Instance().PlayModelAnimation(target_node->animation_name, target_node->is_loop);
+		EditorMediator::Instance().PlayModelAnimation(anim_data.animation_name, anim_data.is_loop);
 	}
 }
 
@@ -444,133 +419,67 @@ void StateMachineGraphEditor::DrawLeftSidebar(GraphData* current_graph, float wi
 //メインのノードエディタキャンバス
 void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float width, float height)
 {
-	bool trigger_add_node = false;         // ノード追加の実行トリガー用フラグ
-	bool trigger_add_subgraph = false;     // サブグラフ追加の実行トリガー用フラグ
-	bool trigger_convert_subgraph = false; // サブグラフ変換の実行トリガー用フラグ
-
 	ImGui::BeginChild("CenterCanvasZone##Child", ImVec2(width, height), false);
-
 	ed::SetCurrentEditor(editor_context.get());
 	ed::Begin("Node Canvas");
 
 	if (current_graph_id == 0 && current_graph->nodes.empty())
 	{
 		data_manager->CheckAndInitDefaultNode(current_graph_id);
-
-		uint32_t default_node_id = current_graph->nodes.front().id; // 待機ノードID
-		constexpr float default_init_pos_x = 100.0f; // 初期座標X
-		constexpr float default_init_pos_y = 100.0f; // 初期座標Y
-		ed::SetNodePosition(default_node_id, ImVec2(default_init_pos_x, default_init_pos_y));
 	}
 
+	// ノード群の描画
 	for (size_t i = 0; i < current_graph->nodes.size(); i++)
 	{
-		const GraphNode& node = current_graph->nodes[i];
-		bool is_active_now = (node.id == graph_active_nodes[current_graph_id]);
+		const GraphNode* node = current_graph->nodes[i].get();
+		if (!node) continue;
 
+		bool is_active_now = (node->GetNodeBasicData().id == graph_active_nodes[current_graph_id]);
 		if (state_node_renderer)
 		{
-			state_node_renderer->DrawNode(node, is_active_now);
-		}
-		else
-		{
-			printf("Error: DrawCenterCanvas - node_renderer が nullptr です。\n");
+			state_node_renderer->DrawNode(*node, is_active_now);
 		}
 	}
 
-	struct PinCacheData
-	{
-		uint32_t node_id; // 所属ノードID
-		float color_r; // 線の赤
-		float color_g; // 線の緑
-		float color_b; // 線の青
-	};
-
-	std::unordered_map<uint32_t, PinCacheData> pin_cache_map; // キャッシュマップ
-
-	for (size_t n = 0; n < current_graph->nodes.size(); n++)
-	{
-		const GraphNode& node = current_graph->nodes[n]; // ループ対象ノード
-		bool is_active_now = (node.id == graph_active_nodes[current_graph_id]);
-
-		if (state_node_renderer)
-		{
-			state_node_renderer->DrawNode(node, is_active_now);
-		}
-		else
-		{
-			printf("Error: DrawCenterCanvas - state_node_renderer が nullptr です。\n");
-		}
-	}
-
+	// リンク群の描画
 	if (state_link_renderer)
 	{
 		state_link_renderer->DrawLinks(
-			data_manager.get(),
-			current_graph,
-			flow_src_node_id,
-			flow_dst_node_id,
-			flow_effect_timer);
-	}
-	else
-	{
-		printf("Error: DrawCenterCanvas - state_link_renderer が nullptr です。\n");
+			data_manager.get(), current_graph, flow_src_node_id, flow_dst_node_id, flow_effect_timer);
 	}
 
+	// リンク接続作成のハンドリング
 	if (link_connection_handler)
 	{
 		link_connection_handler->HandleLinkCreation(data_manager.get(), current_graph, current_graph_id);
 	}
-	else
-	{
-		printf("Error: DrawCenterCanvas - link_connection_handler が nullptr です。\n"); // 日本語エラーログ出力
-	}
-	//-------------------------------------------------------------
-	//ユーザー操作処理をハンドラーへ委譲
-	//-------------------------------------------------------------
+
+	// キャンバス操作（右クリック、削除、D&D、サブグラフ遷移）
 	if (canvas_interaction_handler)
 	{
 		canvas_interaction_handler->HandleContextMenu(data_manager.get(), current_graph, current_graph_id);
 		canvas_interaction_handler->HandlePendingPaletteNode(data_manager.get(), palette_window.get(), current_graph, current_graph_id);
 		canvas_interaction_handler->HandleDeletion(data_manager.get(), current_graph, current_graph_id);
 	}
-	else
-	{
-		printf("Error: DrawCenterCanvas - canvas_interaction_handler が nullptr です。\n"); // 日本語エラーログ出力
-	}
 
 	if (state_graph_navigator)
 	{
 		state_graph_navigator->CheckNavigateToSubGraph(current_graph, current_graph_id);
 	}
-	else
-	{
-		printf("Error: DrawCenterCanvas - state_graph_navigator が nullptr です。\n");
-	}
 
 	ed::End();
 
-	//----------------------------------
-	//ドラッグ＆ドロップ受け取り処理
-	//----------------------------------
 	if (canvas_interaction_handler)
 	{
 		canvas_interaction_handler->HandleDragAndDrop(data_manager.get(), current_graph, current_graph_id);
 	}
 
-	//------------------------------
-	//カメラフォーカスの更新処理
-	//------------------------------
 	if (camera_controller)
 	{
 		camera_controller->UpdateCameraFocus();
 	}
-	else
-	{
-		printf("Error: DrawCenterCanvas - camera_controller が nullptr です。\n"); 
-	}
 
-	if (has_flow_requsted) 
+	if (has_flow_requsted)
 	{
 		has_flow_requsted = false;
 	}

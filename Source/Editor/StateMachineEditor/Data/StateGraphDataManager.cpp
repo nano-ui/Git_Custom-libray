@@ -201,17 +201,25 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 }
 
 //ステートノード追加
-uint32_t StateGraphDataManager::AddStateNode(uint32_t graph_id, DirectX::XMFLOAT2 click, const std::string name = u8"新規ステート")
+uint32_t StateGraphDataManager::AddStateNode(uint32_t graph_id, float click_x, float click_y, const std::string& name)
 {
 	NodeBasicData basic_data = {};
 	basic_data.id = FetchAndIncrementId();
 	basic_data.name = name;
-	basic_data.position = click;
+	basic_data.position = { click_x, click_y };
 	basic_data.is_sub_graph = false;
 	basic_data.sub_graph_id = 0;
 	basic_data.node_type = GraphNodeType::StateNode;
 
-	std::unique_ptr<StateGraphNode> state_node = std::make_unique<StateGraphNode>();
+	std::unique_ptr<StateGraphNode> graph_node = std::make_unique<StateGraphNode>();
+	graph_node->Initialize(basic_data);
+
+	uint32_t generated_id = basic_data.id;
+	if (AddNode(graph_id, std::move(graph_node)))
+	{
+		return generated_id;
+	}
+	return UINT32_MAX;
 }
 
 //階層が空の場合に初期ノードを構築
