@@ -14,22 +14,22 @@ void StateLinkConnectionHandler::HandleLinkCreation(
 	GraphData* current_graph,				//編集中のグラフデータ
 	uint32_t current_graph_id)				//表示中の階層ID
 {
-	if (!data_manager || !current_graph)
+	if (!data_manager || !current_graph || !ed::GetCurrentEditor())
 	{
-		printf("Error: StateLinkConnectionHandler::HandleLinkCreation - 引数が nullptr です。\n");
 		return;
 	}
 
+	// BeginCreate が true を返した（作成アクションが受け入れられた）場合のみ実行
 	if (ed::BeginCreate())
 	{
-		ed::PinId start_pin_id;
-		ed::PinId end_pin_id;
+		ed::PinId start_pin_id = 0;
+		ed::PinId end_pin_id = 0;
 		if (ed::QueryNewLink(&start_pin_id, &end_pin_id))
 		{
 			const uint32_t start_id = static_cast<uint32_t>(start_pin_id.Get());
 			const uint32_t end_id = static_cast<uint32_t>(end_pin_id.Get());
 
-			if (CanConnect(data_manager, current_graph_id, start_id, end_id))
+			if (start_id != 0 && end_id != 0 && CanConnect(data_manager, current_graph_id, start_id, end_id))
 			{
 				const ImVec4 success_color = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
 				constexpr float line_thickness = 2.0f;

@@ -152,7 +152,7 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 
 	SyncActiveNodeAnimation(current_graph, current_active_node_id);
 
-	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
+	// ツールバー描画
 	if (toolbar)
 	{
 		ToolbarContext toolbar_context = {
@@ -170,45 +170,65 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 			last_synced_node_id
 		};
 
-		if (toolbar->DrawToolbar(toolbar_context))
-		{
-			return;
-		}
+		// ★ 修正: 戻り値で早期 return せず、描画スタックを壊さないように継続
+		toolbar->DrawToolbar(toolbar_context);
 	}
 
-	const float pane_top_margin_y = 10.0f;
-	ImGui::Dummy(ImVec2(0.0f, pane_top_margin_y));
+	//------------------------------------------------------------
+	// エディタメインウィンドウの開始
+	//------------------------------------------------------------
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(ImVec2(1280, 720), ImGuiCond_FirstUseEver);
 
-	static float dynamic_left_width = 470.0f;
-	static float dynamic_right_width = 500.0f;
-	const float min_pane_width = 100.0f;
-	const float min_pane_height = 100.0f;
-	const float separator_line_width = 6.0f;
+	if (ImGui::Begin(u8"ステートマシンエディタ"))
+	{
+		const float pane_top_margin_y = 10.0f;
+		ImGui::Dummy(ImVec2(0.0f, pane_top_margin_y));
 
-	float total_available_width = ImGui::GetContentRegionAvail().x;
-	float canvas_width = total_available_width - dynamic_left_width - dynamic_right_width - (separator_line_width * 2.0f);
-	if (canvas_width < min_pane_width) canvas_width = min_pane_width;
+		static float dynamic_left_width = 470.0f;
+		static float dynamic_right_width = 500.0f;
+		constexpr float min_pane_width = 100.0f;
+		constexpr float min_pane_height = 100.0f;
+		constexpr float separator_line_width = 6.0f;
 
-	float canvas_height = ImGui::GetContentRegionAvail().y;
-	if (canvas_height < min_pane_height) canvas_height = min_pane_height;
+		float total_available_width = ImGui::GetContentRegionAvail().x;
+		float canvas_width = total_available_width - dynamic_left_width - dynamic_right_width - (separator_line_width * 2.0f);
+		if (canvas_width < min_pane_width) canvas_width = min_pane_width;
 
-	DrawLeftSidebar(current_graph, dynamic_left_width, canvas_height);
-	ImGui::SameLine();
-	ImGui::Button("##LeftSplitter", ImVec2(separator_line_width, canvas_height));
-	if (ImGui::IsItemActive()) dynamic_left_width += ImGui::GetIO().MouseDelta.x;
-	if (dynamic_left_width < min_pane_width) dynamic_left_width = min_pane_width;
+		float canvas_height = ImGui::GetContentRegionAvail().y;
+		if (canvas_height < min_pane_height) canvas_height = min_pane_height;
 
-	ImGui::SameLine();
-	DrawCenterCanvas(current_graph, canvas_width, canvas_height);
-	ImGui::SameLine();
-	ImGui::Button("##RightSplitter", ImVec2(separator_line_width, canvas_height));
-	if (ImGui::IsItemActive()) dynamic_right_width -= ImGui::GetIO().MouseDelta.x;
-	if (dynamic_right_width < min_pane_width) dynamic_right_width = min_pane_width;
+		// 1. 左側サイドバー
+		DrawLeftSidebar(current_graph, dynamic_left_width, canvas_height);
+		ImGui::SameLine();
 
-	ImGui::SameLine();
-	DrawRightSidebar(current_graph, active_blackboard, dynamic_right_width, canvas_height);
+		// 左スプリッター
+		ImGui::Button("##LeftSplitter", ImVec2(separator_line_width, canvas_height));
+		if (ImGui::IsItemActive()) dynamic_left_width += ImGui::GetIO().MouseDelta.x;
+		if (dynamic_left_width < min_pane_width) dynamic_left_width = min_pane_width;
+		ImGui::SameLine();
 
-	blackboard_inspector->DrawInspector(active_blackboard);
+		// 2. 中央キャンバス
+		DrawCenterCanvas(current_graph, canvas_width, canvas_height);
+		ImGui::SameLine();
+
+		// 右スプリッター
+		ImGui::Button("##RightSplitter", ImVec2(separator_line_width, canvas_height));
+		if (ImGui::IsItemActive()) dynamic_right_width -= ImGui::GetIO().MouseDelta.x;
+		if (dynamic_right_width < min_pane_width) dynamic_right_width = min_pane_width;
+		ImGui::SameLine();
+
+		// 3. 右側サイドバー
+		DrawRightSidebar(current_graph, active_blackboard, dynamic_right_width, canvas_height);
+	}
+	// エディタメインウィンドウの終了
+	ImGui::End();
+
+	// ブラックボードインスペクター（独立ウィンドウ）
+	if (blackboard_inspector)
+	{
+		blackboard_inspector->DrawInspector(active_blackboard);
+	}
 }
 
 //ファイルパスのグラフ情報をリロード
@@ -420,6 +440,8 @@ void StateMachineGraphEditor::DrawLeftSidebar(GraphData* current_graph, float wi
 void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float width, float height)
 {
 	ImGui::BeginChild("CenterCanvasZone##Child", ImVec2(width, height), false);
+
+	// NodeEditor コンテキストのバインドと描画開始 (戻り値は void)
 	ed::SetCurrentEditor(editor_context.get());
 	ed::Begin("Node Canvas");
 
@@ -428,7 +450,7 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 		data_manager->CheckAndInitDefaultNode(current_graph_id);
 	}
 
-	// ノード群の描画
+	// 1. ノードの描画
 	for (size_t i = 0; i < current_graph->nodes.size(); i++)
 	{
 		const GraphNode* node = current_graph->nodes[i].get();
@@ -441,20 +463,20 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 		}
 	}
 
-	// リンク群の描画
+	// 2. リンク線の描画
 	if (state_link_renderer)
 	{
 		state_link_renderer->DrawLinks(
 			data_manager.get(), current_graph, flow_src_node_id, flow_dst_node_id, flow_effect_timer);
 	}
 
-	// リンク接続作成のハンドリング
+	// 3. リンク接続の作成ハンドリング (ed::Begin と ed::End の間に収める)
 	if (link_connection_handler)
 	{
 		link_connection_handler->HandleLinkCreation(data_manager.get(), current_graph, current_graph_id);
 	}
 
-	// キャンバス操作（右クリック、削除、D&D、サブグラフ遷移）
+	// 4. キャンバス操作（右クリックメニュー・パレット追加・削除）
 	if (canvas_interaction_handler)
 	{
 		canvas_interaction_handler->HandleContextMenu(data_manager.get(), current_graph, current_graph_id);
@@ -462,13 +484,16 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 		canvas_interaction_handler->HandleDeletion(data_manager.get(), current_graph, current_graph_id);
 	}
 
+	// 5. サブグラフ遷移ダブルクリック判定
 	if (state_graph_navigator)
 	{
 		state_graph_navigator->CheckNavigateToSubGraph(current_graph, current_graph_id);
 	}
 
+	// NodeEditor の描画終了
 	ed::End();
 
+	// 6. D&D 受付とカメラ更新 (ed::End の外側で行う)
 	if (canvas_interaction_handler)
 	{
 		canvas_interaction_handler->HandleDragAndDrop(data_manager.get(), current_graph, current_graph_id);
@@ -501,7 +526,6 @@ void StateMachineGraphEditor::DrawRightSidebar(GraphData* current_graph, StateBl
 	ImGui::EndChild();
 
 	ed::SetCurrentEditor(nullptr);
-	ImGui::End();
 }
 
 //アニメーションマップを構築して送信

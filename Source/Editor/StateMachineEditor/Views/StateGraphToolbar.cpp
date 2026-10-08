@@ -102,11 +102,9 @@ bool StateGraphToolbar::DrawToolbar(ToolbarContext& context)
 	//ƒpƒ“‚­‚¸ŠK‘wƒiƒrƒQ[ƒVƒ‡ƒ“‚Ì•`‰æ
 	//-------------------------------------
 	//ŠK‘wˆÚ“®‚ª”­¶‚µ‚½‚©”»’è
-	if (context.navigator->DrawHeaderNavigation(context.data_manager, context.current_graph_id))
-	{
-		ImGui::End();
-		return true;
-	}
+	bool is_navigated = context.navigator->DrawHeaderNavigation(context.data_manager, context.current_graph_id);
+
+	ImGui::End();
 
 	return false;
 }
