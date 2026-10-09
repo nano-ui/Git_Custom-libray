@@ -302,6 +302,35 @@
                     "PosX": -214.33334350585938,
                     "PosY": -99.66667175292969,
                     "SubGraphID": 282
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "Death",
+                    "ID": 331,
+                    "Input": [
+                        {
+                            "ID": 332,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": true,
+                    "IsSubGraph": false,
+                    "LinkColorB": 0.4285714030265808,
+                    "LinkColorG": 0.13899612426757813,
+                    "LinkColorR": 0.40285617113113403,
+                    "Name": "死亡状態",
+                    "Output": [
+                        {
+                            "ID": 333,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 208.6664276123047,
+                    "PosY": -306.3333435058594,
+                    "SubGraphID": 0
                 }
             ]
         },
@@ -642,8 +671,22 @@
                     "SubGraphID": 0
                 }
             ]
+        },
+        {
+            "GraphID": 317,
+            "GraphName": "新規サブグラフ",
+            "LayerType": 1,
+            "Links": [],
+            "Nodes": []
+        },
+        {
+            "GraphID": 334,
+            "GraphName": "新規サブグラフ",
+            "LayerType": 1,
+            "Links": [],
+            "Nodes": []
         }
     ],
-    "NextID": 317,
+    "NextID": 340,
     "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }

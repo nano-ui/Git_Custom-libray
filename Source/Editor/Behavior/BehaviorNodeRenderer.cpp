@@ -82,6 +82,7 @@ void BehaviorNodeRenderer::DrawNode(const GraphNode& node, bool is_active)
 
 	ed::EndNode();
 
+	//F‚Ì“K—p
 	for (int color_idx = 0; color_idx < pushed_style_count; color_idx++)
 	{
 		ed::PopStyleColor();

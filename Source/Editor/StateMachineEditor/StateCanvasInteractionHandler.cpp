@@ -50,15 +50,68 @@ void StateCanvasInteractionHandler::HandleContextMenu(
 	//背景用ポップアップメニューの要素描画
 	if (ImGui::BeginPopup("Create New Node Context Menu"))
 	{
-		//「ステート追加」項目が選択されたか判定
-		if (ImGui::MenuItem(u8"ステート追加"))
+		//階層属性に応じたコンテキストメニューの切り替え
+		if (current_graph->layer_type == LayerType::BehaviorTree)
 		{
-			trigger_add_node = true;
+			if (ImGui::MenuItem(u8"ルートノードの追加"))
+			{
+				data_manager->AddBehaviorNode(
+					current_graph,
+					static_cast<float>(popup_click_pos.x),
+					static_cast<float>(popup_click_pos.y),
+					BehaviorCategory::Root);
+
+				const uint32_t new_node_id = current_graph->nodes.back().id;
+				ed::SetNodePosition(new_node_id, popup_click_pos);
+			}
+			if (ImGui::MenuItem(u8"優先順位ノードの追加"))
+			{
+				data_manager->AddBehaviorNode(
+					current_graph,
+					static_cast<float>(popup_click_pos.x),
+					static_cast<float>(popup_click_pos.y),
+					BehaviorCategory::Composite,
+					CompositeNodeType::Select);
+
+				const uint32_t new_node_id = current_graph->nodes.back().id;
+				ed::SetNodePosition(new_node_id, popup_click_pos);
+			}
+			if (ImGui::MenuItem(u8"重み抽選ノードの追加"))
+			{
+				data_manager->AddBehaviorNode(
+					current_graph,
+					static_cast<float>(popup_click_pos.x),
+					static_cast<float>(popup_click_pos.y),
+					BehaviorCategory::Composite,
+					CompositeNodeType::Weight);
+
+				const uint32_t new_node_id = current_graph->nodes.back().id;
+				ed::SetNodePosition(new_node_id, popup_click_pos);
+			}
+			if (ImGui::MenuItem(u8"アクションノードの追加"))
+			{
+				data_manager->AddBehaviorNode(
+					current_graph,
+					static_cast<float>(popup_click_pos.x),
+					static_cast<float>(popup_click_pos.y),
+					BehaviorCategory::Action);
+
+				const uint32_t new_node_id = current_graph->nodes.back().id;
+				ed::SetNodePosition(new_node_id, popup_click_pos);
+			}
 		}
-		//「サブグラフ追加」項目が選択されたか判定
-		if (ImGui::MenuItem(u8"サブグラフ追加"))
+		else
 		{
-			trigger_add_subgraph = true;
+			//「ステート追加」項目が選択されたか判定
+			if (ImGui::MenuItem(u8"ステート追加"))
+			{
+				trigger_add_node = true;
+			}
+			//「サブグラフ追加」項目が選択されたか判定
+			if (ImGui::MenuItem(u8"サブグラフ追加"))
+			{
+				trigger_add_subgraph = true;
+			}
 		}
 		ImGui::EndPopup();
 	}

@@ -114,6 +114,9 @@ public:
 	//ノードの生成
 	void AddNode(GraphData* current_graph, float click_x, float click_y, const std::string& node_name = u8"新規ステート");
 
+	//ビヘイビアツリーノード生成
+	void AddBehaviorNode(GraphData* current_graph, float click_x, float click_y, BehaviorCategory category, CompositeNodeType comp_type = CompositeNodeType::Select, const std::string& node_name = "");
+
 	//サブグラフノードの生成
 	void AddSubGrapNode(uint32_t graph_id, float click_x, float click_y, const std::string& name = u8"新規サブグラフ");
 

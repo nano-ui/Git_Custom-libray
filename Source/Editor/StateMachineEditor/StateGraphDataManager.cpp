@@ -364,6 +364,95 @@ void StateGraphDataManager::AddNode(GraphData* current_graph, float click_x, flo
 		new_node.id, new_input.id, new_output.id);
 }
 
+//ビヘイビアツリーノード生成
+void StateGraphDataManager::AddBehaviorNode(
+	GraphData* current_graph,
+	float click_x, float click_y,
+	BehaviorCategory category,
+	CompositeNodeType comp_type,
+	const std::string& node_name)
+{
+	//ポインタのnullチェック
+	if (!current_graph)
+	{
+		printf("Error: StateGraphDataManager::AddBehaviorNode - current_graph が nullptr です。\n");
+		return;
+	}
+
+	//Rootノードの唯一性チェック
+	if (category == BehaviorCategory::Root)
+	{
+		for (size_t n = 0; n < current_graph->nodes.size(); n++)
+		{
+			if (current_graph->nodes[n].behavior_data.category == BehaviorCategory::Root)
+			{
+				printf("Warning: StateGraphDataManager::AddBehaviorNode - 階層ID %u には既にRootノードが存在します。\n", current_graph->id);
+				return;
+			}
+		}
+	}
+
+	//ノードの設定
+	GraphNode new_node;
+	new_node.id = next_id++;
+	new_node.position_x = click_x;
+	new_node.position_y = click_y;
+	new_node.is_sub_graph = false;
+	new_node.sub_graph_id = 0;
+	new_node.behavior_data.category = category;
+	new_node.behavior_data.composite_node_type = comp_type;
+
+	//デフォルト名設定
+	if (!node_name.empty())
+	{
+		new_node.name = node_name;
+	}
+	else
+	{
+		switch (category)
+		{
+		case BehaviorCategory::Root:
+			new_node.name = u8"Root";
+			break;
+		case BehaviorCategory::Composite:
+			new_node.name = (comp_type == CompositeNodeType::Select) ? u8"Selector" : u8"Weight";
+			break;
+			break;
+		case BehaviorCategory::Action:
+			new_node.name = u8"Action";
+			break;
+		default:
+			new_node.name = u8"None";
+			break;
+		}
+	}
+
+	//親からの入力ピン設定
+	if (category != BehaviorCategory::Root)
+	{
+		GraphPin new_input;
+		new_input.id = next_id++;
+		new_input.name = u8"親入力";
+		new_input.kind = PinKind::Input;
+		new_input.node_id = new_node.id;
+		new_node.inputs.push_back(new_input);
+	}
+
+	//子への出力ピン設定
+	if (category != BehaviorCategory::Action)
+	{
+		GraphPin new_input;
+		new_input.id = next_id++;
+		new_input.name = u8"親入力";
+		new_input.kind = PinKind::Output;
+		new_input.node_id = new_node.id;
+		new_node.outputs.push_back(new_input);
+	}
+	current_graph->nodes.push_back(new_node);
+	printf("StateGraphDataManager: BTノード「%s」(ID:%u, カテゴリ:%d) を正常に追加しました。\n",
+		new_node.name.c_str(), new_node.id, static_cast<int>(category));
+}
+
 //下位階層データを生成してIDを返す
 uint32_t StateGraphDataManager::CreateNewSubGraph(const std::string& name)
 {

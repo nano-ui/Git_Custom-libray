@@ -23,7 +23,13 @@
         },
         "Attack_A_Slow": {
             "animation_duration": 0.800000011920929,
-            "collider_tracks": [],
+            "collider_tracks": [
+                {
+                    "collider_name": "剣攻撃判定",
+                    "end_time": 0.20000000298023224,
+                    "start_time": 0.10000000149011612
+                }
+            ],
             "effective_duration": 0.800000011920929,
             "keyframes": [
                 {
