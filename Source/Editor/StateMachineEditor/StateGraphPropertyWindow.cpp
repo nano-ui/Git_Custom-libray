@@ -125,7 +125,11 @@ bool StateGraphPropertyWindow::DrawNodeProperty(
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	if (ImGui::BeginTabBar("NodePropertyTabBar"))
+	if (current_graph->layer_type == LayerType::BehaviorTree)
+	{
+		is_changed |= DrawBehaviorNodeProperty(target_node, anim_names);
+	}
+	else if (ImGui::BeginTabBar("NodePropertyTabBar"))
 	{
 		if (ImGui::BeginTabItem(u8"アクション・アニメーション"))
 		{
@@ -413,4 +417,159 @@ bool StateGraphPropertyWindow::DrawLinkProperty(StateGraphDataManager* data_mana
 void StateGraphPropertyWindow::DrawInputCompareUI(GraphTransitionCondition& conditon)
 {
 
+}
+
+//ビヘイビアツリーノード用のプロパティ描画
+bool StateGraphPropertyWindow::DrawBehaviorNodeProperty(GraphNode* target_node, const std::vector<std::string>& anim_names)
+{
+	if (!target_node)
+	{
+		printf("Error: StateGraphPropertyWindow::DrawBehaviorNodeProperty - target_node が nullptr です。\n");
+		return false;
+	}
+
+	bool is_changed = false;
+
+	//ノードカテゴリ表示
+	const char* category_names[] = { u8"ルートノード",u8"中間ノード",u8"アクションノード" };
+	int current_category = static_cast<int>(target_node->behavior_data.category);
+	ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), u8"[ノードカテゴリ]");
+	ImGui::Text(u8"種別: %s", category_names[current_category]);
+
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+
+	//ルートノード用表示
+	if (target_node->behavior_data.category == BehaviorCategory::Root)
+	{
+		ImGui::TextColored(ImVec4(0.8f, 0.6f, 1.0f, 1.0f), u8"ビヘイビアツリーの実行開始ノードです。");
+		ImGui::Text(u8"子ノードの出力ピンへ接続してツリーを構成してください。");
+	}
+	//中間ノード用表示
+	if (target_node->behavior_data.category == BehaviorCategory::Composite)
+	{
+		ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), u8"[中間ノード設定]");
+
+		const char* composite_types[] = { u8"優先順位",u8"重み抽選" };
+		constexpr int total_comp_types = 2;
+		int current_comp_type = static_cast<int>(target_node->behavior_data.composite_node_type);
+
+		ImGui::Text(u8"選択アルゴリズム");
+		ImGui::SetNextItemWidth(-1.0f);
+		if (ImGui::Combo(u8"##BTCompositeTypeCombo", &current_comp_type, composite_types, total_comp_types))
+		{
+			target_node->behavior_data.composite_node_type = static_cast<CompositeNodeType>(current_comp_type);
+			is_changed = true;
+		}
+
+		ImGui::Spacing();
+
+		if (target_node->behavior_data.composite_node_type == CompositeNodeType::Weight)
+		{
+			ImGui::Text(u8"抽選重み");
+			ImGui::SetNextItemWidth(-1.0f);
+			if (ImGui::DragInt(u8"##BTWeightDrag", &target_node->behavior_data.weight, 1.0f, 1, 1000))
+			{
+				if (target_node->behavior_data.weight < 1)
+				{
+					target_node->behavior_data.weight = 1;
+				}
+				is_changed = true;
+			}
+		}
+	}
+	// Actionノード用設定
+	else if (target_node->behavior_data.category == BehaviorCategory::Action)
+	{
+		ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), u8"[アクション実行設定]");
+
+		// アニメーション設定
+		ImGui::Text(u8"再生アニメーション:");
+		ImGui::SetNextItemWidth(-1.0f);
+		if (!anim_names.empty())
+		{
+			if (ImGui::BeginCombo(u8"##BTAnimNameCombo", target_node->animation_name.c_str()))
+			{
+				for (size_t i = 0; i < anim_names.size(); i++)
+				{
+					bool is_selected = (target_node->animation_name == anim_names[i]);
+					if (ImGui::Selectable(anim_names[i].c_str(), is_selected))
+					{
+						target_node->animation_name = anim_names[i];
+						is_changed = true;
+					}
+					if (is_selected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+				ImGui::EndCombo();
+			}
+		}
+		else
+		{
+			const size_t anim_buffer_size = 128;
+			char anim_input_buffer[anim_buffer_size] = {};
+			strcpy_s(anim_input_buffer, anim_buffer_size, target_node->animation_name.c_str());
+			if (ImGui::InputText(u8"##BTAnimNameInput", anim_input_buffer, anim_buffer_size))
+			{
+				target_node->animation_name = anim_input_buffer;
+				is_changed = true;
+			}
+		}
+
+		ImGui::Spacing();
+		if (ImGui::Checkbox(u8"ループ再生", &target_node->is_loop))
+		{
+			is_changed = true;
+		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox(u8"ルートモーション", &target_node->is_root_motion))
+		{
+			is_changed = true;
+		}
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		// 完了時の結果
+		const char* result_types[] = { u8"成功", u8"実行中", u8"失敗" };
+		constexpr int total_results = 3;
+		int current_result = static_cast<int>(target_node->behavior_data.result_type);
+		ImGui::Text(u8"完了時返却ステータス:");
+		ImGui::SetNextItemWidth(-1.0f);
+		if (ImGui::Combo(u8"##BTResultTypeCombo", &current_result, result_types, total_results))
+		{
+			target_node->behavior_data.result_type = static_cast<ResultType>(current_result);
+			is_changed = true;
+		}
+
+		ImGui::Spacing();
+		ImGui::Text(u8"持続時間 (-1.0fでアニメーション終了待ち):");
+		ImGui::SetNextItemWidth(-1.0f);
+		if (ImGui::DragFloat(u8"##BTDurationDrag", &target_node->behavior_data.action_duration, 0.05f, -1.0f, 60.0f, u8"%.2f 秒"))
+		{
+			is_changed = true;
+		}
+
+		ImGui::Spacing();
+		ImGui::Text(u8"クールダウン時間 (秒):");
+		ImGui::SetNextItemWidth(-1.0f);
+		if (ImGui::DragFloat(u8"##BTCooldownDrag", &target_node->behavior_data.cooldown_time, 0.05f, 0.0f, 60.0f, u8"%.2f 秒"))
+		{
+			is_changed = true;
+		}
+
+		ImGui::Spacing();
+		ImGui::Text(u8"クールダウン乱数幅 (秒):");
+		ImGui::SetNextItemWidth(-1.0f);
+		if (ImGui::DragFloat(u8"##BTRandomRangeDrag", &target_node->behavior_data.cooldown_random_range, 0.05f, 0.0f, 10.0f, u8"%.2f 秒"))
+		{
+			is_changed = true;
+		}
+	}
+
+	return is_changed;
 }

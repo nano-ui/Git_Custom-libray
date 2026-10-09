@@ -331,6 +331,35 @@
                     "PosX": 208.6664276123047,
                     "PosY": -306.3333435058594,
                     "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "ID": 341,
+                    "Input": [
+                        {
+                            "ID": 342,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": true,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "新規サブグラフ",
+                    "Output": [
+                        {
+                            "ID": 343,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 345.9999694824219,
+                    "PosY": -2.000000238418579,
+                    "SubGraphID": 340
                 }
             ]
         },
@@ -685,8 +714,15 @@
             "LayerType": 1,
             "Links": [],
             "Nodes": []
+        },
+        {
+            "GraphID": 340,
+            "GraphName": "新規サブグラフ",
+            "LayerType": 1,
+            "Links": [],
+            "Nodes": []
         }
     ],
-    "NextID": 340,
+    "NextID": 358,
     "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }

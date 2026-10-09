@@ -50,6 +50,9 @@ private:
 	//入力チェック条件専用のImGui入力UI描画
 	void DrawInputCompareUI(GraphTransitionCondition& conditon);
 
+	//ビヘイビアツリーノード用のプロパティ描画
+	bool DrawBehaviorNodeProperty(GraphNode* target_node, const std::vector<std::string>& anim_names);
+
 private:
 	std::unique_ptr<TransitionConditionEditor> condition_editor;	//条件遷移UI
 	GraphTransitionCondition* waiting_for_key_conditon = nullptr;	//入力条件のポインタ
