@@ -29,6 +29,7 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 		nlohmann::json graph_json;	//ˆê‚Â‚ÌŠK‘wî•ñ‚ğŠi”[‚·‚éJSONƒIƒuƒWƒFƒNƒg
 		graph_json["GraphID"] = graph.id; // ŠK‘wID‚Ì•Û‘¶
 		graph_json["GraphName"] = graph.name; // ŠK‘w–¼‚Ì•Û‘¶
+		graph_json["LayerType"] = graph.layer_type;	//ŠK‘w(ƒŒƒCƒ„[)‘®«•Û‘¶
 
 		nlohmann::json nodes_array = nlohmann::json::array();	//ƒm[ƒhƒf[ƒ^‚ğŠi”[‚·‚éˆê”z—ñ
 
@@ -51,6 +52,16 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 			node_json["LinkColorR"] = node.link_color_r;
 			node_json["LinkColorG"] = node.link_color_g;
 			node_json["LinkColorB"] = node.link_color_b;
+
+			nlohmann::json bt_json;	//ƒrƒwƒCƒrƒAƒcƒŠ[ƒm[ƒhî•ñŠi”[”z—ñ
+			bt_json["Category"] = static_cast<int>(node.behavior_data.category);
+			bt_json["CompositeType"] = static_cast<int>(node.behavior_data.composite_node_type);
+			bt_json["FinishResult"] = static_cast<int>(node.behavior_data.result_type);
+			bt_json["Weight"] = node.behavior_data.weight;
+			bt_json["ActionDuration"] = node.behavior_data.action_duration;
+			bt_json["CooldownTime"] = node.behavior_data.cooldown_time;
+			bt_json["CooldownRandomRange"] = node.behavior_data.cooldown_random_range;
+
 
 			//“ü—Íƒsƒ“‚ÌƒVƒŠƒAƒ‰ƒCƒY
 			nlohmann::json inputs_array = nlohmann::json::array(); // “ü—Íƒsƒ“—p‚Ìˆê”z—ñ
@@ -169,6 +180,15 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 		graph.id = graph_json["GraphID"]; // ŠK‘wID
 		graph.name = graph_json["GraphName"]; // ŠK‘w–¼
 
+		if (graph_json.contains("LayerType"))
+		{
+			graph.layer_type = static_cast<LayerType>(graph_json["LayerType"]);
+		}
+		else
+		{
+			graph.layer_type = LayerType::StateMachine;
+		}
+
 		//ƒm[ƒhŒQ‚Ì•œŒ³“WŠJ
 		for (const auto& node_json : graph_json["Nodes"])
 		{
@@ -203,6 +223,40 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 			{
 				node.animation_name = node_json["AnimationName"];
 			}
+
+			if (node_json.contains("BehaviorData") && node_json["BehaviorData"].is_object())
+			{
+				const auto& bt_json = node_json["BehaviorData"];
+				if (bt_json.contains("Category"))
+				{
+					node.behavior_data.category = static_cast<BehaviorCategory>(bt_json["Category"]);
+				}
+				if (bt_json.contains("CompositeType"))
+				{
+					node.behavior_data.composite_node_type = static_cast<CompositeNodeType>(bt_json["CompositeType"]);
+				}
+				if (bt_json.contains("FinishResult"))
+				{
+					node.behavior_data.result_type = static_cast<ResultType>(bt_json["FinishResult"]);
+				}
+				if (bt_json.contains("Weight"))
+				{
+					node.behavior_data.weight = bt_json["Weight"];
+				}
+				if (bt_json.contains("ActionDuration"))
+				{
+					node.behavior_data.action_duration = node_json["ActionDuration"];
+				}
+				if (bt_json.contains("CooldownTime"))
+				{
+					node.behavior_data.cooldown_time = node_json["CooldownTime"];
+				}
+				if (bt_json.contains("CooldownRandomRange"))
+				{
+					node.behavior_data.cooldown_random_range = node_json["CooldownRandomRange"];
+				}
+			}
+
 
 			//“ü—Íƒsƒ“‚Ì•œŒ³
 			for (const auto& pin_json : node_json["Input"])

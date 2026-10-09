@@ -20,6 +20,7 @@
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Editor\AssetLoader.h"
 #include "Editor\PathHelper.h"
+#include "Editor\Behavior\BehaviorNodeRenderer.h"
 
 #include <imgui_node_editor_internal.h>
 #include <cassert>
@@ -54,6 +55,8 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	link_connection_handler = std::make_unique<StateLinkConnectionHandler>();
 	camera_controller = std::make_unique<StateGraphCameraController>();
 	toolbar = std::make_unique<StateGraphToolbar>();
+
+	behavior_node_renderer = std::make_unique<BehaviorNodeRenderer>();
 
 	target_model_hash = 0;
 
@@ -493,14 +496,29 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 		const GraphNode& node = current_graph->nodes[n]; // ループ対象ノード
 		bool is_active_now = (node.id == graph_active_nodes[current_graph_id]);
 
-		if (state_node_renderer)
+		if (current_graph->layer_type == LayerType::BehaviorTree)
 		{
-			state_node_renderer->DrawNode(node, is_active_now);
+			if (behavior_node_renderer)
+			{
+				behavior_node_renderer->DrawNode(node, is_active_now);
+			}
+			else
+			{
+				printf("Error: DrawCenterCanvas - behavior_node_renderer が nullptr です。\n");
+			}
 		}
-		else
+		else if (current_graph->layer_type == LayerType::StateMachine)
 		{
-			printf("Error: DrawCenterCanvas - state_node_renderer が nullptr です。\n");
+			if (state_node_renderer)
+			{
+				state_node_renderer->DrawNode(node, is_active_now);
+			}
+			else
+			{
+				printf("Error: DrawCenterCanvas - state_node_renderer が nullptr です。\n");
+			}
 		}
+
 	}
 
 	if (state_link_renderer)

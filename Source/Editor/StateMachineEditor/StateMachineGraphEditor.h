@@ -23,6 +23,7 @@ class StateCanvasInteractionHandler;
 class StateLinkConnectionHandler;
 class StateGraphCameraController;
 class StateGraphToolbar;
+class BehaviorNodeRenderer;
 
 struct GraphData;
 struct GraphLink;
@@ -75,6 +76,9 @@ private:
 	{
 		void operator()(ax::NodeEditor::EditorContext* context)const noexcept;
 	};
+
+private:
+	std::unique_ptr<BehaviorNodeRenderer> behavior_node_renderer;	//ビヘイビアノード描画
 
 private:
 	std::unique_ptr<StateGraphDataManager> data_manager;			//データを専門的に扱うマネージャー

@@ -145,31 +145,31 @@
       <Filter>Source\Gameplay\AI\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="Source\Gameplay\AI\ComboJugment.cpp">
-      <Filter>Source\Gameplay\AI\ComboJugment</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\ComboJugment</Filter>
     </ClCompile>
     <ClCompile Include="Source\Gameplay\AI\CooldownJudgment.cpp">
-      <Filter>Source\Gameplay\AI\CooldownJudgment</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\CooldownJudgment</Filter>
     </ClCompile>
     <ClCompile Include="Source\Gameplay\AI\DirectionJudgment.cpp">
-      <Filter>Source\Gameplay\AI\DirectionJudgment</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\DirectionJudgment</Filter>
     </ClCompile>
     <ClCompile Include="Source\Gameplay\AI\DistanceJugment.cpp">
-      <Filter>Source\Gameplay\AI\DistanceJugment</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\DistanceJugment</Filter>
     </ClCompile>
     <ClCompile Include="Source\Gameplay\AI\NodeStateJugment.cpp">
-      <Filter>Source\Gameplay\AI\NodeStateJugment</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\NodeStateJugment</Filter>
     </ClCompile>
     <ClCompile Include="Source\Gameplay\AI\RandomJugment.cpp">
-      <Filter>Source\Gameplay\AI\RandomJugment</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\RandomJugment</Filter>
     </ClCompile>
     <ClCompile Include="Source\Gameplay\AI\RatioJudgment.cpp">
-      <Filter>Source\Gameplay\AI\RatioJudgment</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\RatioJudgment</Filter>
     </ClCompile>
     <ClCompile Include="Source\Gameplay\AI\SelectorNode.cpp">
-      <Filter>Source\Gameplay\AI\SelectorNode</Filter>
+      <Filter>Source\Gameplay\AI\Cimposite\SelectorNode</Filter>
     </ClCompile>
     <ClCompile Include="Source\Gameplay\AI\WeightedNode.cpp">
-      <Filter>Source\Gameplay\AI\WeightedNode</Filter>
+      <Filter>Source\Gameplay\AI\Cimposite\WeightedNode</Filter>
     </ClCompile>
     <ClCompile Include="Source\Gameplay\GameObjects\ObjectFactory.cpp">
       <Filter>Source\Gameplay\GameObjects\ObjectFactory</Filter>
@@ -447,6 +447,9 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphSimulator.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\StateGraphSimulator</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\Behavior\BehaviorNodeRenderer.cpp">
+      <Filter>Source\Editor\Behavior\BehaviorNodeRenderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -528,7 +531,7 @@
       <Filter>Source\Engine\Collision\SpaceDivisionCast</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\AI\ActionNode.h">
-      <Filter>Source\Gameplay\AI\ActionNode</Filter>
+      <Filter>Source\Gameplay\AI\Action\ActionNode</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\AI\BehaviorNode.h">
       <Filter>Source\Gameplay\AI\BehaviorNode</Filter>
@@ -537,37 +540,37 @@
       <Filter>Source\Gameplay\AI\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\AI\ComboJugment.h">
-      <Filter>Source\Gameplay\AI\ComboJugment</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\ComboJugment</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\AI\CooldownJudgment.h">
-      <Filter>Source\Gameplay\AI\CooldownJudgment</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\CooldownJudgment</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\AI\DirectionJudgment.h">
-      <Filter>Source\Gameplay\AI\DirectionJudgment</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\DirectionJudgment</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\AI\DistanceJugment.h">
-      <Filter>Source\Gameplay\AI\DistanceJugment</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\DistanceJugment</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\AI\JudgmentNode.h">
-      <Filter>Source\Gameplay\AI\JudgmentNode</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\JudgmentNode</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\AI\NodeStateJugment.h">
-      <Filter>Source\Gameplay\AI\NodeStateJugment</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\NodeStateJugment</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\AI\RandomJugment.h">
-      <Filter>Source\Gameplay\AI\RandomJugment</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\RandomJugment</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\AI\RatioJudgment.h">
-      <Filter>Source\Gameplay\AI\RatioJudgment</Filter>
+      <Filter>Source\Gameplay\AI\Judgment\RatioJudgment</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\AI\SelectorNode.h">
-      <Filter>Source\Gameplay\AI\SelectorNode</Filter>
+      <Filter>Source\Gameplay\AI\Cimposite\SelectorNode</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\AI\StateActionNode.h">
-      <Filter>Source\Gameplay\AI\StateActionNode</Filter>
+      <Filter>Source\Gameplay\AI\Action\StateActionNode</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\AI\WeightedNode.h">
-      <Filter>Source\Gameplay\AI\WeightedNode</Filter>
+      <Filter>Source\Gameplay\AI\Cimposite\WeightedNode</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\GameObjects\ObjectFactory.h">
       <Filter>Source\Gameplay\GameObjects\ObjectFactory</Filter>
@@ -851,6 +854,12 @@
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphSimulator.h">
       <Filter>Source\Editor\StateMachineGraphEditor\StateGraphSimulator</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Editor\Behavior\BehaviorNodeData.h">
+      <Filter>Source\Editor\Behavior\BehaviorNodeData</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Behavior\BehaviorNodeRenderer.h">
+      <Filter>Source\Editor\Behavior\BehaviorNodeRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli">
@@ -990,44 +999,11 @@
     <Filter Include="Source\Engine\Collision\SpaceDivisionCast">
       <UniqueIdentifier>{eed830da-be5b-4170-8d8f-bf8cace21100}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Gameplay\AI\ActionNode">
-      <UniqueIdentifier>{6de32ebc-452d-4639-9926-d7dc166321a8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Gameplay\AI\BehaviorNode">
       <UniqueIdentifier>{629751c7-69b7-4c9e-a423-a200d6ea2c46}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Gameplay\AI\BehaviorTree">
       <UniqueIdentifier>{3e181fa3-c76d-4b0f-b495-a503f06019ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\AI\ComboJugment">
-      <UniqueIdentifier>{6f2d5648-e842-4a74-a882-f7aca98ab822}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\AI\CooldownJudgment">
-      <UniqueIdentifier>{315bb3ab-0f99-4eef-a502-84a12a5f47e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\AI\DirectionJudgment">
-      <UniqueIdentifier>{e680df13-7aef-4724-aae7-f89e16e516c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\AI\DistanceJugment">
-      <UniqueIdentifier>{7ca71a74-285d-4323-95e6-7bc6e799dbaf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\AI\JudgmentNode">
-      <UniqueIdentifier>{eb946d22-d931-4887-9ed5-e659745b421e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\AI\NodeStateJugment">
-      <UniqueIdentifier>{653b9f71-d4be-4d36-9821-ab66e2e16794}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\AI\RatioJudgment">
-      <UniqueIdentifier>{195216a8-e8d3-45d5-90ea-ea610ef0603a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\AI\SelectorNode">
-      <UniqueIdentifier>{a13f6f4d-4d3f-4f5a-86b7-a0e460ce43cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\AI\StateActionNode">
-      <UniqueIdentifier>{1407b124-fe8b-4c63-bdd9-ebc47049f710}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\AI\WeightedNode">
-      <UniqueIdentifier>{f96c475d-afa6-431a-b2c8-10a5770f846c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Gameplay\GameObjects\ObjectFactory">
       <UniqueIdentifier>{a17c2dfa-fdc5-448e-b699-7a876a9e535c}</UniqueIdentifier>
@@ -1353,8 +1329,59 @@
     <Filter Include="Source\Editor\StateMachineGraphEditor\StateGraphSimulator">
       <UniqueIdentifier>{aba319c5-3254-4b1d-baf4-42debca99e0b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Gameplay\AI\RandomJugment">
+    <Filter Include="Source\Editor\Behavior">
+      <UniqueIdentifier>{011b4919-fc99-4238-a37e-2df8a94c6393}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Behavior\BehaviorNodeData">
+      <UniqueIdentifier>{a0e62366-2f68-4a29-a1b5-a9f99a693763}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Cimposite">
+      <UniqueIdentifier>{ca1d1328-9bf1-4955-8c34-0db364bf26e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Cimposite\SelectorNode">
+      <UniqueIdentifier>{a13f6f4d-4d3f-4f5a-86b7-a0e460ce43cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Cimposite\WeightedNode">
+      <UniqueIdentifier>{f96c475d-afa6-431a-b2c8-10a5770f846c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Judgment">
+      <UniqueIdentifier>{cd551716-da10-472e-8c6d-b66fa95a9e49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Judgment\JudgmentNode">
+      <UniqueIdentifier>{eb946d22-d931-4887-9ed5-e659745b421e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Judgment\DistanceJugment">
+      <UniqueIdentifier>{7ca71a74-285d-4323-95e6-7bc6e799dbaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Judgment\DirectionJudgment">
+      <UniqueIdentifier>{e680df13-7aef-4724-aae7-f89e16e516c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Judgment\CooldownJudgment">
+      <UniqueIdentifier>{315bb3ab-0f99-4eef-a502-84a12a5f47e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Judgment\ComboJugment">
+      <UniqueIdentifier>{6f2d5648-e842-4a74-a882-f7aca98ab822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Judgment\NodeStateJugment">
+      <UniqueIdentifier>{653b9f71-d4be-4d36-9821-ab66e2e16794}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Action">
+      <UniqueIdentifier>{f23d6ba0-f1ae-46c8-b6a4-1f81239339dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Action\ActionNode">
+      <UniqueIdentifier>{6de32ebc-452d-4639-9926-d7dc166321a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Action\StateActionNode">
+      <UniqueIdentifier>{1407b124-fe8b-4c63-bdd9-ebc47049f710}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Judgment\RatioJudgment">
+      <UniqueIdentifier>{195216a8-e8d3-45d5-90ea-ea610ef0603a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\AI\Judgment\RandomJugment">
       <UniqueIdentifier>{b0f6c6b3-ae49-445d-962a-ab9eb5248c0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Behavior\BehaviorNodeRenderer">
+      <UniqueIdentifier>{423a404e-70d8-4b37-aae0-0e7692a1b3e7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

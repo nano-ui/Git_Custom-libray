@@ -3,6 +3,7 @@
         {
             "GraphID": 0,
             "GraphName": "ルート",
+            "LayerType": 0,
             "Links": [
                 {
                     "Conditions": [
@@ -307,6 +308,7 @@
         {
             "GraphID": 108,
             "GraphName": "移動ステート",
+            "LayerType": 0,
             "Links": [],
             "Nodes": [
                 {
@@ -343,6 +345,7 @@
         {
             "GraphID": 248,
             "GraphName": "攻撃ステート",
+            "LayerType": 0,
             "Links": [
                 {
                     "Conditions": [],
@@ -606,6 +609,7 @@
         {
             "GraphID": 282,
             "GraphName": "回避",
+            "LayerType": 0,
             "Links": [],
             "Nodes": [
                 {

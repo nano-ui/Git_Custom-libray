@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "ThiedParty\json.hpp"
+#include "Editor\Behavior\BehaviorNodeData.h"
 
 //ピンの種類
 enum class PinKind
@@ -43,6 +44,7 @@ struct GraphNode
 	float link_color_r = 1.0f;				//ノードから出るリンクの色（赤成分）
 	float link_color_g = 1.0f;				//ノードから出るリンクの色（緑成分）
 	float link_color_b = 1.0f;				//ノードから出るリンクの色（青成分）
+	BehaviorNodeData behavior_data;			//ビヘイビアツリーノード情報
 };
 
 //判定ノードの種類
@@ -77,6 +79,13 @@ struct GraphLink
 	std::vector<GraphTransitionCondition> conditions;	//遷移条件リスト
 };
 
+//階層属性
+enum class LayerType
+{
+	StateMachine,	//ステートマシン
+	BehaviorTree	//ビヘイビアツリー
+};
+
 //階層の情報
 struct GraphData
 {
@@ -84,6 +93,7 @@ struct GraphData
 	std::string name;				//階層名
 	std::vector<GraphNode> nodes;	//階層に存在するノード群
 	std::vector<GraphLink> links;	//階層に存在する接続線群
+	LayerType layer_type = LayerType::StateMachine;	//レイヤー属性
 };
 
 class StateGraphDataManager

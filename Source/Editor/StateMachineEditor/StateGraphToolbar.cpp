@@ -96,6 +96,49 @@ bool StateGraphToolbar::DrawToolbar(ToolbarContext& context)
 		}
 	}
 
+	ImGui::SameLine();
+
+	//階層切り替えコンボボックス表示
+	GraphData* current_graph = nullptr;	//現在の階層情報
+	auto& layers = context.data_manager->GetLayerDatas();	//全ての階層リスト
+	for (size_t g_idx = 0; g_idx < layers.size(); g_idx++)	//全ての階層を巡回
+	{
+		if (layers[g_idx].id == context.current_graph_id)	//現在の階層と一致するか判定
+		{
+			current_graph = &layers[g_idx];
+			break;	//これ以上巡回しても意味がないので抜ける
+		}
+	}
+
+
+	if (current_graph)	//現在の階層が見つかったか
+	{
+		const char* layer_type_names[] = {	//表示する名前
+			u8"ステートマシン",
+			u8"ビヘイビアツリー"
+		};
+
+		constexpr int total_layer_type_count = 2;	//表示する数	
+		int current_type_index = static_cast<int>(current_graph->layer_type);	//現在のレイヤー属性
+
+		//実際にコンボボックス表示
+		ImGui::SetNextItemWidth(180.0f);
+		if (ImGui::Combo(u8"##LayerTypeCombo", &current_type_index, layer_type_names, total_layer_type_count))
+		{
+			if (current_type_index >= 0 && current_type_index < total_layer_type_count)
+			{
+				current_graph->layer_type = static_cast<LayerType>(current_type_index);
+				printf("StateGraphToolbar: 階層ID %u の属性を「%s」に変更しました。\n",
+					current_graph->id, layer_type_names[current_type_index]);
+				ExecuteSave(context);
+			}
+			else
+			{
+				printf("Error: StateGraphToolbar - 不正な階層タイプインデックスが選択されました: %d\n", current_type_index);
+			}
+		}
+	}
+
 	ImGui::Spacing();
 
 	//-------------------------------------
