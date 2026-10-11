@@ -24,6 +24,7 @@ class StateLinkConnectionHandler;
 class StateGraphCameraController;
 class StateGraphToolbar;
 class BehaviorNodeRenderer;
+class BehaviorTreeSimulator;
 
 struct GraphData;
 struct GraphLink;
@@ -98,6 +99,7 @@ private:
 	std::unique_ptr<StateBlackboard> editor_dummy_blackboard;				//未選択時に使用するエディタ専用のダミーブラックボード
 	std::unique_ptr<StateBlackboardInspectorWindow> blackboard_inspector;	//シミュレーション用パラメータ表示ウィンドウ
 	std::unique_ptr<StateMachineComponent> state_machine_component;			//実機互換のシミュレーション実行コンポーネント
+	std::unique_ptr<BehaviorTreeSimulator> behavior_simulator;				//ビヘイビアツリーシミュレータ
 
 	uint32_t current_graph_id;									//現在の階層のグラフID
 	std::unordered_map<uint32_t, uint32_t> graph_active_nodes;	//各階層ごとのアクティブノードIDを個別に保持

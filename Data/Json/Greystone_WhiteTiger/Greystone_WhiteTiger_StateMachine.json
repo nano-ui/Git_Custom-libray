@@ -184,6 +184,66 @@
                     "EndPinID": 104,
                     "ID": 313,
                     "StartPinID": 285
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 5,
+                            "HashKey": 1572818033,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 332,
+                    "ID": 382,
+                    "StartPinID": 102
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 5,
+                            "HashKey": 1572818033,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 332,
+                    "ID": 383,
+                    "StartPinID": 285
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 5,
+                            "HashKey": 1572818033,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 332,
+                    "ID": 384,
+                    "StartPinID": 105
                 }
             ],
             "Nodes": [
@@ -314,7 +374,7 @@
                             "Name": "入力"
                         }
                     ],
-                    "IsLoop": true,
+                    "IsLoop": false,
                     "IsRootMotion": true,
                     "IsSubGraph": false,
                     "LinkColorB": 0.4285714030265808,
@@ -720,9 +780,114 @@
             "GraphName": "新規サブグラフ",
             "LayerType": 1,
             "Links": [],
-            "Nodes": []
+            "Nodes": [
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "ID": 401,
+                    "Input": [],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Root",
+                    "Output": [
+                        {
+                            "ID": 402,
+                            "Kind": 1,
+                            "Name": "親入力"
+                        }
+                    ],
+                    "PosX": -123.57568359375,
+                    "PosY": -203.787841796875,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "ID": 413,
+                    "Input": [
+                        {
+                            "ID": 414,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Selector",
+                    "Output": [
+                        {
+                            "ID": 415,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 162.99998474121094,
+                    "PosY": -148.99998474121094,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "ID": 416,
+                    "Input": [
+                        {
+                            "ID": 417,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Weight",
+                    "Output": [
+                        {
+                            "ID": 418,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 192.99996948242188,
+                    "PosY": -38.999996185302734,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "ID": 419,
+                    "Input": [
+                        {
+                            "ID": 420,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Action",
+                    "Output": [],
+                    "PosX": 428.99993896484375,
+                    "PosY": -80.99999237060547,
+                    "SubGraphID": 0
+                }
+            ]
         }
     ],
-    "NextID": 358,
+    "NextID": 422,
     "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }

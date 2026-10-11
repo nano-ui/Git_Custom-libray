@@ -450,6 +450,13 @@
     <ClCompile Include="Source\Editor\Behavior\BehaviorNodeRenderer.cpp">
       <Filter>Source\Editor\Behavior\BehaviorNodeRenderer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\Behavior\BehaviorTreeSimulator.cpp">
+      <Filter>Source\Editor\Behavior\BehaviorTreeSimulator</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\Behavior\EditorActionNode.cpp">
+      <Filter>Source\Editor\Behavior\EditorActionNode</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\Behavior\BehaviorTreeBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -860,6 +867,13 @@
     <ClInclude Include="Source\Editor\Behavior\BehaviorNodeRenderer.h">
       <Filter>Source\Editor\Behavior\BehaviorNodeRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Editor\Behavior\BehaviorTreeSimulator.h">
+      <Filter>Source\Editor\Behavior\BehaviorTreeSimulator</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Behavior\EditorActionNode.h">
+      <Filter>Source\Editor\Behavior\EditorActionNode</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Behavior\BehaviorTreeBuilder.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli">
@@ -1382,6 +1396,15 @@
     </Filter>
     <Filter Include="Source\Editor\Behavior\BehaviorNodeRenderer">
       <UniqueIdentifier>{423a404e-70d8-4b37-aae0-0e7692a1b3e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Behavior\BehaviorTreeSimulator">
+      <UniqueIdentifier>{81fd1b9d-dbde-4468-a5c2-569e85660514}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Behavior\EditorActionNode">
+      <UniqueIdentifier>{d90050fd-f16e-43ed-8f00-075d040e3995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Behavior\BehaviorTreeBuilder">
+      <UniqueIdentifier>{0539a0dc-6bb8-47ce-9da9-310c1eb178e2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

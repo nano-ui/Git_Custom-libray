@@ -21,6 +21,7 @@
 #include "Editor\AssetLoader.h"
 #include "Editor\PathHelper.h"
 #include "Editor\Behavior\BehaviorNodeRenderer.h"
+#include "Editor\Behavior\BehaviorTreeSimulator.h"
 
 #include <imgui_node_editor_internal.h>
 #include <cassert>
@@ -57,6 +58,7 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	toolbar = std::make_unique<StateGraphToolbar>();
 
 	behavior_node_renderer = std::make_unique<BehaviorNodeRenderer>();
+	behavior_simulator = std::make_unique<BehaviorTreeSimulator>();
 
 	target_model_hash = 0;
 
@@ -341,13 +343,31 @@ void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, 
 	}
 
 	// 前フレームのアクティブステートIDを取得
-	const uint32_t prev_node_id = state_machine_component->GetCurrentNodeId();
 	const float delta_time = ImGui::GetIO().DeltaTime;
 
-	// StateMachineComponent 内部の StateGraphSimulator による遷移シミュレーションを実行
-	state_machine_component->Update(delta_time, blackboard);
+	//階層属性に応じたシミュレーション分岐
+	if (current_graph->layer_type == LayerType::BehaviorTree)
+	{
+		if (behavior_simulator)
+		{
+			behavior_simulator->SetupGraph(current_graph);
+			behavior_simulator->UpdateSimulation(delta_time, blackboard);
+			const uint32_t sim_active_id = behavior_simulator->GetCurrentActiveNodeId();
+			if (sim_active_id != UINT32_MAX)
+			{
+				current_active_node_id = sim_active_id;
+			}
+		}
+		else
+		{
+			printf("Error: StateMachineGraphEditor::UpdateSimulationMode - behavior_simulator が nullptr です。\n");
+		}
+		return;
+	}
 
-	// シミュレーション後のアクティブステートIDを取得
+	// StateMachineComponent 内部の StateGraphSimulator による遷移シミュレーションを実行
+	const uint32_t prev_node_id = state_machine_component->GetCurrentNodeId();
+	state_machine_component->Update(delta_time, blackboard);
 	const uint32_t new_active_node_id = state_machine_component->GetCurrentNodeId();
 
 	// ステート遷移が発生したかを判定
@@ -382,6 +402,24 @@ void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, 
 void StateMachineGraphEditor::SyncActiveNodeAnimation(GraphData* current_graph, uint32_t active_node_id)
 {
 	if (!current_graph || active_node_id == 0 || active_node_id == UINT32_MAX) return;
+
+	// ビヘイビアツリー階層でのアニメーション再生連携
+	if (is_simulation_active && current_graph->layer_type == LayerType::BehaviorTree && behavior_simulator)
+	{
+		if (active_node_id == last_synced_node_id)
+		{
+			return;
+		}
+		last_synced_node_id = active_node_id;
+
+		std::string anim_name = behavior_simulator->GetCurrentAnimationName();
+		bool is_loop = behavior_simulator->GetCurrentAnimationLoop();
+		if (!anim_name.empty())
+		{
+			EditorMediator::Instance().PlayModelAnimation(anim_name, is_loop);
+		}
+		return;
+	}
 
 	// シミュレーション実行中は StateMachineComponent から直接再生中のアニメーションを取得する
 	if (is_simulation_active && state_machine_component)

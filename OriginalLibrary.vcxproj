@@ -232,6 +232,9 @@
     <ClCompile Include="Source\Editor\AssetLoader.cpp" />
     <ClCompile Include="Source\Editor\Attachment\ColliderAttachmentEditor.cpp" />
     <ClCompile Include="Source\Editor\Behavior\BehaviorNodeRenderer.cpp" />
+    <ClCompile Include="Source\Editor\Behavior\BehaviorTreeBuilder.cpp" />
+    <ClCompile Include="Source\Editor\Behavior\BehaviorTreeSimulator.cpp" />
+    <ClCompile Include="Source\Editor\Behavior\EditorActionNode.cpp" />
     <ClCompile Include="Source\Editor\ConstentBrowser\ContentBrowserEditor.cpp" />
     <ClCompile Include="Source\Editor\EditorManager.cpp" />
     <ClCompile Include="Source\Editor\EditorMediator.cpp" />
@@ -363,6 +366,9 @@
     <ClInclude Include="Source\Editor\Attachment\ColliderAttachmentEditor.h" />
     <ClInclude Include="Source\Editor\Behavior\BehaviorNodeData.h" />
     <ClInclude Include="Source\Editor\Behavior\BehaviorNodeRenderer.h" />
+    <ClInclude Include="Source\Editor\Behavior\BehaviorTreeBuilder.h" />
+    <ClInclude Include="Source\Editor\Behavior\BehaviorTreeSimulator.h" />
+    <ClInclude Include="Source\Editor\Behavior\EditorActionNode.h" />
     <ClInclude Include="Source\Editor\ConstentBrowser\ContentBrowserEditor.h" />
     <ClInclude Include="Source\Editor\EditorManager.h" />
     <ClInclude Include="Source\Editor\EditorMediator.h" />

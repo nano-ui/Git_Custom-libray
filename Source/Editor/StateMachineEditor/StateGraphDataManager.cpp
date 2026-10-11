@@ -432,7 +432,7 @@ void StateGraphDataManager::AddBehaviorNode(
 	{
 		GraphPin new_input;
 		new_input.id = next_id++;
-		new_input.name = u8"親入力";
+		//new_input.name = u8"入力";
 		new_input.kind = PinKind::Input;
 		new_input.node_id = new_node.id;
 		new_node.inputs.push_back(new_input);
@@ -443,7 +443,7 @@ void StateGraphDataManager::AddBehaviorNode(
 	{
 		GraphPin new_input;
 		new_input.id = next_id++;
-		new_input.name = u8"親入力";
+		//new_input.name = u8"出力";
 		new_input.kind = PinKind::Output;
 		new_input.node_id = new_node.id;
 		new_node.outputs.push_back(new_input);
@@ -571,6 +571,18 @@ bool StateGraphDataManager::CheckCanConnect(uint32_t graph_id, uint32_t start_pi
 	if (start_pin->kind == PinKind::Input && end_pin->kind == PinKind::Output)
 	{
 		return false;
+	}
+
+	//ビヘイビアツリー用接続ルール判定
+	for (size_t g = 0; g < layer_datas.size(); g++)
+	{
+		if (layer_datas[g].id == graph_id)
+		{
+			if (layer_datas[g].layer_type == LayerType::BehaviorTree)
+			{
+				return CheckCanConnectBehaviorTree(layer_datas[g], start_pin, end_pin);
+			}
+		}
 	}
 
 	return true;
@@ -778,6 +790,116 @@ std::vector<GraphLink*> StateGraphDataManager::GetLinkesFromNode(uint32_t graph_
 		}
 	}
 	return result_linkes;
+}
+
+//ビヘイビアツリー階層用の接続ルール判定
+bool StateGraphDataManager::CheckCanConnectBehaviorTree(
+	const GraphData& graph, const GraphPin* start_pin, const GraphPin* end_pin)
+{
+	if (!start_pin || !end_pin)
+	{
+		printf("Error: StateGraphDataManager::CheckCanConnectBehaviorTree - ピン情報が nullptr です。\n");
+		return false;
+	}
+
+	const uint32_t parent_node_id = start_pin->node_id;
+	const uint32_t child_node_id = end_pin->node_id;
+
+	//同一リンクの重複判定
+	for (size_t l = 0; l < graph.links.size(); l++)
+	{
+		if (graph.links[l].start_pin_id == start_pin->id && graph.links[l].end_pin_id == end_pin->id)
+		{
+			return false;
+		}
+	}
+
+	//単一親の制約
+	for (size_t l = 0; l < graph.links.size(); l++)
+	{
+		if (graph.links[l].end_pin_id == end_pin->id)
+		{
+			return false;
+		}
+	}
+
+	//循環参照判定
+	std::unordered_set<uint32_t> visited_nodes;
+	if (HasBehaviorTreeCycle(graph, child_node_id, parent_node_id, visited_nodes))
+	{
+		printf("Warning: StateGraphDataManager::CheckCanConnectBehaviorTree - ノードID %u から ノードID %u への接続は循環参照を形成するため禁止されました。\n",
+			parent_node_id, child_node_id);
+		return false;
+	}
+	return true;
+}
+
+//ビヘイビアツリー内の循環参照検出
+bool StateGraphDataManager::HasBehaviorTreeCycle(const GraphData& graph, uint32_t current_node_id, uint32_t target_node_id, std::unordered_set<uint32_t>& visited_nodes)
+{
+	//探索対象が親ノードに到達した場合はループ成立
+	if (current_node_id == target_node_id)
+	{
+		return true;
+	}
+
+	//探索済みならスキップ
+	if (visited_nodes.find(current_node_id) != visited_nodes.end())
+	{
+		return false;
+	}
+	visited_nodes.insert(current_node_id);
+
+	//現在のノードから出ている全リンクを探索
+	for (size_t l = 0; l < graph.links.size(); l++)
+	{
+		const GraphLink& link = graph.links[l];
+
+		bool is_start_from_current = false;
+		for (size_t n = 0; n < graph.nodes.size(); n++)
+		{
+			if (graph.nodes[n].id == current_node_id)
+			{
+				for (size_t p = 0; p < graph.nodes[n].outputs.size(); p++)
+				{
+					if (graph.nodes[n].outputs[p].id == link.start_pin_id)
+					{
+						is_start_from_current = true;
+						break;
+					}
+				}
+				break;
+			}
+		}
+
+		if (is_start_from_current)
+		{
+			uint32_t next_node_id = UINT32_MAX;
+			for (size_t n = 0; n < graph.nodes.size(); n++)
+			{
+				for (size_t p = 0; p < graph.nodes[n].inputs.size(); p++)
+				{
+					if (graph.nodes[n].inputs[p].id == link.end_pin_id)
+					{
+						next_node_id = graph.nodes[n].id;
+						break;
+					}
+				}
+				if (next_node_id != UINT32_MAX)
+				{
+					break;
+				}
+			}
+			if (next_node_id != UINT32_MAX)
+			{
+				if (HasBehaviorTreeCycle(graph, next_node_id, target_node_id, visited_nodes))
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
 }
 
 //candidate_graph_id が target_graph_id の祖先（または同一）かを判定

@@ -50,7 +50,7 @@ void BehaviorNodeRenderer::DrawNode(const GraphNode& node, bool is_active)
 	//各ノードの固有名表示
 	ed::BeginNode(node.id);
 
-	ImGui::Text(u8"[&s]", node.name.c_str());	//ノード名
+	//ImGui::Text(u8"[&s]", node.name.c_str());	//ノード名
 
 	if (node.behavior_data.category == BehaviorCategory::Root)
 	{
@@ -103,7 +103,7 @@ void BehaviorNodeRenderer::DrawInputPins(const GraphNode& node)
 	{
 		const GraphPin& pin = node.inputs[in_idx];
 		ed::BeginPin(pin.id, ed::PinKind::Input);
-		ImGui::Text(u8"↓親");
+		ImGui::Text(u8"→入力");
 		ed::EndPin();
 	}
 	ImGui::EndGroup();
@@ -123,7 +123,7 @@ void BehaviorNodeRenderer::DrawOutputPins(const GraphNode& node)
 	{
 		const GraphPin& pin = node.outputs[out_idx];
 		ed::BeginPin(pin.id, ed::PinKind::Input);
-		ImGui::Text(u8"↓子");
+		ImGui::Text(u8"→出力");
 		ed::EndPin();
 	}
 	ImGui::EndGroup();

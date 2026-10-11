@@ -166,6 +166,12 @@ public:
 	std::vector<GraphLink*> GetLinkesFromNode(uint32_t graph_id, uint32_t node_id);
 
 private:
+	//ビヘイビアツリー階層用の接続ルール判定
+	bool CheckCanConnectBehaviorTree(const GraphData& graph, const GraphPin* start_pin, const GraphPin* end_pin);
+
+	//ビヘイビアツリー内の循環参照検出
+	bool HasBehaviorTreeCycle(const GraphData& graph, uint32_t current_node_id, uint32_t target_node_id, std::unordered_set<uint32_t>& visited_nodes);
+
 	//candidate_graph_id が target_graph_id の祖先（または同一）かを判定
 	bool IsAncestorGraph(uint32_t target_graph_id, uint32_t candidate_graph_id);
 

@@ -73,69 +73,13 @@ bool StateLinkConnectionHandler::CanConnect(
 	uint32_t start_pin_id,					//接続元ピンID
 	uint32_t end_pin_id)					//接続先ピンID
 {
-	const GraphPin* start_pin = nullptr;	//接続元のピンポインタ
-	const GraphPin* end_pin = nullptr;		//接続先のピンポインタ
-	const auto& layers = data_manager->GetLayerDatas();	//全階層データ
-
-	//全階層を巡回
-	for (size_t g_idx = 0; g_idx < layers.size(); g_idx++)
+	if (!data_manager)
 	{
-		//現在の階層IDと一致するか判定
-		if (layers[g_idx].id != graph_id)
-		{
-			continue;
-		}
-
-		//階層内の全ノードからピンを検索
-		for (size_t n_idx = 0; n_idx < layers[g_idx].nodes.size(); n_idx++)
-		{
-			const GraphNode& node = layers[g_idx].nodes[n_idx];	//参照ノード
-
-			//入力ピンから検索
-			for (size_t p_idx = 0; p_idx < node.inputs.size(); p_idx++)
-			{
-				if (node.inputs[p_idx].id == start_pin_id) start_pin = &node.inputs[p_idx];
-				if (node.inputs[p_idx].id == end_pin_id) end_pin = &node.inputs[p_idx];
-			}
-
-			//出力ピンから検索
-			for (size_t p_idx = 0; p_idx < node.outputs.size(); p_idx++)
-			{
-				if (node.outputs[p_idx].id == start_pin_id)start_pin = &node.outputs[p_idx];
-				if (node.outputs[p_idx].id == end_pin_id)end_pin = &node.outputs[p_idx];
-			}
-		}
-		break;
-	}
-	
-	//---------------------------------
-	//接続ルールのバリデーション判定
-	//---------------------------------
-	//両方のピンが存在するか確認
-	if (!start_pin || !end_pin)
-	{
+		printf("Error: StateLinkConnectionHandler::CanConnect - data_manager が nullptr です。\n");
 		return false;
 	}
 
-	//同一ノード内のピン同士か判定
-	if (start_pin->node_id == end_pin->node_id)
-	{
-		return false;
-	}
-
-	//入力同士、または出力同士か判定
-	if (start_pin->kind == end_pin->kind)
-	{
-		return false;
-	}
-
-	//逆方向接続か判定
-	if (start_pin->kind == PinKind::Input && end_pin->kind == PinKind::Output)
-	{
-		return false;
-	}
-	
-	return true;
+	return data_manager->CheckCanConnect(graph_id, start_pin_id, end_pin_id);
 }
 
 //リンク作成完了時にピンから所属ノードを特定・検証
@@ -156,7 +100,7 @@ void StateLinkConnectionHandler::OnLinkCreated(
 		const GraphNode& node = current_graph->nodes[n_idx];	//参照ノード
 
 		//出力ピンを巡回
-		for (size_t p_idx = 0; p_idx < node.outputs.size(); p_idx)
+		for (size_t p_idx = 0; p_idx < node.outputs.size(); p_idx++)
 		{
 			//開始ピンと一致するか判定
 			if (node.outputs[p_idx].id == new_link.start_pin_id)
