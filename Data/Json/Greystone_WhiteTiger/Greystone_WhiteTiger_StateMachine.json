@@ -895,6 +895,44 @@
                     "PosX": 410.333251953125,
                     "PosY": -99.33333587646484,
                     "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "Ability_R_0",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 435,
+                    "Input": [
+                        {
+                            "ID": 436,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "溜め攻撃",
+                    "Output": [
+                        {
+                            "ID": 437,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -388.0,
+                    "PosY": -219.0001220703125,
+                    "SubGraphID": 0
                 }
             ]
         },
@@ -1107,6 +1145,6 @@
             ]
         }
     ],
-    "NextID": 435,
+    "NextID": 438,
     "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }

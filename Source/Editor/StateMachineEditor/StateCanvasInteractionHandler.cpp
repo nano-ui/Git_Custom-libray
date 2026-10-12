@@ -204,11 +204,10 @@ void StateCanvasInteractionHandler::HandlePendingPaletteNode(
 				current_graph_id,
 				static_cast<float>(canvas_pos.x),
 				static_cast<float>(canvas_pos.y),
-				palette_window->GetPendingNodeName()
-			);
+				palette_window->GetPendingNodeName());
 
 			//配列再確保対策として現在のグラフポインタを再取得
-			for (size_t g_idx = 0; g_idx < data_manager->GetLayerDatas().size(); g_idx++)
+			for (size_t g_idx = 0; g_idx < data_manager->GetLayerDatas().size(); g_idx++) 
 			{
 				//一致する階層IDを判定
 				if (data_manager->GetLayerDatas()[g_idx].id == current_graph_id)
@@ -224,11 +223,14 @@ void StateCanvasInteractionHandler::HandlePendingPaletteNode(
 				current_graph,
 				static_cast<float>(canvas_pos.x),
 				static_cast<float>(canvas_pos.y),
-				palette_window->GetPendingNodeName()
-			);
+				palette_window->GetPendingNodeName());
 		}
-		const uint32_t new_state_id = current_graph->nodes.back().id;	//新しいノードID
-		ed::SetNodePosition(new_state_id, canvas_pos);
+		if (current_graph && !current_graph->nodes.empty())
+		{
+			const uint32_t new_state_id = current_graph->nodes.back().id;
+			ed::SetNodePosition(new_state_id, canvas_pos);
+		}
+
 		palette_window->ClearPendingNode();
 	}
 }
@@ -330,7 +332,7 @@ void StateCanvasInteractionHandler::HandleDragAndDrop(
 
 			printf("StateCanvasInteractionHandler: サブグラフ「%s」をドラッグ＆ドロップで完全複製配置しました。\n", dropped_sub_name);
 		}
-		ImGui::BeginDragDropTarget();
+		ImGui::EndDragDropTarget();
 	}
 }
 

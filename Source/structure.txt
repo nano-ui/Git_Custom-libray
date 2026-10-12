@@ -30,6 +30,17 @@ C:.
 „    „        ColliderAttachmentEditor.cpp
 „    „        ColliderAttachmentEditor.h
 „    „        
+„    „¥„Ÿ„Ÿ„ŸBehavior
+„    „        BehaviorNodeData.h
+„    „        BehaviorNodeRenderer.cpp
+„    „        BehaviorNodeRenderer.h
+„    „        BehaviorTreeBuilder.cpp
+„    „        BehaviorTreeBuilder.h
+„    „        BehaviorTreeSimulator.cpp
+„    „        BehaviorTreeSimulator.h
+„    „        EditorActionNode.cpp
+„    „        EditorActionNode.h
+„    „        
 „    „¥„Ÿ„Ÿ„ŸConstentBrowser
 „    „        ContentBrowserEditor.cpp
 „    „        ContentBrowserEditor.h
