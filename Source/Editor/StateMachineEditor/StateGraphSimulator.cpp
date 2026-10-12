@@ -277,63 +277,18 @@ bool StateGraphSimulator::EvaluateCondition(
 	StateBlackboard* blackboard,
 	bool is_anim_finished)const
 {
-	//-----------------------------------
-	//アニメーション再生完了条件の判定
-	//-----------------------------------
 	if (cond.type == ConditionNodeType::AnimationEnd)
 	{
 		return is_anim_finished;
 	}
 
-	//--------------------
-	//キー入力条件の判定
-	//--------------------
-	if (cond.type == ConditionNodeType::InputCheck)
+	if (!blackboard)
 	{
-		const int v_key_code = static_cast<int>(cond.hash_key);					//判定対象の仮想キーコード
-		const int input_behavior_mode = static_cast<int>(cond.param_second);	//入力挙動モード
-
-		constexpr int mode_press = 0;		//押されている間
-		constexpr int mode_trigger = 1;		//押された瞬間
-		constexpr int mode_not_press = 2;	//未入力状態
-		constexpr int mode_release = 3;		//離れた瞬間
-
-		//キーが未設定の場合は早期リターン
-		if (v_key_code == 0)
-		{
-			return false;
-		}
-
-		// 各モードに応じた入力判定の分岐実行
-		if (input_behavior_mode == mode_trigger)
-		{
-			return Input::Instance().IsKeyTrigger(v_key_code);
-		}
-		else if (input_behavior_mode == mode_press)
-		{
-			return Input::Instance().IsKeyPress(v_key_code);
-		}
-		else if (input_behavior_mode == mode_not_press)
-		{
-			return !Input::Instance().IsKeyPress(v_key_code);
-		}
-		else if (input_behavior_mode == mode_release)
-		{
-			return Input::Instance().IsKeyRelease(v_key_code);
-		}
+		printf("Warning: StateGraphSimulator::EvaluateCondition - blackboard が nullptr です。\n");
 		return false;
 	}
 
-	//--------------------
-	//値の比較条件の判定
-	//--------------------
-	if (blackboard)
-	{
-		return cond.IsJudgment(*blackboard);
-	}
-
-	printf("Warning: StateGraphSimulator::EvaluateCondition - blackboard が nullptr です。\n");
-	return false;
+	return cond.IsJudgment(*blackboard);
 }
 
 

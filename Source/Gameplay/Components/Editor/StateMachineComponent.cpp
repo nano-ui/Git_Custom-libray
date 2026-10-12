@@ -153,27 +153,6 @@ bool StateMachineComponent::EvaluateCondition(const TransitionCondition& cond, S
 	//アニメーション終了判定
 	if (cond.type == ConditionNodeType::AnimationEnd)return is_anim_finished;
 
-	//キー入力判定
-	if (cond.type == ConditionNodeType::InputCheck)
-	{
-		int v_key_code = static_cast<int>(cond.hash_key);
-		int input_behavior_mode = static_cast<int>(cond.param_second);
-
-		constexpr int mode_press = 0;     // 押されている間
-		constexpr int mode_trigger = 1;   // 押された瞬間
-		constexpr int mode_not_press = 2; // 未入力
-		constexpr int mode_release = 3;   // 離された瞬間
-
-		if (v_key_code == 0) return false; // キー未設定時は不成立
-
-		if (input_behavior_mode == mode_trigger)      return Input::Instance().IsKeyTrigger(v_key_code);
-		else if (input_behavior_mode == mode_press)   return Input::Instance().IsKeyPress(v_key_code);
-		else if (input_behavior_mode == mode_not_press) return !Input::Instance().IsKeyPress(v_key_code);
-		else if (input_behavior_mode == mode_release)  return Input::Instance().IsKeyRelease(v_key_code);
-
-		return false;
-	}
-
 	//通常のブラックボード比較
 	if (blackboard)return cond.IsJudgment(*blackboard);
 }

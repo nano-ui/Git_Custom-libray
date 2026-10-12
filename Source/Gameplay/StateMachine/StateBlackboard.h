@@ -367,4 +367,8 @@ struct TransitionCondition
 
 	//ğŒ‚ğ–‚½‚µ‚Ä‚¢‚é‚©”»’è
 	bool IsJudgment(const StateBlackboard& blackboard)const;
+
+private:
+	//“ü—Í”»’è
+	bool CheckInputConditon()const;
 };

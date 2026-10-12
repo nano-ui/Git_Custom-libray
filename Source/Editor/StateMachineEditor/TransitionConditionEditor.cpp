@@ -312,85 +312,124 @@ void TransitionConditionEditor::DrawRatioUI(StateBlackboard* blackboard, GraphTr
 //キーボードの入力を設定するUI描画
 void TransitionConditionEditor::DrawInputCheckUI(GraphTransitionCondition& condition)
 {
-	ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.9f, 1.0f), u8"指定されたキーボード入力を検知してステートを遷移");
+	ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.9f, 1.0f), u8"入力判定設定");
 
-	//現在この条件項目がユーザーからのキー入力待ち状態であるか判定
 	if (waiting_for_key_condition == &condition)
 	{
-		ImGui::Button(u8"任意のキーを押してください...(待機中)", ImVec2(-1.0f, 30.0f));
+		ImGui::Button(u8"入力待機中...(キーまたはマウス右/中をクリック)", ImVec2(-1.0f, 30.0f));
 
-		//Win32の全仮想キーコード(1～255)の入力状態を走査チェック
-		for (int key_idx = 1; key_idx < 256; key_idx++)
+		if (Input::Instance().IsMouseTrigger(Input::mouse_right))
 		{
-			//マウスボタン(左・右・中クリック)の誤作動による登録を除外判定
-			if (key_idx == VK_LBUTTON || key_idx == VK_RBUTTON || key_idx == VK_MBUTTON ||
-				key_idx == VK_CAPITAL || key_idx == VK_KANA || key_idx == VK_KANJI ||
-				key_idx == VK_CONVERT || key_idx == VK_NONCONVERT || key_idx == VK_NUMLOCK || key_idx == VK_SCROLL ||
-				key_idx == 0xF0 || key_idx == 0xF2 || key_idx == 0xF3 || key_idx == 0xF4) // VK_DBE_ALPHANUMERIC 等
+			condition.hash_key = VK_RBUTTON;
+			waiting_for_key_condition = nullptr;
+		}
+		else if (Input::Instance().IsMouseTrigger(Input::mouse_middle))
+		{
+			condition.hash_key = VK_MBUTTON;
+			waiting_for_key_condition = nullptr;
+		}
+		else
+		{
+			for (int key_idx = 1; key_idx < 256; key_idx++)
 			{
-				continue;
-			}
+				if (key_idx == VK_LBUTTON || key_idx == VK_RBUTTON || key_idx == VK_MBUTTON ||
+					key_idx == VK_CAPITAL || key_idx == VK_KANA || key_idx == VK_KANJI ||
+					key_idx == VK_CONVERT || key_idx == VK_NONCONVERT || key_idx == VK_NUMLOCK ||
+					key_idx == VK_SCROLL || key_idx == 0xF0 || key_idx == 0xF2 || key_idx == 0xF3 || key_idx == 0xF4)
+				{
+					continue;
+				}
 
-			//ユーザーが何かキーをポンと叩いた瞬間をInputクラスから検知したか判定
-			if (Input::Instance().IsKeyTrigger(key_idx))
-			{
-				condition.hash_key = static_cast<uint32_t>(key_idx);
-				waiting_for_key_condition = nullptr;
-				break;
+				if (Input::Instance().IsKeyTrigger(key_idx))
+				{
+					condition.hash_key = static_cast<uint32_t>(key_idx);
+					waiting_for_key_condition = nullptr;
+					break;
+				}
 			}
 		}
 	}
 	else
 	{
-		char key_name_buffer[64] = u8"未設定(クリックして割り当て)";	//表示名バッファ
-		int saved_v_key = static_cast<int>(condition.hash_key);			//保存されている仮想キーコード
+		constexpr size_t key_name_buffer_size = 64;
+		char key_name_buffer[key_name_buffer_size] = {};
+		const int saved_v_key = static_cast<int>(condition.hash_key);
 
-		//有効なキーコードが既に登録されているか判定
-		if (saved_v_key > 0)
+		if (saved_v_key == VK_LBUTTON)
 		{
-			unsigned int scan_code = MapVirtualKeyA(saved_v_key, MAPVK_VK_TO_VSC);	//スキャンコード
-			LONG long_scan_code = static_cast<LONG>(scan_code << 16);	//ビットシフト
-
+			sprintf_s(key_name_buffer, sizeof(key_name_buffer), u8"マウス左クリック");
+		}
+		else if (saved_v_key == VK_RBUTTON)
+		{
+			sprintf_s(key_name_buffer, sizeof(key_name_buffer), u8"マウス右クリック");
+		}
+		else if (saved_v_key == VK_MBUTTON)
+		{
+			sprintf_s(key_name_buffer, sizeof(key_name_buffer), u8"マウスホイールクリック");
+		}
+		else if (saved_v_key > 0)
+		{
+			unsigned int scan_code = MapVirtualKeyA(saved_v_key, MAPVK_VK_TO_VSC);
+			LONG long_scan_code = static_cast<LONG>(scan_code << 16);
 			if (GetKeyNameTextA(long_scan_code, key_name_buffer, sizeof(key_name_buffer)) == 0)
 			{
-				sprintf_s(key_name_buffer, "KeyCord: %d", saved_v_key);
+				sprintf_s(key_name_buffer, sizeof(key_name_buffer), "KeyCord: %d", saved_v_key);
 			}
 		}
+		else
+		{
+			sprintf_s(key_name_buffer, sizeof(key_name_buffer), u8"キー未設定");
+		}
 
-		ImGui::Text(u8"割り当てられたキー");
+		ImGui::Text(u8"キー設定 [");
 		ImGui::SameLine();
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
-
 		if (ImGui::Button(key_name_buffer, ImVec2(-1.0f, 25.0f)))
 		{
 			Input::Instance().ClearKeyTriggers();
 			waiting_for_key_condition = &condition;
 		}
 		ImGui::PopStyleColor();
+
 		ImGui::Spacing();
-
-		int current_behavior = static_cast<int>(condition.param_second);	//現在の入力形式
-		static constexpr int mode_press = 0;	//押されている間
-		static constexpr int mode_trigger = 1;	//押された瞬間
-		static constexpr int mode_not_press = 2;//未入力
-		static constexpr int mode_release = 3;	//離れた瞬間
-
-		//コンボボックス表示用項目
-		const char* behavior_items[] = {
-			u8"押されている間",
-			u8"押された瞬間",
-			u8"未入力",
-			u8"離れた瞬間"
-		};
-		constexpr int total_behavior_count = 4;	//選択肢の総数
-
-		ImGui::Text(u8"入力の検知形式:");
+		ImGui::Text(u8"マウス直接設定:");
 		ImGui::SameLine();
-		ImGui::SetNextItemWidth(200.0f);
-		if (ImGui::Combo(u8"##InputBehaviorCombo", &current_behavior, behavior_items, total_behavior_count)) 
+		if (ImGui::Button(u8"左クリック"))
 		{
-			condition.param_second = static_cast<float>(current_behavior);
+			condition.hash_key = VK_LBUTTON;
+			waiting_for_key_condition = nullptr;
 		}
+		ImGui::SameLine();
+		if (ImGui::Button(u8"右クリック"))
+		{
+			condition.hash_key = VK_RBUTTON;
+			waiting_for_key_condition = nullptr;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button(u8"中クリック"))
+		{
+			condition.hash_key = VK_MBUTTON;
+			waiting_for_key_condition = nullptr;
+		}
+	}
+
+	ImGui::Spacing();
+
+	int current_behavior = static_cast<int>(condition.param_second);
+	const char* behavior_items[] = {
+		u8"押下中 (Press)",
+		u8"押下瞬間 (Trigger)",
+		u8"未押下 (Not Press)",
+		u8"離した瞬間 (Release)"
+	};
+	constexpr int total_behavior_count = 4;
+
+	ImGui::Text(u8"入力動作モード:");
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(200.0f);
+	if (ImGui::Combo(u8"##InputBehaviorCombo", &current_behavior, behavior_items, total_behavior_count))
+	{
+		condition.param_second = static_cast<float>(current_behavior);
 	}
 }
 

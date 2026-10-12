@@ -330,22 +330,15 @@ void StateMachineGraphEditor::UpdateRuntimeTracking()
 //擬似シミュレーション更新
 void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, GraphData* current_graph, uint32_t& current_active_node_id)
 {
-	if (!state_machine_component || !current_graph)
-	{
-		printf("Error: StateMachineGraphEditor::UpdateSimulationMode - state_machine_component または current_graph が nullptr です。\n");
-		return;
-	}
-
 	if (!blackboard)
 	{
 		printf("Error: StateMachineGraphEditor::UpdateSimulationMode - 有効な StateBlackboard が割り当てられていません。\n");
 		return;
 	}
 
-	// 前フレームのアクティブステートIDを取得
 	const float delta_time = ImGui::GetIO().DeltaTime;
 
-	//階層属性に応じたシミュレーション分岐
+	//ビヘイビアツリー階層表示中のシミュレーション処理
 	if (current_graph->layer_type == LayerType::BehaviorTree)
 	{
 		if (behavior_simulator)
@@ -358,19 +351,105 @@ void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, 
 				current_active_node_id = sim_active_id;
 			}
 		}
-		else
+		//ビヘイビアツリー階層を所有している親サブグラフノードを検索
+		uint32_t parent_graph_id = UINT32_MAX;
+		const GraphNode* parent_subgraph_node = nullptr;
+
+		if (data_manager)
 		{
-			printf("Error: StateMachineGraphEditor::UpdateSimulationMode - behavior_simulator が nullptr です。\n");
+			auto& layer = data_manager->GetLayerDatas();
+			for (size_t g = 0; g < layer.size(); g++)
+			{
+				for (size_t n = 0; n < layer[g].nodes.size(); n++)
+				{
+					if (layer[g].nodes[n].is_sub_graph && layer[g].nodes[n].sub_graph_id == current_graph->id)
+					{
+						parent_graph_id = layer[g].id;
+						parent_subgraph_node = &layer[g].nodes[n];
+						break;
+					}
+				}
+				if (parent_subgraph_node)
+				{
+					break;
+				}
+			}
+		}
+		//親サブグラフノードから出ている上位の遷移条件を評価
+		if (parent_subgraph_node && parent_graph_id != UINT32_MAX)
+		{
+			std::vector<GraphLink*> outgoing_links = data_manager->GetLinkesFromNode(parent_graph_id, parent_subgraph_node->id);
+
+			for (size_t l = 0; l < outgoing_links.size(); l++)
+			{
+				const GraphLink* link = outgoing_links[l];
+				if (!link || link->conditions.empty())
+				{
+					continue;
+				}
+
+				//全条件が満たされているか判定
+				bool all_conditions_met = true;
+				for (size_t c = 0; c < link->conditions.size(); c++)
+				{
+					TransitionCondition trans_cond;
+					trans_cond.type = link->conditions[c].type;
+					trans_cond.hash_key = link->conditions[c].hash_key;
+					trans_cond.reference_value = link->conditions[c].reference_value;
+					trans_cond.compart_op = static_cast<CompareOperator>(link->conditions[c].compare_operator);
+					trans_cond.param_second = link->conditions[c].param_second;
+					trans_cond.secondary_hash = link->conditions[c].secondary_hash;
+					trans_cond.vector_reference_value = link->conditions[c].vector_reference_value;
+
+					if (!trans_cond.IsJudgment(*blackboard))
+					{
+						all_conditions_met = false;
+						break;
+					}
+				}
+				//上位の遷移条件が成立した場合
+				if (all_conditions_met)
+				{
+					uint32_t transition_dst_node_id = data_manager->GetNodeIdFromPinId(parent_graph_id, link->end_pin_id);
+					if (transition_dst_node_id != 0 && transition_dst_node_id != UINT32_MAX)
+					{
+						printf("StateMachineGraphEditor: 上位階層 (ID:%u) の遷移条件が成立しました。ノード ID:%u へ遷移します。\n",
+							parent_graph_id, transition_dst_node_id);
+
+						//遷移エフェクト
+						flow_src_node_id = parent_subgraph_node->id;
+						flow_dst_node_id = transition_dst_node_id;
+						constexpr float defalut_flow_dutation = 0.35f;
+						flow_effect_timer = defalut_flow_dutation;
+
+						//BTの実行を停止・リセット
+						if (behavior_simulator)
+						{
+							behavior_simulator->InvalidataTree();
+						}
+
+						//親階層のアクティブノードを更新
+						graph_active_nodes[parent_graph_id] = transition_dst_node_id;
+
+						//表示階層を親階層へ戻す
+						current_graph_id = parent_graph_id;
+						return;
+					}
+				}
+			}
 		}
 		return;
 	}
+	//通常のステートマシン階層におけるシミュレーション
+	if (!state_machine_component)
+	{
+		return;
+	}
 
-	// StateMachineComponent 内部の StateGraphSimulator による遷移シミュレーションを実行
 	const uint32_t prev_node_id = state_machine_component->GetCurrentNodeId();
 	state_machine_component->Update(delta_time, blackboard);
 	const uint32_t new_active_node_id = state_machine_component->GetCurrentNodeId();
 
-	// ステート遷移が発生したかを判定
 	if (new_active_node_id != UINT32_MAX && new_active_node_id != prev_node_id)
 	{
 		flow_src_node_id = prev_node_id;
@@ -380,19 +459,17 @@ void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, 
 		flow_effect_timer = default_flow_duration;
 	}
 
-	// 現在の確定アクティブノードIDをエディタ側へ反映
 	if (new_active_node_id != UINT32_MAX)
 	{
 		current_active_node_id = new_active_node_id;
 
-		// 追尾モードが有効な場合、アクティブノードが所属する階層へ表示を自動切り替え
 		if (is_tracking_active_node && data_manager)
 		{
 			const uint32_t target_graph_id = data_manager->GetGraphIdFromNodeId(new_active_node_id);
 			if (target_graph_id != UINT32_MAX && target_graph_id != current_graph_id)
 			{
 				current_graph_id = target_graph_id;
-				printf("StateMachineGraphEditor: サブステート追尾により表示階層を ID:%u へ自動切り替えしました。\n", current_graph_id);
+				printf("StateMachineGraphEditor: 追従により表示階層を ID:%u へ自動切り替えしました。\n", current_graph_id);
 			}
 		}
 	}

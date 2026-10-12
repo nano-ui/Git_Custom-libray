@@ -49,6 +49,13 @@ void Input::Initialize()
 	mouse_delta_y = 0.0f;
 	raw_mouse_delta_x = 0.0f;
 	raw_mouse_delta_y = 0.0f;
+
+	ZeroMemory(current_mouse_button_state, sizeof(current_mouse_button_state));
+	ZeroMemory(prev_mouse_button_state, sizeof(prev_mouse_button_state));
+	ZeroMemory(latched_mouse_trigger, sizeof(latched_mouse_trigger));
+
+	mouse_wheel_delta = 0;
+	raw_mouse_wheel_delta = 0;
 }
 
 //更新処理
@@ -99,6 +106,23 @@ void Input::Update()
 	//スクリーン座標の更新
 	prev_mouse_pos = current_mouse_pos;
 	GetCursorPos(&current_mouse_pos);
+
+	//現在のマウスの状態を検知
+	for (int btn_idx = 0; btn_idx < mouse_button_count; btn_idx++)
+	{
+		bool is_current_press = current_mouse_button_state[btn_idx];
+		bool is_prev_press = prev_mouse_button_state[btn_idx];
+
+		if (is_current_press && is_prev_press)
+		{
+			latched_mouse_trigger[btn_idx] = false;
+		}
+	}
+
+	memcpy(prev_mouse_button_state, current_mouse_button_state, sizeof(current_mouse_button_state));
+
+	mouse_wheel_delta = raw_mouse_wheel_delta;
+	raw_mouse_wheel_delta = 0;
 }
 
 //キーボードが押されているか判定
@@ -134,6 +158,58 @@ bool Input::IsKeyRelease(int key_code) const
 	bool is_prev_press = (prev_key_state[key_code] & key_press_mask) != 0;
 
 	return !is_current_press && is_prev_press;
+}
+
+//ボタンが押されているか判定
+bool Input::IsMousePress(int button) const
+{
+	if (button < 0 || button >= mouse_button_count)
+	{
+		OutputDebugStringA("[Input] エラー: 範囲外のマウスボタン番号がIsMousePressに渡されました。\n");
+		return false;
+	}
+	return current_mouse_button_state[button];
+}
+
+//ボタンが押された瞬間か判定
+bool Input::IsMouseTrigger(int button) const
+{
+	if (button < 0 || button >= mouse_button_count)
+	{
+		OutputDebugStringA("[Input] エラー: 範囲外のマウスボタン番号がIsMouseTriggerに渡されました。\n");
+		return false;
+	}
+
+	if (latched_mouse_trigger[button])
+	{
+		latched_mouse_trigger[button] = false;
+		return true;
+	}
+
+	return current_mouse_button_state[button] && !prev_mouse_button_state[button];
+}
+
+//ボタンが離された瞬間
+bool Input::IsMouseRelease(int button) const
+{
+	if (button < 0 || button >= mouse_button_count)
+	{
+		OutputDebugStringA("[Input] エラー: 範囲外のマウスボタン番号がIsMouseReleaseに渡されました。\n");
+		return false;
+	}
+	return !current_mouse_button_state[button] && prev_mouse_button_state[button];
+}
+
+//ホイールが奥へ回転したかを判定
+bool Input::IsMouseWheelUp()const
+{
+	return mouse_wheel_delta > 0;
+}
+
+//ホイールが手前へ回転したかを判定
+bool Input::IsMouseWheelDown()const
+{
+	return mouse_wheel_delta < 0;
 }
 
 //コントローラーのボタンが押されているか判定
@@ -211,6 +287,12 @@ float Input::GetMouseDeltaY() const
 	return mouse_delta_y;
 }
 
+//ホイール移動量取得
+int Input::GetMouseWheelDelta() const
+{
+	return mouse_wheel_delta;
+}
+
 //Windowsメッセージ処理
 bool Input::ProcessMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -239,6 +321,45 @@ bool Input::ProcessMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 		last_msg_x = current_x;
 		last_msg_y = current_y;
+		return true;
+	}
+	else if (msg == WM_LBUTTONDOWN)
+	{
+		current_mouse_button_state[mouse_left] = true;
+		latched_mouse_trigger[mouse_left] = true;
+		return true;
+	}
+	else if (msg == WM_LBUTTONUP)
+	{
+		current_mouse_button_state[mouse_left] = false;
+		return true;
+	}
+	else if (msg == WM_RBUTTONDOWN)
+	{
+		current_mouse_button_state[mouse_right] = true;
+		latched_mouse_trigger[mouse_right] = true;
+		return true;
+	}
+	else if (msg == WM_RBUTTONUP)
+	{
+		current_mouse_button_state[mouse_right] = false;
+		return true;
+	}
+	else if (msg == WM_MBUTTONDOWN)
+	{
+		current_mouse_button_state[mouse_middle] = true;
+		latched_mouse_trigger[mouse_middle] = true;
+		return true;
+	}
+	else if (msg == WM_MBUTTONUP)
+	{
+		current_mouse_button_state[mouse_middle] = false;
+		return true;
+	}
+	else if (msg == WM_MOUSEWHEEL)
+	{
+		short delta = static_cast<short>(HIWORD(wparam));
+		raw_mouse_wheel_delta += delta;
 		return true;
 	}
 	return false;

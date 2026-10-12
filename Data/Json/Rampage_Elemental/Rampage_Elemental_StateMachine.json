@@ -8,7 +8,7 @@
                 {
                     "Conditions": [
                         {
-                            "CompOp": 4,
+                            "CompOp": 5,
                             "HashKey": 1572818033,
                             "ParamSecond": 0.0,
                             "RefValue": 50.0,
@@ -28,7 +28,7 @@
                 {
                     "Conditions": [
                         {
-                            "CompOp": 3,
+                            "CompOp": 2,
                             "HashKey": 1572818033,
                             "ParamSecond": 0.0,
                             "RefValue": 50.0,

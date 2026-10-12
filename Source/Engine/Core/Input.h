@@ -26,6 +26,21 @@ public:
 	//キーボードが離された瞬間か判定
 	bool IsKeyRelease(int key_code)const;
 
+	//ボタンが押されているか判定
+	bool IsMousePress(int button)const;
+
+	//ボタンが押された瞬間か判定
+	bool IsMouseTrigger(int button)const;
+
+	//ボタンが離された瞬間
+	bool IsMouseRelease(int button)const;
+
+	//ホイールが奥へ回転したかを判定
+	bool IsMouseWheelUp()const;
+
+	//ホイールが手前へ回転したかを判定
+	bool IsMouseWheelDown()const;
+
 	//コントローラーのボタンが押されているか判定
 	bool IsButtonPress(WORD button)const;
 
@@ -50,6 +65,9 @@ public:
 	//マウスのY方向の移動量を取得
 	float GetMouseDeltaY()const;
 
+	//ホイール移動量取得
+	int GetMouseWheelDelta()const;
+
 	//Windowsメッセージ処理
 	bool ProcessMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -63,6 +81,11 @@ private:
 	//コピー生成と代入を禁止
 	Input(const Input&) = delete;
 	Input& operator = (const Input&) = delete;
+
+public:
+	static constexpr int mouse_left = 0;		//左クリック
+	static constexpr int mouse_right = 1;		//右クリック
+	static constexpr int mouse_middle = 2;		//マウスホイール
 
 private:
 	static constexpr int max_keys = 256;		//キーボードの最大キー数
@@ -79,5 +102,13 @@ private:
 	float mouse_delta_y = 0.0f;					//確定した1フレーム間のマウスY移動量
 	float raw_mouse_delta_x = 0.0f;				//メッセージハンドラで累積蓄積するマウスX移動量
 	float raw_mouse_delta_y = 0.0f;				//メッセージハンドラで累積蓄積するマウスY移動量
+
+	static constexpr int mouse_button_count = 3;			//判定対象とするマウスボタン数
+	bool current_mouse_button_state[mouse_button_count];	//各ボタンの押下状態
+	bool prev_mouse_button_state[mouse_button_count];		//前回の各ボタンの押下状態
+	mutable bool latched_mouse_trigger[mouse_button_count];	//メッセージ受信時に押下瞬間
+
+	int mouse_wheel_delta = 0;								//ホイールの回転量
+	int raw_mouse_wheel_delta = 0;							//ホイールの一時蓄積
 };
 

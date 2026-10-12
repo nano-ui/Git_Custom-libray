@@ -3,6 +3,7 @@
 #include "Gameplay/AI/RandomJugment.h"
 #include "Gameplay/AI/DistanceJugment.h"
 #include "Gameplay/AI/RatioJudgment.h"
+#include "Engine\Core\Input.h"
 
 //コンストラクタ
 StateBlackboard::StateBlackboard()
@@ -166,7 +167,82 @@ bool TransitionCondition::IsJudgment(const StateBlackboard& blackboard) const
 		RatioJudgment ratio_node(std::ref(*cur_val), std::ref(*max_val), threshold, mapped_type);
 		return ratio_node.Check();
 	}
+	case ConditionNodeType::InputCheck:
+	{
+		return CheckInputConditon();
+	}
 	}
 
 	return false;
+}
+
+//入力判定
+bool TransitionCondition::CheckInputConditon() const
+{
+	const int v_key_code = static_cast<int>(hash_key);
+	const int input_behavior_mode = static_cast<int>(param_second);
+
+	constexpr int key_unassigned = 0;
+	if (v_key_code == key_unassigned)
+	{
+		return false;
+	}
+
+	constexpr int mode_press = 0;
+	constexpr int mode_trigger = 1;
+	constexpr int mode_not_press = 2;
+	constexpr int mode_release = 3;
+
+	if (v_key_code == VK_LBUTTON)
+	{
+		switch (input_behavior_mode)
+		{
+		case mode_press:     return Input::Instance().IsMousePress(Input::mouse_left);
+		case mode_trigger:   return Input::Instance().IsMouseTrigger(Input::mouse_left);
+		case mode_not_press: return !Input::Instance().IsMousePress(Input::mouse_left);
+		case mode_release:   return Input::Instance().IsMouseRelease(Input::mouse_left);
+		default:
+			printf("Error: TransitionCondition::CheckInputCondition - 不正な入力判定モードです: %d\n", input_behavior_mode);
+			return false;
+		}
+	}
+	else if (v_key_code == VK_RBUTTON)
+	{
+		switch (input_behavior_mode)
+		{
+		case mode_press:     return Input::Instance().IsMousePress(Input::mouse_right);
+		case mode_trigger:   return Input::Instance().IsMouseTrigger(Input::mouse_right);
+		case mode_not_press: return !Input::Instance().IsMousePress(Input::mouse_right);
+		case mode_release:   return Input::Instance().IsMouseRelease(Input::mouse_right);
+		default:
+			printf("Error: TransitionCondition::CheckInputCondition - 不正な入力判定モードです: %d\n", input_behavior_mode);
+			return false;
+		}
+	}
+	else if (v_key_code == VK_MBUTTON)
+	{
+		switch (input_behavior_mode)
+		{
+		case mode_press:     return Input::Instance().IsMousePress(Input::mouse_middle);
+		case mode_trigger:   return Input::Instance().IsMouseTrigger(Input::mouse_middle);
+		case mode_not_press: return !Input::Instance().IsMousePress(Input::mouse_middle);
+		case mode_release:   return Input::Instance().IsMouseRelease(Input::mouse_middle);
+		default:
+			printf("Error: TransitionCondition::CheckInputCondition - 不正な入力判定モードです: %d\n", input_behavior_mode);
+			return false;
+		}
+	}
+	else
+	{
+		switch (input_behavior_mode)
+		{
+		case mode_press:     return Input::Instance().IsKeyPress(v_key_code);
+		case mode_trigger:   return Input::Instance().IsKeyTrigger(v_key_code);
+		case mode_not_press: return !Input::Instance().IsKeyPress(v_key_code);
+		case mode_release:   return Input::Instance().IsKeyRelease(v_key_code);
+		default:
+			printf("Error: TransitionCondition::CheckInputCondition - 不正な入力判定モードです: %d\n", input_behavior_mode);
+			return false;
+		}
+	}
 }

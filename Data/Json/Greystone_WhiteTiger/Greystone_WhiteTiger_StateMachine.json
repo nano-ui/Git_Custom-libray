@@ -109,7 +109,7 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 16,
+                            "HashKey": 2,
                             "ParamSecond": 1.0,
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
@@ -149,7 +149,7 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 16,
+                            "HashKey": 2,
                             "ParamSecond": 1.0,
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
@@ -244,6 +244,159 @@
                     "EndPinID": 332,
                     "ID": 384,
                     "StartPinID": 105
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 1,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 250,
+                    "ID": 428,
+                    "StartPinID": 102
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 5,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "CompOp": 0,
+                            "HashKey": 1,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 250,
+                    "ID": 429,
+                    "StartPinID": 285
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 1,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 250,
+                    "ID": 430,
+                    "StartPinID": 105
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 5,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 101,
+                    "ID": 431,
+                    "StartPinID": 251
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 5,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 284,
+                    "ID": 432,
+                    "StartPinID": 251
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 5,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 104,
+                    "ID": 433,
+                    "StartPinID": 251
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 5,
+                            "HashKey": 1572818033,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 332,
+                    "ID": 434,
+                    "StartPinID": 251
                 }
             ],
             "Nodes": [
@@ -308,9 +461,9 @@
                     "IsLoop": true,
                     "IsRootMotion": false,
                     "IsSubGraph": true,
-                    "LinkColorB": 0.3129798173904419,
-                    "LinkColorG": 0.3129798173904419,
-                    "LinkColorR": 0.953667938709259,
+                    "LinkColorB": 0.15813717246055603,
+                    "LinkColorG": 0.15813717246055603,
+                    "LinkColorR": 0.8532818555831909,
                     "Name": "移動ステート",
                     "Output": [
                         {
@@ -346,9 +499,9 @@
                     "IsLoop": true,
                     "IsRootMotion": false,
                     "IsSubGraph": true,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
+                    "LinkColorB": 0.7065637111663818,
+                    "LinkColorG": 0.5849077105522156,
+                    "LinkColorR": 0.286444753408432,
                     "Name": "攻撃ステート",
                     "Output": [
                         {
@@ -384,9 +537,9 @@
                     "IsLoop": true,
                     "IsRootMotion": false,
                     "IsSubGraph": true,
-                    "LinkColorB": 0.1295747011899948,
-                    "LinkColorG": 0.8185328245162964,
-                    "LinkColorR": 0.1987365484237671,
+                    "LinkColorB": 0.27198463678359985,
+                    "LinkColorG": 0.7915058135986328,
+                    "LinkColorR": 0.3241373300552368,
                     "Name": "回避",
                     "Output": [
                         {
@@ -436,44 +589,6 @@
                     "PosX": 208.6664276123047,
                     "PosY": -306.3333435058594,
                     "SubGraphID": 0
-                },
-                {
-                    "ActionCategory": 0,
-                    "AnimationName": "",
-                    "BehaviorData": {
-                        "ActionDuration": -1.0,
-                        "Category": 0,
-                        "CompositeType": 0,
-                        "CooldownRandomRange": 0.0,
-                        "CooldownTime": 0.0,
-                        "FinishResult": 0,
-                        "Weight": 1
-                    },
-                    "ID": 341,
-                    "Input": [
-                        {
-                            "ID": 342,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": true,
-                    "IsRootMotion": false,
-                    "IsSubGraph": true,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "新規サブグラフ",
-                    "Output": [
-                        {
-                            "ID": 343,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": 345.9999694824219,
-                    "PosY": -2.000000238418579,
-                    "SubGraphID": 340
                 }
             ]
         },
@@ -529,13 +644,67 @@
             "LayerType": 0,
             "Links": [
                 {
-                    "Conditions": [],
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 1,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 5,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
                     "EndPinID": 260,
                     "ID": 262,
                     "StartPinID": 258
                 },
                 {
-                    "Conditions": [],
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "HashKey": 1,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 5,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
                     "EndPinID": 264,
                     "ID": 266,
                     "StartPinID": 261
@@ -544,11 +713,24 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 0,
+                            "HashKey": 1,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
                             "Type": 4,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "CompOp": 0,
+                            "HashKey": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 5,
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -559,26 +741,6 @@
                     "EndPinID": 257,
                     "ID": 267,
                     "StartPinID": 265
-                },
-                {
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
-                            "HashKey": 0,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 4,
-                            "VectorRefValue": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        }
-                    ],
-                    "EndPinID": 279,
-                    "ID": 281,
-                    "StartPinID": 277
                 }
             ],
             "Nodes": [
@@ -698,44 +860,6 @@
                 },
                 {
                     "ActionCategory": 3,
-                    "AnimationName": "Ability_R_0",
-                    "BehaviorData": {
-                        "ActionDuration": -1.0,
-                        "Category": 0,
-                        "CompositeType": 0,
-                        "CooldownRandomRange": 0.0,
-                        "CooldownTime": 0.0,
-                        "FinishResult": 0,
-                        "Weight": 1
-                    },
-                    "ID": 269,
-                    "Input": [
-                        {
-                            "ID": 270,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": false,
-                    "IsRootMotion": false,
-                    "IsSubGraph": false,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "とびかかり",
-                    "Output": [
-                        {
-                            "ID": 271,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": -72.33341979980469,
-                    "PosY": -87.33333587646484,
-                    "SubGraphID": 0
-                },
-                {
-                    "ActionCategory": 3,
                     "AnimationName": "Attack_RMB",
                     "BehaviorData": {
                         "ActionDuration": -1.0,
@@ -770,82 +894,6 @@
                     ],
                     "PosX": 410.333251953125,
                     "PosY": -99.33333587646484,
-                    "SubGraphID": 0
-                },
-                {
-                    "ActionCategory": 0,
-                    "AnimationName": "",
-                    "BehaviorData": {
-                        "ActionDuration": -1.0,
-                        "Category": 0,
-                        "CompositeType": 0,
-                        "CooldownRandomRange": 0.0,
-                        "CooldownTime": 0.0,
-                        "FinishResult": 0,
-                        "Weight": 1
-                    },
-                    "ID": 275,
-                    "Input": [
-                        {
-                            "ID": 276,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": true,
-                    "IsRootMotion": false,
-                    "IsSubGraph": false,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "新規ステート",
-                    "Output": [
-                        {
-                            "ID": 277,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": 490.0,
-                    "PosY": -194.0,
-                    "SubGraphID": 0
-                },
-                {
-                    "ActionCategory": 0,
-                    "AnimationName": "",
-                    "BehaviorData": {
-                        "ActionDuration": -1.0,
-                        "Category": 0,
-                        "CompositeType": 0,
-                        "CooldownRandomRange": 0.0,
-                        "CooldownTime": 0.0,
-                        "FinishResult": 0,
-                        "Weight": 1
-                    },
-                    "ID": 278,
-                    "Input": [
-                        {
-                            "ID": 279,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": true,
-                    "IsRootMotion": false,
-                    "IsSubGraph": false,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "新規ステート",
-                    "Output": [
-                        {
-                            "ID": 280,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": 749.0,
-                    "PosY": -191.0,
                     "SubGraphID": 0
                 }
             ]
@@ -1059,6 +1107,6 @@
             ]
         }
     ],
-    "NextID": 422,
+    "NextID": 435,
     "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }
