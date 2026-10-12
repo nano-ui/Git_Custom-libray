@@ -28,9 +28,11 @@ public:
 	//ツリーを構築
 	std::shared_ptr<BehaviorNode> BuildTree(
 		const GraphData* graph,
-		StateBlackboard* blackboard,
 		std::function<void(uint32_t, const std::string&, bool, bool)>action_callback
 	);
+
+	//ブラックボードの設定
+	void SetActiveBlackboard(StateBlackboard* blackboard) { active_blackboard = blackboard; }
 
 private:
 	//優先順位ノード作成
@@ -59,5 +61,8 @@ private:
 
 	//グラフノードを検索
 	const GraphNode* FindGraphNode(const GraphData* graph, uint32_t node_id);
+
+private:
+	StateBlackboard* active_blackboard = nullptr;	//有効なブラックボード
 };
 

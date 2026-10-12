@@ -27,31 +27,23 @@ void BehaviorTreeSimulator::SetupGraph(const GraphData* graph)
 	current_graph_data = graph;
 	active_node_id = UINT32_MAX;
 	current_animation_name = "";
-
-	if (tree_builder)
-	{
-		runtime_root_node = tree_builder->BuildTree(
-			current_graph_data,
-			nullptr,
-			[this](uint32_t id, const std::string& anim, bool loop, bool root_motion)
-			{
-				this->OnActionExecuted(id, anim, loop, root_motion);
-			});
-	}
-	else
-	{
-		printf("Error: BehaviorTreeSimulator::SetupGraph - tree_builder が nullptr です。\n");
-	}
+	runtime_root_node.reset();
 }
 
 //シミュレーション更新処理
 bool BehaviorTreeSimulator::UpdateSimulation(float elapsed_time, StateBlackboard* blackboard)
 {
+	if (!tree_builder)
+	{
+		return false;
+	}
+
+	tree_builder->SetActiveBlackboard(blackboard);
+
 	if (!runtime_root_node && current_graph_data)
 	{
 		runtime_root_node = tree_builder->BuildTree(
 			current_graph_data,
-			blackboard,
 			[this](uint32_t id, const std::string& anim, bool loop, bool root_motion)
 			{
 				this->OnActionExecuted(id, anim, loop, root_motion);

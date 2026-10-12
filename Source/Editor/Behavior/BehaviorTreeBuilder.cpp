@@ -8,7 +8,6 @@
 //ƒcƒŠ[‚ğ\’z
 std::shared_ptr<BehaviorNode> BehaviorTreeBuilder::BuildTree(
 	const GraphData* graph,
-	StateBlackboard* blackboard,
 	std::function<void(uint32_t, const std::string&, bool, bool)> action_callback)
 {
 	if (!graph || graph->nodes.empty())
@@ -68,16 +67,19 @@ std::shared_ptr<BehaviorNode> BehaviorTreeBuilder::BuildTree(
 			}
 			const GraphNode* child_graph_node = FindGraphNode(graph, child_ids[c]);
 			int weight = (child_graph_node && child_graph_node->behavior_data.weight > 0) ? child_graph_node->behavior_data.weight : 1;
-		
-			const GraphLink* link = FindLinkBetweenNodes(graph, parent_node.id, child_ids[c]);
-			if (link && !link->conditions.empty())
-			{
-				std::vector<GraphTransitionCondition> cond_copy = link->conditions;
-				child_it->second->SetCondition([this, cond_copy, blackboard]()->bool
+
+			const uint32_t current_parent_id = parent_node.id;
+			const uint32_t current_child_id = child_ids[c];
+
+			child_it->second->SetCondition([this, graph, current_parent_id, current_child_id]() -> bool
+				{
+					const GraphLink* current_link = this->FindLinkBetweenNodes(graph, current_parent_id, current_child_id);
+					if (!current_link || current_link->conditions.empty())
 					{
-						return this->EvaluateConditions(cond_copy, blackboard);
-					});
-			}
+						return true;
+					}
+					return this->EvaluateConditions(current_link->conditions, this->active_blackboard);
+				});
 
 			auto selector = std::dynamic_pointer_cast<SelectorNode>(parent_it->second);
 			if (selector)

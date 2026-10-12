@@ -21,9 +21,9 @@
                             ]
                         }
                     ],
-                    "EndPinID": 366,
-                    "ID": 369,
-                    "StartPinID": 364
+                    "EndPinID": 401,
+                    "ID": 403,
+                    "StartPinID": 398
                 },
                 {
                     "Conditions": [
@@ -41,9 +41,9 @@
                             ]
                         }
                     ],
-                    "EndPinID": 363,
-                    "ID": 370,
-                    "StartPinID": 367
+                    "EndPinID": 397,
+                    "ID": 404,
+                    "StartPinID": 402
                 }
             ],
             "Nodes": [
@@ -59,10 +59,10 @@
                         "FinishResult": 0,
                         "Weight": 1
                     },
-                    "ID": 362,
+                    "ID": 396,
                     "Input": [
                         {
-                            "ID": 363,
+                            "ID": 397,
                             "Kind": 0,
                             "Name": "入力"
                         }
@@ -76,7 +76,7 @@
                     "Name": "待機状態",
                     "Output": [
                         {
-                            "ID": 364,
+                            "ID": 398,
                             "Kind": 1,
                             "Name": "出力"
                         }
@@ -97,10 +97,10 @@
                         "FinishResult": 0,
                         "Weight": 1
                     },
-                    "ID": 365,
+                    "ID": 400,
                     "Input": [
                         {
-                            "ID": 366,
+                            "ID": 401,
                             "Kind": 0,
                             "Name": "入力"
                         }
@@ -111,17 +111,17 @@
                     "LinkColorB": 1.0,
                     "LinkColorG": 1.0,
                     "LinkColorR": 1.0,
-                    "Name": "移動ステート",
+                    "Name": "新規サブグラフ",
                     "Output": [
                         {
-                            "ID": 367,
+                            "ID": 402,
                             "Kind": 1,
                             "Name": "出力"
                         }
                     ],
-                    "PosX": 364.3951721191406,
-                    "PosY": 62.69696807861328,
-                    "SubGraphID": 368
+                    "PosX": 126.6390380859375,
+                    "PosY": -2.614990234375,
+                    "SubGraphID": 399
                 }
             ]
         },
@@ -555,18 +555,25 @@
             "GraphID": 368,
             "GraphName": "移動ステート",
             "LayerType": 1,
+            "Links": [],
+            "Nodes": []
+        },
+        {
+            "GraphID": 399,
+            "GraphName": "新規サブグラフ",
+            "LayerType": 1,
             "Links": [
                 {
                     "Conditions": [],
-                    "EndPinID": 374,
-                    "ID": 376,
-                    "StartPinID": 372
+                    "EndPinID": 408,
+                    "ID": 410,
+                    "StartPinID": 406
                 },
                 {
                     "Conditions": [],
-                    "EndPinID": 378,
-                    "ID": 379,
-                    "StartPinID": 375
+                    "EndPinID": 412,
+                    "ID": 413,
+                    "StartPinID": 409
                 }
             ],
             "Nodes": [
@@ -582,7 +589,7 @@
                         "FinishResult": 0,
                         "Weight": 1
                     },
-                    "ID": 371,
+                    "ID": 405,
                     "Input": [],
                     "IsLoop": true,
                     "IsRootMotion": false,
@@ -593,13 +600,13 @@
                     "Name": "Root",
                     "Output": [
                         {
-                            "ID": 372,
+                            "ID": 406,
                             "Kind": 1,
                             "Name": ""
                         }
                     ],
-                    "PosX": 260.3951721191406,
-                    "PosY": 27.696964263916016,
+                    "PosX": -3.3609619140625,
+                    "PosY": 31.385009765625,
                     "SubGraphID": 0
                 },
                 {
@@ -614,10 +621,10 @@
                         "FinishResult": 0,
                         "Weight": 1
                     },
-                    "ID": 373,
+                    "ID": 407,
                     "Input": [
                         {
-                            "ID": 374,
+                            "ID": 408,
                             "Kind": 0,
                             "Name": ""
                         }
@@ -631,13 +638,13 @@
                     "Name": "Selector",
                     "Output": [
                         {
-                            "ID": 375,
+                            "ID": 409,
                             "Kind": 1,
                             "Name": ""
                         }
                     ],
-                    "PosX": 422.39520263671875,
-                    "PosY": 36.696964263916016,
+                    "PosX": 226.6390380859375,
+                    "PosY": 32.385009765625,
                     "SubGraphID": 0
                 },
                 {
@@ -652,10 +659,10 @@
                         "FinishResult": 0,
                         "Weight": 1
                     },
-                    "ID": 377,
+                    "ID": 411,
                     "Input": [
                         {
-                            "ID": 378,
+                            "ID": 412,
                             "Kind": 0,
                             "Name": ""
                         }
@@ -668,13 +675,13 @@
                     "LinkColorR": 1.0,
                     "Name": "Action",
                     "Output": [],
-                    "PosX": 587.3952026367188,
-                    "PosY": 20.696962356567383,
+                    "PosX": 442.6390380859375,
+                    "PosY": -26.614990234375,
                     "SubGraphID": 0
                 }
             ]
         }
     ],
-    "NextID": 380,
+    "NextID": 414,
     "TargetModelPath": "Data\\Model\\Character\\Enemy\\Rampage_Elemental.gltf"
 }
