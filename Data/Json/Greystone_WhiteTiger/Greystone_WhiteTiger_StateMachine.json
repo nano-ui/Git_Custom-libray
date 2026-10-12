@@ -250,6 +250,15 @@
                 {
                     "ActionCategory": 0,
                     "AnimationName": "Idle",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 100,
                     "Input": [
                         {
@@ -279,6 +288,15 @@
                 {
                     "ActionCategory": 1,
                     "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 103,
                     "Input": [
                         {
@@ -308,6 +326,15 @@
                 {
                     "ActionCategory": 0,
                     "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 249,
                     "Input": [
                         {
@@ -337,6 +364,15 @@
                 {
                     "ActionCategory": 4,
                     "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 283,
                     "Input": [
                         {
@@ -366,6 +402,15 @@
                 {
                     "ActionCategory": 0,
                     "AnimationName": "Death",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 331,
                     "Input": [
                         {
@@ -395,6 +440,15 @@
                 {
                     "ActionCategory": 0,
                     "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 341,
                     "Input": [
                         {
@@ -432,6 +486,15 @@
                 {
                     "ActionCategory": 1,
                     "AnimationName": "Run_Front",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 245,
                     "Input": [
                         {
@@ -522,6 +585,15 @@
                 {
                     "ActionCategory": 3,
                     "AnimationName": "Attack_A_Slow",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 256,
                     "Input": [
                         {
@@ -551,6 +623,15 @@
                 {
                     "ActionCategory": 3,
                     "AnimationName": "Attack_B_Slow",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 259,
                     "Input": [
                         {
@@ -580,6 +661,15 @@
                 {
                     "ActionCategory": 3,
                     "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 263,
                     "Input": [
                         {
@@ -609,6 +699,15 @@
                 {
                     "ActionCategory": 3,
                     "AnimationName": "Ability_R_0",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 269,
                     "Input": [
                         {
@@ -638,6 +737,15 @@
                 {
                     "ActionCategory": 3,
                     "AnimationName": "Attack_RMB",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 272,
                     "Input": [
                         {
@@ -667,6 +775,15 @@
                 {
                     "ActionCategory": 0,
                     "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 275,
                     "Input": [
                         {
@@ -696,6 +813,15 @@
                 {
                     "ActionCategory": 0,
                     "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 278,
                     "Input": [
                         {
@@ -733,6 +859,15 @@
                 {
                     "ActionCategory": 4,
                     "AnimationName": "Roll_Front",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 314,
                     "Input": [
                         {
@@ -784,6 +919,15 @@
                 {
                     "ActionCategory": 0,
                     "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 401,
                     "Input": [],
                     "IsLoop": true,
@@ -807,6 +951,15 @@
                 {
                     "ActionCategory": 0,
                     "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 413,
                     "Input": [
                         {
@@ -836,6 +989,15 @@
                 {
                     "ActionCategory": 0,
                     "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 416,
                     "Input": [
                         {
@@ -865,6 +1027,15 @@
                 {
                     "ActionCategory": 0,
                     "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 419,
                     "Input": [
                         {

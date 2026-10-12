@@ -61,7 +61,7 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 			bt_json["ActionDuration"] = node.behavior_data.action_duration;
 			bt_json["CooldownTime"] = node.behavior_data.cooldown_time;
 			bt_json["CooldownRandomRange"] = node.behavior_data.cooldown_random_range;
-
+			node_json["BehaviorData"] = bt_json;
 
 			//入力ピンのシリアライズ
 			nlohmann::json inputs_array = nlohmann::json::array(); // 入力ピン用の一時配列
@@ -229,34 +229,33 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 				const auto& bt_json = node_json["BehaviorData"];
 				if (bt_json.contains("Category"))
 				{
-					node.behavior_data.category = static_cast<BehaviorCategory>(bt_json["Category"]);
+					node.behavior_data.category = static_cast<BehaviorCategory>(bt_json["Category"].get<int>());
 				}
 				if (bt_json.contains("CompositeType"))
 				{
-					node.behavior_data.composite_node_type = static_cast<CompositeNodeType>(bt_json["CompositeType"]);
+					node.behavior_data.composite_node_type = static_cast<CompositeNodeType>(bt_json["CompositeType"].get<int>());
 				}
 				if (bt_json.contains("FinishResult"))
 				{
-					node.behavior_data.result_type = static_cast<ResultType>(bt_json["FinishResult"]);
+					node.behavior_data.result_type = static_cast<ResultType>(bt_json["FinishResult"].get<int>());
 				}
 				if (bt_json.contains("Weight"))
 				{
-					node.behavior_data.weight = bt_json["Weight"];
+					node.behavior_data.weight = bt_json["Weight"].get<int>();
 				}
 				if (bt_json.contains("ActionDuration"))
 				{
-					node.behavior_data.action_duration = node_json["ActionDuration"];
+					node.behavior_data.action_duration = bt_json["ActionDuration"].get<float>();
 				}
 				if (bt_json.contains("CooldownTime"))
 				{
-					node.behavior_data.cooldown_time = node_json["CooldownTime"];
+					node.behavior_data.cooldown_time = bt_json["CooldownTime"].get<float>();
 				}
 				if (bt_json.contains("CooldownRandomRange"))
 				{
-					node.behavior_data.cooldown_random_range = node_json["CooldownRandomRange"];
+					node.behavior_data.cooldown_random_range = bt_json["CooldownRandomRange"].get<float>();
 				}
 			}
-
 
 			//入力ピンの復元
 			for (const auto& pin_json : node_json["Input"])

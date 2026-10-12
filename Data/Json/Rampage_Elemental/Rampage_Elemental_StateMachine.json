@@ -7,25 +7,68 @@
             "Links": [
                 {
                     "Conditions": [],
-                    "EndPinID": 343,
-                    "ID": 345,
-                    "StartPinID": 341
+                    "EndPinID": 353,
+                    "ID": 355,
+                    "StartPinID": 351
                 },
                 {
-                    "Conditions": [],
-                    "EndPinID": 347,
-                    "ID": 348,
-                    "StartPinID": 344
+                    "Conditions": [
+                        {
+                            "CompOp": 4,
+                            "HashKey": 1572818033,
+                            "ParamSecond": 0.0,
+                            "RefValue": 50.0,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 357,
+                    "ID": 358,
+                    "StartPinID": 354
+                },
+                {
+                    "Conditions": [
+                        {
+                            "CompOp": 3,
+                            "HashKey": 1572818033,
+                            "ParamSecond": 0.0,
+                            "RefValue": 50.0,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 360,
+                    "ID": 361,
+                    "StartPinID": 354
                 }
             ],
             "Nodes": [
                 {
                     "ActionCategory": 0,
                     "AnimationName": "",
-                    "ID": 339,
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 349,
                     "Input": [
                         {
-                            "ID": 340,
+                            "ID": 350,
                             "Kind": 0,
                             "Name": "入力"
                         }
@@ -39,7 +82,7 @@
                     "Name": "待機状態",
                     "Output": [
                         {
-                            "ID": 341,
+                            "ID": 351,
                             "Kind": 1,
                             "Name": "出力"
                         }
@@ -51,10 +94,19 @@
                 {
                     "ActionCategory": 0,
                     "AnimationName": "",
-                    "ID": 342,
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 1,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 352,
                     "Input": [
                         {
-                            "ID": 343,
+                            "ID": 353,
                             "Kind": 0,
                             "Name": ""
                         }
@@ -68,22 +120,31 @@
                     "Name": "Selector",
                     "Output": [
                         {
-                            "ID": 344,
+                            "ID": 354,
                             "Kind": 1,
                             "Name": ""
                         }
                     ],
-                    "PosX": 357.34130859375,
-                    "PosY": 76.8009033203125,
+                    "PosX": 271.9999694824219,
+                    "PosY": 38.000003814697266,
                     "SubGraphID": 0
                 },
                 {
                     "ActionCategory": 0,
-                    "AnimationName": "Move_Front_Start",
-                    "ID": 346,
+                    "AnimationName": "Move_Front_Loop",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 2,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 356,
                     "Input": [
                         {
-                            "ID": 347,
+                            "ID": 357,
                             "Kind": 0,
                             "Name": ""
                         }
@@ -96,8 +157,40 @@
                     "LinkColorR": 1.0,
                     "Name": "Action",
                     "Output": [],
-                    "PosX": 587.34130859375,
-                    "PosY": -71.1990966796875,
+                    "PosX": 524.0,
+                    "PosY": -23.000001907348633,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "Idle",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 2,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 359,
+                    "Input": [
+                        {
+                            "ID": 360,
+                            "Kind": 0,
+                            "Name": ""
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Action",
+                    "Output": [],
+                    "PosX": 550.0,
+                    "PosY": 78.00000762939453,
                     "SubGraphID": 0
                 }
             ]
@@ -111,6 +204,15 @@
                 {
                     "ActionCategory": 1,
                     "AnimationName": "Run_Front",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 245,
                     "Input": [
                         {
@@ -201,6 +303,15 @@
                 {
                     "ActionCategory": 3,
                     "AnimationName": "Attack_A_Slow",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 256,
                     "Input": [
                         {
@@ -230,6 +341,15 @@
                 {
                     "ActionCategory": 3,
                     "AnimationName": "Attack_B_Slow",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 259,
                     "Input": [
                         {
@@ -259,6 +379,15 @@
                 {
                     "ActionCategory": 3,
                     "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 263,
                     "Input": [
                         {
@@ -288,6 +417,15 @@
                 {
                     "ActionCategory": 3,
                     "AnimationName": "Ability_R_0",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 269,
                     "Input": [
                         {
@@ -317,6 +455,15 @@
                 {
                     "ActionCategory": 3,
                     "AnimationName": "Attack_RMB",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 272,
                     "Input": [
                         {
@@ -346,6 +493,15 @@
                 {
                     "ActionCategory": 0,
                     "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 275,
                     "Input": [
                         {
@@ -375,6 +531,15 @@
                 {
                     "ActionCategory": 0,
                     "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 278,
                     "Input": [
                         {
@@ -412,6 +577,15 @@
                 {
                     "ActionCategory": 4,
                     "AnimationName": "Roll_Front",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
                     "ID": 314,
                     "Input": [
                         {
@@ -448,6 +622,6 @@
             "Nodes": []
         }
     ],
-    "NextID": 349,
+    "NextID": 362,
     "TargetModelPath": "Data\\Model\\Character\\Enemy\\Rampage_Elemental.gltf"
 }
