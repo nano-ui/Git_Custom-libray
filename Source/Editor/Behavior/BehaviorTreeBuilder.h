@@ -10,8 +10,11 @@ class BehaviorNode;
 class SelectorNode;
 class WeightedNode;
 class EditorActionNode;
+class StateBlackboard;
 struct GraphData;
 struct GraphNode;
+struct GraphLink;
+struct GraphTransitionCondition;
 
 class BehaviorTreeBuilder
 {
@@ -25,6 +28,7 @@ public:
 	//ツリーを構築
 	std::shared_ptr<BehaviorNode> BuildTree(
 		const GraphData* graph,
+		StateBlackboard* blackboard,
 		std::function<void(uint32_t, const std::string&, bool, bool)>action_callback
 	);
 
@@ -40,6 +44,12 @@ private:
 		const GraphNode& node,
 		std::function<void(uint32_t, const std::string&, bool, bool)>action_callback
 	);
+
+	//ノード間のリンクを検索
+	const GraphLink* FindLinkBetweenNodes(const GraphData* graph, uint32_t parent_node_id, uint32_t child_node_id);
+
+	//評価条件処理
+	bool EvaluateConditions(const std::vector<GraphTransitionCondition>& conditions, StateBlackboard* blackboard);
 
 	//ルートノードを検索
 	uint32_t FindRootNodeId(const GraphData* graph);

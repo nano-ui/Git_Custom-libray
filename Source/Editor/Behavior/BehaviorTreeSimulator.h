@@ -26,6 +26,9 @@ public:
 	//シミュレーション更新処理
 	bool UpdateSimulation(float elapsed_time, StateBlackboard* blackboard);
 
+	//ツリーの再構築
+	void InvalidataTree() { return runtime_root_node.reset(); }
+
 	//実行ノードID取得
 	uint32_t GetCurrentActiveNodeId()const { return active_node_id; }
 

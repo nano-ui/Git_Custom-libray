@@ -654,6 +654,11 @@ void StateMachineGraphEditor::DrawRightSidebar(GraphData* current_graph, StateBl
 //アニメーションマップを構築して送信
 void StateMachineGraphEditor::TriggerHotReload()
 {
+	if (behavior_simulator)
+	{
+		behavior_simulator->InvalidataTree();
+	}
+
 	if (!current_loaded_file_path.empty())
 	{
 		data_manager->SaveToFile(current_loaded_file_path);

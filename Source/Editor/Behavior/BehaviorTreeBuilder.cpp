@@ -3,10 +3,12 @@
 #include "Gameplay\AI\SelectorNode.h"
 #include "Gameplay\AI\WeightedNode.h"
 #include "Editor\StateMachineEditor\StateGraphDataManager.h"
+#include "Gameplay\StateMachine\StateBlackboard.h"
 
 //ツリーを構築
 std::shared_ptr<BehaviorNode> BehaviorTreeBuilder::BuildTree(
 	const GraphData* graph,
+	StateBlackboard* blackboard,
 	std::function<void(uint32_t, const std::string&, bool, bool)> action_callback)
 {
 	if (!graph || graph->nodes.empty())
@@ -67,6 +69,16 @@ std::shared_ptr<BehaviorNode> BehaviorTreeBuilder::BuildTree(
 			const GraphNode* child_graph_node = FindGraphNode(graph, child_ids[c]);
 			int weight = (child_graph_node && child_graph_node->behavior_data.weight > 0) ? child_graph_node->behavior_data.weight : 1;
 		
+			const GraphLink* link = FindLinkBetweenNodes(graph, parent_node.id, child_ids[c]);
+			if (link && !link->conditions.empty())
+			{
+				std::vector<GraphTransitionCondition> cond_copy = link->conditions;
+				child_it->second->SetCondition([this, cond_copy, blackboard]()->bool
+					{
+						return this->EvaluateConditions(cond_copy, blackboard);
+					});
+			}
+
 			auto selector = std::dynamic_pointer_cast<SelectorNode>(parent_it->second);
 			if (selector)
 			{
@@ -108,6 +120,74 @@ std::shared_ptr<EditorActionNode> BehaviorTreeBuilder::CreateActionNode(
         node.behavior_data.action_duration,
         node.behavior_data.result_type,
         action_callback);
+}
+
+//ノード間のリンクを検索
+const GraphLink* BehaviorTreeBuilder::FindLinkBetweenNodes(const GraphData* graph, uint32_t parent_node_id, uint32_t child_node_id)
+{
+	const GraphNode* parent = FindGraphNode(graph, parent_node_id);
+	const GraphNode* child = FindGraphNode(graph, child_node_id);
+	if (!parent || !child)
+	{
+		return nullptr;
+	}
+
+	for (size_t l = 0; l < graph->links.size(); l++)
+	{
+		const GraphLink& link = graph->links[l];
+		for (size_t op = 0; op < parent->outputs.size(); op++)
+		{
+			if (link.start_pin_id == parent->outputs[op].id)
+			{
+				for (size_t ip = 0; ip < child->inputs.size(); ip++)
+				{
+					if (link.end_pin_id == child->inputs[ip].id)
+					{
+						return &link;
+					}
+				}
+			}
+		}
+	}
+	return nullptr;
+}
+
+//評価条件処理
+bool BehaviorTreeBuilder::EvaluateConditions(const std::vector<GraphTransitionCondition>& conditions, StateBlackboard* blackboard)
+{
+	if (!blackboard)
+	{
+		return true;
+	}
+
+	for (size_t i = 0; i < conditions.size(); i++)
+	{
+		if (!blackboard)
+		{
+			return true;
+		}
+
+		for (const auto& cond : conditions)
+		{
+			TransitionCondition trans_cond;
+			trans_cond.type = cond.type;
+			trans_cond.hash_key = cond.hash_key;
+			trans_cond.reference_value = cond.reference_value;
+			trans_cond.compart_op = static_cast<CompareOperator>(cond.compare_operator);
+			trans_cond.param_second = cond.param_second;
+			trans_cond.secondary_hash = cond.secondary_hash;
+			trans_cond.vector_reference_value = cond.vector_reference_value;
+
+			if (!trans_cond.IsJudgment(*blackboard))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	return false;
 }
 
 //ルートノードを検索

@@ -32,6 +32,7 @@ void BehaviorTreeSimulator::SetupGraph(const GraphData* graph)
 	{
 		runtime_root_node = tree_builder->BuildTree(
 			current_graph_data,
+			nullptr,
 			[this](uint32_t id, const std::string& anim, bool loop, bool root_motion)
 			{
 				this->OnActionExecuted(id, anim, loop, root_motion);
@@ -46,6 +47,17 @@ void BehaviorTreeSimulator::SetupGraph(const GraphData* graph)
 //シミュレーション更新処理
 bool BehaviorTreeSimulator::UpdateSimulation(float elapsed_time, StateBlackboard* blackboard)
 {
+	if (!runtime_root_node && current_graph_data)
+	{
+		runtime_root_node = tree_builder->BuildTree(
+			current_graph_data,
+			blackboard,
+			[this](uint32_t id, const std::string& anim, bool loop, bool root_motion)
+			{
+				this->OnActionExecuted(id, anim, loop, root_motion);
+			});
+	}
+
 	if (!runtime_root_node)
 	{
 		return false;
