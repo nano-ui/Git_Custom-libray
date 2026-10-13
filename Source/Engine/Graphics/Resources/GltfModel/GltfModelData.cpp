@@ -154,6 +154,7 @@ void GltfModelData::CreateGpuResources(ID3D11Device* device)
 	}
 
 	//テクスチャのシェーダーリソースビュー（SRV）の生成
+	size_t image_index = 0;
 	for (const image& img : images)
 	{
 		ID3D11ShaderResourceView* shader_resource_view = nullptr;
@@ -162,6 +163,14 @@ void GltfModelData::CreateGpuResources(ID3D11Device* device)
 		if (!img.raw_image_data.empty()) // 生データが保持されている場合（メモリからの読み込み）
 		{
 			hr = GpuResourceUtils::LoadTexture(device, img.raw_image_data.data(), img.raw_image_data.size(), &shader_resource_view);
+			hr = GpuResourceUtils::LoadTexture(device, img.raw_image_data.data(), img.raw_image_data.size(), &shader_resource_view);
+			if (FAILED(hr))
+			{
+				char debug_msg[512];
+				sprintf_s(debug_msg, "[GltfModelData エラー] テクスチャの読み込みに失敗しました。 インデックス: %zu, 名前: %s, MIME形式: %s, データサイズ: %zu バイト, HRESULT: 0x%08X\n",
+					image_index, img.name.c_str(), img.mime_type.c_str(), img.raw_image_data.size(), static_cast<unsigned int>(hr));
+				OutputDebugStringA(debug_msg);
+			}
 			_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		}
 		else if (!img.uri.empty()) // 外部ファイルパスが指定されている場合
@@ -198,6 +207,7 @@ void GltfModelData::CreateGpuResources(ID3D11Device* device)
 			// テクスチャの読み込みに失敗した場合でも、インデックスのズレを防ぐために空の要素を追加する
 			texture_resource_views.emplace_back(nullptr);
 		}
+		image_index++;
 	}
 
 }

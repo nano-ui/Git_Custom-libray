@@ -40,8 +40,8 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	const uint32_t root_id = 0; // ルート階層の固定ID
 	current_graph_id = root_id;
 
+	//各クラスの初期化
 	data_manager = std::make_unique<StateGraphDataManager>();
-
 	palette_window = std::make_unique<StateGraphPaletteWindow>();
 	property_window = std::make_unique<StateGraphPropertyWindow>();
 	config_manager = std::make_unique<StateGraphConfigManager>();
@@ -56,15 +56,13 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	link_connection_handler = std::make_unique<StateLinkConnectionHandler>();
 	camera_controller = std::make_unique<StateGraphCameraController>();
 	toolbar = std::make_unique<StateGraphToolbar>();
-
 	behavior_node_renderer = std::make_unique<BehaviorNodeRenderer>();
 	behavior_simulator = std::make_unique<BehaviorTreeSimulator>();
 
+	//変数の初期化
 	target_model_hash = 0;
-
 	config_manager->LoadEditorConfig();
 	current_loaded_file_path = config_manager->GetCurrentLoadedFilePath();
-
 	bool is_success = false; //成功判定フラグ
 
 	if (!current_loaded_file_path.empty())

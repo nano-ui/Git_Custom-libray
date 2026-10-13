@@ -219,7 +219,6 @@ void SceneGame::Render(float elapsed_time)
 		const UINT k_shader_shadow_sampler_slot = 10;
 		context->PSSetSamplers(k_shader_shadow_sampler_slot, 1, &shadow_sampler);
 
-		object_manager->Render(context);
 		shadow_fb->deactivate(context);
 	}
 

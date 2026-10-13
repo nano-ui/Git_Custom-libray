@@ -4,34 +4,14 @@
             "detail_json_path": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
             "model_path": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
             "position": {
-                "x": -0.4922996163368225,
-                "y": 0.0,
-                "z": 2.8180806636810303
-            },
-            "rotation": {
-                "w": 0.9773527383804321,
-                "x": 0.0,
-                "y": 0.21161670982837677,
-                "z": 0.0
-            },
-            "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            }
-        },
-        {
-            "detail_json_path": "Data/Json/ExampleStage/ExampleStage.json",
-            "model_path": "Data\\Model\\Stage\\ExampleStage.glb",
-            "position": {
-                "x": 1.5348312854766846,
-                "y": 0.0,
-                "z": 3.3014981746673584
-            },
-            "rotation": {
-                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
+                "z": -0.21687133610248566
+            },
+            "rotation": {
+                "w": 0.45559394359588623,
+                "x": 0.0,
+                "y": -0.8901877403259277,
                 "z": 0.0
             },
             "scale": {
@@ -49,15 +29,55 @@
                 "z": 10.0
             },
             "rotation": {
-                "w": -1.1920928955078125e-07,
+                "w": 1.0,
                 "x": 0.0,
-                "y": 0.9999998807907104,
-                "z": -0.0
+                "y": 0.0,
+                "z": 0.0
             },
             "scale": {
                 "x": 3.0,
                 "y": 3.0,
                 "z": 3.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/MossyForgotten_SquareStone_Small/MossyForgotten_SquareStone_Small.json",
+            "model_path": "Data\\Model\\Stage\\MossyForgotten_SquareStone_Small.glb",
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 20.600000381469727,
+                "y": 1.0,
+                "z": 18.700000762939453
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/MossyForgotten_SquareStone_Large/MossyForgotten_SquareStone_Large.json",
+            "model_path": "Data\\Model\\Stage\\MossyForgotten_SquareStone_Large.glb",
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 15.0,
+                "y": 25.0,
+                "z": 15.0
             }
         }
     ]

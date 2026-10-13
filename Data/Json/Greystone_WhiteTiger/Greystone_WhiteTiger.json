@@ -1,13 +1,6 @@
 {
     "StateMachinePath": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger_StateMachine.json",
     "class_name": "Player",
-    "コライダーオフセット": {
-        "x": 0.0,
-        "y": 0.800000011920929,
-        "z": 0.0
-    },
-    "コライダー半径": 0.800000011920929,
-    "コライダー高さ": 0.699999988079071,
     "体力": 100.0,
     "加速度": 50.0,
     "摩擦力": 15.0,

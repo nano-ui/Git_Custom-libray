@@ -456,7 +456,9 @@
     <ClCompile Include="Source\Editor\Behavior\EditorActionNode.cpp">
       <Filter>Source\Editor\Behavior\EditorActionNode</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\Behavior\BehaviorTreeBuilder.cpp" />
+    <ClCompile Include="Source\Editor\Behavior\BehaviorTreeBuilder.cpp">
+      <Filter>Source\Editor\Behavior\BehaviorTreeBuilder</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -873,7 +875,9 @@
     <ClInclude Include="Source\Editor\Behavior\EditorActionNode.h">
       <Filter>Source\Editor\Behavior\EditorActionNode</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\Behavior\BehaviorTreeBuilder.h" />
+    <ClInclude Include="Source\Editor\Behavior\BehaviorTreeBuilder.h">
+      <Filter>Source\Editor\Behavior\BehaviorTreeBuilder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli">
