@@ -320,6 +320,7 @@ void CollisionManager::CheckDynamicVsSpace()
                 DirectX::XMStoreFloat3(&result.safe_position, v_safe_pos);
                 DirectX::XMStoreFloat3(&result.penetration_vector, v_push);
                 result.hit_attribute = space->attribute;
+                result.hit_collider = collider;
                 collider->listener->OnCollisionHit(result);
             }
         }

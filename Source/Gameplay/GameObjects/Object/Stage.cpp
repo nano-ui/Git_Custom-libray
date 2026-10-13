@@ -100,34 +100,26 @@ void Stage::RenderDebug(ShapeRenderer* renderer)
 {
 	if (!is_draw_areas || !space_division_cast) return;
 
-	std::vector<DirectX::BoundingBox> bboxes = space_division_cast->GetAreaBoundingBoxes();
-
-	DirectX::XMMATRIX stage_world = DirectX::XMMatrixIdentity();
-	if (transform_component)
+	if (!renderer)
 	{
-		stage_world = transform_component->GetWorldMatrix();
+		OutputDebugStringA("[Stage ÉGÉâÅ[] RenderDebug: ShapeRenderer Ç™ñ≥å¯Ç≈Ç∑ÅB\n");
+		return;
 	}
 
-	if (!renderer) return;
-	static constexpr float size_multiplier = 2.0f;
+	std::vector<DirectX::BoundingBox> bboxes = space_division_cast->GetAreaBoundingBoxes();
 
-	DirectX::XMFLOAT3 scale = transform_component ? transform_component->GetScale() : DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
-	DirectX::XMFLOAT4 rotation = transform_component ? transform_component->GetQuaternion() : DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	static constexpr float size_multiplier = 2.0f;
+	constexpr DirectX::XMFLOAT4 identity_rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 	for (size_t i = 0; i < bboxes.size(); i++)
 	{
 		const DirectX::BoundingBox& box = bboxes.at(i);
-		DirectX::XMVECTOR local_center = DirectX::XMLoadFloat3(&box.Center);
-		DirectX::XMVECTOR world_center = DirectX::XMVector3TransformCoord(local_center, stage_world);
-		DirectX::XMFLOAT3 final_center_pos;
-		DirectX::XMStoreFloat3(&final_center_pos, world_center);
-		DirectX::XMFLOAT3 extents_size = box.Extents;
 		DirectX::XMFLOAT3 full_size = {
-			extents_size.x * size_multiplier * scale.x,
-			extents_size.y * size_multiplier * scale.y,
-			extents_size.z * size_multiplier * scale.z
+			box.Extents.x * size_multiplier,
+			box.Extents.y * size_multiplier,
+			box.Extents.z * size_multiplier
 		};
-		renderer->DrawBox(final_center_pos, rotation, full_size, area_draw_color, ShapeDrawMode::Wireframe);
+		renderer->DrawBox(box.Center, identity_rotation, full_size, area_draw_color, ShapeDrawMode::Wireframe);
 	}
 
 	ID3D11DeviceContext* context = Graphics::Instance().GetContext();
