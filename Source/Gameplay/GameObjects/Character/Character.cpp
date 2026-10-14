@@ -111,8 +111,7 @@ void Character::Update(float elapsed_time)
 		{
 			if (sequencer_component)
 			{
-				constexpr float default_blend_time = 0.2f;
-				sequencer_component->ChangeAnimation(target_anim_name, default_blend_time);
+				sequencer_component->ChangeAnimation(target_anim_name, belnd_time);
 			}
 			previous_animation_name = target_anim_name;
 		}
@@ -207,6 +206,7 @@ void Character::SetupInspector()
 	{
 		inspector->RegisterVariable(u8"体力", &health, u8"基本ステータス");
 		inspector->RegisterVariable(u8"攻撃力", &attack_power, u8"基本ステータス");
+		inspector->RegisterVariable(u8"ブレンド時間", &belnd_time, u8"アニメーションブレンド");
 		inspector->RegisterText(u8"無敵時間タイマー", &invincible_timer, u8"ステータスモニター");
 		inspector->RegisterText(u8"現在のアニメーション", &current_animation_name, u8"アニメーションモニター");
 		inspector->RegisterText(u8"アニメーション再生時間", &current_animation_time, u8"アニメーションモニター");

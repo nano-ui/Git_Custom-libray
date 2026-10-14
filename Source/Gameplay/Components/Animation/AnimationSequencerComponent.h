@@ -48,10 +48,10 @@ public:
 
 private:
 	//指定時刻上の速度倍率を取得
-	float GetSpeedMultiplierAt(float seq_time)const;
+	float GetSpeedMultiplierAt(const std::string& anim_name, float seq_time)const;
 
 	//モデル再生時間を算出
-	float GetIntegratedModelTime(float seq_time)const;
+	float GetIntegratedModelTime(const std::string& anim_name, float seq_time)const;
 
 	//シーケンサ調整後の実効総時間を取得
 	float GetEffectiveDuration()const;
@@ -61,6 +61,7 @@ private:
 	std::unique_ptr<AnimationBlender> animation_blender;					//補完計算クラス
 	std::unordered_map <std::string, AnimationSequenceData> sequence_map;	//全アニメーションのシーケンス情報
 	std::string current_animaiton_name;										//現在のアニメーション名
+	std::string prev_animation_name;										//前回のアニメーション名
 	float current_sequence_time = 0.0f;										//シーケンサ上の経過時間
 	bool is_active = false;													//シーケンサフラグ
 	bool ia_animation_finished = false;										//アニメーション終了フラグ

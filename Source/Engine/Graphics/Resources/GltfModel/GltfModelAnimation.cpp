@@ -181,6 +181,13 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 		OutputDebugStringA("[GltfModelAnimation Error] animation_index out of range!/n");
 	}
 
+	for (size_t i = 0; i < animated_nodes.size(); ++i)
+	{
+		animated_nodes[i].scale = model_data->nodes[i].scale;
+		animated_nodes[i].rotation = model_data->nodes[i].rotation;
+		animated_nodes[i].translation = model_data->nodes[i].translation;
+	}
+
 	using namespace DirectX;															// DirectXMathの名前空間を使用
 	const size_t INDEX_OFFSET_NEXT = 1;													// 次の要素を参照するためのインデックスオフセット定数
 	const GltfModelData::animation& animation = model_data->animations.at(animation_index);	// 引数で指定されたアニメーションデータを参照として取得
@@ -244,15 +251,15 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 				OutputDebugStringA("[GltfModelAnimation Error] Animate: rotations key or keyframe index error!\n");
 				continue;
 			}
-			const std::vector<XMFLOAT4>& rotations = rot_it->second;      
-			XMVECTOR rot_start = XMLoadFloat4(&rotations.at(keyframe_index));                     
-			XMVECTOR rot_end = XMLoadFloat4(&rotations.at(keyframe_index + INDEX_OFFSET_NEXT));   
-			XMVECTOR slerped_rot = XMQuaternionSlerp(rot_start, rot_end, interpolation_factor);   
-			XMVECTOR normalized_rot = XMQuaternionNormalize(slerped_rot);                         
+			const std::vector<XMFLOAT4>& rotations = rot_it->second;
+			XMVECTOR rot_start = XMQuaternionNormalize(XMLoadFloat4(&rotations.at(keyframe_index)));
+			XMVECTOR rot_end = XMQuaternionNormalize(XMLoadFloat4(&rotations.at(keyframe_index + INDEX_OFFSET_NEXT)));
+			XMVECTOR slerped_rot = XMQuaternionSlerp(rot_start, rot_end, interpolation_factor);
+			XMVECTOR normalized_rot = XMQuaternionNormalize(slerped_rot);
 
 			if (static_cast<size_t>(channel.target_node) < animated_nodes.size())
 			{
-				XMStoreFloat4(&animated_nodes.at(channel.target_node).rotation, normalized_rot);     
+				XMStoreFloat4(&animated_nodes.at(channel.target_node).rotation, normalized_rot);
 			}
 		}
 		else if (channel.target_path == "translation")                                           

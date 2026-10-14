@@ -12,6 +12,8 @@ AnimationSequencerComponent::AnimationSequencerComponent(std::weak_ptr<ModelComp
 	: target_model_component(target_model_component)
 	, current_sequence_time(0.0f)
 	, is_active(false)
+	, current_animaiton_name("")
+	, prev_animation_name("")
 {
 	animation_blender = std::make_unique<AnimationBlender>();
 }
@@ -68,7 +70,7 @@ void AnimationSequencerComponent::Update(float elapsed_time)
 	float anim_duration = model->GetAnimationDuration();
 	float effective_duration = GetEffectiveDuration();
 
-	float integrated_time_b = GetIntegratedModelTime(current_sequence_time);
+	float integrated_time_b = GetIntegratedModelTime(current_animaiton_name, current_sequence_time);
 	constexpr float MIN_DURATION_THRESHOLD = 0.0f;
 
 	if (anim_duration > 0.0f)
@@ -84,13 +86,13 @@ void AnimationSequencerComponent::Update(float elapsed_time)
 	else OutputDebugStringA("[AnimationSequencerComponent 警告] Update: アニメーションの総再生時間が0以下です。\n");
 
 	//補完中の場合
-	if (animation_blender && animation_blender->IsBlending())
+	if (animation_blender && animation_blender->IsBlending() && current_animaiton_name != prev_animation_name)
 	{
 		std::string prev_name = animation_blender->GetPreviousAnimName();
 		float prev_time = animation_blender->GetPreviousAnimTime() + animation_blender->GetBlendTimer();
 		float blend_factor = animation_blender->GetBlendFactor();
 
-		float integrated_time_a = GetIntegratedModelTime(prev_time);
+		float integrated_time_a = GetIntegratedModelTime(prev_name, prev_time);
 		model->AnimateBlend(prev_name, integrated_time_a, current_animaiton_name, integrated_time_b, blend_factor);
 	}
 	else model->SetAnimationTime(integrated_time_b);
@@ -104,6 +106,7 @@ void AnimationSequencerComponent::ChangeAnimation(const std::string& anim_name, 
 	std::shared_ptr<ModelComponent> shared_model_comp = target_model_component.lock();
 	if (shared_model_comp && shared_model_comp->GetModel())
 	{
+		prev_animation_name = current_animaiton_name;
 		shared_model_comp->GetModel()->PlayAnimation(anim_name, true);
 	}
 	else
@@ -140,7 +143,7 @@ const AnimationSequenceData* AnimationSequencerComponent::GetCurrentSequenceData
 }
 
 //指定時刻上の速度倍率を取得
-float AnimationSequencerComponent::GetSpeedMultiplierAt(float seq_time) const
+float AnimationSequencerComponent::GetSpeedMultiplierAt(const std::string& anim_name, float seq_time) const
 {
 	auto it = sequence_map.find(current_animaiton_name);
 	if (it == sequence_map.end() || it->second.keyframes.empty())return DEFAULT_SPEED_MULTIPLIER;
@@ -165,7 +168,7 @@ float AnimationSequencerComponent::GetSpeedMultiplierAt(float seq_time) const
 }
 
 //モデル再生時間を算出
-float AnimationSequencerComponent::GetIntegratedModelTime(float seq_time) const
+float AnimationSequencerComponent::GetIntegratedModelTime(const std::string& anim_name, float seq_time) const
 {
 	auto it = sequence_map.find(current_animaiton_name);
 	if (it == sequence_map.end() || it->second.keyframes.empty())return seq_time;
@@ -186,8 +189,8 @@ float AnimationSequencerComponent::GetIntegratedModelTime(float seq_time) const
 
 		if (dt > 0.0f)
 		{
-			float s_start = GetSpeedMultiplierAt(t_start);
-			float s_end = GetSpeedMultiplierAt(t_end);
+			float s_start = GetSpeedMultiplierAt(anim_name, t_start);
+			float s_end = GetSpeedMultiplierAt(anim_name, t_end);
 			float segment_area = ((s_start + s_end) * 0.5f) * dt;
 			total_model_time += segment_area;
 		}

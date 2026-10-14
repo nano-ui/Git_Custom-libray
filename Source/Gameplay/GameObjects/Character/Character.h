@@ -105,6 +105,7 @@ protected:
 
 	float invincible_timer;		//–³“GŠÔ
 	float attack_power;			//UŒ‚—Í
-	float health;				//¶–½—Í	
+	float health;				//¶–½—Í
+	float belnd_time = 0.2f;
 };
 

@@ -179,6 +179,19 @@
                                 0.0,
                                 0.0
                             ]
+                        },
+                        {
+                            "CompOp": 4,
+                            "HashKey": 4203995948,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.05000000074505806,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
                         }
                     ],
                     "EndPinID": 104,
@@ -352,6 +365,19 @@
                                 0.0,
                                 0.0
                             ]
+                        },
+                        {
+                            "CompOp": 0,
+                            "HashKey": 2,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 4,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
                         }
                     ],
                     "EndPinID": 284,
@@ -367,6 +393,19 @@
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
                             "Type": 5,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "CompOp": 4,
+                            "HashKey": 4203995948,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.05000000074505806,
+                            "SecondaryHash": 0,
+                            "Type": 0,
                             "VectorRefValue": [
                                 0.0,
                                 0.0,

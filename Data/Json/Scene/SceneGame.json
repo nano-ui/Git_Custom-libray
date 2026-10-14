@@ -4,14 +4,14 @@
             "detail_json_path": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
             "model_path": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
             "position": {
-                "x": 22.74244499206543,
-                "y": 0.0,
-                "z": -18.567663192749023
+                "x": 25.442975997924805,
+                "y": 0.3680693507194519,
+                "z": -18.081092834472656
             },
             "rotation": {
-                "w": 0.4088755249977112,
+                "w": 0.9751757979393005,
                 "x": 0.0,
-                "y": -0.9125901460647583,
+                "y": 0.22143207490444183,
                 "z": 0.0
             },
             "scale": {
