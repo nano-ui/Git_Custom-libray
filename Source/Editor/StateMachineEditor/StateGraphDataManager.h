@@ -9,6 +9,8 @@
 #include "ThiedParty\json.hpp"
 #include "Editor\Behavior\BehaviorNodeData.h"
 
+constexpr float DEFAULT_BLEND_TIME = 0.2f;	//初期時のブレンド時間
+
 //ピンの種類
 enum class PinKind
 {
@@ -76,6 +78,7 @@ struct GraphLink
 	uint32_t id;			//線の固有ID
 	uint32_t start_pin_id;	//接続元の出力ピンID
 	uint32_t end_pin_id;	//接続先の入力ピンID
+	float blend_time = DEFAULT_BLEND_TIME;		//ブレンド時間
 	std::vector<GraphTransitionCondition> conditions;	//遷移条件リスト
 };
 

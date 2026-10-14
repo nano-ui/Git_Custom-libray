@@ -48,7 +48,7 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 			node_json["ActionCategory"] = node.action_category;	// アクション値
 			node_json["AnimationName"] = node.animation_name;	// アニメ名
 			node_json["IsLoop"] = node.is_loop;					// 再生フラグ
-			node_json["IsRootMotion"] = node.is_root_motion;	
+			node_json["IsRootMotion"] = node.is_root_motion;
 			node_json["LinkColorR"] = node.link_color_r;
 			node_json["LinkColorG"] = node.link_color_g;
 			node_json["LinkColorB"] = node.link_color_b;
@@ -92,7 +92,8 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 
 			link_json["ID"] = link.id; // リンク固有ID
 			link_json["StartPinID"] = link.start_pin_id; // 開始ピンID
-			link_json["EndPinID"] = link.end_pin_id; // 終了ピンID
+			link_json["EndPinID"] = link.end_pin_id;	// 終了ピンID
+			link_json["BlendTime"] = link.blend_time;	//ブレンド時間
 
 			//リンクが抱える全ての遷移条件をパッキング
 			nlohmann::json conds_array = nlohmann::json::array();	//条件式格納用の配列
@@ -289,6 +290,20 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 			link.start_pin_id = link_json["StartPinID"]; // 開始ピン
 			link.end_pin_id = link_json["EndPinID"]; // 終了ピン
 
+			if (link_json.contains("BlendTime"))
+			{
+				link.blend_time = link_json["BlendTime"].get<float>();
+				constexpr float min_blend_time = 0.0f;
+				if (link.blend_time < min_blend_time)
+				{
+					printf("Warning: LoadFromFile - リンクID %u のブレンド時間が負の値(%.2f)のため、0.0fに補正しました。\n", link.id, link.blend_time);
+					link.blend_time = min_blend_time;
+				}
+			}
+			else
+			{
+				link.blend_time = DEFAULT_BLEND_TIME;
+			}
 			//各条件式の復元
 			for (const auto& cond_json : link_json["Conditions"])
 			{
@@ -1088,6 +1103,7 @@ void StateGraphDataManager::AddSubGrapNode(uint32_t graph_id, float click_x, flo
 
 			if (copied_link.start_pin_id != invalid_id && copied_link.end_pin_id != invalid_id)
 			{
+				copied_link.blend_time = src_link.blend_time;
 				copied_link.conditions = src_link.conditions;
 				copied_links.push_back(copied_link);
 			}

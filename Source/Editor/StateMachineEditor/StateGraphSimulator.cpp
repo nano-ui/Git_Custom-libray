@@ -9,6 +9,7 @@ StateGraphSimulator::StateGraphSimulator()
 	:current_node_id(UINT32_MAX)
 	, current_animation_name("")
 	, current_animation_loop(true)
+	, current_blend_time(DEFAULT_RUNTIME_BLEND_TIME)
 {
 }
 
@@ -83,6 +84,7 @@ bool StateGraphSimulator::UpdateSimulation(float elapsed_time, StateBlackboard* 
 			{
 				current_animation_name = runtime_nodes[n].animation_name;
 				current_animation_loop = runtime_nodes[n].is_loop;
+				current_blend_time = DEFAULT_RUNTIME_BLEND_TIME;
 				break;
 			}
 		}
@@ -205,10 +207,20 @@ bool StateGraphSimulator::UpdateSimulation(float elapsed_time, StateBlackboard* 
 	//状態遷移の実行とコールバック通知
 	if (is_transition_triggered && next_node_id != current_node_id)
 	{
-		if (on_transition_link_callback && best_link)
+		if (best_link)
 		{
-			on_transition_link_callback(best_link->id);
+			current_blend_time = best_link->blend_time;
+			printf("StateGraphSimulator: リンクID %u の遷移が成立しました。適用ブレンド時間: %.2f秒\n", best_link->id, current_blend_time);
+
+			if (on_transition_link_callback)
+			{
+				on_transition_link_callback(best_link->id);
+			}
 		}
+		else
+		{
+			printf("Warning: StateGraphSimulator::UpdateSimulation - 遷移が成立しましたが best_link が nullptr のためブレンド時間を更新できませんでした。\n");
+		}		
 		current_node_id = next_node_id;
 
 		//サブグラフの自動潜り込み処理

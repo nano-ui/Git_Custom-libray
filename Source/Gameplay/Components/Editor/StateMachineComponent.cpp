@@ -17,6 +17,7 @@ StateMachineComponent::StateMachineComponent()
 	model_hash = 0;
 	current_node_id = UINT32_MAX;
 	current_animation_loop = true;
+	current_blend_time = DEFAULT_STATE_BLEND_TIME;
 }
 
 //デストラクタ
@@ -57,6 +58,7 @@ void StateMachineComponent::Initialize(StateBlackboard* blackboard)
 			if (runtime_nodes[n].id == current_node_id)
 			{
 				current_animation_name = runtime_nodes[n].animation_name;
+				current_blend_time = DEFAULT_STATE_BLEND_TIME;
 				break;
 			}
 		}
@@ -105,6 +107,7 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 	current_node_id = state_graph_simulator->GetCurrentNodeID();
 	current_animation_name = state_graph_simulator->GetAnimationName();
 	current_animation_loop = state_graph_simulator->GetAnimationLoop();
+	current_blend_time = state_graph_simulator->GetCurrentBlendTime();
 }
 
 //モデル名設定
@@ -273,6 +276,21 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 					link.id = link_json["ID"].get<uint32_t>();
 					link.start_pin_id = link_json["StartPinID"].get<uint32_t>();
 					link.end_pin_id = link_json["EndPinID"].get<uint32_t>();
+
+					if (link_json.contains("BlendTime") && link_json["BlendTime"].is_number())
+					{
+						link.blend_time = link_json["BlendTime"].get<float>();
+						constexpr float min_blend_time = 0.0f;
+						if (link.blend_time < min_blend_time)
+						{
+							printf("Warning: StateMachineComponent::LoadAnimationMap - リンクID %u のブレンド時間が負の値(%.2f)のため、0.0fに補正しました。\n", link.id, link.blend_time);
+							link.blend_time = min_blend_time;
+						}
+					}
+					else
+					{
+						link.blend_time = DEFAULT_STATE_BLEND_TIME;
+					}
 
 					if (link_json.contains("Conditions") && link_json["Conditions"].is_array())
 					{

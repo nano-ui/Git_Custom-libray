@@ -10,12 +10,15 @@
 class StateBlackboard;
 struct TransitionCondition;
 
+static constexpr float DEFAULT_RUNTIME_BLEND_TIME = 0.2f;
+
 //実行時リンクデータ
 struct SimulatorRuntimeLink
 {
 	uint32_t id;			//リンクID
 	uint32_t start_pin_id;	//開始ピンID
 	uint32_t end_pin_id;	//終了ピンID
+	float blend_time = DEFAULT_RUNTIME_BLEND_TIME;	//ブレンド時間
 	std::vector<TransitionCondition> conditions;	//遷移条件配列
 };
 
@@ -79,6 +82,9 @@ public:
 	//ルートモーション有効フラグ取得
 	bool GetRootMotionEnabled()const;
 
+	//ブレンド時間を取得
+	float GetCurrentBlendTime() const { return current_blend_time; }
+
 private:
 	//単一の遷移条件の評価
 	bool EvaluateCondition(
@@ -97,6 +103,7 @@ private:
 	uint32_t current_node_id = UINT32_MAX;									//現在のアクティブノード
 	std::string current_animation_name = "";								//再生中のアニメーション名
 	bool current_animation_loop = true;										//アニメーションループフラグ
+	float current_blend_time = DEFAULT_RUNTIME_BLEND_TIME;					//ブレンド時間
 	std::vector<SimulatorRuntimeNode> runtime_nodes;						//評価対象の全ノードリスト
 	std::vector<SimulatorRuntimeLink> runtime_links;						//評価対象の全リンクリスト
 	std::unordered_map<uint32_t, uint32_t> layer_entry_nades;				//階層ごとの先頭ノードIDマップ

@@ -13,6 +13,9 @@ class AnimationComponent;
 class StateMachineComponent
 {
 public:
+	static constexpr float DEFAULT_STATE_BLEND_TIME = 0.2f;
+
+public:
 	//コンストラクタ
 	StateMachineComponent();
 
@@ -52,6 +55,9 @@ public:
 	//アニメーションを抽出
 	const std::string& GetCurrentAnimationName()const { return current_animation_name; }
 
+	//ブレンド時間を取得
+	float GetCurrentBlendTime()const { return current_blend_time; }
+	 
 	//アニメーションループを取得
 	bool GetAnimationLoop()const { return current_animation_loop; }
 
@@ -81,6 +87,7 @@ private:
 	std::string state_machine_path = "";						//Jsonパス
 	uint32_t model_hash = 0;									//モデルのハッシュ値
 	uint32_t current_node_id = UINT32_MAX;						//アクティブノード
+	float current_blend_time = DEFAULT_STATE_BLEND_TIME;		//ブレンド時間
 	std::string current_animation_name = "";					//アニメーション名
 	bool current_animation_loop;								//アニメーション再生フラグ
 	bool is_pending_reload = false;								//リロード予約フラグ

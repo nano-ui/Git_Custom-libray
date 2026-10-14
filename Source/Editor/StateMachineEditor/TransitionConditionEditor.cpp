@@ -27,6 +27,11 @@ bool TransitionConditionEditor::DrawConditonSettings(StateGraphDataManager* data
 		return false;
 	}
 
+	constexpr float drag_spped = 0.1f;
+	constexpr float drag_max = 10.0f;
+	constexpr float drag_min = 0.0f;
+	ImGui::DragFloat(u8"ブレンド時間", &target_link->blend_time, drag_spped, drag_min, drag_max);
+
 	bool is_changed = false;	//変更検知フラグ
 
 	//リンクに新しい条件を追加

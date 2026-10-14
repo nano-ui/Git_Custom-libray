@@ -145,7 +145,7 @@ const AnimationSequenceData* AnimationSequencerComponent::GetCurrentSequenceData
 //Žw’èŽžã‚Ì‘¬“x”{—¦‚ðŽæ“¾
 float AnimationSequencerComponent::GetSpeedMultiplierAt(const std::string& anim_name, float seq_time) const
 {
-	auto it = sequence_map.find(current_animaiton_name);
+	auto it = sequence_map.find(anim_name);
 	if (it == sequence_map.end() || it->second.keyframes.empty())return DEFAULT_SPEED_MULTIPLIER;
 	const std::vector<SequenceKeyframe>& keyframes = it->second.keyframes;
 	if (seq_time <= keyframes.front().sequencer_time)return keyframes.front().speed_multiplier;
@@ -170,7 +170,7 @@ float AnimationSequencerComponent::GetSpeedMultiplierAt(const std::string& anim_
 //ƒ‚ƒfƒ‹Ä¶ŽžŠÔ‚ðŽZo
 float AnimationSequencerComponent::GetIntegratedModelTime(const std::string& anim_name, float seq_time) const
 {
-	auto it = sequence_map.find(current_animaiton_name);
+	auto it = sequence_map.find(anim_name);
 	if (it == sequence_map.end() || it->second.keyframes.empty())return seq_time;
 	const std::vector<SequenceKeyframe>& keyframes = it->second.keyframes;
 	float total_model_time = 0.0f;
