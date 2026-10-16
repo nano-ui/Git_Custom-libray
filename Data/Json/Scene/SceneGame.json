@@ -4,14 +4,14 @@
             "detail_json_path": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
             "model_path": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
             "position": {
-                "x": 25.442975997924805,
-                "y": 0.3680693507194519,
-                "z": -18.081092834472656
+                "x": 1.101724624633789,
+                "y": 0.3976905047893524,
+                "z": 19.28490447998047
             },
             "rotation": {
-                "w": 0.9751757979393005,
+                "w": 1.0,
                 "x": 0.0,
-                "y": 0.22143207490444183,
+                "y": 0.0,
                 "z": 0.0
             },
             "scale": {
@@ -25,7 +25,7 @@
             "model_path": "Data\\Model\\Character\\Enemy\\Rampage_Elemental.gltf",
             "position": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": 0.5396489500999451,
                 "z": 10.0
             },
             "rotation": {
@@ -55,9 +55,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 20.600000381469727,
+                "x": 20.0,
                 "y": 1.0,
-                "z": 18.700000762939453
+                "z": 20.0
             }
         },
         {

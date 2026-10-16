@@ -226,6 +226,8 @@ void CollisionManager::CheckDynamicVsSpace()
         Collider* collider = dynamic_colliders.at(i);
         if (!collider || !collider->is_active)continue;
 
+        if (collider->attribute == ColliderAttribute::Attack)continue;
+
         //空間分割のループ処理
         for (size_t j = 0; j < space_colliders.size(); j++)
         {
@@ -472,6 +474,11 @@ void CollisionManager::CheckCapsuleVsCapsule()
 
                     if (col_b && col_b->is_active && col_b->type == ColliderType::Capsule && col_a != col_b)
                     {
+                        if (col_a->owner_id != INVALID_OWNER_ID && col_a->owner_id == col_b->owner_id)
+                        {
+                            idx_b = grid_elements[idx_b].next_index;
+                            continue;
+                        }
                         CapsuleCollider* capsule_b = static_cast<CapsuleCollider*>(col_b);
                         GridRange range_b = CalculateGridRenge(capsule_b);
 
@@ -488,11 +495,22 @@ void CollisionManager::CheckCapsuleVsCapsule()
 
                             if (is_hit)
                             {
+                                bool is_both_solid = (capsule_a->attribute == ColliderAttribute::Collision &&
+                                    capsule_b->attribute == ColliderAttribute::Collision);
+
                                 // カプセルAへの衝突通知
                                 if (capsule_a->listener)
                                 {
                                     result_a.hit_attribute = capsule_b->attribute;
                                     result_a.hit_collider = capsule_b;
+                                    result_a.self_collider = capsule_a;
+
+                                    if (!is_both_solid)
+                                    {
+                                        result_a.penetration_vector = { 0.0f, 0.0f, 0.0f };
+                                        result_a.safe_position = capsule_a->start_center;
+                                    }
+
                                     capsule_a->listener->OnCollisionHit(result_a);
                                 }
                                 //カプセルBへの衝突処理
@@ -507,11 +525,24 @@ void CollisionManager::CheckCapsuleVsCapsule()
                                     result_b.penetration_vector.z = -result_a.penetration_vector.z;
                                     result_b.hit_attribute = capsule_a->attribute;
                                     result_b.hit_collider = capsule_a;
+                                    result_b.self_collider = capsule_b;
 
-                                    DirectX::XMVECTOR v_start_b = DirectX::XMLoadFloat3(&capsule_a->start_center);
-                                    DirectX::XMVECTOR v_push_b = DirectX::XMLoadFloat3(&result_b.penetration_vector);
-                                    DirectX::XMStoreFloat3(&result_b.safe_position, DirectX::XMVectorAdd(v_start_b, v_push_b));
-                                
+                                    if (is_both_solid)
+                                    {
+                                        result_b.penetration_vector.x = -result_a.penetration_vector.x;
+                                        result_b.penetration_vector.y = -result_a.penetration_vector.y;
+                                        result_b.penetration_vector.z = -result_a.penetration_vector.z;
+
+                                        DirectX::XMVECTOR v_start_b = DirectX::XMLoadFloat3(&capsule_b->start_center);
+                                        DirectX::XMVECTOR v_push_b = DirectX::XMLoadFloat3(&result_b.penetration_vector);
+                                        DirectX::XMStoreFloat3(&result_b.safe_position, DirectX::XMVectorAdd(v_start_b, v_push_b));
+                                    }
+                                    else
+                                    {
+                                        result_b.penetration_vector = { 0.0f, 0.0f, 0.0f };
+                                        result_b.safe_position = capsule_b->start_center;
+                                    }
+
                                     capsule_b->listener->OnCollisionHit(result_b);
                                 }
                             }                            

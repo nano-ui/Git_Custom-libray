@@ -74,6 +74,7 @@ void Character::Initialize()
 				if (capsule)
 				{
 					capsule->listener = this;
+					capsule->owner_id = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(this));
 					AddCollider(capsule.get());
 				}
 			}

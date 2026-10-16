@@ -7,6 +7,8 @@
 class SpaceDivisionCast;
 struct Collider;
 
+constexpr uint32_t INVALID_OWNER_ID = 0;	//未割当状態
+
 //当たり判定の属性
 enum class ColliderAttribute
 {
@@ -26,6 +28,7 @@ struct CollisionResult
 	ColliderAttribute hit_attribute;		//衝突した当たり判定の属性
 	DirectX::XMFLOAT3 penetration_vector;	//貫通ベクトル
 	Collider* hit_collider = nullptr;		//衝突した相手のコライダーのポインタ
+	Collider* self_collider = nullptr;		//自身の衝突コライダー
 };
 
 //衝突イベント受け取り用インターフェース
@@ -56,6 +59,7 @@ struct Collider
 	float weight = 1.0f;									//オブジェクトの重さ
 	float attack_power = 0.0f;								//攻撃力
 	bool is_active = true;                                  //有効フラグ
+	uint32_t owner_id = INVALID_OWNER_ID;					//自身のID
 	ICollisionListener* listener = nullptr;                 //衝突の通知先
 	virtual ~Collider() = default;
 };
