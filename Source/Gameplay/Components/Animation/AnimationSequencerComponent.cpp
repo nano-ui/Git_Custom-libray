@@ -50,7 +50,7 @@ bool AnimationSequencerComponent::Initialize(const std::string& model_name)
 }
 
 //更新処理
-void AnimationSequencerComponent::Update(float elapsed_time)
+void AnimationSequencerComponent::Update(float elapsed_time, bool is_loop)
 {
 	if (!is_active || current_animaiton_name.empty())return;
 
@@ -79,7 +79,21 @@ void AnimationSequencerComponent::Update(float elapsed_time)
 		if (integrated_time_b >= anim_duration || (effective_duration > MIN_DURATION_THRESHOLD && current_sequence_time >= effective_duration)) 
 		{
 			ia_animation_finished = true;
-			current_sequence_time = std::fmod(current_sequence_time, anim_duration);
+			if (is_loop)
+			{
+				current_sequence_time = std::fmod(current_sequence_time, anim_duration);
+			}
+			else
+			{
+				if (effective_duration > MIN_DURATION_THRESHOLD)
+				{
+					current_sequence_time = effective_duration;
+				}
+				else
+				{
+					current_sequence_time = anim_duration;
+				}
+			}
 		}
 		else ia_animation_finished = false;
 	}
@@ -93,6 +107,12 @@ void AnimationSequencerComponent::Update(float elapsed_time)
 		float blend_factor = animation_blender->GetBlendFactor();
 
 		float integrated_time_a = GetIntegratedModelTime(prev_name, prev_time);
+
+		char blend_log[256];
+		sprintf_s(blend_log, "[Blend実行中] 元Anim=%s (計算時間=%.3fs) -> 先Anim=%s (計算時間=%.3fs) | Factor=%.2f\n",
+			prev_name.c_str(), integrated_time_a, current_animaiton_name.c_str(), integrated_time_b, blend_factor);
+		OutputDebugStringA(blend_log);
+
 		model->AnimateBlend(prev_name, integrated_time_a, current_animaiton_name, integrated_time_b, blend_factor);
 	}
 	else model->SetAnimationTime(integrated_time_b);
@@ -116,6 +136,11 @@ void AnimationSequencerComponent::ChangeAnimation(const std::string& anim_name, 
 
 	if (animation_blender && !current_animaiton_name.empty())
 	{
+		char debug_log[256];
+		sprintf_s(debug_log, "[AnimationSequencerComponent] アニメーション切り替え実行: 遷移元=%s (時間=%.3f s) -> 遷移先=%s (ブレンド時間=%.3f s)\n",
+			current_animaiton_name.c_str(), current_sequence_time, anim_name.c_str(), blend_time);
+		OutputDebugStringA(debug_log);
+
 		animation_blender->StartCrossFade(current_animaiton_name, current_sequence_time, blend_time);
 	}
 
@@ -138,7 +163,7 @@ const AnimationSequenceData* AnimationSequencerComponent::GetCurrentSequenceData
 		return &it->second;
 	}
 
-	OutputDebugStringA("[AnimationSequencerComponent 警告] GetCurrentSequenceData: 現在のアニメーションシーケンスデータが見つかりません。\n");
+	//OutputDebugStringA("[AnimationSequencerComponent 警告] GetCurrentSequenceData: 現在のアニメーションシーケンスデータが見つかりません。\n");
 	return nullptr;
 }
 

@@ -60,12 +60,6 @@ void Enemy::OnAnimationEnd(uint32_t state_key)
 
 }
 
-//衝突コールバック処理
-void Enemy::OnCollisionHit(const CollisionResult& result)
-{
-
-}
-
 //コンポーネント群のセットアップ
 void Enemy::SetupComponent()
 {

@@ -109,6 +109,14 @@ void Character::Update(float elapsed_time)
 		std::string target_anim_name = state_machine_component->GetCurrentAnimationName();
 		if (!target_anim_name.empty() && previous_animation_name != target_anim_name)
 		{
+			belnd_time = state_machine_component->GetCurrentBlendTime();
+			constexpr float min_blend_time = 0.0f;
+			if (belnd_time < min_blend_time)
+			{
+				printf("Warning: Character::Update - 取得したブレンド時間が負の値(%.2f)のため、0.0fに補正しました。\n", belnd_time);
+				belnd_time = min_blend_time;
+			}
+
 			if (sequencer_component)
 			{
 				sequencer_component->ChangeAnimation(target_anim_name, belnd_time);
@@ -119,7 +127,7 @@ void Character::Update(float elapsed_time)
 
 	if (sequencer_component)
 	{
-		sequencer_component->Update(elapsed_time);
+		sequencer_component->Update(elapsed_time, state_machine_component->GetAnimationLoop());
 		current_animation_name = sequencer_component->GetCurrentAnimationName();
 		current_animation_time = sequencer_component->GetCurrentSequenceTime();
 		UpdateColliderSequencer();

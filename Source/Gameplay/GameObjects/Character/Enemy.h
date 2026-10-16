@@ -36,9 +36,6 @@ public:
 	// アニメーション終了イベント
 	void OnAnimationEnd(uint32_t state_key) override;
 
-	//衝突コールバック処理
-	void OnCollisionHit(const CollisionResult& result)override;
-
 private:
 	//コンポーネント群のセットアップ
 	void SetupComponent();

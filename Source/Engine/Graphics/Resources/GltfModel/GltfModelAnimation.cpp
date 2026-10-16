@@ -405,40 +405,59 @@ void GltfModelAnimation::TraverseNodeForTransform(int node_index, std::stack<Dir
 //アニメーションのキーフレームを取得し補間係数を計算
 size_t GltfModelAnimation::GetAnimationKeyframeIndex(const std::vector<float>& timelines, float time, float& interpolation_factor)
 {
-	// 定数の定義
-	const size_t keyframe_count = timelines.size();		// タイムラインに存在するキーフレームの総数を取得
-	const size_t INDEX_OFFSET_NEXT = 1;					// 次の要素やインデックス計算用のオフセット定数
-	const size_t INDEX_OFFSET_PREV = 2;					// 末尾から2番目を取得するためのオフセット定数
-	const float INTERPOLATION_MAX = 1.0f;				// 補間係数の最大値（100%）
-	const float INTERPOLATION_MIN = 0.0f;				// 補間係数の最小値（0%）
-	const size_t START_INDEX = 0;						// 配列の開始インデックス
+	const size_t keyframe_count = timelines.size();
+	const size_t MIN_KEYFRAME_COUNT = 2;
+	const size_t INDEX_OFFSET_NEXT = 1;
+	const size_t INDEX_OFFSET_PREV = 2;
+	const float INTERPOLATION_MAX = 1.0f;
+	const float INTERPOLATION_MIN = 0.0f;
+	const size_t START_INDEX = 0;
+	constexpr float EPSILON_TIME_DELTA = 0.00001f;
 
-	// 時間外の境界値判定
-	if (time > timelines.at(keyframe_count - INDEX_OFFSET_NEXT))	// 指定された時間が最後のキーフレーム時間を超過している場合
+	if (keyframe_count < MIN_KEYFRAME_COUNT)
 	{
-		interpolation_factor = INTERPOLATION_MAX;					// 補間係数を最大値に固定してアニメーションを末尾で止める
-		return keyframe_count - INDEX_OFFSET_PREV;					// 最後の補間区間の開始インデックスを返す
-	}
-	else if (time < timelines.at(START_INDEX))						// 指定された時間が最初のキーフレーム時間より前の場合
-	{
-		interpolation_factor = INTERPOLATION_MIN;					// 補間係数を最小値に固定して初期ポーズを維持
-		return START_INDEX;											// 一番最初のインデックスを返す
+		OutputDebugStringA("[GltfModelAnimation 警告] GetAnimationKeyframeIndex: タイムラインのキーフレーム数が2未満です。\n");
+		interpolation_factor = INTERPOLATION_MIN;
+		return START_INDEX;
 	}
 
-	//適切なキーフレームの探索と補間係数の計算
-	size_t keyframe_index = START_INDEX;																		// 該当するキーフレームのインデックスを初期化
-	for (size_t time_index = INDEX_OFFSET_NEXT; time_index < keyframe_count; time_index++)						// 2番目のキーフレームから最後まで順番にチェック
+	const size_t last_keyframe_index = keyframe_count - INDEX_OFFSET_NEXT;
+	const size_t max_valid_segment_index = keyframe_count - INDEX_OFFSET_PREV;
+
+	if (time >= timelines.at(last_keyframe_index))
 	{
-		if (time < timelines.at(time_index))																	// 現在の時間がチェック中のキーフレームの時間を下回った場合
+		interpolation_factor = INTERPOLATION_MAX;
+		return max_valid_segment_index;
+	}
+	else if (time <= timelines.at(START_INDEX))
+	{
+		interpolation_factor = INTERPOLATION_MIN;
+		return START_INDEX;
+	}
+
+	size_t keyframe_index = START_INDEX;
+	for (size_t time_index = INDEX_OFFSET_NEXT; time_index < keyframe_count; ++time_index)
+	{
+		if (time < timelines.at(time_index))
 		{
-			keyframe_index = std::max<size_t>(START_INDEX, time_index - INDEX_OFFSET_NEXT);						// 配列外アクセスを防ぎつつ1つ前のインデックスを現在のキーフレームとして設定
-			break;																								// 目的の区間が見つかったのでループを強制終了
+			keyframe_index = time_index - INDEX_OFFSET_NEXT;
+			break;
 		}
 	}
 
-	float time_difference = timelines.at(keyframe_index + INDEX_OFFSET_NEXT) - timelines.at(keyframe_index);	// 次のキーフレームまでの全体時間を計算
-	time_difference = std::max<float>(time_difference, 0.00001f);												// 差分が0になるのを防ぐためのセーフガード
-	interpolation_factor = (time - timelines.at(keyframe_index)) / time_difference;								// 現在の時間がその区間でどの位置にあるかの割合を計算
+	if (keyframe_index > max_valid_segment_index)
+	{
+		char error_log[256];
+		sprintf_s(error_log, "[GltfModelAnimation エラー] 存在しないキーフレーム区間が検出されました: index=%zu, max=%zu\n",
+			keyframe_index, max_valid_segment_index);
+		OutputDebugStringA(error_log);
+		keyframe_index = max_valid_segment_index;
+	}
+
+	float time_difference = timelines.at(keyframe_index + INDEX_OFFSET_NEXT) - timelines.at(keyframe_index);
+	time_difference = (std::max)(time_difference, EPSILON_TIME_DELTA);
+	float raw_factor = (time - timelines.at(keyframe_index)) / time_difference;
+	interpolation_factor = std::clamp(raw_factor, INTERPOLATION_MIN, INTERPOLATION_MAX);
 
 	return keyframe_index;
 }

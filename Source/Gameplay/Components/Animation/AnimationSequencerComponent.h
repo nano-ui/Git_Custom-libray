@@ -26,7 +26,7 @@ public:
 	bool Initialize(const std::string& model_name);
 
 	//更新処理
-	void Update(float elapsed_time);
+	void Update(float elapsed_time, bool is_loop);
 
 	//アニメーション切り替え
 	void ChangeAnimation(const std::string& anim_name, float blend_time = DEFAULT_BLEND_TIME);
