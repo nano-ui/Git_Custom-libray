@@ -6,6 +6,7 @@
             "LayerType": 0,
             "Links": [
                 {
+                    "BlendTime": 0.20000000298023224,
                     "Conditions": [
                         {
                             "CompOp": 5,
@@ -26,6 +27,7 @@
                     "StartPinID": 398
                 },
                 {
+                    "BlendTime": 0.20000000298023224,
                     "Conditions": [
                         {
                             "CompOp": 2,
@@ -177,18 +179,21 @@
             "LayerType": 0,
             "Links": [
                 {
+                    "BlendTime": 0.20000000298023224,
                     "Conditions": [],
                     "EndPinID": 260,
                     "ID": 262,
                     "StartPinID": 258
                 },
                 {
+                    "BlendTime": 0.20000000298023224,
                     "Conditions": [],
                     "EndPinID": 264,
                     "ID": 266,
                     "StartPinID": 261
                 },
                 {
+                    "BlendTime": 0.20000000298023224,
                     "Conditions": [
                         {
                             "CompOp": 0,
@@ -209,6 +214,7 @@
                     "StartPinID": 265
                 },
                 {
+                    "BlendTime": 0.20000000298023224,
                     "Conditions": [
                         {
                             "CompOp": 0,
@@ -564,12 +570,14 @@
             "LayerType": 1,
             "Links": [
                 {
+                    "BlendTime": 0.20000000298023224,
                     "Conditions": [],
                     "EndPinID": 408,
                     "ID": 410,
                     "StartPinID": 406
                 },
                 {
+                    "BlendTime": 0.20000000298023224,
                     "Conditions": [],
                     "EndPinID": 412,
                     "ID": 413,

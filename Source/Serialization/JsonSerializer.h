@@ -8,6 +8,24 @@
 #include <imgui.h>
 #include "ThiedParty\json.hpp"
 
+//保存区分
+enum class SerializeTarget : uint8_t 
+{
+	Base = 1 << 0,			//基底情報
+	Detail = 1 << 1,		//固有情報
+	All = Base | Detail		//共通情報
+};
+
+inline SerializeTarget operator&(SerializeTarget a, SerializeTarget b)
+{
+	return static_cast<SerializeTarget>(static_cast<uint8_t>(a) & static_cast<uint8_t>(b));
+}
+
+inline SerializeTarget operator|(SerializeTarget a, SerializeTarget b)
+{
+	return static_cast<SerializeTarget>(static_cast<uint8_t>(a) | static_cast<uint8_t>(b));
+}
+
 //DirectXMathの型をJSONで自動変換するための定義
 namespace nlohmann
 {
@@ -96,31 +114,33 @@ public:
 
 	//セーブ・ロード対象の変数名とポインタを登録
 	template<typename T>
-	void RegisterVariable(const std::string& property_name, T* target_variable)
+	void RegisterVariable(const std::string& property_name, T* target_variable, SerializeTarget target = SerializeTarget::All)
 	{
 		PropertyData new_data;
 		new_data.name = property_name;
+		new_data.target = target;
 		new_data.property_interface = std::make_unique<TypedProperty<T>>(target_variable);
 		registered_properties.push_back(std::move(new_data));
 	}
 
 	//JSON形式でデータをファイルへ書き出す
-	void SaveToFile(const std::string& file_path);
+	void SaveToFile(const std::string& file_path, SerializeTarget target = SerializeTarget::All);
 
 	//JSONファイルからデータを群へ読み込む
-	bool LoadFromFile(const std::string& file_path);
+	bool LoadFromFile(const std::string& file_path, SerializeTarget target = SerializeTarget::All);
 
 	//JSONオブジェクトへ登録データを直接書き出す
-	void SaveToObject(nlohmann::json& root_json);
+	void SaveToObject(nlohmann::json& root_json, SerializeTarget target = SerializeTarget::All);
 
 	//JSONオブジェクトからデータを直接読み込む
-	void LoadFromObject(const nlohmann::json& root_json);
+	void LoadFromObject(const nlohmann::json& root_json, SerializeTarget target = SerializeTarget::All);
 
 private:
 	//個別のプロパティ情報をまとめる内部構造体
 	struct PropertyData
 	{
 		std::string name;		//名
+		SerializeTarget target = SerializeTarget::All;	//保存タイプ
 		std::unique_ptr<IProperty> property_interface;	//操作ポインタ
 	};
 

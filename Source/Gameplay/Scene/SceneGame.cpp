@@ -108,7 +108,7 @@ void SceneGame::Update(float elapsed_time)
 	
 #ifdef USE_IMGUI
 	const ImGuiIO& io = ImGui::GetIO();
-	if (camera_controller && !io.WantCaptureMouse)camera_controller->Update(elapsed_time);
+	/*if (camera_controller && !io.WantCaptureMouse)*/camera_controller->Update(elapsed_time);
 #else
 	if (camera_controller)camera_controller->Update(elapsed_time);
 #endif
@@ -116,7 +116,7 @@ void SceneGame::Update(float elapsed_time)
 	if (editor_manager && !editor_manager->IsGameViewportActive())return;
 	if (SceneManager::Instance().IsPaused())return;
 	if (object_manager)object_manager->Update(elapsed_time);
-	if (collision_experiment)collision_experiment->Update(elapsed_time);
+	//if (collision_experiment)collision_experiment->Update(elapsed_time);
 	if (collision_manager)collision_manager->ExecuteCollision();
 }
 

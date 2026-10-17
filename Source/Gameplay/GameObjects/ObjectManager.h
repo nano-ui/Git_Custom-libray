@@ -41,9 +41,9 @@ public:
 		T* raw_pointer = new_object.get();
 
 		//プレハブシステムの完全自動化処理
+		new_object->Initialize();
 		new_object->SetupSerialization();
 		new_object->LoadFromJson();
-		new_object->Initialize();
 
 		//コライダーの自動登録処理
 		if (collision_manager)

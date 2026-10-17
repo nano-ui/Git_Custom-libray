@@ -3,7 +3,8 @@
 #include "Gameplay\Components\Model\ModelComponent.h"
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Gameplay\Components\Movement\MovementComponent.h"
-#include "Gameplay\Components\Collision\BoneCapsuleColliderComponent.h"
+#include "Gameplay\Components\Editor\AttachmentColliderComponent.h"
+
 #include "Engine\Graphics\Renderers\ShapeRenderer.h"
 
 #include <Windows.h>
@@ -12,8 +13,6 @@ static AutoRegister<Enemy> auto_register_enemy("Enemy");
 
 //コンストラクタ
 Enemy::Enemy()
-	:head_collider_component(nullptr)
-	,body_collider_component(nullptr)
 {
 	SetClassName("Enemy");
 }
@@ -45,19 +44,25 @@ void Enemy::RenderDebug(ShapeRenderer* renderer)
 //シリアライズ登録
 void Enemy::SetupSerialization()
 {
-
+	Character::SetupSerialization();
 }
 
 //インスペクター登録
 void Enemy::SetupInspector()
 {
-
+	Character::SetupInspector();
 }
 
 // アニメーション終了イベント
 void Enemy::OnAnimationEnd(uint32_t state_key)
 {
 
+}
+
+//デフォルトパスの取得
+std::string Enemy::GetDefaultModelPath() const
+{
+	return "Data/Model/Character/Enemy/Rampage_Elemental.gltf";
 }
 
 //コンポーネント群のセットアップ
@@ -76,7 +81,7 @@ void Enemy::SetupComponent()
 		//モデルがロードされていない場合
 		if (model_component->GetModelPath().empty())
 		{
-			const std::string default_model_path = "Data/Model/Character/Enemy/Rampage_Elemental.gltf";
+			const std::string default_model_path = GetDefaultModelPath();
 			model_component->LoadModel(default_model_path);
 		}
 

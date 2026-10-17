@@ -94,16 +94,25 @@ public:
 	virtual void SetupInspector();
 
 	//指定されたJSONオブジェクトへ自身のデータを書き込む
-	virtual void SaveToJObject(nlohmann::json& object_json);
+	virtual void SaveToJObject(nlohmann::json& object_json, SerializeTarget target = SerializeTarget::All);
 
 	//指定されたJSONオブジェクトから自身のデータを復元
-	virtual void LoadFromJObject(const nlohmann::json& object_json);
+	virtual void LoadFromJObject(const nlohmann::json& object_json, SerializeTarget target = SerializeTarget::All);
 
 	//パラメータをJSONファイルへ保存
-	void SaveToJson();
+	void SaveToJson(SerializeTarget target = SerializeTarget::Base);
 
 	//JSONファイルからパラメータを復元
-	void LoadFromJson();
+	void LoadFromJson(SerializeTarget target = SerializeTarget::Base);
+
+	//クラス名とモデル個別情報のみを保存
+	bool SaveToDetailFile(const std::string& file_path);
+
+	//モデル個別情報のみを復元
+	bool LoadFromDetailFile(const std::string& file_path);
+
+	//オブジェクト生成前に、個別 JSON ファイルから class_nameを読み取る
+	static std::string ReadClassNameFromDetailFile(const std::string& file_path);
 
 	//削除要求
 	void Destory() { is_active = false; }

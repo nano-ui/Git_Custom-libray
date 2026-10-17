@@ -26,11 +26,17 @@ ObjectManager::~ObjectManager()
 //オブジェクトの登録
 void ObjectManager::Register(std::unique_ptr<GameObject> object)
 {
+	if (!object)
+	{
+		OutputDebugStringA("[ObjectManager エラー] Register: 登録対象の object が nullptr です。\n");
+		return;
+	}
+
 	//プレハブシステムの完全自動化処理
+	object->Initialize();
 	object->SetupSerialization();
 	object->LoadFromJson();
-	object->Initialize();
-	
+
 	//コライダーの登録
 	if (collision_manager)
 	{

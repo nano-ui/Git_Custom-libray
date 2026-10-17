@@ -22,11 +22,18 @@ public:
 	//デバッグ描画
 	void RenderDebug(ShapeRenderer* renderer)override;
 
-	//をシリアライザに登録
+	//シリアライザに登録
 	void SetupSerialization() override;
+
+	//インスペクター登録
+	void SetupInspector()override;
 
 	//アニメーション終了イベント
 	void OnAnimationEnd(uint32_t state_key)override;
+
+protected:
+	//デフォルトパスの取得
+	std::string GetDefaultModelPath() const override;
 
 private:
 	//入力更新処理

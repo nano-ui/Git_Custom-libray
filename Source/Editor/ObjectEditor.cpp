@@ -281,7 +281,7 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 						printf("[デバッグ 警告] 生成されたオブジェクト (%s) に ModelComponent がアタッチされていません。\n", target_class_name.c_str());
 					}
 
-					new_object->LoadFromJObject(detail_json);
+					new_object->LoadFromJObject(detail_json, SerializeTarget::Detail);
 					current_selected_object = new_object;
 					is_json_loaded = true;
 				}
@@ -682,22 +682,12 @@ void ObjectEditor::SaveScene(const std::string& file_path)
 			std::string detail_file_path = detail_dir + "/" + model_name + ".json";
 
 			//ディレクトリの生成
-			std::filesystem::create_directories(detail_dir);
+			if (!obj->SaveToDetailFile(detail_file_path))
+			{
+				OutputDebugStringA("[ObjectEditor 警告] SaveScene: 個別JSONファイルの保存に失敗しました。\n");
+			}
 
 			//個別情報Jsonの書き出し
-			nlohmann::json detail_json;
-			detail_json["class_name"] = obj->GetClassNameW();
-			obj->SaveToJObject(detail_json);
-
-			std::ofstream detail_file(detail_file_path);
-			if (detail_file.is_open())
-			{
-				detail_file << detail_json.dump(json_indent_space_count);
-				detail_file.close();
-			}
-			else OutputDebugStringA("[エラー] SaveScene: 個別JSONファイルのオープンに失敗しました。\n");
-
-			//シーンJsonへ最小限の情報のみを記録
 			nlohmann::json node;
 			node["model_path"] = model_path;
 			node["position"] = transform_component ? transform_component->GetPosition() : DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -798,7 +788,7 @@ void ObjectEditor::LoadScene(const std::string& file_path)
 						}
 
 						//個別JSONからステータス等の復元
-						new_object->LoadFromJObject(detail_json);
+						new_object->LoadFromJObject(detail_json, SerializeTarget::Detail);
 					}
 				}
 			}

@@ -140,8 +140,8 @@ void FollowCameraComponent::UpdateMouseRotation(float elapsed_time)
 		rotation_angle.x += delta_y * turn_sensitivity * elapsed_time;
 
 		constexpr float safe_pitch_limit_deg = 80.0f;
-		const float min_pitch_rad = DirectX::XMConvertToRadians(-safe_pitch_limit_deg);
-		const float max_pitch_rad = DirectX::XMConvertToRadians(safe_pitch_limit_deg);
+		constexpr float min_pitch_rad = DirectX::XMConvertToRadians(-safe_pitch_limit_deg);
+		constexpr float max_pitch_rad = DirectX::XMConvertToRadians(safe_pitch_limit_deg);
 		rotation_angle.x = std::clamp(rotation_angle.x, min_pitch_rad, max_pitch_rad);
 
 		//¶‰E‰ñ“]Šp(Yaw)‚ğ -ƒÎ ` +ƒÎ ‚Ì”ÍˆÍ‚É³‹K‰»

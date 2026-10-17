@@ -4,6 +4,9 @@
 
 #include <DirectXMath.h>
 
+class JsonSerializer;
+class GuiInspector;
+
 class TransformComponent : public Component
 {
 public:
@@ -21,6 +24,12 @@ public:
 
 	//ImGuiデバッグ描画処理
 	void RenderGui()override;
+
+	//JSON保存用変数登録
+	void SetupSerialization(JsonSerializer* serializer)override;
+
+	//GuiInspector専用のインスペクター項目登録
+	void SetupInspector(GuiInspector* inspector)override;
 
 	//座標の取得
 	const DirectX::XMFLOAT3& GetPosition()const { return position; }
@@ -52,6 +61,9 @@ public:
 private:
 	//行列とクォータニオンの計算処理
 	void UpdateWorldMatrix();
+
+	//クォータニオンからオイラー角を算出して同期
+	void UpdateEulerFromQuaternion();
 
 private:
 	DirectX::XMFLOAT3 position;		//位置座標

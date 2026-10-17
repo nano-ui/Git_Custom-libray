@@ -42,26 +42,13 @@ void Player::Initialize()
 
 		if (model_component->GetModelPath().empty())
 		{
-			const std::string default_model_path = "Data/Model/Character/Player/Greystone_WhiteTiger.gltf";
+			const std::string default_model_path = GetDefaultModelPath();
 			model_component->LoadModel(default_model_path);
-		}
-
-		std::filesystem::path path_obj(model_component->GetModelPath());
-		std::string model_name = path_obj.stem().string();
-
-		if (state_machine_component)
-		{
-			state_machine_component->SetModelName(model_name);
 		}
 	}
 
 	// 基底クラス初期化（MovementComponent 等のセットアップ）
 	Character::Initialize();
-
-	if (state_machine_component && blackboard)
-	{
-		state_machine_component->Initialize(blackboard.get());
-	}
 }
 
 //更新処理
@@ -87,10 +74,22 @@ void Player::SetupSerialization()
 	}
 }
 
+//インスペクター登録
+void Player::SetupInspector()
+{
+	Character::SetupInspector();
+}
+
 //アニメーション終了イベント
 void Player::OnAnimationEnd(uint32_t state_key)
 {
 
+}
+
+//デフォルトパスの取得
+std::string Player::GetDefaultModelPath() const
+{
+	return "Data/Model/Character/Player/Greystone_WhiteTiger.gltf";
 }
 
 //入力更新処理

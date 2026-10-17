@@ -47,6 +47,9 @@ public:
 	//ダメージ処理
 	bool ApplyDamage(float damage, float invincible_time);
 
+	//ブラックボードに同期
+	void SyncBlackboard();
+
 	//ブラックボードを取得
 	StateBlackboard* GetBlackboard()const { return blackboard.get(); }
 
@@ -57,6 +60,9 @@ public:
 	StateMachineComponent* GetStateMachineComponent()const { return state_machine_component.get(); }
 
 protected:
+	//デフォルトパスの取得
+	virtual std::string GetDefaultModelPath() const = 0;
+
 	//移動方向の設定
 	void Move(float elapsed_time, float vx, float vz, float speed);
 

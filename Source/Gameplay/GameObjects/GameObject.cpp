@@ -2,6 +2,9 @@
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Gameplay\Components\Model\ModelComponent.h"
 
+#include <fstream>
+#include <filesystem>
+
 //コンストラクタ
 GameObject::GameObject()
 	:is_active(true)
@@ -93,35 +96,125 @@ void GameObject::SetupInspector()
 }
 
 //指定されたJSONオブジェクトへ自身のデータを書き込む
-void GameObject::SaveToJObject(nlohmann::json& object_json)
+void GameObject::SaveToJObject(nlohmann::json& object_json, SerializeTarget target) 
 {
-	if (serializer)serializer->SaveToObject(object_json);
+	serializer->SaveToObject(object_json, target);
 }
 
 //指定されたJSONオブジェクトから自身のデータを復元
-void GameObject::LoadFromJObject(const nlohmann::json& object_json)
+void GameObject::LoadFromJObject(const nlohmann::json& object_json, SerializeTarget target) 
 {
-	if (serializer)serializer->LoadFromObject(object_json);
-	else OutputDebugStringA("[GameObject 警告] LoadFromJObject: model インスタンスが nullptr です。\n");
+	serializer->LoadFromObject(object_json, target);
 }
 
 //パラメータをJSONファイルへ保存
-void GameObject::SaveToJson()
+void GameObject::SaveToJson(SerializeTarget target) 
 {
-	if (!serializer)return;
 	std::string file_path = "Data/Json/" + class_name + ".json";
-	serializer->SaveToFile(file_path);
+	serializer->SaveToFile(file_path, target);
 }
 
 //JSONファイルからパラメータを復元
-void GameObject::LoadFromJson()
+void GameObject::LoadFromJson(SerializeTarget target) 
 {
-	if (!serializer)return;
-
 	std::string file_path = "Data/Json/" + class_name + ".json";
-	bool is_loading = serializer->LoadFromFile(file_path);
+	bool is_loading = serializer->LoadFromFile(file_path, target);
 	if (!is_loading)
 	{
-		serializer->SaveToFile(file_path);
+		serializer->SaveToFile(file_path, target);
 	}
+}
+
+//クラス名とモデル個別情報のみを保存
+bool GameObject::SaveToDetailFile(const std::string& file_path)
+{
+	//パスを受け取り、親ディレクトリの確認し、存在しない場合は生成
+	std::filesystem::path system_path(file_path);
+	if (system_path.has_parent_path())
+	{
+		std::filesystem::create_directories(system_path.parent_path());
+	}
+
+	//nlohmann::jsonの最上位キーを設定
+	nlohmann::json detail_json;
+	detail_json["class_name"] = class_name;
+
+	//固有情報を格納
+	if (serializer)
+	{
+		serializer->SaveToObject(detail_json, SerializeTarget::Detail);
+	}
+	else
+	{
+		OutputDebugStringA("[GameObject 警告] SaveToDetailFile: serializer が nullptr です。\n");
+		return false;
+	}
+
+	//ファイルに書き出し
+	std::ofstream detail_file(file_path);
+	if (detail_file.is_open())
+	{
+		constexpr int json_indent_space = 4;
+		detail_file << detail_json.dump(json_indent_space);
+		detail_file.close();
+	}
+	else
+	{
+		OutputDebugStringA("[GameObject エラー] SaveToDetailFile: 個別JSONファイルのオープンに失敗しました。\n");
+		return false;
+	}
+	return true;
+}
+
+//モデル個別情報のみを復元
+bool GameObject::LoadFromDetailFile(const std::string& file_path)
+{
+	//ファイルを開き、JSONパースを実行
+	std::ifstream detail_file(file_path);
+
+	//開けるか確認
+	if (!detail_file.is_open())
+	{
+		OutputDebugStringA("[GameObject エラー] LoadFromDetailFile: 個別JSONファイルが開けませんでした。\n");
+		return false;
+	}
+
+	nlohmann::json detail_json;
+	detail_file >> detail_json;
+	detail_file.close();
+
+	//パラメーター復元
+	if (serializer)
+	{
+		serializer->LoadFromObject(detail_json, SerializeTarget::Detail);
+		return true;
+	}
+	else
+	{
+		OutputDebugStringA("[GameObject 警告] LoadFromDetailFile: serializer が nullptr です。\n");
+		return false;
+	}
+}
+
+//オブジェクト生成前に、個別 JSON ファイルから class_nameを読み取る
+std::string GameObject::ReadClassNameFromDetailFile(const std::string& file_path)
+{
+	std::ifstream detail_file(file_path);
+	if (!detail_file.is_open())
+	{
+		OutputDebugStringA("[GameObject エラー] ReadClassNameFromDetailFile: 個別JSONファイルが開けませんでした。\n");
+		return "";
+	}
+
+	nlohmann::json detail_json;
+	detail_file >> detail_json;
+	detail_file.close();
+
+	if (detail_json.contains("class_name"))
+	{
+		return detail_json["class_name"].get<std::string>();
+	}
+
+	OutputDebugStringA("[GameObject 警告] ReadClassNameFromDetailFile: JSON内に class_name が見つかりませんでした。\n");
+	return "";
 }

@@ -43,6 +43,26 @@ void Character::Initialize()
 	if (!movement_component) movement_component = AddComponent<MovementComponent>();
 	movement_component->SetTransformComponent(transform_component);
 
+	//モデルパスの確認
+	if (model_component->GetModelPath().empty())
+	{
+		const std::string default_path = GetDefaultModelPath();
+		if (!default_path.empty())
+		{
+			model_component->LoadModel(default_path);
+		}
+		else
+		{
+			OutputDebugStringA("[Character エラー] Initialize: デフォルトモデルパスが設定されていません。\n");
+		}
+	}
+
+	if (!model_component->GetModel())
+	{
+		OutputDebugStringA("[Character エラー] Initialize: モデルデータのロードに失敗したため、後続の初期化を中止します。\n");
+		return;
+	}
+
 	//全コンポーネントの初期化実行
 	GameObject::Initialize();
 
@@ -79,6 +99,19 @@ void Character::Initialize()
 				}
 			}
 		}
+
+		std::filesystem::path path_obj(model_component->GetModelPath());
+		std::string model_name = path_obj.stem().string();
+
+		if (state_machine_component)
+		{
+			state_machine_component->SetModelName(model_name);
+		}
+	}
+
+	if (state_machine_component && blackboard)
+	{
+		state_machine_component->Initialize(blackboard.get());
 	}
 
 	SetupSerialization();
@@ -202,8 +235,12 @@ void Character::SetupSerialization()
 
 	if (serializer)
 	{
-		serializer->RegisterVariable(u8"体力", &health);
-		serializer->RegisterVariable(u8"攻撃力", &attack_power);
+		serializer->RegisterVariable(u8"体力", &health, SerializeTarget::Detail);
+		serializer->RegisterVariable(u8"攻撃力", &attack_power, SerializeTarget::Detail);
+	}
+	else
+	{
+		OutputDebugStringA("[Character 警告] SetupSerialization: serializer が nullptr です。\n");
 	}
 }
 
@@ -215,10 +252,15 @@ void Character::SetupInspector()
 	{
 		inspector->RegisterVariable(u8"体力", &health, u8"基本ステータス");
 		inspector->RegisterVariable(u8"攻撃力", &attack_power, u8"基本ステータス");
-		inspector->RegisterVariable(u8"ブレンド時間", &belnd_time, u8"アニメーションブレンド");
 		inspector->RegisterText(u8"無敵時間タイマー", &invincible_timer, u8"ステータスモニター");
 		inspector->RegisterText(u8"現在のアニメーション", &current_animation_name, u8"アニメーションモニター");
 		inspector->RegisterText(u8"アニメーション再生時間", &current_animation_time, u8"アニメーションモニター");
+		inspector->RegisterText(u8"ルートモーション有効", &debug_root_motion_enabled, u8"ルートモーション");
+		inspector->RegisterText(u8"ルートモーション差分", &debug_root_motion_delta, u8"ルートモーション");
+	}
+	else
+	{
+		OutputDebugStringA("[Character 警告] SetupInspector: inspector が nullptr です。\n");
 	}
 }
 
@@ -245,6 +287,17 @@ bool Character::ApplyDamage(float damage, float invincible_time)
 	return true;
 }
 
+//ブラックボードに同期
+void Character::SyncBlackboard()
+{
+	float current_move_speed = movement_component ? movement_component->GetMoveSpeed() : 0.0f;
+	bool current_is_ground = movement_component ? movement_component->IsGround() : false;
+
+	blackboard->SetValue(u8"体力", health);
+	blackboard->SetValue(u8"接地フラグ", current_is_ground);
+	blackboard->SetValue("move_speed", current_move_speed);
+}
+
 //ブラックボードに登録・初期化
 void Character::SetupBlackboard()
 {
@@ -252,9 +305,7 @@ void Character::SetupBlackboard()
 	blackboard->RegisterVariable("move_speed");
 	blackboard->RegisterVariable(u8"接地フラグ");
 
-	blackboard->SetValue(u8"体力", health);
-	blackboard->SetValue(u8"接地フラグ", movement_component ? movement_component->IsGround() : false);
-	blackboard->SetValue("move_speed", movement_component ? movement_component->GetMoveSpeed() : 0.0f);
+	SyncBlackboard();
 }
 
 //移動方向の設定
