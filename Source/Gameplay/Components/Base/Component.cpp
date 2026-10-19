@@ -23,5 +23,25 @@ void Component::Initialize()
 //デバッグ描画処理
 void Component::RenderGui()
 {
+	if (!is_active)return;
+}
 
+//JSON保存用変数登録
+void Component::SetupSerialization(JsonSerializer* serializer)
+{
+	if (!serializer)
+	{
+		OutputDebugStringA("[Component::SetupSerialization] serializerがnullです。\n");
+		return;
+	}
+}
+
+//GuiInspector専用のインスペクター項目登録
+void Component::SetupInspector(GuiInspector* inspector)
+{
+	if (!inspector)
+	{
+		OutputDebugStringA("[Component::SetupInspector] inspectorがnullです。\n");
+		return;
+	}
 }

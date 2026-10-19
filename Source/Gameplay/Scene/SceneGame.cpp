@@ -14,6 +14,8 @@
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Engine/Graphics/Shaders/SkyBox.h"
 #include "SceneManager.h"
+#include "Gameplay\GameObjects\Character\Player.h"
+#include "Gameplay\GameObjects\Character\Enemy.h"
 
 //コンストラクタ
 SceneGame::SceneGame()
@@ -82,6 +84,24 @@ void SceneGame::Initialize()
 	shape_renderer = std::make_unique<ShapeRenderer>(device);
 	editor_manager = std::make_unique<EditorManager>();
 	editor_manager->Initialize();
+
+	Player* player = object_manager->Instantiate<Player>();
+	Enemy* enemy = object_manager->Instantiate<Enemy>();
+
+	if (!player || !enemy)
+	{
+		OutputDebugStringA("[SceneGame エラー] Initialize: Player または Enemy の生成に失敗しました。\n");
+		return;
+	}
+
+	auto player_transform = player->GetComponent<TransformComponent>();
+	if (!player_transform)
+	{
+		OutputDebugStringA("[SceneGame エラー] Initialize: Player の TransformComponent の取得に失敗しました。\n");
+		return;
+	}
+	enemy->SetTarget(player_transform);
+
 }
 
 //終了化

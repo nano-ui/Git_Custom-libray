@@ -9,6 +9,7 @@ class CollisionSphere;
 class CapsuleColliderComponent;
 class BoneCapsuleColliderComponent;
 class AttachmentColliderComponent;
+class LinearMove;
 
 class Enemy :public Character
 {
@@ -37,6 +38,9 @@ public:
 	// アニメーション終了イベント
 	void OnAnimationEnd(uint32_t state_key) override;
 
+	//対象を設定
+	void SetTarget(const std::shared_ptr<TransformComponent>& target);
+
 protected:
 	//デフォルトパスの取得
 	std::string GetDefaultModelPath() const override;
@@ -45,7 +49,13 @@ private:
 	//コンポーネント群のセットアップ
 	void SetupComponent();
 
+	//座標計算・移動入力の更新処理
+	void UpdateChase(float elapsed_time);
+
 private:
-
+	bool is_play = true;	//playフラグ
+	std::weak_ptr<TransformComponent> target_transform;	//対象の座標
+	std::unique_ptr<LinearMove> linear_move;			//直線移動
+	float chase_speed = 3.0f;							//移動速度
+	float stop_distance;								//停止距離
 };
-

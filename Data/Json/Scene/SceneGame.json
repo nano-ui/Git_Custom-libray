@@ -5,7 +5,7 @@
             "model_path": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
             "position": {
                 "x": 8.935102462768555,
-                "y": 0.3842999339103699,
+                "y": 0.3846001923084259,
                 "z": 22.292705535888672
             },
             "rotation": {
@@ -65,7 +65,7 @@
             "model_path": "Data\\Model\\Character\\Enemy\\Rampage_Elemental.gltf",
             "position": {
                 "x": -0.17117436230182648,
-                "y": 0.4797044098377228,
+                "y": 0.48147156834602356,
                 "z": -0.3457679748535156
             },
             "rotation": {

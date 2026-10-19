@@ -45,7 +45,7 @@ private:
 
 private:
 	static constexpr float DEFAULT_OFFSET_Y = 5.0f;			//注視点の基準Yオフセット
-	static constexpr float DEFAULT_DISTANCE = 10.0f;		//デフォルトのカメラ距離
+	static constexpr float DEFAULT_DISTANCE = 20.0f;		//デフォルトのカメラ距離
 	static constexpr float DEFAULT_FOLLOW_SPEED = 10.0f;	//追従の補間速度
 	static constexpr float DEFAULT_TURN_SENSITIVITY = 0.2f;	//マウス感度
 

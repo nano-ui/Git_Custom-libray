@@ -108,10 +108,10 @@ void AnimationSequencerComponent::Update(float elapsed_time, bool is_loop)
 
 		float integrated_time_a = GetIntegratedModelTime(prev_name, prev_time);
 
-		char blend_log[256];
-		sprintf_s(blend_log, "[Blend実行中] 元Anim=%s (計算時間=%.3fs) -> 先Anim=%s (計算時間=%.3fs) | Factor=%.2f\n",
-			prev_name.c_str(), integrated_time_a, current_animaiton_name.c_str(), integrated_time_b, blend_factor);
-		OutputDebugStringA(blend_log);
+		//char blend_log[256];
+		//sprintf_s(blend_log, "[Blend実行中] 元Anim=%s (計算時間=%.3fs) -> 先Anim=%s (計算時間=%.3fs) | Factor=%.2f\n",
+		//	prev_name.c_str(), integrated_time_a, current_animaiton_name.c_str(), integrated_time_b, blend_factor);
+		//OutputDebugStringA(blend_log);
 
 		model->AnimateBlend(prev_name, integrated_time_a, current_animaiton_name, integrated_time_b, blend_factor);
 	}
@@ -136,10 +136,10 @@ void AnimationSequencerComponent::ChangeAnimation(const std::string& anim_name, 
 
 	if (animation_blender && !current_animaiton_name.empty())
 	{
-		char debug_log[256];
-		sprintf_s(debug_log, "[AnimationSequencerComponent] アニメーション切り替え実行: 遷移元=%s (時間=%.3f s) -> 遷移先=%s (ブレンド時間=%.3f s)\n",
-			current_animaiton_name.c_str(), current_sequence_time, anim_name.c_str(), blend_time);
-		OutputDebugStringA(debug_log);
+		//char debug_log[256];
+		//sprintf_s(debug_log, "[AnimationSequencerComponent] アニメーション切り替え実行: 遷移元=%s (時間=%.3f s) -> 遷移先=%s (ブレンド時間=%.3f s)\n",
+		//	current_animaiton_name.c_str(), current_sequence_time, anim_name.c_str(), blend_time);
+		//OutputDebugStringA(debug_log);
 
 		animation_blender->StartCrossFade(current_animaiton_name, current_sequence_time, blend_time);
 	}

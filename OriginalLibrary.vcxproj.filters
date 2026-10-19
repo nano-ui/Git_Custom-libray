@@ -459,6 +459,9 @@
     <ClCompile Include="Source\Editor\Behavior\BehaviorTreeBuilder.cpp">
       <Filter>Source\Editor\Behavior\BehaviorTreeBuilder</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\AI\HateComponent.cpp">
+      <Filter>Source\Gameplay\Components\AI\HateComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -877,6 +880,9 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\Behavior\BehaviorTreeBuilder.h">
       <Filter>Source\Editor\Behavior\BehaviorTreeBuilder</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\AI\HateComponent.h">
+      <Filter>Source\Gameplay\Components\AI\HateComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1409,6 +1415,12 @@
     </Filter>
     <Filter Include="Source\Editor\Behavior\BehaviorTreeBuilder">
       <UniqueIdentifier>{0539a0dc-6bb8-47ce-9da9-310c1eb178e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\AI">
+      <UniqueIdentifier>{2da081c0-bd37-48b7-af30-ee88cc8fbfca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\AI\HateComponent">
+      <UniqueIdentifier>{9cc50d14-e0fb-4e29-b1d4-c708ad52ff9a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

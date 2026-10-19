@@ -28,10 +28,10 @@ public:
 	virtual void RenderGui();
 
 	//JSON保存用変数登録
-	virtual void SetupSerialization(JsonSerializer* serializer){}
+	virtual void SetupSerialization(JsonSerializer* serializer);
 
 	//GuiInspector専用のインスペクター項目登録
-	virtual void SetupInspector(GuiInspector* inspector){}
+	virtual void SetupInspector(GuiInspector* inspector);
 
 	//有効フラグ取得
 	bool IsActive()const { return is_active; }

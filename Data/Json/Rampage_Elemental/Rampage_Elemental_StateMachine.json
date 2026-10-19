@@ -9,10 +9,10 @@
                     "BlendTime": 0.20000000298023224,
                     "Conditions": [
                         {
-                            "CompOp": 5,
-                            "HashKey": 1572818033,
+                            "CompOp": 2,
+                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
-                            "RefValue": 50.0,
+                            "RefValue": 0.0,
                             "SecondaryHash": 0,
                             "Type": 0,
                             "VectorRefValue": [
@@ -30,10 +30,10 @@
                     "BlendTime": 0.20000000298023224,
                     "Conditions": [
                         {
-                            "CompOp": 2,
-                            "HashKey": 1572818033,
+                            "CompOp": 5,
+                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
-                            "RefValue": 50.0,
+                            "RefValue": 0.0,
                             "SecondaryHash": 0,
                             "Type": 0,
                             "VectorRefValue": [
@@ -578,9 +578,57 @@
                 },
                 {
                     "BlendTime": 0.20000000298023224,
-                    "Conditions": [],
+                    "Conditions": [
+                        {
+                            "CompOp": 2,
+                            "HashKey": 4203995948,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "CompOp": 3,
+                            "HashKey": 4203995948,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.05000000074505806,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
                     "EndPinID": 412,
                     "ID": 413,
+                    "StartPinID": 409
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 4,
+                            "HashKey": 4203995948,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.05000000074505806,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 415,
+                    "ID": 416,
                     "StartPinID": 409
                 }
             ],
@@ -686,10 +734,42 @@
                     "PosX": 442.6390380859375,
                     "PosY": -26.614990234375,
                     "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "Move_Front_Loop",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 2,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 414,
+                    "Input": [
+                        {
+                            "ID": 415,
+                            "Kind": 0,
+                            "Name": ""
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Action",
+                    "Output": [],
+                    "PosX": 265.85491943359375,
+                    "PosY": 69.7332763671875,
+                    "SubGraphID": 0
                 }
             ]
         }
     ],
-    "NextID": 414,
+    "NextID": 417,
     "TargetModelPath": "Data\\Model\\Character\\Enemy\\Rampage_Elemental.gltf"
 }
