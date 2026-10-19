@@ -45,7 +45,7 @@ public:
 	void SetupInspector() override;
 
 	//ダメージ処理
-	bool ApplyDamage(float damage, float invincible_time);
+	bool ApplyDamage(float damage, float invincible_time, uint32_t attacker_id);
 
 	//ブラックボードに同期
 	void SyncBlackboard();
@@ -85,7 +85,7 @@ protected:
 	virtual void OnLanding() {}
 
 	//被弾時イベント
-	virtual void OnDamage() {}
+	virtual void OnDamage(uint32_t attacker_id, float hate) {}
 
 	//死亡時イベント
 	virtual void OnDead() {}

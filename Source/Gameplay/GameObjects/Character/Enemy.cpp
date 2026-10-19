@@ -5,6 +5,8 @@
 #include "Gameplay\Components\Movement\MovementComponent.h"
 #include "Gameplay\Components\Editor\AttachmentColliderComponent.h"
 #include "Gameplay\Components\Movement\Move\LinearMove.h"
+#include "Gameplay\Components\AI\HateComponent.h"
+#include "Gameplay\Components\Editor\StateMachineComponent.h"
 
 #include "Engine\Graphics\Renderers\ShapeRenderer.h"
 
@@ -37,6 +39,7 @@ void Enemy::Initialize()
 
 	//基底クラスの初期化
 	Character::Initialize();
+	health = 100.0f;
 }
 
 //更新処理
@@ -44,9 +47,10 @@ void Enemy::Update(float elapsed_time)
 {
 	if (is_play)
 	{
+		UpdateTargetFromHate();
 		UpdateChase(elapsed_time);
-		Character::Update(elapsed_time);
 	}
+	Character::Update(elapsed_time);
 }
 
 //デバッグ描画
@@ -62,6 +66,11 @@ void Enemy::SetupSerialization()
 	serializer->RegisterVariable(u8"開始", &is_play, SerializeTarget::Detail);
 	serializer->RegisterVariable(u8"速度", &chase_speed, SerializeTarget::Detail);
 	serializer->RegisterVariable(u8"停止距離", &stop_distance, SerializeTarget::Detail);
+
+	if (state_machine_component && serializer)
+	{
+		state_machine_component->SetupSerialization(serializer.get());
+	}
 }
 
 //インスペクター登録
@@ -91,6 +100,12 @@ std::string Enemy::GetDefaultModelPath() const
 	return "Data/Model/Character/Enemy/Rampage_Elemental.gltf";
 }
 
+//被弾時イベント
+void Enemy::OnDamage(uint32_t attacker_id, float hate)
+{
+	hate_component->AddHate(attacker_id, hate);
+}
+
 //コンポーネント群のセットアップ
 void Enemy::SetupComponent()
 {
@@ -116,6 +131,13 @@ void Enemy::SetupComponent()
 	{
 		OutputDebugStringA("[Enemy エラー] SetupComponents: 必要な基本コンポーネントの生成に失敗しました。\n");
 	}
+
+	hate_component = GetComponent<HateComponent>();
+	if (!hate_component)
+	{
+		hate_component = AddComponent<HateComponent>();
+	}
+
 }
 
 //座標計算・移動入力の更新処理
@@ -165,4 +187,51 @@ void Enemy::UpdateChase(float elapsed_time)
 	//実際に移動
 	Character::Move(elapsed_time, dir_x, dir_z, chase_speed);
 	Character::Tuen(elapsed_time, dir_x, dir_z, chase_speed);
+}
+
+//注目対象更新処理
+void Enemy::UpdateTargetFromHate()
+{
+	if (!hate_component)
+	{
+		OutputDebugStringA("[Enemy::UpdateTargetFromHate] hate_componentがnullです。\n");
+		return;
+	}
+
+	//対象IDの取得
+	bool is_found = false;
+	uint32_t target_id = hate_component->GetTopHateTargetId();
+	if (!hate_component->HasTarget())
+	{
+		target_transform.reset();
+		return;
+	}
+	
+	//対象の検索
+	for (const auto& obj : ObjectManager::Instance().GetGameObjects())
+	{
+		if (!obj || !obj->IsActive())
+		{
+			continue;
+		}
+
+		if (target_id == obj->GetObjectId())
+		{
+			auto transform = obj->GetComponent<TransformComponent>();
+			if (transform)
+			{
+				target_transform = transform;
+				is_found = true;
+				break;
+			}
+			else
+			{
+				OutputDebugStringA("[Enemy::UpdateTargetFromHate] 対象の TransformComponent が取得できませんでした。\n");
+			}
+		}
+	}
+	if (!is_found)
+	{
+		target_transform.reset();
+	}
 }

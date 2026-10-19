@@ -14,7 +14,7 @@
 Character::Character()
 	: health(100.0f)
 	, attack_power(10.0f)
-	, invincible_timer(0.0f)
+	, invincible_timer(1.0f)
 {
 	blackboard = std::make_unique<StateBlackboard>();
 	state_machine_component = std::make_unique<StateMachineComponent>();
@@ -94,7 +94,7 @@ void Character::Initialize()
 				if (capsule)
 				{
 					capsule->listener = this;
-					capsule->owner_id = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(this));
+					capsule->owner_id = object_id;
 					AddCollider(capsule.get());
 				}
 			}
@@ -209,6 +209,7 @@ void Character::OnCollisionHit(const CollisionResult& result)
 	// 攻撃判定の被弾処理
 	else if (result.hit_attribute == ColliderAttribute::Attack)
 	{
+		ApplyDamage(attack_power, invincible_timer, result.hit_collider->owner_id);
 		OutputDebugStringA("[Character] 攻撃判定がヒットしました。\n");
 	}
 }
@@ -265,7 +266,7 @@ void Character::SetupInspector()
 }
 
 //ダメージ処理
-bool Character::ApplyDamage(float damage, float invincible_time)
+bool Character::ApplyDamage(float damage, float invincible_time, uint32_t attacker_id)
 {
 	//ダメージの適用条件判定
 	if (damage <= 0)return false;
@@ -281,7 +282,7 @@ bool Character::ApplyDamage(float damage, float invincible_time)
 	}
 	else
 	{
-		OnDamage();
+		OnDamage(attacker_id, damage);
 	}
 
 	return true;
@@ -295,15 +296,15 @@ void Character::SyncBlackboard()
 
 	blackboard->SetValue(u8"体力", health);
 	blackboard->SetValue(u8"接地フラグ", current_is_ground);
-	blackboard->SetValue("move_speed", current_move_speed);
+	blackboard->SetValue(u8"移動速度", current_move_speed);
 }
 
 //ブラックボードに登録・初期化
 void Character::SetupBlackboard()
 {
 	blackboard->RegisterVariable(u8"体力");
-	blackboard->RegisterVariable("move_speed");
 	blackboard->RegisterVariable(u8"接地フラグ");
+	blackboard->RegisterVariable(u8"移動速度");
 
 	SyncBlackboard();
 }

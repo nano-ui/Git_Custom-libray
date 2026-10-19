@@ -135,6 +135,9 @@ public:
 	//モデル識別ハッシュ値の設定
 	void SetModelHash(uint32_t hash) { model_hash = hash; }
 
+	//オブジェクトIDを取得
+	uint32_t GetObjectId()const { return object_id; }
+
 protected:
 	//コライダーを登録
 	void AddCollider(Collider* collider) { collideres.push_back(collider); }
@@ -148,5 +151,7 @@ protected:
 	std::vector<Collider*> collideres;	//コライダーのリスト
 	std::string class_name;				//クラス名
 	uint32_t model_hash = 0;			//モデル識別ハッシュ値
+	uint32_t object_id;					//オブジェクトID
+	static constexpr uint32_t INVALID_OBJECT_ID = 0;	//ID未設定時の値
 };
 

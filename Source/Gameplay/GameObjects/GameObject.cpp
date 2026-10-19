@@ -5,12 +5,21 @@
 #include <fstream>
 #include <filesystem>
 
+static uint32_t next_game_object_id = 1;	//次のオブジェクトID
+
 //コンストラクタ
 GameObject::GameObject()
 	:is_active(true)
 	, class_name("GameObject")
 	, model_hash(0)
+	, object_id(next_game_object_id++)
 {
+	if (next_game_object_id == INVALID_OBJECT_ID)
+	{
+		next_game_object_id = 1;
+	}
+
+
 	//基本情報の設定
 	serializer = std::make_unique<JsonSerializer>();
 	inspector = std::make_unique<GuiInspector>();
@@ -87,6 +96,8 @@ void GameObject::SetupInspector()
 {
 	if (!inspector) return;
 	inspector->Clear();
+
+	inspector->RegisterText(u8"オブジェクトID", &object_id, u8"基本情報");
 
 	// アタッチされた全コンポーネントのインスペクター登録を一括実行
 	for (auto& component : components)

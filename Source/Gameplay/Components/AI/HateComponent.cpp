@@ -3,6 +3,7 @@
 #include "Editor\GuiInspector.h"
 
 #include <Windows.h>
+#include <imgui.h>
 
 //コンストラクタ
 HateComponent::HateComponent()

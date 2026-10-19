@@ -10,7 +10,7 @@
                     "Conditions": [
                         {
                             "CompOp": 2,
-                            "HashKey": 4203995948,
+                            "HashKey": 4233592014,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
@@ -22,16 +22,16 @@
                             ]
                         }
                     ],
-                    "EndPinID": 401,
-                    "ID": 403,
-                    "StartPinID": 398
+                    "EndPinID": 105,
+                    "ID": 107,
+                    "StartPinID": 102
                 },
                 {
                     "BlendTime": 0.20000000298023224,
                     "Conditions": [
                         {
                             "CompOp": 5,
-                            "HashKey": 4203995948,
+                            "HashKey": 4233592014,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
@@ -43,9 +43,51 @@
                             ]
                         }
                     ],
-                    "EndPinID": 397,
-                    "ID": 404,
-                    "StartPinID": 402
+                    "EndPinID": 101,
+                    "ID": 108,
+                    "StartPinID": 106
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 5,
+                            "HashKey": 1572818033,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 110,
+                    "ID": 112,
+                    "StartPinID": 102
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 5,
+                            "HashKey": 1572818033,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 110,
+                    "ID": 113,
+                    "StartPinID": 106
                 }
             ],
             "Nodes": [
@@ -61,10 +103,10 @@
                         "FinishResult": 0,
                         "Weight": 1
                     },
-                    "ID": 396,
+                    "ID": 100,
                     "Input": [
                         {
-                            "ID": 397,
+                            "ID": 101,
                             "Kind": 0,
                             "Name": "入力"
                         }
@@ -78,7 +120,7 @@
                     "Name": "待機状態",
                     "Output": [
                         {
-                            "ID": 398,
+                            "ID": 102,
                             "Kind": 1,
                             "Name": "出力"
                         }
@@ -99,10 +141,10 @@
                         "FinishResult": 0,
                         "Weight": 1
                     },
-                    "ID": 400,
+                    "ID": 104,
                     "Input": [
                         {
-                            "ID": 401,
+                            "ID": 105,
                             "Kind": 0,
                             "Name": "入力"
                         }
@@ -110,325 +152,24 @@
                     "IsLoop": true,
                     "IsRootMotion": false,
                     "IsSubGraph": true,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "新規サブグラフ",
+                    "LinkColorB": 0.4434340298175812,
+                    "LinkColorG": 0.8262548446655273,
+                    "LinkColorR": 0.4463902413845062,
+                    "Name": "移動状態",
                     "Output": [
                         {
-                            "ID": 402,
+                            "ID": 106,
                             "Kind": 1,
                             "Name": "出力"
                         }
                     ],
-                    "PosX": 126.6390380859375,
-                    "PosY": -2.614990234375,
-                    "SubGraphID": 399
-                }
-            ]
-        },
-        {
-            "GraphID": 108,
-            "GraphName": "移動ステート",
-            "LayerType": 0,
-            "Links": [],
-            "Nodes": [
-                {
-                    "ActionCategory": 1,
-                    "AnimationName": "Run_Front",
-                    "BehaviorData": {
-                        "ActionDuration": -1.0,
-                        "Category": 0,
-                        "CompositeType": 0,
-                        "CooldownRandomRange": 0.0,
-                        "CooldownTime": 0.0,
-                        "FinishResult": 0,
-                        "Weight": 1
-                    },
-                    "ID": 245,
-                    "Input": [
-                        {
-                            "ID": 246,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": true,
-                    "IsRootMotion": false,
-                    "IsSubGraph": false,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "前移動",
-                    "Output": [
-                        {
-                            "ID": 247,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": -75.96469116210938,
-                    "PosY": -41.43595886230469,
-                    "SubGraphID": 0
-                }
-            ]
-        },
-        {
-            "GraphID": 248,
-            "GraphName": "攻撃ステート",
-            "LayerType": 0,
-            "Links": [
-                {
-                    "BlendTime": 0.20000000298023224,
-                    "Conditions": [],
-                    "EndPinID": 260,
-                    "ID": 262,
-                    "StartPinID": 258
-                },
-                {
-                    "BlendTime": 0.20000000298023224,
-                    "Conditions": [],
-                    "EndPinID": 264,
-                    "ID": 266,
-                    "StartPinID": 261
-                },
-                {
-                    "BlendTime": 0.20000000298023224,
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
-                            "HashKey": 0,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 4,
-                            "VectorRefValue": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        }
-                    ],
-                    "EndPinID": 257,
-                    "ID": 267,
-                    "StartPinID": 265
-                },
-                {
-                    "BlendTime": 0.20000000298023224,
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
-                            "HashKey": 0,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 4,
-                            "VectorRefValue": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        }
-                    ],
-                    "EndPinID": 279,
-                    "ID": 281,
-                    "StartPinID": 277
-                }
-            ],
-            "Nodes": [
-                {
-                    "ActionCategory": 3,
-                    "AnimationName": "Attack_A_Slow",
-                    "BehaviorData": {
-                        "ActionDuration": -1.0,
-                        "Category": 0,
-                        "CompositeType": 0,
-                        "CooldownRandomRange": 0.0,
-                        "CooldownTime": 0.0,
-                        "FinishResult": 0,
-                        "Weight": 1
-                    },
-                    "ID": 256,
-                    "Input": [
-                        {
-                            "ID": 257,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": false,
-                    "IsRootMotion": false,
-                    "IsSubGraph": false,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "右薙ぎ払い",
-                    "Output": [
-                        {
-                            "ID": 258,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": 17.0,
-                    "PosY": -73.0,
-                    "SubGraphID": 0
-                },
-                {
-                    "ActionCategory": 3,
-                    "AnimationName": "Attack_B_Slow",
-                    "BehaviorData": {
-                        "ActionDuration": -1.0,
-                        "Category": 0,
-                        "CompositeType": 0,
-                        "CooldownRandomRange": 0.0,
-                        "CooldownTime": 0.0,
-                        "FinishResult": 0,
-                        "Weight": 1
-                    },
-                    "ID": 259,
-                    "Input": [
-                        {
-                            "ID": 260,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": false,
-                    "IsRootMotion": false,
-                    "IsSubGraph": false,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "斜め切り",
-                    "Output": [
-                        {
-                            "ID": 261,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": 297.0,
-                    "PosY": -65.0,
-                    "SubGraphID": 0
-                },
-                {
-                    "ActionCategory": 3,
-                    "AnimationName": "",
-                    "BehaviorData": {
-                        "ActionDuration": -1.0,
-                        "Category": 0,
-                        "CompositeType": 0,
-                        "CooldownRandomRange": 0.0,
-                        "CooldownTime": 0.0,
-                        "FinishResult": 0,
-                        "Weight": 1
-                    },
-                    "ID": 263,
-                    "Input": [
-                        {
-                            "ID": 264,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": false,
-                    "IsRootMotion": false,
-                    "IsSubGraph": false,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "右薙ぎ払い2",
-                    "Output": [
-                        {
-                            "ID": 265,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": 20.0,
-                    "PosY": 27.0,
-                    "SubGraphID": 0
-                },
-                {
-                    "ActionCategory": 3,
-                    "AnimationName": "Ability_R_0",
-                    "BehaviorData": {
-                        "ActionDuration": -1.0,
-                        "Category": 0,
-                        "CompositeType": 0,
-                        "CooldownRandomRange": 0.0,
-                        "CooldownTime": 0.0,
-                        "FinishResult": 0,
-                        "Weight": 1
-                    },
-                    "ID": 269,
-                    "Input": [
-                        {
-                            "ID": 270,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": false,
-                    "IsRootMotion": false,
-                    "IsSubGraph": false,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "とびかかり",
-                    "Output": [
-                        {
-                            "ID": 271,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": -72.33341979980469,
-                    "PosY": -87.33333587646484,
-                    "SubGraphID": 0
-                },
-                {
-                    "ActionCategory": 3,
-                    "AnimationName": "Attack_RMB",
-                    "BehaviorData": {
-                        "ActionDuration": -1.0,
-                        "Category": 0,
-                        "CompositeType": 0,
-                        "CooldownRandomRange": 0.0,
-                        "CooldownTime": 0.0,
-                        "FinishResult": 0,
-                        "Weight": 1
-                    },
-                    "ID": 272,
-                    "Input": [
-                        {
-                            "ID": 273,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": false,
-                    "IsRootMotion": true,
-                    "IsSubGraph": false,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "ダッシュ攻撃",
-                    "Output": [
-                        {
-                            "ID": 274,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": 410.333251953125,
-                    "PosY": -99.33333587646484,
-                    "SubGraphID": 0
+                    "PosX": 165.0,
+                    "PosY": 217.0,
+                    "SubGraphID": 103
                 },
                 {
                     "ActionCategory": 0,
-                    "AnimationName": "",
+                    "AnimationName": "Death_A_0",
                     "BehaviorData": {
                         "ActionDuration": -1.0,
                         "Category": 0,
@@ -438,165 +179,54 @@
                         "FinishResult": 0,
                         "Weight": 1
                     },
-                    "ID": 275,
+                    "ID": 109,
                     "Input": [
                         {
-                            "ID": 276,
+                            "ID": 110,
                             "Kind": 0,
                             "Name": "入力"
                         }
                     ],
-                    "IsLoop": true,
+                    "IsLoop": false,
                     "IsRootMotion": false,
                     "IsSubGraph": false,
                     "LinkColorB": 1.0,
                     "LinkColorG": 1.0,
                     "LinkColorR": 1.0,
-                    "Name": "新規ステート",
+                    "Name": "死亡状態",
                     "Output": [
                         {
-                            "ID": 277,
+                            "ID": 111,
                             "Kind": 1,
                             "Name": "出力"
                         }
                     ],
-                    "PosX": 490.0,
-                    "PosY": -194.0,
-                    "SubGraphID": 0
-                },
-                {
-                    "ActionCategory": 0,
-                    "AnimationName": "",
-                    "BehaviorData": {
-                        "ActionDuration": -1.0,
-                        "Category": 0,
-                        "CompositeType": 0,
-                        "CooldownRandomRange": 0.0,
-                        "CooldownTime": 0.0,
-                        "FinishResult": 0,
-                        "Weight": 1
-                    },
-                    "ID": 278,
-                    "Input": [
-                        {
-                            "ID": 279,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": true,
-                    "IsRootMotion": false,
-                    "IsSubGraph": false,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "新規ステート",
-                    "Output": [
-                        {
-                            "ID": 280,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": 749.0,
-                    "PosY": -191.0,
+                    "PosX": 345.0,
+                    "PosY": 172.0,
                     "SubGraphID": 0
                 }
             ]
         },
         {
-            "GraphID": 282,
-            "GraphName": "回避",
-            "LayerType": 0,
-            "Links": [],
-            "Nodes": [
-                {
-                    "ActionCategory": 4,
-                    "AnimationName": "Roll_Front",
-                    "BehaviorData": {
-                        "ActionDuration": -1.0,
-                        "Category": 0,
-                        "CompositeType": 0,
-                        "CooldownRandomRange": 0.0,
-                        "CooldownTime": 0.0,
-                        "FinishResult": 0,
-                        "Weight": 1
-                    },
-                    "ID": 314,
-                    "Input": [
-                        {
-                            "ID": 315,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": true,
-                    "IsRootMotion": true,
-                    "IsSubGraph": false,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "前回避",
-                    "Output": [
-                        {
-                            "ID": 316,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": 16.0,
-                    "PosY": -79.0,
-                    "SubGraphID": 0
-                }
-            ]
-        },
-        {
-            "GraphID": 317,
-            "GraphName": "新規サブグラフ",
-            "LayerType": 1,
-            "Links": [],
-            "Nodes": []
-        },
-        {
-            "GraphID": 368,
-            "GraphName": "移動ステート",
-            "LayerType": 1,
-            "Links": [],
-            "Nodes": []
-        },
-        {
-            "GraphID": 399,
-            "GraphName": "新規サブグラフ",
+            "GraphID": 103,
+            "GraphName": "移動状態",
             "LayerType": 1,
             "Links": [
                 {
                     "BlendTime": 0.20000000298023224,
                     "Conditions": [],
-                    "EndPinID": 408,
-                    "ID": 410,
-                    "StartPinID": 406
+                    "EndPinID": 117,
+                    "ID": 119,
+                    "StartPinID": 115
                 },
                 {
                     "BlendTime": 0.20000000298023224,
                     "Conditions": [
                         {
-                            "CompOp": 2,
-                            "HashKey": 4203995948,
+                            "CompOp": 5,
+                            "HashKey": 4233592014,
                             "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 0,
-                            "VectorRefValue": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        },
-                        {
-                            "CompOp": 3,
-                            "HashKey": 4203995948,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.05000000074505806,
+                            "RefValue": 1.0,
                             "SecondaryHash": 0,
                             "Type": 0,
                             "VectorRefValue": [
@@ -606,18 +236,18 @@
                             ]
                         }
                     ],
-                    "EndPinID": 412,
-                    "ID": 413,
-                    "StartPinID": 409
+                    "EndPinID": 121,
+                    "ID": 122,
+                    "StartPinID": 118
                 },
                 {
                     "BlendTime": 0.20000000298023224,
                     "Conditions": [
                         {
                             "CompOp": 4,
-                            "HashKey": 4203995948,
+                            "HashKey": 4233592014,
                             "ParamSecond": 0.0,
-                            "RefValue": 0.05000000074505806,
+                            "RefValue": 1.0,
                             "SecondaryHash": 0,
                             "Type": 0,
                             "VectorRefValue": [
@@ -627,9 +257,9 @@
                             ]
                         }
                     ],
-                    "EndPinID": 415,
-                    "ID": 416,
-                    "StartPinID": 409
+                    "EndPinID": 124,
+                    "ID": 125,
+                    "StartPinID": 118
                 }
             ],
             "Nodes": [
@@ -645,7 +275,7 @@
                         "FinishResult": 0,
                         "Weight": 1
                     },
-                    "ID": 405,
+                    "ID": 114,
                     "Input": [],
                     "IsLoop": true,
                     "IsRootMotion": false,
@@ -656,13 +286,13 @@
                     "Name": "Root",
                     "Output": [
                         {
-                            "ID": 406,
+                            "ID": 115,
                             "Kind": 1,
                             "Name": ""
                         }
                     ],
-                    "PosX": -3.3609619140625,
-                    "PosY": 31.385009765625,
+                    "PosX": 142.0,
+                    "PosY": 153.0,
                     "SubGraphID": 0
                 },
                 {
@@ -677,10 +307,10 @@
                         "FinishResult": 0,
                         "Weight": 1
                     },
-                    "ID": 407,
+                    "ID": 116,
                     "Input": [
                         {
-                            "ID": 408,
+                            "ID": 117,
                             "Kind": 0,
                             "Name": ""
                         }
@@ -694,13 +324,13 @@
                     "Name": "Selector",
                     "Output": [
                         {
-                            "ID": 409,
+                            "ID": 118,
                             "Kind": 1,
                             "Name": ""
                         }
                     ],
-                    "PosX": 226.6390380859375,
-                    "PosY": 32.385009765625,
+                    "PosX": 324.0,
+                    "PosY": 135.0,
                     "SubGraphID": 0
                 },
                 {
@@ -715,10 +345,10 @@
                         "FinishResult": 0,
                         "Weight": 1
                     },
-                    "ID": 411,
+                    "ID": 120,
                     "Input": [
                         {
-                            "ID": 412,
+                            "ID": 121,
                             "Kind": 0,
                             "Name": ""
                         }
@@ -731,8 +361,8 @@
                     "LinkColorR": 1.0,
                     "Name": "Action",
                     "Output": [],
-                    "PosX": 442.6390380859375,
-                    "PosY": -26.614990234375,
+                    "PosX": 496.9999694824219,
+                    "PosY": 88.0,
                     "SubGraphID": 0
                 },
                 {
@@ -747,10 +377,10 @@
                         "FinishResult": 0,
                         "Weight": 1
                     },
-                    "ID": 414,
+                    "ID": 123,
                     "Input": [
                         {
-                            "ID": 415,
+                            "ID": 124,
                             "Kind": 0,
                             "Name": ""
                         }
@@ -763,13 +393,13 @@
                     "LinkColorR": 1.0,
                     "Name": "Action",
                     "Output": [],
-                    "PosX": 265.85491943359375,
-                    "PosY": 69.7332763671875,
+                    "PosX": 522.0,
+                    "PosY": 160.0,
                     "SubGraphID": 0
                 }
             ]
         }
     ],
-    "NextID": 417,
-    "TargetModelPath": "Data\\Model\\Character\\Enemy\\Rampage_Elemental.gltf"
+    "NextID": 126,
+    "TargetModelPath": ""
 }

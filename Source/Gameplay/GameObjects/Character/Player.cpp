@@ -18,6 +18,7 @@ static AutoRegister<Player> auto_register_player("Player");
 //コンストラクタ
 Player::Player()
 {
+	health = 100.0f;
 }
 
 //デストラクタ
