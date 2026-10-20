@@ -5,11 +5,11 @@
 #include <vector>
 #include <memory>
 
+#include "Editor\StateMachineEditor\StateGraphSimulator.h"
+
 class StateBlackboard;
 class BehaviorNode;
 class BehaviorTreeBuilder;
-struct GraphNode;
-struct GraphData;
 
 class BehaviorTreeSimulator
 {
@@ -21,7 +21,9 @@ public:
 	~BehaviorTreeSimulator();
 
 	//グラフ情報の設定
-	void SetupGraph(const GraphData* graph);
+	void SetupGraph(
+		const std::vector<SimulatorRuntimeNode>& nodes,
+		const std::vector<SimulatorRuntimeLink>& links);
 
 	//シミュレーション更新処理
 	bool UpdateSimulation(float elapsed_time, StateBlackboard* blackboard);
@@ -48,7 +50,10 @@ private:
 private:
 	std::unique_ptr<BehaviorTreeBuilder> tree_builder;	//ツリー構築クラス
 	std::shared_ptr<BehaviorNode> runtime_root_node;	//実行ノード
-	const GraphData* current_graph_data = nullptr;		//現在のグラフ情報
+
+	std::vector<SimulatorRuntimeNode> current_runtime_nodes; //現在のグラフノード
+	std::vector<SimulatorRuntimeLink> current_runtime_links; //現在のグラフリンク
+
 	uint32_t active_node_id = UINT32_MAX;				//実行ノードID
 	uint32_t running_action_node_id = UINT32_MAX;		//実行中ノードID
 	float action_timer = 0.0f;							//実行時間

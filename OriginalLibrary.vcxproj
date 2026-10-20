@@ -253,6 +253,7 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphToolbar.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateLinkConnectionHandler.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateLinkRenderer.cpp" />
+    <ClCompile Include="Source\Editor\StateMachineEditor\StateMachineDataLoader.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateNodeRenderer.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateBlackboardInspectorWindow.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphConfigManager.cpp" />
@@ -389,6 +390,7 @@
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphToolbar.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateLinkConnectionHandler.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateLinkRenderer.h" />
+    <ClInclude Include="Source\Editor\StateMachineEditor\StateMachineDataLoader.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateNodeRenderer.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateBlackboardInspectorWindow.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphConfigManager.h" />

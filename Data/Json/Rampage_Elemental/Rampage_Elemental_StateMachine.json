@@ -10,7 +10,7 @@
                     "Conditions": [
                         {
                             "CompOp": 2,
-                            "HashKey": 4233592014,
+                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
@@ -88,6 +88,27 @@
                     "EndPinID": 110,
                     "ID": 113,
                     "StartPinID": 106
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 2,
+                            "HashKey": 1572818033,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryHash": 0,
+                            "Type": 0,
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 101,
+                    "ID": 126,
+                    "StartPinID": 111
                 }
             ],
             "Nodes": [
@@ -223,8 +244,8 @@
                     "BlendTime": 0.20000000298023224,
                     "Conditions": [
                         {
-                            "CompOp": 5,
-                            "HashKey": 4233592014,
+                            "CompOp": 3,
+                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
                             "RefValue": 1.0,
                             "SecondaryHash": 0,
@@ -244,8 +265,8 @@
                     "BlendTime": 0.20000000298023224,
                     "Conditions": [
                         {
-                            "CompOp": 4,
-                            "HashKey": 4233592014,
+                            "CompOp": 2,
+                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
                             "RefValue": 1.0,
                             "SecondaryHash": 0,
@@ -400,6 +421,6 @@
             ]
         }
     ],
-    "NextID": 126,
+    "NextID": 127,
     "TargetModelPath": ""
 }

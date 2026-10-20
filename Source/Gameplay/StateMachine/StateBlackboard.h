@@ -14,6 +14,13 @@
 
 #include "Editor\StateMachineEditor\StateGraphDataManager.h"
 
+//階層属性
+enum class RuntimeLayerType
+{
+	StateMachine,
+	BehaviorTree
+};
+
 //キャラクターのアクションカテゴリー
 enum class ActionCategory
 {
@@ -234,24 +241,30 @@ struct CompareVisitor
 	{
 	}
 
-	//float型用の比較判定処理
 	bool operator()(float& val)
 	{
-		const float* ref = std::get_if<float>(&ref_val);	//基準値
+		const float* ref = std::get_if<float>(&ref_val);
+		const int* ref_int = std::get_if<int>(&ref_val);
 
-		//基準値が違う型だった場合
-		if (!ref) { return false; }
+		if (!ref && !ref_int)
+		{
+			printf("エラー: CompareVisitor - 基準値に float または int が設定されていません。\n");
+			return false;
+		}
 
-		//演算子に応じた比較処理
+		float target_ref = ref ? *ref : static_cast<float>(*ref_int);
+
 		switch (op)
 		{
-		case CompareOperator::Equal:		return static_cast<float>(val) == *ref; break;
-		case CompareOperator::NotEqual:		return static_cast<float>(val) != *ref; break;
-		case CompareOperator::Greater:		return static_cast<float>(val) > *ref;  break;
-		case CompareOperator::Less:			return static_cast<float>(val) < *ref;  break;
-		case CompareOperator::GreaterEqual:	return static_cast<float>(val) >= *ref; break;
-		case CompareOperator::LessEqual:	return static_cast<float>(val) <= *ref; break;
-		default:							return false;			  break;
+		case CompareOperator::Equal:		return val == target_ref;
+		case CompareOperator::NotEqual:		return val != target_ref;
+		case CompareOperator::Greater:		return val > target_ref;
+		case CompareOperator::Less:			return val < target_ref;
+		case CompareOperator::GreaterEqual:	return val >= target_ref;
+		case CompareOperator::LessEqual:	return val <= target_ref;
+		default:
+			printf("エラー: CompareVisitor - 未定義の比較演算子が指定されました: %d\n", static_cast<int>(op));
+			return false;
 		}
 	}
 

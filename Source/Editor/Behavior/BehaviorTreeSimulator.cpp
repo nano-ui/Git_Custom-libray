@@ -8,7 +8,6 @@
 BehaviorTreeSimulator::BehaviorTreeSimulator()
 	: tree_builder(std::make_unique<BehaviorTreeBuilder>())
 	, runtime_root_node(nullptr)
-	, current_graph_data(nullptr)
 	, active_node_id(UINT32_MAX)
 {
 }
@@ -17,14 +16,22 @@ BehaviorTreeSimulator::BehaviorTreeSimulator()
 BehaviorTreeSimulator::~BehaviorTreeSimulator() = default;
 
 //ÉOÉâÉtèÓïÒÇÃê›íË
-void BehaviorTreeSimulator::SetupGraph(const GraphData* graph)
+void BehaviorTreeSimulator::SetupGraph(
+	const std::vector<SimulatorRuntimeNode>& nodes,
+	const std::vector<SimulatorRuntimeLink>& links)
 {
-	if (current_graph_data == graph && runtime_root_node)
+	if (runtime_root_node &&
+		current_runtime_nodes.size() == nodes.size() &&
+		!nodes.empty() &&
+		current_runtime_nodes.front().id == nodes.front().id)
 	{
+		current_runtime_links = links;
 		return;
 	}
 
-	current_graph_data = graph;
+	current_runtime_nodes = nodes;
+	current_runtime_links = links;
+
 	active_node_id = UINT32_MAX;
 	current_animation_name = "";
 	runtime_root_node.reset();
@@ -40,10 +47,11 @@ bool BehaviorTreeSimulator::UpdateSimulation(float elapsed_time, StateBlackboard
 
 	tree_builder->SetActiveBlackboard(blackboard);
 
-	if (!runtime_root_node && current_graph_data)
+	if (!runtime_root_node && !current_runtime_nodes.empty())
 	{
 		runtime_root_node = tree_builder->BuildTree(
-			current_graph_data,
+			current_runtime_nodes,
+			current_runtime_links,
 			[this](uint32_t id, const std::string& anim, bool loop, bool root_motion)
 			{
 				this->OnActionExecuted(id, anim, loop, root_motion);

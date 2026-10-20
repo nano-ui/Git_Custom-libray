@@ -3,7 +3,11 @@
 #include <string>
 #include <cstdint>
 #include <unordered_map>
+
 #include "Gameplay\StateMachine\StateBlackboard.h"
+#include "Editor\StateMachineEditor\StateGraphSimulator.h"
+#include "Editor\StateMachineEditor\StateMachineDataLoader.h"
+#include "Editor\Behavior\BehaviorTreeSimulator.h"
 #include "Editor\StateMachineEditor\StateGraphSimulator.h"
 
 class StateBlackboard;
@@ -81,8 +85,12 @@ private:
 	//指定されたノードIDの親サブグラフノードIDを逆引き
 	uint32_t GetParentNodeId(uint32_t node_id)const;
 
+	//ノードIDからグラフIDを取得
+	uint32_t GetGraphIdFromNodeId(uint32_t node_id)const;
+
 private:
 	std::unique_ptr<StateGraphSimulator> state_graph_simulator;	//ステートマシン共通シミュレータ
+	std::unique_ptr<BehaviorTreeSimulator> behavior_simulator;	//ビヘイビアツリーシミュレータ
 
 	std::string state_machine_path = "";						//Jsonパス
 	uint32_t model_hash = 0;									//モデルのハッシュ値
@@ -94,6 +102,12 @@ private:
 	std::unordered_map<uint32_t, std::string> animation_map;	//ステートIDとアニメーション名の対応表
 	std::vector<SimulatorRuntimeNode> runtime_nodes;			//ノード配列
 	std::vector<SimulatorRuntimeLink> runtime_links;			//リンク配列
+
 	std::unordered_map<uint32_t, uint32_t> layer_entry_nodes;	//各階層ごとの先頭エントリーIDマップ
+	std::unordered_map<uint32_t, RuntimeLayerType> layer_types;
+
+	std::unordered_map<uint32_t, std::vector<SimulatorRuntimeNode>> bt_nodes_map;
+	std::unordered_map<uint32_t, std::vector<SimulatorRuntimeLink>> bt_links_map;
+	uint32_t last_bt_graph_id = UINT32_MAX;
 };
 

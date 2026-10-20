@@ -334,115 +334,13 @@ void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, 
 		return;
 	}
 
-	const float delta_time = ImGui::GetIO().DeltaTime;
-
-	//ビヘイビアツリー階層表示中のシミュレーション処理
-	if (current_graph->layer_type == LayerType::BehaviorTree)
-	{
-		if (behavior_simulator)
-		{
-			behavior_simulator->SetupGraph(current_graph);
-			behavior_simulator->UpdateSimulation(delta_time, blackboard);
-			const uint32_t sim_active_id = behavior_simulator->GetCurrentActiveNodeId();
-			if (sim_active_id != UINT32_MAX)
-			{
-				current_active_node_id = sim_active_id;
-			}
-		}
-		//ビヘイビアツリー階層を所有している親サブグラフノードを検索
-		uint32_t parent_graph_id = UINT32_MAX;
-		const GraphNode* parent_subgraph_node = nullptr;
-
-		if (data_manager)
-		{
-			auto& layer = data_manager->GetLayerDatas();
-			for (size_t g = 0; g < layer.size(); g++)
-			{
-				for (size_t n = 0; n < layer[g].nodes.size(); n++)
-				{
-					if (layer[g].nodes[n].is_sub_graph && layer[g].nodes[n].sub_graph_id == current_graph->id)
-					{
-						parent_graph_id = layer[g].id;
-						parent_subgraph_node = &layer[g].nodes[n];
-						break;
-					}
-				}
-				if (parent_subgraph_node)
-				{
-					break;
-				}
-			}
-		}
-		//親サブグラフノードから出ている上位の遷移条件を評価
-		if (parent_subgraph_node && parent_graph_id != UINT32_MAX)
-		{
-			std::vector<GraphLink*> outgoing_links = data_manager->GetLinkesFromNode(parent_graph_id, parent_subgraph_node->id);
-
-			for (size_t l = 0; l < outgoing_links.size(); l++)
-			{
-				const GraphLink* link = outgoing_links[l];
-				if (!link || link->conditions.empty())
-				{
-					continue;
-				}
-
-				//全条件が満たされているか判定
-				bool all_conditions_met = true;
-				for (size_t c = 0; c < link->conditions.size(); c++)
-				{
-					TransitionCondition trans_cond;
-					trans_cond.type = link->conditions[c].type;
-					trans_cond.hash_key = link->conditions[c].hash_key;
-					trans_cond.reference_value = link->conditions[c].reference_value;
-					trans_cond.compart_op = static_cast<CompareOperator>(link->conditions[c].compare_operator);
-					trans_cond.param_second = link->conditions[c].param_second;
-					trans_cond.secondary_hash = link->conditions[c].secondary_hash;
-					trans_cond.vector_reference_value = link->conditions[c].vector_reference_value;
-
-					if (!trans_cond.IsJudgment(*blackboard))
-					{
-						all_conditions_met = false;
-						break;
-					}
-				}
-				//上位の遷移条件が成立した場合
-				if (all_conditions_met)
-				{
-					uint32_t transition_dst_node_id = data_manager->GetNodeIdFromPinId(parent_graph_id, link->end_pin_id);
-					if (transition_dst_node_id != 0 && transition_dst_node_id != UINT32_MAX)
-					{
-						printf("StateMachineGraphEditor: 上位階層 (ID:%u) の遷移条件が成立しました。ノード ID:%u へ遷移します。\n",
-							parent_graph_id, transition_dst_node_id);
-
-						//遷移エフェクト
-						flow_src_node_id = parent_subgraph_node->id;
-						flow_dst_node_id = transition_dst_node_id;
-						constexpr float defalut_flow_dutation = 0.35f;
-						flow_effect_timer = defalut_flow_dutation;
-
-						//BTの実行を停止・リセット
-						if (behavior_simulator)
-						{
-							behavior_simulator->InvalidataTree();
-						}
-
-						//親階層のアクティブノードを更新
-						graph_active_nodes[parent_graph_id] = transition_dst_node_id;
-
-						//表示階層を親階層へ戻す
-						current_graph_id = parent_graph_id;
-						return;
-					}
-				}
-			}
-		}
-		return;
-	}
-	//通常のステートマシン階層におけるシミュレーション
 	if (!state_machine_component)
 	{
+		printf("Error: StateMachineGraphEditor::UpdateSimulationMode - state_machine_component が nullptr です。\n");
 		return;
 	}
+
+	const float delta_time = ImGui::GetIO().DeltaTime;
 
 	const uint32_t prev_node_id = state_machine_component->GetCurrentNodeId();
 	state_machine_component->Update(delta_time, blackboard);
@@ -457,11 +355,45 @@ void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, 
 		flow_effect_timer = default_flow_duration;
 	}
 
-	if (new_active_node_id != UINT32_MAX)
+	if (new_active_node_id != UINT32_MAX && data_manager)
 	{
-		current_active_node_id = new_active_node_id;
+		uint32_t trace_node_id = new_active_node_id;
+		uint32_t trace_graph_id = data_manager->GetGraphIdFromNodeId(trace_node_id);
 
-		if (is_tracking_active_node && data_manager)
+		while (trace_graph_id != UINT32_MAX)
+		{
+			graph_active_nodes[trace_graph_id] = trace_node_id;
+
+			if (trace_graph_id == current_graph_id)
+			{
+				current_active_node_id = trace_node_id;
+			}
+
+			uint32_t parent_node_id = UINT32_MAX;
+			uint32_t parent_graph_id = UINT32_MAX;
+			const auto& layers = data_manager->GetLayerDatas();
+			for (size_t g = 0; g < layers.size(); g++)
+			{
+				for (size_t n = 0; n < layers[g].nodes.size(); n++)
+				{
+					if (layers[g].nodes[n].is_sub_graph && layers[g].nodes[n].sub_graph_id == trace_graph_id)
+					{
+						parent_node_id = layers[g].nodes[n].id;
+						parent_graph_id = layers[g].id;
+						break;
+					}
+				}
+				if (parent_node_id != UINT32_MAX)
+				{
+					break;
+				}
+			}
+
+			trace_node_id = parent_node_id;
+			trace_graph_id = parent_graph_id;
+		}
+
+		if (is_tracking_active_node)
 		{
 			const uint32_t target_graph_id = data_manager->GetGraphIdFromNodeId(new_active_node_id);
 			if (target_graph_id != UINT32_MAX && target_graph_id != current_graph_id)
@@ -478,30 +410,10 @@ void StateMachineGraphEditor::SyncActiveNodeAnimation(GraphData* current_graph, 
 {
 	if (!current_graph || active_node_id == 0 || active_node_id == UINT32_MAX) return;
 
-	// ビヘイビアツリー階層でのアニメーション再生連携
-	if (is_simulation_active && current_graph->layer_type == LayerType::BehaviorTree && behavior_simulator)
-	{
-		if (active_node_id == last_synced_node_id)
-		{
-			return;
-		}
-		last_synced_node_id = active_node_id;
-
-		std::string anim_name = behavior_simulator->GetCurrentAnimationName();
-		bool is_loop = behavior_simulator->GetCurrentAnimationLoop();
-		if (!anim_name.empty())
-		{
-			EditorMediator::Instance().PlayModelAnimation(anim_name, is_loop);
-		}
-		return;
-	}
-
-	// シミュレーション実行中は StateMachineComponent から直接再生中のアニメーションを取得する
 	if (is_simulation_active && state_machine_component)
 	{
 		uint32_t current_sim_node_id = state_machine_component->GetCurrentNodeId();
 
-		// 同一ノードでの連続再生命令を防ぐガード節
 		if (current_sim_node_id == last_synced_node_id) return;
 
 		last_synced_node_id = current_sim_node_id;
@@ -520,7 +432,6 @@ void StateMachineGraphEditor::SyncActiveNodeAnimation(GraphData* current_graph, 
 		return;
 	}
 
-	// 手動選択時（シミュレーション非実行時）の同期処理
 	if (active_node_id == last_synced_node_id) return;
 
 	const GraphNode* target_node = nullptr;
@@ -741,6 +652,7 @@ void StateMachineGraphEditor::TriggerHotReload()
 
 		if (state_machine_component)
 		{
+			state_machine_component->SetStateMachinePath(current_loaded_file_path);
 			state_machine_component->RequestReload();
 		}
 	}

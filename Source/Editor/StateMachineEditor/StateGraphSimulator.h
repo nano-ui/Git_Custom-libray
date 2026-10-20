@@ -7,7 +7,9 @@
 #include <functional>
 #include <memory>
 
-class StateBlackboard;
+#include "Editor\Behavior\BehaviorNodeData.h"
+#include "Gameplay\StateMachine\StateBlackboard.h"
+
 struct TransitionCondition;
 
 static constexpr float DEFAULT_RUNTIME_BLEND_TIME = 0.2f;
@@ -35,6 +37,8 @@ struct SimulatorRuntimeNode
 	bool is_loop;						//ループフラグ
 	bool is_root_motion = false;		//ルートモーションフラグ
 	uint32_t parent_node_id = UINT_MAX;	//親サブグラフノードID
+	BehaviorNodeData behavior_data;		//ビヘイビアツリー情報
+	uint32_t graph_id = 0;				//所属する階層(グラフ)ID
 };
 
 //ステートマシン共通シミュレーション

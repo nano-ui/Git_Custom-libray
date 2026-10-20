@@ -2,20 +2,20 @@
 #include "Editor\Behavior\EditorActionNode.h"
 #include "Gameplay\AI\SelectorNode.h"
 #include "Gameplay\AI\WeightedNode.h"
-#include "Editor\StateMachineEditor\StateGraphDataManager.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
 
 //ツリーを構築
 std::shared_ptr<BehaviorNode> BehaviorTreeBuilder::BuildTree(
-	const GraphData* graph,
+	const std::vector<SimulatorRuntimeNode>& runtime_nodes,
+	const std::vector<SimulatorRuntimeLink>& runtime_links,
 	std::function<void(uint32_t, const std::string&, bool, bool)> action_callback)
 {
-	if (!graph || graph->nodes.empty())
+	if (runtime_nodes.empty())
 	{
 		return nullptr;
 	}
 
-	uint32_t root_id = FindRootNodeId(graph);
+	uint32_t root_id = FindRootNodeId(runtime_nodes);
 	if (root_id == UINT32_MAX)
 	{
 		printf("Warning: BehaviorTreeBuilder::BuildTree - Rootノードが存在しません。\n");
@@ -24,9 +24,9 @@ std::shared_ptr<BehaviorNode> BehaviorTreeBuilder::BuildTree(
 
 	std::unordered_map<uint32_t, std::shared_ptr<BehaviorNode>> created_nodes;
 
-	for (size_t n = 0; n < graph->nodes.size(); n++)
+	for (size_t n = 0; n < runtime_nodes.size(); n++)
 	{
-		const GraphNode& node = graph->nodes[n];
+		const SimulatorRuntimeNode& node = runtime_nodes[n];
 		if (node.behavior_data.category == BehaviorCategory::Root)
 		{
 			created_nodes[node.id] = std::make_shared<SelectorNode>(static_cast<int>(node.id));
@@ -48,16 +48,16 @@ std::shared_ptr<BehaviorNode> BehaviorTreeBuilder::BuildTree(
 		}
 	}
 
-	for (size_t n = 0; n < graph->nodes.size(); n++)
+	for (size_t n = 0; n < runtime_nodes.size(); n++)
 	{
-		const GraphNode& parent_node = graph->nodes[n];
+		const SimulatorRuntimeNode& parent_node = runtime_nodes[n];
 		auto parent_it = created_nodes.find(parent_node.id);
 		if (parent_it == created_nodes.end())
 		{
 			continue;
 		}
 
-		std::vector<uint32_t> child_ids = GetChildNodeIds(graph, parent_node.id);
+		std::vector<uint32_t> child_ids = GetChildNodeIds(runtime_nodes, runtime_links, parent_node.id);
 		for (size_t c = 0; c < child_ids.size(); c++)
 		{
 			auto child_it = created_nodes.find(child_ids[c]);
@@ -65,15 +65,15 @@ std::shared_ptr<BehaviorNode> BehaviorTreeBuilder::BuildTree(
 			{
 				continue;
 			}
-			const GraphNode* child_graph_node = FindGraphNode(graph, child_ids[c]);
+			const SimulatorRuntimeNode* child_graph_node = FindGraphNode(runtime_nodes, child_ids[c]);
 			int weight = (child_graph_node && child_graph_node->behavior_data.weight > 0) ? child_graph_node->behavior_data.weight : 1;
 
 			const uint32_t current_parent_id = parent_node.id;
 			const uint32_t current_child_id = child_ids[c];
 
-			child_it->second->SetCondition([this, graph, current_parent_id, current_child_id]() -> bool
+			child_it->second->SetCondition([this, runtime_nodes, runtime_links, current_parent_id, current_child_id]() -> bool
 				{
-					const GraphLink* current_link = this->FindLinkBetweenNodes(graph, current_parent_id, current_child_id);
+					const SimulatorRuntimeLink* current_link = this->FindLinkBetweenNodes(runtime_nodes, runtime_links, current_parent_id, current_child_id);
 					if (!current_link || current_link->conditions.empty())
 					{
 						return true;
@@ -98,52 +98,56 @@ std::shared_ptr<BehaviorNode> BehaviorTreeBuilder::BuildTree(
 }
 
 //優先順位ノード作成
-std::shared_ptr<SelectorNode> BehaviorTreeBuilder::CreateSelectorNode(const GraphNode& node)
+std::shared_ptr<SelectorNode> BehaviorTreeBuilder::CreateSelectorNode(const SimulatorRuntimeNode& node)
 {
-    return std::make_shared<SelectorNode>(static_cast<int>(node.id));
+	return std::make_shared<SelectorNode>(static_cast<int>(node.id));
 }
 
 //重み抽選ノード作成
-std::shared_ptr<WeightedNode> BehaviorTreeBuilder::CreateWeightedNode(const GraphNode& node)
+std::shared_ptr<WeightedNode> BehaviorTreeBuilder::CreateWeightedNode(const SimulatorRuntimeNode& node)
 {
-    return std::make_shared<WeightedNode>(static_cast<int>(node.id));
+	return std::make_shared<WeightedNode>(static_cast<int>(node.id));
 }
 
 //アクションノード生成
 std::shared_ptr<EditorActionNode> BehaviorTreeBuilder::CreateActionNode(
-    const GraphNode& node,
-    std::function<void(uint32_t, const std::string&, bool, bool)> action_callback)
+	const SimulatorRuntimeNode& node,
+	std::function<void(uint32_t, const std::string&, bool, bool)> action_callback)
 {
-    return std::make_shared<EditorActionNode>(
-        static_cast<int>(node.id),
-        node.animation_name,
-        node.is_loop,
-        node.is_root_motion,
-        node.behavior_data.action_duration,
-        node.behavior_data.result_type,
-        action_callback);
+	return std::make_shared<EditorActionNode>(
+		static_cast<int>(node.id),
+		node.animation_name,
+		node.is_loop,
+		node.is_root_motion,
+		node.behavior_data.action_duration,
+		node.behavior_data.result_type,
+		action_callback);
 }
 
 //ノード間のリンクを検索
-const GraphLink* BehaviorTreeBuilder::FindLinkBetweenNodes(const GraphData* graph, uint32_t parent_node_id, uint32_t child_node_id)
+const SimulatorRuntimeLink* BehaviorTreeBuilder::FindLinkBetweenNodes(
+	const std::vector<SimulatorRuntimeNode>& runtime_nodes,
+	const std::vector<SimulatorRuntimeLink>& runtime_links,
+	uint32_t parent_node_id,
+	uint32_t child_node_id)
 {
-	const GraphNode* parent = FindGraphNode(graph, parent_node_id);
-	const GraphNode* child = FindGraphNode(graph, child_node_id);
+	const SimulatorRuntimeNode* parent = FindGraphNode(runtime_nodes, parent_node_id);
+	const SimulatorRuntimeNode* child = FindGraphNode(runtime_nodes, child_node_id);
 	if (!parent || !child)
 	{
 		return nullptr;
 	}
 
-	for (size_t l = 0; l < graph->links.size(); l++)
+	for (size_t l = 0; l < runtime_links.size(); l++)
 	{
-		const GraphLink& link = graph->links[l];
+		const SimulatorRuntimeLink& link = runtime_links[l];
 		for (size_t op = 0; op < parent->outputs.size(); op++)
 		{
-			if (link.start_pin_id == parent->outputs[op].id)
+			if (link.start_pin_id == parent->outputs[op])
 			{
 				for (size_t ip = 0; ip < child->inputs.size(); ip++)
 				{
-					if (link.end_pin_id == child->inputs[ip].id)
+					if (link.end_pin_id == child->inputs[ip])
 					{
 						return &link;
 					}
@@ -155,57 +159,33 @@ const GraphLink* BehaviorTreeBuilder::FindLinkBetweenNodes(const GraphData* grap
 }
 
 //評価条件処理
-bool BehaviorTreeBuilder::EvaluateConditions(const std::vector<GraphTransitionCondition>& conditions, StateBlackboard* blackboard)
+bool BehaviorTreeBuilder::EvaluateConditions(const std::vector<TransitionCondition>& conditions, StateBlackboard* blackboard) 
 {
 	if (!blackboard)
 	{
 		return true;
 	}
 
-	for (size_t i = 0; i < conditions.size(); i++)
+	for (const auto& cond : conditions)
 	{
-		if (!blackboard)
+		if (!cond.IsJudgment(*blackboard))
 		{
-			return true;
+			return false;
 		}
-
-		for (const auto& cond : conditions)
-		{
-			TransitionCondition trans_cond;
-			trans_cond.type = cond.type;
-			trans_cond.hash_key = cond.hash_key;
-			trans_cond.reference_value = cond.reference_value;
-			trans_cond.compart_op = static_cast<CompareOperator>(cond.compare_operator);
-			trans_cond.param_second = cond.param_second;
-			trans_cond.secondary_hash = cond.secondary_hash;
-			trans_cond.vector_reference_value = cond.vector_reference_value;
-
-			if (!trans_cond.IsJudgment(*blackboard))
-			{
-				return false;
-			}
-		}
-
-		return true;
 	}
 
-	return false;
+	return true;
 }
 
 //ルートノードを検索
-uint32_t BehaviorTreeBuilder::FindRootNodeId(const GraphData* graph)
+uint32_t BehaviorTreeBuilder::FindRootNodeId(const std::vector<SimulatorRuntimeNode>& runtime_nodes) 
 {
-	if (!graph)
-	{
-		return UINT32_MAX;
-	}
-
 	//階層内のノードを巡回しルートノードを検索
-	for (size_t n = 0; n < graph->nodes.size(); n++)
+	for (size_t n = 0; n < runtime_nodes.size(); n++)
 	{
-		if (graph->nodes[n].behavior_data.category == BehaviorCategory::Root)
+		if (runtime_nodes[n].behavior_data.category == BehaviorCategory::Root)
 		{
-			return graph->nodes[n].id;
+			return runtime_nodes[n].id;
 		}
 	}
 
@@ -213,11 +193,14 @@ uint32_t BehaviorTreeBuilder::FindRootNodeId(const GraphData* graph)
 }
 
 //子ノード群を取得
-std::vector<uint32_t> BehaviorTreeBuilder::GetChildNodeIds(const GraphData* graph, uint32_t node_id)
+std::vector<uint32_t> BehaviorTreeBuilder::GetChildNodeIds(
+	const std::vector<SimulatorRuntimeNode>& runtime_nodes,
+	const std::vector<SimulatorRuntimeLink>& runtime_links,
+	uint32_t node_id)
 {
 	std::vector<uint32_t> children;	//下位ノードIDリスト
 
-	const GraphNode* parent = FindGraphNode(graph, node_id);	//親ノード
+	const SimulatorRuntimeNode* parent = FindGraphNode(runtime_nodes, node_id);	//親ノード
 	if (!parent)
 	{
 		return children;
@@ -226,19 +209,19 @@ std::vector<uint32_t> BehaviorTreeBuilder::GetChildNodeIds(const GraphData* grap
 	//対象のノードの接続先ノードIDを検索
 	for (size_t p = 0; p < parent->outputs.size(); p++)	//親ノードの全出力ピンを巡回
 	{
-		const uint32_t out_pin_id = parent->outputs[p].id;	//対象の出力ピン
-		for (size_t l = 0; l < graph->links.size(); l++)	//グラフ内の全リンクを巡回
+		const uint32_t out_pin_id = parent->outputs[p];	//対象の出力ピン
+		for (size_t l = 0; l < runtime_links.size(); l++)	//グラフ内の全リンクを巡回
 		{
-			if (graph->links[l].start_pin_id == out_pin_id)	//対象の出力ピンと探索中の出力ピンが一致するか判定
+			if (runtime_links[l].start_pin_id == out_pin_id)	//対象の出力ピンと探索中の出力ピンが一致するか判定
 			{
-				const uint32_t in_pin_id = graph->links[l].end_pin_id;	//接続先の入力ピン
-				for (size_t n = 0; n < graph->nodes.size(); n++)	//グラフ内の全ノードを巡回
+				const uint32_t in_pin_id = runtime_links[l].end_pin_id;	//接続先の入力ピン
+				for (size_t n = 0; n < runtime_nodes.size(); n++)	//グラフ内の全ノードを巡回
 				{
-					for (size_t ip = 0; ip < graph->nodes[n].inputs.size(); ip++)	//探索中の全入力ピンを巡回
+					for (size_t ip = 0; ip < runtime_nodes[n].inputs.size(); ip++)	//探索中の全入力ピンを巡回
 					{
-						if (graph->nodes[n].inputs[ip].id == in_pin_id)	//接続先の入力ピンと探索中の入力ピンが一致するか判定
+						if (runtime_nodes[n].inputs[ip] == in_pin_id)	//接続先の入力ピンと探索中の入力ピンが一致するか判定
 						{
-							children.push_back(graph->nodes[n].id);	//下位ノードリストに追加
+							children.push_back(runtime_nodes[n].id);	//下位ノードリストに追加
 							break;
 						}
 					}
@@ -250,19 +233,14 @@ std::vector<uint32_t> BehaviorTreeBuilder::GetChildNodeIds(const GraphData* grap
 }
 
 //グラフノードを検索
-const GraphNode* BehaviorTreeBuilder::FindGraphNode(const GraphData* graph, uint32_t node_id)
+const SimulatorRuntimeNode* BehaviorTreeBuilder::FindGraphNode(const std::vector<SimulatorRuntimeNode>& runtime_nodes, uint32_t node_id)
 {
-	if (!graph)
-	{
-		return nullptr;
-	}
-
 	//階層内のノード群を巡回し対象のIDを検索
-	for (size_t n = 0; n < graph->nodes.size(); n++)
+	for (size_t n = 0; n < runtime_nodes.size(); n++)
 	{
-		if (graph->nodes[n].id == node_id)
+		if (runtime_nodes[n].id == node_id)
 		{
-			return &graph->nodes[n];
+			return &runtime_nodes[n];
 		}
 	}
 

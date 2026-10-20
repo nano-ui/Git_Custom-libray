@@ -296,7 +296,7 @@ void Character::SyncBlackboard()
 
 	blackboard->SetValue(u8"体力", health);
 	blackboard->SetValue(u8"接地フラグ", current_is_ground);
-	blackboard->SetValue(u8"移動速度", current_move_speed);
+	blackboard->SetValue(u8"move_speed", current_move_speed);
 }
 
 //ブラックボードに登録・初期化
@@ -304,7 +304,7 @@ void Character::SetupBlackboard()
 {
 	blackboard->RegisterVariable(u8"体力");
 	blackboard->RegisterVariable(u8"接地フラグ");
-	blackboard->RegisterVariable(u8"移動速度");
+	blackboard->RegisterVariable(u8"move_speed");
 
 	SyncBlackboard();
 }

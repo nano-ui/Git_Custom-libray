@@ -13,6 +13,7 @@
 StateMachineComponent::StateMachineComponent()
 {
 	state_graph_simulator = std::make_unique<StateGraphSimulator>();
+	behavior_simulator = std::make_unique<BehaviorTreeSimulator>();
 	state_machine_path = "";
 	model_hash = 0;
 	current_node_id = UINT32_MAX;
@@ -68,18 +69,16 @@ void StateMachineComponent::Initialize(StateBlackboard* blackboard)
 //更新
 void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboard, bool is_anim_finished) 
 {
-	//ブラックボードポインタが有効であるかを判定
 	if (!blackboard)
 	{
+		printf("エラー: StateMachineComponent::Update - blackboard が nullptr です。\n");
 		return;
 	}
 
-	//現在のノードIDが無効、または再読み込み要求が保留されているかを判定
 	if (current_node_id == UINT32_MAX || is_pending_reload)
 	{
 		is_pending_reload = false;
 
-		//ファイルパスが空であるかを判定
 		if (state_machine_path.empty())
 		{
 			const std::string default_model_name = "Default";
@@ -91,6 +90,7 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 
 		if (runtime_nodes.empty())
 		{
+			printf("警告: StateMachineComponent::Update - runtime_nodes が空のため更新を中断します。\n");
 			return;
 		}
 	}
@@ -101,13 +101,119 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 		return;
 	}
 
-	//シミュレータによるステートマシン遷移更新
-	const bool is_transitioned = state_graph_simulator->UpdateSimulation(elapsed_time, blackboard, is_anim_finished);
+	uint32_t current_graph_id = GetGraphIdFromNodeId(current_node_id);
+	RuntimeLayerType current_layer_type = RuntimeLayerType::StateMachine;
+	auto layer_it = layer_types.find(current_graph_id);
+	if (layer_it != layer_types.end())
+	{
+		current_layer_type = layer_it->second;
+	}
 
-	current_node_id = state_graph_simulator->GetCurrentNodeID();
-	current_animation_name = state_graph_simulator->GetAnimationName();
-	current_animation_loop = state_graph_simulator->GetAnimationLoop();
-	current_blend_time = state_graph_simulator->GetCurrentBlendTime();
+	if (current_layer_type == RuntimeLayerType::BehaviorTree)
+	{
+		if (last_bt_graph_id != current_graph_id)
+		{
+			behavior_simulator->SetupGraph(bt_nodes_map[current_graph_id], bt_links_map[current_graph_id]);
+			last_bt_graph_id = current_graph_id;
+			printf("StateMachineComponent: ビヘイビアツリー階層 (ID:%u) のシミュレーションを開始しました。\n", current_graph_id);
+		}
+
+		behavior_simulator->UpdateSimulation(elapsed_time, blackboard);
+
+		const uint32_t sim_active_id = behavior_simulator->GetCurrentActiveNodeId();
+		if (sim_active_id != UINT32_MAX)
+		{
+			current_node_id = sim_active_id;
+			current_animation_name = behavior_simulator->GetCurrentAnimationName();
+			current_animation_loop = behavior_simulator->GetCurrentAnimationLoop();
+		}
+
+		uint32_t parent_subgraph_node_id = UINT32_MAX;
+		for (size_t i = 0; i < runtime_nodes.size(); i++)
+		{
+			if (runtime_nodes[i].is_sub_graph && runtime_nodes[i].sub_graph_id == current_graph_id)
+			{
+				parent_subgraph_node_id = runtime_nodes[i].id;
+				break;
+			}
+		}
+
+		if (parent_subgraph_node_id != UINT32_MAX)
+		{
+			for (const auto& link : runtime_links)
+			{
+				uint32_t src_node_id = GetNodeIdFromPinId(link.start_pin_id);
+				if (src_node_id == parent_subgraph_node_id)
+				{
+					if (link.conditions.empty()) continue;
+
+					bool all_conditions_met = true;
+					for (const auto& cond : link.conditions)
+					{
+						if (!EvaluateCondition(cond, blackboard, is_anim_finished))
+						{
+							all_conditions_met = false;
+							break;
+						}
+					}
+
+					if (all_conditions_met)
+					{
+						uint32_t dst_node_id = GetNodeIdFromPinId(link.end_pin_id);
+						if (dst_node_id != UINT32_MAX)
+						{
+							current_node_id = dst_node_id;
+							current_blend_time = link.blend_time;
+							behavior_simulator->InvalidataTree();
+							last_bt_graph_id = UINT32_MAX;
+
+							for (size_t n = 0; n < runtime_nodes.size(); n++)
+							{
+								if (runtime_nodes[n].id == current_node_id)
+								{
+									current_animation_name = runtime_nodes[n].animation_name;
+									current_animation_loop = runtime_nodes[n].is_loop;
+									break;
+								}
+							}
+
+							state_graph_simulator->SetCurreentNodeID(current_node_id);
+							printf("StateMachineComponent: ビヘイビアツリー階層 (ID:%u) からノード (ID:%u) へ遷移しました。\n", current_graph_id, current_node_id);
+							return;
+						}
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		const bool is_transitioned = state_graph_simulator->UpdateSimulation(elapsed_time, blackboard, is_anim_finished);
+
+		current_node_id = state_graph_simulator->GetCurrentNodeID();
+		current_animation_name = state_graph_simulator->GetAnimationName();
+		current_animation_loop = state_graph_simulator->GetAnimationLoop();
+		current_blend_time = state_graph_simulator->GetCurrentBlendTime();
+
+		if (is_transitioned)
+		{
+			uint32_t next_graph_id = GetGraphIdFromNodeId(current_node_id);
+			if (layer_types[next_graph_id] == RuntimeLayerType::BehaviorTree)
+			{
+				behavior_simulator->SetupGraph(bt_nodes_map[next_graph_id], bt_links_map[next_graph_id]);
+				last_bt_graph_id = next_graph_id;
+				behavior_simulator->UpdateSimulation(elapsed_time, blackboard);
+
+				const uint32_t sim_active_id = behavior_simulator->GetCurrentActiveNodeId();
+				if (sim_active_id != UINT32_MAX)
+				{
+					current_node_id = sim_active_id;
+					current_animation_name = behavior_simulator->GetCurrentAnimationName();
+					current_animation_loop = behavior_simulator->GetCurrentAnimationLoop();
+				}
+			}
+		}
+	}
 }
 
 //モデル名設定
@@ -163,188 +269,42 @@ bool StateMachineComponent::EvaluateCondition(const TransitionCondition& cond, S
 //ステートマシンJSONからアニメーション対応表を抽出
 void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 {
-	std::ifstream input_file(state_machine_path);
+	bool load_success = StateMachineDataLoader::LoadForRuntime(
+		state_machine_path,
+		runtime_nodes,
+		runtime_links,
+		layer_entry_nodes,
+		animation_map,
+		layer_types);
 
-	if (!input_file.is_open())
+	if (!load_success)
 	{
-		//std::cerr << "Warning: StateMachineComponent - ファイルを開けませんでした: " << state_machine_path << std::endl;
 		return;
 	}
 
-	nlohmann::json root_json;
-	input_file >> root_json;
-	input_file.close();
-
-	animation_map.clear();
-	runtime_nodes.clear();
-	runtime_links.clear();
-	layer_entry_nodes.clear();
-
-	std::unordered_map<uint32_t, uint32_t> sub_graph_to_parent_map;
-
-	if(root_json.is_object() && root_json.contains("Layers") && root_json["Layers"].is_array())
+	if (blackboard)
 	{
-		// すべてのサブグラフノードの親子関係（所属レイヤー）を事前に高速スキャンしてマップへ先行登録
-		for (size_t i = 0; i < root_json["Layers"].size(); i++)
+		for (size_t l = 0; l < runtime_links.size(); l++)
 		{
-			const auto& layer = root_json["Layers"][i]; // スキャン用一時レイヤー
-
-			if (layer.contains("Nodes") && layer["Nodes"].is_array())
+			for (size_t c = 0; c < runtime_links[l].conditions.size(); c++)
 			{
-				for (size_t j = 0; j < layer["Nodes"].size(); j++)
+				TransitionCondition& cond = runtime_links[l].conditions[c];
+
+				if (cond.type == ConditionNodeType::NormalCompare && cond.hash_key != 0)
 				{
-					const auto& node_json = layer["Nodes"][j]; // スキャン用一時ノード
+					const BlackboardData& raw_data = blackboard->GetAttributeValue(cond.hash_key);
 
-					if (node_json.is_object() && node_json.contains("IsSubGraph") && node_json["IsSubGraph"].get<bool>())
+					const float* parsed_float_ptr = std::get_if<float>(&cond.reference_value);
+					float parsed_float = parsed_float_ptr ? *parsed_float_ptr : 0.0f;
+
+					if (std::holds_alternative<bool>(raw_data))
 					{
-						sub_graph_to_parent_map[node_json["SubGraphID"].get<uint32_t>()] = node_json["ID"].get<uint32_t>();
+						cond.reference_value = (parsed_float != 0.0f);
 					}
-				}
-			}
-		}
-
-		// 本番パース。1パス目で集計した親子関係マップから親IDを割り出しながらアロケーション
-		for (size_t i = 0; i < root_json["Layers"].size(); i++)
-		{
-			const auto& layer = root_json["Layers"][i];
-			uint32_t layer_graph_id = layer["GraphID"].get<uint32_t>();
-
-			uint32_t parent_id = UINT32_MAX; // 所属する親サブグラフノードIDの初期化
-			auto parent_it = sub_graph_to_parent_map.find(layer_graph_id); // 自分のレイヤーの親を検索
-
-			if (parent_it != sub_graph_to_parent_map.end())
-			{
-				parent_id = parent_it->second; // 親サブグラフのノードIDを代入
-			}
-
-			if (layer.contains("Nodes") && layer["Nodes"].is_array())
-			{
-				for (size_t j = 0; j < layer["Nodes"].size(); j++)
-				{
-					const auto& node_json = layer["Nodes"][j];
-
-					if (node_json.is_object())
+					else if (std::holds_alternative<int>(raw_data))
 					{
-						SimulatorRuntimeNode node;
-						node.id = node_json["ID"].get<uint32_t>();
-						node.name = node_json["Name"].get<std::string>();
-						node.animation_name = node_json.contains("AnimationName") ? node_json["AnimationName"].get<std::string>() : "";
-						node.is_sub_graph = node_json["IsSubGraph"].get<bool>();
-						node.sub_graph_id = node_json["SubGraphID"].get<uint32_t>();
-						node.is_loop = node_json.contains("IsLoop") ? node_json["IsLoop"].get<bool>() : true;
-						node.is_root_motion = node_json.contains("IsRootMotion") ? node_json["IsRootMotion"].get<bool>() : false;
-						node.parent_node_id = parent_id;
-
-						if (node_json.contains("Input") && node_json["Input"].is_array())
-						{
-							for (size_t p = 0; p < node_json["Input"].size(); p++)
-							{
-								node.inputs.push_back(node_json["Input"][p]["ID"].get<uint32_t>());
-							}
-						}
-
-						if (node_json.contains("Output") && node_json["Output"].is_array())
-						{
-							for (size_t p = 0; p < node_json["Output"].size(); p++)
-							{
-								node.outputs.push_back(node_json["Output"][p]["ID"].get<uint32_t>());
-							}
-						}
-
-						if (j == 0)
-						{
-							layer_entry_nodes[layer_graph_id] = node.id;
-						}
-
-						if (!node.animation_name.empty())
-						{
-							animation_map[node.id] = node.animation_name;
-						}
-
-						runtime_nodes.push_back(node);
+						cond.reference_value = static_cast<int>(parsed_float);
 					}
-				}
-			}
-
-			if (layer.contains("Links") && layer["Links"].is_array())
-			{
-				for (size_t j = 0; j < layer["Links"].size(); j++)
-				{
-					const auto& link_json = layer["Links"][j];
-
-					SimulatorRuntimeLink link;
-					link.id = link_json["ID"].get<uint32_t>();
-					link.start_pin_id = link_json["StartPinID"].get<uint32_t>();
-					link.end_pin_id = link_json["EndPinID"].get<uint32_t>();
-
-					if (link_json.contains("BlendTime") && link_json["BlendTime"].is_number())
-					{
-						link.blend_time = link_json["BlendTime"].get<float>();
-						constexpr float min_blend_time = 0.0f;
-						if (link.blend_time < min_blend_time)
-						{
-							printf("Warning: StateMachineComponent::LoadAnimationMap - リンクID %u のブレンド時間が負の値(%.2f)のため、0.0fに補正しました。\n", link.id, link.blend_time);
-							link.blend_time = min_blend_time;
-						}
-					}
-					else
-					{
-						link.blend_time = DEFAULT_STATE_BLEND_TIME;
-					}
-
-					if (link_json.contains("Conditions") && link_json["Conditions"].is_array())
-					{
-						for (size_t c = 0; c < link_json["Conditions"].size(); c++)
-						{
-							const auto& cond_json = link_json["Conditions"][c];
-
-							TransitionCondition cond;
-							cond.type = static_cast<ConditionNodeType>(cond_json["Type"].get<int>());
-							cond.hash_key = cond_json["HashKey"].get<uint32_t>();
-							cond.compart_op = static_cast<CompareOperator>(cond_json["CompOp"].get<int>());
-							cond.param_second = cond_json["ParamSecond"].get<float>();
-							cond.secondary_hash = cond_json["SecondaryHash"].get<uint32_t>();
-
-							float raw_ref_value = cond_json["RefValue"].get<float>();
-
-							if (blackboard && cond.type == ConditionNodeType::NormalCompare && cond.hash_key != 0)
-							{
-								const BlackboardData& raw_data = blackboard->GetAttributeValue(cond.hash_key);
-
-								if (std::holds_alternative<bool>(raw_data))
-								{
-									cond.reference_value = (raw_ref_value != 0.0f);
-								}
-								else if (std::holds_alternative<int>(raw_data))
-								{
-									cond.reference_value = static_cast<int>(raw_ref_value);
-								}
-								else if (std::holds_alternative<DirectX::XMFLOAT3>(raw_data))
-								{
-									DirectX::XMFLOAT3 vec_ref = { 0.0f,0.0f,0.0f };
-									if (cond_json.contains("VectorRefValue") && cond_json["VectorRefValue"].is_array() && cond_json["VectorRefValue"].size() == 3)
-									{
-										vec_ref.x = cond_json["VectorRefValue"][0].get<float>();
-										vec_ref.y = cond_json["VectorRefValue"][1].get<float>();
-										vec_ref.z = cond_json["VectorRefValue"][2].get<float>();
-									}
-									cond.reference_value = vec_ref;
-								}
-								else
-								{
-									cond.reference_value = raw_ref_value;
-								}
-							}
-							else
-							{
-								cond.reference_value = raw_ref_value;
-							}
-
-							link.conditions.push_back(cond);
-						}
-					}
-
-					runtime_links.push_back(link);
 				}
 			}
 		}
@@ -360,12 +320,61 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 			state_machine_path.c_str(), runtime_nodes.size(), runtime_links.size());
 	}
 
-	//シミュレータへのグラフデータ移譲
+	if (!runtime_nodes.empty())
+	{
+		bool node_exists = false;
+		for (size_t i = 0; i < runtime_nodes.size(); i++)
+		{
+			if (runtime_nodes[i].id == current_node_id)
+			{
+				node_exists = true;
+				break;
+			}
+		}
+
+		if (!node_exists)
+		{
+			constexpr uint32_t root_layer_id = 0;
+			auto entry_it = layer_entry_nodes.find(root_layer_id);
+			if (entry_it != layer_entry_nodes.end())
+			{
+				current_node_id = entry_it->second;
+			}
+			else
+			{
+				current_node_id = runtime_nodes.front().id;
+			}
+		}
+	}
+
 	if (state_graph_simulator)
 	{
 		state_graph_simulator->SetupRuntimeGraph(runtime_nodes, runtime_links, layer_entry_nodes);
 		state_graph_simulator->SetCurreentNodeID(current_node_id);
 	}
+
+	bt_nodes_map.clear();
+	bt_links_map.clear();
+	for (const auto& node : runtime_nodes)
+	{
+		if (layer_types[node.graph_id] == RuntimeLayerType::BehaviorTree)
+		{
+			bt_nodes_map[node.graph_id].push_back(node);
+		}
+	}
+	for (const auto& link : runtime_links)
+	{
+		uint32_t src_node_id = GetNodeIdFromPinId(link.start_pin_id);
+		if (src_node_id != UINT32_MAX)
+		{
+			uint32_t graph_id = GetGraphIdFromNodeId(src_node_id);
+			if (graph_id != UINT32_MAX && layer_types[graph_id] == RuntimeLayerType::BehaviorTree)
+			{
+				bt_links_map[graph_id].push_back(link);
+			}
+		}
+	}
+	last_bt_graph_id = UINT32_MAX;
 }
 
 //ピンIDから所属するノードIDを逆引き検索
@@ -406,5 +415,18 @@ uint32_t StateMachineComponent::GetParentNodeId(uint32_t node_id) const
 		}
 	}
 
+	return UINT32_MAX;
+}
+
+//ノードIDからグラフIDを取得
+uint32_t StateMachineComponent::GetGraphIdFromNodeId(uint32_t node_id) const
+{
+	for (size_t i = 0; i < runtime_nodes.size(); i++)
+	{
+		if (runtime_nodes[i].id == node_id)
+		{
+			return runtime_nodes[i].graph_id;
+		}
+	}
 	return UINT32_MAX;
 }

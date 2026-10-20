@@ -96,7 +96,6 @@ uint32_t StateBlackboard::GetVariableHash(const std::string& variable_name) cons
 //条件を満たしているか判定
 bool TransitionCondition::IsJudgment(const StateBlackboard& blackboard) const
 {
-	//判定ノードの識別
 	switch (type)
 	{
 	case ConditionNodeType::NormalCompare:
@@ -106,14 +105,19 @@ bool TransitionCondition::IsJudgment(const StateBlackboard& blackboard) const
 			return false;
 		}
 
-		BlackboardData current_value = blackboard.GetAttributeValue(hash_key);	//比較する値
+		BlackboardData current_value = blackboard.GetAttributeValue(hash_key);
+		if (std::holds_alternative<DirectX::XMFLOAT3>(current_value))
+		{
+			CompareVisitor vec_visitor(compart_op, vector_reference_value);
+			return std::visit(vec_visitor, current_value);
+		}
 		CompareVisitor visitor(compart_op, reference_value);
 		return std::visit(visitor, current_value);
 	}
 	case ConditionNodeType::Random:
 	{
 		const float* ref_float = std::get_if<float>(&reference_value);
-		int probability = ref_float ? static_cast<int>(*ref_float) : 0;	//確率値
+		int probability = ref_float ? static_cast<int>(*ref_float) : 0;
 		RandomJugment random_node(probability);
 		return random_node.Check();
 	}
@@ -124,19 +128,19 @@ bool TransitionCondition::IsJudgment(const StateBlackboard& blackboard) const
 			return false;
 		}
 
-		BlackboardData raw_my_pos = blackboard.GetAttributeValue(hash_key);	//自身の座標
-		BlackboardData raw_target_pos = blackboard.GetAttributeValue(secondary_hash);	//対象の座標
+		BlackboardData raw_my_pos = blackboard.GetAttributeValue(hash_key);
+		BlackboardData raw_target_pos = blackboard.GetAttributeValue(secondary_hash);
 
-		const DirectX::XMFLOAT3* my_pos = std::get_if<DirectX::XMFLOAT3>(&raw_my_pos);	//自身の座標
-		const DirectX::XMFLOAT3* target_pos = std::get_if<DirectX::XMFLOAT3>(&raw_target_pos);	//対象の座標
+		const DirectX::XMFLOAT3* my_pos = std::get_if<DirectX::XMFLOAT3>(&raw_my_pos);
+		const DirectX::XMFLOAT3* target_pos = std::get_if<DirectX::XMFLOAT3>(&raw_target_pos);
 
 		if (!my_pos || !target_pos)
 		{
 			return false;
 		}
 
-		const float* ref_float = std::get_if<float>(&reference_value);	//最小距離
-		float min_dist = ref_float ? *ref_float : 0.0f;	//確定した最小距離
+		const float* ref_float = std::get_if<float>(&reference_value);
+		float min_dist = ref_float ? *ref_float : 0.0f;
 
 		DistanceJudgment distance_node(std::ref(*my_pos), std::ref(*target_pos), min_dist, param_second);
 		return distance_node.Check();
@@ -148,21 +152,21 @@ bool TransitionCondition::IsJudgment(const StateBlackboard& blackboard) const
 			return false;
 		}
 
-		BlackboardData raw_current = blackboard.GetAttributeValue(hash_key);	//読み込んだ現在値
-		BlackboardData raw_max = blackboard.GetAttributeValue(secondary_hash);	//読み込んだ最大値
+		BlackboardData raw_current = blackboard.GetAttributeValue(hash_key);
+		BlackboardData raw_max = blackboard.GetAttributeValue(secondary_hash);
 
-		const float* cur_val = std::get_if<float>(&raw_current);	//確定した現在値
-		const float* max_val = std::get_if<float>(&raw_max);		//確定した最大値
+		const float* cur_val = std::get_if<float>(&raw_current);
+		const float* max_val = std::get_if<float>(&raw_max);
 
 		if (!cur_val || !max_val)
 		{
 			return false;
 		}
 
-		const float* ref_float = std::get_if<float>(&reference_value);	//読み込んだ基準値
-		float threshold = ref_float ? *ref_float : 0.0f;				//確定した基準値
+		const float* ref_float = std::get_if<float>(&reference_value);
+		float threshold = ref_float ? *ref_float : 0.0f;
 
-		CompareType mapped_type = static_cast<CompareType>(compart_op);	//比較演算子
+		CompareType mapped_type = static_cast<CompareType>(compart_op);
 
 		RatioJudgment ratio_node(std::ref(*cur_val), std::ref(*max_val), threshold, mapped_type);
 		return ratio_node.Check();
