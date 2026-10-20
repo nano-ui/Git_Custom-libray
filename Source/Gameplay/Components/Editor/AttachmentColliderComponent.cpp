@@ -57,8 +57,14 @@ void AttachmentColliderComponent::Initializa(
 
 		auto capsule = std::make_unique<CapsuleCollider>();
 		capsule->radius = item->radius;
-		capsule->attribute = item->attribute;
+		capsule->attribute_bits = item->attribute_bits;
+		capsule->target_mask = item->target_mask;
 		capsule->is_active = item->is_active;
+
+		if (capsule->target_mask == 0)
+		{
+			OutputDebugStringA("[AttachmentColliderComponent 警告] Initializa: target_mask が 0 に設定されているため、当たり判定が発生しません。\n");
+		}
 
 		runtime_colliders.push_back(std::move(capsule));
 	}
@@ -142,21 +148,18 @@ void AttachmentColliderComponent::RenderDebug(ShapeRenderer* renderer)
 		DirectX::XMStoreFloat4(&rotation, rot_quat);
 
 		//属性に応じたカラーリング
-		DirectX::XMFLOAT4 color = { 0.2f,0.7f,1.0f,1.0f };
-		switch (capsule->attribute)
+		DirectX::XMFLOAT4 color = { 0.6f, 0.6f, 0.6f, 1.0f };
+		if ((capsule->attribute_bits & static_cast<uint32_t>(ColliderAttribute::Attack)) != 0)
 		{
-		case ColliderAttribute::Attack:
-			color = { 1.0f,0.2f,0.2f,1.0f };
-			break;
-		case ColliderAttribute::Stage:
-			color = { 0.2f,1.0f,0.2f,1.0f };
-			break;
-		case ColliderAttribute::Collision:
-			color = { 0.2f,0.6f,1.0f,1.0f };
-			break;
-		default:
-			color = { 0.6f,0.6f,0.6f,1.0f };
-			break;
+			color = { 1.0f, 0.2f, 0.2f, 1.0f };
+		}
+		else if ((capsule->attribute_bits & static_cast<uint32_t>(ColliderAttribute::Collision)) != 0)
+		{
+			color = { 0.2f, 0.6f, 1.0f, 1.0f };
+		}
+		else if ((capsule->attribute_bits & static_cast<uint32_t>(ColliderAttribute::Stage)) != 0)
+		{
+			color = { 0.2f, 1.0f, 0.2f, 1.0f };
 		}
 		renderer->DrawCapsule(center, rotation, capsule->radius, total_height, color);
 	}
@@ -191,7 +194,7 @@ void AttachmentColliderComponent::SetAttackCollidersActive(bool is_active)
 		if (!collider_items[i] || !runtime_colliders[i])continue;
 
 		//攻撃属性のみを対象に切り替える
-		if (collider_items[i]->attribute == ColliderAttribute::Attack)
+		if ((collider_items[i]->attribute_bits & static_cast<uint32_t>(ColliderAttribute::Attack)) != 0) 
 		{
 			collider_items[i]->is_active = is_active;
 			runtime_colliders[i]->is_active = is_active;

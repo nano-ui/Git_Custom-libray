@@ -247,3 +247,20 @@ void CollisionLogic::CalculaterClosestPointsBetweenSegments(
     out_closest_a = DirectX::XMVectorAdd(start_a, DirectX::XMVectorScale(dir_a, ratio_a));
     out_closest_b = DirectX::XMVectorAdd(start_b, DirectX::XMVectorScale(dir_b, ratio_b));
 }
+
+//衝突対象検知処理
+bool CollisionLogic::ShouldCollide(const Collider* col_a, const Collider* col_b)
+{
+    //コライダーの有効確認
+    if (!col_a || !col_b || !col_a->is_active || !col_b->is_active)return false;
+
+    //同一オーナーか判定
+    if (col_a->owner_id == col_b->owner_id && col_a->owner_id != INVALID_OWNER_ID)return false;
+
+    //各コリジョンが衝突対象か判定
+    ColliderAttribute a_is_target = operator&(static_cast<ColliderAttribute>(col_a->attribute_bits), static_cast<ColliderAttribute>(col_b->target_mask));
+    ColliderAttribute b_is_target = operator&(static_cast<ColliderAttribute>(col_b->attribute_bits), static_cast<ColliderAttribute>(col_a->target_mask));
+
+    //両方が衝突対象か判定
+    return (a_is_target != ColliderAttribute::None) && (b_is_target != ColliderAttribute::None);
+}

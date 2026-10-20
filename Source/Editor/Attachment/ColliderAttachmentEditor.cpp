@@ -6,7 +6,6 @@
 #include "Engine\Camera\Camera.h"
 #include "Engine\Collision\CollisionLogic.h"
 
-#include <Windows.h>
 #include <imgui.h>
 #include <algorithm>
 #include <fstream>
@@ -120,19 +119,72 @@ void ColliderAttachmentEditor::RenderGui(ModelPreviewWindow* preview_window)
 		ImGui::Text(u8"アタッチ中ノード: %s", item->start_bone_name.empty() ? u8"(未設定)" : item->start_bone_name.c_str());
 		ImGui::Checkbox(u8"有効", &item->is_active);
 
-		//当たり判定の属性選択コンボボックス
-		static const char* attribute_names[] = {
-			u8"なし(None)",
-			u8"地形(Stage)",
-			u8"動的衝突(Collision)",
-			u8"攻撃判定(Attack)"
-		};
-		int current_attr_idx = static_cast<int>(item->attribute);
-		if (ImGui::Combo(u8"当たり判定属性", &current_attr_idx, attribute_names,IM_ARRAYSIZE(attribute_names)))
+		//------------------------------------
+		//各属性の追加
+		//------------------------------------
+		ImGui::Separator();
+		ImGui::Text(u8"自身の属性(Attribute)");
+
+		//地形属性の追加
+		bool is_attr_stage = (item->attribute_bits & static_cast<uint32_t>(ColliderAttribute::Stage)) != 0;
+		if (ImGui::Checkbox(u8"地形(Stage)##Attr", &is_attr_stage))
 		{
-			item->attribute = static_cast<ColliderAttribute>(current_attr_idx);
-			item->attribute_int = current_attr_idx;
+			//属性を追加(ビット値が両方0でないなら1(追加))
+			if (is_attr_stage)item->attribute_bits |= static_cast<uint32_t>(ColliderAttribute::Stage);
+			//属性を削除(対象ビットのみを0(削除)にする)
+			else item->attribute_bits &= ~static_cast<uint32_t>(ColliderAttribute::Stage);
 		}
+		ImGui::SameLine();
+
+		//衝突属性の追加
+		bool is_attr_col = (item->attribute_bits & static_cast<uint32_t>(ColliderAttribute::Collision)) != 0;
+		if (ImGui::Checkbox(u8"衝突(Collision)##Attr", &is_attr_col))
+		{
+			if (is_attr_col)item->attribute_bits |= static_cast<uint32_t>(ColliderAttribute::Collision);
+			else item->attribute_bits &= ~static_cast<uint32_t>(ColliderAttribute::Collision);
+		}
+		ImGui::SameLine();
+
+		//攻撃属性の追加
+		bool is_attr_attack = (item->attribute_bits & static_cast<uint32_t>(ColliderAttribute::Attack)) != 0;
+		if (ImGui::Checkbox(u8"攻撃(Attack)##Attack", &is_attr_attack))
+		{
+			if (is_attr_attack)item->attribute_bits |= static_cast<uint32_t>(ColliderAttribute::Attack);
+			else item->attribute_bits &= ~static_cast<uint32_t>(ColliderAttribute::Attack);
+		}
+
+		//--------------------
+		//衝突先属性の追加
+		//--------------------
+		ImGui::Spacing();
+		ImGui::Text(u8"衝突対象マスク (Target Mask)");
+
+		//地形属性の追加
+		bool is_mask_stage = (item->target_mask & static_cast<uint32_t>(ColliderAttribute::Stage)) != 0;
+		if (ImGui::Checkbox(u8"地形 (Stage)##Mask", &is_mask_stage))
+		{
+			if (is_mask_stage) item->target_mask |= static_cast<uint32_t>(ColliderAttribute::Stage);
+			else item->target_mask &= ~static_cast<uint32_t>(ColliderAttribute::Stage);
+		}
+		ImGui::SameLine();
+
+		//衝突属性の追加
+		bool is_mask_col = (item->target_mask & static_cast<uint32_t>(ColliderAttribute::Collision)) != 0;
+		if (ImGui::Checkbox(u8"衝突 (Collision)##Mask", &is_mask_col))
+		{
+			if (is_mask_col) item->target_mask |= static_cast<uint32_t>(ColliderAttribute::Collision);
+			else item->target_mask &= ~static_cast<uint32_t>(ColliderAttribute::Collision);
+		}
+		ImGui::SameLine();
+
+		//攻撃属性の追加
+		bool is_mask_attack = (item->target_mask & static_cast<uint32_t>(ColliderAttribute::Attack)) != 0;
+		if (ImGui::Checkbox(u8"攻撃 (Attack)##Mask", &is_mask_attack))
+		{
+			if (is_mask_attack) item->target_mask |= static_cast<uint32_t>(ColliderAttribute::Attack);
+			else item->target_mask &= ~static_cast<uint32_t>(ColliderAttribute::Attack);
+		}
+		ImGui::Separator();
 
 		if (ImGui::Checkbox(u8"2ボーン連携", &item->is_two_bone_link))
 		{
@@ -556,21 +608,21 @@ void ColliderAttachmentEditor::RenderDebug(ShapeRenderer* renderer, ModelPreview
 				}
 				else
 				{
-					switch (item->attribute)
+					if ((item->attribute_bits & static_cast<uint32_t>(ColliderAttribute::Attack)) != 0)
 					{
-					case ColliderAttribute::Attack:
-						color = { 1.0f, 0.2f, 0.2f, 1.0f }; // 攻撃判定: 赤
-						break;
-					case ColliderAttribute::Stage:
-						color = { 0.2f, 1.0f, 0.2f, 1.0f }; // 地形・壁: 緑
-						break;
-					case ColliderAttribute::Collision:
-						color = { 0.2f, 0.6f, 1.0f, 1.0f }; // 動的衝突: 青
-						break;
-					case ColliderAttribute::None:
-					default:
-						color = { 0.6f, 0.6f, 0.6f, 1.0f }; // なし: 灰色
-						break;
+						color = { 1.0f, 0.2f, 0.2f, 1.0f };
+					}
+					else if ((item->attribute_bits & static_cast<uint32_t>(ColliderAttribute::Collision)) != 0)
+					{
+						color = { 0.2f, 0.6f, 1.0f, 1.0f };
+					}
+					else if ((item->attribute_bits & static_cast<uint32_t>(ColliderAttribute::Stage)) != 0)
+					{
+						color = { 0.2f, 1.0f, 0.2f, 1.0f };
+					}
+					else
+					{
+						color = { 0.6f, 0.6f, 0.6f, 1.0f };
 					}
 				}
 
@@ -602,20 +654,17 @@ void ColliderAttachmentEditor::RenderDebugForSequencer(ShapeRenderer* renderer, 
 		{
 			DirectX::XMFLOAT4 color = { 0.2f,0.7f,1.0f,1.0f };
 
-			switch (item->attribute)
+			if ((item->attribute_bits & static_cast<uint32_t>(ColliderAttribute::Attack)) != 0)
 			{
-			case ColliderAttribute::Attack:
-				color = { 1.0f,0.2f,0.2f,1.0f };
-				break;
-			case ColliderAttribute::Stage:
-				color = { 0.2f,1.0f,0.2f,1.0f };
-				break;
-			case ColliderAttribute::Collision:
-				color = { 0.2f,0.7f,1.0f,1.0f };
-				break;
-			default:
-				color = { 0.6f,0.6f,0.6f,1.0f };
-				break;
+				color = { 1.0f, 0.2f, 0.2f, 1.0f };
+			}
+			else if ((item->attribute_bits & static_cast<uint32_t>(ColliderAttribute::Collision)) != 0)
+			{
+				color = { 0.2f, 0.7f, 1.0f, 1.0f };
+			}
+			else if ((item->attribute_bits & static_cast<uint32_t>(ColliderAttribute::Stage)) != 0)
+			{
+				color = { 0.2f, 1.0f, 0.2f, 1.0f };
 			}
 			renderer->DrawCapsule(center, rotation, item->radius, total_height, color);
 		}

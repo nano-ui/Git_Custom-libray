@@ -44,7 +44,6 @@ void Stage::Initialize()
 	space_division_cast = std::make_unique<SpaceDivisionCast>();
 
 	space_collider.space_cast = space_division_cast.get();
-	space_collider.attribute = ColliderAttribute::Stage;
 	space_collider.is_active = true;
 	AddCollider(&space_collider);
 

@@ -80,7 +80,7 @@ void ColliderComponent::SetAttribute(ColliderAttribute attr)
 {
 	attribute = attr;
 	Collider* raw_collider = GetRawCollider();
-	if (raw_collider)raw_collider->attribute = attr;
+	if (raw_collider)raw_collider->attribute_bits = static_cast<uint32_t>(attr);
 }
 
 //d—Ê‚Ìİ’è

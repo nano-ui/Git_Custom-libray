@@ -28,6 +28,9 @@ public:
 	//カプセル同士の当たり判定
 	bool IsCapsuleCapsuleCollision(const CapsuleCollider* capsule_a, const CapsuleCollider* capsule_b, CollisionResult& out_result);
 
+	//衝突対象検知処理
+	bool ShouldCollide(const Collider* col_a, const Collider* col_b);
+
 private:
 	//2つの線分間の最近傍点を計算
 	void CalculaterClosestPointsBetweenSegments(

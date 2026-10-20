@@ -31,7 +31,7 @@
                     "Conditions": [
                         {
                             "CompOp": 5,
-                            "HashKey": 4233592014,
+                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
                             "SecondaryHash": 0,
@@ -265,7 +265,7 @@
                     "BlendTime": 0.20000000298023224,
                     "Conditions": [
                         {
-                            "CompOp": 2,
+                            "CompOp": 4,
                             "HashKey": 4203995948,
                             "ParamSecond": 0.0,
                             "RefValue": 1.0,

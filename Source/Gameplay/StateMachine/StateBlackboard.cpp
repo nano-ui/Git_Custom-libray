@@ -105,6 +105,12 @@ bool TransitionCondition::IsJudgment(const StateBlackboard& blackboard) const
 			return false;
 		}
 
+		if (!blackboard.HasVariable(hash_key))
+		{
+			printf("警告: TransitionCondition::IsJudgment - ハッシュキー [%u] の変数が登録されていないため遷移判定をスキップします。\n", hash_key);
+			return false;
+		}
+
 		BlackboardData current_value = blackboard.GetAttributeValue(hash_key);
 		if (std::holds_alternative<DirectX::XMFLOAT3>(current_value))
 		{

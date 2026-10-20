@@ -135,7 +135,7 @@ void BoneCapsuleColliderComponent::SetAttribute(ColliderAttribute attr)
 {
 	if (capsule_collider)
 	{
-		capsule_collider->attribute = attr;
+		capsule_collider->attribute_bits = static_cast<uint32_t>(attr);
 	}
 }
 

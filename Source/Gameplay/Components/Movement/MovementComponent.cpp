@@ -153,10 +153,15 @@ void MovementComponent::ResolveStageCollision(const CollisionResult& result, Col
 		is_graund = true;
 		if (velocity.y < 0.0f)velocity.y = 0.0f;
 
+		if (push.y > 0.0f)
+		{
+			current_pos.y += (push.y > PENETRATION_LIMIT) ? PENETRATION_LIMIT : push.y;
+		}
+
 		//â“¹‚Å‚Ì–@ü•â³
-		float penetration_depth = std::sqrtf((push.x * push.x) + (push.y * push.y) + (push.z * push.z));
-		float upward_push = penetration_depth / result.hit_normal.y;
-		current_pos.y += (upward_push > PENETRATION_LIMIT) ? PENETRATION_LIMIT : upward_push;
+		//float penetration_depth = std::sqrtf((push.x * push.x) + (push.y * push.y) + (push.z * push.z));
+		//float upward_push = penetration_depth / result.hit_normal.y;
+		//current_pos.y += (upward_push > PENETRATION_LIMIT) ? PENETRATION_LIMIT : upward_push;
 	}
 	else if (result.hit_normal.y < CEILING_THRESHOLD)
 	{

@@ -226,8 +226,6 @@ void CollisionManager::CheckDynamicVsSpace()
         Collider* collider = dynamic_colliders.at(i);
         if (!collider || !collider->is_active)continue;
 
-        if (collider->attribute == ColliderAttribute::Attack)continue;
-
         //空間分割のループ処理
         for (size_t j = 0; j < space_colliders.size(); j++)
         {
@@ -236,6 +234,8 @@ void CollisionManager::CheckDynamicVsSpace()
             DirectX::XMFLOAT3 temp_hit_pos = { 0.0f,0.0f,0.0f };
             DirectX::XMFLOAT3 temp_hit_normal = { 0.0f,0.0f,0.0f };
             bool is_hit = false;
+
+            if (!collision_logic->ShouldCollide(collider, space))continue;
 
             //形状に応じたキャスト方法の自動選択
             switch (collider->type)
@@ -321,8 +321,10 @@ void CollisionManager::CheckDynamicVsSpace()
                 DirectX::XMVECTOR v_safe_pos = DirectX::XMVectorAdd(v_base, v_push);
                 DirectX::XMStoreFloat3(&result.safe_position, v_safe_pos);
                 DirectX::XMStoreFloat3(&result.penetration_vector, v_push);
-                result.hit_attribute = space->attribute;
+                result.hit_attribute = static_cast<ColliderAttribute>(space->attribute_bits);
                 result.hit_collider = collider;
+                result.self_collider = collider;
+                result.hit_collider = space;
                 collider->listener->OnCollisionHit(result);
             }
         }
@@ -418,7 +420,7 @@ void CollisionManager::CheckSphereVsSphere()
                             {
                                 if (sphere_a->listener)
                                 {
-                                    result_a.hit_attribute = sphere_b->attribute;
+                                    result_a.hit_attribute = static_cast<ColliderAttribute>(sphere_b->attribute_bits);
                                     sphere_a->listener->OnCollisionHit(result_a);
                                 }
                                 if (sphere_b->listener)
@@ -430,7 +432,7 @@ void CollisionManager::CheckSphereVsSphere()
                                     result_b.penetration_vector.x = -result_a.penetration_vector.x;
                                     result_b.penetration_vector.y = -result_a.penetration_vector.y;
                                     result_b.penetration_vector.z = -result_a.penetration_vector.z;
-                                    result_b.hit_attribute = sphere_a->attribute;
+                                    result_b.hit_attribute = static_cast<ColliderAttribute>(sphere_a->attribute_bits);
                                     sphere_b->listener->OnCollisionHit(result_b);
                                 }
                             }
@@ -474,11 +476,12 @@ void CollisionManager::CheckCapsuleVsCapsule()
 
                     if (col_b && col_b->is_active && col_b->type == ColliderType::Capsule && col_a != col_b)
                     {
-                        if (col_a->owner_id != INVALID_OWNER_ID && col_a->owner_id == col_b->owner_id)
+                        if (!collision_logic->ShouldCollide(col_a, col_b))
                         {
                             idx_b = grid_elements[idx_b].next_index;
                             continue;
                         }
+
                         CapsuleCollider* capsule_b = static_cast<CapsuleCollider*>(col_b);
                         GridRange range_b = CalculateGridRenge(capsule_b);
 
@@ -495,13 +498,14 @@ void CollisionManager::CheckCapsuleVsCapsule()
 
                             if (is_hit)
                             {
-                                bool is_both_solid = (capsule_a->attribute == ColliderAttribute::Collision &&
-                                    capsule_b->attribute == ColliderAttribute::Collision);
+                                bool is_both_solid = (
+                                    static_cast<ColliderAttribute>(capsule_a->attribute_bits) == ColliderAttribute::Collision &&
+                                    static_cast<ColliderAttribute>(capsule_b->attribute_bits) == ColliderAttribute::Collision);
 
                                 // カプセルAへの衝突通知
                                 if (capsule_a->listener)
                                 {
-                                    result_a.hit_attribute = capsule_b->attribute;
+                                    result_a.hit_attribute = static_cast<ColliderAttribute>(capsule_b->attribute_bits);
                                     result_a.hit_collider = capsule_b;
                                     result_a.self_collider = capsule_a;
 
@@ -523,7 +527,7 @@ void CollisionManager::CheckCapsuleVsCapsule()
                                     result_b.penetration_vector.x = -result_a.penetration_vector.x;
                                     result_b.penetration_vector.y = -result_a.penetration_vector.y;
                                     result_b.penetration_vector.z = -result_a.penetration_vector.z;
-                                    result_b.hit_attribute = capsule_a->attribute;
+                                    result_b.hit_attribute = static_cast<ColliderAttribute>(capsule_a->attribute_bits);
                                     result_b.hit_collider = capsule_a;
                                     result_b.self_collider = capsule_b;
 

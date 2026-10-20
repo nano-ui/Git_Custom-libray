@@ -81,6 +81,8 @@ C:.
 „            StateLinkConnectionHandler.h
 „            StateLinkRenderer.cpp
 „            StateLinkRenderer.h
+„            StateMachineDataLoader.cpp
+„            StateMachineDataLoader.h
 „            StateMachineGraphEditor.cpp
 „            StateMachineGraphEditor.h
 „            StateNodeRenderer.cpp
@@ -218,6 +220,10 @@ C:.
 „    „        WeightedNode.h
 „    „        
 „    „¥„Ÿ„Ÿ„ŸComponents
+„    „    „¥„Ÿ„Ÿ„ŸAI
+„    „    „        HateComponent.cpp
+„    „    „        HateComponent.h
+„    „    „        
 „    „    „¥„Ÿ„Ÿ„ŸAnimation
 „    „    „        AnimationBlender.cpp
 „    „    „        AnimationBlender.h

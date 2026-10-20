@@ -5,6 +5,7 @@
 #include <memory>
 #include <DirectXMath.h>
 #include <filesystem>
+#include <Windows.h>
 
 #include "Engine\Collision\Collider.h"
 #include "Serialization\JsonSerializer.h"
@@ -18,6 +19,22 @@ class CollisionLogic;
 class ColliderAttachmentItem
 {
 public:
+	//コンストラクタ
+	ColliderAttachmentItem()
+	{
+		name = "NewCollider";
+		start_bone_name = "";
+		end_bone_name = "";
+		radius = 0.2f;
+		height = 0.5f;
+		offset = { 0.0f,0.0f,0.0f };
+		rotation = { 0.0f,0.0f,0.0f };
+		attribute_bits = static_cast<uint32_t>(ColliderAttribute::None);
+		target_mask = DEFAULT_TARGET_MASK;
+		is_two_bone_link = false;
+		is_active = true;
+	}
+
 	//JsonSerializerへの登録処理
 	void SetupSerialization(JsonSerializer* serializer)
 	{
@@ -29,7 +46,8 @@ public:
 		serializer->RegisterVariable(u8"長さ", &height);
 		serializer->RegisterVariable(u8"オフセット", &offset);
 		serializer->RegisterVariable(u8"角度", &rotation);
-		serializer->RegisterVariable(u8"属性", &attribute_int);
+		serializer->RegisterVariable(u8"属性ビット", &attribute_bits);
+		serializer->RegisterVariable(u8"対象マスク", &target_mask);
 		serializer->RegisterVariable(u8"２ボーン連携フラグ", &is_two_bone_link);
 		serializer->RegisterVariable(u8"有効フラグ", &is_active);
 	}
@@ -37,21 +55,25 @@ public:
 	//復元後にintからenumに反映
 	void OnDeserialized()
 	{
-		attribute = static_cast<ColliderAttribute>(attribute_int);
+		if (target_mask == 0)
+		{
+			OutputDebugStringA("[ColliderAttachmentItem 警告] target_mask が 0 のため DEFAULT_TARGET_MASK を設定しました。\n");
+			target_mask = DEFAULT_TARGET_MASK;
+		}
 	}
 
 public:
-	std::string name = "NewCollider";
-	std::string start_bone_name = "";
-	std::string end_bone_name = "";
-	float radius = 0.2f;
-	float height = 0.5f;
-	DirectX::XMFLOAT3 offset = { 0.0f,0.0f,0.0f };
-	DirectX::XMFLOAT3 rotation = { 0.0f,0.0f,0.0f };
-	ColliderAttribute attribute = ColliderAttribute::Collision;
-	int attribute_int = 2;
-	bool is_two_bone_link = false;
-	bool is_active = true;
+	std::string name ;				//コライダー名
+	std::string start_bone_name;	//基準ボーン名
+	std::string end_bone_name;		//終点ボーン名
+	float radius;					//半径
+	float height;					//長さ
+	DirectX::XMFLOAT3 offset;		//オフセット
+	DirectX::XMFLOAT3 rotation;		//角度
+	uint32_t attribute_bits;		//属性ビット
+	uint32_t target_mask;			//対象マスク
+	bool is_two_bone_link;			//２ボーン連携フラグ
+	bool is_active;					//有効フラグ
 };
 
 class ColliderAttachmentEditor

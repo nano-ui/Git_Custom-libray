@@ -146,7 +146,10 @@ public:
 	}
 
 	//ハッシュキーからデータの値を取得
-	const BlackboardData& GetAttributeValue(uint32_t hash_key)const;
+	const BlackboardData& GetAttributeValue(uint32_t hash_key)const;;
+
+	//変数が辞書に存在するか確認
+	bool HasVariable(uint32_t hash_key) const { return data_map.find(hash_key) != data_map.end(); }
 
 	//の事前登録
 	void RegisterVariable(const std::string& variable_name) { allowed_variables.insert(variable_name); }

@@ -15,7 +15,7 @@ CollisionSphere::CollisionSphere(CollisionManager* collision_manager, const Dire
 	sphere_collider->center = spawn_position;
 	sphere_collider->old_center = spawn_position;
 	sphere_collider->radius = radius_size;
-	sphere_collider->attribute = ColliderAttribute::Collision;
+	sphere_collider->attribute_bits = static_cast<uint32_t>(ColliderAttribute::Collision);
 	sphere_collider->listener = this;
 
 	move_velocity = { 1.0f,1.0f,1.0f };
