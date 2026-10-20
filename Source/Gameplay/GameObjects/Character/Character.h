@@ -15,7 +15,6 @@ class TransformComponent;
 class ModelComponent;
 class MovementComponent;
 class AttachmentColliderComponent;
-class CapsuleColliderComponent;
 
 class Character : public GameObject, public IAnimationListener, public ICollisionListener
 {
@@ -101,7 +100,6 @@ protected:
 	std::shared_ptr<ModelComponent> model_component;		//モデルコンポーネント
 	std::shared_ptr<MovementComponent> movement_component;	//移動コンポーネント
 	std::shared_ptr<AttachmentColliderComponent> attachment_collider_component;	//当たり判定コンポーネント
-	std::shared_ptr<CapsuleColliderComponent> main_capsule_component;			//カプセルクラス
 
 	std::string current_animation_name = "";	//現在のアニメーション名
 	float current_animation_time = 0.0f;		//現在のアニメーション再生時間

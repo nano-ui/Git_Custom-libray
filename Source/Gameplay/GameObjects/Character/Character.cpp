@@ -5,7 +5,6 @@
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Gameplay\Components\Model\ModelComponent.h"
 #include "Gameplay\Components\Movement\MovementComponent.h"
-#include "Gameplay\Components\Collision\CapsuleColliderComponent.h"
 #include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
 
 #include <imgui.h>
@@ -43,30 +42,6 @@ void Character::Initialize()
 	movement_component = GetComponent<MovementComponent>();
 	if (!movement_component) movement_component = AddComponent<MovementComponent>();
 	movement_component->SetTransformComponent(transform_component);
-
-	//CapsuleColliderComponent の取得・生成
-	main_capsule_component = GetComponent<CapsuleColliderComponent>();
-	if (!main_capsule_component) main_capsule_component = AddComponent<CapsuleColliderComponent>();
-	main_capsule_component->SetTransformComponent(transform_component);
-
-	constexpr float default_capsule_radius = 0.4f;
-	constexpr float default_capsule_height = 1.2f;
-	main_capsule_component->SetRadius(default_capsule_radius);
-	main_capsule_component->SetHeight(default_capsule_height);
-
-	CapsuleCollider* main_raw_collider = main_capsule_component->GetCapsuleCollider();
-	if (main_raw_collider)
-	{
-		main_raw_collider->attribute_bits = static_cast<uint32_t>(ColliderAttribute::Collision);
-		main_raw_collider->target_mask = static_cast<uint32_t>(ColliderAttribute::Stage | ColliderAttribute::Collision);
-		main_raw_collider->listener = this;
-		main_raw_collider->owner_id = object_id;
-		AddCollider(main_raw_collider);
-	}
-	else
-	{
-		OutputDebugStringA("[Character エラー] Initialize: main_capsule_component のコライダー実体取得に失敗しました。\n");
-	}
 
 	//モデルパスの確認
 	if (model_component->GetModelPath().empty())
@@ -227,23 +202,15 @@ void Character::OnCollisionHit(const CollisionResult& result)
 		return;
 	}
 
-	Collider* main_collider = main_capsule_component ? main_capsule_component->GetRawCollider() : nullptr;
-
 	//地形との当たり判定
 	if ((result.hit_attribute & ColliderAttribute::Stage) != ColliderAttribute::None)
 	{
-		if (self_collider == main_collider)
-		{
-			movement_component->ResolveStageCollision(result, self_collider);
-		}
+		movement_component->ResolveStageCollision(result, self_collider);
 	}
 	// 動的オブジェクト衝突（他キャラなど）
 	else if ((result.hit_attribute & ColliderAttribute::Collision) != ColliderAttribute::None)
 	{
-		if (self_collider == main_collider)
-		{
-			movement_component->ResolveDynamicCollision(result, self_collider);
-		}
+		movement_component->ResolveDynamicCollision(result, self_collider);
 	}
 	// 攻撃判定の被弾処理
 	else if ((result.hit_attribute & ColliderAttribute::Attack) != ColliderAttribute::None)
