@@ -465,14 +465,20 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\StateMachineDataLoader.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\StateMachineDataLoader</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\Log\LogEditor.cpp">
-      <Filter>Source\Editor\Log</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Core\Log\LogCategoryManager.cpp">
       <Filter>Source\Engine\Core\Log\LogCategoryManager</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Core\Log\LogSystem.cpp">
       <Filter>Source\Engine\Core\Log\LogSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Core\Log\LogFilter.cpp">
+      <Filter>Source\Engine\Core\Log\LogFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\Log\LogEditor.cpp">
+      <Filter>Source\Editor\Log\LogEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\Log\LogFilterWindow.cpp">
+      <Filter>Source\Editor\Log\LogFilterWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -899,9 +905,6 @@
     <ClInclude Include="Source\Editor\StateMachineEditor\StateMachineDataLoader.h">
       <Filter>Source\Editor\StateMachineGraphEditor\StateMachineDataLoader</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\Log\LogEditor.h">
-      <Filter>Source\Editor\Log</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Core\Log\LogCategoryManager.h">
       <Filter>Source\Engine\Core\Log\LogCategoryManager</Filter>
     </ClInclude>
@@ -913,6 +916,15 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Core\Log\RingBuffer.h">
       <Filter>Source\Engine\Core\Log\RingBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Core\Log\LogFilter.h">
+      <Filter>Source\Engine\Core\Log\LogFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Log\LogEditor.h">
+      <Filter>Source\Editor\Log\LogEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Log\LogFilterWindow.h">
+      <Filter>Source\Editor\Log\LogFilterWindow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1472,6 +1484,15 @@
     </Filter>
     <Filter Include="Source\Engine\Core\Log\RingBuffer">
       <UniqueIdentifier>{b0997df1-9981-4ad8-a5e1-267653bce3b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Core\Log\LogFilter">
+      <UniqueIdentifier>{53afb5c1-fc01-4ac3-9a31-2fd623675e61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Log\LogFilterWindow">
+      <UniqueIdentifier>{d8d7941d-3e7c-4d35-834a-6a00f5dc9727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Log\LogEditor">
+      <UniqueIdentifier>{460798d2-7d45-4dd4-b563-3b8c37172800}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
