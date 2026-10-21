@@ -7,6 +7,10 @@
 #include "Gameplay\Components\Movement\MovementComponent.h"
 #include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
 
+#include "Engine\Core\Log\LogSystem.h"
+#include "Engine\Core\Log\LogCategoryManager.h"
+#include "Engine\Core\Log\LogEntry.h"
+
 #include <imgui.h>
 #include <cmath>
 
@@ -116,6 +120,40 @@ void Character::Initialize()
 
 	SetupSerialization();
 	SetupInspector();
+
+	// テスト用ログの追加
+	LogSystem::Instance().AddLog(
+		Importance::Success,
+		{ u8"プレイヤー",u8"初期化" },
+		u8"Characterの初期化が完了しました。",
+		__FILE__,
+		__LINE__
+	);
+
+	LogSystem::Instance().AddLog(
+		Importance::Warning,
+		{ u8"プレイヤー" },
+		u8"警告テストログです。",
+		__FILE__,
+		__LINE__
+	);
+
+	LogSystem::Instance().AddLog(
+		Importance::Error,
+		{ u8"ステートマシン" },
+		u8"エラーテストログです。",
+		__FILE__,
+		__LINE__
+	);
+
+	LogSystem::Instance().AddLog(
+		Importance::Normal,
+		{ u8"通常",u8"エネミー" },
+		u8"通常テストログです。",
+		__FILE__,
+		__LINE__
+	);
+
 }
 
 //更新処理

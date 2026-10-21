@@ -13,6 +13,7 @@ class ModelPreviewWindow;
 class Camera;
 class CollisionManager;
 class ColliderAttachmentEditor;
+class LogEditor;
 
 struct ID3D11DeviceContext;
 
@@ -49,6 +50,7 @@ private:
 	std::unique_ptr<ModelPreviewWindow> model_preview_window;				//モデルプレビュー
 	std::unique_ptr<ColliderAttachmentEditor> collider_attachment_editor;	//コライダーアタッチメントエディタ
 	std::unique_ptr<EditorTabBar> tab_bar;									//アセットタブバー
+	std::unique_ptr<LogEditor> log_editor;									//ログエディタ
 	EditorSceneType active_scene_type;										//現在アクティブなエディタ画面の種類
 };
 

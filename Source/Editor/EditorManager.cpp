@@ -1,5 +1,6 @@
 #include "EditorManager.h"
 #include "ObjectEditor.h"
+#include "Log\LogEditor.h"
 #include "StateMachineEditor\StateMachineGraphEditor.h"
 #include "Sequence\AnimationSequencerEditor.h"
 #include "EditorMenuBar.h"
@@ -38,6 +39,7 @@ void EditorManager::Initialize()
 	content_browser_editor = std::make_unique<ContentBrowserEditor>();
 	tab_bar = std::make_unique<EditorTabBar>();
 	collider_attachment_editor = std::make_unique<ColliderAttachmentEditor>();
+	log_editor = std::make_unique<LogEditor>();
 
 	object_editor->Initialize();
 	animation_sequencer_editor->Initialize();
@@ -78,7 +80,7 @@ void EditorManager::Update(float elapsed_time)
 //Gui描画、レイアウト構築
 void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manager)
 {
-	menu_bar->RenderGui(object_editor.get());
+	menu_bar->RenderGui(object_editor.get(),log_editor.get());
 	active_scene_type = tab_bar->Draw();
 
 	//画面全体のドッキング空間用の設定フラグ構築
@@ -175,6 +177,7 @@ void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manage
 		//OutputDebugStringA("[Error] EditorManager::RenderGui: Unknown active_scene_type detected!\n");
 		break;
 	}
+	log_editor->Render();
 }
 
 //プレビュー用のフレームバッファに3Dモデルをレンダリング

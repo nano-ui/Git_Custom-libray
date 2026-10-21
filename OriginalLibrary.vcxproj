@@ -242,6 +242,7 @@
     <ClCompile Include="Source\Editor\EditorTabBar.cpp" />
     <ClCompile Include="Source\Editor\FileDialogHelper.cpp" />
     <ClCompile Include="Source\Editor\GuiInspector.cpp" />
+    <ClCompile Include="Source\Editor\Log\LogEditor.cpp" />
     <ClCompile Include="Source\Editor\ObjectEditor.cpp" />
     <ClCompile Include="Source\Editor\PathHelper.cpp" />
     <ClCompile Include="Source\Editor\Preview\ModelPreviewWindow.cpp" />
@@ -275,6 +276,8 @@
     <ClCompile Include="Source\Engine\Collision\SpaceDivisionCast.cpp" />
     <ClCompile Include="Source\Engine\Core\framework.cpp" />
     <ClCompile Include="Source\Engine\Core\Input.cpp" />
+    <ClCompile Include="Source\Engine\Core\Log\LogCategoryManager.cpp" />
+    <ClCompile Include="Source\Engine\Core\Log\LogSystem.cpp" />
     <ClCompile Include="Source\Engine\Core\main.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Device\DirectXDevice.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Device\framebuffer.cpp" />
@@ -378,6 +381,7 @@
     <ClInclude Include="Source\Editor\EditorTabBar.h" />
     <ClInclude Include="Source\Editor\FileDialogHelper.h" />
     <ClInclude Include="Source\Editor\GuiInspector.h" />
+    <ClInclude Include="Source\Editor\Log\LogEditor.h" />
     <ClInclude Include="Source\Editor\ObjectEditor.h" />
     <ClInclude Include="Source\Editor\PathHelper.h" />
     <ClInclude Include="Source\Editor\Preview\ModelPreviewWindow.h" />
@@ -414,6 +418,10 @@
     <ClInclude Include="Source\Engine\Core\framework.h" />
     <ClInclude Include="Source\Engine\Core\high_resolution_timer.h" />
     <ClInclude Include="Source\Engine\Core\Input.h" />
+    <ClInclude Include="Source\Engine\Core\Log\LogCategoryManager.h" />
+    <ClInclude Include="Source\Engine\Core\Log\LogEntry.h" />
+    <ClInclude Include="Source\Engine\Core\Log\LogSystem.h" />
+    <ClInclude Include="Source\Engine\Core\Log\RingBuffer.h" />
     <ClInclude Include="Source\Engine\Core\misc.h" />
     <ClInclude Include="Source\Engine\Graphics\Device\DirectXDevice.h" />
     <ClInclude Include="Source\Engine\Graphics\Device\framebuffer.h" />

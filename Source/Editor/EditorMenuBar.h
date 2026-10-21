@@ -1,6 +1,7 @@
 #pragma once
 
 class ObjectEditor;
+class LogEditor;
 
 class EditorMenuBar
 {
@@ -15,6 +16,6 @@ public:
 	void Initialize();
 
 	//Gui•`‰æ
-	void RenderGui(ObjectEditor* object_editor);
+	void RenderGui(ObjectEditor* object_editor, LogEditor* log_editor);
 };
 

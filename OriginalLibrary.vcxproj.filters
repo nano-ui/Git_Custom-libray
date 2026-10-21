@@ -465,6 +465,15 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\StateMachineDataLoader.cpp">
       <Filter>Source\Editor\StateMachineGraphEditor\StateMachineDataLoader</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\Log\LogEditor.cpp">
+      <Filter>Source\Editor\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Core\Log\LogCategoryManager.cpp">
+      <Filter>Source\Engine\Core\Log\LogCategoryManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Core\Log\LogSystem.cpp">
+      <Filter>Source\Engine\Core\Log\LogSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -889,6 +898,21 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\StateMachineEditor\StateMachineDataLoader.h">
       <Filter>Source\Editor\StateMachineGraphEditor\StateMachineDataLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Log\LogEditor.h">
+      <Filter>Source\Editor\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Core\Log\LogCategoryManager.h">
+      <Filter>Source\Engine\Core\Log\LogCategoryManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Core\Log\LogEntry.h">
+      <Filter>Source\Engine\Core\Log\LogEntry</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Core\Log\LogSystem.h">
+      <Filter>Source\Engine\Core\Log\LogSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Core\Log\RingBuffer.h">
+      <Filter>Source\Engine\Core\Log\RingBuffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1430,6 +1454,24 @@
     </Filter>
     <Filter Include="Source\Editor\StateMachineGraphEditor\StateMachineDataLoader">
       <UniqueIdentifier>{54573509-634e-4289-afa3-4075958148a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Log">
+      <UniqueIdentifier>{d03dd662-50ad-4183-9e57-3b6c17bafc09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Core\Log">
+      <UniqueIdentifier>{6ee2986b-db4e-4ccb-9c86-a4a919f8691b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Core\Log\LogCategoryManager">
+      <UniqueIdentifier>{23808ece-dc6b-4210-aa0b-32295c49499c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Core\Log\LogEntry">
+      <UniqueIdentifier>{0d3d3fe2-cccf-49c5-9866-b21f41040b89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Core\Log\LogSystem">
+      <UniqueIdentifier>{991a9e8b-4fdc-4f00-8e4c-a287996a5f9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Core\Log\RingBuffer">
+      <UniqueIdentifier>{b0997df1-9981-4ad8-a5e1-267653bce3b5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
