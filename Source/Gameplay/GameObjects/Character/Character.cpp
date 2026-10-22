@@ -121,17 +121,11 @@ void Character::Initialize()
 
 	DirectX::XMFLOAT3 pos = transform_component->GetPosition();
 
-	LOG_NORMAL(
-		{ "Player", "Transform" },
-		"初期座標: X={:.2f}, Y={:.2f}, Z={:.2f}",
-		pos.x,
-		pos.y,
-		pos.z
-	);
+	LOG_NORMAL({ "Player" }, u8"座標: (%.2f, %.2f, %.2f)", pos.x, pos.y, pos.z);
 
 	LOG_WARNING(
 		{ "Player", "Battle" },
-		"被弾テスト - ダメージ量: {:.1f}, 残り体力: {:.1f}",
+		u8"被弾テスト - ダメージ量: {:.1f}, 残り体力: {:.1f}",
 		15.5f,
 		health
 	);
