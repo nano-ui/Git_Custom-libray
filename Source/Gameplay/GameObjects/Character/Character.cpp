@@ -123,7 +123,7 @@ void Character::Initialize()
 
 	LOG_NORMAL(
 		{ "Player", "Transform" },
-		u8"初期座標: X={:.2f}, Y={:.2f}, Z={:.2f}",
+		"初期座標: X={:.2f}, Y={:.2f}, Z={:.2f}",
 		pos.x,
 		pos.y,
 		pos.z
@@ -131,7 +131,7 @@ void Character::Initialize()
 
 	LOG_WARNING(
 		{ "Player", "Battle" },
-		u8"被弾テスト - ダメージ量: {:.1f}, 残り体力: {:.1f}",
+		"被弾テスト - ダメージ量: {:.1f}, 残り体力: {:.1f}",
 		15.5f,
 		health
 	);

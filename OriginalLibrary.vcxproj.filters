@@ -926,6 +926,9 @@
     <ClInclude Include="Source\Editor\Log\LogFilterWindow.h">
       <Filter>Source\Editor\Log\LogFilterWindow</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\Core\Log\Log.h">
+      <Filter>Source\Engine\Core\Log</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli">

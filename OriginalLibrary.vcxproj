@@ -421,6 +421,7 @@
     <ClInclude Include="Source\Engine\Core\framework.h" />
     <ClInclude Include="Source\Engine\Core\high_resolution_timer.h" />
     <ClInclude Include="Source\Engine\Core\Input.h" />
+    <ClInclude Include="Source\Engine\Core\Log\Log.h" />
     <ClInclude Include="Source\Engine\Core\Log\LogCategoryManager.h" />
     <ClInclude Include="Source\Engine\Core\Log\LogEntry.h" />
     <ClInclude Include="Source\Engine\Core\Log\LogFilter.h" />
