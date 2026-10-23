@@ -260,6 +260,7 @@ bool StateGraphSimulator::UpdateSimulation(float elapsed_time, StateBlackboard* 
 				current_animation_name = runtime_nodes[n].animation_name;
 				current_animation_loop = runtime_nodes[n].is_loop;
 				current_action_category = runtime_nodes[n].action_category;
+				found_node = true;
 				break;
 			}
 		}

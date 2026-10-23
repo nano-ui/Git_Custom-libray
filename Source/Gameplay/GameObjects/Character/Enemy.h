@@ -10,6 +10,7 @@ class CapsuleColliderComponent;
 class BoneCapsuleColliderComponent;
 class AttachmentColliderComponent;
 class LinearMove;
+class WanderMove;
 class HateComponent;
 
 class Enemy :public Character
@@ -64,6 +65,7 @@ private:
 	std::weak_ptr<TransformComponent> target_transform;	//‘ÎÛ‚ÌÀ•W
 	std::shared_ptr<HateComponent> hate_component;		//ƒwƒCƒgŠÇ—
 	std::unique_ptr<LinearMove> linear_move;			//’¼üˆÚ“®
-	float chase_speed = 3.0f;							//ˆÚ“®‘¬“x
+	std::unique_ptr<WanderMove> wander_move;			//œpœjˆÚ“®
+	float chase_speed;									//ˆÚ“®‘¬“x
 	float stop_distance;								//’â~‹——£
 };

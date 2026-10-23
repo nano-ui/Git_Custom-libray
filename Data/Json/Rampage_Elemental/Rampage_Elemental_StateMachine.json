@@ -111,7 +111,7 @@
                             "Name": "入力"
                         }
                     ],
-                    "IsLoop": true,
+                    "IsLoop": false,
                     "IsRootMotion": false,
                     "IsSubGraph": false,
                     "LinkColorB": 1.0,

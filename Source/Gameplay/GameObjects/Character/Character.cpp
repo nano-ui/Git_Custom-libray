@@ -11,6 +11,7 @@
 
 #include <imgui.h>
 #include <cmath>
+#include <Engine\Core\MacroTracy.h>
 
 //コンストラクタ
 Character::Character()
@@ -125,6 +126,7 @@ void Character::Initialize()
 //更新処理
 void Character::Update(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
 	UpdateInvincibleTimer(elapsed_time);
 
 	// GameObject::Update で MovementComponent などの全コンポーネントが更新される
@@ -163,14 +165,6 @@ void Character::Update(float elapsed_time)
 		}
 	}
 
-	if (sequencer_component)
-	{
-		sequencer_component->Update(elapsed_time, state_machine_component->GetAnimationLoop());
-		current_animation_name = sequencer_component->GetCurrentAnimationName();
-		current_animation_time = sequencer_component->GetCurrentSequenceTime();
-		UpdateColliderSequencer();
-	}
-
 	// ルートモーション判定
 	bool is_rm_enabled = state_machine_component ? state_machine_component->IsCurrentRootMotionEnbled() : false;
 	debug_root_motion_enabled = is_rm_enabled;
@@ -192,6 +186,8 @@ void Character::Update(float elapsed_time)
 //衝突処理
 void Character::OnCollisionHit(const CollisionResult& result)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!movement_component)
 	{
 		LOG_WARNING({ "Character", "Collision" }, u8"OnCollisionHit: movement_component が存在しないため衝突解決をスキップします。");
@@ -234,12 +230,15 @@ void Character::OnCollisionHit(const CollisionResult& result)
 //描画処理
 void Character::Render(ID3D11DeviceContext* context)
 {
+	BS_PROFILE_FUNCTION();
+
 	GameObject::Render(context);
 }
 
 //デバッグ描画
 void Character::RenderDebug(ShapeRenderer* renderer)
 {
+	BS_PROFILE_FUNCTION();
 	if (attachment_collider_component)
 	{
 		attachment_collider_component->RenderDebug(renderer);
@@ -249,6 +248,8 @@ void Character::RenderDebug(ShapeRenderer* renderer)
 //シリアライザに登録
 void Character::SetupSerialization()
 {
+	BS_PROFILE_FUNCTION();
+
 	GameObject::SetupSerialization();
 
 	if (serializer)
@@ -264,6 +265,8 @@ void Character::SetupSerialization()
 
 void Character::SetupInspector()
 {
+	BS_PROFILE_FUNCTION();
+
 	GameObject::SetupInspector();
 
 	if (inspector)
@@ -285,6 +288,8 @@ void Character::SetupInspector()
 //ダメージ処理
 bool Character::ApplyDamage(float damage, float invincible_time, uint32_t attacker_id)
 {
+	BS_PROFILE_FUNCTION();
+
 	//ダメージの適用条件判定
 	if (damage <= 0)return false;
 	if (health <= 0)return false;
@@ -308,6 +313,8 @@ bool Character::ApplyDamage(float damage, float invincible_time, uint32_t attack
 //ブラックボードに同期
 void Character::SyncBlackboard()
 {
+	BS_PROFILE_FUNCTION();
+
 	float current_move_speed = movement_component ? movement_component->GetMoveSpeed() : 0.0f;
 	bool current_is_ground = movement_component ? movement_component->IsGround() : false;
 
@@ -319,6 +326,8 @@ void Character::SyncBlackboard()
 //ブラックボードに登録・初期化
 void Character::SetupBlackboard()
 {
+	BS_PROFILE_FUNCTION();
+
 	blackboard->RegisterVariable(u8"体力");
 	blackboard->RegisterVariable(u8"接地フラグ");
 	blackboard->RegisterVariable(u8"move_speed");
@@ -329,6 +338,7 @@ void Character::SetupBlackboard()
 //移動方向の設定
 void Character::Move(float elapsed_time, float vx, float vz, float speed)
 {
+	BS_PROFILE_FUNCTION();
 
 	if (state_machine_component->GetCurrentActionCategory() != ActionCategory::Attack)
 	{
@@ -339,6 +349,8 @@ void Character::Move(float elapsed_time, float vx, float vz, float speed)
 //旋回処理
 void Character::Tuen(float elapsed_time, float vx, float vz, float speed)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (state_machine_component->GetCurrentActionCategory() != ActionCategory::Attack)
 	{
 		movement_component->Turn(elapsed_time, vx, vz, speed);
@@ -348,12 +360,16 @@ void Character::Tuen(float elapsed_time, float vx, float vz, float speed)
 //ジャンプ処理
 void Character::Jump(float speed)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (movement_component) movement_component->Jump(speed);
 }
 
 //無敵時間更新処理
 void Character::UpdateInvincibleTimer(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (invincible_timer > 0.0f)
 	{
 		invincible_timer -= elapsed_time;
@@ -363,6 +379,8 @@ void Character::UpdateInvincibleTimer(float elapsed_time)
 //ルートモーション更新
 void Character::UpdateRootMotion()
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!model_component || !model_component->GetModel() || !transform_component)
 	{
 		LOG_WARNING({ "Character", "RootMotion" }, u8"UpdateRootMotion: 必要なコンポーネントまたは Model が nullptr です。");
@@ -392,6 +410,8 @@ void Character::UpdateRootMotion()
 //アニメーションシーケンス時間に合わせて当たり判定の有効状態を更新
 void Character::UpdateColliderSequencer()
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!attachment_collider_component || !sequencer_component)return;
 
 	//攻撃判定コライダーをすべて非アクティブ

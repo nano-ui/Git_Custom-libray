@@ -1,11 +1,14 @@
 #include "GltfModelAnimation.h"
 
 #include <algorithm>
+#include <Engine\Core\MacroTracy.h>
 
 
 //アニメーションクラスをモデルデータで初期化
 void GltfModelAnimation::Initialize(const std::shared_ptr<const GltfModelData>& data)
 {
+	BS_PROFILE_FUNCTION();
+
 	//データの保持と作業用ノード配列の初期化
 	model_data = data;	//モデルデータを保存
 	if (model_data)		//モデルデータが有効か確認
@@ -25,6 +28,8 @@ void GltfModelAnimation::Initialize(const std::shared_ptr<const GltfModelData>& 
 //親子関係をたどって各ノードのグローバル行列を計算
 void GltfModelAnimation::CumulateTransforms()
 {
+	BS_PROFILE_FUNCTION();
+
 	//モデルデータの有効性チェック
 	if (!model_data) return;
 
@@ -69,6 +74,8 @@ void GltfModelAnimation::CumulateTransforms()
 //名前を指定してアニメーションの再生を開始
 void GltfModelAnimation::PlayAniamtion(const std::string& animation_name, bool is_loop)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!model_data) return;	//モデルデータが有効か確認
 	//マップからアニメーション番号の検索
 	auto iterator = model_data->animation_index_map.find(animation_name);	//指定されたアニメーションを検索
@@ -89,6 +96,8 @@ void GltfModelAnimation::PlayAniamtion(const std::string& animation_name, bool i
 //アニメーション更新処理
 void GltfModelAnimation::UpdateAnimation(float delta_time)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!model_data || !is_playing || model_data->animations.empty())return;
 
 	//時間の進行とループ判定
@@ -112,6 +121,8 @@ void GltfModelAnimation::UpdateAnimation(float delta_time)
 //現在のアニメーション経過時間を取得
 float GltfModelAnimation::GetCurrentAnimationTime() const
 {
+	BS_PROFILE_FUNCTION();
+
 	//モデルデータが読み込まれていないなど、不正な状態での呼び出しを検知
 	if (!model_data)
 	{
@@ -125,6 +136,8 @@ float GltfModelAnimation::GetCurrentAnimationTime() const
 //アニメーションの再生時間を設定
 void GltfModelAnimation::SetCurrentAnimationTime(float time)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!model_data || model_data->animations.empty())return;
 
 	//指定された時間に再生経過時間を設定
@@ -157,6 +170,8 @@ void GltfModelAnimation::SetCurrentAnimationTime(float time)
 //アニメーションの総時間を取得
 float GltfModelAnimation::GetAnimationDuration() const
 {
+	BS_PROFILE_FUNCTION();
+
 	//モデルデータが読み込まれていない場合は安全のためゼロを返す
 	if (!model_data)
 	{
@@ -170,6 +185,8 @@ float GltfModelAnimation::GetAnimationDuration() const
 //指定した時間のアニメーションを適用しノード情報を更新
 void GltfModelAnimation::Animate(size_t animation_index, float time)
 {
+	BS_PROFILE_FUNCTION();
+
 	// アニメーションデータの有無の確認
 	if (model_data->animations.empty())	// GltfModelData内にアニメーションデータが存在しない場合
 	{
@@ -305,6 +322,8 @@ void GltfModelAnimation::Animate(size_t animation_index, float time)
 //対象のノードがシーンの最上位ルートノードが判定
 bool GltfModelAnimation::IsRootNode(int node_index) const
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!model_data || model_data->scenes.empty())
 	{
 		OutputDebugStringA("[GltfModelAnimation 警告] IsRootNode: model_data または scenes が空です。\n");
@@ -320,6 +339,8 @@ bool GltfModelAnimation::IsRootNode(int node_index) const
 //指定アニメーション内で最も移動量の大きいルートモーション対象ノードのインデックスを取得
 int GltfModelAnimation::GetTargetRootNodeIndex(size_t animation_index) const
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!model_data || animation_index >= model_data->animations.size())
 	{
 		OutputDebugStringA("[GltfModelAnimation 警告] GetTargetRootNodeIndex: model_data が無効またはインデックスが範囲外です。\n");
@@ -374,6 +395,8 @@ int GltfModelAnimation::GetTargetRootNodeIndex(size_t animation_index) const
 //行列計算用の再帰呼び出し
 void GltfModelAnimation::TraverseNodeForTransform(int node_index, std::stack<DirectX::XMFLOAT4X4>& parent_global_transforms)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (node_index < 0 || static_cast<size_t>(node_index) >= animated_nodes.size())
 	{
 		return;
@@ -405,6 +428,8 @@ void GltfModelAnimation::TraverseNodeForTransform(int node_index, std::stack<Dir
 //アニメーションのキーフレームを取得し補間係数を計算
 size_t GltfModelAnimation::GetAnimationKeyframeIndex(const std::vector<float>& timelines, float time, float& interpolation_factor)
 {
+	BS_PROFILE_FUNCTION();
+
 	const size_t keyframe_count = timelines.size();
 	const size_t MIN_KEYFRAME_COUNT = 2;
 	const size_t INDEX_OFFSET_NEXT = 1;
@@ -465,6 +490,8 @@ size_t GltfModelAnimation::GetAnimationKeyframeIndex(const std::vector<float>& t
 //アニメーションの全体の長さを計算
 float GltfModelAnimation::CalculateAnimationDuration(size_t animation_index)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!model_data || model_data->animations.empty() || animation_index >= model_data->animations.size())
 	{
 		OutputDebugStringA("[GltfModelAnimation Error] CalculateAnimationDuration: index out of range!\n");
@@ -504,6 +531,8 @@ float GltfModelAnimation::CalculateAnimationDuration(size_t animation_index)
 //指定したノードの移動成分を外部から上書き
 void GltfModelAnimation::SetNodeTranslation(int node_index, const DirectX::XMFLOAT3& translation)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (node_index >= 0 && static_cast<size_t>(node_index) < animated_nodes.size())
 	{
 		animated_nodes.at(node_index).translation = translation;
@@ -513,6 +542,8 @@ void GltfModelAnimation::SetNodeTranslation(int node_index, const DirectX::XMFLO
 //二つのアニメーション姿勢の合成
 void GltfModelAnimation::AnimationBlend(size_t animation_index_a, float time_a, size_t animation_index_b, float time_b, float blend_factor)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!model_data || model_data->animations.empty())return;
 
 	//ブレンド率を0.0f～1.0fの範囲にクランプ

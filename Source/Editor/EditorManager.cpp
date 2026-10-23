@@ -14,6 +14,7 @@
 #include "Engine\Core\Input.h"
 
 #include <windows.h>
+#include <Engine\Core\MacroTracy.h>
 
 //コンストラクタ
 EditorManager::EditorManager()
@@ -68,6 +69,7 @@ void EditorManager::Initialize()
 //更新処理
 void EditorManager::Update(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
 	model_preview_window->Update(elapsed_time);
 	animation_sequencer_editor->Update(elapsed_time);
 
@@ -80,6 +82,7 @@ void EditorManager::Update(float elapsed_time)
 //Gui描画、レイアウト構築
 void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manager)
 {
+	BS_PROFILE_FUNCTION();
 	menu_bar->RenderGui(object_editor.get(),log_editor.get());
 	active_scene_type = tab_bar->Draw();
 

@@ -3,12 +3,15 @@
 #include "Engine/Graphics/Shaders/shader.h"
 #include "Engine\Graphics\Renderers\Graphics.h"
 #include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
+#include <Engine\Core\MacroTracy.h>
 
 //=========================================
 //デバイスを受け取り描画リソースを初期化
 //=========================================
 GltfModelRenderer::GltfModelRenderer(ID3D11Device* device)
 {
+	BS_PROFILE_FUNCTION();
+
 	//--------------------------------------------------
 	// シェーダーへの入力レイアウトの定義
 	//--------------------------------------------------
@@ -55,6 +58,8 @@ void GltfModelRenderer::Render
 	ID3D11SamplerState* const* sampler_states
 )
 {
+	BS_PROFILE_FUNCTION();
+
 	const GltfModelData& data = *model.GetData();	//モデルの実体情報
 	const std::vector<GltfModelData::node>& nodes = model.GetAnimatedNodes();	//アニメーション計算済みのノード配列
 
@@ -234,6 +239,8 @@ void GltfModelRenderer::TraverseNodeForRender
 	ID3D11SamplerState** sampler_states
 )
 {
+	BS_PROFILE_FUNCTION();
+
 	using namespace DirectX;														// DirectXMathの名前空間を使用
 	const GltfModelData::node& current_node = nodes.at(node_index);					// 描画対象のノード情報を参照で取得
 
@@ -395,6 +402,8 @@ void GltfModelRenderer::GetherRenderCommands
 	std::vector<RenderCommand>& commands			//描画情報
 )
 {
+	BS_PROFILE_FUNCTION();
+
 	const GltfModelData::node& current_node = nodes.at(node_index);	//現在のモデル情報
 
 	//メッシュが存在する場合、プリミティブ情報を配列に格納

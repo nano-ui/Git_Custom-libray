@@ -4,6 +4,7 @@
 #include "Engine\Core\Input.h"
 #include "Gameplay/Scene/SceneTitle.h"
 #include "Gameplay/Scene/SceneManager.h"
+#include "Engine\Core\MacroTracy.h"
 
 #include <sstream>
 #include <memory>
@@ -45,6 +46,8 @@ framework::~framework()
 
 int framework::run()
 {
+	BS_PROFILE_FUNCTION();
+
 	MSG msg{};
 	std::unique_ptr<Graphics, GraphicsScopeDeleter> graphics_scope(&Graphics::Instance());
 	std::unique_ptr<SceneManager, SceneManagerScopeDeleter> scene_manager_scope(&SceneManager::Instance());
@@ -91,13 +94,26 @@ int framework::run()
 			Input::Instance().Update();
 
 			//シーンの更新と描画
-			scene_manager_scope->Update(tictoc.time_interval());
-			graphics_scope->BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);
-			scene_manager_scope->Render(tictoc.time_interval());
+			{
+				BS_PROFILE_SCOPE("Input_Update");
+				Input::Instance().Update();
+			}
 
+			{
+				BS_PROFILE_SCOPE("Scene_Update");
+				scene_manager_scope->Update(tictoc.time_interval());
+			}
+
+			{
+				BS_PROFILE_SCOPE("Scene_Render");
+				graphics_scope->BeginFrame(0.2f, 0.2f, 0.2f, 1.0f);
+				scene_manager_scope->Render(tictoc.time_interval());
+			}
 			imgui_manager->EndFrame();
 
 			graphics_scope->EndFrame();
+
+			BS_PROFILE_FRAME_MARK();
 		}
 	}
 	scene_manager_scope.reset();
@@ -142,6 +158,8 @@ LRESULT framework::handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 
 void framework::calculate_frame_stats()
 {
+	BS_PROFILE_FUNCTION();
+
 	if (++frames_per_second, (tictoc.time_stamp() - count_by_seconds) >= 1.0f)
 	{
 		//FPSとフレーム時間を計算

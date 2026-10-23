@@ -45,6 +45,12 @@ C:.
 „    „        ContentBrowserEditor.cpp
 „    „        ContentBrowserEditor.h
 „    „        
+„    „¥„Ÿ„Ÿ„ŸLog
+„    „        LogEditor.cpp
+„    „        LogEditor.h
+„    „        LogFilterWindow.cpp
+„    „        LogFilterWindow.h
+„    „        
 „    „¥„Ÿ„Ÿ„ŸPreview
 „    „        ModelPreviewWindow.cpp
 „    „        ModelPreviewWindow.h
@@ -119,14 +125,27 @@ C:.
 „    „        SpaceDivisionCast.h
 „    „        
 „    „¥„Ÿ„Ÿ„ŸCore
-„    „        framework.cpp
-„    „        framework.h
-„    „        high_resolution_timer.h
-„    „        Input.cpp
-„    „        Input.h
-„    „        main.cpp
-„    „        misc.h
-„    „        
+„    „    „    framework.cpp
+„    „    „    framework.h
+„    „    „    high_resolution_timer.h
+„    „    „    Input.cpp
+„    „    „    Input.h
+„    „    „    MacroTracy.h
+„    „    „    main.cpp
+„    „    „    misc.h
+„    „    „    TracyClient.cpp
+„    „    „    
+„    „    „¤„Ÿ„Ÿ„ŸLog
+„    „            Log.h
+„    „            LogCategoryManager.cpp
+„    „            LogCategoryManager.h
+„    „            LogEntry.h
+„    „            LogFilter.cpp
+„    „            LogFilter.h
+„    „            LogSystem.cpp
+„    „            LogSystem.h
+„    „            RingBuffer.h
+„    „            
 „    „¤„Ÿ„Ÿ„ŸGraphics
 „        „¥„Ÿ„Ÿ„ŸDevice
 „        „        DirectXDevice.cpp
@@ -270,6 +289,8 @@ C:.
 „    „    „    „        MoveFactory.h
 „    „    „    „        RepulsiveMove.cpp
 „    „    „    „        RepulsiveMove.h
+„    „    „    „        WanderMove.cpp
+„    „    „    „        WanderMove.h
 „    „    „    „        
 „    „    „    „¤„Ÿ„Ÿ„ŸRotation
 „    „    „            LockAtRotation.cpp
@@ -333,5 +354,76 @@ C:.
 „        JsonSerializer.h
 „        
 „¤„Ÿ„Ÿ„ŸThiedParty
-        json.hpp
-        
+    „    json.hpp
+    „    
+    „¤„Ÿ„Ÿ„Ÿtracy
+        „    TracyClient.cpp
+        „    
+        „¥„Ÿ„Ÿ„Ÿclient
+        „        TracyAlloc.cpp
+        „        TracyArmCpuTable.hpp
+        „        TracyCallstack.cpp
+        „        TracyCallstack.h
+        „        TracyCallstack.hpp
+        „        TracyCpuid.hpp
+        „        TracyDebug.hpp
+        „        TracyDxt1.cpp
+        „        TracyDxt1.hpp
+        „        TracyFastVector.hpp
+        „        TracyKCore.cpp
+        „        TracyKCore.hpp
+        „        TracyLock.hpp
+        „        TracyOverride.cpp
+        „        TracyProfiler.cpp
+        „        TracyProfiler.hpp
+        „        TracyRingBuffer.hpp
+        „        TracyRocprof.cpp
+        „        TracyScoped.hpp
+        „        TracyStringHelpers.hpp
+        „        TracySysPower.cpp
+        „        TracySysPower.hpp
+        „        TracySysTime.cpp
+        „        TracySysTime.hpp
+        „        TracySysTrace.cpp
+        „        TracySysTrace.hpp
+        „        TracyThread.hpp
+        „        tracy_concurrentqueue.h
+        „        tracy_rpmalloc.cpp
+        „        tracy_rpmalloc.hpp
+        „        tracy_SPSCQueue.h
+        „        
+        „¥„Ÿ„Ÿ„Ÿcommon
+        „        TracyAlign.hpp
+        „        TracyAlloc.hpp
+        „        TracyApi.h
+        „        TracyColor.hpp
+        „        TracyForceInline.hpp
+        „        TracyMutex.hpp
+        „        TracyProtocol.hpp
+        „        TracyQueue.hpp
+        „        TracySocket.cpp
+        „        TracySocket.hpp
+        „        TracyStackFrames.cpp
+        „        TracyStackFrames.hpp
+        „        TracySystem.cpp
+        „        TracySystem.hpp
+        „        TracyVersion.hpp
+        „        TracyWinFamily.hpp
+        „        TracyYield.hpp
+        „        tracy_lz4.cpp
+        „        tracy_lz4.hpp
+        „        tracy_lz4hc.cpp
+        „        tracy_lz4hc.hpp
+        „        
+        „¤„Ÿ„Ÿ„Ÿtracy
+                Tracy.hpp
+                TracyC.h
+                TracyCUDA.hpp
+                TracyD3D11.hpp
+                TracyD3D12.hpp
+                TracyLua.hpp
+                TracyMetal.hmm
+                TracyOpenCL.hpp
+                TracyOpenGL.hpp
+                TracyVulkan.hpp
+                

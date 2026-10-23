@@ -16,6 +16,7 @@
 #include "SceneManager.h"
 #include "Gameplay\GameObjects\Character\Player.h"
 #include "Gameplay\GameObjects\Character\Enemy.h"
+#include <Engine\Core\MacroTracy.h>
 
 //コンストラクタ
 SceneGame::SceneGame()
@@ -107,24 +108,41 @@ void SceneGame::Finalize()
 //更新処理
 void SceneGame::Update(float elapsed_time)
 {
-	
+	BS_PROFILE_FUNCTION();
 #ifdef USE_IMGUI
 	const ImGuiIO& io = ImGui::GetIO();
 	/*if (camera_controller && !io.WantCaptureMouse)*/camera_controller->Update(elapsed_time);
 #else
 	if (camera_controller)camera_controller->Update(elapsed_time);
 #endif
-	if (editor_manager)editor_manager->Update(elapsed_time);
-	if (editor_manager && !editor_manager->IsGameViewportActive())return;
-	if (SceneManager::Instance().IsPaused())return;
-	if (object_manager)object_manager->Update(elapsed_time);
+	{
+		BS_PROFILE_SCOPE("EditorManager::Update");
+		if (editor_manager)editor_manager->Update(elapsed_time);
+	}
+	{
+		BS_PROFILE_SCOPE("IsGameViewportActive");
+		if (editor_manager && !editor_manager->IsGameViewportActive())return;
+	}
+	{
+		BS_PROFILE_SCOPE("IsGameViewportActive");
+		if (SceneManager::Instance().IsPaused())return;
+	}
+	{
+		BS_PROFILE_SCOPE("OubectManager::Update");
+		if (object_manager)object_manager->Update(elapsed_time);
+	}
 	//if (collision_experiment)collision_experiment->Update(elapsed_time);
-	if (collision_manager)collision_manager->ExecuteCollision();
+	{
+		BS_PROFILE_SCOPE("CollisionManager::Update");
+		if (collision_manager)collision_manager->ExecuteCollision();
+	}
 }
 
 //描画処理
 void SceneGame::Render(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
+
 	Camera* current_camera = camera_controller ? camera_controller->GetCamera().get() : nullptr;
 	ID3D11DeviceContext* context = Graphics::Instance().GetContext();
 	auto states = Graphics::Instance().GetPipelineStates();
@@ -133,7 +151,7 @@ void SceneGame::Render(float elapsed_time)
 	// エディタ画面（レベル以外）がアクティブな場合の描画処理
 	if (editor_manager && !editor_manager->IsGameViewportActive())
 	{
-//#ifdef USE_IMGUI
+#ifdef USE_IMGUI
 		// カメラとライトの定数バッファを更新してプレビューモデルを正しく描画できるようにする
 		if (current_camera && light)
 		{
@@ -157,7 +175,7 @@ void SceneGame::Render(float elapsed_time)
 		// ImGui UI の描画を実行
 		RenderGui();
 		editor_manager->RenderGui(current_camera, collision_manager.get());
-//#endif
+#endif
 		return;
 	}
 
@@ -263,10 +281,12 @@ void SceneGame::Render(float elapsed_time)
 	{
 		skybox->BindIblTextures(context);
 	}
-
-	if (object_manager)
 	{
-		object_manager->Render(context);
+		BS_PROFILE_SCOPE("ObjectManager::Render");
+		if (object_manager)
+		{
+			object_manager->Render(context);
+		}
 	}
 
 	if (collision_experiment)
@@ -316,10 +336,10 @@ void SceneGame::Render(float elapsed_time)
 		skybox->Render(context);
 	}
 
-//#ifdef USE_IMGUI
+#ifdef USE_IMGUI
 	RenderGui();
 	editor_manager->RenderGui(current_camera, collision_manager.get());
-//#endif
+#endif
 }
 
 //ImGuiデバッグ描画

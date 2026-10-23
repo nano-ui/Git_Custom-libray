@@ -480,6 +480,12 @@
     <ClCompile Include="Source\Editor\Log\LogFilterWindow.cpp">
       <Filter>Source\Editor\Log\LogFilterWindow</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Movement\Move\WanderMove.cpp">
+      <Filter>Source\Gameplay\Components\Movement\Move\WanderMove</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Core\TracyClient.cpp">
+      <Filter>Source\Engine\Core\Tracy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -928,6 +934,12 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Core\Log\Log.h">
       <Filter>Source\Engine\Core\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Movement\Move\WanderMove.h">
+      <Filter>Source\Gameplay\Components\Movement\Move\WanderMove</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Core\MacroTracy.h">
+      <Filter>Source\Engine\Core\Tracy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1496,6 +1508,12 @@
     </Filter>
     <Filter Include="Source\Editor\Log\LogEditor">
       <UniqueIdentifier>{460798d2-7d45-4dd4-b563-3b8c37172800}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Movement\Move\WanderMove">
+      <UniqueIdentifier>{8da59add-a7c6-42a5-b67e-31988ae3dd34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Core\Tracy">
+      <UniqueIdentifier>{b4e8cc94-4ab7-4a7e-8c9b-bed72ef7a504}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

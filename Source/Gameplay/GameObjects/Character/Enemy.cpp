@@ -5,6 +5,7 @@
 #include "Gameplay\Components\Movement\MovementComponent.h"
 #include "Gameplay\Components\Editor\AttachmentColliderComponent.h"
 #include "Gameplay\Components\Movement\Move\LinearMove.h"
+#include "Gameplay\Components\Movement\Move\WanderMove.h"
 #include "Gameplay\Components\AI\HateComponent.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 
@@ -12,20 +13,25 @@
 #include "Engine\Core\Log\Log.h"
 
 #include <Windows.h>
+#include <Engine\Core\MacroTracy.h>
 
 static AutoRegister<Enemy> auto_register_enemy("Enemy");
 
 static constexpr uint32_t DUMMY_BLACKBOARD_KEY = 0;
-static constexpr float DEFAULT_CHASE_SPEED = 3.0f;
+static constexpr float DEFAULT_CHASE_SPEED = 10.0f;
 static constexpr float DEFAULT_STOP_DISTANCE = 1.5f;
 static constexpr float EPSILON_DISTANCE_SQ = 0.0001f;
 
 //コンストラクタ
 Enemy::Enemy()
 {
+	BS_PROFILE_FUNCTION();
 	SetClassName("Enemy");
 	chase_speed = DEFAULT_CHASE_SPEED;
 	stop_distance = DEFAULT_STOP_DISTANCE;
+	chase_speed = DEFAULT_CHASE_SPEED;
+	linear_move = std::make_unique<LinearMove>(DUMMY_BLACKBOARD_KEY);
+	wander_move = std::make_unique<WanderMove>();
 }
 
 //デストラクタ
@@ -34,10 +40,8 @@ Enemy::~Enemy() = default;
 //初期化処理
 void Enemy::Initialize()
 {
+	BS_PROFILE_FUNCTION();
 	SetupComponent();
-
-	linear_move = std::make_unique<LinearMove>(DUMMY_BLACKBOARD_KEY);
-
 	//基底クラスの初期化
 	Character::Initialize();
 	health = 100.0f;
@@ -46,9 +50,10 @@ void Enemy::Initialize()
 //更新処理
 void Enemy::Update(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
 	if (is_play)
 	{
-		UpdateTargetFromHate();
+		//UpdateTargetFromHate();
 		UpdateChase(elapsed_time);
 	}
 	Character::Update(elapsed_time);
@@ -57,12 +62,14 @@ void Enemy::Update(float elapsed_time)
 //デバッグ描画
 void Enemy::RenderDebug(ShapeRenderer* renderer)
 {
+	BS_PROFILE_FUNCTION();
 	Character::RenderDebug(renderer);
 }
 
 //シリアライズ登録
 void Enemy::SetupSerialization()
 {
+	BS_PROFILE_FUNCTION();
 	Character::SetupSerialization();
 	serializer->RegisterVariable(u8"開始", &is_play, SerializeTarget::Detail);
 	serializer->RegisterVariable(u8"速度", &chase_speed, SerializeTarget::Detail);
@@ -77,6 +84,7 @@ void Enemy::SetupSerialization()
 //インスペクター登録
 void Enemy::SetupInspector()
 {
+	BS_PROFILE_FUNCTION();
 	Character::SetupInspector();
 	inspector->RegisterVariable(u8"開始", &is_play);
 	inspector->RegisterVariable(u8"速度", &chase_speed);
@@ -92,6 +100,7 @@ void Enemy::OnAnimationEnd(uint32_t state_key)
 //対象を設定
 void Enemy::SetTarget(const std::shared_ptr<TransformComponent>& target)
 {
+	BS_PROFILE_FUNCTION();
 	target_transform = target;
 }
 
@@ -104,12 +113,14 @@ std::string Enemy::GetDefaultModelPath() const
 //被弾時イベント
 void Enemy::OnDamage(uint32_t attacker_id, float hate)
 {
+	BS_PROFILE_FUNCTION();
 	hate_component->AddHate(attacker_id, hate);
 }
 
 //コンポーネント群のセットアップ
 void Enemy::SetupComponent()
 {
+	BS_PROFILE_FUNCTION();
 	transform_component = GetComponent<TransformComponent>();
 	if (!transform_component)transform_component = AddComponent<TransformComponent>();
 
@@ -144,37 +155,39 @@ void Enemy::SetupComponent()
 //座標計算・移動入力の更新処理
 void Enemy::UpdateChase(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
 	auto target = target_transform.lock();
+	DirectX::XMFLOAT3 move_velocity = { 0.0f,0.0f,0.0f };
 	if (!target)
 	{
-		LOG_WARNING({ "Enemy","Target" }, u8"追尾対象の TransformComponent が無効または未設定です");
-		return;
+		move_velocity = wander_move->UpdateWander(elapsed_time, transform_component->GetPosition(), chase_speed);
 	}
-	
-	//座標の取得
-	DirectX::XMFLOAT3 current_pos = transform_component->GetPosition();
-	DirectX::XMFLOAT3 target_pos = target->GetPosition();
-	target_pos.y = current_pos.y;
-
-	//距離を算出
-	DirectX::XMVECTOR current_v = DirectX::XMLoadFloat3(&current_pos);
-	DirectX::XMVECTOR target_v = DirectX::XMLoadFloat3(&target_pos);
-	DirectX::XMVECTOR diff_v = DirectX::XMVectorSubtract(target_v, current_v);
-	DirectX::XMVECTOR dist_sq_v = DirectX::XMVector3LengthSq(diff_v);
-
-	float distance_sq = 0.0f;
-	DirectX::XMStoreFloat(&distance_sq, dist_sq_v);
-
-	float stop_distance_sq = stop_distance * stop_distance;
-	if (distance_sq <= stop_distance_sq || distance_sq < EPSILON_DISTANCE_SQ)
+	else
 	{
-		Character::Move(elapsed_time, 0.0f, 0.0f, 0.0f);
-		return;
+		//座標の取得
+		DirectX::XMFLOAT3 current_pos = transform_component->GetPosition();
+		DirectX::XMFLOAT3 target_pos = target->GetPosition();
+		target_pos.y = current_pos.y;
+
+		//距離を算出
+		DirectX::XMVECTOR current_v = DirectX::XMLoadFloat3(&current_pos);
+		DirectX::XMVECTOR target_v = DirectX::XMLoadFloat3(&target_pos);
+		DirectX::XMVECTOR diff_v = DirectX::XMVectorSubtract(target_v, current_v);
+		DirectX::XMVECTOR dist_sq_v = DirectX::XMVector3LengthSq(diff_v);
+
+		float distance_sq = 0.0f;
+		DirectX::XMStoreFloat(&distance_sq, dist_sq_v);
+
+		float stop_distance_sq = stop_distance * stop_distance;
+		if (distance_sq <= stop_distance_sq || distance_sq < EPSILON_DISTANCE_SQ)
+		{
+			Character::Move(elapsed_time, 0.0f, 0.0f, 0.0f);
+			return;
+		}
+
+		//移動速度を算出
+		move_velocity = linear_move->UpdateLiner(current_pos, target_pos, chase_speed);
 	}
-
-	//移動速度を算出
-	DirectX::XMFLOAT3 move_velocity = linear_move->UpdateLiner(current_pos, target_pos, chase_speed);
-
 	float length = std::sqrtf((move_velocity.x * move_velocity.x) + (move_velocity.z * move_velocity.z));
 	if (length < EPSILON_DISTANCE_SQ)
 	{
@@ -193,6 +206,7 @@ void Enemy::UpdateChase(float elapsed_time)
 //注目対象更新処理
 void Enemy::UpdateTargetFromHate()
 {
+	BS_PROFILE_FUNCTION();
 	if (!hate_component)
 	{
 		LOG_WARNING({ "Enemy","Target" }, u8"hate_componentがnullです");

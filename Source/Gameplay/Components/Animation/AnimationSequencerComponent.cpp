@@ -5,6 +5,7 @@
 
 #include <windows.h>
 #include <cstdio>
+#include <Engine\Core\MacroTracy.h>
 
 static constexpr float DEFAULT_SPEED_MULTIPLIER = 1.0f;	//標準速度倍率
 
@@ -16,6 +17,8 @@ AnimationSequencerComponent::AnimationSequencerComponent(std::weak_ptr<ModelComp
 	, current_animaiton_name("")
 	, prev_animation_name("")
 {
+	BS_PROFILE_FUNCTION();
+
 	animation_blender = std::make_unique<AnimationBlender>();
 }
 
@@ -25,6 +28,8 @@ AnimationSequencerComponent::~AnimationSequencerComponent() = default;
 //初期化処理
 bool AnimationSequencerComponent::Initialize(const std::string& model_name)
 {
+	BS_PROFILE_FUNCTION();
+
 	sequence_map.clear();
 	current_sequence_time = 0.0f;
 	is_active = false;
@@ -52,6 +57,8 @@ bool AnimationSequencerComponent::Initialize(const std::string& model_name)
 //更新処理
 void AnimationSequencerComponent::Update(float elapsed_time, bool is_loop)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!is_active || current_animaiton_name.empty())return;
 
 	//スマートポインタの昇格確認
@@ -116,6 +123,8 @@ void AnimationSequencerComponent::Update(float elapsed_time, bool is_loop)
 //アニメーション切り替え
 void AnimationSequencerComponent::ChangeAnimation(const std::string& anim_name, float blend_time)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (current_animaiton_name == anim_name) return;
 
 	std::shared_ptr<ModelComponent> shared_model_comp = target_model_component.lock();
@@ -142,6 +151,8 @@ void AnimationSequencerComponent::ChangeAnimation(const std::string& anim_name, 
 //保存再生中のアニメーションに対応するシーケンスデータを取得
 const AnimationSequenceData* AnimationSequencerComponent::GetCurrentSequenceData() const
 {
+	BS_PROFILE_FUNCTION();
+
 	if (current_animaiton_name.empty())
 	{
 		return nullptr;
@@ -159,6 +170,8 @@ const AnimationSequenceData* AnimationSequencerComponent::GetCurrentSequenceData
 //指定時刻上の速度倍率を取得
 float AnimationSequencerComponent::GetSpeedMultiplierAt(const std::string& anim_name, float seq_time) const
 {
+	BS_PROFILE_FUNCTION();
+
 	auto it = sequence_map.find(anim_name);
 	if (it == sequence_map.end() || it->second.keyframes.empty())return DEFAULT_SPEED_MULTIPLIER;
 	const std::vector<SequenceKeyframe>& keyframes = it->second.keyframes;
@@ -184,6 +197,8 @@ float AnimationSequencerComponent::GetSpeedMultiplierAt(const std::string& anim_
 //モデル再生時間を算出
 float AnimationSequencerComponent::GetIntegratedModelTime(const std::string& anim_name, float seq_time) const
 {
+	BS_PROFILE_FUNCTION();
+
 	auto it = sequence_map.find(anim_name);
 	if (it == sequence_map.end() || it->second.keyframes.empty())return seq_time;
 	const std::vector<SequenceKeyframe>& keyframes = it->second.keyframes;
@@ -215,6 +230,8 @@ float AnimationSequencerComponent::GetIntegratedModelTime(const std::string& ani
 //シーケンサ調整後の実効総時間を取得
 float AnimationSequencerComponent::GetEffectiveDuration() const
 {
+	BS_PROFILE_FUNCTION();
+
 	auto iterator = sequence_map.find(current_animaiton_name);
 	constexpr float INVALID_DURATION = 0.0f;
 

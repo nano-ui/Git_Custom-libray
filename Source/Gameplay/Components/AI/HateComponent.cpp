@@ -4,6 +4,7 @@
 
 #include <Windows.h>
 #include <imgui.h>
+#include <Engine\Core\MacroTracy.h>
 
 //コンストラクタ
 HateComponent::HateComponent()
@@ -11,6 +12,8 @@ HateComponent::HateComponent()
 	, debug_top_hate_id(NOT_TARGET_ID)
 	, debug_top_hate_value(0.0f)
 {
+	BS_PROFILE_FUNCTION();
+
 	SetComponentName(u8"ヘイト管理");
 }
 
@@ -20,6 +23,8 @@ HateComponent::~HateComponent() = default;
 //初期化処理
 void HateComponent::Initialize()
 {
+	BS_PROFILE_FUNCTION();
+
 	Component::Initialize();
 	hate_table.clear();
 }
@@ -27,6 +32,8 @@ void HateComponent::Initialize()
 //更新処理
 void HateComponent::Update(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
+
 	//有効フラグと引数の検証
 	if (!is_active)return;
 
@@ -61,6 +68,8 @@ void HateComponent::Update(float elapsed_time)
 //デバッグ描画処理
 void HateComponent::RenderGui()
 {
+	BS_PROFILE_FUNCTION();
+
 	Component::RenderGui();
 
 	if(ImGui::TreeNode(u8"ヘイトリスト一覧"))
@@ -83,6 +92,8 @@ void HateComponent::RenderGui()
 //JSON保存用変数登録
 void HateComponent::SetupSerialization(JsonSerializer* serializer)
 {
+	BS_PROFILE_FUNCTION();
+
 	Component::SetupSerialization(serializer);
 	serializer->RegisterVariable(u8"減衰量", &decay_rate, SerializeTarget::Detail);
 }
@@ -90,6 +101,8 @@ void HateComponent::SetupSerialization(JsonSerializer* serializer)
 //GuiInspector専用のインスペクター項目登録
 void HateComponent::SetupInspector(GuiInspector* inspector)
 {
+	BS_PROFILE_FUNCTION();
+
 	Component::SetupInspector(inspector);
 	inspector->RegisterVariable(u8"減衰量", &decay_rate, GetComponentName());
 	inspector->RegisterText(u8"最大ヘイトID", &debug_top_hate_id, GetComponentName());
@@ -99,6 +112,8 @@ void HateComponent::SetupInspector(GuiInspector* inspector)
 //ヘイト加算
 void HateComponent::AddHate(uint32_t target_id, float hate)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (target_id == NOT_TARGET_ID)
 	{
 		OutputDebugStringA("[HateComponent::AddHate] 対象IDが無効な値です。\n");
@@ -115,6 +130,8 @@ void HateComponent::AddHate(uint32_t target_id, float hate)
 //最大ヘイト値ID取得
 uint32_t HateComponent::GetTopHateTargetId()
 {
+	BS_PROFILE_FUNCTION();
+
 	//存在確認
 	if (!HasTarget())
 	{
@@ -145,5 +162,7 @@ uint32_t HateComponent::GetTopHateTargetId()
 //ヘイト対象が存在するか判定
 bool HateComponent::HasTarget() const
 {
+	BS_PROFILE_FUNCTION();
+
 	return (!hate_table.empty());
 }

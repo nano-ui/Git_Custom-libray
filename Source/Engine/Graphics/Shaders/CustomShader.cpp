@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 #include "BlurShader.h"
+#include <Engine\Core\MacroTracy.h>
 
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxguid.lib")
@@ -27,6 +28,8 @@ bool CustomShader::Initialize(
     const std::string& ps_name                     //ピクセルシェーダーファイル名
 )
 {
+    BS_PROFILE_FUNCTION();
+
     // 開始ログの出力
     printf_s("--------------------------------------------------\n");
     printf_s("[CustomShader 情報] シェーダーの初期化を開始します。\n");
@@ -66,6 +69,8 @@ bool CustomShader::Initialize(
 //手動で入力レイアウトを指定してシェーダーを生成し初期化
 bool CustomShader::Initialize(const std::string& vs_name, const std::string& ps_name, const D3D11_INPUT_ELEMENT_DESC* input_elements, UINT element_count)
 {
+    BS_PROFILE_FUNCTION();
+
     //頂点シェーダーと手動レイアウトの生成
     auto device = Graphics::Instance().GetDevice();
 
@@ -101,6 +106,8 @@ bool CustomShader::Initialize(const std::string& vs_name, const std::string& ps_
 //==================================================================
 void CustomShader::Apply()
 {
+    BS_PROFILE_FUNCTION();
+
     //バインド準備
     auto context = Graphics::Instance().GetContext();
 
@@ -186,6 +193,8 @@ bool CustomShader::CreateVertexShaderWithReflection(const std::string& vs_name)
 //====================================================
 DXGI_FORMAT CustomShader::DetermineDxgiFormat(D3D_REGISTER_COMPONENT_TYPE type, BYTE mask)
 {
+    BS_PROFILE_FUNCTION();
+
     //フォーマットの判定
     if (type == D3D_REGISTER_COMPONENT_FLOAT32)
     {

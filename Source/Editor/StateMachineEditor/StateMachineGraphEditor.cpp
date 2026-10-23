@@ -27,12 +27,15 @@
 #include <cassert>
 #include <fstream>
 #include <iomanip>
+#include <Engine\Core\MacroTracy.h>
 
 namespace ed = ax::NodeEditor;
 
 //コンストラクタ
 StateMachineGraphEditor::StateMachineGraphEditor()
 {
+	BS_PROFILE_FUNCTION();
+
 	ed::Config config; // 設定データ
 	config.SettingsFile = "Data/Json/NodeEditor_State.json";
 	editor_context.reset(ed::CreateEditor(&config));
@@ -110,6 +113,8 @@ StateMachineGraphEditor::~StateMachineGraphEditor() = default;
 //エディタ描画
 void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 {
+	BS_PROFILE_FUNCTION();
+
 	UpdateRuntimeTracking();
 
 	StateBlackboard* active_blackboard = blackboard ? blackboard : editor_dummy_blackboard.get();
@@ -240,6 +245,8 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 //ファイルパスのグラフ情報をリロード
 bool StateMachineGraphEditor::LoadGraphFromFile(const std::string& file_path)
 {
+	BS_PROFILE_FUNCTION();
+
 	//パスが空文字か判定
 	if (file_path.empty())
 	{
@@ -293,6 +300,8 @@ bool StateMachineGraphEditor::LoadGraphFromFile(const std::string& file_path)
 //追従ロジックとタイマー更新
 void StateMachineGraphEditor::UpdateRuntimeTracking()
 {
+	BS_PROFILE_FUNCTION();
+
 	//追尾機能が有効かつ実行中のアクティブノードIDが有効かを判定
 	if (is_tracking_active_node && runtime_active_node_id != UINT32_MAX)
 	{
@@ -328,6 +337,8 @@ void StateMachineGraphEditor::UpdateRuntimeTracking()
 //擬似シミュレーション更新
 void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, GraphData* current_graph, uint32_t& current_active_node_id)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!blackboard)
 	{
 		printf("Error: StateMachineGraphEditor::UpdateSimulationMode - 有効な StateBlackboard が割り当てられていません。\n");
@@ -408,6 +419,8 @@ void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, 
 //アクティブノードのアニメーション同期
 void StateMachineGraphEditor::SyncActiveNodeAnimation(GraphData* current_graph, uint32_t active_node_id)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!current_graph || active_node_id == 0 || active_node_id == UINT32_MAX) return;
 
 	if (is_simulation_active && state_machine_component)
@@ -457,6 +470,8 @@ void StateMachineGraphEditor::SyncActiveNodeAnimation(GraphData* current_graph, 
 //左パレットとノードリスト
 void StateMachineGraphEditor::DrawLeftSidebar(GraphData* current_graph, float width, float height)
 {
+	BS_PROFILE_FUNCTION();
+
 	ImGui::BeginChild("LeftSidebarZone##Child", ImVec2(width, height), true);
 	uint32_t focus_node_id = 0; //受け取り用のフォーカスID
 	palette_window->DrawPalette(data_manager.get(), current_graph, focus_node_id);
@@ -471,6 +486,8 @@ void StateMachineGraphEditor::DrawLeftSidebar(GraphData* current_graph, float wi
 //メインのノードエディタキャンバス
 void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float width, float height)
 {
+	BS_PROFILE_FUNCTION();
+
 	bool trigger_add_node = false;         // ノード追加の実行トリガー用フラグ
 	bool trigger_add_subgraph = false;     // サブグラフ追加の実行トリガー用フラグ
 	bool trigger_convert_subgraph = false; // サブグラフ変換の実行トリガー用フラグ
@@ -623,6 +640,8 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 //右プロパティウインドウ
 void StateMachineGraphEditor::DrawRightSidebar(GraphData* current_graph, StateBlackboard* blackboard, float width, float height)
 {
+	BS_PROFILE_FUNCTION();
+
 	ImGui::BeginChild("RightSidebarZone##Child", ImVec2(width, height), true);
 	bool is_changed = property_window->DrawProperty(data_manager.get(), current_graph, blackboard, asset_loader->GetAnimationNames()); // プロパティ変更フラグ
 
@@ -640,6 +659,8 @@ void StateMachineGraphEditor::DrawRightSidebar(GraphData* current_graph, StateBl
 //アニメーションマップを構築して送信
 void StateMachineGraphEditor::TriggerHotReload()
 {
+	BS_PROFILE_FUNCTION();
+
 	if (behavior_simulator)
 	{
 		behavior_simulator->InvalidataTree();
@@ -661,6 +682,8 @@ void StateMachineGraphEditor::TriggerHotReload()
 //カスタムデリータ
 void StateMachineGraphEditor::EditorContexDeleter::operator()(ax::NodeEditor::EditorContext* context) const noexcept
 {
+	BS_PROFILE_FUNCTION();
+
 	if (context)
 	{
 		ed::DestroyEditor(context);

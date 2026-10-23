@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <filesystem>
+#include <Engine\Core\MacroTracy.h>
 
 static uint32_t next_game_object_id = 1;	//次のオブジェクトID
 
@@ -47,8 +48,11 @@ void GameObject::Update(float elapsed_time)
 	
 	for (auto& component : components)
 	{
-		if (component)component->Update(elapsed_time);
-		else OutputDebugStringA("[GameObject 警告] Update: リスト内に nullptr のコンポーネントが存在します。\n");
+		BS_PROFILE_SCOPE("Components::Update");
+		{
+			if (component)component->Update(elapsed_time);
+			else OutputDebugStringA("[GameObject 警告] Update: リスト内に nullptr のコンポーネントが存在します。\n");
+		}
 	}
 }
 

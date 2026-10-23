@@ -12,6 +12,7 @@
 
 #include <imgui.h>
 #include <filesystem>
+#include <Engine\Core\MacroTracy.h>
 
 static AutoRegister<Player> auto_register_player("Player");
 
@@ -30,6 +31,7 @@ Player::~Player()
 //初期化処理
 void Player::Initialize()
 {
+	BS_PROFILE_FUNCTION();
 	// 基本コンポーネントの追加・設定
 	model_component = GetComponent<ModelComponent>();
 	if (!model_component) model_component = AddComponent<ModelComponent>();
@@ -55,6 +57,7 @@ void Player::Initialize()
 //更新処理
 void Player::Update(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
 	UpdateInput(elapsed_time);
 	Character::Update(elapsed_time);
 }

@@ -7,6 +7,7 @@
 #include "Engine\Graphics\Shaders\shader.h"
 
 #include <Windows.h>
+#include <Engine\Core\MacroTracy.h>
 
 
 //画像読み込みをスキップするためのダミー関数
@@ -30,6 +31,8 @@ struct CompareMaterialCache
 //デバイスとファイルを受け取ってモデルデータを初期化
 GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const std::string& filename)
 {
+	BS_PROFILE_FUNCTION();
+
 	this->filename = filename;
 
 	tinygltf::TinyGLTF tiny_gltf;
@@ -103,6 +106,8 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 //復元した生データからGPUリソースを構築
 void GltfModelData::CreateGpuResources(ID3D11Device* device)
 {
+	BS_PROFILE_FUNCTION();
+
 	buffers.resize(raw_buffers.size());	//格納用ベクトルをリサイズ
 
 	//メッシュのバッファーリソースビューの生成
@@ -215,6 +220,8 @@ void GltfModelData::CreateGpuResources(ID3D11Device* device)
 //バイナリキャッシュを利用してモデルを読み込む
 std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const std::string& filename)
 {
+	BS_PROFILE_FUNCTION();
+
 	//キャッシュファイル名の生成
 	std::string binary_filename = filename + ".cerial";							//元の名前に「.bin」を付与してキャッシュ用ファイル名とする
 	std::shared_ptr<GltfModelData> data = std::make_shared<GltfModelData>();	//空のデータインスタンスを生成
@@ -239,6 +246,8 @@ std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const s
 //頂点座標リスト取得
 std::vector<DirectX::XMFLOAT3> GltfModelData::GetVertices() const
 {
+	BS_PROFILE_FUNCTION();
+
 	std::vector<DirectX::XMFLOAT3> vertices_data;
 	for (const auto& mesh : meshes)
 	{
@@ -272,6 +281,8 @@ std::vector<DirectX::XMFLOAT3> GltfModelData::GetVertices() const
 //インデックスリスト取得
 std::vector<uint32_t> GltfModelData::GetIndices() const
 {
+	BS_PROFILE_FUNCTION();
+
 	std::vector<uint32_t> indices_data;
 	uint32_t vertex_offset = 0;
 	for (const auto& mesh : meshes)
@@ -311,6 +322,8 @@ std::vector<uint32_t> GltfModelData::GetIndices() const
 //アニメーション名一覧取得
 std::vector<std::string> GltfModelData::GetAnimationNames() const
 {
+	BS_PROFILE_FUNCTION();
+
 	std::vector<std::string> names;
 	for (const auto& pair : animation_index_map)
 	{
@@ -322,6 +335,8 @@ std::vector<std::string> GltfModelData::GetAnimationNames() const
 //アニメーション名からインデックス番号を取得
 int GltfModelData::GetAnimationIndex(const std::string& name) const
 {
+	BS_PROFILE_FUNCTION();
+
 	if (name.empty())return ERROR_ANIMATION_NOT_FOUND;
 
 	auto iterator = animation_index_map.find(name);
@@ -336,6 +351,8 @@ int GltfModelData::GetAnimationIndex(const std::string& name) const
 //tinygltfの型情報をDirectXのフォーマットに変換
 DXGI_FORMAT GltfModelData::ConvertFormat(const tinygltf::Accessor& accessor)
 {
+	BS_PROFILE_FUNCTION();
+
 	switch (accessor.type)	//gltfの型(スカラー、ベクトル等)で判定
 	{
 	case TINYGLTF_TYPE_SCALAR:	//インデックスバッファ等
@@ -403,6 +420,8 @@ DXGI_FORMAT GltfModelData::ConvertFormat(const tinygltf::Accessor& accessor)
 //メッシュ情報とGPUバッファを生成
 void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 {
+	BS_PROFILE_FUNCTION();
+
 	for (std::vector<tinygltf::Mesh>::const_reference gltf_mesh : gltf_model.meshes)	//全メッシュをループ
 	{
 		mesh& mesh = meshes.emplace_back();	//自身のリストにメッシュを追加
@@ -569,6 +588,8 @@ void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 //tinygltfのモデルからノード情報を抽出
 void GltfModelData::FetchNodes(const tinygltf::Model& gltf_model)
 {
+	BS_PROFILE_FUNCTION();
+
 	for (std::vector<tinygltf::Node>::const_reference gltf_node : gltf_model.nodes)
 	{
 		node& node = nodes.emplace_back();
@@ -670,6 +691,8 @@ void GltfModelData::FetchNodes(const tinygltf::Model& gltf_model)
 //tinygltfのモデルからマテリアルデータを抽出
 void GltfModelData::FetchMaterials(const tinygltf::Model& gltf_model)
 {
+	BS_PROFILE_FUNCTION();
+
 	//---------------------------------------
 	//gltfモデル内の全マテリアルを走査
 	//---------------------------------------
@@ -713,6 +736,8 @@ void GltfModelData::FetchMaterials(const tinygltf::Model& gltf_model)
 //テクスチャ情報を抽出
 void GltfModelData::FetchTextures(const tinygltf::Model& gltf_model)
 {
+	BS_PROFILE_FUNCTION();
+
 	HRESULT hr = S_OK;
 
 	for (const tinygltf::Texture& gltf_texture : gltf_model.textures)
@@ -751,6 +776,8 @@ void GltfModelData::FetchTextures(const tinygltf::Model& gltf_model)
 //アニメーション情報を抽出
 void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 {
+	BS_PROFILE_FUNCTION();
+
 	using namespace std;
 	using namespace tinygltf;
 	using namespace DirectX;
@@ -863,6 +890,8 @@ void GltfModelData::FetchAnimations(const tinygltf::Model& gltf_model)
 //アニメーション名をマップに登録
 void GltfModelData::MapAnimationNames(const tinygltf::Model& gltf_model)
 {
+	BS_PROFILE_FUNCTION();
+
 	//全てのアニメーションをループ
 	for (size_t animation_index = 0; animation_index < animations.size(); animation_index++)
 	{
@@ -878,6 +907,8 @@ void GltfModelData::MapAnimationNames(const tinygltf::Model& gltf_model)
 //モデルデータに接線（TANGENT）情報が含まれていない場合、頂点座標とUV座標から接線ベクトルを自動計算
 void GltfModelData::ComputeTangentsForPrimitive(mesh::primitive& primitive)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (primitive.has("TANGENT") || !primitive.has("POSITION") || !primitive.has("TEXCOORD_0") || primitive.index_buffer_view.buffer == -1)
 	{
 		return;
@@ -971,6 +1002,8 @@ void GltfModelData::ComputeTangentsForPrimitive(mesh::primitive& primitive)
 //メッシュ内の頂点データ（座標、法線、接線）のX軸を反転してDirectX仕様の左手系に変換
 void GltfModelData::ConvertMeshAxisSystem(mesh& target_mesh)
 {
+	BS_PROFILE_FUNCTION();
+
 	for (mesh::primitive& primitive : target_mesh.primitives)
 	{
 		if (primitive.has("POSITION"))
@@ -1038,6 +1071,8 @@ void GltfModelData::ConvertMeshAxisSystem(mesh& target_mesh)
 //各ボーン・ノードの初期ポーズ（TRSプロパティ）の座標系を右手系から左手系に変換
 void GltfModelData::ConvertNodeAxisSystem(node& target_node)
 {
+	BS_PROFILE_FUNCTION();
+
 	target_node.translation.x = -target_node.translation.x;
 
 	target_node.rotation.x = -target_node.rotation.x;
@@ -1047,6 +1082,8 @@ void GltfModelData::ConvertNodeAxisSystem(node& target_node)
 //アニメーションの全キーフレーム（位置、回転）のデータを左手系に変換
 void GltfModelData::ConvertAnimationAxisSystem(animation& target_animation)
 {
+	BS_PROFILE_FUNCTION();
+
 	for (auto& pair : target_animation.translations) // すべての移動キーフレームマップを走査するループ
 	{
 		for (DirectX::XMFLOAT3& trans : pair.second)
@@ -1068,6 +1105,8 @@ void GltfModelData::ConvertAnimationAxisSystem(animation& target_animation)
 //初期化時に描画コマンド配列の構築とマテリアル順ソートを事前に行う
 void GltfModelData::BuildRenderCommandsCache()
 {
+	BS_PROFILE_FUNCTION();
+
 	//モデルが持つすべてのノードを走査
 	for (size_t i = 0; i < nodes.size(); i++)
 	{

@@ -3,10 +3,13 @@
 #include "GltfModelAnimation.h"
 #include "GltfModelRenderer.h"
 #include "Model.h"
+#include <Engine\Core\MacroTracy.h>
 
 //コンストラクタ
 GltfModel::GltfModel(const std::shared_ptr<GltfModelData>& model_data, const std::shared_ptr<GltfModelRenderer> model_renderer)
 {
+	BS_PROFILE_FUNCTION();
+
 	//共有データの保持と個別コンポーネントの作成
 	data = model_data;										//データの実体を共有して保持
 	renderer = model_renderer;								//描画クラスの実体を共有して保持
@@ -24,6 +27,8 @@ GltfModel::~GltfModel()
 //更新処理
 void GltfModel::Update(float delta_time)
 {
+	BS_PROFILE_FUNCTION();
+
 	//アニメーションの時間を進めて計算を実行
 	if (animation)	//アニメーションクラスが存在しているか確認
 	{
@@ -34,6 +39,8 @@ void GltfModel::Update(float delta_time)
 //描画処理
 void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world_matrix)
 {
+	BS_PROFILE_FUNCTION();
+
 	//描画クラスにデータと計算結果を渡してGPUへ命令
 	if (renderer && data && animation)	//要な3つのコンポーネントがすべて揃っているか確認
 	{
@@ -45,6 +52,8 @@ void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XM
 //アニメーションの再生切り替え
 void GltfModel::PlayAnimation(const std::string& animation_name, bool is_loop)
 {
+	BS_PROFILE_FUNCTION();
+
 	//--------------------------------------
 	//アニメーションクラスへの命令の委譲
 	//--------------------------------------
@@ -57,6 +66,8 @@ void GltfModel::PlayAnimation(const std::string& animation_name, bool is_loop)
 //アニメーションの終了したか取得
 bool GltfModel::IsAnimationFinished() const
 {
+	BS_PROFILE_FUNCTION();
+
 	if (animation)
 	{
 		return animation->IsFinished();
@@ -68,18 +79,24 @@ bool GltfModel::IsAnimationFinished() const
 //アニメーション情報取得
 const std::vector<GltfModelData::node>& GltfModel::GetAnimatedNodes() const
 {
+	BS_PROFILE_FUNCTION();
+
 	return animation->GetAnimationNodes();
 }
 
 //現在の再生経過時間を取得
 float GltfModel::GetAnimationCurrentTime() const
 {
+	BS_PROFILE_FUNCTION();
+
 	return animation->GetCurrentAnimationTime();
 }
 
 //再生時間を設定
 void GltfModel::SetAnimationTime(float time)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (animation)
 	{
 		animation->SetCurrentAnimationTime(time);
@@ -89,12 +106,16 @@ void GltfModel::SetAnimationTime(float time)
 //アニメーションの総時間を取得
 float GltfModel::GetAnimationDuration() const
 {
+	BS_PROFILE_FUNCTION();
+
 	return animation->GetAnimationDuration();
 }
 
 //指定したノードの移動成分を外部から上書き
 void GltfModel::SetNodeTranslation(int node_index, const DirectX::XMFLOAT3& translation)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (animation)
 	{
 		animation->SetNodeTranslation(node_index, translation);
@@ -104,6 +125,8 @@ void GltfModel::SetNodeTranslation(int node_index, const DirectX::XMFLOAT3& tran
 //変更されたノード情報をもとに、グローバル行列を再計算
 void GltfModel::RecalculateTransforms()
 {
+	BS_PROFILE_FUNCTION();
+
 	if (animation)
 	{
 		animation->CumulateTransforms();
@@ -113,6 +136,8 @@ void GltfModel::RecalculateTransforms()
 //アニメーションブレンド
 void GltfModel::AnimateBlend(const std::string& anim_a, float time_a, const std::string& anim_b, float time_b, float blend_factor)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (animation && data)
 	{
 		int index_a = data->GetAnimationIndex(anim_a.c_str());
@@ -124,6 +149,8 @@ void GltfModel::AnimateBlend(const std::string& anim_a, float time_a, const std:
 //ノード名からインデックスを検索
 int GltfModel::FindNodeIndex(const std::string& node_name) const
 {
+	BS_PROFILE_FUNCTION();
+
 	if (node_name.empty())
 	{
 		printf_s("------------------------------------------------------\n");
@@ -152,6 +179,8 @@ int GltfModel::FindNodeIndex(const std::string& node_name) const
 //ノード名からモデル空間のグローバル行列を取得
 bool GltfModel::GetNodeGlobalTransform(const std::string& node_name, DirectX::XMFLOAT4X4& out_transform) const
 {
+	BS_PROFILE_FUNCTION();
+
 	int index = FindNodeIndex(node_name);
 	if (index < 0)return false;
 	return GetNodeGlobalTransform(index, out_transform);
@@ -160,6 +189,8 @@ bool GltfModel::GetNodeGlobalTransform(const std::string& node_name, DirectX::XM
 //ノードインデックスからモデル空間のグローバル行列を取得
 bool GltfModel::GetNodeGlobalTransform(int node_index, DirectX::XMFLOAT4X4& out_transform) const
 {
+	BS_PROFILE_FUNCTION();
+
 	const std::vector<GltfModelData::node>& nodes = GetAnimatedNodes();
 	if (node_index < 0 || static_cast<size_t>(node_index) >= nodes.size())
 	{
