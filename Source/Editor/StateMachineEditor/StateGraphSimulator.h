@@ -39,6 +39,7 @@ struct SimulatorRuntimeNode
 	uint32_t parent_node_id = UINT_MAX;	//親サブグラフノードID
 	BehaviorNodeData behavior_data;		//ビヘイビアツリー情報
 	uint32_t graph_id = 0;				//所属する階層(グラフ)ID
+	ActionCategory action_category = ActionCategory::Idle;	//カテゴリ
 };
 
 //ステートマシン共通シミュレーション
@@ -89,6 +90,9 @@ public:
 	//ブレンド時間を取得
 	float GetCurrentBlendTime() const { return current_blend_time; }
 
+	//アクションカテゴリを取得
+	ActionCategory GetCurrentActionCategory() const { return current_action_category; }
+
 private:
 	//単一の遷移条件の評価
 	bool EvaluateCondition(
@@ -113,5 +117,6 @@ private:
 	std::unordered_map<uint32_t, uint32_t> layer_entry_nades;				//階層ごとの先頭ノードIDマップ
 	std::unordered_map<uint32_t, uint32_t> pin_to_node_map;					//ピンキャッシュマップ
 	std::function<void(uint32_t)> on_transition_link_callback = nullptr;	//遷移成立時の通知先
+	ActionCategory current_action_category = ActionCategory::Idle;			//アクションカテゴリ
 };
 

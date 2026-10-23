@@ -9,6 +9,7 @@
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 
 #include "Engine\Graphics\Renderers\ShapeRenderer.h"
+#include "Engine\Core\Log\Log.h"
 
 #include <Windows.h>
 
@@ -129,7 +130,7 @@ void Enemy::SetupComponent()
 	}
 	else
 	{
-		OutputDebugStringA("[Enemy エラー] SetupComponents: 必要な基本コンポーネントの生成に失敗しました。\n");
+		LOG_WARNING({ "Enemy","Setup" }, u8"必要な基本コンポーネントの生成に失敗しました");
 	}
 
 	hate_component = GetComponent<HateComponent>();
@@ -146,7 +147,7 @@ void Enemy::UpdateChase(float elapsed_time)
 	auto target = target_transform.lock();
 	if (!target)
 	{
-		//OutputDebugStringA("[Enemy 警告] UpdateChase: 追尾対象の TransformComponent が無効または未設定です。\n");
+		LOG_WARNING({ "Enemy","Target" }, u8"追尾対象の TransformComponent が無効または未設定です");
 		return;
 	}
 	
@@ -194,7 +195,7 @@ void Enemy::UpdateTargetFromHate()
 {
 	if (!hate_component)
 	{
-		OutputDebugStringA("[Enemy::UpdateTargetFromHate] hate_componentがnullです。\n");
+		LOG_WARNING({ "Enemy","Target" }, u8"hate_componentがnullです");
 		return;
 	}
 
@@ -226,7 +227,7 @@ void Enemy::UpdateTargetFromHate()
 			}
 			else
 			{
-				OutputDebugStringA("[Enemy::UpdateTargetFromHate] 対象の TransformComponent が取得できませんでした。\n");
+				LOG_WARNING({ "Enemy","Target" }, u8"対象の TransformComponent が取得できませんでした");
 			}
 		}
 	}

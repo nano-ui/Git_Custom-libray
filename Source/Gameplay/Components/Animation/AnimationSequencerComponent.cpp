@@ -1,6 +1,7 @@
 #include "AnimationSequencerComponent.h"
 #include "Gameplay\Components\Model\ModelComponent.h"
 #include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
+#include "Engine\Core\Log\Log.h"
 
 #include <windows.h>
 #include <cstdio>
@@ -31,7 +32,7 @@ bool AnimationSequencerComponent::Initialize(const std::string& model_name)
 
 	if (model_name.empty())
 	{
-		OutputDebugStringA("[SequencerComponent Warning] Initialize: model_name is empty!\n");
+		LOG_WARNING({ u8"アニメーション",u8"設定" }, u8"モデル名がありません");
 		return false;
 	}
 
@@ -40,12 +41,11 @@ bool AnimationSequencerComponent::Initialize(const std::string& model_name)
 	{
 		is_active = true;
 		char log_buf[256];
-		sprintf_s(log_buf, "[SequencerComponent] Successfully initialized for model: %s\n", model_name.c_str());
-		OutputDebugStringA(log_buf);
+		LOG_SUCCESS({ u8"アニメーション",u8"読み込み" }, u8"シーケンスファイルの読み込みに成功");
 		return true;
 	}
 
-	OutputDebugStringA("[SequencerComponent Warning] Failed to load sequence data or file not found.\n");
+	LOG_WARNING({ u8"アニメーション",u8"読み込み" }, u8"シーケンスファイルの読み込みに失敗");
 	return false;
 }
 
@@ -58,7 +58,7 @@ void AnimationSequencerComponent::Update(float elapsed_time, bool is_loop)
 	std::shared_ptr<ModelComponent> shared_model_comp = target_model_component.lock();
 	if (!shared_model_comp || !shared_model_comp->GetModel())
 	{
-		OutputDebugStringA("[SequencerComponent Error] Update: target_model_component または GltfModel が無効です!\n");
+		LOG_WARNING({ u8"アニメーション",u8"設定" }, u8"target_model_component または GltfModel が無効");
 		return;
 	}
 	GltfModel* model = shared_model_comp->GetModel();
@@ -97,7 +97,7 @@ void AnimationSequencerComponent::Update(float elapsed_time, bool is_loop)
 		}
 		else ia_animation_finished = false;
 	}
-	else OutputDebugStringA("[AnimationSequencerComponent 警告] Update: アニメーションの総再生時間が0以下です。\n");
+	else LOG_WARNING({ u8"アニメーション" }, u8"アニメーションの総再生時間が0以下");
 
 	//補完中の場合
 	if (animation_blender && animation_blender->IsBlending() && current_animaiton_name != prev_animation_name)
@@ -107,11 +107,6 @@ void AnimationSequencerComponent::Update(float elapsed_time, bool is_loop)
 		float blend_factor = animation_blender->GetBlendFactor();
 
 		float integrated_time_a = GetIntegratedModelTime(prev_name, prev_time);
-
-		//char blend_log[256];
-		//sprintf_s(blend_log, "[Blend実行中] 元Anim=%s (計算時間=%.3fs) -> 先Anim=%s (計算時間=%.3fs) | Factor=%.2f\n",
-		//	prev_name.c_str(), integrated_time_a, current_animaiton_name.c_str(), integrated_time_b, blend_factor);
-		//OutputDebugStringA(blend_log);
 
 		model->AnimateBlend(prev_name, integrated_time_a, current_animaiton_name, integrated_time_b, blend_factor);
 	}
@@ -131,16 +126,11 @@ void AnimationSequencerComponent::ChangeAnimation(const std::string& anim_name, 
 	}
 	else
 	{
-		OutputDebugStringA("[SequencerComponent 警告] ChangeAnimation: target_model_component または GltfModel が nullptr のため PlayAnimation を呼び出せませんでした。\n");
+		LOG_WARNING({ u8"アニメーション" }, u8"アニメーション切り替えに失敗");
 	}
 
 	if (animation_blender && !current_animaiton_name.empty())
 	{
-		//char debug_log[256];
-		//sprintf_s(debug_log, "[AnimationSequencerComponent] アニメーション切り替え実行: 遷移元=%s (時間=%.3f s) -> 遷移先=%s (ブレンド時間=%.3f s)\n",
-		//	current_animaiton_name.c_str(), current_sequence_time, anim_name.c_str(), blend_time);
-		//OutputDebugStringA(debug_log);
-
 		animation_blender->StartCrossFade(current_animaiton_name, current_sequence_time, blend_time);
 	}
 
@@ -163,7 +153,6 @@ const AnimationSequenceData* AnimationSequencerComponent::GetCurrentSequenceData
 		return &it->second;
 	}
 
-	//OutputDebugStringA("[AnimationSequencerComponent 警告] GetCurrentSequenceData: 現在のアニメーションシーケンスデータが見つかりません。\n");
 	return nullptr;
 }
 

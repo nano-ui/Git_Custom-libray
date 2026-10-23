@@ -1,6 +1,7 @@
 #include "StateGraphSimulator.h"
 #include "Gameplay\StateMachine\StateBlackboard.h"
 #include "Engine\Core\Input.h"
+#include "Engine\Core\Log\Log.h"
 
 #include <cstdio>
 
@@ -10,6 +11,7 @@ StateGraphSimulator::StateGraphSimulator()
 	, current_animation_name("")
 	, current_animation_loop(true)
 	, current_blend_time(DEFAULT_RUNTIME_BLEND_TIME)
+	, current_action_category(ActionCategory::Idle)
 {
 }
 
@@ -85,6 +87,7 @@ bool StateGraphSimulator::UpdateSimulation(float elapsed_time, StateBlackboard* 
 				current_animation_name = runtime_nodes[n].animation_name;
 				current_animation_loop = runtime_nodes[n].is_loop;
 				current_blend_time = DEFAULT_RUNTIME_BLEND_TIME;
+				current_action_category = runtime_nodes[n].action_category;
 				break;
 			}
 		}
@@ -210,17 +213,12 @@ bool StateGraphSimulator::UpdateSimulation(float elapsed_time, StateBlackboard* 
 		if (best_link)
 		{
 			current_blend_time = best_link->blend_time;
-			printf("StateGraphSimulator: リンクID %u の遷移が成立しました。適用ブレンド時間: %.2f秒\n", best_link->id, current_blend_time);
 
 			if (on_transition_link_callback)
 			{
 				on_transition_link_callback(best_link->id);
 			}
 		}
-		else
-		{
-			printf("Warning: StateGraphSimulator::UpdateSimulation - 遷移が成立しましたが best_link が nullptr のためブレンド時間を更新できませんでした。\n");
-		}		
 		current_node_id = next_node_id;
 
 		//サブグラフの自動潜り込み処理
@@ -245,7 +243,7 @@ bool StateGraphSimulator::UpdateSimulation(float elapsed_time, StateBlackboard* 
 						}
 						else
 						{
-							printf("Warning: StateGraphSimulator::UpdateSimulation - サブグラフ ID:%u にエントリーノードが設定されていません。\n", runtime_nodes[n].sub_graph_id);
+							LOG_WARNING({ u8"エディタ",u8"ステートマシン",u8"シミュレーター" }, u8"サブグラフ ID:%u にエントリーノードが設定されていません", runtime_nodes[n].sub_graph_id);
 						}
 					}
 					break;
@@ -254,14 +252,20 @@ bool StateGraphSimulator::UpdateSimulation(float elapsed_time, StateBlackboard* 
 		}
 
 		//アニメーション情報の同期と結果返却
+		bool found_node = false;
 		for (size_t n = 0; n < runtime_nodes.size(); n++)
 		{
 			if (current_node_id == runtime_nodes[n].id)
 			{
 				current_animation_name = runtime_nodes[n].animation_name;
 				current_animation_loop = runtime_nodes[n].is_loop;
+				current_action_category = runtime_nodes[n].action_category;
 				break;
 			}
+		}
+		if (!found_node)
+		{
+			LOG_WARNING({ u8"エディタ",u8"ステートマシン" }, u8"遷移先ノード [ID:%u] のデータが見つかりませんでした", current_node_id);
 		}
 		return true;
 	}

@@ -65,6 +65,9 @@ public:
 	//アニメーションループを取得
 	bool GetAnimationLoop()const { return current_animation_loop; }
 
+	//アクションカテゴリを取得
+	ActionCategory GetCurrentActionCategory() const;
+
 	//現在のステートがルートモーションを有効にしているか取得
 	bool IsCurrentRootMotionEnbled()const;
 

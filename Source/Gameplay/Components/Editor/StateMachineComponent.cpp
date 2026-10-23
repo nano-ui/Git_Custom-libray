@@ -244,6 +244,12 @@ void StateMachineComponent::SetupSerialization(JsonSerializer* serializer)
 	}
 }
 
+//アクションカテゴリを取得
+ActionCategory StateMachineComponent::GetCurrentActionCategory() const
+{
+	return state_graph_simulator->GetCurrentActionCategory();
+}
+
 //現在のステートがルートモーションを有効にしているか取得
 bool StateMachineComponent::IsCurrentRootMotionEnbled() const
 {

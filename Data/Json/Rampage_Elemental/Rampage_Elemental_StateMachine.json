@@ -88,27 +88,6 @@
                     "EndPinID": 110,
                     "ID": 113,
                     "StartPinID": 106
-                },
-                {
-                    "BlendTime": 0.20000000298023224,
-                    "Conditions": [
-                        {
-                            "CompOp": 2,
-                            "HashKey": 1572818033,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 0,
-                            "VectorRefValue": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        }
-                    ],
-                    "EndPinID": 101,
-                    "ID": 126,
-                    "StartPinID": 111
                 }
             ],
             "Nodes": [

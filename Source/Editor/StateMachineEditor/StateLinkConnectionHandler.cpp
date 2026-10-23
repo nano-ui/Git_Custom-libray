@@ -127,6 +127,4 @@ void StateLinkConnectionHandler::OnLinkCreated(
 		printf("Error: StateLinkConnectionHandler::OnLinkCreated - 接続されたピンに対応する親ノードが見つかりませんでした。\n");
 		return;
 	}
-	printf("StateLinkConnectionHandler: リンクを正常に作成しました。ID: %u (ノード: %u -> %u)\n",
-		new_link.id, source_node_id, target_node_id);
 }

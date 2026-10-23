@@ -3,6 +3,7 @@
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Engine\Graphics\Resources\Model.h"
 #include "Engine\Graphics\Renderers\ShapeRenderer.h"
+#include "Engine\Core\Log\Log.h"
 #include "ThiedParty\json.hpp"
 
 #include <Windows.h>
@@ -31,7 +32,7 @@ void AttachmentColliderComponent::Initializa(
 
 	if (model_file_path.empty())
 	{
-		OutputDebugStringA("[AttachmentColliderComponent 警告] model_file_path が空です。\n");
+		LOG_WARNING({ u8"アタッチメント",u8"設定" }, u8"モデルパスがありません");
 		return;
 	}
 
@@ -45,7 +46,7 @@ void AttachmentColliderComponent::Initializa(
 	//JSONから読み込み
 	if (!LoadFromJson(attach_json_path))
 	{
-		OutputDebugStringA("[AttachmentColliderComponent 警告] コライダー定義JSONのロードに失敗またはファイルが存在しません。\n");
+		LOG_WARNING({ u8"エディタ",u8"読み込み" }, u8"ロードに失敗またはファイルが存在しません");
 		return;
 	}
 

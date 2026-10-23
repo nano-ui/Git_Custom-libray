@@ -55,13 +55,13 @@ void Character::Initialize()
 		}
 		else
 		{
-			OutputDebugStringA("[Character エラー] Initialize: デフォルトモデルパスが設定されていません。\n");
+			LOG_ERROR({ "Character", "Model" }, u8"Initialize: デフォルトモデルパスが設定されていません。");
 		}
 	}
 
 	if (!model_component->GetModel())
 	{
-		OutputDebugStringA("[Character エラー] Initialize: モデルデータのロードに失敗したため、後続の初期化を中止します。\n");
+		LOG_ERROR({ "Character", "Model" }, u8"Initialize: モデルデータのロードに失敗したため、後続の初期化を中止します。");
 		return;
 	}
 
@@ -120,15 +120,6 @@ void Character::Initialize()
 	SetupInspector();
 
 	DirectX::XMFLOAT3 pos = transform_component->GetPosition();
-
-	LOG_NORMAL({ "Player" }, u8"座標: (%.2f, %.2f, %.2f)", pos.x, pos.y, pos.z);
-
-	LOG_WARNING(
-		{ "Player", "Battle" },
-		u8"被弾テスト - ダメージ量: {:.1f}, 残り体力: {:.1f}",
-		15.5f,
-		health
-	);
 }
 
 //更新処理
@@ -160,7 +151,7 @@ void Character::Update(float elapsed_time)
 			constexpr float min_blend_time = 0.0f;
 			if (belnd_time < min_blend_time)
 			{
-				printf("Warning: Character::Update - 取得したブレンド時間が負の値(%.2f)のため、0.0fに補正しました。\n", belnd_time);
+				LOG_WARNING({ "Character", "Animation" }, u8"Update: 取得したブレンド時間が負の値(%.2f)のため、0.0fに補正しました。", belnd_time);
 				belnd_time = min_blend_time;
 			}
 
@@ -203,7 +194,7 @@ void Character::OnCollisionHit(const CollisionResult& result)
 {
 	if (!movement_component)
 	{
-		OutputDebugStringA("[Character 警告] OnCollisionHit: movement_component が存在しないため衝突解決をスキップします。\n");
+		LOG_WARNING({ "Character", "Collision" }, u8"OnCollisionHit: movement_component が存在しないため衝突解決をスキップします。");
 		return;
 	}
 
@@ -211,7 +202,7 @@ void Character::OnCollisionHit(const CollisionResult& result)
 	Collider* self_collider = result.self_collider;
 	if (!self_collider)
 	{
-		OutputDebugStringA("[Character 警告] OnCollisionHit: self_collider が nullptr のため衝突処理を中断します。\n");
+		LOG_WARNING({ "Character", "Collision" }, u8"OnCollisionHit: self_collider が nullptr のため衝突処理を中断します。");
 		return;
 	}
 
@@ -231,11 +222,11 @@ void Character::OnCollisionHit(const CollisionResult& result)
 		if (result.hit_collider)
 		{
 			ApplyDamage(attack_power, invincible_timer, result.hit_collider->owner_id);
-			OutputDebugStringA("[Character] 攻撃判定がヒットしました。\n");
+			LOG_NORMAL({ "Character", "Combat" }, u8"攻撃判定がヒットしました。攻撃者ID: %u", result.hit_collider->owner_id);
 		}
 		else
 		{
-			OutputDebugStringA("[Character 警告] OnCollisionHit: hit_collider が nullptr のため被弾処理を中断しました。\n");
+			LOG_WARNING({ "Character", "Collision" }, u8"OnCollisionHit: hit_collider が nullptr のため被弾処理を中断しました。");
 		}
 	}
 }
@@ -267,7 +258,7 @@ void Character::SetupSerialization()
 	}
 	else
 	{
-		OutputDebugStringA("[Character 警告] SetupSerialization: serializer が nullptr です。\n");
+		LOG_WARNING({ "Character", "Serialization" }, u8"SetupSerialization: serializer が nullptr です。");
 	}
 }
 
@@ -287,7 +278,7 @@ void Character::SetupInspector()
 	}
 	else
 	{
-		OutputDebugStringA("[Character 警告] SetupInspector: inspector が nullptr です。\n");
+		LOG_WARNING({ "Character", "Inspector" }, u8"SetupInspector: inspector が nullptr です。");
 	}
 }
 
@@ -338,13 +329,20 @@ void Character::SetupBlackboard()
 //移動方向の設定
 void Character::Move(float elapsed_time, float vx, float vz, float speed)
 {
-	if (movement_component) movement_component->Move(vx, vz, speed);
+
+	if (state_machine_component->GetCurrentActionCategory() != ActionCategory::Attack)
+	{
+		movement_component->Move(vx, vz, speed);
+	}
 }
 
 //旋回処理
 void Character::Tuen(float elapsed_time, float vx, float vz, float speed)
 {
-	if (movement_component) movement_component->Turn(elapsed_time, vx, vz, speed);
+	if (state_machine_component->GetCurrentActionCategory() != ActionCategory::Attack)
+	{
+		movement_component->Turn(elapsed_time, vx, vz, speed);
+	}
 }
 
 //ジャンプ処理
@@ -367,7 +365,7 @@ void Character::UpdateRootMotion()
 {
 	if (!model_component || !model_component->GetModel() || !transform_component)
 	{
-		OutputDebugStringA("[Character 警告] UpdateRootMotion: 必要なコンポーネントまたは Model が nullptr です。\n");
+		LOG_WARNING({ "Character", "RootMotion" }, u8"UpdateRootMotion: 必要なコンポーネントまたは Model が nullptr です。");
 		return;
 	}
 

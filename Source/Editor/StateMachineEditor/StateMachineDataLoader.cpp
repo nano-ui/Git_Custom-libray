@@ -1,6 +1,7 @@
 #include "StateMachineDataLoader.h"
 #include "StateGraphDataManager.h"
 #include <Gameplay\StateMachine\StateBlackboard.h>
+#include "Engine\Core\Log\Log.h"
 
 #include <fstream>
 #include <cstdio>
@@ -22,7 +23,7 @@ bool StateMachineDataLoader::LoadForRuntime(
     std::ifstream input_file(file_path);
     if (!input_file.is_open())
     {
-        printf("エラー: StateMachineDataLoader::LoadForRuntime - 指定されたファイルが開けませんでした。パス: %s\n", file_path.c_str());
+        LOG_WARNING({ u8"エディタ", u8"ステートマシン", u8"読み込み" }, u8"指定されたファイルが開けませんでした", file_path.c_str());
         return false;
     }
 
@@ -32,7 +33,7 @@ bool StateMachineDataLoader::LoadForRuntime(
 
     if (!root_json.is_object() || !root_json.contains("Layers") || !root_json["Layers"].is_array())
     {
-        printf("エラー: StateMachineDataLoader::LoadForRuntime - JSONのフォーマットが不正です。Layers配列が存在しません。\n");
+        LOG_WARNING({ u8"エディタ", u8"ステートマシン", u8"読み込み" }, u8"JSONのフォーマットが不正です");
         return false;
     }
 
@@ -124,10 +125,20 @@ void StateMachineDataLoader::ParseRuntimeNode(
     out_node.animation_name = node_json.contains("AnimationName") ? node_json["AnimationName"].get<std::string>() : "";
     out_node.is_sub_graph = node_json["IsSubGraph"].get<bool>();
     out_node.sub_graph_id = node_json["SubGraphID"].get<uint32_t>();
-    out_node.is_loop = node_json.contains("IsLoop") ? node_json["IsLoop"].get<bool>() : true;
+    out_node.is_loop = node_json.contains("IsLoop") ? node_json["IsLoop"].get<bool>() : false;
     out_node.is_root_motion = node_json.contains("IsRootMotion") ? node_json["IsRootMotion"].get<bool>() : false;
     out_node.parent_node_id = parent_id;
     out_node.graph_id = graph_id;
+
+    if (node_json.contains("ActionCategory") && node_json["ActionCategory"].is_number_integer())
+    {
+        out_node.action_category = static_cast<ActionCategory>(node_json["ActionCategory"].get<int>());
+    }
+    else
+    {
+        out_node.action_category = ActionCategory::Idle;
+        LOG_WARNING({ u8"エディタ",u8"ステートマシン",u8"読み込み" }, u8"ノード [ID:%u] に ActionCategory が存在しないため、Idle として扱います", out_node.id);
+    }
 
     if (node_json.contains("BehaviorData") && node_json["BehaviorData"].is_object())
     {
@@ -193,7 +204,7 @@ void StateMachineDataLoader::ParseRuntimeLink(
         constexpr float min_blend_time = 0.0f;
         if (out_link.blend_time < min_blend_time)
         {
-            printf("警告: StateMachineDataLoader::ParseRuntimeLink - リンクID %u のブレンド時間が負の値(%.2f)のため、0.0fに補正しました。\n", out_link.id, out_link.blend_time);
+            LOG_WARNING({ u8"エディタ",u8"ステートマシン" }, u8"リンクID %u のブレンド時間が負の値(%.2f)のため、0.0fに補正しました", out_link.id, out_link.blend_time);
             out_link.blend_time = min_blend_time;
         }
     }

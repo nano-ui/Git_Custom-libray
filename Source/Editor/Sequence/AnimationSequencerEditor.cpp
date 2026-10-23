@@ -3,6 +3,7 @@
 #include "Editor\FileDialogHelper.h"
 #include "Editor\EditorMediator.h"
 #include "Editor\Attachment\ColliderAttachmentEditor.h"
+#include "Engine\Core\Log\Log.h"
 
 #include <windows.h>
 #include <imgui.h>
@@ -203,11 +204,11 @@ void AnimationSequencerEditor::RenderGui()
 				SaveCurrentSequenceDataToMap();
 				if (AnimationSequenceSerializer::SaveToFile(current_model_name, all_sequences_map))
 				{
-					OutputDebugStringA("[Sequencer] All sequences saved to JSON successfully.\n");
+					LOG_SUCCESS({ u8"シーケンサ",u8"保存" }, u8"シーケンサ情報をJSONファイルへ保存");
 				}
 				else
 				{
-					OutputDebugStringA("[Sequencer Error] Failed to save sequences to JSON!\n");
+					LOG_WARNING({ u8"シーケンサ",u8"保存" }, u8"シーケンサ情報をJSONファイルへ保存できませんでした");
 				}
 			}
 
@@ -219,10 +220,11 @@ void AnimationSequencerEditor::RenderGui()
 				if (AnimationSequenceSerializer::LoadFromFile(current_model_name, all_sequences_map))
 				{
 					LoadCurrentSequenceDataFromMap();
-					OutputDebugStringA("[Sequencer] All sequences loaded from JSON successfully.\n");
+					LOG_SUCCESS({ u8"シーケンサ",u8"読み込み" }, u8"シーケンサ情報を読み込みできました");
 				}
 				else
 				{
+					LOG_WARNING({ u8"シーケンサ",u8"読み込み" }, u8"シーケンサ情報の読み込みに失敗");
 					OutputDebugStringA("[Sequencer Error] Failed to load sequences from JSON!\n");
 				}
 			}
@@ -592,7 +594,7 @@ float AnimationSequencerEditor::GetSpeedMultiplierAt(float seq_time) const
 {
 	if (time_map_keyframes.empty())
 	{
-		OutputDebugStringA("[Sequencer Error] GetSpeedMultiplierAt: Keyframes array is empty!\n");
+		LOG_WARNING({ u8"シーケンサ",u8"アニメーション" }, u8"タイムマップキーフレームが存在しません");
 		return DEFAULT_SPEED_MULTIPLIER;
 	}
 
@@ -622,7 +624,7 @@ float AnimationSequencerEditor::GetIntegratedModelTime(float seq_time) const
 {
 	if (time_map_keyframes.empty())
 	{
-		OutputDebugStringA("[Sequencer Error] GetIntegratedModelTime: Keyframes array is empty!\n");
+		LOG_WARNING({ u8"シーケンサ",u8"アニメーション" }, u8"タイムマップキーフレームが存在しません");
 		return 0.0f;
 	}
 
@@ -904,7 +906,7 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 				selected_keyframe_index = -1;
 
 				// 警告ログをデバッグ出力
-				OutputDebugStringA("[Sequencer] Keyframe deleted via right-click.\n");
+				LOG_WARNING({ u8"シーケンサ",u8"アニメーション" }, u8"タイムリマップの基準点のため削除不可");
 				break; //イテレータの破綻を防ぐためループを抜る
 			}
 		}
@@ -951,9 +953,7 @@ void AnimationSequencerEditor::DrawTimelineTracks()
 			std::sort(time_map_keyframes.begin(), time_map_keyframes.end(), CompareKeyframes);
 
 			// デバッグログを出力
-			char added_log[256];
-			sprintf_s(added_log, "[Sequencer] Added Speed Keyframe at Time: %.2fs -> Speed: %.2fx\n", click_seq_time, click_speed);
-			OutputDebugStringA(added_log);
+			LOG_NORMAL({ u8"シーケンサ",u8"追加" }, u8"キーフレームを追加 時間: %.2fs -> 速さ: %.2fx", click_seq_time, click_speed);
 		}
 	}
 
