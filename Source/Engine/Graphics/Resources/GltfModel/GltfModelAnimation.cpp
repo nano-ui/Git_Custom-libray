@@ -30,43 +30,37 @@ void GltfModelAnimation::CumulateTransforms()
 {
 	BS_PROFILE_FUNCTION();
 
-	//モデルデータの有効性チェック
-	if (!model_data) return;
-
-	std::vector<int> root_nodes;
-
-	//デフォルトシーン番号が配列の範囲内にあるか存在確認
-	if (model_data->default_scene >= 0 && static_cast<size_t>(model_data->default_scene) < model_data->scenes.size())
+	if (!model_data || model_data->flattened_node_indices.empty())
 	{
-		root_nodes = model_data->scenes.at(model_data->default_scene).nodes;
+		return;
 	}
-	else
-	{
-		//OutputDebugStringA("[GltfModelAnimation Error] model_data->default_scene is OUT OF RANGE!\n");
 
-		if (!model_data->scenes.empty())
+	using namespace DirectX;
+
+	for (int node_index : model_data->flattened_node_indices)
+	{
+		if (node_index < 0 || static_cast<size_t>(node_index) >= animated_nodes.size())
 		{
-			//OutputDebugStringA("[GltfModelAnimation Warning] Safety fallback: Using the first scene (0) instead.\n");
-			root_nodes = model_data->scenes.at(0).nodes;
+			continue;
+		}
+
+		GltfModelData::node& current_node = animated_nodes[node_index];
+
+		XMMATRIX scale_matrix = XMMatrixScaling(current_node.scale.x, current_node.scale.y, current_node.scale.z);
+		XMMATRIX rotation_matrix = XMMatrixRotationQuaternion(XMVectorSet(current_node.rotation.x, current_node.rotation.y, current_node.rotation.z, current_node.rotation.w));
+		XMMATRIX translation_matrix = XMMatrixTranslation(current_node.translation.x, current_node.translation.y, current_node.translation.z);
+
+		XMMATRIX local_matrix = scale_matrix * rotation_matrix * translation_matrix;
+
+		int parent_index = current_node.parent_index;
+		if (parent_index >= 0 && static_cast<size_t>(parent_index) < animated_nodes.size())
+		{
+			XMMATRIX parent_global = XMLoadFloat4x4(&animated_nodes[parent_index].global_transform);
+			XMStoreFloat4x4(&current_node.global_transform, local_matrix * parent_global);
 		}
 		else
 		{
-			//OutputDebugStringA("[GltfModelAnimation Warning] Safety fallback: Scenes container is completely empty!\n");
-		}
-	}
-
-	// ルートノードからの巡回処理
-	std::stack<DirectX::XMFLOAT4X4> parent_global_transforms;							//親ノードの行列情報を順次保持するためのスタックを作成
-	DirectX::XMFLOAT4X4 identity_matrix;												//処理の起点となる単位行列用のを宣言
-	DirectX::XMStoreFloat4x4(&identity_matrix, DirectX::XMMatrixIdentity());			//DirectXの関数を利用してに単位行列を格納
-
-	for (int node_index : root_nodes)		//現在のデフォルトシーンに登録されている全てのルートノードをループ
-	{
-		if (node_index >= 0 && static_cast<size_t>(node_index) < animated_nodes.size())
-		{
-			parent_global_transforms.push(identity_matrix);									//一番根っこの親として単位行列をスタックに追加
-			TraverseNodeForTransform(node_index, parent_global_transforms);					//ルートノードのインデックスを渡し階層の巡回処理を開始
-			parent_global_transforms.pop();													//全探索が終了した後にスタックの単位行列を取り除きクリア
+			XMStoreFloat4x4(&current_node.global_transform, local_matrix);
 		}
 	}
 }

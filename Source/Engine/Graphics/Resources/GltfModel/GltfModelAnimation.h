@@ -54,6 +54,8 @@ private:
 	//行列計算用の再帰呼び出し
 	void TraverseNodeForTransform(int node_index, std::stack<DirectX::XMFLOAT4X4>& parent_global_transforms);
 
+
+
 	//アニメーションのキーフレームを取得し補間係数を計算
 	size_t GetAnimationKeyframeIndex(const std::vector<float>& timelines, float time, float& interpolation_factor);
 

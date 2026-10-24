@@ -280,6 +280,9 @@ private:
 	//初期化時に描画コマンド配列の構築とマテリアル順ソートを事前に行う
 	void BuildRenderCommandsCache();
 
+	//親から子の順に並んだフラットなノードインデックス配列を構築
+	void BuildFlattenedNodesCache();
+
 public:
 	std::vector<std::vector<unsigned char>> raw_buffers;	//シリアライズ用の生データ保持配列
 	std::string filename;	//ファイルの名前
@@ -292,6 +295,7 @@ public:
 	std::vector<image> images;			//全画像のリスト
 	std::vector<skin> skins;			//全スキンのリスト
 	std::vector<animation> animations;	//全アニメーションのリスト
+	std::vector<int> flattened_node_indices; //親から子の順に並んだノードインデックス配列
 
 	std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> buffers;								//生成された全GPUバッファのリスト
 	std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> texture_resource_views;	//全テクスチャビューのリスト

@@ -101,6 +101,7 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 	}
 
 	BuildRenderCommandsCache();
+	BuildFlattenedNodesCache();
 }
 
 //復元した生データからGPUリソースを構築
@@ -223,7 +224,7 @@ std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const s
 	BS_PROFILE_FUNCTION();
 
 	//キャッシュファイル名の生成
-	std::string binary_filename = filename + ".cerial";							//元の名前に「.bin」を付与してキャッシュ用ファイル名とする
+	std::string binary_filename = filename + ".cerial";							//元の名前に「.cerial」を付与してキャッシュ用ファイル名とする
 	std::shared_ptr<GltfModelData> data = std::make_shared<GltfModelData>();	//空のデータインスタンスを生成
 
 	//キャッシュからのロード試行
@@ -1137,4 +1138,60 @@ void GltfModelData::BuildRenderCommandsCache()
 	}
 
 	std::sort(cached_render_commands.begin(), cached_render_commands.end(), CompareMaterialCache()); //関数オブジェクトを利用してマテリアル番号順にソートを実行
+}
+
+//親から子の順に並んだフラットなノードインデックス配列を構築
+void GltfModelData::BuildFlattenedNodesCache()
+{
+	BS_PROFILE_FUNCTION();
+
+	flattened_node_indices.clear();
+	if (nodes.empty())
+	{
+		return;
+	}
+
+	std::vector<int> root_nodes;
+	int scene_index = default_scene;
+	if (scene_index >= 0 && static_cast<size_t>(scene_index) < scenes.size())
+	{
+		root_nodes = scenes.at(scene_index).nodes;
+	}
+	else if (!scenes.empty())
+	{
+		root_nodes = scenes.at(0).nodes;
+	}
+
+	// ルートから幅優先探索(BFS)で巡回して、親が子よりも先に現れる順序を確定する
+	std::vector<bool> visited(nodes.size(), false);
+	std::vector<int> queue = root_nodes;
+
+	for (size_t head = 0; head < queue.size(); ++head)
+	{
+		int node_idx = queue[head];
+		if (node_idx < 0 || static_cast<size_t>(node_idx) >= nodes.size() || visited[node_idx])
+		{
+			continue;
+		}
+
+		visited[node_idx] = true;
+		flattened_node_indices.push_back(node_idx);
+
+		for (int child_idx : nodes[node_idx].children)
+		{
+			if (child_idx >= 0 && static_cast<size_t>(child_idx) < nodes.size() && !visited[child_idx])
+			{
+				queue.push_back(child_idx);
+			}
+		}
+	}
+
+	// シーンのツリー外に取り残された孤立ノードがある場合のフォールバック
+	for (size_t i = 0; i < nodes.size(); ++i)
+	{
+		if (!visited[i])
+		{
+			flattened_node_indices.push_back(static_cast<int>(i));
+		}
+	}
 }
