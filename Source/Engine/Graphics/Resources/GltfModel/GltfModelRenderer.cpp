@@ -79,6 +79,7 @@ void GltfModelRenderer::Render
 		custom_shader->Apply();
 	}
 
+	int last_skin_id = -1;
 	int last_material_id = -1; //前回のマテリアルIDを保持するキャッシュ
 
 	for (const GltfModelData::cached_command& cmd : data.cached_render_commands) //事前ソート済みのキャッシュ配列を直接走査するループ
@@ -93,31 +94,11 @@ void GltfModelRenderer::Render
 			DirectX::XMLoadFloat4x4(&world));
 
 		int skin_index = current_node.skin; //ノードに紐づくスキン番号
-		DirectX::XMFLOAT4X4 node_global_matrix = current_node.global_transform; //ノード単体のグローバル行列
 
-		if (skin_index > -1 && static_cast<size_t>(skin_index) < data.skins.size()) //スキニング処理が必要であるか
+		if (skin_index > -1 && skin_index != last_skin_id)
 		{
-			const GltfModelData::skin& skin = data.skins.at(skin_index);
-			GltfModelData::primitive_joint_constants primitive_joint_data = {};
-
-			for (size_t joint_index = 0; joint_index < skin.joints.size() && joint_index < 512; joint_index++) //スキン内の全ジョイント行列を計算するループ
-			{
-				DirectX::XMMATRIX inv_bind = DirectX::XMLoadFloat4x4(&skin.inverse_bind_matrices.at(joint_index));
-				DirectX::XMMATRIX joint_global = DirectX::XMLoadFloat4x4(&nodes.at(skin.joints.at(joint_index)).global_transform);
-				DirectX::XMVECTOR determinant = {};
-				DirectX::XMMATRIX mesh_inv = DirectX::XMMatrixInverse(&determinant, DirectX::XMLoadFloat4x4(&node_global_matrix));
-
-				if (DirectX::XMVector3Less(DirectX::XMVectorAbs(determinant), DirectX::XMVectorReplicate(1e-6f))) //パーツ行列の逆行列がゼロ行列等で計算不可能であるか
-				{
-					mesh_inv = DirectX::XMMatrixIdentity();
-				}
-
-				DirectX::XMMATRIX skin_matrix = inv_bind * joint_global * mesh_inv; //列優先順序でのスキニング行列計算
-				DirectX::XMStoreFloat4x4(&primitive_joint_data.matrices[joint_index], skin_matrix);
-			}
-
-			immediate_context->UpdateSubresource(primitive_joint_cbuffer.Get(), OFFSET_ZERO, nullptr, &primitive_joint_data, OFFSET_ZERO, OFFSET_ZERO);
-			immediate_context->VSSetConstantBuffers(SHADER_SLOT_2, RESOURCE_COUNT_1, primitive_joint_cbuffer.GetAddressOf());
+			UpdateSkinMatrices(immediate_context, data, nodes, skin_index, current_node.global_transform);
+			last_skin_id = skin_index;
 		}
 
 		{
@@ -433,4 +414,46 @@ void GltfModelRenderer::GetherRenderCommands
 	{
 		GetherRenderCommands(child_index, data, nodes, world, commands);
 	}
+}
+
+//スキニング用定数バッファの更新処理
+void GltfModelRenderer::UpdateSkinMatrices(
+	ID3D11DeviceContext* immediate_context,
+	const GltfModelData& data,
+	const std::vector<GltfModelData::node>& nodes,
+	int skin_index,
+	const DirectX::XMFLOAT4X4& node_global_matrix)
+{
+	BS_PROFILE_FUNCTION();
+
+	if (skin_index < 0 || static_cast<size_t>(skin_index) >= data.skins.size())
+	{
+		return;
+	}
+
+	const GltfModelData::skin& skin = data.skins.at(skin_index);
+	GltfModelData::primitive_joint_constants primitive_joint_data = {};
+
+	DirectX::XMVECTOR determinant = {};
+	DirectX::XMMATRIX mesh_inv = DirectX::XMMatrixInverse(&determinant, DirectX::XMLoadFloat4x4(&node_global_matrix));
+
+	if (DirectX::XMVector3Less(DirectX::XMVectorAbs(determinant), DirectX::XMVectorReplicate(1e-6f)))
+	{
+		mesh_inv = DirectX::XMMatrixIdentity();
+	}
+
+	constexpr size_t max_joints_limit = 512;
+	const size_t joint_count = (std::min)(skin.joints.size(), max_joints_limit);
+
+	for (size_t joint_index = 0; joint_index < joint_count; ++joint_index)
+	{
+		DirectX::XMMATRIX inv_bind = DirectX::XMLoadFloat4x4(&skin.inverse_bind_matrices.at(joint_index));
+		DirectX::XMMATRIX joint_global = DirectX::XMLoadFloat4x4(&nodes.at(skin.joints.at(joint_index)).global_transform);
+
+		DirectX::XMMATRIX skin_matrix = inv_bind * joint_global * mesh_inv;
+		DirectX::XMStoreFloat4x4(&primitive_joint_data.matrices[joint_index], skin_matrix);
+	}
+
+	immediate_context->UpdateSubresource(primitive_joint_cbuffer.Get(), OFFSET_ZERO, nullptr, &primitive_joint_data, OFFSET_ZERO, OFFSET_ZERO);
+	immediate_context->VSSetConstantBuffers(SHADER_SLOT_2, RESOURCE_COUNT_1, primitive_joint_cbuffer.GetAddressOf());
 }
