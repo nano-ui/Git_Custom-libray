@@ -42,6 +42,18 @@ public:
 	void AnimationBlend(size_t animation_index_a, float time_a, size_t animation_index_b, float time_b, float blend_factor);
 
 private:
+
+	//ノードのローカル変換成分（TRS）のみを保持する軽量構造体
+	struct NodePose
+	{
+		DirectX::XMFLOAT3 scale = { 1.0f, 1.0f, 1.0f };
+		DirectX::XMFLOAT4 rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
+		DirectX::XMFLOAT3 translation = { 0.0f, 0.0f, 0.0f };
+	};
+
+	//指定した時間のアニメーションからTRS成分のみをサンプリング
+	void SampleAnimationPose(size_t animation_index, float time, std::vector<NodePose>& out_poses);
+
 	//指定した時間のアニメーションを適用しノード情報を更新
 	void Animate(size_t animation_index, float time);
 
@@ -50,11 +62,6 @@ private:
 
 	//指定アニメーション内で最も移動量の大きいルートモーション対象ノードのインデックスを取得
 	int GetTargetRootNodeIndex(size_t animation_index) const;
-
-	//行列計算用の再帰呼び出し
-	void TraverseNodeForTransform(int node_index, std::stack<DirectX::XMFLOAT4X4>& parent_global_transforms);
-
-
 
 	//アニメーションのキーフレームを取得し補間係数を計算
 	size_t GetAnimationKeyframeIndex(const std::vector<float>& timelines, float time, float& interpolation_factor);

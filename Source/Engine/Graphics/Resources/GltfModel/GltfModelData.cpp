@@ -231,6 +231,7 @@ std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const s
 	if (GltfModelSerializer::Load(binary_filename, data))	//バイナリファイルが存在し、読み込みに成功した場合
 	{
 		data->CreateGpuResources(device);	//復元した生データから即座にGPUバッファを生成
+		data->BuildFlattenedNodesCache();
 		return data;						//完成したデータを返す
 	}
 

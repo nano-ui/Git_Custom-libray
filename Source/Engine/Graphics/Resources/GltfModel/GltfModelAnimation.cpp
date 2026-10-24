@@ -176,140 +176,262 @@ float GltfModelAnimation::GetAnimationDuration() const
 	return current_animation_duration;
 }
 
-//指定した時間のアニメーションを適用しノード情報を更新
-void GltfModelAnimation::Animate(size_t animation_index, float time)
+//指定した時間のアニメーションからTRS成分のみをサンプリング
+void GltfModelAnimation::SampleAnimationPose(size_t animation_index, float time, std::vector<NodePose>& out_poses)
 {
 	BS_PROFILE_FUNCTION();
 
-	// アニメーションデータの有無の確認
-	if (model_data->animations.empty())	// GltfModelData内にアニメーションデータが存在しない場合
-	{
-		return;						// 更新する対象がないため何も処理せずに安全に終了
-	}
-
-	if (animation_index >= model_data->animations.size())
-	{
-		OutputDebugStringA("[GltfModelAnimation Error] animation_index out of range!/n");
-	}
+	out_poses.resize(animated_nodes.size());
 
 	for (size_t i = 0; i < animated_nodes.size(); ++i)
 	{
-		animated_nodes[i].scale = model_data->nodes[i].scale;
-		animated_nodes[i].rotation = model_data->nodes[i].rotation;
-		animated_nodes[i].translation = model_data->nodes[i].translation;
+		out_poses[i].scale = model_data->nodes[i].scale;
+		out_poses[i].rotation = model_data->nodes[i].rotation;
+		out_poses[i].translation = model_data->nodes[i].translation;
 	}
 
-	using namespace DirectX;															// DirectXMathの名前空間を使用
-	const size_t INDEX_OFFSET_NEXT = 1;													// 次の要素を参照するためのインデックスオフセット定数
-	const GltfModelData::animation& animation = model_data->animations.at(animation_index);	// 引数で指定されたアニメーションデータを参照として取得
+	if (model_data->animations.empty() || animation_index >= model_data->animations.size())
+	{
+		return;
+	}
 
-	// ルートモーション対象ノードのインデックスを取得
+	using namespace DirectX;
+	constexpr size_t INDEX_OFFSET_NEXT = 1;
+	const GltfModelData::animation& animation = model_data->animations.at(animation_index);
 	int target_root_node_index = GetTargetRootNodeIndex(animation_index);
 
-	// チャンネル（操作対象）ごとのアニメーション適用
-	for (const GltfModelData::animation::channel& channel : animation.channels)                   // アニメーションが持つ全チャンネル（誰のどの部位を動かすか）をループ
+	for (const GltfModelData::animation::channel& channel : animation.channels)
 	{
-		//サンプラーインデックスの安全な存在確認
 		if (channel.sampler < 0 || static_cast<size_t>(channel.sampler) >= animation.samplers.size())
 		{
-			OutputDebugStringA("[GltfModelAnimation Error] Animate: channel.sampler is out of range!\n");
 			continue;
 		}
 
-		const GltfModelData::animation::sampler& sampler = animation.samplers.at(channel.sampler);// チャンネルに対応するサンプラー（時間と値の紐付け情報）を取得
-		
-		//タイムラインマップのキーの安全な存在確
+		const GltfModelData::animation::sampler& sampler = animation.samplers.at(channel.sampler);
+
 		auto timeline_it = animation.timelines.find(sampler.input);
-		if (timeline_it == animation.timelines.end())
+		if (timeline_it == animation.timelines.end() || timeline_it->second.empty())
 		{
-			OutputDebugStringA("[GltfModelAnimation Error] Animate: sampler.input key not found in timelines map!\n");
 			continue;
 		}
 		const std::vector<float>& timeline = timeline_it->second;
 
-		if (timeline.empty())                                                                     // タイムラインのデータが空の場合
+		float interpolation_factor = 0.0f;
+		size_t keyframe_index = GetAnimationKeyframeIndex(timeline, time, interpolation_factor);
+
+		if (static_cast<size_t>(channel.target_node) >= out_poses.size())
 		{
-			continue;                                                                             // 処理ができないためスキップし次のチャンネルへ進む
+			continue;
 		}
 
-		float interpolation_factor = 0.0f;                                                        // 関数から受け取るための補間係数を初期化
-		size_t keyframe_index = GetAnimationKeyframeIndex(timeline, time, interpolation_factor);  // 現在の時間に対応するキーフレーム番号と補間割合を取得
-
-		// 対象パラメータに応じた数式（補間処理）の実行
-		if (channel.target_path == "scale")                                                      
+		if (channel.target_path == "scale")
 		{
 			auto scale_it = animation.scales.find(sampler.output);
-			if (scale_it == animation.scales.end() || (keyframe_index + INDEX_OFFSET_NEXT) >= scale_it->second.size())
+			if (scale_it != animation.scales.end() && (keyframe_index + INDEX_OFFSET_NEXT) < scale_it->second.size())
 			{
-				OutputDebugStringA("[GltfModelAnimation Error] Animate: scales key or keyframe index error!\n");
-				continue;
-			}
-			const std::vector<XMFLOAT3>& scales = scale_it->second;								
-			XMVECTOR scale_start = XMLoadFloat3(&scales.at(keyframe_index));                    
-			XMVECTOR scale_end = XMLoadFloat3(&scales.at(keyframe_index + INDEX_OFFSET_NEXT));  
-			XMVECTOR lerped_scale = XMVectorLerp(scale_start, scale_end, interpolation_factor); 
-
-			if (static_cast<size_t>(channel.target_node) < animated_nodes.size())
-			{
-				XMStoreFloat3(&animated_nodes.at(channel.target_node).scale, lerped_scale);           
+				const std::vector<XMFLOAT3>& scales = scale_it->second;
+				XMVECTOR scale_start = XMLoadFloat3(&scales.at(keyframe_index));
+				XMVECTOR scale_end = XMLoadFloat3(&scales.at(keyframe_index + INDEX_OFFSET_NEXT));
+				XMVECTOR lerped_scale = XMVectorLerp(scale_start, scale_end, interpolation_factor);
+				XMStoreFloat3(&out_poses[channel.target_node].scale, lerped_scale);
 			}
 		}
-		else if (channel.target_path == "rotation")                                               
+		else if (channel.target_path == "rotation")
 		{
 			auto rot_it = animation.rotations.find(sampler.output);
-			if (rot_it == animation.rotations.end() || (keyframe_index + INDEX_OFFSET_NEXT) >= rot_it->second.size())
+			if (rot_it != animation.rotations.end() && (keyframe_index + INDEX_OFFSET_NEXT) < rot_it->second.size())
 			{
-				OutputDebugStringA("[GltfModelAnimation Error] Animate: rotations key or keyframe index error!\n");
-				continue;
-			}
-			const std::vector<XMFLOAT4>& rotations = rot_it->second;
-			XMVECTOR rot_start = XMQuaternionNormalize(XMLoadFloat4(&rotations.at(keyframe_index)));
-			XMVECTOR rot_end = XMQuaternionNormalize(XMLoadFloat4(&rotations.at(keyframe_index + INDEX_OFFSET_NEXT)));
-			XMVECTOR slerped_rot = XMQuaternionSlerp(rot_start, rot_end, interpolation_factor);
-			XMVECTOR normalized_rot = XMQuaternionNormalize(slerped_rot);
-
-			if (static_cast<size_t>(channel.target_node) < animated_nodes.size())
-			{
-				XMStoreFloat4(&animated_nodes.at(channel.target_node).rotation, normalized_rot);
+				const std::vector<XMFLOAT4>& rotations = rot_it->second;
+				XMVECTOR rot_start = XMQuaternionNormalize(XMLoadFloat4(&rotations.at(keyframe_index)));
+				XMVECTOR rot_end = XMQuaternionNormalize(XMLoadFloat4(&rotations.at(keyframe_index + INDEX_OFFSET_NEXT)));
+				XMVECTOR slerped_rot = XMQuaternionNormalize(XMQuaternionSlerp(rot_start, rot_end, interpolation_factor));
+				XMStoreFloat4(&out_poses[channel.target_node].rotation, slerped_rot);
 			}
 		}
-		else if (channel.target_path == "translation")                                           
+		else if (channel.target_path == "translation")
 		{
 			auto trans_it = animation.translations.find(sampler.output);
-			if (trans_it == animation.translations.end() || (keyframe_index + INDEX_OFFSET_NEXT) >= trans_it->second.size())
+			if (trans_it != animation.translations.end() && (keyframe_index + INDEX_OFFSET_NEXT) < trans_it->second.size())
 			{
-				OutputDebugStringA("[GltfModelAnimation エラー] Animate: translations キーまたはキーフレームインデックスが不正です。\n");
-				continue;
-			}
-			const std::vector<XMFLOAT3>& translations = trans_it->second;		
-			XMVECTOR trans_start = XMLoadFloat3(&translations.at(keyframe_index));						
-			XMVECTOR trans_end = XMLoadFloat3(&translations.at(keyframe_index + INDEX_OFFSET_NEXT));	
-			XMVECTOR lerped_trans = XMVectorLerp(trans_start, trans_end, interpolation_factor);			
+				const std::vector<XMFLOAT3>& translations = trans_it->second;
+				XMVECTOR trans_start = XMLoadFloat3(&translations.at(keyframe_index));
+				XMVECTOR trans_end = XMLoadFloat3(&translations.at(keyframe_index + INDEX_OFFSET_NEXT));
+				XMVECTOR lerped_trans = XMVectorLerp(trans_start, trans_end, interpolation_factor);
 
-			if (static_cast<size_t>(channel.target_node) < animated_nodes.size())
-			{
-				if (IsRootNode(channel.target_node)) 
+				if (IsRootNode(channel.target_node))
 				{
 					constexpr float ZERO_POSITION = 0.0f;
-					animated_nodes.at(channel.target_node).translation = XMFLOAT3(ZERO_POSITION, ZERO_POSITION, ZERO_POSITION);
+					out_poses[channel.target_node].translation = XMFLOAT3(ZERO_POSITION, ZERO_POSITION, ZERO_POSITION);
 				}
 				else if (channel.target_node == target_root_node_index)
 				{
 					XMFLOAT3 initial_pose_trans = translations.front();
 					XMFLOAT3 final_trans;
 					XMStoreFloat3(&final_trans, lerped_trans);
-
 					final_trans.x = initial_pose_trans.x;
 					final_trans.z = initial_pose_trans.z;
-
-					animated_nodes.at(channel.target_node).translation = final_trans;
+					out_poses[channel.target_node].translation = final_trans;
 				}
-				else XMStoreFloat3(&animated_nodes.at(channel.target_node).translation, lerped_trans);			
+				else
+				{
+					XMStoreFloat3(&out_poses[channel.target_node].translation, lerped_trans);
+				}
 			}
 		}
 	}
+}
 
-	//更新されたノードのグローバル行列を再計算
+//指定した時間のアニメーションを適用しノード情報を更新
+void GltfModelAnimation::Animate(size_t animation_index, float time)
+{
+	BS_PROFILE_FUNCTION();
+
+	//// アニメーションデータの有無の確認
+	//if (model_data->animations.empty())	// GltfModelData内にアニメーションデータが存在しない場合
+	//{
+	//	return;						// 更新する対象がないため何も処理せずに安全に終了
+	//}
+
+	//if (animation_index >= model_data->animations.size())
+	//{
+	//	OutputDebugStringA("[GltfModelAnimation Error] animation_index out of range!/n");
+	//}
+
+	//for (size_t i = 0; i < animated_nodes.size(); ++i)
+	//{
+	//	animated_nodes[i].scale = model_data->nodes[i].scale;
+	//	animated_nodes[i].rotation = model_data->nodes[i].rotation;
+	//	animated_nodes[i].translation = model_data->nodes[i].translation;
+	//}
+
+	//using namespace DirectX;															// DirectXMathの名前空間を使用
+	//const size_t INDEX_OFFSET_NEXT = 1;													// 次の要素を参照するためのインデックスオフセット定数
+	//const GltfModelData::animation& animation = model_data->animations.at(animation_index);	// 引数で指定されたアニメーションデータを参照として取得
+
+	//// ルートモーション対象ノードのインデックスを取得
+	//int target_root_node_index = GetTargetRootNodeIndex(animation_index);
+
+	//// チャンネル（操作対象）ごとのアニメーション適用
+	//for (const GltfModelData::animation::channel& channel : animation.channels)                   // アニメーションが持つ全チャンネル（誰のどの部位を動かすか）をループ
+	//{
+	//	//サンプラーインデックスの安全な存在確認
+	//	if (channel.sampler < 0 || static_cast<size_t>(channel.sampler) >= animation.samplers.size())
+	//	{
+	//		OutputDebugStringA("[GltfModelAnimation Error] Animate: channel.sampler is out of range!\n");
+	//		continue;
+	//	}
+
+	//	const GltfModelData::animation::sampler& sampler = animation.samplers.at(channel.sampler);// チャンネルに対応するサンプラー（時間と値の紐付け情報）を取得
+	//	
+	//	//タイムラインマップのキーの安全な存在確
+	//	auto timeline_it = animation.timelines.find(sampler.input);
+	//	if (timeline_it == animation.timelines.end())
+	//	{
+	//		OutputDebugStringA("[GltfModelAnimation Error] Animate: sampler.input key not found in timelines map!\n");
+	//		continue;
+	//	}
+	//	const std::vector<float>& timeline = timeline_it->second;
+
+	//	if (timeline.empty())                                                                     // タイムラインのデータが空の場合
+	//	{
+	//		continue;                                                                             // 処理ができないためスキップし次のチャンネルへ進む
+	//	}
+
+	//	float interpolation_factor = 0.0f;                                                        // 関数から受け取るための補間係数を初期化
+	//	size_t keyframe_index = GetAnimationKeyframeIndex(timeline, time, interpolation_factor);  // 現在の時間に対応するキーフレーム番号と補間割合を取得
+
+	//	// 対象パラメータに応じた数式（補間処理）の実行
+	//	if (channel.target_path == "scale")                                                      
+	//	{
+	//		auto scale_it = animation.scales.find(sampler.output);
+	//		if (scale_it == animation.scales.end() || (keyframe_index + INDEX_OFFSET_NEXT) >= scale_it->second.size())
+	//		{
+	//			OutputDebugStringA("[GltfModelAnimation Error] Animate: scales key or keyframe index error!\n");
+	//			continue;
+	//		}
+	//		const std::vector<XMFLOAT3>& scales = scale_it->second;								
+	//		XMVECTOR scale_start = XMLoadFloat3(&scales.at(keyframe_index));                    
+	//		XMVECTOR scale_end = XMLoadFloat3(&scales.at(keyframe_index + INDEX_OFFSET_NEXT));  
+	//		XMVECTOR lerped_scale = XMVectorLerp(scale_start, scale_end, interpolation_factor); 
+
+	//		if (static_cast<size_t>(channel.target_node) < animated_nodes.size())
+	//		{
+	//			XMStoreFloat3(&animated_nodes.at(channel.target_node).scale, lerped_scale);           
+	//		}
+	//	}
+	//	else if (channel.target_path == "rotation")                                               
+	//	{
+	//		auto rot_it = animation.rotations.find(sampler.output);
+	//		if (rot_it == animation.rotations.end() || (keyframe_index + INDEX_OFFSET_NEXT) >= rot_it->second.size())
+	//		{
+	//			OutputDebugStringA("[GltfModelAnimation Error] Animate: rotations key or keyframe index error!\n");
+	//			continue;
+	//		}
+	//		const std::vector<XMFLOAT4>& rotations = rot_it->second;
+	//		XMVECTOR rot_start = XMQuaternionNormalize(XMLoadFloat4(&rotations.at(keyframe_index)));
+	//		XMVECTOR rot_end = XMQuaternionNormalize(XMLoadFloat4(&rotations.at(keyframe_index + INDEX_OFFSET_NEXT)));
+	//		XMVECTOR slerped_rot = XMQuaternionSlerp(rot_start, rot_end, interpolation_factor);
+	//		XMVECTOR normalized_rot = XMQuaternionNormalize(slerped_rot);
+
+	//		if (static_cast<size_t>(channel.target_node) < animated_nodes.size())
+	//		{
+	//			XMStoreFloat4(&animated_nodes.at(channel.target_node).rotation, normalized_rot);
+	//		}
+	//	}
+	//	else if (channel.target_path == "translation")                                           
+	//	{
+	//		auto trans_it = animation.translations.find(sampler.output);
+	//		if (trans_it == animation.translations.end() || (keyframe_index + INDEX_OFFSET_NEXT) >= trans_it->second.size())
+	//		{
+	//			OutputDebugStringA("[GltfModelAnimation エラー] Animate: translations キーまたはキーフレームインデックスが不正です。\n");
+	//			continue;
+	//		}
+	//		const std::vector<XMFLOAT3>& translations = trans_it->second;		
+	//		XMVECTOR trans_start = XMLoadFloat3(&translations.at(keyframe_index));						
+	//		XMVECTOR trans_end = XMLoadFloat3(&translations.at(keyframe_index + INDEX_OFFSET_NEXT));	
+	//		XMVECTOR lerped_trans = XMVectorLerp(trans_start, trans_end, interpolation_factor);			
+
+	//		if (static_cast<size_t>(channel.target_node) < animated_nodes.size())
+	//		{
+	//			if (IsRootNode(channel.target_node)) 
+	//			{
+	//				constexpr float ZERO_POSITION = 0.0f;
+	//				animated_nodes.at(channel.target_node).translation = XMFLOAT3(ZERO_POSITION, ZERO_POSITION, ZERO_POSITION);
+	//			}
+	//			else if (channel.target_node == target_root_node_index)
+	//			{
+	//				XMFLOAT3 initial_pose_trans = translations.front();
+	//				XMFLOAT3 final_trans;
+	//				XMStoreFloat3(&final_trans, lerped_trans);
+
+	//				final_trans.x = initial_pose_trans.x;
+	//				final_trans.z = initial_pose_trans.z;
+
+	//				animated_nodes.at(channel.target_node).translation = final_trans;
+	//			}
+	//			else XMStoreFloat3(&animated_nodes.at(channel.target_node).translation, lerped_trans);			
+	//		}
+	//	}
+	//}
+
+	////更新されたノードのグローバル行列を再計算
+	//CumulateTransforms();
+
+	if (model_data->animations.empty())
+	{
+		return;
+	}
+
+	std::vector<NodePose> poses;
+	SampleAnimationPose(animation_index, time, poses);
+
+	for (size_t i = 0; i < animated_nodes.size() && i < poses.size(); ++i)
+	{
+		animated_nodes[i].scale = poses[i].scale;
+		animated_nodes[i].rotation = poses[i].rotation;
+		animated_nodes[i].translation = poses[i].translation;
+	}
+
 	CumulateTransforms();
 }
 
@@ -384,39 +506,6 @@ int GltfModelAnimation::GetTargetRootNodeIndex(size_t animation_index) const
 	}
 
 	return max_movement_node_index;
-}
-
-//行列計算用の再帰呼び出し
-void GltfModelAnimation::TraverseNodeForTransform(int node_index, std::stack<DirectX::XMFLOAT4X4>& parent_global_transforms)
-{
-	BS_PROFILE_FUNCTION();
-
-	if (node_index < 0 || static_cast<size_t>(node_index) >= animated_nodes.size())
-	{
-		return;
-	}
-
-	// ローカル変換行列の構築とグローバル行列の計算
-	using namespace DirectX;                                                                                                    // DirectXMathの名前空間を使用し記述を省略
-	GltfModelData::node& current_node = animated_nodes.at(node_index);                                                                   // 対象のノードを参照で取得し更新可能にする
-	XMMATRIX scale_matrix = XMMatrixScaling(current_node.scale.x, current_node.scale.y, current_node.scale.z);                  // XYZのスケール値からスケール行列を作成
-	XMMATRIX rotation_matrix = XMMatrixRotationQuaternion(XMVectorSet(current_node.rotation.x, current_node.rotation.y, current_node.rotation.z, current_node.rotation.w)); // クォータニオン情報から回転行列を作成
-	XMMATRIX translation_matrix = XMMatrixTranslation(current_node.translation.x, current_node.translation.y, current_node.translation.z); // XYZの位置座標から移動行列を作成
-
-	XMMATRIX local_matrix = scale_matrix * rotation_matrix * translation_matrix;                                                // スケール、回転、移動を掛け合わせて自身のローカル行列を作成
-	XMMATRIX global_matrix = local_matrix * XMLoadFloat4x4(&parent_global_transforms.top());                                    // スタック最上部にある親の行列を掛けて自身のグローバル行列を算出
-	XMStoreFloat4x4(&current_node.global_transform, global_matrix);                                                             // 算出したグローバル行列をノード構造体に保存
-
-	// 子ノードに対する再帰処理
-	for (int child_index : current_node.children)								// ノードが持つ全ての子ノードに対してループ処理
-	{
-		if (child_index >= 0 && static_cast<size_t>(child_index) < animated_nodes.size())
-		{
-			parent_global_transforms.push(current_node.global_transform);			// 自身のグローバル行列を「親の行列」としてスタックの最上部に積む
-			TraverseNodeForTransform(child_index, parent_global_transforms);		// 子ノードのインデックスを渡し自身を再帰呼び出し
-			parent_global_transforms.pop();											// 子ノードの処理が終わったらスタックから自身の行列を取り除く
-		}
-	}
 }
 
 //アニメーションのキーフレームを取得し補間係数を計算
@@ -538,49 +627,101 @@ void GltfModelAnimation::AnimationBlend(size_t animation_index_a, float time_a, 
 {
 	BS_PROFILE_FUNCTION();
 
-	if (!model_data || model_data->animations.empty())return;
+	//if (!model_data || model_data->animations.empty())return;
 
-	//ブレンド率を0.0f～1.0fの範囲にクランプ
+	////ブレンド率を0.0f～1.0fの範囲にクランプ
+	//constexpr float min_blend_factor = 0.0f;
+	//constexpr float max_blend_factor = 1.0f;
+	//float clamped_factor = std::clamp(blend_factor, min_blend_factor, max_blend_factor);
+
+	////アニメーションAの姿勢を算出
+	//Animate(animation_index_a, time_a);
+
+	////ブレンド率がほぼ0の場合はアニメーションAのみで終了
+	//constexpr float epsilon_threshold = 0.0001f;
+	//if (clamped_factor <= epsilon_threshold)return;
+
+	////アニメーションAのノード姿勢を一時保存
+	//std::vector<GltfModelData::node> nodes_a = animated_nodes;
+
+	////アニメーションBの姿勢を算出
+	//Animate(animation_index_b, time_b);
+	//std::vector<GltfModelData::node> nodes_b = animated_nodes;
+
+	////全ボーンノードの平行移動・回転・スケールを合成
+	//using namespace DirectX;
+	//for (size_t node_idx = 0; node_idx < animated_nodes.size(); node_idx++)
+	//{
+	//	//スケールのLERP合成
+	//	XMVECTOR scale_a = XMLoadFloat3(&nodes_a[node_idx].scale);
+	//	XMVECTOR scale_b = XMLoadFloat3(&nodes_b[node_idx].scale);
+	//	XMVECTOR lerped_scale = XMVectorLerp(scale_a, scale_b, clamped_factor);
+	//	XMStoreFloat3(&animated_nodes[node_idx].scale, lerped_scale);
+
+	//	//回転のSLERP合成
+	//	XMVECTOR rot_a = XMLoadFloat4(&nodes_a[node_idx].rotation);
+	//	XMVECTOR rot_b = XMLoadFloat4(&nodes_b[node_idx].rotation);
+	//	XMVECTOR slerped_rot = XMQuaternionNormalize(XMQuaternionSlerp(rot_a, rot_b, clamped_factor));
+	//	XMStoreFloat4(&animated_nodes[node_idx].rotation, slerped_rot);
+
+	//	//平行移動のLERP合成
+	//	XMVECTOR trans_a = XMLoadFloat3(&nodes_a[node_idx].translation);
+	//	XMVECTOR trans_b = XMLoadFloat3(&nodes_b[node_idx].translation);
+	//	XMVECTOR lerped_trans = XMVectorLerp(trans_a, trans_b, clamped_factor);
+	//	XMStoreFloat3(&animated_nodes[node_idx].translation, lerped_trans);
+	//}
+
+	////合成後のローカル姿勢から最終的なワールド変換行列を再計算
+	//CumulateTransforms();
+
+	if (!model_data || model_data->animations.empty())
+	{
+		return;
+	}
+
 	constexpr float min_blend_factor = 0.0f;
 	constexpr float max_blend_factor = 1.0f;
 	float clamped_factor = std::clamp(blend_factor, min_blend_factor, max_blend_factor);
 
-	//アニメーションAの姿勢を算出
-	Animate(animation_index_a, time_a);
-
-	//ブレンド率がほぼ0の場合はアニメーションAのみで終了
 	constexpr float epsilon_threshold = 0.0001f;
-	if (clamped_factor <= epsilon_threshold)return;
-
-	//アニメーションAのノード姿勢を一時保存
-	std::vector<GltfModelData::node> nodes_a = animated_nodes;
-
-	//アニメーションBの姿勢を算出
-	Animate(animation_index_b, time_b);
-	std::vector<GltfModelData::node> nodes_b = animated_nodes;
-
-	//全ボーンノードの平行移動・回転・スケールを合成
-	using namespace DirectX;
-	for (size_t node_idx = 0; node_idx < animated_nodes.size(); node_idx++)
+	if (clamped_factor <= epsilon_threshold)
 	{
-		//スケールのLERP合成
-		XMVECTOR scale_a = XMLoadFloat3(&nodes_a[node_idx].scale);
-		XMVECTOR scale_b = XMLoadFloat3(&nodes_b[node_idx].scale);
+		Animate(animation_index_a, time_a);
+		return;
+	}
+	if (clamped_factor >= (max_blend_factor - epsilon_threshold))
+	{
+		Animate(animation_index_b, time_b);
+		return;
+	}
+
+	std::vector<NodePose> poses_a;
+	std::vector<NodePose> poses_b;
+
+	SampleAnimationPose(animation_index_a, time_a, poses_a);
+	SampleAnimationPose(animation_index_b, time_b, poses_b);
+
+	using namespace DirectX;
+	const size_t node_count = animated_nodes.size();
+
+	for (size_t node_idx = 0; node_idx < node_count; ++node_idx)
+	{
+		XMVECTOR scale_a = XMLoadFloat3(&poses_a[node_idx].scale);
+		XMVECTOR scale_b = XMLoadFloat3(&poses_b[node_idx].scale);
 		XMVECTOR lerped_scale = XMVectorLerp(scale_a, scale_b, clamped_factor);
 		XMStoreFloat3(&animated_nodes[node_idx].scale, lerped_scale);
 
-		//回転のSLERP合成
-		XMVECTOR rot_a = XMLoadFloat4(&nodes_a[node_idx].rotation);
-		XMVECTOR rot_b = XMLoadFloat4(&nodes_b[node_idx].rotation);
+		XMVECTOR rot_a = XMLoadFloat4(&poses_a[node_idx].rotation);
+		XMVECTOR rot_b = XMLoadFloat4(&poses_b[node_idx].rotation);
 		XMVECTOR slerped_rot = XMQuaternionNormalize(XMQuaternionSlerp(rot_a, rot_b, clamped_factor));
 		XMStoreFloat4(&animated_nodes[node_idx].rotation, slerped_rot);
 
-		//平行移動のLERP合成
-		XMVECTOR trans_a = XMLoadFloat3(&nodes_a[node_idx].translation);
-		XMVECTOR trans_b = XMLoadFloat3(&nodes_b[node_idx].translation);
+		XMVECTOR trans_a = XMLoadFloat3(&poses_a[node_idx].translation);
+		XMVECTOR trans_b = XMLoadFloat3(&poses_b[node_idx].translation);
 		XMVECTOR lerped_trans = XMVectorLerp(trans_a, trans_b, clamped_factor);
 		XMStoreFloat3(&animated_nodes[node_idx].translation, lerped_trans);
 	}
-	//合成後のローカル姿勢から最終的なワールド変換行列を再計算
+
+	// 合成された最終姿勢に対してのみ、1回だけ行列ツリーを計算する
 	CumulateTransforms();
 }
