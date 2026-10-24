@@ -91,7 +91,6 @@ int framework::run()
 
 			tictoc.tick();
 			calculate_frame_stats();
-			Input::Instance().Update();
 
 			//シーンの更新と描画
 			{
