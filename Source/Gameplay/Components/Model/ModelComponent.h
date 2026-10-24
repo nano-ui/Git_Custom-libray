@@ -70,6 +70,10 @@ public:
 	//ボーン名からワールド座標を取得
 	bool GetBoneWorldPosition(const std::string& bone_name, DirectX::XMFLOAT3& out_world_position)const;
 
+	void SetAutoAnimationUpdate(bool enable) { auto_animation_update = enable; }
+
+	bool IsAutoAnimationUpdate() const { return auto_animation_update; }
+
 private:
 	//モデルの描画処理
 	void RenderInternal(ID3D11DeviceContext* context);
@@ -81,4 +85,5 @@ private:
 	std::weak_ptr<TransformComponent> target_transform;        //描画用トランスフォームへの弱参照
 	std::string model_path = "";                               //ロードしているモデルファイルパス
 	bool is_visible = true;                                    //描画可否フラグ
+	bool auto_animation_update = true;
 };

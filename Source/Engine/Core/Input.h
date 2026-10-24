@@ -71,6 +71,9 @@ public:
 	//Windowsメッセージ処理
 	bool ProcessMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
+	//フレームの終わりに呼び出し、更新ロックを解除する
+	void EndFrame();
+
 private:
 	//コンストラクタ
 	Input();
@@ -110,5 +113,7 @@ private:
 
 	int mouse_wheel_delta = 0;								//ホイールの回転量
 	int raw_mouse_wheel_delta = 0;							//ホイールの一時蓄積
+
+	bool is_updated_this_frame = false;
 };
 

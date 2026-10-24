@@ -9,6 +9,7 @@
 #include <Windows.h>
 #include <fstream>
 #include <filesystem>
+#include <Engine\Core\MacroTracy.h>
 
 //コンストラクタ
 AttachmentColliderComponent::AttachmentColliderComponent()
@@ -25,6 +26,8 @@ void AttachmentColliderComponent::Initializa(
 	std::shared_ptr<ModelComponent> model_comp,
 	std::shared_ptr<TransformComponent> transform_comp)
 {
+	BS_PROFILE_FUNCTION();
+
 	Component::Initialize();
 
 	model_component = model_comp;
@@ -75,6 +78,7 @@ void AttachmentColliderComponent::Initializa(
 //更新処理
 void AttachmentColliderComponent::Update(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
 	if (!is_active)return;
 
 	auto model_comp = model_component.lock();
@@ -109,6 +113,8 @@ void AttachmentColliderComponent::Update(float elapsed_time)
 //デバッグ描画処理
 void AttachmentColliderComponent::RenderDebug(ShapeRenderer* renderer)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!renderer || !is_active)return;
 
 	for (const auto& capsule : runtime_colliders)
@@ -169,6 +175,8 @@ void AttachmentColliderComponent::RenderDebug(ShapeRenderer* renderer)
 //コライダー名を指定して有効/無効切り替え
 void AttachmentColliderComponent::SetColliderActive(const std::string& target_name, bool is_active)
 {
+	BS_PROFILE_FUNCTION();
+
 	bool is_found = false;
 	for (size_t i = 0; i < collider_items.size() && i < runtime_colliders.size(); i++)
 	{
@@ -190,6 +198,8 @@ void AttachmentColliderComponent::SetColliderActive(const std::string& target_na
 //攻撃判定属性のコライダーのみ一括で有効/無効切り替え
 void AttachmentColliderComponent::SetAttackCollidersActive(bool is_active)
 {
+	BS_PROFILE_FUNCTION();
+
 	for (size_t i = 0; i < collider_items.size() && i < runtime_colliders.size(); i++)
 	{
 		if (!collider_items[i] || !runtime_colliders[i])continue;
@@ -206,6 +216,8 @@ void AttachmentColliderComponent::SetAttackCollidersActive(bool is_active)
 //全コライダーの一括有効/無効切り替え
 void AttachmentColliderComponent::SetAllColluderActive(bool is_active)
 {
+	BS_PROFILE_FUNCTION();
+
 	for (size_t i = 0; i < collider_items.size() && i < runtime_colliders.size(); i++)
 	{
 		if (collider_items[i])collider_items[i]->is_active = is_active;
@@ -216,6 +228,8 @@ void AttachmentColliderComponent::SetAllColluderActive(bool is_active)
 //JSONファイルからコライダー設定復元
 bool AttachmentColliderComponent::LoadFromJson(const std::string& file_path)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (file_path.empty())return false;
 
 	std::ifstream input_file(file_path);
@@ -256,6 +270,8 @@ bool AttachmentColliderComponent::CalculateCapsulePoints(
 	DirectX::XMFLOAT3& out_start,
 	DirectX::XMFLOAT3& out_end)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!model_comp || item.start_bone_name.empty())return false;
 
 	//2ボーン連携モード

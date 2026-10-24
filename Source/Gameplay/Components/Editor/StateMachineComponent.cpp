@@ -8,6 +8,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <Engine\Core\MacroTracy.h>
 
 //コンストラクタ
 StateMachineComponent::StateMachineComponent()
@@ -27,6 +28,8 @@ StateMachineComponent::~StateMachineComponent() = default;
 //初期化
 void StateMachineComponent::Initialize(StateBlackboard* blackboard)
 {
+	BS_PROFILE_FUNCTION();
+
 	//プレハブJSONからパスが正しく読み込まれているか判定
 	if (!state_machine_path.empty())
 	{
@@ -69,6 +72,8 @@ void StateMachineComponent::Initialize(StateBlackboard* blackboard)
 //更新
 void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboard, bool is_anim_finished) 
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!blackboard)
 	{
 		printf("エラー: StateMachineComponent::Update - blackboard が nullptr です。\n");
@@ -219,6 +224,8 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 //モデル名設定
 void StateMachineComponent::SetModelName(const std::string& model_name)
 {
+	BS_PROFILE_FUNCTION();
+
 	const std::string suffix_name = "_StateMachine";
 	std::string generated_path = PathHelper::GenerateJsonFilePath(model_name, suffix_name);
 
@@ -237,6 +244,8 @@ void StateMachineComponent::SetModelName(const std::string& model_name)
 //シリアライズ登録
 void StateMachineComponent::SetupSerialization(JsonSerializer* serializer)
 {
+	BS_PROFILE_FUNCTION();
+
 	//シリアライザのポインタが有効か確認
 	if (serializer)
 	{
@@ -247,12 +256,16 @@ void StateMachineComponent::SetupSerialization(JsonSerializer* serializer)
 //アクションカテゴリを取得
 ActionCategory StateMachineComponent::GetCurrentActionCategory() const
 {
+	BS_PROFILE_FUNCTION();
+
 	return state_graph_simulator->GetCurrentActionCategory();
 }
 
 //現在のステートがルートモーションを有効にしているか取得
 bool StateMachineComponent::IsCurrentRootMotionEnbled() const
 {
+	BS_PROFILE_FUNCTION();
+
 	//シミュレータが存在する場合はその判定結果を返却
 	if (state_graph_simulator)
 	{
@@ -265,6 +278,8 @@ bool StateMachineComponent::IsCurrentRootMotionEnbled() const
 //単一の遷移条件が成立しているか判定
 bool StateMachineComponent::EvaluateCondition(const TransitionCondition& cond, StateBlackboard* blackboard, bool is_anim_finished) const
 {
+	BS_PROFILE_FUNCTION();
+
 	//アニメーション終了判定
 	if (cond.type == ConditionNodeType::AnimationEnd)return is_anim_finished;
 
@@ -275,6 +290,8 @@ bool StateMachineComponent::EvaluateCondition(const TransitionCondition& cond, S
 //ステートマシンJSONからアニメーション対応表を抽出
 void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 {
+	BS_PROFILE_FUNCTION();
+
 	bool load_success = StateMachineDataLoader::LoadForRuntime(
 		state_machine_path,
 		runtime_nodes,
@@ -386,6 +403,8 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 //ピンIDから所属するノードIDを逆引き検索
 uint32_t StateMachineComponent::GetNodeIdFromPinId(uint32_t pin_id) const
 {
+	BS_PROFILE_FUNCTION();
+
 	for (size_t i = 0; i < runtime_nodes.size(); i++)
 	{
 		const SimulatorRuntimeNode& node = runtime_nodes[i]; //検索対象ノード
@@ -413,6 +432,8 @@ uint32_t StateMachineComponent::GetNodeIdFromPinId(uint32_t pin_id) const
 //指定されたノードIDの親サブグラフノードIDを逆引き
 uint32_t StateMachineComponent::GetParentNodeId(uint32_t node_id) const
 {
+	BS_PROFILE_FUNCTION();
+
 	for (size_t i = 0; i < runtime_nodes.size(); i++)
 	{
 		if (runtime_nodes[i].id == node_id)
@@ -427,6 +448,8 @@ uint32_t StateMachineComponent::GetParentNodeId(uint32_t node_id) const
 //ノードIDからグラフIDを取得
 uint32_t StateMachineComponent::GetGraphIdFromNodeId(uint32_t node_id) const
 {
+	BS_PROFILE_FUNCTION();
+
 	for (size_t i = 0; i < runtime_nodes.size(); i++)
 	{
 		if (runtime_nodes[i].id == node_id)

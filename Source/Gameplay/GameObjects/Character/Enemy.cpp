@@ -53,7 +53,7 @@ void Enemy::Update(float elapsed_time)
 	BS_PROFILE_FUNCTION();
 	if (is_play)
 	{
-		//UpdateTargetFromHate();
+		UpdateTargetFromHate();
 		UpdateChase(elapsed_time);
 	}
 	Character::Update(elapsed_time);

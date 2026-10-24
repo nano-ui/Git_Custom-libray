@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Character/Character.h"
 #include "Gameplay\Components\Animation\AnimationComponent.h"
+#include <Engine\Core\MacroTracy.h>
 
 //静的の実体定義
 ObjectManager* ObjectManager::instance_ptr = nullptr;
@@ -26,6 +27,8 @@ ObjectManager::~ObjectManager()
 //オブジェクトの登録
 void ObjectManager::Register(std::unique_ptr<GameObject> object)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!object)
 	{
 		OutputDebugStringA("[ObjectManager エラー] Register: 登録対象の object が nullptr です。\n");
@@ -57,6 +60,8 @@ void ObjectManager::Register(std::unique_ptr<GameObject> object)
 //全オブジェクトの更新処理
 void ObjectManager::Update(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
+
 	//生存している全オブジェクトの更新処理
 	for (auto& object : game_objects)
 	{
@@ -73,6 +78,8 @@ void ObjectManager::Update(float elapsed_time)
 //全オブジェクトの描画処理
 void ObjectManager::Render(ID3D11DeviceContext* context)
 {
+	BS_PROFILE_FUNCTION();
+
 	//生存している全オブジェクトの描画処理
 	for (auto& object : game_objects)
 	{
@@ -99,6 +106,8 @@ void ObjectManager::RenderGui()
 //全オブジェクトのデバッグ描画
 void ObjectManager::RenderDebug(ShapeRenderer* renderer)
 {
+	BS_PROFILE_FUNCTION();
+
 	//生存している全オブジェクトのデバッグ描画処理
 	for (auto& object : game_objects)
 	{
@@ -112,6 +121,8 @@ void ObjectManager::RenderDebug(ShapeRenderer* renderer)
 //アニメーションマップの更新
 void ObjectManager::RefreshAnimationMap(uint32_t target_model_hash, const std::unordered_map<uint32_t, std::string>& new_map)
 {
+	BS_PROFILE_FUNCTION();
+
 	//全てのオブジェクトを走査
 	for (auto iterator = game_objects.begin(); iterator != game_objects.end(); iterator++)
 	{
@@ -126,6 +137,8 @@ void ObjectManager::RefreshAnimationMap(uint32_t target_model_hash, const std::u
 //無効になったオブジェクトの削除処理
 void ObjectManager::RemoveInactiveObject()
 {
+	BS_PROFILE_FUNCTION();
+
 	for (auto iterator = game_objects.begin(); iterator != game_objects.end();)
 	{
 		if (!(*iterator)->IsActive())
@@ -148,6 +161,8 @@ void ObjectManager::RemoveInactiveObject()
 
 void ObjectManager::Clear()
 {
+	BS_PROFILE_FUNCTION();
+
 	if (collision_manager)
 	{
 		for (auto& object : game_objects)

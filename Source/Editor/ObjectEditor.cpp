@@ -21,6 +21,7 @@
 #include <windows.h>
 #include <commdlg.h>
 #include "StateMachineEditor\StateGraphConfigManager.h"
+#include <Engine\Core\MacroTracy.h>
 
 static const std::string editor_config_path = "Data/Json/System/EditorConfig.json";
 static const std::string config_key_scene_path = "last_opened_scene";
@@ -51,6 +52,8 @@ ObjectEditor::~ObjectEditor()
 //初期化
 void ObjectEditor::Initialize()
 {
+	BS_PROFILE_FUNCTION();
+
 	selected_class_index = 0;
 	current_selected_object = nullptr;
 	cached_class_names = ObjectFactory::GetClassNames();
@@ -67,6 +70,8 @@ void ObjectEditor::Initialize()
 //更新
 void ObjectEditor::Update(Camera* camera, CollisionManager* collision_manager)
 {
+	BS_PROFILE_FUNCTION();
+
 	//実行前チェック
 	if (!is_placement_mode)return;
 	if (selected_class_index < 0 || selected_class_index >= static_cast<int>(cached_class_names.size()))return;
@@ -159,6 +164,8 @@ void ObjectEditor::Update(Camera* camera, CollisionManager* collision_manager)
 //描画
 void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 {
+	BS_PROFILE_FUNCTION();
+
 	HandleDragDropTarget(camera, collision_manager);
 
 	//画面解像度に基づいた初期配置位置の計算
@@ -211,6 +218,8 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 //シーン保存
 void ObjectEditor::SaveSceneWithDialog()
 {
+	BS_PROFILE_FUNCTION();
+
 	std::string dynamic_save_path = SelectSavePath();
 	if (!dynamic_save_path.empty())
 	{
@@ -221,6 +230,8 @@ void ObjectEditor::SaveSceneWithDialog()
 //シーン読み込み
 void ObjectEditor::LoadSceneWithDialog()
 {
+	BS_PROFILE_FUNCTION();
+
 	std::string dynamic_load_path = SelectOpenPath();
 
 	if (!dynamic_load_path.empty())
@@ -232,6 +243,8 @@ void ObjectEditor::LoadSceneWithDialog()
 //仮オブジェクト生成
 void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 {
+	BS_PROFILE_FUNCTION();
+
 	printf("\n==========================================\n");
 	printf("[デバッグログ] CreateTempModelObject 開始\n");
 	printf("[デバッグログ] ドロップされたモデルパス: %s\n", model_path.c_str());
@@ -340,6 +353,8 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 //オブジェクト生成UI描画
 void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_manager)
 {
+	BS_PROFILE_FUNCTION();
+
 	//現在生成されているオブジェクトの一覧リスト描画
 	ImGui::Text(u8"オブジェクトリスト");
 	ImGui::Separator();
@@ -389,6 +404,8 @@ void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_mana
 //クラス適用UI描画
 void ObjectEditor::DrawClassApplySection()
 {
+	BS_PROFILE_FUNCTION();
+
 	if (cached_class_names.empty())
 	{
 		OutputDebugStringA("[Error] ObjectEditor: DrawClassApplySection - cached_class_names が空です。\n");
@@ -428,6 +445,8 @@ void ObjectEditor::DrawClassApplySection()
 //選択されたクラスへの置き換え処理
 void ObjectEditor::ApplySelectedClassToObject()
 {
+	BS_PROFILE_FUNCTION();
+
 	printf("\n==========================================\n");
 	printf("[デバッグログ] ApplySelectedClassToObject (クラス置換) 開始\n");
 
@@ -517,6 +536,8 @@ void ObjectEditor::ApplySelectedClassToObject()
 //オブジェクトパラメータ編集UI描画
 void ObjectEditor::DrawRightPane()
 {
+	BS_PROFILE_FUNCTION();
+
 	//選択中のオブジェクト情報の表示
 	ImGui::Text(u8"モデル情報");
 	ImGui::Separator();
@@ -559,6 +580,8 @@ void ObjectEditor::DrawRightPane()
 //ギズモ描画
 void ObjectEditor::DrawGizmo(Camera* camera)
 {
+	BS_PROFILE_FUNCTION();
+
 	//実行前チェック
 	if (current_selected_object == nullptr) return;
 	if (!current_selected_object->IsActive())return;
@@ -645,6 +668,8 @@ void ObjectEditor::DrawGizmo(Camera* camera)
 //配置されているすべてのオブジェクト状態を保存
 void ObjectEditor::SaveScene(const std::string& file_path)
 {
+	BS_PROFILE_FUNCTION();
+
 	//指定された保存先フォルダの動的自動生成
 	std::filesystem::path system_path(file_path);
 	if (system_path.has_parent_path())

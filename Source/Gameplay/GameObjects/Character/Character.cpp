@@ -73,6 +73,11 @@ void Character::Initialize()
 
 	if (model_component->GetModel())
 	{
+		std::filesystem::path path_obj(model_component->GetModelPath());
+		std::string model_name = path_obj.stem().string();
+
+		model_component->SetAutoAnimationUpdate(false);
+
 		sequencer_component = std::make_unique<AnimationSequencerComponent>(model_component);
 		sequencer_component->Initialize(model_component->GetModelPath());
 
@@ -102,9 +107,6 @@ void Character::Initialize()
 				}
 			}
 		}
-
-		std::filesystem::path path_obj(model_component->GetModelPath());
-		std::string model_name = path_obj.stem().string();
 
 		if (state_machine_component)
 		{
@@ -181,6 +183,21 @@ void Character::Update(float elapsed_time)
 			debug_root_motion_delta = { 0.0f, 0.0f, 0.0f };
 		}
 	}
+
+	// アニメーションシーケンサの更新と再生時間の同期
+	if (sequencer_component)
+	{
+		constexpr bool is_loop = true;
+		sequencer_component->Update(elapsed_time, is_loop);
+		current_animation_time = sequencer_component->GetCurrentSequenceTime();
+	}
+	else
+	{
+		OutputDebugStringA("[Character 警告] Update: sequencer_component が nullptr です。\n");
+	}
+
+	// アニメーション再生時刻に応じた当たり判定の有効状態を更新
+	UpdateColliderSequencer();
 }
 
 //衝突処理

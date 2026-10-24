@@ -9,10 +9,13 @@
 #include <imgui.h>
 #include <algorithm>
 #include <fstream>
+#include <Engine\Core\MacroTracy.h>
 
 //コンストラクタ
 ColliderAttachmentEditor::ColliderAttachmentEditor()
 {
+	BS_PROFILE_FUNCTION();
+
 	collision_logic = std::make_unique<CollisionLogic>();
 }
 
@@ -22,6 +25,8 @@ ColliderAttachmentEditor::~ColliderAttachmentEditor() = default;
 //初期化処理
 void ColliderAttachmentEditor::Initialize()
 {
+	BS_PROFILE_FUNCTION();
+
 	collider_items.clear();
 	selected_item_index = -1;
 }
@@ -29,6 +34,8 @@ void ColliderAttachmentEditor::Initialize()
 //更新処理
 void ColliderAttachmentEditor::Update(ModelPreviewWindow* preview_wnidow)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!preview_wnidow)return;
 
 	//左クリック時レイキャスト判定
@@ -43,6 +50,8 @@ void ColliderAttachmentEditor::Update(ModelPreviewWindow* preview_wnidow)
 //ImGui描画及びレイキャストによる選択処理
 void ColliderAttachmentEditor::RenderGui(ModelPreviewWindow* preview_window)
 {
+	BS_PROFILE_FUNCTION();
+
 	ImGui::SetNextWindowSize(ImVec2(360.0f, 520.0f), ImGuiCond_FirstUseEver);
 	if (!ImGui::Begin(u8"コライダーアタッチメントエディタ"))
 	{
@@ -306,12 +315,14 @@ void ColliderAttachmentEditor::RenderGui(ModelPreviewWindow* preview_window)
 //コライダー名を指定してON/OFF切り替え
 void ColliderAttachmentEditor::SetColliderActiveByName(const std::string& target_name, bool is_active)
 {
+	BS_PROFILE_FUNCTION();
+
 	bool is_found = false;
 	for (auto& item : collider_items)
 	{
 		if (item && item->name == target_name)
 		{
-			item->is_active = is_active;
+			item->is_sequencer_active = is_active;
 			is_found = true;
 			break;
 		}
@@ -326,6 +337,8 @@ void ColliderAttachmentEditor::SetColliderActiveByName(const std::string& target
 //ビューポートクリック時のレイキャスト判定
 void ColliderAttachmentEditor::HandleRaycastSelection(ModelPreviewWindow* preview_window, const ImVec2& image_pos, const ImVec2& image_size)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!preview_window || !collision_logic) return;
 
 	Model* model = preview_window->GetModel();
@@ -443,6 +456,8 @@ void ColliderAttachmentEditor::HandleRaycastSelection(ModelPreviewWindow* previe
 
 int ColliderAttachmentEditor::FindHighestAmongHitNodes(const std::vector<int>& hit_node_indices, Model* model)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!model || hit_node_indices.empty())return -1;
 
 	const auto& nodes = model->GetAnimatedNodes();
@@ -487,6 +502,8 @@ int ColliderAttachmentEditor::FindHighestAmongHitNodes(const std::vector<int>& h
 //JSON保存
 void ColliderAttachmentEditor::SaveToJson(const std::string& file_path)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (file_path.empty()) return;
 
 	// 全コライダーを格納するルート配列
@@ -520,6 +537,8 @@ void ColliderAttachmentEditor::SaveToJson(const std::string& file_path)
 //JSON読み込み
 void ColliderAttachmentEditor::LoadFromJson(const std::string& file_path)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (file_path.empty()) return;
 
 	std::ifstream input_file(file_path);
@@ -560,6 +579,8 @@ void ColliderAttachmentEditor::LoadFromJson(const std::string& file_path)
 //プレビュー用コライダー描画
 void ColliderAttachmentEditor::RenderDebug(ShapeRenderer* renderer, ModelPreviewWindow* preview_window)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!renderer || !preview_window) return;
 	Model* model = preview_window->GetModel();
 	if (!model) return;
@@ -635,6 +656,8 @@ void ColliderAttachmentEditor::RenderDebug(ShapeRenderer* renderer, ModelPreview
 //シーケンサプレビュー用コライダー描画
 void ColliderAttachmentEditor::RenderDebugForSequencer(ShapeRenderer* renderer, ModelPreviewWindow* prevew_window)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!renderer || !prevew_window)return;
 	Model* model = prevew_window->GetModel();
 	if (!model)return;
@@ -644,7 +667,7 @@ void ColliderAttachmentEditor::RenderDebugForSequencer(ShapeRenderer* renderer, 
 	for (size_t i = 0; i < collider_items.size(); i++)
 	{
 		const auto& item = collider_items[i];
-		if (!item || !item->is_active)continue;
+		if (!item || !item->is_active || !item->is_sequencer_active)continue;
 
 		DirectX::XMFLOAT3 center = {};
 		DirectX::XMFLOAT4 rotation = {};
@@ -680,6 +703,8 @@ bool ColliderAttachmentEditor::CalculateCapsuleWorld(
 	DirectX::XMFLOAT4& out_rotation,
 	float& out_total_height)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!model || item.start_bone_name.empty()) return false;
 	DirectX::XMMATRIX mat_model = DirectX::XMLoadFloat4x4(&model_world);
 
@@ -783,6 +808,8 @@ bool ColliderAttachmentEditor::CalculateCapsuleWorld(
 //モデル名に基づいて保存/読み込みファイルパスを管理
 std::string ColliderAttachmentEditor::GetDefaultFilePath(ModelPreviewWindow* preview_window) const
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!preview_window)return "";
 
 	std::string raw_model_path = preview_window->GetModelName();

@@ -7,6 +7,7 @@
 #include <cmath>
 #include <algorithm>
 #include <chrono>
+#include <Engine\Core\MacroTracy.h>
 
 #undef min
 #undef max
@@ -33,6 +34,8 @@ CollisionManager::~CollisionManager()
 //コライダーの登録
 void CollisionManager::Register(Collider* collider)
 {
+    BS_PROFILE_FUNCTION();
+
 	//引数チェック
 	if (!collider)return;
 
@@ -66,6 +69,8 @@ void CollisionManager::Register(Collider* collider)
 //コライダーの削除
 void CollisionManager::Remove(Collider* collider)
 {
+    BS_PROFILE_FUNCTION();
+
     //引数チェック
     if (!collider)return;
 
@@ -109,6 +114,8 @@ void CollisionManager::Remove(Collider* collider)
 //登録されたコライダーの一括判定
 void CollisionManager::ExecuteCollision()
 {
+    BS_PROFILE_FUNCTION();
+
     //実行前チェック
     if (!is_enable_collision)
     {
@@ -147,6 +154,8 @@ void CollisionManager::ExecuteCollision()
 //ImGuiデバッグ描画
 void CollisionManager::RenderGui()
 {
+    BS_PROFILE_FUNCTION();
+
 #ifdef USE_IMGUI
     {
         if (ImGui::CollapsingHeader("CollisionManagerInfo", ImGuiTreeNodeFlags_DefaultOpen))
@@ -197,6 +206,8 @@ void CollisionManager::RenderGui()
 //デバッグ描画
 void CollisionManager::RenderDebug(ShapeRenderer* renderer)
 {
+    BS_PROFILE_FUNCTION();
+
     if (!is_draw_grid || !renderer)return;
 
     DirectX::XMFLOAT4 color = { 1.0f,1.0f,0.0f,1.0f };
@@ -220,6 +231,8 @@ void CollisionManager::RenderDebug(ShapeRenderer* renderer)
 //動的コライダーと空間分割の判定
 void CollisionManager::CheckDynamicVsSpace()
 {
+    BS_PROFILE_FUNCTION();
+
     //スフィアのループ処理
     for (size_t i = 0; i < dynamic_colliders.size(); i++)
     {
@@ -337,6 +350,8 @@ bool CollisionManager::RayCastSpace(
     const DirectX::XMFLOAT3& end_pos,
     DirectX::XMFLOAT3& hit_position) const
 {
+    BS_PROFILE_FUNCTION();
+
     bool is_hit = false;
     float closest_distance = std::numeric_limits<float>::max();
     DirectX::XMFLOAT3 temp_hit_pos = { 0.0f,0.0f,0.0f };
@@ -375,6 +390,8 @@ bool CollisionManager::RayCastSpace(
 //スフィア同士の総当たり判定
 void CollisionManager::CheckSphereVsSphere()
 {
+    BS_PROFILE_FUNCTION();
+
     //コライダーが2つ未満の場合は判定不要
     if (sphere_colliders.size() < 2) return;
 
@@ -449,6 +466,8 @@ void CollisionManager::CheckSphereVsSphere()
 //カプセル同士の総当たり判定
 void CollisionManager::CheckCapsuleVsCapsule()
 {
+    BS_PROFILE_FUNCTION();
+
     if (capsule_colliders.size() < 2)return;
 
     for (auto it = grid_heads.begin(); it != grid_heads.end(); it++)
@@ -563,6 +582,8 @@ void CollisionManager::CheckCapsuleVsCapsule()
 //グリッド登録用の補助関数
 void CollisionManager::AddColluderToGrid(Collider* collider)
 {
+    BS_PROFILE_FUNCTION();
+
     //グリッド範囲の算出
     GridRange range = CalculateGridRenge(collider);
 
@@ -591,6 +612,8 @@ void CollisionManager::AddColluderToGrid(Collider* collider)
 //座標からグリッド範囲を計算
 GridRange CollisionManager::CalculateGridRenge(Collider* collider) const
 {
+    BS_PROFILE_FUNCTION();
+
     GridRange range;
 
     DirectX::XMFLOAT3 min_pos = { 0.0f,0.0f,0.0f };
@@ -645,6 +668,8 @@ GridRange CollisionManager::CalculateGridRenge(Collider* collider) const
 //現在のコライダー密度から最適なセルサイズを計算して適用
 void CollisionManager::OptimizeCellSize()
 {
+    BS_PROFILE_FUNCTION();
+
     if (!is_auto_optimize_grid || dynamic_colliders.empty())return;
 
     const size_t current_collider_count = dynamic_colliders.size();

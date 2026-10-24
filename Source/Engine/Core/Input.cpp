@@ -1,4 +1,5 @@
 #include "Input.h"
+#include "Log\Log.h"
 
 #include <cmath>
 
@@ -95,17 +96,20 @@ void Input::Update()
 		ZeroMemory(&current_pad_state, sizeof(XINPUT_STATE));
 	}
 
-	//マウス移動量の確定処理
-	mouse_delta_x = raw_mouse_delta_x;
-	mouse_delta_y = raw_mouse_delta_y;
+	//スクリーン座標の更新とマウス差分の計算
+	prev_mouse_pos = current_mouse_pos;
+	if (!GetCursorPos(&current_mouse_pos))
+	{
+		LOG_WARNING({ u8"インプット" }, u8"GetCursorPos の取得に失敗");
+	}
+
+	//メッセージハンドラで累積された移動差分を採用
+	mouse_delta_x = static_cast<float>(current_mouse_pos.x - prev_mouse_pos.x);
+	mouse_delta_y = static_cast<float>(current_mouse_pos.y - prev_mouse_pos.y);
 
 	//次フレーム用に累積変数をクリア
 	raw_mouse_delta_x = 0.0f;
 	raw_mouse_delta_y = 0.0f;
-
-	//スクリーン座標の更新
-	prev_mouse_pos = current_mouse_pos;
-	GetCursorPos(&current_mouse_pos);
 
 	//現在のマウスの状態を検知
 	for (int btn_idx = 0; btn_idx < mouse_button_count; btn_idx++)
@@ -299,8 +303,8 @@ bool Input::ProcessMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	if (msg == WM_MOUSEMOVE)
 	{
 		//メッセージパラメーターから現在のローカルマウス座標を抽出
-		int current_x = static_cast<int>(LOWORD(lparam));
-		int current_y = static_cast<int>(HIWORD(lparam));
+		short current_x = static_cast<short>(LOWORD(lparam));
+		short current_y = static_cast<short>(HIWORD(lparam));
 
 		static int last_msg_x = current_x;
 		static int last_msg_y = current_y;
@@ -363,4 +367,10 @@ bool Input::ProcessMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		return true;
 	}
 	return false;
+}
+
+//フレームの終わりに呼び出し、更新ロックを解除する
+void Input::EndFrame()
+{
+	is_pad_connected = false;
 }

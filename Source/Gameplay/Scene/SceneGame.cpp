@@ -281,17 +281,20 @@ void SceneGame::Render(float elapsed_time)
 	{
 		skybox->BindIblTextures(context);
 	}
+
+	if (object_manager)
 	{
-		BS_PROFILE_SCOPE("ObjectManager::Render");
-		if (object_manager)
-		{
-			object_manager->Render(context);
-		}
+		object_manager->Render(context);
 	}
 
 	if (collision_experiment)
 	{
 		collision_experiment->Render(shape_renderer.get());
+	}
+
+	if (object_manager && shape_renderer)
+	{
+		object_manager->RenderDebug(shape_renderer.get());
 	}
 
 	// レンダラーとカメラが有効か判定

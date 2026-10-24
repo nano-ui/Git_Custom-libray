@@ -74,8 +74,21 @@ bool ModelComponent::LoadModel(const std::string& file_path)
 //アニメーション更新
 void ModelComponent::Update(float delta_time)
 {
-	if (model)model->Update(delta_time);
-	else OutputDebugStringA("[ModelComponent 警告] Update: model インスタンスが nullptr です。\n");
+	if (!is_active)
+	{
+		return;
+	}
+
+	if (!model)
+	{
+		OutputDebugStringA("[ModelComponent 警告] Update: model が nullptr です。\n");
+		return;
+	}
+
+	if (auto_animation_update)
+	{
+		model->Update(delta_time);
+	}
 }
 
 //描画処理

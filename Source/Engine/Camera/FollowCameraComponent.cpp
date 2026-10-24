@@ -1,6 +1,7 @@
 #include "FollowCameraComponent.h"
 #include "Camera.h"
 #include "Engine\Core\Input.h"
+#include "Engine\Core\Log\Log.h"
 
 #include <Windows.h>
 #include <cmath>
@@ -126,10 +127,15 @@ void FollowCameraComponent::SetCamera(const std::shared_ptr<Camera>& camera)
 //マウス入力による回転角の更新
 void FollowCameraComponent::UpdateMouseRotation(float elapsed_time)
 {
-	if (Input::Instance().IsKeyPress(VK_RBUTTON))
+	if (Input::Instance().IsMousePress(Input::mouse_right))
 	{
 		float delta_x = Input::Instance().GetMouseDeltaX();
 		float delta_y = Input::Instance().GetMouseDeltaY();
+
+		if (delta_x == 0.0f && delta_y == 0.0f)
+		{
+			return;
+		}
 
 		// 飛び値の制御
 		constexpr float max_mouse_delta = 100.0f;

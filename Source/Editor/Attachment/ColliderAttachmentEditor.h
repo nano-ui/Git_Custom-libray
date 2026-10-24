@@ -74,6 +74,7 @@ public:
 	uint32_t target_mask;			//対象マスク
 	bool is_two_bone_link;			//２ボーン連携フラグ
 	bool is_active;					//有効フラグ
+	bool is_sequencer_active = true;
 };
 
 class ColliderAttachmentEditor

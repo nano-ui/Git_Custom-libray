@@ -43,41 +43,6 @@
                     "collider_name": "剣攻撃判定",
                     "end_time": 0.25,
                     "start_time": 0.15000000596046448
-                },
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 0.30000001192092896,
-                    "start_time": 0.10000000149011612
-                },
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 0.25,
-                    "start_time": 0.15000000596046448
-                },
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 1.100000023841858,
-                    "start_time": 0.800000011920929
-                },
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 0.25,
-                    "start_time": 0.15000000596046448
-                },
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 0.30000001192092896,
-                    "start_time": 0.10000000149011612
-                },
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 0.25,
-                    "start_time": 0.15000000596046448
-                },
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 0.20000000298023224,
-                    "start_time": 0.10000000149011612
                 }
             ],
             "effective_duration": 0.800000011920929,
@@ -97,13 +62,8 @@
             "collider_tracks": [
                 {
                     "collider_name": "剣攻撃判定",
-                    "end_time": 0.25,
-                    "start_time": 0.15000000596046448
-                },
-                {
-                    "collider_name": "剣攻撃判定",
                     "end_time": 0.30000001192092896,
-                    "start_time": 0.10000000149011612
+                    "start_time": 0.15000000596046448
                 }
             ],
             "effective_duration": 0.800000011920929,
@@ -123,17 +83,7 @@
             "collider_tracks": [
                 {
                     "collider_name": "剣攻撃判定",
-                    "end_time": 0.25,
-                    "start_time": 0.15000000596046448
-                },
-                {
-                    "collider_name": "剣攻撃判定",
                     "end_time": 0.30000001192092896,
-                    "start_time": 0.10000000149011612
-                },
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 0.25,
                     "start_time": 0.15000000596046448
                 }
             ],
@@ -151,47 +101,15 @@
         },
         "Attack_RMB": {
             "animation_duration": 3.0333330631256104,
-            "collider_tracks": [
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 0.25,
-                    "start_time": 0.15000000596046448
-                },
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 0.30000001192092896,
-                    "start_time": 0.10000000149011612
-                },
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 0.25,
-                    "start_time": 0.15000000596046448
-                },
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 1.100000023841858,
-                    "start_time": 0.800000011920929
-                },
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 0.25,
-                    "start_time": 0.15000000596046448
-                },
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 0.30000001192092896,
-                    "start_time": 0.10000000149011612
-                },
-                {
-                    "collider_name": "剣攻撃判定",
-                    "end_time": 0.25,
-                    "start_time": 0.15000000596046448
-                }
-            ],
+            "collider_tracks": [],
             "effective_duration": 3.0333330631256104,
             "keyframes": [
                 {
                     "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 0.39465945959091187,
                     "speed_multiplier": 1.0
                 },
                 {

@@ -46,6 +46,7 @@ private:
 	std::unordered_map<uint32_t, float> hate_table;		//ヘイトコンテナ
 	float decay_rate;									//ヘイト値減衰量
 
+	uint32_t cached_top_hate_id = NOT_TARGET_ID;		//最大ヘイトを持つ対象のID
 	uint32_t debug_top_hate_id;							//デバッグ用最大ヘイトID
 	float debug_top_hate_value;							//デバッグ用最大ヘイト値
 };
