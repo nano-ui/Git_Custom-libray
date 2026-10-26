@@ -1,5 +1,6 @@
 #include "ShapeRenderer.h"
 #include "Engine/Graphics/Shaders/CustomShader.h"
+#include "Engine\Core\Log\Log.h"
 #include "Graphics.h"
 
 #include <cmath>
@@ -116,6 +117,97 @@ void ShapeRenderer::DrawCapsule(const DirectX::XMFLOAT3& position, const DirectX
 	//算出した座標で上下の球を登録
 	DrawSphere(top_pos, radius, color, mode);
 	DrawSphere(bottom_pos, radius, color, mode);
+}
+
+//扇形の描画登録
+void ShapeRenderer::DrawFan(const DirectX::XMFLOAT3& center, float rotation_y, float radius, float angle, const DirectX::XMFLOAT4 color, ShapeDrawMode mode)
+{
+	if (radius <= 0.0f || angle <= 0.0f)
+	{
+		LOG_WARNING({ u8"デバッグ",u8"描画" }, u8"無効な半径または角度が指定されました。\n");
+		return;
+	}
+
+	//扇形の「左端の角度」と「右端の角度」を算出
+	float right_angle = rotation_y + (angle * 0.5f);
+	float left_angle = rotation_y - (angle * 0.5f);
+
+	//角度から先端座標への変換
+	DirectX::XMFLOAT3 right_pos;
+	right_pos.x = center.x + (radius * sinf(right_angle));
+	right_pos.y = center.y;
+	right_pos.z = center.z + (radius * cosf(right_angle));
+
+	DirectX::XMFLOAT3 left_pos;
+	left_pos.x = center.x + (radius * sinf(left_angle));
+	left_pos.y = center.y;
+	left_pos.z = center.z + (radius * cosf(left_angle));
+
+	//2点間を結ぶ円柱パラメータの計算
+
+	//左の円柱を描画
+	DirectX::XMFLOAT3 mid_pos_left = {
+		(center.x + left_pos.x) * 0.5f,
+		(center.y + left_pos.y) * 0.5f,
+		(center.z + left_pos.z) * 0.5f
+	};
+
+	float height = radius;
+	DirectX::XMVECTOR v_quaternion = DirectX::XMQuaternionRotationRollPitchYaw(DirectX::XM_PIDIV2, left_angle, 0.0f);
+	DirectX::XMFLOAT4 quaternion = {};
+	DirectX::XMStoreFloat4(&quaternion, v_quaternion);
+	static constexpr float LINE_RADIUS = 0.02f;
+	DrawCylinder(mid_pos_left, quaternion, LINE_RADIUS, height, color, mode);
+
+	//右の円柱を描画
+	DirectX::XMFLOAT3 mid_pos_right = {
+		(center.x + right_pos.x) * 0.5f,
+		(center.y + right_pos.y) * 0.5f,
+		(center.z + right_pos.z) * 0.5f
+	};
+	v_quaternion = DirectX::XMQuaternionRotationRollPitchYaw(DirectX::XM_PIDIV2, right_angle, 0.0f);
+	DirectX::XMStoreFloat4(&quaternion, v_quaternion);
+	DrawCylinder(mid_pos_right, quaternion, LINE_RADIUS, height, color, mode);
+
+	//円弧（外周の曲線）の描画
+	static constexpr int SUBDIVISIONS = 16;
+	float step_angle = angle / static_cast<float>(SUBDIVISIONS);
+
+	for (int i = 0; i < SUBDIVISIONS; ++i)
+	{
+		float current_angle = left_angle + step_angle * i;
+		float next_angle = left_angle + step_angle * (i + 1);
+
+		DirectX::XMFLOAT3 p1 = {
+			center.x + (radius * sinf(current_angle)),
+			center.y,
+			center.z + (radius * cosf(current_angle)),
+		};
+
+		DirectX::XMFLOAT3 p2 = {
+			center.x + (radius * sinf(next_angle)),
+			center.y,
+			center.z + (radius * cosf(next_angle)),
+		};
+
+		DirectX::XMFLOAT3 arc_mid_pos = {
+			(p1.x + p2.x) * 0.5f,
+			(p1.y + p2.y) * 0.5f,
+			(p1.z + p2.z) * 0.5f
+		};
+
+		float arc_height = 0.0f;
+		DirectX::XMVECTOR v_p1 = DirectX::XMLoadFloat3(&p1);
+		DirectX::XMVECTOR v_p2 = DirectX::XMLoadFloat3(&p2);
+		DirectX::XMVECTOR v = DirectX::XMVectorSubtract(v_p2, v_p1);
+		v = DirectX::XMVector3Length(v);
+		arc_height = DirectX::XMVectorGetX(v);
+
+		float arc_yaw = atan2f((p2.x - p1.x), (p2.z - p1.z));
+		v_quaternion = DirectX::XMQuaternionRotationRollPitchYaw(DirectX::XM_PIDIV2, arc_yaw, 0.0f);
+		DirectX::XMStoreFloat4(&quaternion, v_quaternion);
+		DrawCylinder(arc_mid_pos, quaternion, LINE_RADIUS, arc_height, color, mode);
+	}
 }
 
 //グリッド線を描画登録

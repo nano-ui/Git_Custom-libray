@@ -12,6 +12,7 @@ class AttachmentColliderComponent;
 class LinearMove;
 class WanderMove;
 class HateComponent;
+class VisionSensorComponent;
 
 class Enemy :public Character
 {
@@ -62,10 +63,11 @@ private:
 
 private:
 	bool is_play = true;	//playƒtƒ‰ƒO
-	std::weak_ptr<TransformComponent> target_transform;	//‘ÎÛ‚ÌÀ•W
-	std::shared_ptr<HateComponent> hate_component;		//ƒwƒCƒgŠÇ—
-	std::unique_ptr<LinearMove> linear_move;			//’¼üˆÚ“®
-	std::unique_ptr<WanderMove> wander_move;			//œpœjˆÚ“®
-	float chase_speed;									//ˆÚ“®‘¬“x
-	float stop_distance;								//’â~‹——£
+	std::weak_ptr<TransformComponent> target_transform;		//‘ÎÛ‚ÌÀ•W
+	std::shared_ptr<VisionSensorComponent> vision_sensor;	//‹ŠE
+	std::shared_ptr<HateComponent> hate_component;			//ƒwƒCƒgŠÇ—
+	std::unique_ptr<LinearMove> linear_move;				//’¼üˆÚ“®
+	std::unique_ptr<WanderMove> wander_move;				//œpœjˆÚ“®
+	float chase_speed;										//ˆÚ“®‘¬“x
+	float stop_distance;									//’â~‹——£
 };

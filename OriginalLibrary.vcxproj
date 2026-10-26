@@ -343,6 +343,7 @@
     <ClCompile Include="Source\Gameplay\Components\Movement\Move\WanderMove.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Movement\Rotation\LockAtRotation.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Movement\Rotation\RotationFactory.cpp" />
+    <ClCompile Include="Source\Gameplay\Components\Sensor\VisionSensorComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Transform\TransformComponent.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Character.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Enemy.cpp" />
@@ -496,6 +497,7 @@
     <ClInclude Include="Source\Gameplay\Components\Movement\Rotation\LockAtRotation.h" />
     <ClInclude Include="Source\Gameplay\Components\Movement\Rotation\RotationBase.h" />
     <ClInclude Include="Source\Gameplay\Components\Movement\Rotation\RotationFactory.h" />
+    <ClInclude Include="Source\Gameplay\Components\Sensor\VisionSensorComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Transform\TransformComponent.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Character.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Enemy.h" />

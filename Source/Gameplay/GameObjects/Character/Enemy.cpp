@@ -8,6 +8,7 @@
 #include "Gameplay\Components\Movement\Move\WanderMove.h"
 #include "Gameplay\Components\AI\HateComponent.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
+#include "Gameplay\Components\Sensor\VisionSensorComponent.h"
 
 #include "Engine\Graphics\Renderers\ShapeRenderer.h"
 #include "Engine\Core\Log\Log.h"
@@ -32,6 +33,7 @@ Enemy::Enemy()
 	chase_speed = DEFAULT_CHASE_SPEED;
 	linear_move = std::make_unique<LinearMove>(DUMMY_BLACKBOARD_KEY);
 	wander_move = std::make_unique<WanderMove>();
+	Initialize();
 }
 
 //デストラクタ
@@ -41,9 +43,9 @@ Enemy::~Enemy() = default;
 void Enemy::Initialize()
 {
 	BS_PROFILE_FUNCTION();
-	SetupComponent();
 	//基底クラスの初期化
 	Character::Initialize();
+	SetupComponent();
 	health = 100.0f;
 }
 
@@ -54,7 +56,7 @@ void Enemy::Update(float elapsed_time)
 	if (is_play)
 	{
 		UpdateTargetFromHate();
-		//UpdateChase(elapsed_time);
+		UpdateChase(elapsed_time);
 	}
 	Character::Update(elapsed_time);
 }
@@ -65,6 +67,7 @@ void Enemy::RenderDebug(ShapeRenderer* renderer)
 	BS_PROFILE_FUNCTION();
 	Character::RenderDebug(renderer);
 	wander_move->RenderDebug(renderer);
+	vision_sensor->RenderDebug(renderer);
 }
 
 //シリアライズ登録
@@ -128,29 +131,21 @@ void Enemy::SetupComponent()
 	model_component = GetComponent<ModelComponent>();
 	if (!model_component)model_component = AddComponent<ModelComponent>();
 
-	if (model_component && transform_component)
-	{
-		model_component->SetTransformComponent(transform_component);
+	model_component->SetTransformComponent(transform_component);
 
-		//モデルがロードされていない場合
-		if (model_component->GetModelPath().empty())
-		{
-			const std::string default_model_path = GetDefaultModelPath();
-			model_component->LoadModel(default_model_path);
-		}
-
-	}
-	else
+	//モデルがロードされていない場合
+	if (model_component->GetModelPath().empty())
 	{
-		LOG_WARNING({ "Enemy","Setup" }, u8"必要な基本コンポーネントの生成に失敗しました");
+		const std::string default_model_path = GetDefaultModelPath();
+		model_component->LoadModel(default_model_path);
 	}
 
 	hate_component = GetComponent<HateComponent>();
-	if (!hate_component)
-	{
-		hate_component = AddComponent<HateComponent>();
-	}
+	if (!hate_component) hate_component = AddComponent<HateComponent>();
 
+	vision_sensor = GetComponent<VisionSensorComponent>();
+	if (!vision_sensor) vision_sensor = AddComponent<VisionSensorComponent>();
+	vision_sensor->SetTransformComponent(transform_component);
 }
 
 //座標計算・移動入力の更新処理

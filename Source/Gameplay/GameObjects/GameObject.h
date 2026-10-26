@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 #include <string>
 #include <d3d11.h>
+#include <memory>
 
 #include "Engine\Graphics\Renderers\ShapeRenderer.h"
 #include "Engine\Graphics\Resources\Model.h"

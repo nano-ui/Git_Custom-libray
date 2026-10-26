@@ -4,6 +4,7 @@
 
 class JsonSerializer;
 class GuiInspector;
+class ShapeRenderer;
 struct ID3D11DeviceContext;
 
 class Component
@@ -24,7 +25,10 @@ public:
 	//描画処理
 	virtual void Render(ID3D11DeviceContext* context){}
 
-	//デバッグ描画処理
+	//デバッグ描画
+	virtual void RenderDebug(ShapeRenderer* renderer) {};
+
+	//Gui処理
 	virtual void RenderGui();
 
 	//JSON保存用変数登録

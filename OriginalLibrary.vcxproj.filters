@@ -486,6 +486,9 @@
     <ClCompile Include="Source\Engine\Core\TracyClient.cpp">
       <Filter>Source\Engine\Core\Tracy</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Sensor\VisionSensorComponent.cpp">
+      <Filter>Source\Gameplay\Components\Sensor\VisionSensorComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -940,6 +943,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Core\MacroTracy.h">
       <Filter>Source\Engine\Core\Tracy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Sensor\VisionSensorComponent.h">
+      <Filter>Source\Gameplay\Components\Sensor\VisionSensorComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1514,6 +1520,12 @@
     </Filter>
     <Filter Include="Source\Engine\Core\Tracy">
       <UniqueIdentifier>{b4e8cc94-4ab7-4a7e-8c9b-bed72ef7a504}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Sensor">
+      <UniqueIdentifier>{46893258-9ae3-4851-9de6-eb8b3cb4bdd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Sensor\VisionSensorComponent">
+      <UniqueIdentifier>{7a8415c6-ee5b-4276-b826-353f3704ec48}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

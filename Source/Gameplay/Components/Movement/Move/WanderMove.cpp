@@ -79,8 +79,8 @@ DirectX::XMFLOAT3 WanderMove::UpdateWander(
 //デバッグ描画
 void WanderMove::RenderDebug(ShapeRenderer* renderer)
 {
-	static constexpr float DEBUG_AREA_HEIGHT = 0.5f;
-	static constexpr float DEBUG_TARGET_RADIUS = 0.3f;
+	static constexpr float DEBUG_AREA_HEIGHT = 1.0f;
+	static constexpr float DEBUG_TARGET_RADIUS = 1.0f;
 	static constexpr DirectX::XMFLOAT4 IDENTITY_ROTATION = { 0.0f, 0.0f, 0.0f, 1.0f };
 	static constexpr DirectX::XMFLOAT4 COLOR_GREEN = { 0.0f, 1.0f, 0.0f, 1.0f };
 	static constexpr DirectX::XMFLOAT4 COLOR_RED = { 1.0f, 0.0f, 0.0f, 1.0f };

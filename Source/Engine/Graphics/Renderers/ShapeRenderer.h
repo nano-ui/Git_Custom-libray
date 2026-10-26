@@ -37,6 +37,9 @@ public:
 	//ƒJƒvƒZƒ‹‚Ì•`‰æ“o˜^
 	void DrawCapsule(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT4& rotation, float radius, float height, const DirectX::XMFLOAT4& color, ShapeDrawMode mode = ShapeDrawMode::Wireframe);
 
+	//îŒ`‚Ì•`‰æ“o˜^
+	void DrawFan(const DirectX::XMFLOAT3& center, float rotation_y, float radius, float angle, const DirectX::XMFLOAT4 color, ShapeDrawMode mode = ShapeDrawMode::Wireframe);
+
 	//ƒOƒŠƒbƒhü‚ğ•`‰æ“o˜^
 	void DrawGrid(const DirectX::XMFLOAT3& center, float size, int divisions, const DirectX::XMFLOAT4& color);
 
