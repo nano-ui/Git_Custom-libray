@@ -125,20 +125,8 @@ void Enemy::OnDamage(uint32_t attacker_id, float hate)
 void Enemy::SetupComponent()
 {
 	BS_PROFILE_FUNCTION();
-	transform_component = GetComponent<TransformComponent>();
-	if (!transform_component)transform_component = AddComponent<TransformComponent>();
 
-	model_component = GetComponent<ModelComponent>();
-	if (!model_component)model_component = AddComponent<ModelComponent>();
-
-	model_component->SetTransformComponent(transform_component);
-
-	//ƒ‚ƒfƒ‹‚ªƒ[ƒh‚³‚ê‚Ä‚¢‚È‚¢ê‡
-	if (model_component->GetModelPath().empty())
-	{
-		const std::string default_model_path = GetDefaultModelPath();
-		model_component->LoadModel(default_model_path);
-	}
+	Character::SetupComponent();
 
 	hate_component = GetComponent<HateComponent>();
 	if (!hate_component) hate_component = AddComponent<HateComponent>();

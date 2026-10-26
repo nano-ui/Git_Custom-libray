@@ -44,6 +44,9 @@ public:
 	void SetupSerialization() override;
 	void SetupInspector() override;
 
+	//コンポーネントの設定
+	void SetupComponent()override;
+
 	//ダメージ処理
 	bool ApplyDamage(float damage, float invincible_time, uint32_t attacker_id);
 

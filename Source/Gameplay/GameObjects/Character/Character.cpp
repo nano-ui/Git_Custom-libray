@@ -32,19 +32,7 @@ void Character::Initialize()
 {
 	is_active = true;
 
-	//TransformComponent の取得・生成
-	transform_component = GetComponent<TransformComponent>();
-	if (!transform_component) transform_component = AddComponent<TransformComponent>();
-
-	//ModelComponent の取得・生成
-	model_component = GetComponent<ModelComponent>();
-	if (!model_component) model_component = AddComponent<ModelComponent>();
-	model_component->SetTransformComponent(transform_component);
-
-	//MovementComponent の取得・生成とセットアップ
-	movement_component = GetComponent<MovementComponent>();
-	if (!movement_component) movement_component = AddComponent<MovementComponent>();
-	movement_component->SetTransformComponent(transform_component);
+	SetupComponent();
 
 	//モデルパスの確認
 	if (model_component->GetModelPath().empty())
@@ -87,7 +75,6 @@ void Character::Initialize()
 		}
 
 		//アタッチメントコライダーコンポーネントの生成と初期化
-		attachment_collider_component = AddComponent<AttachmentColliderComponent>();
 		if (attachment_collider_component)
 		{
 			attachment_collider_component->Initializa(
@@ -300,6 +287,27 @@ void Character::SetupInspector()
 	{
 		LOG_WARNING({ "Character", "Inspector" }, u8"SetupInspector: inspector が nullptr です。");
 	}
+}
+//コンポーネントの設定
+void Character::SetupComponent()
+{
+	//TransformComponent の取得・生成
+	transform_component = GetComponent<TransformComponent>();
+	if (!transform_component) transform_component = AddComponent<TransformComponent>();
+
+	//ModelComponent の取得・生成
+	model_component = GetComponent<ModelComponent>();
+	if (!model_component) model_component = AddComponent<ModelComponent>();
+	model_component->SetTransformComponent(transform_component);
+
+	//MovementComponent の取得・生成
+	movement_component = GetComponent<MovementComponent>();
+	if (!movement_component) movement_component = AddComponent<MovementComponent>();
+	movement_component->SetTransformComponent(transform_component);
+
+	//AttachmentColliderComponentt の取得・生成
+	attachment_collider_component = GetComponent<AttachmentColliderComponent>();
+	if (!attachment_collider_component) attachment_collider_component = AddComponent<AttachmentColliderComponent>();
 }
 
 //ダメージ処理

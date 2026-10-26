@@ -62,6 +62,18 @@ void VisionSensorComponent::RenderDebug(ShapeRenderer* renderer)
     
     DirectX::XMFLOAT3 position = transform->GetPosition();
     DirectX::XMFLOAT3 rotation = transform->GetRotation();
+
+    static constexpr float POSITION_LIMIT = 10000.0f;
+    if (std::abs(position.x) > POSITION_LIMIT ||
+        std::abs(position.y) > POSITION_LIMIT ||
+        std::abs(position.z) > POSITION_LIMIT ||
+        std::isnan(position.x) || std::isnan(position.y) || std::isnan(position.z))
+    {
+        LOG_ERROR({ u8"視界", u8"描画" }, u8"異常な座標が検出されました。アドレス: %p, 座標: (%.2f, %.2f, %.2f)", transform.get(), position.x, position.y, position.z);
+        return;
+    }
+    position.y += 0.2f;
+
     renderer->DrawFan(
         position,
         rotation.y,

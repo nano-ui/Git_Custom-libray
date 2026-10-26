@@ -37,6 +37,9 @@ public:
 	//ImGuiデバッグ描画
 	virtual void RenderGui();
 
+	//コンポーネントの設定
+	virtual void SetupComponent() {}
+
 	//コンポーネントの追加
 	template<typename T,typename... Args>
 	std::shared_ptr<T> AddComponent(Args&&... args)

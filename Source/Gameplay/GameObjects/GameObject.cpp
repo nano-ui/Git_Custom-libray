@@ -136,10 +136,12 @@ void GameObject::LoadFromJson(SerializeTarget target)
 {
 	std::string file_path = "Data/Json/" + class_name + ".json";
 	bool is_loading = serializer->LoadFromFile(file_path, target);
+	
 	if (!is_loading)
 	{
 		serializer->SaveToFile(file_path, target);
 	}
+	SetupComponent();
 }
 
 //ƒNƒ‰ƒX–¼‚Æƒ‚ƒfƒ‹ŒÂ•Êî•ñ‚Ì‚İ‚ğ•Û‘¶

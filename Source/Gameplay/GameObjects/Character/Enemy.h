@@ -38,6 +38,9 @@ public:
 	//インスペクター登録
 	void SetupInspector()override;
 
+	//コンポーネント群のセットアップ
+	void SetupComponent()override;
+
 	// アニメーション終了イベント
 	void OnAnimationEnd(uint32_t state_key) override;
 
@@ -52,9 +55,6 @@ protected:
 	void OnDamage(uint32_t attacker_id, float hate)override;
 
 private:
-	//コンポーネント群のセットアップ
-	void SetupComponent();
-
 	//座標計算・移動入力の更新処理
 	void UpdateChase(float elapsed_time);
 
