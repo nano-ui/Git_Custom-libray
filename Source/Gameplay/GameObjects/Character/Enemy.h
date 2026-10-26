@@ -6,8 +6,6 @@
 #include <memory>
 
 class CollisionSphere;
-class CapsuleColliderComponent;
-class BoneCapsuleColliderComponent;
 class AttachmentColliderComponent;
 class LinearMove;
 class WanderMove;

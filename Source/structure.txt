@@ -299,6 +299,10 @@ C:.
 „    „    „            RotationFactory.cpp
 „    „    „            RotationFactory.h
 „    „    „            
+„    „    „¥„Ÿ„Ÿ„ŸSensor
+„    „    „        VisionSensorComponent.cpp
+„    „    „        VisionSensorComponent.h
+„    „    „        
 „    „    „¤„Ÿ„Ÿ„ŸTransform
 „    „            TransformComponent.cpp
 „    „            TransformComponent.h
