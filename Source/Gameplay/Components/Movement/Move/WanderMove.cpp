@@ -1,6 +1,7 @@
 #include "WanderMove.h"
 #include "LinearMove.h"
 #include "Engine\Core\Log\Log.h"
+#include "Engine\Graphics\Renderers\ShapeRenderer.h"
 
 //コンストラクタ
 WanderMove::WanderMove()
@@ -73,4 +74,23 @@ DirectX::XMFLOAT3 WanderMove::UpdateWander(
 
 	//目的地へ移動
 	return 	liner_move->UpdateLiner(current_pos, target_pos, speed);
+}
+
+//デバッグ描画
+void WanderMove::RenderDebug(ShapeRenderer* renderer)
+{
+	static constexpr float DEBUG_AREA_HEIGHT = 0.5f;
+	static constexpr float DEBUG_TARGET_RADIUS = 0.3f;
+	static constexpr DirectX::XMFLOAT4 IDENTITY_ROTATION = { 0.0f, 0.0f, 0.0f, 1.0f };
+	static constexpr DirectX::XMFLOAT4 COLOR_GREEN = { 0.0f, 1.0f, 0.0f, 1.0f };
+	static constexpr DirectX::XMFLOAT4 COLOR_RED = { 1.0f, 0.0f, 0.0f, 1.0f };
+
+	if (!renderer)
+	{
+		LOG_WARNING({ "WanderMove", "RenderDebug" }, u8"renderer が null です");
+		return;
+	}
+
+	renderer->DrawCylinder(home_position, IDENTITY_ROTATION, wander_radius, DEBUG_AREA_HEIGHT, COLOR_GREEN, ShapeDrawMode::Wireframe);
+	renderer->DrawSphere(target_pos, DEBUG_TARGET_RADIUS, COLOR_RED, ShapeDrawMode::Wireframe);
 }

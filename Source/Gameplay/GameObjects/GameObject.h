@@ -138,6 +138,9 @@ public:
 	//オブジェクトIDを取得
 	uint32_t GetObjectId()const { return object_id; }
 
+	//デバッグ表示フラグ取得
+	bool IsDebug()const { return is_debug; }
+
 protected:
 	//コライダーを登録
 	void AddCollider(Collider* collider) { collideres.push_back(collider); }
@@ -148,6 +151,7 @@ protected:
 	std::vector<std::shared_ptr<Component>> components;	//コンポーネント群のリスト
 	DirectX::XMFLOAT4 color;	//色
 	bool is_active;				//生存フラグ
+	bool is_debug;				//デバッグ表示フラグ
 	std::vector<Collider*> collideres;	//コライダーのリスト
 	std::string class_name;				//クラス名
 	uint32_t model_hash = 0;			//モデル識別ハッシュ値

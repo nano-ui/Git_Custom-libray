@@ -74,6 +74,7 @@ void AnimationSequencerEditor::Update(float elapsed_time)
 			current_time = 0.0f;
 		}
 
+		UpdateColliderActiveStates(current_time);
 		EditorMediator::Instance().SetModelAnimationPlaying(false);
 	}
 
@@ -108,6 +109,10 @@ void AnimationSequencerEditor::Update(float elapsed_time)
 		EditorMediator::Instance().SetModelAnimationTime(integrated_model_time);
 
 		//更新された再生時間に合わせてコライダーの有効状態を同期
+		UpdateColliderActiveStates(current_time);
+	}
+	else
+	{
 		UpdateColliderActiveStates(current_time);
 	}
 }
@@ -250,6 +255,7 @@ void AnimationSequencerEditor::RenderGui()
 			{
 				float remapped_time = GetRemappedTime(current_time);
 				EditorMediator::Instance().SetModelAnimationTime(remapped_time);
+				UpdateColliderActiveStates(current_time);
 			}
 		}
 		ImGui::EndChild(); // 固定コントロールエリアの終了
@@ -302,8 +308,6 @@ void AnimationSequencerEditor::DrawColliderTracksGui()
 		new_track.end_time = (std::min)(default_interval, animation_duration);
 
 		collider_tracks.push_back(new_track);
-		selected_collider_trank_index = static_cast<int>(collider_tracks.size() - 1);
-		UpdateColliderActiveStates(current_time);
 	}
 
 	if (collider_tracks.empty())
@@ -316,7 +320,7 @@ void AnimationSequencerEditor::DrawColliderTracksGui()
 	float bar_width = ImGui::GetContentRegionAvail().x - 20.0f;
 	constexpr float bar_height = 26.0f;
 	constexpr float edge_handle_width = 8.0f;
-	float duration = (animation_duration > 0.0f) ? animation_duration : 1.0f;
+	float duration = (GetEffectiveDuration() > 0.0f) ? GetEffectiveDuration() : 1.0f;
 
 	if (bar_width < 100.0f) bar_width = 100.0f;
 
@@ -562,6 +566,7 @@ void AnimationSequencerEditor::UpdateColliderActiveStates(float current_seq_time
 				}
 			}
 		}
+
 		//状態変化があればMediator経由で更新
 		EditorMediator::Instance().SetColliderActiveByName(item->name, should_be_active);
 	}

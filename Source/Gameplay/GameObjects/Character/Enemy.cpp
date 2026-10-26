@@ -54,7 +54,7 @@ void Enemy::Update(float elapsed_time)
 	if (is_play)
 	{
 		UpdateTargetFromHate();
-		UpdateChase(elapsed_time);
+		//UpdateChase(elapsed_time);
 	}
 	Character::Update(elapsed_time);
 }
@@ -64,6 +64,7 @@ void Enemy::RenderDebug(ShapeRenderer* renderer)
 {
 	BS_PROFILE_FUNCTION();
 	Character::RenderDebug(renderer);
+	wander_move->RenderDebug(renderer);
 }
 
 //シリアライズ登録

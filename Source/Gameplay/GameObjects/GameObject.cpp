@@ -11,6 +11,7 @@ static uint32_t next_game_object_id = 1;	//次のオブジェクトID
 //コンストラクタ
 GameObject::GameObject()
 	:is_active(true)
+	, is_debug(true)
 	, class_name("GameObject")
 	, model_hash(0)
 	, object_id(next_game_object_id++)
@@ -102,6 +103,7 @@ void GameObject::SetupInspector()
 	inspector->Clear();
 
 	inspector->RegisterText(u8"オブジェクトID", &object_id, u8"基本情報");
+	inspector->RegisterVariable(u8"デバッグ表示フラグ", &is_debug, u8"デバッグ");
 
 	// アタッチされた全コンポーネントのインスペクター登録を一括実行
 	for (auto& component : components)

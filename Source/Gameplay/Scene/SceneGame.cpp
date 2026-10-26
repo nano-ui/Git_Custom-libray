@@ -297,41 +297,15 @@ void SceneGame::Render(float elapsed_time)
 		object_manager->RenderDebug(shape_renderer.get());
 	}
 
-	// レンダラーとカメラが有効か判定
 	if (shape_renderer && current_camera)
 	{
-		const float k_light_debug_distance = 5.0f;
-		DirectX::XMFLOAT4 light_dir = light->GetDirection();
-		DirectX::XMFLOAT3 light_pos = {
-			-light_dir.x * k_light_debug_distance,
-			-light_dir.y * k_light_debug_distance,
-			-light_dir.z * k_light_debug_distance
-		};
-		shape_renderer->DrawSphere(light_pos, 0.5f, { 1.0f, 1.0f, 0.0f, 1.0f }, ShapeDrawMode::Solid);
-
-		for (const debug_shape& shape : debug_shapes)
-		{
-			ShapeDrawMode mode = static_cast<ShapeDrawMode>(shape.draw_mode);
-			DirectX::XMFLOAT4 rotation = { 0.0f,0.0f,0.0f,1.0f };
-
-			if (shape.type == debug_shape_type::box)
-			{
-				shape_renderer->DrawBox(shape.position, rotation, { 1.0f, 1.0f, 1.0f }, shape.color, mode);
-			}
-			if (shape.type == debug_shape_type::sphere)
-			{
-				shape_renderer->DrawSphere(shape.position, 0.5f, shape.color, mode);
-			}
-			if (shape.type == debug_shape_type::cylinder)
-			{
-				shape_renderer->DrawCylinder(shape.position, rotation, 0.5f, 1.0f, shape.color, mode);
-			}
-			if (shape.type == debug_shape_type::capsule)
-			{
-				shape_renderer->DrawCapsule(shape.position, rotation, 0.5f, 3.0f, shape.color, mode);
-			}
-		}
-		shape_renderer->Render(context, current_camera->GetView(), current_camera->GetProjection());
+		DirectX::XMFLOAT4X4 view_matrix = current_camera->GetView();
+		DirectX::XMFLOAT4X4 proj_matrix = current_camera->GetProjection();
+		shape_renderer->Render(context, view_matrix, proj_matrix);
+	}
+	else
+	{
+		OutputDebugStringA("[SceneGame 警告] デバッグ描画に必要な shape_renderer または current_camera が無効です。\n");
 	}
 
 	if (skybox)

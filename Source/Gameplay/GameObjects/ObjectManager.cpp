@@ -96,7 +96,7 @@ void ObjectManager::RenderGui()
 	//生存している全オブジェクトのImGui描画処理
 	for (auto& object : game_objects)
 	{
-		if (object->IsActive())
+		if (object->IsActive() && object->IsDebug())
 		{
 			object->RenderGui();
 		}

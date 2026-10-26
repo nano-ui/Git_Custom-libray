@@ -6,6 +6,7 @@
 #include <memory>
 
 class LinearMove;
+class ShapeRenderer;
 
 class WanderMove : MoveBase
 {
@@ -28,6 +29,9 @@ public:
 		const DirectX::XMFLOAT3& current_pos,
 		float speed
 	);
+
+	//デバッグ描画
+	void RenderDebug(ShapeRenderer* renderer);
 
 private:
 	std::unique_ptr<LinearMove> liner_move;	//直線移動
