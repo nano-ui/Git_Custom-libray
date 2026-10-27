@@ -12,6 +12,7 @@
 #include "Gameplay\Components\Base\Component.h"
 
 struct Collider;
+enum class GameObjectTag : uint32_t;
 
 class GameObject
 {
@@ -145,21 +146,31 @@ public:
 	//デバッグ表示フラグ取得
 	bool IsDebug()const { return is_debug; }
 
+	//タグの設定
+	void SetTag(GameObjectTag object_tag) { tag = object_tag; }
+
+	//タグの取得
+	GameObjectTag GetTag()const { return tag; }
+
+	//タグの判定
+	bool HasTag(GameObjectTag check_tag)const;
+
 protected:
 	//コライダーを登録
 	void AddCollider(Collider* collider) { collideres.push_back(collider); }
 
 protected:
-	std::unique_ptr<JsonSerializer> serializer;	//自身専用のシリアライザ
-	std::unique_ptr<GuiInspector> inspector;	//UI表示用インスペクター
+	std::unique_ptr<JsonSerializer> serializer;			//自身専用のシリアライザ
+	std::unique_ptr<GuiInspector> inspector;			//UI表示用インスペクター
 	std::vector<std::shared_ptr<Component>> components;	//コンポーネント群のリスト
-	DirectX::XMFLOAT4 color;	//色
-	bool is_active;				//生存フラグ
-	bool is_debug;				//デバッグ表示フラグ
-	std::vector<Collider*> collideres;	//コライダーのリスト
-	std::string class_name;				//クラス名
-	uint32_t model_hash = 0;			//モデル識別ハッシュ値
-	uint32_t object_id;					//オブジェクトID
+	DirectX::XMFLOAT4 color;							//色
+	bool is_active;										//生存フラグ
+	bool is_debug;										//デバッグ表示フラグ
+	std::vector<Collider*> collideres;					//コライダーのリスト
+	std::string class_name;								//クラス名
+	uint32_t model_hash = 0;							//モデル識別ハッシュ値
+	uint32_t object_id;									//オブジェクトID
 	static constexpr uint32_t INVALID_OBJECT_ID = 0;	//ID未設定時の値
+	GameObjectTag tag;									//オブジェクトのタグ
 };
 

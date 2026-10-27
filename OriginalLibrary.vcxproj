@@ -503,6 +503,7 @@
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Enemy.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Player.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\GameObject.h" />
+    <ClInclude Include="Source\Gameplay\GameObjects\GameObjectTag.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\ObjectFactory.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\ObjectManager.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Object\Stage.h" />
@@ -518,6 +519,7 @@
     <ClInclude Include="Source\Serialization\AnimationSequenceSerializer.h" />
     <ClInclude Include="Source\Serialization\GltfModelSerializer.h" />
     <ClInclude Include="Source\Serialization\JsonSerializer.h" />
+    <ClInclude Include="Source\Utility\BitmaskOperators.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli" />

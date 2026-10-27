@@ -947,6 +947,12 @@
     <ClInclude Include="Source\Gameplay\Components\Sensor\VisionSensorComponent.h">
       <Filter>Source\Gameplay\Components\Sensor\VisionSensorComponent</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Gameplay\GameObjects\GameObjectTag.h">
+      <Filter>Source\Gameplay\GameObjects\GameObjectTag</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utility\BitmaskOperators.h">
+      <Filter>Source\Utility\BitmaskOperators</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli">
@@ -1526,6 +1532,15 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Sensor\VisionSensorComponent">
       <UniqueIdentifier>{7a8415c6-ee5b-4276-b826-353f3704ec48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\GameObjects\GameObjectTag">
+      <UniqueIdentifier>{bf552f55-0575-4f2a-a079-bab1904c6a58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utility">
+      <UniqueIdentifier>{639280ca-fe91-4387-9043-e8fdf124ff98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utility\BitmaskOperators">
+      <UniqueIdentifier>{7f93c868-7ad8-4b3a-8d29-2d5e2c442af8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

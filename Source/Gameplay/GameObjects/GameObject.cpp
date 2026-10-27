@@ -1,6 +1,8 @@
 #include "GameObject.h"
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Gameplay\Components\Model\ModelComponent.h"
+#include "Gameplay\GameObjects\GameObjectTag.h"
+#include "Engine\Core\Log\Log.h"
 
 #include <fstream>
 #include <filesystem>
@@ -15,6 +17,7 @@ GameObject::GameObject()
 	, class_name("GameObject")
 	, model_hash(0)
 	, object_id(next_game_object_id++)
+	, tag(GameObjectTag::None)
 {
 	if (next_game_object_id == INVALID_OBJECT_ID)
 	{
@@ -38,7 +41,7 @@ void GameObject::Initialize()
 	for (auto& component : components)
 	{
 		if (component)component->Initialize();
-		else OutputDebugStringA("[GameObject 警告] Initialize: リスト内に nullptr のコンポーネントが存在します。\n");
+		else LOG_WARNING({u8"ポインタ",u8"コンポーネント" }, u8"リスト内に nullptr のコンポーネントが存在します");
 	}
 }
 
@@ -52,7 +55,7 @@ void GameObject::Update(float elapsed_time)
 		BS_PROFILE_SCOPE("Components::Update");
 		{
 			if (component)component->Update(elapsed_time);
-			else OutputDebugStringA("[GameObject 警告] Update: リスト内に nullptr のコンポーネントが存在します。\n");
+			else LOG_WARNING({ u8"ポインタ",u8"コンポーネント" }, u8"リスト内に nullptr のコンポーネントが存在します");
 		}
 	}
 }
@@ -236,4 +239,15 @@ std::string GameObject::ReadClassNameFromDetailFile(const std::string& file_path
 
 	OutputDebugStringA("[GameObject 警告] ReadClassNameFromDetailFile: JSON内に class_name が見つかりませんでした。\n");
 	return "";
+}
+
+//タグの判定
+bool GameObject::HasTag(GameObjectTag check_tag) const
+{
+	if (check_tag == GameObjectTag::None)
+	{
+		LOG_WARNING({ u8"タグ" }, u8"判定対象のタグが無効なタグです");
+	}
+
+	return (tag & check_tag) != GameObjectTag::None;
 }
