@@ -9,6 +9,9 @@
 #include "Gameplay\Components\AI\HateComponent.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Gameplay\Components\Sensor\VisionSensorComponent.h"
+#include "Gameplay\Components\AI\PerceptionComponent.h"
+
+#include "Gameplay\GameObjects\GameObjectTag.h"
 
 #include "Engine\Graphics\Renderers\ShapeRenderer.h"
 #include "Engine\Core\Log\Log.h"
@@ -47,6 +50,8 @@ void Enemy::Initialize()
 	Character::Initialize();
 	SetupComponent();
 	health = 100.0f;
+	SetTag(GameObjectTag::Enemy);
+	perception->SetTargetTag(GameObjectTag::Player | GameObjectTag::Allies);
 }
 
 //更新処理
@@ -56,7 +61,7 @@ void Enemy::Update(float elapsed_time)
 	if (is_play)
 	{
 		UpdateTargetFromHate();
-		UpdateChase(elapsed_time);
+		//UpdateChase(elapsed_time);
 	}
 	Character::Update(elapsed_time);
 }
@@ -134,6 +139,11 @@ void Enemy::SetupComponent()
 	vision_sensor = GetComponent<VisionSensorComponent>();
 	if (!vision_sensor) vision_sensor = AddComponent<VisionSensorComponent>();
 	vision_sensor->SetTransformComponent(transform_component);
+
+	perception = GetComponent<PerceptionComponent>();
+	if (!perception)perception = AddComponent<PerceptionComponent>();
+	perception->SetHate(hate_component);
+	perception->SetVisionSensor(vision_sensor);
 }
 
 //座標計算・移動入力の更新処理

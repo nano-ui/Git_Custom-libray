@@ -9,6 +9,7 @@
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Gameplay\Components\Model\ModelComponent.h"
 #include "Gameplay\Components\Movement\MovementComponent.h"
+#include "Gameplay\GameObjects\GameObjectTag.h"
 
 #include <imgui.h>
 #include <filesystem>
@@ -20,6 +21,7 @@ static AutoRegister<Player> auto_register_player("Player");
 Player::Player()
 {
 	health = 100.0f;
+	SetTag(GameObjectTag::Player);
 }
 
 //デストラクタ

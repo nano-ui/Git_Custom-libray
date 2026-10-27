@@ -168,7 +168,7 @@ void AttachmentColliderComponent::RenderDebug(ShapeRenderer* renderer)
 		{
 			color = { 0.2f, 1.0f, 0.2f, 1.0f };
 		}
-		renderer->DrawCapsule(center, rotation, capsule->radius, total_height, color);
+		renderer->DrawCapsule(center, rotation, capsule->radius, total_height, color, ShapeDrawMode::Wireframe);
 	}
 }
 
