@@ -242,6 +242,8 @@ C:.
 „    „    „¥„Ÿ„Ÿ„ŸAI
 „    „    „        HateComponent.cpp
 „    „    „        HateComponent.h
+„    „    „        PerceptionComponent.cpp
+„    „    „        PerceptionComponent.h
 „    „    „        
 „    „    „¥„Ÿ„Ÿ„ŸAnimation
 „    „    „        AnimationBlender.cpp
@@ -310,6 +312,7 @@ C:.
 „    „¥„Ÿ„Ÿ„ŸGameObjects
 „    „    „    GameObject.cpp
 „    „    „    GameObject.h
+„    „    „    GameObjectTag.h
 „    „    „    ObjectFactory.cpp
 „    „    „    ObjectFactory.h
 „    „    „    ObjectManager.cpp
@@ -357,77 +360,80 @@ C:.
 „        JsonSerializer.cpp
 „        JsonSerializer.h
 „        
-„¤„Ÿ„Ÿ„ŸThiedParty
-    „    json.hpp
-    „    
-    „¤„Ÿ„Ÿ„Ÿtracy
-        „    TracyClient.cpp
-        „    
-        „¥„Ÿ„Ÿ„Ÿclient
-        „        TracyAlloc.cpp
-        „        TracyArmCpuTable.hpp
-        „        TracyCallstack.cpp
-        „        TracyCallstack.h
-        „        TracyCallstack.hpp
-        „        TracyCpuid.hpp
-        „        TracyDebug.hpp
-        „        TracyDxt1.cpp
-        „        TracyDxt1.hpp
-        „        TracyFastVector.hpp
-        „        TracyKCore.cpp
-        „        TracyKCore.hpp
-        „        TracyLock.hpp
-        „        TracyOverride.cpp
-        „        TracyProfiler.cpp
-        „        TracyProfiler.hpp
-        „        TracyRingBuffer.hpp
-        „        TracyRocprof.cpp
-        „        TracyScoped.hpp
-        „        TracyStringHelpers.hpp
-        „        TracySysPower.cpp
-        „        TracySysPower.hpp
-        „        TracySysTime.cpp
-        „        TracySysTime.hpp
-        „        TracySysTrace.cpp
-        „        TracySysTrace.hpp
-        „        TracyThread.hpp
-        „        tracy_concurrentqueue.h
-        „        tracy_rpmalloc.cpp
-        „        tracy_rpmalloc.hpp
-        „        tracy_SPSCQueue.h
-        „        
-        „¥„Ÿ„Ÿ„Ÿcommon
-        „        TracyAlign.hpp
-        „        TracyAlloc.hpp
-        „        TracyApi.h
-        „        TracyColor.hpp
-        „        TracyForceInline.hpp
-        „        TracyMutex.hpp
-        „        TracyProtocol.hpp
-        „        TracyQueue.hpp
-        „        TracySocket.cpp
-        „        TracySocket.hpp
-        „        TracyStackFrames.cpp
-        „        TracyStackFrames.hpp
-        „        TracySystem.cpp
-        „        TracySystem.hpp
-        „        TracyVersion.hpp
-        „        TracyWinFamily.hpp
-        „        TracyYield.hpp
-        „        tracy_lz4.cpp
-        „        tracy_lz4.hpp
-        „        tracy_lz4hc.cpp
-        „        tracy_lz4hc.hpp
-        „        
-        „¤„Ÿ„Ÿ„Ÿtracy
-                Tracy.hpp
-                TracyC.h
-                TracyCUDA.hpp
-                TracyD3D11.hpp
-                TracyD3D12.hpp
-                TracyLua.hpp
-                TracyMetal.hmm
-                TracyOpenCL.hpp
-                TracyOpenGL.hpp
-                TracyVulkan.hpp
-                
+„¥„Ÿ„Ÿ„ŸThiedParty
+„    „    json.hpp
+„    „    
+„    „¤„Ÿ„Ÿ„Ÿtracy
+„        „    TracyClient.cpp
+„        „    
+„        „¥„Ÿ„Ÿ„Ÿclient
+„        „        TracyAlloc.cpp
+„        „        TracyArmCpuTable.hpp
+„        „        TracyCallstack.cpp
+„        „        TracyCallstack.h
+„        „        TracyCallstack.hpp
+„        „        TracyCpuid.hpp
+„        „        TracyDebug.hpp
+„        „        TracyDxt1.cpp
+„        „        TracyDxt1.hpp
+„        „        TracyFastVector.hpp
+„        „        TracyKCore.cpp
+„        „        TracyKCore.hpp
+„        „        TracyLock.hpp
+„        „        TracyOverride.cpp
+„        „        TracyProfiler.cpp
+„        „        TracyProfiler.hpp
+„        „        TracyRingBuffer.hpp
+„        „        TracyRocprof.cpp
+„        „        TracyScoped.hpp
+„        „        TracyStringHelpers.hpp
+„        „        TracySysPower.cpp
+„        „        TracySysPower.hpp
+„        „        TracySysTime.cpp
+„        „        TracySysTime.hpp
+„        „        TracySysTrace.cpp
+„        „        TracySysTrace.hpp
+„        „        TracyThread.hpp
+„        „        tracy_concurrentqueue.h
+„        „        tracy_rpmalloc.cpp
+„        „        tracy_rpmalloc.hpp
+„        „        tracy_SPSCQueue.h
+„        „        
+„        „¥„Ÿ„Ÿ„Ÿcommon
+„        „        TracyAlign.hpp
+„        „        TracyAlloc.hpp
+„        „        TracyApi.h
+„        „        TracyColor.hpp
+„        „        TracyForceInline.hpp
+„        „        TracyMutex.hpp
+„        „        TracyProtocol.hpp
+„        „        TracyQueue.hpp
+„        „        TracySocket.cpp
+„        „        TracySocket.hpp
+„        „        TracyStackFrames.cpp
+„        „        TracyStackFrames.hpp
+„        „        TracySystem.cpp
+„        „        TracySystem.hpp
+„        „        TracyVersion.hpp
+„        „        TracyWinFamily.hpp
+„        „        TracyYield.hpp
+„        „        tracy_lz4.cpp
+„        „        tracy_lz4.hpp
+„        „        tracy_lz4hc.cpp
+„        „        tracy_lz4hc.hpp
+„        „        
+„        „¤„Ÿ„Ÿ„Ÿtracy
+„                Tracy.hpp
+„                TracyC.h
+„                TracyCUDA.hpp
+„                TracyD3D11.hpp
+„                TracyD3D12.hpp
+„                TracyLua.hpp
+„                TracyMetal.hmm
+„                TracyOpenCL.hpp
+„                TracyOpenGL.hpp
+„                TracyVulkan.hpp
+„                
+„¤„Ÿ„Ÿ„ŸUtility
+        BitmaskOperators.h
+        

@@ -1,5 +1,6 @@
 #include "FreeCamera.h"
 #include "Engine\Core\Input.h"
+#include "Engine\Core\Log\Log.h"
 
 #include <imgui.h>
 #include <cmath>
@@ -9,6 +10,8 @@ static constexpr int key_move_forward = 'W';	//前進キーの仮想キーコード
 static constexpr int key_move_backward = 'S';	//後退キーの仮想キーコード
 static constexpr int key_move_left = 'A';		//左平行移動キーの仮想キーコード
 static constexpr int key_move_right = 'D';		//右平行移動キーの仮想キーコード
+static constexpr int key_move_up = 'E';			//上移動キー
+static constexpr int key_move_down = 'Q';		//下移動キー
 
 //カメラ回転制限および初期値
 static constexpr float max_pitch_angle = 89.0f;			//ジンバルロックを防ぐための限界画角設定（度数法）
@@ -20,6 +23,10 @@ static constexpr float default_eye_z = -10.0f;			//後方に引くカメラ距離Z
 static constexpr float default_focus_x = 0.0f;			//ゲーム開始時の初期注視点位置X
 static constexpr float default_focus_y = 0.0f;			//ゲーム開始時の初期注視点位置Y
 static constexpr float default_focus_z = 0.0f;			//ゲーム開始時の初期注視点位置Z
+
+static constexpr float min_move_speed = 1.0f;			//マウスホイール最小移動値
+static constexpr float max_move_speed = 100.0f;			//マウスホイール最大移動値
+static constexpr float speed_change_step = 2.0f;		//マウスホイール移動量
 
 //コンストラクタ
 FreeCamera::FreeCamera()
@@ -64,6 +71,35 @@ void FreeCamera::Update(float elapsed_time)
 		if (rotation_angle.x < -max_pitch_rad)rotation_angle.x = -max_pitch_rad;
 	}
 
+	//マウスホイールの移動量変化
+	int wheel_delta = Input::Instance().GetMouseWheelDelta();
+	if (wheel_delta != 0)
+	{
+		if (wheel_delta > 0)
+		{
+			move_speed += speed_change_step;
+		}
+		else
+		{
+			move_speed -= speed_change_step;
+		}
+
+		if (move_speed < min_move_speed)
+		{
+			move_speed = min_move_speed;
+		}
+		else if (move_speed > max_move_speed)
+		{
+			move_speed = max_move_speed;
+		}
+
+		if (move_speed <= 0.0f || std::isnan(move_speed))
+		{
+			LOG_WARNING({ u8"カメラ" }, u8"移動速度が不正な値になりました。デフォルト値にリセットします");
+			move_speed = default_move_speed;
+		}
+	}
+
 	//新しい回転角度に基づいた視線方向ベクトルの再合成
 	float cos_pitch = std::cosf(rotation_angle.x);
 	float sin_pitch = std::sinf(rotation_angle.x);
@@ -85,21 +121,29 @@ void FreeCamera::Update(float elapsed_time)
 	DirectX::XMVECTOR move_vector = DirectX::XMVectorZero();
 
 	//キーボード移動
-	if (Input::Instance().IsKeyPress(VK_RBUTTON) && Input::Instance().IsKeyPress(key_move_forward))
+	if (Input::Instance().IsKeyPress(key_move_forward))
 	{
 		move_vector = DirectX::XMVectorAdd(move_vector, new_front);
 	}
-	if (Input::Instance().IsKeyPress(VK_RBUTTON) && Input::Instance().IsKeyPress(key_move_backward))
+	if (Input::Instance().IsKeyPress(key_move_backward))
 	{
 		move_vector = DirectX::XMVectorSubtract(move_vector, new_front);
 	}
-	if (Input::Instance().IsKeyPress(VK_RBUTTON) && Input::Instance().IsKeyPress(key_move_left))
+	if (Input::Instance().IsKeyPress(key_move_left))
 	{
 		move_vector = DirectX::XMVectorSubtract(move_vector, new_right);
 	}
-	if (Input::Instance().IsKeyPress(VK_RBUTTON) && Input::Instance().IsKeyPress(key_move_right))
+	if (Input::Instance().IsKeyPress(key_move_right))
 	{
 		move_vector = DirectX::XMVectorAdd(move_vector, new_right);
+	}
+	if (Input::Instance().IsKeyPress(key_move_up))
+	{
+		move_vector = DirectX::XMVectorAdd(move_vector, world_up);
+	}
+	if (Input::Instance().IsKeyPress(key_move_down))
+	{
+		move_vector = DirectX::XMVectorSubtract(move_vector, world_up);
 	}
 
 	//コントローラー移動
