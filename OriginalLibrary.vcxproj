@@ -324,6 +324,7 @@
     <ClCompile Include="Source\Gameplay\AI\SelectorNode.cpp" />
     <ClCompile Include="Source\Gameplay\AI\WeightedNode.cpp" />
     <ClCompile Include="Source\Gameplay\Components\AI\HateComponent.cpp" />
+    <ClCompile Include="Source\Gameplay\Components\AI\PerceptionComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Animation\AnimationBlender.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Animation\AnimationComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.cpp" />
@@ -476,6 +477,7 @@
     <ClInclude Include="Source\Gameplay\AI\StateActionNode.h" />
     <ClInclude Include="Source\Gameplay\AI\WeightedNode.h" />
     <ClInclude Include="Source\Gameplay\Components\AI\HateComponent.h" />
+    <ClInclude Include="Source\Gameplay\Components\AI\PerceptionComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Animation\AnimationBlender.h" />
     <ClInclude Include="Source\Gameplay\Components\Animation\AnimationComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.h" />

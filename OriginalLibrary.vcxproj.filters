@@ -489,6 +489,9 @@
     <ClCompile Include="Source\Gameplay\Components\Sensor\VisionSensorComponent.cpp">
       <Filter>Source\Gameplay\Components\Sensor\VisionSensorComponent</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\AI\PerceptionComponent.cpp">
+      <Filter>Source\Gameplay\Components\AI\PerceptionComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -952,6 +955,9 @@
     </ClInclude>
     <ClInclude Include="Source\Utility\BitmaskOperators.h">
       <Filter>Source\Utility\BitmaskOperators</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\AI\PerceptionComponent.h">
+      <Filter>Source\Gameplay\Components\AI\PerceptionComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1541,6 +1547,9 @@
     </Filter>
     <Filter Include="Source\Utility\BitmaskOperators">
       <UniqueIdentifier>{7f93c868-7ad8-4b3a-8d29-2d5e2c442af8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\AI\PerceptionComponent">
+      <UniqueIdentifier>{2898b389-ae11-45a4-8dff-885807e6d9f6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
