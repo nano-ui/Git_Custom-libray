@@ -4,6 +4,7 @@
 #include "FollowCameraComponent.h"
 #include "CameraManager.h"
 #include "Engine\Core\Input.h"
+#include "Engine\Core\Log\Log.h"
 
 #include <Windows.h>
 
@@ -34,7 +35,6 @@ void CameraController::Initialize()
 //更新処理
 void CameraController::Update(float elapsed_time)
 {
-	if (Input::Instance().IsKeyTrigger(KEY_SWITCH_MODE))SwitchMode();
 	if (current_mode == CameraMode::Free)
 	{
 		if (main_camera)main_camera->Update(elapsed_time);
@@ -59,6 +59,29 @@ void CameraController::RenderGui()
 void CameraController::SetTargetPositionGetter(const std::function<bool(DirectX::XMFLOAT3&)>& getter)
 {
 	follow_camera_component->SetTarget(getter);
+}
+
+//カメラの設定
+void CameraController::SetCameraMode(CameraMode mode)
+{
+	if (current_mode == mode)return;
+
+	switch (mode)
+	{
+	case CameraMode::Free:		current_mode = CameraMode::Free; break;
+	case CameraMode::Follow:
+		if (!follow_camera_component)
+		{
+			LOG_WARNING({ u8"カメラ",u8"設定" }, u8"follow_camera_component が無効なため追従モードに切り替えられません");
+			return;
+		}
+		current_mode = CameraMode::Follow;
+		follow_camera_component->ResetCameraPosition();
+		break;
+	default:
+		LOG_WARNING({ u8"カメラ",u8"設定" }, u8"不正なカメラモードが指定されました");
+		break;
+	}
 }
 
 //モード切替

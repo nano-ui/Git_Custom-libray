@@ -12,7 +12,7 @@ SceneManager& SceneManager::Instance()
 //コンストラクタ
 SceneManager::SceneManager()
 {
-
+	is_paused = false;
 }
 
 //デストラクタ

@@ -17,6 +17,9 @@
 #include "Gameplay\GameObjects\Character\Player.h"
 #include "Gameplay\GameObjects\Character\Enemy.h"
 #include <Engine\Core\MacroTracy.h>
+#include <Engine\Core\Input.h>
+
+static constexpr int key_pause = VK_SPACE;
 
 //コンストラクタ
 SceneGame::SceneGame()
@@ -123,9 +126,34 @@ void SceneGame::Update(float elapsed_time)
 		BS_PROFILE_SCOPE("IsGameViewportActive");
 		if (editor_manager && !editor_manager->IsGameViewportActive())return;
 	}
+	if (Input::Instance().IsKeyTrigger(key_pause))
+	{
+		bool next_pause_state = !SceneManager::Instance().IsPaused();
+		SceneManager::Instance().SetPauseState(next_pause_state);
+
+		if (camera_controller)
+		{
+			if (next_pause_state)
+			{
+				camera_controller->SetCameraMode(CameraMode::Free);
+			}
+			else
+			{
+				camera_controller->SetCameraMode(CameraMode::Follow);
+			}
+		}
+		else
+		{
+			OutputDebugStringA("[SceneGame 警告] ポーズ切り替え時に camera_controller が nullptr です。\n");
+		}
+	}
 	{
 		BS_PROFILE_SCOPE("IsGameViewportActive");
-		if (SceneManager::Instance().IsPaused())return;
+		if (SceneManager::Instance().IsPaused())
+		{
+
+			return;
+		}
 	}
 	{
 		BS_PROFILE_SCOPE("OubectManager::Update");

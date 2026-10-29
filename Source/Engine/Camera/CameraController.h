@@ -38,6 +38,9 @@ public:
 	//メインカメラを取得
 	std::shared_ptr<Camera> GetCamera()const { return main_camera; }
 
+	//カメラの設定
+	void SetCameraMode(CameraMode mode);
+
 private:
 	//モード切替
 	void SwitchMode();

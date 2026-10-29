@@ -492,6 +492,12 @@
     <ClCompile Include="Source\Gameplay\Components\AI\PerceptionComponent.cpp">
       <Filter>Source\Gameplay\Components\AI\PerceptionComponent</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Tactics\TacticalCommandController.cpp">
+      <Filter>Source\Gameplay\Components\Tactics\TacticalCommandController</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utility\RayUtility.cpp">
+      <Filter>Source\Utility\RayUtility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -958,6 +964,12 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\AI\PerceptionComponent.h">
       <Filter>Source\Gameplay\Components\AI\PerceptionComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Tactics\TacticalCommandController.h">
+      <Filter>Source\Gameplay\Components\Tactics\TacticalCommandController</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utility\RayUtility.h">
+      <Filter>Source\Utility\RayUtility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1550,6 +1562,15 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\AI\PerceptionComponent">
       <UniqueIdentifier>{2898b389-ae11-45a4-8dff-885807e6d9f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Tactics">
+      <UniqueIdentifier>{2ee7ba5e-fcd4-48d6-a63b-7eac56e6d3ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Tactics\TacticalCommandController">
+      <UniqueIdentifier>{71e013a5-4383-4ee2-8e1b-2c766170f36d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utility\RayUtility">
+      <UniqueIdentifier>{8d4dba39-1ab4-4746-a3d6-e1a268efb0a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
