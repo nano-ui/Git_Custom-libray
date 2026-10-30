@@ -50,7 +50,7 @@ void Enemy::Initialize()
 	Character::Initialize();
 	SetupComponent();
 	health = 100.0f;
-	SetTag(GameObjectTag::Enemy);
+	SetTag(GameObjectTag::Enemys);
 	perception->SetTargetTag(GameObjectTag::Player | GameObjectTag::Allies);
 }
 
@@ -175,7 +175,7 @@ void Enemy::UpdateChase(float elapsed_time)
 		float stop_distance_sq = stop_distance * stop_distance;
 		if (distance_sq <= stop_distance_sq || distance_sq < EPSILON_DISTANCE_SQ)
 		{
-			Character::Move(elapsed_time, 0.0f, 0.0f, 0.0f);
+			Character::Move(elapsed_time, 0.0f, 0.0f);
 			return;
 		}
 
@@ -185,7 +185,7 @@ void Enemy::UpdateChase(float elapsed_time)
 	float length = std::sqrtf((move_velocity.x * move_velocity.x) + (move_velocity.z * move_velocity.z));
 	if (length < EPSILON_DISTANCE_SQ)
 	{
-		Character::Move(elapsed_time, 0.0f, 0.0f, 0.0f);
+		Character::Move(elapsed_time, 0.0f, 0.0f);
 		return;
 	}
 
@@ -193,8 +193,8 @@ void Enemy::UpdateChase(float elapsed_time)
 	float dir_z = move_velocity.z / length;
 
 	//ŽÀÛ‚ÉˆÚ“®
-	Character::Move(elapsed_time, dir_x, dir_z, chase_speed);
-	Character::Tuen(elapsed_time, dir_x, dir_z, chase_speed);
+	Character::Move(elapsed_time, dir_x, dir_z);
+	Character::Tuen(elapsed_time, dir_x, dir_z);
 }
 
 //’–Ú‘ÎÛXVˆ—

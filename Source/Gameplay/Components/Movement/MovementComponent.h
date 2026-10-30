@@ -37,10 +37,10 @@ public:
 	void SetTransformComponent(const std::shared_ptr<TransformComponent>& transform);
 
 	//移動方向と速度の入力設定
-	void Move(float vx, float vz, float speed);
+	void Move(float vx, float vz);
 
 	//移動方向への旋回処理
-	void Turn(float elapsed_time, float vx, float vz, float speed);
+	void Turn(float elapsed_time, float vx, float vz);
 
 	//ジャンプ処理
 	void Jump(float speed);
@@ -75,6 +75,7 @@ private:
 	std::weak_ptr<TransformComponent> target_transform;	//対象の行列
 	DirectX::XMFLOAT3 velocity;		//移動速度ベクトル
 	DirectX::XMFLOAT2 move_input;	//入力方向ベクトル
+	float turn_speed = 0.0f;		//回転速度
 	float move_speed = 0.0f;		//水平速度
 	float max_speed = 5.0f;			//最大移動速度
 	float acceleration = 50.0f;		//加速度

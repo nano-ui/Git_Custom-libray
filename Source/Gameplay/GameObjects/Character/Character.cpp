@@ -361,24 +361,24 @@ void Character::SetupBlackboard()
 }
 
 //ˆÚ“®•ûŒü‚ÌÝ’è
-void Character::Move(float elapsed_time, float vx, float vz, float speed)
+void Character::Move(float elapsed_time, float vx, float vz)
 {
 	BS_PROFILE_FUNCTION();
 
 	if (state_machine_component->GetCurrentActionCategory() != ActionCategory::Attack)
 	{
-		movement_component->Move(vx, vz, speed);
+		movement_component->Move(vx, vz);
 	}
 }
 
 //ù‰ñˆ—
-void Character::Tuen(float elapsed_time, float vx, float vz, float speed)
+void Character::Tuen(float elapsed_time, float vx, float vz)
 {
 	BS_PROFILE_FUNCTION();
 
 	if (state_machine_component->GetCurrentActionCategory() != ActionCategory::Attack)
 	{
-		movement_component->Turn(elapsed_time, vx, vz, speed);
+		movement_component->Turn(elapsed_time, vx, vz);
 	}
 }
 

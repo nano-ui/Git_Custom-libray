@@ -306,6 +306,8 @@ C:.
 „    „    „        VisionSensorComponent.h
 „    „    „        
 „    „    „¥„Ÿ„Ÿ„ŸTactics
+„    „    „        SquadManager.cpp
+„    „    „        SquadManager.h
 „    „    „        TacticalCommandController.cpp
 „    „    „        TacticalCommandController.h
 „    „    „        
@@ -323,6 +325,8 @@ C:.
 „    „    „    ObjectManager.h
 „    „    „    
 „    „    „¥„Ÿ„Ÿ„ŸCharacter
+„    „    „        Allie.cpp
+„    „    „        Allie.h
 „    „    „        Character.cpp
 „    „    „        Character.h
 „    „    „        Enemy.cpp
@@ -440,4 +444,6 @@ C:.
 „                
 „¤„Ÿ„Ÿ„ŸUtility
         BitmaskOperators.h
+        RayUtility.cpp
+        RayUtility.h
         

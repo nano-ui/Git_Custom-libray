@@ -1,4 +1,5 @@
 #include "TacticalCommandController.h"
+#include "SquadManager.h"
 #include "Editor\GuiInspector.h"
 #include "Serialization\JsonSerializer.h"
 #include "Engine\Collision\CollisionManager.h"
@@ -55,6 +56,7 @@ void TacticalCommandController::Update(float elapsed_time)
 
 	if (is_hit)
 	{
+		SquadManager::Instance().CommandMode(target_position);
 		LOG_SUCCESS({ u8"ÚG" }, u8"ƒŒƒC‚ªƒqƒbƒg‚µ‚Ü‚µ‚½");
 		has_target = true;
 	}

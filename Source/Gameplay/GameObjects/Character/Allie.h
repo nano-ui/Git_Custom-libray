@@ -2,6 +2,7 @@
 #include "Character.h"
 
 #include <DirectXMath.h>
+#include "memory.h"
 
 //味方クラス
 class Allie : public Character
@@ -37,6 +38,12 @@ public:
 	//コンポーネントの設定
 	void SetupComponent()override;
 
+	//ブラックボードに登録・初期化
+	void SetupBlackboard()override;
+
+	//アニメーション終了イベント
+	void OnAnimationEnd(uint32_t state_key) override;
+
 public:
 	//目標座標の設定
 	void SetTargetPosition(DirectX::XMFLOAT3 pos) { target_position = pos; }
@@ -50,9 +57,23 @@ public:
 	//目標フラグの取得
 	bool GetHasTarget()const { return has_target; }
 
+private:
+	//目標地点に向けて進む
+	void MoveTarget(float elapsed_time);
+
 protected:
 	//デフォルトパスの取得
 	std::string GetDefaultModelPath()const override;
+
+	//接地時イベント
+	void OnLanding()override;
+
+	//被弾時イベント
+	void OnDamage(uint32_t attacker_id, float hate)override;
+
+	//死亡時イベント
+	void OnDead()override;
+
 
 private:
 	DirectX::XMFLOAT3 target_position;	//目標座標

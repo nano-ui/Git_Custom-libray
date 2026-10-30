@@ -6,6 +6,7 @@
 #include <Windows.h>
 #include <cmath>
 #include <algorithm>
+#include <Engine\Core\MacroTracy.h>
 
 static constexpr float SLOPE_THRESHOLD = 0.5f;				//床・坂道と判定する法線Yの閾値
 static constexpr float CEILING_THRESHOLD = -0.5f;			//天井と判定する法線Yの閾値
@@ -16,6 +17,7 @@ static constexpr float PENETRATION_LIMIT = 5.0f;			//1フレームあたりの最大押し出
 MovementComponent::MovementComponent()
 	:velocity({ 0.0f,0.0f,0.0f })
 	, move_input({ 0.0f,0.0f })
+	, turn_speed(0.0f)
 	, move_speed(0.0f)
 	, max_speed(5.0f)
 	, acceleration(50.0f)
@@ -43,6 +45,7 @@ void MovementComponent::Initialize()
 //更新処理
 void MovementComponent::Update(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
 	if (!is_active)return;
 	UpdateVelocity(elapsed_time);
 	move_speed = std::sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
@@ -57,19 +60,23 @@ void MovementComponent::RenderGui()
 //JSON保存変数登録
 void MovementComponent::SetupSerialization(JsonSerializer* serializer)
 {
+	BS_PROFILE_FUNCTION();
 	if (!serializer)return;
-	serializer->RegisterVariable(u8"最高速度", &max_speed);
-	serializer->RegisterVariable(u8"加速度", &acceleration);
-	serializer->RegisterVariable(u8"摩擦力", &friction);
-	serializer->RegisterVariable(u8"重力", &gravity);
-	serializer->RegisterVariable(u8"空中制御力", &air_control);
+	serializer->RegisterVariable(u8"最高速度", &max_speed, SerializeTarget::Detail);
+	serializer->RegisterVariable(u8"旋回速度", &turn_speed, SerializeTarget::Detail);
+	serializer->RegisterVariable(u8"加速度", &acceleration, SerializeTarget::Detail);
+	serializer->RegisterVariable(u8"摩擦力", &friction, SerializeTarget::Detail);
+	serializer->RegisterVariable(u8"重力", &gravity, SerializeTarget::Detail);
+	serializer->RegisterVariable(u8"空中制御力", &air_control, SerializeTarget::Detail);
 }
 
 //inspector登録
 void MovementComponent::SetupInspector(GuiInspector* inspector)
 {
+	BS_PROFILE_FUNCTION();
 	if (!inspector)return;
 	inspector->RegisterVariable(u8"最高速度", &max_speed, GetComponentName());
+	inspector->RegisterVariable(u8"旋回速度", &turn_speed, GetComponentName());
 	inspector->RegisterVariable(u8"加速度", &acceleration, GetComponentName());
 	inspector->RegisterVariable(u8"摩擦力", &friction, GetComponentName());
 	inspector->RegisterVariable(u8"重力", &gravity, GetComponentName());
@@ -87,16 +94,36 @@ void MovementComponent::SetTransformComponent(const std::shared_ptr<TransformCom
 }
 
 //移動方向と速度の入力設定
-void MovementComponent::Move(float vx, float vz, float speed)
+void MovementComponent::Move(float vx, float vz)
 {
-	move_input.x = vx;
-	move_input.y = vz;
-	max_speed = speed;
+	if (std::isnan(vx) || std::isnan(vz))
+	{
+		OutputDebugStringA("[MovementComponent エラー] Move: 入力値に NaN が検出されました。\n");
+		return;
+	}
+
+	constexpr float max_input_limit_sq = 1.0f;
+	float length_sq = (vx * vx) + (vz * vz);
+
+	//斜め移動時のクランプ
+	if (length_sq > max_input_limit_sq)
+	{
+		float inv_len = 1.0f / std::sqrtf(length_sq);
+		move_input.x = vx * inv_len;
+		move_input.y = vz * inv_len;
+	}
+	else
+	{
+		move_input.x = vx;
+		move_input.y = vz;
+	}
 }
 
 //移動方向への旋回処理
-void MovementComponent::Turn(float elapsed_time, float vx, float vz, float speed)
+void MovementComponent::Turn(float elapsed_time, float vx, float vz)
 {
+	BS_PROFILE_FUNCTION();
+
 	auto transform = target_transform.lock();
 	if (!transform)return;
 
@@ -111,7 +138,7 @@ void MovementComponent::Turn(float elapsed_time, float vx, float vz, float speed
 	while (angle_diff > DirectX::XM_PI)angle_diff -= DirectX::XM_2PI;
 	while (angle_diff < -DirectX::XM_PI)angle_diff += DirectX::XM_2PI;
 
-	float rot_speed = speed * elapsed_time;
+	float rot_speed = turn_speed * elapsed_time;
 
 	if (std::abs(angle_diff) <= rot_speed)current_rot.y = target_angle;
 	else current_rot.y += (angle_diff > 0.0f ? rot_speed : -rot_speed);
@@ -137,6 +164,8 @@ void MovementComponent::Jump(float speed)
 //ステージ（静的メッシュ）との衝突押し出し処理
 void MovementComponent::ResolveStageCollision(const CollisionResult& result, Collider* my_collider)
 {
+	BS_PROFILE_FUNCTION();
+
 	auto transform = target_transform.lock();
 	if (!transform)return;
 
@@ -212,6 +241,8 @@ void MovementComponent::ResolveStageCollision(const CollisionResult& result, Col
 //動的オブジェクトとの衝突押し出し
 void MovementComponent::ResolveDynamicCollision(const CollisionResult& result, Collider* my_collider)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!my_collider || !result.hit_collider)return;
 
 	auto transform = target_transform.lock();
@@ -250,6 +281,8 @@ void MovementComponent::ResolveDynamicCollision(const CollisionResult& result, C
 //速度・位置更新
 void MovementComponent::UpdateVelocity(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
+
 	UpdateVerticalVelocity(elapsed_time);
 	UpdateHorizontalVelocity(elapsed_time);
 	UpdateVericalMove(elapsed_time);

@@ -345,6 +345,7 @@
     <ClCompile Include="Source\Gameplay\Components\Movement\Rotation\LockAtRotation.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Movement\Rotation\RotationFactory.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Sensor\VisionSensorComponent.cpp" />
+    <ClCompile Include="Source\Gameplay\Components\Tactics\SquadManager.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Tactics\TacticalCommandController.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Transform\TransformComponent.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Allie.cpp" />
@@ -503,6 +504,7 @@
     <ClInclude Include="Source\Gameplay\Components\Movement\Rotation\RotationBase.h" />
     <ClInclude Include="Source\Gameplay\Components\Movement\Rotation\RotationFactory.h" />
     <ClInclude Include="Source\Gameplay\Components\Sensor\VisionSensorComponent.h" />
+    <ClInclude Include="Source\Gameplay\Components\Tactics\SquadManager.h" />
     <ClInclude Include="Source\Gameplay\Components\Tactics\TacticalCommandController.h" />
     <ClInclude Include="Source\Gameplay\Components\Transform\TransformComponent.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Allie.h" />

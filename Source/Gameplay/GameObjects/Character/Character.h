@@ -67,10 +67,10 @@ protected:
 	virtual std::string GetDefaultModelPath() const = 0;
 
 	//ˆÚ“®•ûŒü‚Ìİ’è
-	void Move(float elapsed_time, float vx, float vz, float speed);
+	void Move(float elapsed_time, float vx, float vz);
 
 	//ù‰ñˆ—
-	void Tuen(float elapsed_time, float vx, float vz, float speed);
+	void Tuen(float elapsed_time, float vx, float vz);
 
 	//ƒWƒƒƒ“ƒvˆ—
 	void Jump(float speed);

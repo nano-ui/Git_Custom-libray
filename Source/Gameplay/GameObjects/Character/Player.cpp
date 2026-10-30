@@ -113,6 +113,6 @@ void Player::UpdateInput(float elapsed_time)
 
 	float target_speed = movement_component ? movement_component->GetMaxSpeed() : 5.0f;
 
-	Character::Move(elapsed_time, move_vec.x, move_vec.z, target_speed);
-	Character::Tuen(elapsed_time, move_vec.x, move_vec.z, target_speed);
+	Character::Move(elapsed_time, move_vec.x, move_vec.z);
+	Character::Tuen(elapsed_time, move_vec.x, move_vec.z);
 }

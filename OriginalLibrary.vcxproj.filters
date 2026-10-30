@@ -501,6 +501,9 @@
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Allie.cpp">
       <Filter>Source\Gameplay\GameObjects\Character\Allie</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Tactics\SquadManager.cpp">
+      <Filter>Source\Gameplay\Components\Tactics\SquadManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -976,6 +979,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Allie.h">
       <Filter>Source\Gameplay\GameObjects\Character\Allie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Tactics\SquadManager.h">
+      <Filter>Source\Gameplay\Components\Tactics\SquadManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1580,6 +1586,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\GameObjects\Character\Allie">
       <UniqueIdentifier>{d5639b8d-9725-43c0-9537-da949feeb358}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Tactics\SquadManager">
+      <UniqueIdentifier>{d785a56f-9c07-40e1-8e2c-acb06cbb4114}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
