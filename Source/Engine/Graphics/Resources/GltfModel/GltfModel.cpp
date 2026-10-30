@@ -2,6 +2,7 @@
 
 #include "GltfModelAnimation.h"
 #include "GltfModelRenderer.h"
+#include "Engine/Graphics/Resources/GltfModel/ModelRenderQueue.h"
 #include "Model.h"
 #include <Engine\Core\MacroTracy.h>
 
@@ -46,6 +47,72 @@ void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XM
 	{
 		//自身の共有データ、指定された位置（ワールド行列）、自身の計算済みノード配列を渡して描画を実行
 		renderer->Render(immediate_context, *this, world_matrix, nullptr);
+	}
+}
+
+//レンダーキューに登録
+void GltfModel::SubmitRenderCommands(ModelRenderQueue& queue, const DirectX::XMFLOAT4X4& world_matrix)
+{
+	BS_PROFILE_FUNCTION();
+
+	if (!data)
+	{
+		OutputDebugStringA("[GltfModel エラー] SubmitRenderCommands: data が nullptr です。\n");
+		return;
+	}
+
+	if (!animation)
+	{
+		OutputDebugStringA("[GltfModel エラー] SubmitRenderCommands: animation が nullptr です。\n");
+		return;
+	}
+
+	const std::vector<GltfModelData::node>& nodes = animation->GetAnimationNodes();
+	if (nodes.empty())
+	{
+		OutputDebugStringA("[GltfModel 警告] SubmitRenderCommands: nodes が空です。\n");
+		return;
+	}
+
+	DirectX::XMMATRIX base_world = DirectX::XMLoadFloat4x4(&world_matrix);
+
+	for (const GltfModelData::cached_command& cmd : data->cached_render_commands)
+	{
+		if (cmd.node_index < 0 || static_cast<size_t>(cmd.node_index) >= nodes.size())
+		{
+			OutputDebugStringA("[GltfModel エラー] SubmitRenderCommands: 不正な node_index です。\n");
+			continue;
+		}
+
+		if (cmd.mesh_index < 0 || static_cast<size_t>(cmd.mesh_index) >= data->meshes.size())
+		{
+			OutputDebugStringA("[GltfModel エラー] SubmitRenderCommands: 不正な mesh_index です。\n");
+			continue;
+		}
+
+		const GltfModelData::mesh& mesh = data->meshes.at(cmd.mesh_index);
+		if (cmd.primitive_index < 0 || static_cast<size_t>(cmd.primitive_index) >= mesh.primitives.size())
+		{
+			OutputDebugStringA("[GltfModel エラー] SubmitRenderCommands: 不正な primitive_index です。\n");
+			continue;
+		}
+
+		const GltfModelData::node& current_node = nodes.at(cmd.node_index);
+		const GltfModelData::mesh::primitive* primitive = &mesh.primitives.at(cmd.primitive_index);
+
+		ModelDrawCommand draw_command = {};
+		draw_command.data = data.get();
+		draw_command.nodes = &nodes;
+		draw_command.primitive = primitive;
+		draw_command.material_index = cmd.material_index;
+		draw_command.skin_index = current_node.skin;
+		draw_command.node_index = cmd.node_index;
+
+		DirectX::XMMATRIX node_global = DirectX::XMLoadFloat4x4(&current_node.global_transform);
+		DirectX::XMMATRIX final_world = DirectX::XMMatrixMultiply(node_global, base_world);
+		DirectX::XMStoreFloat4x4(&draw_command.world_matrix, final_world);
+
+		queue.Submit(draw_command);
 	}
 }
 

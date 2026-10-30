@@ -1,8 +1,11 @@
 #include "ObjectManager.h"
 #include "GameObject.h"
 #include "Character/Character.h"
+#include "Engine/Graphics/Resources/GltfModel/ModelRenderQueue.h"
+#include "Engine/Graphics/Resources/GltfModel/GltfModelRenderer.h"
 #include "Gameplay\Components\Animation\AnimationComponent.h"
 #include <Engine\Core\MacroTracy.h>
+#include <Engine\Graphics\Resources\ModelManager.h>
 
 //静的の実体定義
 ObjectManager* ObjectManager::instance_ptr = nullptr;
@@ -11,6 +14,7 @@ ObjectManager* ObjectManager::instance_ptr = nullptr;
 ObjectManager::ObjectManager()
 {
 	instance_ptr = this;
+	model_render_queue = std::make_unique<ModelRenderQueue>();
 }
 
 //デストラクタ
@@ -80,13 +84,40 @@ void ObjectManager::Render(ID3D11DeviceContext* context)
 {
 	BS_PROFILE_FUNCTION();
 
-	//生存している全オブジェクトの描画処理
+	if (!context)
+	{
+		OutputDebugStringA("[ObjectManager エラー] Render: context が nullptr です。\n");
+		return;
+	}
+
+	if (model_render_queue)
+	{
+		model_render_queue->Clear();
+	}
+
 	for (auto& object : game_objects)
 	{
 		if (object->IsActive())
 		{
 			object->Render(context);
 		}
+	}
+
+	if (model_render_queue && model_render_queue->GetCommandCount() > 0)
+	{
+		model_render_queue->Sort();
+
+		std::shared_ptr<GltfModelRenderer> renderer = ModelManager::Instance().GetRenderer();
+		if (renderer)
+		{
+			renderer->RenderQueue(context, *model_render_queue);
+		}
+		else
+		{
+			OutputDebugStringA("[ObjectManager エラー] Render: GltfModelRenderer の取得に失敗しました。\n");
+		}
+
+		model_render_queue->Clear();
 	}
 }
 

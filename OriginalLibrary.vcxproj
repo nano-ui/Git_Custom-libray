@@ -302,6 +302,7 @@
     <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelData.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelRenderer.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfRootMotion.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\ModelRenderQueue.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\TinygltfImpl.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Resources\Light.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Resources\Model.cpp" />
@@ -457,6 +458,7 @@
     <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelData.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelRenderer.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfRootMotion.h" />
+    <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\ModelRenderQueue.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\Light.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\Model.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\ModelManager.h" />

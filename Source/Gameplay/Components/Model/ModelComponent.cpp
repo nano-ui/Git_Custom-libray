@@ -5,6 +5,7 @@
 #include "Engine/Graphics/Resources/GltfModel/GltfModelData.h"
 #include "Engine/Graphics/Resources/GltfModel/GltfModelRenderer.h"
 #include "Engine/Graphics/Renderers/Graphics.h"
+#include "Gameplay/GameObjects/ObjectManager.h"
 
 #include <Windows.h>
 #include <vector>
@@ -156,7 +157,7 @@ void ModelComponent::RenderInternal(ID3D11DeviceContext* context)
 	DirectX::XMFLOAT4X4 world_matrix;
 	DirectX::XMStoreFloat4x4(&world_matrix, world_matrix_xm);
 
-	model->Render(context, world_matrix);
+	model->SubmitRenderCommands(ObjectManager::Instance().GetRenderQueue(), world_matrix);
 }
 
 //ボーンインデックス検索

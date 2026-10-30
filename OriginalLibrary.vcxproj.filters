@@ -504,6 +504,9 @@
     <ClCompile Include="Source\Gameplay\Components\Tactics\SquadManager.cpp">
       <Filter>Source\Gameplay\Components\Tactics\SquadManager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\ModelRenderQueue.cpp">
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\ModelRenderQueue</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -982,6 +985,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Tactics\SquadManager.h">
       <Filter>Source\Gameplay\Components\Tactics\SquadManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\ModelRenderQueue.h">
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\ModelRenderQueue</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1589,6 +1595,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Tactics\SquadManager">
       <UniqueIdentifier>{d785a56f-9c07-40e1-8e2c-acb06cbb4114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\Model\GltfModel\ModelRenderQueue">
+      <UniqueIdentifier>{8182e727-ff77-432a-8ceb-9e051f5afc63}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -8,6 +8,7 @@
 #include "Engine/Collision/CollisionManager.h"
 
 class ShapeRenderer;
+class ModelRenderQueue;
 class GameObject;
 struct ID3D11DeviceContext;
 struct Collider;
@@ -89,6 +90,9 @@ public:
 	//全ゲームオブジェクトのリストへの参照を取得
 	const std::vector<std::unique_ptr<GameObject>>& GetGameObjects()const { return game_objects; }
 
+	//キュー参照を取得
+	ModelRenderQueue& GetRenderQueue() { return *model_render_queue; }
+
 	//アニメーションマップの更新
 	void RefreshAnimationMap(uint32_t target_model_hash, const std::unordered_map<uint32_t, std::string>& new_map);
 
@@ -98,6 +102,7 @@ private:
 
 private:
 	std::vector<std::unique_ptr<GameObject>> game_objects;	//ゲームオブジェクトを管理する配列
+	std::unique_ptr<ModelRenderQueue> model_render_queue = nullptr;	//レンダーキュー
 	CollisionManager* collision_manager = nullptr;			//CollisionManagerのポインタ
 	static ObjectManager* instance_ptr;						//静的インスタンスポインタ
 };
