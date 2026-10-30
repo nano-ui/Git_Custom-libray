@@ -27,7 +27,6 @@ bool Model::LoadModelInternal(const std::string& file_path)
 {
 	model_path = file_path;
 
-	//ModelManagerからのデータ取得
 	data = ModelManager::Instance().LoadModelData(file_path);
 	if (!data)
 	{
@@ -36,21 +35,18 @@ bool Model::LoadModelInternal(const std::string& file_path)
 		return false;
 	}
 
-	//DirectX11デバイスを取得して描画用インスタンスを生成
-	ID3D11Device* device = Graphics::Instance().GetDevice();
-	if (!device)
+	renderer = ModelManager::Instance().GetRenderer();
+	if (!renderer)
 	{
-		OutputDebugStringA("[Model エラー] LoadModelInternal: Graphics から ID3D11Device を取得できませんでした。\n");
+		OutputDebugStringA("[Model エラー] LoadModelInternal: ModelManager から GltfModelRenderer の取得に失敗しました。\n");
 		return false;
 	}
 
-	renderer = std::make_shared<GltfModelRenderer>(device);
 	model = std::make_unique<GltfModel>(data, renderer);
 
 	constexpr float INITIAL_UPDATE_TIME = 0.0f;
 	if (model)model->Update(INITIAL_UPDATE_TIME);
 
-	//内部ルートモーションコンポーネントの初期化
 	if (root_motion_component)root_motion_component->Initialize(data);
 
 	return true;

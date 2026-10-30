@@ -1,5 +1,6 @@
 #include "ModelManager.h"
 #include "Engine\Graphics\Resources\GltfModel\GltfModelData.h"
+#include "Engine\Graphics\Resources\GltfModel\GltfModelRenderer.h"
 #include "Engine\Graphics\Renderers\Graphics.h"
 #include "ThiedParty\json.hpp"
 
@@ -18,12 +19,17 @@ ModelManager& ModelManager::Instance()
 //モデルデータのロードと登録
 std::shared_ptr<GltfModelData> ModelManager::LoadModelData(const std::string& file_path)
 {
-	//検索用にパスを正規化
 	const std::string key_path = NormalizePath(file_path);
 
-	//既に登録済みか検索
-	auto iterator = model_registry.find(key_path);
-	if (iterator != model_registry.end())return iterator->second;
+	auto iterator = model_cache.find(key_path);
+	if (iterator != model_cache.end())
+	{
+		std::shared_ptr<GltfModelData> cached_data = iterator->second.lock();
+		if (cached_data)
+		{
+			return cached_data;
+		}
+	}
 
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 
@@ -33,7 +39,6 @@ std::shared_ptr<GltfModelData> ModelManager::LoadModelData(const std::string& fi
 		return nullptr;
 	}
 
-	//新規モデルデータの読み込み
 	std::shared_ptr<GltfModelData> new_model_data = GltfModelData::Load(device, file_path);
 	if (!new_model_data)
 	{
@@ -42,8 +47,7 @@ std::shared_ptr<GltfModelData> ModelManager::LoadModelData(const std::string& fi
 		return nullptr;
 	}
 
-	//正規化したパスをキーにして登録
-	model_registry[key_path] = new_model_data;
+	model_cache[key_path] = new_model_data;
 	return new_model_data;
 }
 
@@ -129,9 +133,17 @@ std::shared_ptr<GltfModelData> ModelManager::GetModelData(const std::string& fil
 {
 	const std::string key_path = NormalizePath(file_path);
 
-	auto iterator = model_registry.find(key_path);
-	if (iterator != model_registry.end())return iterator->second;
-	std::string debug_message = "[ModelManager 警告] 指定されたモデルデータが見つかりません。 パス: " + file_path + "\n";
+	auto iterator = model_cache.find(key_path);
+	if (iterator != model_cache.end())
+	{
+		std::shared_ptr<GltfModelData> cached_data = iterator->second.lock();
+		if (cached_data)
+		{
+			return cached_data;
+		}
+	}
+
+	std::string debug_message = "[ModelManager 警告] 指定されたモデルデータが見つからないか破棄されています。 パス: " + file_path + "\n";
 	OutputDebugStringA(debug_message.c_str());
 	return nullptr;
 }
@@ -141,8 +153,11 @@ void ModelManager::UnloadModelData(const std::string& file_path)
 {
 	const std::string key_path = NormalizePath(file_path);
 
-	auto iterator = model_registry.find(key_path);
-	if (iterator != model_registry.end())model_registry.erase(iterator);
+	auto iterator = model_cache.find(key_path);
+	if (iterator != model_cache.end())
+	{
+		model_cache.erase(iterator);
+	}
 	else
 	{
 		std::string debug_message = "[ModelManager 警告] 削除対象のモデルデータが存在しません。 パス: " + file_path + "\n";
@@ -150,19 +165,45 @@ void ModelManager::UnloadModelData(const std::string& file_path)
 	}
 }
 
+//全てのモデルデータキャッシュを開放
+void ModelManager::Clear()
+{
+	model_cache.clear();
+	renderer.reset();
+}
+
+//モデル描画を取得
+std::shared_ptr<GltfModelRenderer> ModelManager::GetRenderer()
+{
+	if (!renderer)
+	{
+		ID3D11Device* device = Graphics::Instance().GetDevice();
+		if (!device)
+		{
+			OutputDebugStringA("[ModelManager エラー] GetRenderer: ID3D11Device が nullptr です。\n");
+			return nullptr;
+		}
+
+		renderer = std::make_shared<GltfModelRenderer>(device);
+		if (!renderer)
+		{
+			OutputDebugStringA("[ModelManager エラー] GetRenderer: GltfModelRenderer の生成に失敗しました。\n");
+			return nullptr;
+		}
+	}
+	return renderer;
+}
+
 //使われていないモデルデータの一括開放
 void ModelManager::UnloadUnusedModels()
 {
-	constexpr long UNUSED_REFERENCE_COUNT = 1;
-
-	//登録されているモデルの参照カウントを確認しながら安全にループ削除
-	for (auto iterator = model_registry.begin(); iterator != model_registry.end();)
+	for (auto iterator = model_cache.begin(); iterator != model_cache.end();)
 	{
-		if (iterator->second.use_count() == UNUSED_REFERENCE_COUNT)
+		if (iterator->second.expired())
 		{
-			std::string debug_message = "[ModelManager 情報] 未使用のモデルデータを自動解放しました。 パス: " + iterator->first + "\n";
+			std::string debug_message = "[ModelManager 情報] 参照が切れたモデルデータを自動解放しました。 パス: " + iterator->first + "\n";
 			OutputDebugStringA(debug_message.c_str());
-			iterator = model_registry.erase(iterator);
+			iterator = model_cache.erase(iterator);
 		}
 		else
 		{

@@ -38,7 +38,6 @@ bool ModelComponent::LoadModel(const std::string& file_path)
 {
 	model_path = file_path;
 
-	//ModelManagerを経由して共有モデルデータを取得
 	model_data = ModelManager::Instance().LoadModelData(file_path);
 	if (!model_data)
 	{
@@ -46,22 +45,13 @@ bool ModelComponent::LoadModel(const std::string& file_path)
 		return false;
 	}
 
-	//レンダラーの生成
-	ID3D11Device* device = Graphics::Instance().GetDevice();
-	if (!device)
-	{
-		OutputDebugStringA("[ModelComponent エラー] LoadModel: ID3D11Device の取得に失敗しました。\n");
-		return false;
-	}
-
-	renderer = std::make_unique<GltfModelRenderer>(device);
+	renderer = ModelManager::Instance().GetRenderer();
 	if (!renderer)
 	{
-		OutputDebugStringA("[ModelComponent エラー] LoadModel: GltfModelRenderer の生成に失敗しました。\n");
+		OutputDebugStringA("[ModelComponent エラー] LoadModel: ModelManager から GltfModelRenderer の取得に失敗しました。\n");
 		return false;
 	}
 
-	//個別オブジェクト用の GltfModel インスタンスを生成
 	model = std::make_unique<GltfModel>(model_data, renderer);
 	if (!model)
 	{

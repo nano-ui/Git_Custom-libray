@@ -7,6 +7,7 @@
 #include <vector>
 
 class GltfModelData;
+class GltfModelRenderer;
 
 class ModelManager
 {
@@ -34,6 +35,9 @@ public:
 	//指定したモデルデータを削除
 	void UnloadModelData(const std::string& file_path);
 
+	//モデル描画を取得
+	std::shared_ptr<GltfModelRenderer> GetRenderer();
+
 	//使われていないモデルデータの一括開放
 	void UnloadUnusedModels();
 
@@ -50,6 +54,7 @@ private:
 	std::string NormalizePath(const std::string& file_path)const;
 
 private:
-	std::unordered_map<std::string, std::shared_ptr<GltfModelData>> model_registry;	//識別名とモデルデータを紐づけて保持するマップ
+	std::unordered_map<std::string, std::weak_ptr<GltfModelData>> model_cache;
+	std::shared_ptr<GltfModelRenderer> renderer = nullptr;
 };
 
