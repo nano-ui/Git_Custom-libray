@@ -6,6 +6,7 @@
 #include "Engine/Graphics/Shaders/CustomShader.h"
 
 class GltfModel;
+class ModelRenderQueue;
 
 class GltfModelRenderer
 {
@@ -17,6 +18,7 @@ public:
 	static constexpr UINT OFFSET_ZERO = 0;		//バッファ等のオフセット初期値
 	static constexpr UINT TEXTURE_COUNT_5 = 5;	//マテリアルが保持するテクスチャの総数
 	static constexpr UINT SAMPLER_COUNT_3 = 3;	//使用するサンプラーステートの総数
+	static constexpr UINT VERTEX_BUFFER_STREAM_COUNT = 6;	//頂点属性数
 
 private:
 	//1回の描画に必要な情報
@@ -47,6 +49,11 @@ public:
 		const GltfModel& model,
 		const DirectX::XMFLOAT4X4& world,
 		ID3D11SamplerState* const* sampler_states);
+
+	//レンダーキューに蓄積されたすべての描画コマンドを一括走査
+	void RenderQueue(
+		ID3D11DeviceContext* immediate_context,
+		const ModelRenderQueue& queue);
 
 private:
 	//描画対象のノードを階層順に巡回

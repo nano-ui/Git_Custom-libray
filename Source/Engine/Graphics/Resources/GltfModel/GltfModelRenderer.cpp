@@ -3,6 +3,7 @@
 #include "Engine/Graphics/Shaders/shader.h"
 #include "Engine\Graphics\Renderers\Graphics.h"
 #include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
+#include "Engine/Graphics/Resources/GltfModel/ModelRenderQueue.h"
 #include <Engine\Core\MacroTracy.h>
 
 //=========================================
@@ -200,6 +201,186 @@ void GltfModelRenderer::Render
 		{
 			auto pos_it = primitive->vertex_buffer_views.find("POSITION"); //座標属性
 			if (pos_it != primitive->vertex_buffer_views.end()) //座標属性が存在するか
+			{
+				immediate_context->Draw(static_cast<UINT>(pos_it->second.count), OFFSET_ZERO);
+			}
+		}
+	}
+}
+
+//レンダーキューに蓄積されたすべての描画コマンドを一括走査
+void GltfModelRenderer::RenderQueue(ID3D11DeviceContext* immediate_context, const ModelRenderQueue& queue)
+{
+	BS_PROFILE_FUNCTION();
+
+	if (!immediate_context)
+	{
+		OutputDebugStringA("[GltfModelRenderer エラー] RenderQueue: immediate_context が nullptr です。\n");
+		return;
+	}
+
+	if (queue.GetCommands().empty())
+	{
+		return;
+	}
+
+	if (!custom_shader)
+	{
+		OutputDebugStringA("[GltfModelRenderer エラー] RenderQueue: custom_shader が nullptr です。\n");
+		return;
+	}
+
+	custom_shader->Apply();
+
+	immediate_context->VSSetConstantBuffers(SHADER_SLOT_0, RESOURCE_COUNT_1, primitive_cbuffer.GetAddressOf());
+	immediate_context->PSSetConstantBuffers(SHADER_SLOT_0, RESOURCE_COUNT_1, primitive_cbuffer.GetAddressOf());
+
+	const GltfModelData* last_model_data = nullptr;
+	int last_material_id = -1;
+	const GltfModelData* last_skin_model_data = nullptr;
+	const std::vector<GltfModelData::node>* last_skin_nodes = nullptr;
+	int last_skin_id = -1;
+	int last_skin_node_index = -1;
+	const GltfModelData::mesh::primitive* last_primitive = nullptr;
+
+	for (const ModelDrawCommand& cmd : queue.GetCommands())
+	{
+		if (!cmd.data || !cmd.nodes || !cmd.primitive)
+		{
+			OutputDebugStringA("[GltfModelRenderer 警告] RenderQueue: 不正な描画コマンドをスキップしました。\n");
+			continue;
+		}
+
+		if (cmd.skin_index > -1)
+		{
+			if (cmd.data != last_skin_model_data ||
+				cmd.nodes != last_skin_nodes ||
+				cmd.skin_index != last_skin_id ||
+				cmd.node_index != last_skin_node_index)
+			{
+				if (cmd.node_index >= 0 && static_cast<size_t>(cmd.node_index) < cmd.nodes->size())
+				{
+					UpdateSkinMatrices(immediate_context, *cmd.data, *cmd.nodes, cmd.skin_index, cmd.nodes->at(cmd.node_index).global_transform);
+					last_skin_model_data = cmd.data;
+					last_skin_nodes = cmd.nodes;
+					last_skin_id = cmd.skin_index;
+					last_skin_node_index = cmd.node_index;
+				}
+				else
+				{
+					OutputDebugStringA("[GltfModelRenderer エラー] RenderQueue: cmd.node_index が範囲外です。\n");
+				}
+			}
+		}
+
+		{
+			GltfModelData::primitive_constants primitive_data = {};
+			primitive_data.material = cmd.primitive->material;
+			primitive_data.has_tangent = cmd.primitive->has("TANGENT") ? 1 : 0;
+			primitive_data.skin = cmd.skin_index;
+			primitive_data.world = cmd.world_matrix;
+
+			immediate_context->UpdateSubresource(primitive_cbuffer.Get(), OFFSET_ZERO, nullptr, &primitive_data, OFFSET_ZERO, OFFSET_ZERO);
+		}
+
+		if (cmd.data != last_model_data || cmd.material_index != last_material_id)
+		{
+			if (cmd.data->material_resource_view)
+			{
+				immediate_context->PSSetShaderResources(OFFSET_ZERO, RESOURCE_COUNT_1, cmd.data->material_resource_view.GetAddressOf());
+			}
+
+			ID3D11ShaderResourceView* shader_resource_views[TEXTURE_COUNT_5] = { nullptr };
+
+			if (cmd.material_index >= 0 && static_cast<size_t>(cmd.material_index) < cmd.data->materials.size())
+			{
+				const GltfModelData::material& material = cmd.data->materials.at(cmd.material_index);
+				const int texture_indices[] =
+				{
+					material.data.pbr_metallic_roughness.basecolor_texture.index,
+					material.data.pbr_metallic_roughness.metallic_roughness_texture.index,
+					material.data.normal_texture.index,
+					material.data.emissive_texture.index,
+					material.data.occlusion_texture.index
+				};
+
+				for (int texture_index = 0; texture_index < TEXTURE_COUNT_5; texture_index++)
+				{
+					int tex_idx = texture_indices[texture_index];
+					if (tex_idx >= 0 && static_cast<size_t>(tex_idx) < cmd.data->textures.size())
+					{
+						int source_idx = cmd.data->textures.at(tex_idx).source;
+						if (source_idx >= 0 && static_cast<size_t>(source_idx) < cmd.data->texture_resource_views.size())
+						{
+							shader_resource_views[texture_index] = cmd.data->texture_resource_views.at(source_idx).Get();
+						}
+					}
+				}
+			}
+
+			immediate_context->PSSetShaderResources(SHADER_SLOT_1, TEXTURE_COUNT_5, shader_resource_views);
+
+			auto states = Graphics::Instance().GetPipelineStates();
+			if (states)
+			{
+				ID3D11SamplerState* samplers[SAMPLER_COUNT_3] = {
+					states->GetSamplerState(0).Get(),
+					states->GetSamplerState(1).Get(),
+					states->GetSamplerState(2).Get()
+				};
+				immediate_context->PSSetSamplers(OFFSET_ZERO, SAMPLER_COUNT_3, samplers);
+			}
+
+			last_model_data = cmd.data;
+			last_material_id = cmd.material_index;
+		}
+
+		if (cmd.data != last_model_data || cmd.primitive != last_primitive)
+		{
+			ID3D11Buffer* vertex_buffers[VERTEX_BUFFER_STREAM_COUNT] = { nullptr };
+			UINT strides[VERTEX_BUFFER_STREAM_COUNT] = { OFFSET_ZERO };
+			UINT offsets[VERTEX_BUFFER_STREAM_COUNT] = { OFFSET_ZERO };
+
+			const char* attribute_names[] = { "POSITION", "NORMAL", "TANGENT", "TEXCOORD_0", "JOINTS_0", "WEIGHTS_0" };
+
+			for (int i = 0; i < static_cast<int>(VERTEX_BUFFER_STREAM_COUNT); ++i)
+			{
+				const char* attr = attribute_names[i];
+				if (cmd.primitive->has(attr))
+				{
+					auto it = cmd.primitive->vertex_buffer_views.find(attr);
+					if (it != cmd.primitive->vertex_buffer_views.end())
+					{
+						int buffer_idx = it->second.buffer;
+						if (buffer_idx >= 0 && static_cast<size_t>(buffer_idx) < cmd.data->buffers.size())
+						{
+							vertex_buffers[i] = cmd.data->buffers.at(buffer_idx).Get();
+							strides[i] = static_cast<UINT>(it->second.stride_in_bytes);
+							offsets[i] = static_cast<UINT>(it->second.byte_offset);
+						}
+					}
+				}
+			}
+
+			immediate_context->IASetVertexBuffers(SHADER_SLOT_0, VERTEX_BUFFER_STREAM_COUNT, vertex_buffers, strides, offsets);
+
+			if (cmd.primitive->index_buffer_view.buffer > -1)
+			{
+				immediate_context->IASetIndexBuffer(cmd.data->buffers.at(cmd.primitive->index_buffer_view.buffer).Get(),
+					cmd.primitive->index_buffer_view.format, static_cast<UINT>(cmd.primitive->index_buffer_view.byte_offset));
+			}
+
+			last_primitive = cmd.primitive;
+		}
+
+		if (cmd.primitive->index_buffer_view.buffer > -1)
+		{
+			immediate_context->DrawIndexed(static_cast<UINT>(cmd.primitive->index_buffer_view.count), OFFSET_ZERO, OFFSET_ZERO);
+		}
+		else
+		{
+			auto pos_it = cmd.primitive->vertex_buffer_views.find("POSITION");
+			if (pos_it != cmd.primitive->vertex_buffer_views.end())
 			{
 				immediate_context->Draw(static_cast<UINT>(pos_it->second.count), OFFSET_ZERO);
 			}
