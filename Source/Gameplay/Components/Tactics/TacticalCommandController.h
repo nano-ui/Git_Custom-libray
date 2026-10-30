@@ -22,6 +22,9 @@ public:
 	//更新処理
 	void Update(float elapsed_time) override;
 
+	//デバッグ描画
+	void RenderDebug(ShapeRenderer* renderer)override;
+
 	//JSON保存用変数登録
 	void SetupSerialization(JsonSerializer* serializer)override;
 

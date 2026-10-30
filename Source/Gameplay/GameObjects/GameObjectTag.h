@@ -10,6 +10,6 @@ enum class GameObjectTag : uint32_t
 	None = 0,			//–³‚µ
 	Player = 1 << 0,	//ƒvƒŒƒCƒ„[
 	Allies = 1 << 1,	//–¡•û
-	Enemy = 1 << 2		//“G
+	Enemys = 1 << 2		//“G
 };
 template<>struct EnableBitmaskOperators<GameObjectTag> : std::true_type {};

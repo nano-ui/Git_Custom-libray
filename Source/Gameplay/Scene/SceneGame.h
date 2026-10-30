@@ -13,6 +13,7 @@ class CollisionManager;
 class SkyBox;
 class CollisionExperiment;
 class EditorManager;
+class TacticalCommandController;
 
 class SceneGame : public Scene
 {
@@ -62,6 +63,7 @@ private:
 	std::unique_ptr<CollisionManager> collision_manager;	//当たり判定管理マネージャー
 	std::unique_ptr<SkyBox> skybox;							//スカイボックスクラス
 
+	std::unique_ptr<TacticalCommandController> tactical_command;
 	std::unique_ptr<ShapeRenderer> shape_renderer;
 	std::vector<debug_shape> debug_shapes;
 	int current_debug_draw_mode = 0;

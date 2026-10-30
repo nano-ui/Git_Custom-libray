@@ -50,6 +50,13 @@ public:
 	//コントローラーのボタンが離された瞬間か判定
 	bool IsButtonRelease(WORD button)const;
 
+public:
+	//マウスのX座標を取得
+	float GetMousePosX()const { return current_mouse_pos.x; }
+
+	//マウスのY座標を取得
+	float GetMousePosY()const { return current_mouse_pos.y; }
+
 	//コントローラーの左スティックのX軸入力を取得
 	float GetLeftStickX()const;
 

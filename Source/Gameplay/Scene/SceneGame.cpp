@@ -16,6 +16,7 @@
 #include "SceneManager.h"
 #include "Gameplay\GameObjects\Character\Player.h"
 #include "Gameplay\GameObjects\Character\Enemy.h"
+#include "Gameplay\Components\Tactics\TacticalCommandController.h"
 #include <Engine\Core\MacroTracy.h>
 #include <Engine\Core\Input.h>
 
@@ -39,6 +40,8 @@ SceneGame::SceneGame()
 		L"Data/Sprite/SkyTexture/specular_pmrem.dds",	//IBL用の鏡面反射テクスチャ
 		L"Data/Sprite/SkyTexture/lut_ggx.dds"			//IBL用のルックアップテーブル
 	);
+	tactical_command = std::make_unique<TacticalCommandController>();
+	tactical_command->SetCollisionManager(collision_manager.get());
 }
 
 //デストラクタ
@@ -151,7 +154,7 @@ void SceneGame::Update(float elapsed_time)
 		BS_PROFILE_SCOPE("IsGameViewportActive");
 		if (SceneManager::Instance().IsPaused())
 		{
-
+			tactical_command->Update(elapsed_time);
 			return;
 		}
 	}
@@ -323,6 +326,7 @@ void SceneGame::Render(float elapsed_time)
 	if (object_manager && shape_renderer)
 	{
 		object_manager->RenderDebug(shape_renderer.get());
+		tactical_command->RenderDebug(shape_renderer.get());
 	}
 
 	if (shape_renderer && current_camera)

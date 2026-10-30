@@ -498,6 +498,9 @@
     <ClCompile Include="Source\Utility\RayUtility.cpp">
       <Filter>Source\Utility\RayUtility</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\GameObjects\Character\Allie.cpp">
+      <Filter>Source\Gameplay\GameObjects\Character\Allie</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -970,6 +973,9 @@
     </ClInclude>
     <ClInclude Include="Source\Utility\RayUtility.h">
       <Filter>Source\Utility\RayUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\GameObjects\Character\Allie.h">
+      <Filter>Source\Gameplay\GameObjects\Character\Allie</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1571,6 +1577,9 @@
     </Filter>
     <Filter Include="Source\Utility\RayUtility">
       <UniqueIdentifier>{8d4dba39-1ab4-4746-a3d6-e1a268efb0a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\GameObjects\Character\Allie">
+      <UniqueIdentifier>{d5639b8d-9725-43c0-9537-da949feeb358}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

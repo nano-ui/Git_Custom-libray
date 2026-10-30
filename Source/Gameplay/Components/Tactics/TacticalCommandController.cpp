@@ -3,8 +3,13 @@
 #include "Serialization\JsonSerializer.h"
 #include "Engine\Collision\CollisionManager.h"
 #include "Engine\Camera\CameraManager.h"
+#include "Engine\Camera\Camera.h"
 #include "Engine\Graphics\Renderers\ShapeRenderer.h"
+#include "Engine\Graphics\Renderers\Graphics.h"
 #include "Engine\Core\Log\Log.h"
+#include "Engine\Core\Input.h"
+#include "Gameplay\Scene\SceneManager.h"
+#include "Utility\RayUtility.h"
 
 //コンストラクタ
 TacticalCommandController::TacticalCommandController()
@@ -28,7 +33,44 @@ void TacticalCommandController::Initialize()
 //更新処理
 void TacticalCommandController::Update(float elapsed_time)
 {
+	if (!SceneManager::Instance().IsPaused() || !Input::Instance().IsMouseTrigger(Input::mouse_left))return;
+	if (!collision_manager)return;
 
+	auto camera = CameraManager::Instance().GetActiveCamera();
+	if (!camera)return;
+
+	DirectX::XMFLOAT3 ray_start = { 0.0f,0.0f,0.0f };
+	DirectX::XMFLOAT3 ray_end = { 0.0f,0.0f,0.0f };
+
+	bool is_ray = ScreenToWorldRay(
+		Graphics::Instance().GetCurrentHeight(),
+		Graphics::Instance().GetCurrentWidth(),
+		{ Input::Instance().GetMousePosX(),Input::Instance().GetMousePosY() },
+		camera->GetView(), camera->GetProjection(),
+		ray_start, ray_end
+	);
+
+	if (!is_ray)return;
+	bool is_hit = collision_manager->RayCastSpace(ray_start, ray_end, target_position);
+
+	if (is_hit)
+	{
+		LOG_SUCCESS({ u8"接触" }, u8"レイがヒットしました");
+		has_target = true;
+	}
+	else
+	{
+		LOG_ERROR({ u8"接触" }, u8"レイがヒットしませんでした");
+		has_target = false;
+	}
+}
+
+//デバッグ描画
+void TacticalCommandController::RenderDebug(ShapeRenderer* renderer)
+{
+	if (!has_target || !renderer)return;
+	DirectX::XMFLOAT4 color = { 0.8f,0.1f,0.4f,1.0f };
+	renderer->DrawSphere(target_position, 1.0f, color, ShapeDrawMode::Wireframe);
 }
 
 //JSON保存用変数登録
