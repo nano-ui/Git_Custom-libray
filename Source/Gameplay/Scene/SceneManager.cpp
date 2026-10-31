@@ -1,6 +1,7 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "Engine\Core\Input.h"
+#include <Engine\Core\MacroTracy.h>
 
 //シングルトンの取得
 SceneManager& SceneManager::Instance()
@@ -24,12 +25,16 @@ SceneManager::~SceneManager()
 //シーン切り替え
 void SceneManager::ChangeScene(std::unique_ptr<Scene> next_scene)
 {
+	BS_PROFILE_FUNCTION();
+
 	reserved_scene = std::move(next_scene);
 }
 
 //更新処理
 void SceneManager::Update(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
+
 	//F5キーによる一時停止のトグル切り替え判定
 	if (Input::Instance().IsKeyTrigger(VK_F5))
 	{
@@ -57,6 +62,8 @@ void SceneManager::Update(float elapsed_time)
 //描画処理
 void SceneManager::Render(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (current_scene)
 	{
 		current_scene->Render(elapsed_time);
@@ -66,6 +73,8 @@ void SceneManager::Render(float elapsed_time)
 //マネージャーの終了処理
 void SceneManager::Finalize()
 {
+	BS_PROFILE_FUNCTION();
+
 	//保持している全シーンの明示的破棄
 	if (current_scene)
 	{

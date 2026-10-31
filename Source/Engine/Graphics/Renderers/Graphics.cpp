@@ -1,5 +1,6 @@
 #include "Engine\Graphics\Renderers\Graphics.h"
 #include "Engine\Graphics\Device\framebuffer.h"
+#include <Engine\Core\MacroTracy.h>
 
 static constexpr UINT constant_buffer_slot_scene = 1;
 
@@ -13,6 +14,8 @@ Graphics& Graphics::Instance()
 //初期化
 bool Graphics::Initialize(HWND window_handle)
 {
+    BS_PROFILE_FUNCTION();
+
     //デバイスを作成
     directx_device = std::make_unique<DirectXDevice>(window_handle);
     if (!directx_device->Initialize())
@@ -63,6 +66,8 @@ bool Graphics::Initialize(HWND window_handle)
 //明示的にスマートポインタを解放したい場合
 void Graphics::Finalize()
 {
+    BS_PROFILE_FUNCTION();
+
     if (directx_device)
     {
         auto context = directx_device->GetImmediateContext();
@@ -88,6 +93,8 @@ void Graphics::Finalize()
 //描画開始
 void Graphics::BeginFrame(float r, float g, float b, float a)
 {
+    BS_PROFILE_FUNCTION();
+
     auto context = directx_device->GetImmediateContext();
     auto rtv = directx_device->GetRenderTargetView();
     auto dsv = directx_device->GetDepthStencilView();
@@ -122,6 +129,8 @@ void Graphics::BeginFrame(float r, float g, float b, float a)
 //描画終了
 void Graphics::EndFrame()
 {
+    BS_PROFILE_FUNCTION();
+
     //垂直同期待機
     directx_device->GetSwapChain()->Present(1, 0);
 }
@@ -129,6 +138,8 @@ void Graphics::EndFrame()
 //シーン定数バッファを生成
 bool Graphics::CreateSceneConstantBuffer()
 {
+    BS_PROFILE_FUNCTION();
+
     //定数バッファの設定とリソース生成
     D3D11_BUFFER_DESC buffer_desc{};                    //DirectX11のバッファ設定用構造体を初期化宣言
     buffer_desc.ByteWidth = sizeof(scene_constants);    //転送する構造体のサイズをバイト単位で正確に指定
@@ -151,6 +162,8 @@ bool Graphics::CreateSceneConstantBuffer()
 //シーン定数バッファを更新
 void Graphics::UpdateSceneConstantBuffer(const scene_constants& constants)
 {
+    BS_PROFILE_FUNCTION();
+
     if (!scene_constant_buffer)
     {
         return; //生成されていなければ処理を終了
@@ -166,6 +179,8 @@ void Graphics::UpdateSceneConstantBuffer(const scene_constants& constants)
 //描画サイズのリサイズ
 void Graphics::Resize(UINT width, UINT height)
 {
+    BS_PROFILE_FUNCTION();
+
     auto context = directx_device->GetImmediateContext();
     if (context)
     {

@@ -41,6 +41,8 @@ public:
 	//二つのアニメーション姿勢の合成
 	void AnimationBlend(size_t animation_index_a, float time_a, size_t animation_index_b, float time_b, float blend_factor);
 
+	int ComputeTargetRootNodeIndex(size_t animation_index) const;
+
 private:
 
 	//ノードのローカル変換成分（TRS）のみを保持する軽量構造体
@@ -49,6 +51,26 @@ private:
 		DirectX::XMFLOAT3 scale = { 1.0f, 1.0f, 1.0f };
 		DirectX::XMFLOAT4 rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
 		DirectX::XMFLOAT3 translation = { 0.0f, 0.0f, 0.0f };
+	};
+
+	//アニメーション適用対象のパラメータ種類
+	enum class TargetPath
+	{
+		Scale,
+		Rotation,
+		Translation,
+		Unknown
+	};
+
+	//毎フレームの検索負荷をなくすための高速アクセス用キャッシュ
+	struct AnimationChannelCache
+	{
+		int target_node = -1;
+		TargetPath path_type = TargetPath::Unknown;
+		const std::vector<float>* timeline = nullptr;
+		const std::vector<DirectX::XMFLOAT3>* scales = nullptr;
+		const std::vector<DirectX::XMFLOAT4>* rotations = nullptr;
+		const std::vector<DirectX::XMFLOAT3>* translations = nullptr;
 	};
 
 	//指定した時間のアニメーションからTRS成分のみをサンプリング
@@ -69,9 +91,18 @@ private:
 	//アニメーションの全体の長さを計算
 	float CalculateAnimationDuration(size_t animation_index);
 
+	//アニメーションキャッシュの構築
+	void BuildAnimationCache();
+
 private:
 	std::shared_ptr<const GltfModelData> model_data;	//モデルデータの保持
 	std::vector<GltfModelData::node> animated_nodes;	//アニメーション計算結果を格納
+	std::vector<int> target_root_node_indices;
+	std::vector<std::vector<AnimationChannelCache>> animation_caches; // 事前バインドされたキャッシュ
+
+	std::vector<NodePose> work_poses;		//単一アニメーション計算用バッファ
+	std::vector<NodePose> blend_poses_a;	//ブレンド用バッファA
+	std::vector<NodePose> blend_poses_b;	//ブレンド用バッファB
 
 	size_t current_animation_index = 0;			//現在再生中のアニメーション番号
 	float current_animation_time = 0.0f;		//現在の再生時間

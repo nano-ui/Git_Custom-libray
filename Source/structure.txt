@@ -196,6 +196,8 @@ C:.
 „        „            GltfModelRenderer.h
 „        „            GltfRootMotion.cpp
 „        „            GltfRootMotion.h
+„        „            ModelRenderQueue.cpp
+„        „            ModelRenderQueue.h
 „        „            TinygltfImpl.cpp
 „        „            
 „        „¤„Ÿ„Ÿ„ŸShaders

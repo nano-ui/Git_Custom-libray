@@ -5,6 +5,7 @@
 #include "Engine\Graphics\Renderers\Graphics.h"
 #include "Engine\Core\misc.h"
 #include "Engine/Camera/StandCamera.h"
+#include <Engine\Core\MacroTracy.h>
 
 static constexpr float logical_screen_width = 1280.0f; //ƒQ[ƒ€‚ÌÝŒvã‚ÌŠî–{‰¡•
 static constexpr float logical_screen_height = 720.0f; //ƒQ[ƒ€‚ÌÝŒvã‚ÌŠî–{c•
@@ -65,6 +66,8 @@ void SceneTitle::Update(float elapsed_time)
 //•`‰æˆ—
 void SceneTitle::Render(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
+
 	ID3D11DeviceContext* context = Graphics::Instance().GetContext();
 	auto states = Graphics::Instance().GetPipelineStates();
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(0).Get(), 1);

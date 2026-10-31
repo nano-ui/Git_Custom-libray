@@ -122,6 +122,8 @@ int framework::run()
 
 LRESULT framework::handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (imgui_manager && imgui_manager->ProcessMessage(hwnd, msg, wparam, lparam))return 1;
 
 	switch (msg)
@@ -182,6 +184,8 @@ void framework::calculate_frame_stats()
 //フルスクリーンとウィンドウモードの切り替え
 void framework::toggle_fullscreen()
 {
+	BS_PROFILE_FUNCTION();
+
 	static bool is_fullscreen = false;
 	static RECT window_rect = {};
 	static DWORD window_style = 0;

@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
+#include <Engine\Core\MacroTracy.h>
 
 //ImGuiのWin32メッセージハンドラ宣言
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -67,6 +68,8 @@ bool ImGuiManager::Initialize(HWND hwnd_window, ID3D11Device* device_ptr, ID3D11
 //フレーム開始処理
 void ImGuiManager::BeginFrame()
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!is_initialized)
 	{
 		std::cout << "[ImGuiManager] エラー: 未初期化状態で BeginFrame が呼び出されました。" << std::endl;
@@ -81,6 +84,8 @@ void ImGuiManager::BeginFrame()
 //フレーム描画処理
 void ImGuiManager::EndFrame()
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!is_initialized)
 	{
 		std::cout << "[ImGuiManager] エラー: 未初期化状態で EndFrame が呼び出されました。" << std::endl;

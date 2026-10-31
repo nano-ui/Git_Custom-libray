@@ -61,7 +61,7 @@ void Enemy::Update(float elapsed_time)
 	if (is_play)
 	{
 		UpdateTargetFromHate();
-		//UpdateChase(elapsed_time);
+		UpdateChase(elapsed_time);
 	}
 	Character::Update(elapsed_time);
 }

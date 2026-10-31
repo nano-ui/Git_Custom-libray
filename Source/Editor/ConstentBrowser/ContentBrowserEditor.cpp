@@ -5,6 +5,7 @@
 
 #include <windows.h>
 #include <imgui.h>
+#include <Engine\Core\MacroTracy.h>
 
 //コンストラクタ
 ContentBrowserEditor::ContentBrowserEditor()
@@ -34,6 +35,8 @@ void ContentBrowserEditor::Initialize()
 //Gui描画
 void ContentBrowserEditor::RenderGui()
 {
+	BS_PROFILE_FUNCTION();
+
 	//ウィンドウサイズの設定
 	const float default_window_width = 500.0f;	
 	const float default_window_height = 400.0f;	
@@ -63,6 +66,8 @@ void ContentBrowserEditor::RenderGui()
 //フォルダ階層を表示
 void ContentBrowserEditor::DrawFolderTree(const std::filesystem::path& path)
 {
+	BS_PROFILE_FUNCTION();
+
 	try
 	{
 		//指定ディレクトリ内のイテレーション
@@ -126,6 +131,8 @@ void ContentBrowserEditor::DrawFolderTree(const std::filesystem::path& path)
 //フォルダ内容を表示
 void ContentBrowserEditor::DrawFolderContents(const std::filesystem::path& path)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!std::filesystem::exists(path))
 	{
 		return;
@@ -213,6 +220,8 @@ void ContentBrowserEditor::DrawFolderContents(const std::filesystem::path& path)
 //ドラッグ&ドロップの送信処理
 void ContentBrowserEditor::HandleDragAndDrop(const std::filesystem::path& path)
 {
+	BS_PROFILE_FUNCTION();
+
 	//拡張子の確認
 	std::string extension = path.extension().string();
 	if (extension != ".gltf" && extension != ".glb")return;
@@ -234,6 +243,8 @@ void ContentBrowserEditor::HandleDragAndDrop(const std::filesystem::path& path)
 //システムアイコンを取得、新規生成
 ID3D11ShaderResourceView* ContentBrowserEditor::GetOrCreateSystemIcon(const std::filesystem::path& path)
 {
+	BS_PROFILE_FUNCTION();
+
 	//キャッシュキーの生成
 	std::wstring key = path.extension().wstring();
 	if (std::filesystem::is_directory(path))
@@ -288,6 +299,8 @@ ID3D11ShaderResourceView* ContentBrowserEditor::GetOrCreateSystemIcon(const std:
 //Win32のHICONからDirect3D11のシェーダーリソースビューを作成
 HRESULT ContentBrowserEditor::CreateSrvFromHIcon(ID3D11Device* device, HICON h_icon, ID3D11ShaderResourceView** pp_srv)
 {
+	BS_PROFILE_FUNCTION();
+
 	//アイコン情報の取得
 	ICONINFO icon_info = {};
 	if (!GetIconInfo(h_icon, &icon_info))
