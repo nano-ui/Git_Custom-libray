@@ -6,6 +6,7 @@
 #include "Gameplay\Components\Model\ModelComponent.h"
 #include "Gameplay\Components\Movement\MovementComponent.h"
 #include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
+#include "Engine\Graphics\Resources\AnimationManager.h"
 
 #include "Engine\Core\Log\Log.h"
 
@@ -66,7 +67,7 @@ void Character::Initialize()
 
 		model_component->SetAutoAnimationUpdate(false);
 
-		sequencer_component = std::make_unique<AnimationSequencerComponent>(model_component);
+		sequencer_component = std::make_shared<AnimationSequencerComponent>(model_component);
 		sequencer_component->Initialize(model_component->GetModelPath());
 
 		if (root_motion_component && model_component->GetModelData())
@@ -99,6 +100,8 @@ void Character::Initialize()
 		{
 			state_machine_component->SetModelName(model_name);
 		}
+
+		AnimationManager::Instance().Register(object_id, sequencer_component, model_component, 0);
 	}
 
 	if (state_machine_component && blackboard)
@@ -110,6 +113,7 @@ void Character::Initialize()
 	SetupInspector();
 
 	DirectX::XMFLOAT3 pos = transform_component->GetPosition();
+
 }
 
 //XVˆ—

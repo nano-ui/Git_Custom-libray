@@ -10,6 +10,7 @@
 #include "Editor\EditorManager.h"
 #include "Engine/Collision/CollisionManager.h"
 #include "Engine/Collision/CollisionExperiment.h"
+#include "Engine\Graphics\Resources\AnimationManager.h"
 #include "Gameplay/GameObjects/Character/Character.h"
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Engine/Graphics/Shaders/SkyBox.h"
@@ -160,7 +161,11 @@ void SceneGame::Update(float elapsed_time)
 	}
 	{
 		BS_PROFILE_SCOPE("OubectManager::Update");
-		if (object_manager)object_manager->Update(elapsed_time);
+		if (object_manager)
+		{
+			object_manager->Update(elapsed_time);
+			AnimationManager::Instance().Update();
+		}
 	}
 	//if (collision_experiment)collision_experiment->Update(elapsed_time);
 	{

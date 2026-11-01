@@ -507,6 +507,9 @@
     <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\ModelRenderQueue.cpp">
       <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\ModelRenderQueue</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Resources\AnimationManager.cpp">
+      <Filter>Source\Engine\Graphics\Resources\AnimationManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -988,6 +991,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\ModelRenderQueue.h">
       <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\ModelRenderQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\AnimationManager.h">
+      <Filter>Source\Engine\Graphics\Resources\AnimationManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1598,6 +1604,9 @@
     </Filter>
     <Filter Include="Source\Engine\Graphics\Resources\Model\GltfModel\ModelRenderQueue">
       <UniqueIdentifier>{8182e727-ff77-432a-8ceb-9e051f5afc63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\AnimationManager">
+      <UniqueIdentifier>{05200471-82cb-47cc-9c90-1d60caff9cc6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

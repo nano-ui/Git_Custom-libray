@@ -96,7 +96,7 @@ protected:
 protected:
 	std::unique_ptr<StateBlackboard> blackboard;
 	std::unique_ptr<StateMachineComponent> state_machine_component;	//ステートマシン制御
-	std::unique_ptr<AnimationSequencerComponent> sequencer_component;	//アニメーションシーケンサ
+	std::shared_ptr<AnimationSequencerComponent> sequencer_component;	//アニメーションシーケンサ
 	std::unique_ptr<RootMotionComponent> root_motion_component;        //ルートモーション計算コンポーネント
 
 	std::shared_ptr<TransformComponent> transform_component;//行列コンポーネント

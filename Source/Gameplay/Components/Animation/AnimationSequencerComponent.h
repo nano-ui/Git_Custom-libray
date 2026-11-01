@@ -10,6 +10,17 @@
 class ModelComponent;
 class GltfModel;
 
+// アニメーション再生パラメータ
+struct AnimationPlaybackState
+{
+	bool is_blending = false;
+	std::string current_anim_name = "";
+	float current_model_time = 0.0f;
+	std::string prev_anim_name = "";
+	float prev_model_time = 0.0f;
+	float blend_factor = 0.0f;
+};
+
 class AnimationSequencerComponent
 {
 public:
@@ -46,6 +57,9 @@ public:
 	//現在読み取っているシーケンサのファイルパスを取得
 	const std::string& GetSequenceFilePath()const { return sequence_file_path; }
 
+	//現在の再生状態を取得
+	const AnimationPlaybackState& GetPlaybackState() const { return playback_state; }
+
 private:
 	//指定時刻上の速度倍率を取得
 	float GetSpeedMultiplierAt(const std::string& anim_name, float seq_time)const;
@@ -57,7 +71,7 @@ private:
 	float GetEffectiveDuration()const;
 
 private:
-	std::weak_ptr<ModelComponent> target_model_component;	//対象のモデルコンポーネント
+	std::weak_ptr<ModelComponent> target_model_component;					//対象のモデルコンポーネント
 	std::unique_ptr<AnimationBlender> animation_blender;					//補完計算クラス
 	std::unordered_map <std::string, AnimationSequenceData> sequence_map;	//全アニメーションのシーケンス情報
 	std::string current_animaiton_name;										//現在のアニメーション名
@@ -66,5 +80,7 @@ private:
 	bool is_active = false;													//シーケンサフラグ
 	bool ia_animation_finished = false;										//アニメーション終了フラグ
 	std::string sequence_file_path = "";									//シーケンサパス
+
+	AnimationPlaybackState playback_state;									//再生状態データ
 };
 

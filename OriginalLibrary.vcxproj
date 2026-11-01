@@ -296,6 +296,7 @@
     <ClCompile Include="Source\Engine\Graphics\Renderers\ShapeRenderer.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Renderers\sprite.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Renderers\sprite_batch.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Resources\AnimationManager.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Resources\geometric_primitive.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfModel.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelAnimation.cpp" />
@@ -452,6 +453,7 @@
     <ClInclude Include="Source\Engine\Graphics\Renderers\ShapeRenderer.h" />
     <ClInclude Include="Source\Engine\Graphics\Renderers\sprite.h" />
     <ClInclude Include="Source\Engine\Graphics\Renderers\sprite_batch.h" />
+    <ClInclude Include="Source\Engine\Graphics\Resources\AnimationManager.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\geometric_primitive.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModel.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelAnimation.h" />

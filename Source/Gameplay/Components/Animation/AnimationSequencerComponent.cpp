@@ -83,7 +83,7 @@ void AnimationSequencerComponent::Update(float elapsed_time, bool is_loop)
 	if (anim_duration > 0.0f)
 	{
 		//積算モデル時間がモデル長に達したか、またはシーケンサ時間が実効総時間に達したかで判定
-		if (integrated_time_b >= anim_duration || (effective_duration > MIN_DURATION_THRESHOLD && current_sequence_time >= effective_duration)) 
+		if (integrated_time_b >= anim_duration || (effective_duration > MIN_DURATION_THRESHOLD && current_sequence_time >= effective_duration))
 		{
 			ia_animation_finished = true;
 			if (is_loop)
@@ -106,18 +106,25 @@ void AnimationSequencerComponent::Update(float elapsed_time, bool is_loop)
 	}
 	else LOG_WARNING({ u8"アニメーション" }, u8"アニメーションの総再生時間が0以下");
 
-	//補完中の場合
+	// 再生パラメータの構築
+	playback_state.current_anim_name = current_animaiton_name;
+	playback_state.current_model_time = integrated_time_b;
+
 	if (animation_blender && animation_blender->IsBlending() && current_animaiton_name != prev_animation_name)
 	{
-		std::string prev_name = animation_blender->GetPreviousAnimName();
+		playback_state.is_blending = true;
+		playback_state.prev_anim_name = animation_blender->GetPreviousAnimName();
 		float prev_time = animation_blender->GetPreviousAnimTime() + animation_blender->GetBlendTimer();
-		float blend_factor = animation_blender->GetBlendFactor();
-
-		float integrated_time_a = GetIntegratedModelTime(prev_name, prev_time);
-
-		model->AnimateBlend(prev_name, integrated_time_a, current_animaiton_name, integrated_time_b, blend_factor);
+		playback_state.prev_model_time = GetIntegratedModelTime(playback_state.prev_anim_name, prev_time);
+		playback_state.blend_factor = animation_blender->GetBlendFactor();
 	}
-	else model->SetAnimationTime(integrated_time_b);
+	else
+	{
+		playback_state.is_blending = false;
+		playback_state.prev_anim_name = "";
+		playback_state.prev_model_time = 0.0f;
+		playback_state.blend_factor = 0.0f;
+	}
 }
 
 //アニメーション切り替え
