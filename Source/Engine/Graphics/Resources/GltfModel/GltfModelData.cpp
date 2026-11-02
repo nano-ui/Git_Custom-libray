@@ -584,6 +584,11 @@ void GltfModelData::FetchMeshes(const tinygltf::Model& gltf_model)
 			ComputeTangentsForPrimitive(primitive);
 		}
 		ConvertMeshAxisSystem(mesh);
+
+		for (mesh::primitive& primitive : mesh.primitives)
+		{
+			BuildInterleavedVertices(primitive);
+		}
 	}
 }
 
@@ -1068,6 +1073,75 @@ void GltfModelData::ConvertMeshAxisSystem(mesh& target_mesh)
 			}
 		}
 	}
+}
+
+//各属性を単一のインターリーブ頂点配列に統合
+void GltfModelData::BuildInterleavedVertices(mesh::primitive& primitive)
+{
+	BS_PROFILE_FUNCTION();
+
+	auto pos_it = primitive.vertex_buffer_views.find("POSITION");
+	if (pos_it == primitive.vertex_buffer_views.end() || pos_it->second.buffer < 0)
+	{
+		return;
+	}
+
+	const size_t vertex_count = pos_it->second.count;
+	std::vector<GltfVertex> vertices(vertex_count);
+
+	const auto ExtractData = [&](const std::string& attr, auto callback)
+		{
+			auto it = primitive.vertex_buffer_views.find(attr);
+			if (it != primitive.vertex_buffer_views.end() && it->second.buffer >= 0)
+			{
+				const buffer_view& view = it->second;
+				const unsigned char* base_ptr = raw_buffers.at(view.buffer).data() + view.byte_offset;
+				const size_t stride = view.stride_in_bytes;
+				for (size_t i = 0; i < vertex_count && i < view.count; ++i)
+				{
+					callback(i, base_ptr + i * stride);
+				}
+			}
+		};
+
+	ExtractData("POSITION", [&](size_t i, const unsigned char* ptr) {
+		vertices[i].position = *reinterpret_cast<const DirectX::XMFLOAT3*>(ptr);
+		});
+
+	ExtractData("NORMAL", [&](size_t i, const unsigned char* ptr) {
+		vertices[i].normal = *reinterpret_cast<const DirectX::XMFLOAT3*>(ptr);
+		});
+
+	ExtractData("TANGENT", [&](size_t i, const unsigned char* ptr) {
+		vertices[i].tangent = *reinterpret_cast<const DirectX::XMFLOAT4*>(ptr);
+		});
+
+	ExtractData("TEXCOORD_0", [&](size_t i, const unsigned char* ptr) {
+		vertices[i].texcoord = *reinterpret_cast<const DirectX::XMFLOAT2*>(ptr);
+		});
+
+	ExtractData("JOINTS_0", [&](size_t i, const unsigned char* ptr) {
+		const uint16_t* joints = reinterpret_cast<const uint16_t*>(ptr);
+		vertices[i].joints[0] = joints[0];
+		vertices[i].joints[1] = joints[1];
+		vertices[i].joints[2] = joints[2];
+		vertices[i].joints[3] = joints[3];
+		});
+
+	ExtractData("WEIGHTS_0", [&](size_t i, const unsigned char* ptr) {
+		vertices[i].weights = *reinterpret_cast<const DirectX::XMFLOAT4*>(ptr);
+		});
+
+	std::vector<unsigned char> raw_vertex_bytes(vertex_count * sizeof(GltfVertex));
+	std::memcpy(raw_vertex_bytes.data(), vertices.data(), raw_vertex_bytes.size());
+
+	raw_buffers.push_back(std::move(raw_vertex_bytes));
+
+	primitive.vertex_buffer_view.format = DXGI_FORMAT_UNKNOWN;
+	primitive.vertex_buffer_view.buffer = static_cast<int>(raw_buffers.size() - 1);
+	primitive.vertex_buffer_view.stride_in_bytes = sizeof(GltfVertex);
+	primitive.vertex_buffer_view.byte_offset = 0;
+	primitive.vertex_buffer_view.count = vertex_count;
 }
 
 //各ボーン・ノードの初期ポーズ（TRSプロパティ）の座標系を右手系から左手系に変換

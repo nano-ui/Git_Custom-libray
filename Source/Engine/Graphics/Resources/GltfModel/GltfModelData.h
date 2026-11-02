@@ -18,6 +18,17 @@
 
 constexpr int ERROR_ANIMATION_NOT_FOUND = -1;
 
+//1頂点に必要なすべてのデータ
+struct GltfVertex
+{
+	DirectX::XMFLOAT3 position = { 0.0f, 0.0f, 0.0f };
+	DirectX::XMFLOAT3 normal = { 0.0f, 1.0f, 0.0f };
+	DirectX::XMFLOAT4 tangent = { 1.0f, 0.0f, 0.0f, 1.0f };
+	DirectX::XMFLOAT2 texcoord = { 0.0f, 0.0f };
+	uint16_t joints[4] = { 0, 0, 0, 0 };
+	DirectX::XMFLOAT4 weights = { 1.0f, 0.0f, 0.0f, 0.0f };
+};
+
 class GltfModelData
 {
 public:
@@ -88,6 +99,7 @@ public:
 			int material;	//マテリアルのインデックス
 			std::map<std::string, buffer_view> vertex_buffer_views;	//属性名ごとの頂点バッファ情報
 			buffer_view index_buffer_view;	//インデックスバッファの情報
+			buffer_view vertex_buffer_view; //インターリーブ済み頂点バッファ情報
 
 			//特定の属性を保持しているかの確認
 			bool has(const char* attribute)const
@@ -270,6 +282,9 @@ private:
 
 	//メッシュ内の頂点データ（座標、法線、接線）のX軸を反転してDirectX仕様の左手系に変換
 	void ConvertMeshAxisSystem(mesh& target_mesh);
+
+	//各属性を単一のインターリーブ頂点配列に統合
+	void BuildInterleavedVertices(mesh::primitive& primitive);
 
 	//各ボーン・ノードの初期ポーズ（TRSプロパティ）の座標系を右手系から左手系に変換
 	void ConvertNodeAxisSystem(node& target_node);

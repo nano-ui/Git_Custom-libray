@@ -49,7 +49,7 @@ template<class Archive> void serialize(Archive& archive, GltfModelData::buffer_v
 }
 template<class Archive> void serialize(Archive& archive, GltfModelData::mesh::primitive& p)
 {
-	archive(p.material, p.vertex_buffer_views, p.index_buffer_view);
+	archive(p.material, p.vertex_buffer_views, p.index_buffer_view, p.vertex_buffer_view);
 }
 template<class Archive> void serialize(Archive& archive, GltfModelData::mesh& m)
 {
