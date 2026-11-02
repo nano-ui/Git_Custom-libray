@@ -18,6 +18,8 @@ GltfModel::GltfModel(const std::shared_ptr<GltfModelData>& model_data, const std
 
 	//アニメーションクラスの初期化
 	animation->Initialize(data);	//共有データをアニメーションクラスに渡し、初期姿勢などを構築
+
+	ComputeBoundingSphere();
 }
 
 //デストラクタ
@@ -42,6 +44,11 @@ void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XM
 {
 	BS_PROFILE_FUNCTION();
 
+	if (!is_in_frustum)
+	{
+		return;
+	}
+
 	//描画クラスにデータと計算結果を渡してGPUへ命令
 	if (renderer && data && animation)	//要な3つのコンポーネントがすべて揃っているか確認
 	{
@@ -54,6 +61,11 @@ void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XM
 void GltfModel::SubmitRenderCommands(ModelRenderQueue& queue, const DirectX::XMFLOAT4X4& world_matrix)
 {
 	BS_PROFILE_FUNCTION();
+
+	if (!is_in_frustum)
+	{
+		return;
+	}
 
 	if (!data)
 	{
@@ -114,6 +126,34 @@ void GltfModel::SubmitRenderCommands(ModelRenderQueue& queue, const DirectX::XMF
 
 		queue.Submit(draw_command);
 	}
+}
+
+//視錐台カリング内外判定の更新
+void GltfModel::UpdateFrustumVisibility(const Frustum& frustum, const DirectX::XMFLOAT4X4& world_matrix)
+{
+	BS_PROFILE_FUNCTION();
+
+	DirectX::XMVECTOR local_center = DirectX::XMLoadFloat3(&bounding_sphere.center);
+	DirectX::XMMATRIX world = DirectX::XMLoadFloat4x4(&world_matrix);
+	DirectX::XMVECTOR world_center_vec = DirectX::XMVector3TransformCoord(local_center, world);
+
+	DirectX::XMFLOAT3 world_center;
+	DirectX::XMStoreFloat3(&world_center, world_center_vec);
+
+	DirectX::XMVECTOR scale_x = DirectX::XMVector3Length(world.r[0]);
+	DirectX::XMVECTOR scale_y = DirectX::XMVector3Length(world.r[1]);
+	DirectX::XMVECTOR scale_z = DirectX::XMVector3Length(world.r[2]);
+	float max_scale = (std::max)({ DirectX::XMVectorGetX(scale_x), DirectX::XMVectorGetX(scale_y), DirectX::XMVectorGetX(scale_z) });
+
+	constexpr float MIN_SCALE = 0.0001f;
+	if (max_scale < MIN_SCALE)
+	{
+		max_scale = 1.0f;
+	}
+
+	float world_radius = bounding_sphere.radius * max_scale;
+
+	is_in_frustum = frustum.Intersects(world_center, world_radius);
 }
 
 //アニメーションの再生切り替え
@@ -269,4 +309,73 @@ bool GltfModel::GetNodeGlobalTransform(int node_index, DirectX::XMFLOAT4X4& out_
 	
 	out_transform = nodes[static_cast<size_t>(node_index)].global_transform;
 	return true;
+}
+
+//モデル頂点データからバウンディングスフィアを算出
+void GltfModel::ComputeBoundingSphere()
+{
+	BS_PROFILE_FUNCTION();
+
+	constexpr float DEFAULT_SPHERE_RADIUS = 1.0f;
+	bounding_sphere.center = { 0.0f, 0.0f, 0.0f };
+	bounding_sphere.radius = DEFAULT_SPHERE_RADIUS;
+
+	if (!data)
+	{
+		OutputDebugStringA("[GltfModel 警告] ComputeBoundingSphere: data が nullptr のためデフォルトスフィアを設定します。\n");
+		return;
+	}
+
+	std::vector<DirectX::XMFLOAT3> vertices = data->GetVertices();
+	if (vertices.empty())
+	{
+		OutputDebugStringA("[GltfModel 警告] ComputeBoundingSphere: 頂点配列が空のためデフォルトスフィアを設定します。\n");
+		return;
+	}
+
+	DirectX::XMFLOAT3 min_point = vertices.front();
+	DirectX::XMFLOAT3 max_point = vertices.front();
+
+	for (const auto& v : vertices)
+	{
+		min_point.x = (std::min)(min_point.x, v.x);
+		min_point.y = (std::min)(min_point.y, v.y);
+		min_point.z = (std::min)(min_point.z, v.z);
+
+		max_point.x = (std::max)(max_point.x, v.x);
+		max_point.y = (std::max)(max_point.y, v.y);
+		max_point.z = (std::max)(max_point.z, v.z);
+	}
+
+	constexpr float HALF_FACTOR = 0.5f;
+	bounding_sphere.center = {
+		(min_point.x + max_point.x) * HALF_FACTOR,
+		(min_point.y + max_point.y) * HALF_FACTOR,
+		(min_point.z + max_point.z) * HALF_FACTOR
+	};
+
+	DirectX::XMVECTOR center_vec = DirectX::XMLoadFloat3(&bounding_sphere.center);
+	float max_dist_sq = 0.0f;
+
+	for (const auto& v : vertices)
+	{
+		DirectX::XMVECTOR vert_vec = DirectX::XMLoadFloat3(&v);
+		DirectX::XMVECTOR diff = DirectX::XMVectorSubtract(vert_vec, center_vec);
+		DirectX::XMVECTOR length_sq = DirectX::XMVector3LengthSq(diff);
+		float dist_sq = DirectX::XMVectorGetX(length_sq);
+
+		if (dist_sq > max_dist_sq)
+		{
+			max_dist_sq = dist_sq;
+		}
+	}
+
+	bounding_sphere.radius = std::sqrt(max_dist_sq);
+
+	constexpr float MIN_VALID_RADIUS = 0.001f;
+	if (bounding_sphere.radius < MIN_VALID_RADIUS)
+	{
+		OutputDebugStringA("[GltfModel 警告] ComputeBoundingSphere: 算出されたスフィア半径が極小です。デフォルト半径を設定します。\n");
+		bounding_sphere.radius = DEFAULT_SPHERE_RADIUS;
+	}
 }

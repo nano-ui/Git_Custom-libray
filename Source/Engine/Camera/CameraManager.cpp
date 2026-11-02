@@ -10,6 +10,20 @@ CameraManager& CameraManager::Instance()
 	return instance;
 }
 
+//フラスタムの更新
+void CameraManager::UpdateFrustum()
+{
+	std::shared_ptr<Camera> camera = active_camera.lock();
+	if (!camera)
+	{
+		OutputDebugStringA("[CameraManager 警告] UpdateFrustum: アクティブカメラが無効です。\n");
+		return;
+	}
+
+	DirectX::XMFLOAT4X4 view_projection = camera->GetViewProjectionMatrix();
+	frustum.Update(view_projection);
+}
+
 //アクティブカメラの設定
 void CameraManager::SetActiveCamera(const std::shared_ptr<Camera>& camera)
 {

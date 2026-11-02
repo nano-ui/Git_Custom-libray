@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Engine/Graphics/Device/Frustum.h"
+
 #include <DirectXMath.h>
 #include <memory>
 
@@ -11,6 +13,9 @@ public:
 	//シングルトン取得
 	static CameraManager& Instance();
 
+	//フラスタムの更新
+	void UpdateFrustum();
+
 	//アクティブカメラの設定
 	void SetActiveCamera(const std::shared_ptr<Camera>& camera);
 
@@ -19,6 +24,8 @@ public:
 
 	//入力値からカメラ基準の水平移動ベクトルを計算
 	DirectX::XMFLOAT3 CalculateMoveVector(float input_x, float input_z)const;
+
+	const Frustum& GetFrustum() const { return frustum; }
 
 private:
 	// コンストラクタ / デストラクタ
@@ -37,5 +44,6 @@ private:
 
 private:
 	std::weak_ptr<Camera> active_camera;	//現在のメインカメラ
+	Frustum frustum;
 };
 

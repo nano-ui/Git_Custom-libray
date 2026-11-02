@@ -6,6 +6,7 @@
 #include "Engine/Graphics/Resources/GltfModel/GltfModelRenderer.h"
 #include "Engine/Graphics/Renderers/Graphics.h"
 #include "Gameplay/GameObjects/ObjectManager.h"
+#include "Engine/Camera/CameraManager.h"
 
 #include <Windows.h>
 #include <vector>
@@ -156,6 +157,9 @@ void ModelComponent::RenderInternal(ID3D11DeviceContext* context)
 	DirectX::XMMATRIX world_matrix_xm = transform->GetWorldMatrix();
 	DirectX::XMFLOAT4X4 world_matrix;
 	DirectX::XMStoreFloat4x4(&world_matrix, world_matrix_xm);
+
+	const Frustum& camera_frustum = CameraManager::Instance().GetFrustum();
+	model->UpdateFrustumVisibility(camera_frustum, world_matrix);
 
 	model->SubmitRenderCommands(ObjectManager::Instance().GetRenderQueue(), world_matrix);
 }

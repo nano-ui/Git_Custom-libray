@@ -444,6 +444,7 @@
     <ClInclude Include="Source\Engine\Core\misc.h" />
     <ClInclude Include="Source\Engine\Graphics\Device\DirectXDevice.h" />
     <ClInclude Include="Source\Engine\Graphics\Device\framebuffer.h" />
+    <ClInclude Include="Source\Engine\Graphics\Device\Frustum.h" />
     <ClInclude Include="Source\Engine\Graphics\Device\GpuResourceUtils.h" />
     <ClInclude Include="Source\Engine\Graphics\Device\PipelineStates.h" />
     <ClInclude Include="Source\Engine\Graphics\Device\SceneConstantBuffers.h" />

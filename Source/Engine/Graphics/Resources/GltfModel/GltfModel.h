@@ -6,6 +6,7 @@
 #include <DirectXMath.h>
 
 #include "Engine\Graphics\Resources\GltfModel\GltfModelData.h"
+#include "Engine\Graphics\Device\Frustum.h"
 
 class GltfModelAnimation;
 class GltfModelRenderer;
@@ -29,6 +30,22 @@ public:
 
 	//レンダーキューに登録
 	void SubmitRenderCommands(ModelRenderQueue& queue, const DirectX::XMFLOAT4X4& world_matrix);
+
+	//視錐台カリング内外判定の更新
+	void UpdateFrustumVisibility(const Frustum& frustum, const DirectX::XMFLOAT4X4& world_matrix);
+
+	//視錐台内に存在するか取得
+	bool IsInFrustum() const { return is_in_frustum; }
+
+	//バウンディングスフィアの手動設定
+	void SetBoundingSphere(const DirectX::XMFLOAT3& center, float radius)
+	{
+		bounding_sphere.center = center;
+		bounding_sphere.radius = radius;
+	}
+
+	//バウンディングスフィアの取得
+	const BoundingSphere& GetBoundingSphere() const { return bounding_sphere; }
 
 	//アニメーション切り替え
 	void PlayAnimation(const std::string& animation_name, bool is_loop);
@@ -70,8 +87,14 @@ public:
 	bool GetNodeGlobalTransform(int node_index, DirectX::XMFLOAT4X4& out_transform)const;
 
 private:
+	//モデル頂点データからバウンディングスフィアを算出
+	void ComputeBoundingSphere();
+
+private:
 	std::shared_ptr<GltfModelData> data;			//リソースデータ
 	std::shared_ptr<GltfModelRenderer> renderer;	//描画命令クラス
 	std::unique_ptr<GltfModelAnimation> animation;	//アニメーション計算クラス
+	BoundingSphere bounding_sphere;					//ローカル空間のバウンディングスフィア
+	bool is_in_frustum = true;						//視錐台内存在フラグ
 };
 

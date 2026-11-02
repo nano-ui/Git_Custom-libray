@@ -3,6 +3,8 @@
 #include "Gameplay\Components\Model\ModelComponent.h"
 #include "Gameplay\Components\Animation\AnimationSequencerComponent.h"
 #include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
+#include "Engine\Graphics\Resources\Model.h"
+#include "Engine\Graphics\Device\Frustum.h"
 #include "Engine\Core\Log\Log.h"
 
 #include <windows.h>
@@ -182,6 +184,8 @@ void AnimationManager::ExecuteAnimationCalculation(const AnimationTarget& target
 	}
 
 	GltfModel* model = model_comp->GetModel();
+	if (!model->IsInFrustum())return;
+
 	if (!model)
 	{
 		LOG_WARNING({ u8"アニメーション", u8"計算" }, u8"GltfModel が存在しません。ID: %u", target.id);

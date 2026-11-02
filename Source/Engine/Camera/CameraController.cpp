@@ -44,6 +44,7 @@ void CameraController::Update(float elapsed_time)
 		if (follow_camera_component)follow_camera_component->Update(elapsed_time);
 		else OutputDebugStringA("[CameraController ƒGƒ‰[] follow_camera_component ‚ª nullptr ‚Å‚·B\n");
 	}
+	CameraManager::Instance().UpdateFrustum();
 }
 
 //ImGui•`‰æ

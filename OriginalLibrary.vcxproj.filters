@@ -995,6 +995,9 @@
     <ClInclude Include="Source\Engine\Graphics\Resources\AnimationManager.h">
       <Filter>Source\Engine\Graphics\Resources\AnimationManager</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Device\Frustum.h">
+      <Filter>Source\Engine\Graphics\Device\Frustum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli">
@@ -1607,6 +1610,9 @@
     </Filter>
     <Filter Include="Source\Engine\Graphics\Resources\AnimationManager">
       <UniqueIdentifier>{05200471-82cb-47cc-9c90-1d60caff9cc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Device\Frustum">
+      <UniqueIdentifier>{19db2ea5-0a0c-43c5-a88f-2591e35123f4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
