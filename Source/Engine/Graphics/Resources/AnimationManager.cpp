@@ -29,7 +29,7 @@ void AnimationManager::Register(
 
 	std::shared_ptr<ModelComponent> current_model = model.lock();
 
-	//同一の実体が既に登録されているか確認（再初期化時の上書き対応）
+	//同一の実体が既に登録されているか確認
 	for (auto& target : animation_targets)
 	{
 		std::shared_ptr<ModelComponent> existing_model = target.model_component.lock();
@@ -193,6 +193,13 @@ void AnimationManager::ExecuteAnimationCalculation(const AnimationTarget& target
 
 	if (state.current_anim_name.empty())
 	{
+		return;
+	}
+
+	// 非数(NaN)が渡されていないか確認
+	if (!std::isfinite(state.current_model_time))
+	{
+		LOG_WARNING({ u8"アニメーション", u8"計算" }, u8"再生時間(current_model_time)が不正な数値(NaN)です。モデル名: %s", state.current_anim_name.c_str());
 		return;
 	}
 

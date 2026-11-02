@@ -1,0 +1,35 @@
+{
+    "animation_sequences": {
+        "Attack1": {
+            "animation_duration": 2.9666666984558105,
+            "collider_tracks": [],
+            "effective_duration": 2.9666666984558105,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 2.9666666984558105,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        },
+        "Idle": {
+            "animation_duration": 10.0,
+            "collider_tracks": [],
+            "effective_duration": 10.0,
+            "keyframes": [
+                {
+                    "sequencer_time": 0.0,
+                    "speed_multiplier": 1.0
+                },
+                {
+                    "sequencer_time": 10.0,
+                    "speed_multiplier": 1.0
+                }
+            ]
+        }
+    },
+    "model_name": "SKM_StoneGolem"
+}

@@ -229,6 +229,11 @@ void GltfModelAnimation::SampleAnimationPose(size_t animation_index, float time,
 		{
 			if ((keyframe_index + INDEX_OFFSET_NEXT) < cache.rotations->size())
 			{
+				if (!std::isfinite(interpolation_factor))
+				{
+					interpolation_factor = 0.0f;
+				}
+
 				const std::vector<XMFLOAT4>& rotations = *cache.rotations;
 				XMVECTOR rot_start = XMQuaternionNormalize(XMLoadFloat4(&rotations.at(keyframe_index)));
 				XMVECTOR rot_end = XMQuaternionNormalize(XMLoadFloat4(&rotations.at(keyframe_index + INDEX_OFFSET_NEXT)));
@@ -329,6 +334,12 @@ int GltfModelAnimation::GetTargetRootNodeIndex(size_t animation_index) const
 size_t GltfModelAnimation::GetAnimationKeyframeIndex(const std::vector<float>& timelines, float time, float& interpolation_factor)
 {
 	BS_PROFILE_FUNCTION();
+
+	if (!std::isfinite(time))
+	{
+		OutputDebugStringA("[GltfModelAnimation エラー] GetAnimationKeyframeIndex: 渡された再生時間(time)が非数(NaN/Inf)です。0.0fに補正します。\n");
+		time = 0.0f;
+	}
 
 	const size_t keyframe_count = timelines.size();
 	const size_t MIN_KEYFRAME_COUNT = 2;
