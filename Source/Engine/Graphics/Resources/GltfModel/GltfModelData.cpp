@@ -1267,6 +1267,47 @@ void GltfModelData::BuildFlattenedNodesCache()
 	}
 }
 
+//ルートモーション追跡ボーンとベイク相殺ボーンを一致
+int GltfModelData::ComputeTargetRootNodeIndex(size_t animation_index) const
+{
+	if (animation_index >= animations.size()) return -1;
+	const animation& anim = animations.at(animation_index);
+
+	int max_movement_node_index = -1;
+	float max_distance = 0.0f;
+
+	for (const animation::channel& channel : anim.channels)
+	{
+		if (channel.target_path == "translation")
+		{
+			if (channel.sampler < 0 || static_cast<size_t>(channel.sampler) >= anim.samplers.size()) continue;
+			const animation::sampler& sampler = anim.samplers.at(channel.sampler);
+			auto trans_it = anim.translations.find(sampler.output);
+			if (trans_it != anim.translations.end())
+			{
+				const std::vector<DirectX::XMFLOAT3>& translations = trans_it->second;
+				if (translations.size() >= 2)
+				{
+					float current_dist = 0.0f;
+					for (size_t k = 0; k < translations.size() - 1; k++)
+					{
+						DirectX::XMVECTOR p0 = DirectX::XMLoadFloat3(&translations.at(k));
+						DirectX::XMVECTOR p1 = DirectX::XMLoadFloat3(&translations.at(k + 1));
+						DirectX::XMVECTOR diff = DirectX::XMVectorSubtract(p1, p0);
+						current_dist += DirectX::XMVectorGetX(DirectX::XMVector3Length(diff));
+					}
+					if (current_dist > max_distance)
+					{
+						max_distance = current_dist;
+						max_movement_node_index = channel.target_node;
+					}
+				}
+			}
+		}
+	}
+	return max_movement_node_index;
+}
+
 //ロード時に全アニメーションのスキニング行列を事前計算し、GPUテクスチャを構築
 void GltfModelData::BakeAnimationTextures(ID3D11Device* device)
 {
@@ -1423,7 +1464,23 @@ void GltfModelData::BakeAnimationTextures(ID3D11Device* device)
 					{
 						DirectX::XMVECTOR t0 = DirectX::XMLoadFloat3(&it->second.at(keyframe_idx));
 						DirectX::XMVECTOR t1 = DirectX::XMLoadFloat3(&it->second.at(keyframe_idx + 1));
-						DirectX::XMStoreFloat3(&current_pose[channel.target_node].translation, DirectX::XMVectorLerp(t0, t1, factor));
+						DirectX::XMVECTOR lerped_trans = DirectX::XMVectorLerp(t0, t1, factor);
+
+						int target_root_idx = ComputeTargetRootNodeIndex(anim_idx);
+
+						if (channel.target_node == target_root_idx && !it->second.empty())
+						{
+							DirectX::XMFLOAT3 initial_trans = it->second.front();
+							DirectX::XMFLOAT3 current_trans;
+							DirectX::XMStoreFloat3(&current_trans, lerped_trans);
+							current_trans.x = initial_trans.x;
+							current_trans.z = initial_trans.z;
+							current_pose[channel.target_node].translation = current_trans;
+						}
+						else
+						{
+							DirectX::XMStoreFloat3(&current_pose[channel.target_node].translation, lerped_trans);
+						}
 					}
 				}
 			}

@@ -315,6 +315,9 @@ private:
 	//親から子の順に並んだフラットなノードインデックス配列を構築
 	void BuildFlattenedNodesCache();
 
+	//ルートモーション追跡ボーンとベイク相殺ボーンを一致
+	int ComputeTargetRootNodeIndex(size_t animation_index) const;
+
 	//ロード時に全アニメーションのスキニング行列を事前計算し、GPUテクスチャを構築
 	void BakeAnimationTextures(ID3D11Device* device);
 
