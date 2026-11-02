@@ -14,6 +14,9 @@ struct ModelDrawCommand
 	int material_index = -1;
 	int skin_index = -1;
 	int node_index = -1;
+	uint32_t anim_row_offset = 0;
+	float current_anim_time = 0.0f;
+	float anim_duration = 0.0f;
 };
 
 class ModelRenderQueue

@@ -120,6 +120,18 @@ void GltfModel::SubmitRenderCommands(ModelRenderQueue& queue, const DirectX::XMF
 		draw_command.skin_index = current_node.skin;
 		draw_command.node_index = cmd.node_index;
 
+		if (animation && data->HasBoneTexture())
+		{
+			const auto& bake_infos = data->GetAnimationBakeInfos();
+			size_t current_anim_idx = animation->GetCurrentAnimationIndex();
+			if (current_anim_idx < bake_infos.size())
+			{
+				draw_command.anim_row_offset = static_cast<uint32_t>(bake_infos[current_anim_idx].start_frame);
+				draw_command.current_anim_time = animation->GetCurrentAnimationTime();
+				draw_command.anim_duration = bake_infos[current_anim_idx].duration;
+			}
+		}
+
 		DirectX::XMMATRIX node_global = DirectX::XMLoadFloat4x4(&current_node.global_transform);
 		DirectX::XMMATRIX final_world = DirectX::XMMatrixMultiply(node_global, base_world);
 		DirectX::XMStoreFloat4x4(&draw_command.world_matrix, final_world);

@@ -8,17 +8,29 @@
 class GltfModel;
 class ModelRenderQueue;
 
+struct ModelInstanceData
+{
+	DirectX::XMFLOAT4X4 world_matrix;
+	float anim_row_offset = 0.0f;
+	float current_anim_time = 0.0f;
+	float anim_duration = 0.0f;
+	float padding = 0.0f;
+};
+
 class GltfModelRenderer
 {
 public:
 	static constexpr UINT SHADER_SLOT_0 = 0;	//シェーダースロット0番
 	static constexpr UINT SHADER_SLOT_1 = 1;	//シェーダースロット1番
 	static constexpr UINT SHADER_SLOT_2 = 2;	//シェーダースロット2番
+	static constexpr UINT SHADER_SLOT_3 = 3;	//シェーダースロット3番
 	static constexpr UINT RESOURCE_COUNT_1 = 1;	//一度にバインドするリソースの数
 	static constexpr UINT OFFSET_ZERO = 0;		//バッファ等のオフセット初期値
 	static constexpr UINT TEXTURE_COUNT_5 = 5;	//マテリアルが保持するテクスチャの総数
 	static constexpr UINT SAMPLER_COUNT_3 = 3;	//使用するサンプラーステートの総数
 	static constexpr UINT VERTEX_BUFFER_STREAM_COUNT = 6;	//頂点属性数
+	static constexpr UINT INSTANCE_BUFFER_SLOT = 1;
+	static constexpr size_t DEFAULT_MAX_INSTANCES = 1024;
 
 private:
 	//1回の描画に必要な情報
@@ -84,6 +96,8 @@ private:
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_cbuffer;				//プリミティブの情報を送るための定数バッファ
 	Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_joint_cbuffer;		//スキン（ボーン）行列を送るための定数バッファ
+	Microsoft::WRL::ComPtr<ID3D11Buffer> instance_buffer;
+	size_t max_instance_count = DEFAULT_MAX_INSTANCES;
 	std::unique_ptr<CustomShader> custom_shader;
 };
 

@@ -95,13 +95,13 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 		this->filename.c_str(), nodes.size(), nodes_with_mesh, meshes.size(), total_primitives);
 	OutputDebugStringA(debug_buf);
 
-	if (device) //デバイスポインタが有効であるか
+	BuildRenderCommandsCache();
+	BuildFlattenedNodesCache();
+
+	if (device)
 	{
 		CreateGpuResources(device.Get());
 	}
-
-	BuildRenderCommandsCache();
-	BuildFlattenedNodesCache();
 }
 
 //復元した生データからGPUリソースを構築
@@ -223,23 +223,19 @@ std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const s
 {
 	BS_PROFILE_FUNCTION();
 
-	//キャッシュファイル名の生成
-	std::string binary_filename = filename + ".cerial";							//元の名前に「.cerial」を付与してキャッシュ用ファイル名とする
-	std::shared_ptr<GltfModelData> data = std::make_shared<GltfModelData>();	//空のデータインスタンスを生成
+	std::string binary_filename = filename + ".cerial";
+	std::shared_ptr<GltfModelData> data = std::make_shared<GltfModelData>();
 
-	//キャッシュからのロード試行
-	if (GltfModelSerializer::Load(binary_filename, data))	//バイナリファイルが存在し、読み込みに成功した場合
+	if (GltfModelSerializer::Load(binary_filename, data))
 	{
-		data->CreateGpuResources(device);	//復元した生データから即座にGPUバッファを生成
 		data->BuildFlattenedNodesCache();
-		return data;						//完成したデータを返す
+		data->CreateGpuResources(device);
+		return data;
 	}
 
-	//キャッシュがない場合の通常読み込み
 	Microsoft::WRL::ComPtr<ID3D11Device> com_device(device);
 	data = std::make_shared<GltfModelData>(com_device, filename);
 
-	//次回起動時のためにベイク保存処理
 	GltfModelSerializer::Save(binary_filename, data);
 
 	return data;

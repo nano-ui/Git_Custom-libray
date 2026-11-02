@@ -7,7 +7,7 @@
 // cbuffer PRIMITIVE_CONSTANT_BUFFER
 // {
 //
-//   row_major float4x4 world;          // Offset:    0 Size:    64
+//   row_major float4x4 world;          // Offset:    0 Size:    64 [unused]
 //   int material;                      // Offset:   64 Size:     4 [unused]
 //   bool has_tangent;                  // Offset:   68 Size:     4 [unused]
 //   int skin;                          // Offset:   72 Size:     4
@@ -27,21 +27,14 @@
 //
 // }
 //
-// cbuffer PRIMITIVE_JOINT_CONSTANTS
-// {
-//
-//   row_major float4x4 joint_matrices[512];// Offset:    0 Size: 32768
-//
-// }
-//
 //
 // Resource Bindings:
 //
 // Name                                 Type  Format         Dim      HLSL Bind  Count
 // ------------------------------ ---------- ------- ----------- -------------- ------
+// bone_texture                      texture  float4          2d             t3      1 
 // PRIMITIVE_CONSTANT_BUFFER         cbuffer      NA          NA            cb0      1 
 // SCENE_CONSTNANT_BUFFER            cbuffer      NA          NA            cb1      1 
-// PRIMITIVE_JOINT_CONSTANTS         cbuffer      NA          NA            cb2      1 
 //
 //
 //
@@ -55,6 +48,11 @@
 // TEXCOORD                 0   xy          3     NONE   float   xy  
 // JOINTS                   0   xyzw        4     NONE    uint   xyzw
 // WEIGHTS                  0   xyzw        5     NONE   float   xyzw
+// INSTANCE_WORLD           0   xyzw        6     NONE   float   xyzw
+// INSTANCE_WORLD           1   xyzw        7     NONE   float   xyzw
+// INSTANCE_WORLD           2   xyzw        8     NONE   float   xyzw
+// INSTANCE_WORLD           3   xyzw        9     NONE   float   xyzw
+// INSTANCE_ANIM            0   xyzw       10     NONE   float   x   
 //
 //
 // Output signature:
@@ -72,20 +70,25 @@ vs_5_0
 dcl_globalFlags refactoringAllowed | skipOptimization
 dcl_constantbuffer CB0[5], immediateIndexed
 dcl_constantbuffer CB1[12], immediateIndexed
-dcl_constantbuffer CB2[2048], dynamicIndexed
+dcl_resource_texture2d (float,float,float,float) t3
 dcl_input v0.xyz
 dcl_input v1.xyz
 dcl_input v2.xyzw
 dcl_input v3.xy
 dcl_input v4.xyzw
 dcl_input v5.xyzw
+dcl_input v6.xyzw
+dcl_input v7.xyzw
+dcl_input v8.xyzw
+dcl_input v9.xyzw
+dcl_input v10.x
 dcl_output_siv o0.xyzw, position
 dcl_output o1.xyzw
 dcl_output o2.xyzw
 dcl_output o3.xyzw
 dcl_output o4.xy
 dcl_output o5.xyz
-dcl_temps 11
+dcl_temps 20
 //
 // Initial variable locations:
 //   v0.x <- vin.position.x; v0.y <- vin.position.y; v0.z <- vin.position.z; v0.w <- vin.position.w; 
@@ -94,6 +97,11 @@ dcl_temps 11
 //   v3.x <- vin.texcoord.x; v3.y <- vin.texcoord.y; 
 //   v4.x <- vin.joints.x; v4.y <- vin.joints.y; v4.z <- vin.joints.z; v4.w <- vin.joints.w; 
 //   v5.x <- vin.weights.x; v5.y <- vin.weights.y; v5.z <- vin.weights.z; v5.w <- vin.weights.w; 
+//   v6.x <- vin.instance_world._m00; v6.y <- vin.instance_world._m01; v6.z <- vin.instance_world._m02; v6.w <- vin.instance_world._m03; 
+//   v7.x <- vin.instance_world._m10; v7.y <- vin.instance_world._m11; v7.z <- vin.instance_world._m12; v7.w <- vin.instance_world._m13; 
+//   v8.x <- vin.instance_world._m20; v8.y <- vin.instance_world._m21; v8.z <- vin.instance_world._m22; v8.w <- vin.instance_world._m23; 
+//   v9.x <- vin.instance_world._m30; v9.y <- vin.instance_world._m31; v9.z <- vin.instance_world._m32; v9.w <- vin.instance_world._m33; 
+//   v10.x <- vin.instance_anim.x; v10.y <- vin.instance_anim.y; v10.z <- vin.instance_anim.z; v10.w <- vin.instance_anim.w; 
 //   o5.x <- <main return value>.shadow_texcoord.x; o5.y <- <main return value>.shadow_texcoord.y; o5.z <- <main return value>.shadow_texcoord.z; 
 //   o4.x <- <main return value>.texcoord.x; o4.y <- <main return value>.texcoord.y; 
 //   o3.x <- <main return value>.w_tangent.x; o3.y <- <main return value>.w_tangent.y; o3.z <- <main return value>.w_tangent.z; o3.w <- <main return value>.w_tangent.w; 
@@ -101,227 +109,378 @@ dcl_temps 11
 //   o1.x <- <main return value>.w_position.x; o1.y <- <main return value>.w_position.y; o1.z <- <main return value>.w_position.z; o1.w <- <main return value>.w_position.w; 
 //   o0.x <- <main return value>.position.x; o0.y <- <main return value>.position.y; o0.z <- <main return value>.position.z; o0.w <- <main return value>.position.w
 //
-#line 5 "C:\Users\2240068\Desktop\Glt_Original_Library\Shaders\SoureCode\gltf_model_vs.hlsl"
+#line 15 "C:\Users\2240068\Desktop\Glt_Original_Library\Shaders\SoureCode\gltf_model_vs.hlsl"
 mov r0.x, v2.w  // r0.x <- sigma
 
-#line 8
+#line 17
 ilt r0.y, l(-1), cb0[4].z
+dp4 r0.z, v5.xyzw, l(1.000000, 1.000000, 1.000000, 1.000000)
+lt r0.z, l(0.001000), r0.z
+and r0.y, r0.z, r0.y
 if_nz r0.y
 
+#line 19
+  add r0.y, v10.x, l(0.500000)
+  ftou r1.y, r0.y  // r1.y <- row_y
+
+#line 21
+  nop 
+  mov r0.y, v4.x
+  mov r1.y, r1.y
+
+#line 5
+  mov r0.z, l(4)
+  imul null, r0.y, r0.z, r0.y  // r0.y <- base_x
+
+#line 6
+  mov r0.z, l(0)
+  iadd r2.x, r0.z, r0.y
+  mov r2.y, r1.y
+  mov r2.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r3.xyzw, r2.xyzw, t3.xyzw  // r3.x <- r0.x; r3.y <- r0.y; r3.z <- r0.z; r3.w <- r0.w
+
+#line 7
+  mov r0.z, l(1)
+  iadd r2.x, r0.z, r0.y
+  mov r2.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r4.xyzw, r2.xyzw, t3.xyzw  // r4.x <- r1.x; r4.y <- r1.y; r4.z <- r1.z; r4.w <- r1.w
+
+#line 8
+  mov r0.z, l(2)
+  iadd r2.x, r0.z, r0.y
+  mov r2.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r5.xyzw, r2.xyzw, t3.xyzw  // r5.x <- r2.x; r5.y <- r2.y; r5.z <- r2.z; r5.w <- r2.w
+
+#line 9
+  mov r0.z, l(3)
+  iadd r2.x, r0.z, r0.y
+  mov r2.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r2.xyzw, r2.xyzw, t3.xyzw  // r2.x <- r3.x; r2.y <- r3.y; r2.z <- r3.z; r2.w <- r3.w
+
 #line 10
-  imul null, r0.y, v4.x, l(4)
-  mul r1.x, v5.x, cb2[r0.y + 0].x
-  mul r2.x, v5.x, cb2[r0.y + 0].y
-  mul r3.x, v5.x, cb2[r0.y + 0].z
-  mul r4.x, v5.x, cb2[r0.y + 0].w
-  mul r1.y, v5.x, cb2[r0.y + 1].x
-  mul r2.y, v5.x, cb2[r0.y + 1].y
-  mul r3.y, v5.x, cb2[r0.y + 1].z
-  mul r4.y, v5.x, cb2[r0.y + 1].w
-  mul r1.z, v5.x, cb2[r0.y + 2].x
-  mul r2.z, v5.x, cb2[r0.y + 2].y
-  mul r3.z, v5.x, cb2[r0.y + 2].z
-  mul r4.z, v5.x, cb2[r0.y + 2].w
-  mul r5.xyzw, v5.xxxx, cb2[r0.y + 3].xyzw
-  imul null, r0.y, v4.y, l(4)
-  mul r6.x, v5.y, cb2[r0.y + 0].x
-  mul r7.x, v5.y, cb2[r0.y + 0].y
-  mul r8.x, v5.y, cb2[r0.y + 0].z
-  mul r9.x, v5.y, cb2[r0.y + 0].w
-  mul r6.y, v5.y, cb2[r0.y + 1].x
-  mul r7.y, v5.y, cb2[r0.y + 1].y
-  mul r8.y, v5.y, cb2[r0.y + 1].z
-  mul r9.y, v5.y, cb2[r0.y + 1].w
-  mul r6.z, v5.y, cb2[r0.y + 2].x
-  mul r7.z, v5.y, cb2[r0.y + 2].y
-  mul r8.z, v5.y, cb2[r0.y + 2].z
-  mul r9.z, v5.y, cb2[r0.y + 2].w
-  mul r10.xyzw, v5.yyyy, cb2[r0.y + 3].xyzw
-  mov r1.w, r5.x
-  mov r6.w, r10.x
-  add r1.xyzw, r1.xyzw, r6.xyzw
-  mov r2.w, r5.y
-  mov r7.w, r10.y
-  add r2.xyzw, r2.xyzw, r7.xyzw
-  mov r3.w, r5.z
-  mov r8.w, r10.z
-  add r3.xyzw, r3.xyzw, r8.xyzw
-  mov r4.w, r5.w
-  mov r9.w, r10.w
-  add r4.xyzw, r4.xyzw, r9.xyzw
-  imul null, r0.y, v4.z, l(4)
-  mul r5.x, v5.z, cb2[r0.y + 0].x
-  mul r6.x, v5.z, cb2[r0.y + 0].y
-  mul r7.x, v5.z, cb2[r0.y + 0].z
-  mul r8.x, v5.z, cb2[r0.y + 0].w
-  mul r5.y, v5.z, cb2[r0.y + 1].x
-  mul r6.y, v5.z, cb2[r0.y + 1].y
-  mul r7.y, v5.z, cb2[r0.y + 1].z
-  mul r8.y, v5.z, cb2[r0.y + 1].w
-  mul r5.z, v5.z, cb2[r0.y + 2].x
-  mul r6.z, v5.z, cb2[r0.y + 2].y
-  mul r7.z, v5.z, cb2[r0.y + 2].z
-  mul r8.z, v5.z, cb2[r0.y + 2].w
-  mul r9.xyzw, v5.zzzz, cb2[r0.y + 3].xyzw
-  mov r5.w, r9.x
-  add r1.xyzw, r1.xyzw, r5.xyzw
-  mov r6.w, r9.y
-  add r2.xyzw, r2.xyzw, r6.xyzw
-  mov r7.w, r9.z
-  add r3.xyzw, r3.xyzw, r7.xyzw
-  mov r8.w, r9.w
-  add r4.xyzw, r4.xyzw, r8.xyzw
-  imul null, r0.y, v4.w, l(4)
-  mul r5.x, v5.w, cb2[r0.y + 0].x
-  mul r6.x, v5.w, cb2[r0.y + 0].y
-  mul r7.x, v5.w, cb2[r0.y + 0].z
-  mul r8.x, v5.w, cb2[r0.y + 0].w
-  mul r5.y, v5.w, cb2[r0.y + 1].x
-  mul r6.y, v5.w, cb2[r0.y + 1].y
-  mul r7.y, v5.w, cb2[r0.y + 1].z
-  mul r8.y, v5.w, cb2[r0.y + 1].w
-  mul r5.z, v5.w, cb2[r0.y + 2].x
-  mul r6.z, v5.w, cb2[r0.y + 2].y
-  mul r7.z, v5.w, cb2[r0.y + 2].z
-  mul r8.z, v5.w, cb2[r0.y + 2].w
-  mul r9.xyzw, v5.wwww, cb2[r0.y + 3].xyzw
-  mov r5.w, r9.x
-  add r1.xyzw, r1.xyzw, r5.xyzw  // r1.x <- skin_matrix._m00; r1.y <- skin_matrix._m10; r1.z <- skin_matrix._m20; r1.w <- skin_matrix._m30
-  mov r6.w, r9.y
-  add r2.xyzw, r2.xyzw, r6.xyzw  // r2.x <- skin_matrix._m01; r2.y <- skin_matrix._m11; r2.z <- skin_matrix._m21; r2.w <- skin_matrix._m31
-  mov r7.w, r9.z
-  add r3.xyzw, r3.xyzw, r7.xyzw  // r3.x <- skin_matrix._m02; r3.y <- skin_matrix._m12; r3.z <- skin_matrix._m22; r3.w <- skin_matrix._m32
-  mov r8.w, r9.w
-  add r4.xyzw, r4.xyzw, r8.xyzw  // r4.x <- skin_matrix._m03; r4.y <- skin_matrix._m13; r4.z <- skin_matrix._m23; r4.w <- skin_matrix._m33
+  mov r6.x, r3.x  // r6.x <- <FetchBoneMatrix return value>._m00
+  mov r6.y, r4.x  // r6.y <- <FetchBoneMatrix return value>._m10
+  mov r6.z, r5.x  // r6.z <- <FetchBoneMatrix return value>._m20
+  mov r6.w, r2.x  // r6.w <- <FetchBoneMatrix return value>._m30
+  mov r7.x, r3.y  // r7.x <- <FetchBoneMatrix return value>._m01
+  mov r7.y, r4.y  // r7.y <- <FetchBoneMatrix return value>._m11
+  mov r7.z, r5.y  // r7.z <- <FetchBoneMatrix return value>._m21
+  mov r7.w, r2.y  // r7.w <- <FetchBoneMatrix return value>._m31
+  mov r8.x, r3.z  // r8.x <- <FetchBoneMatrix return value>._m02
+  mov r8.y, r4.z  // r8.y <- <FetchBoneMatrix return value>._m12
+  mov r8.z, r5.z  // r8.z <- <FetchBoneMatrix return value>._m22
+  mov r8.w, r2.z  // r8.w <- <FetchBoneMatrix return value>._m32
+  mov r2.x, r3.w  // r2.x <- <FetchBoneMatrix return value>._m03
+  mov r2.y, r4.w  // r2.y <- <FetchBoneMatrix return value>._m13
+  mov r2.z, r5.w  // r2.z <- <FetchBoneMatrix return value>._m23
+  mov r2.w, r2.w  // r2.w <- <FetchBoneMatrix return value>._m33
 
-#line 15
-  itof r5.w, l(1)
-  mov r5.xyz, v0.xyzx
-  dp4 r0.y, r5.xyzw, r1.xyzw  // r0.y <- vin.position.x
-  dp4 r0.z, r5.xyzw, r2.xyzw  // r0.z <- vin.position.y
-  dp4 r0.w, r5.xyzw, r3.xyzw  // r0.w <- vin.position.z
+#line 21
+  mov r6.xyzw, r6.xyzw  // r6.x <- b0._m00; r6.y <- b0._m10; r6.z <- b0._m20; r6.w <- b0._m30
+  mov r7.xyzw, r7.xyzw  // r7.x <- b0._m01; r7.y <- b0._m11; r7.z <- b0._m21; r7.w <- b0._m31
+  mov r8.xyzw, r8.xyzw  // r8.x <- b0._m02; r8.y <- b0._m12; r8.z <- b0._m22; r8.w <- b0._m32
+  mov r2.xyzw, r2.xyzw  // r2.x <- b0._m03; r2.y <- b0._m13; r2.z <- b0._m23; r2.w <- b0._m33
 
-#line 16
-  itof r5.w, l(0)
-  mov r5.xyz, v1.xyzx
-  dp4 r6.x, r5.xyzw, r1.xyzw
-  dp4 r6.y, r5.xyzw, r2.xyzw
-  dp4 r6.z, r5.xyzw, r3.xyzw
-  dp4 r6.w, r5.xyzw, r4.xyzw
-  dp4 r5.x, r6.xyzw, r6.xyzw
-  rsq r5.x, r5.x
-  mul r5.xyz, r5.xxxx, r6.xyzx  // r5.x <- vin.normal.x; r5.y <- vin.normal.y; r5.z <- vin.normal.z
+#line 22
+  nop 
+  mov r0.y, v4.y
+  mov r3.y, r1.y
 
-#line 17
-  itof r6.w, l(0)
+#line 5
+  mov r0.z, l(4)
+  imul null, r0.y, r0.z, r0.y  // r0.y <- base_x
+
+#line 6
+  mov r0.z, l(0)
+  iadd r3.x, r0.z, r0.y
+  mov r3.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r4.xyzw, r3.xyzw, t3.xyzw  // r4.x <- r0.x; r4.y <- r0.y; r4.z <- r0.z; r4.w <- r0.w
+
+#line 7
+  mov r0.z, l(1)
+  iadd r3.x, r0.z, r0.y
+  mov r3.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r5.xyzw, r3.xyzw, t3.xyzw  // r5.x <- r1.x; r5.y <- r1.y; r5.z <- r1.z; r5.w <- r1.w
+
+#line 8
+  mov r0.z, l(2)
+  iadd r3.x, r0.z, r0.y
+  mov r3.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r9.xyzw, r3.xyzw, t3.xyzw  // r9.x <- r2.x; r9.y <- r2.y; r9.z <- r2.z; r9.w <- r2.w
+
+#line 9
+  mov r0.z, l(3)
+  iadd r3.x, r0.z, r0.y
+  mov r3.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r3.xyzw, r3.xyzw, t3.xyzw  // r3.x <- r3.x; r3.y <- r3.y; r3.z <- r3.z; r3.w <- r3.w
+
+#line 10
+  mov r10.x, r4.x  // r10.x <- <FetchBoneMatrix return value>._m00
+  mov r10.y, r5.x  // r10.y <- <FetchBoneMatrix return value>._m10
+  mov r10.z, r9.x  // r10.z <- <FetchBoneMatrix return value>._m20
+  mov r10.w, r3.x  // r10.w <- <FetchBoneMatrix return value>._m30
+  mov r11.x, r4.y  // r11.x <- <FetchBoneMatrix return value>._m01
+  mov r11.y, r5.y  // r11.y <- <FetchBoneMatrix return value>._m11
+  mov r11.z, r9.y  // r11.z <- <FetchBoneMatrix return value>._m21
+  mov r11.w, r3.y  // r11.w <- <FetchBoneMatrix return value>._m31
+  mov r12.x, r4.z  // r12.x <- <FetchBoneMatrix return value>._m02
+  mov r12.y, r5.z  // r12.y <- <FetchBoneMatrix return value>._m12
+  mov r12.z, r9.z  // r12.z <- <FetchBoneMatrix return value>._m22
+  mov r12.w, r3.z  // r12.w <- <FetchBoneMatrix return value>._m32
+  mov r3.x, r4.w  // r3.x <- <FetchBoneMatrix return value>._m03
+  mov r3.y, r5.w  // r3.y <- <FetchBoneMatrix return value>._m13
+  mov r3.z, r9.w  // r3.z <- <FetchBoneMatrix return value>._m23
+  mov r3.w, r3.w  // r3.w <- <FetchBoneMatrix return value>._m33
+
+#line 22
+  mov r10.xyzw, r10.xyzw  // r10.x <- b1._m00; r10.y <- b1._m10; r10.z <- b1._m20; r10.w <- b1._m30
+  mov r11.xyzw, r11.xyzw  // r11.x <- b1._m01; r11.y <- b1._m11; r11.z <- b1._m21; r11.w <- b1._m31
+  mov r12.xyzw, r12.xyzw  // r12.x <- b1._m02; r12.y <- b1._m12; r12.z <- b1._m22; r12.w <- b1._m32
+  mov r3.xyzw, r3.xyzw  // r3.x <- b1._m03; r3.y <- b1._m13; r3.z <- b1._m23; r3.w <- b1._m33
+
+#line 23
+  nop 
+  mov r0.y, v4.z
+  mov r4.y, r1.y
+
+#line 5
+  mov r0.z, l(4)
+  imul null, r0.y, r0.z, r0.y  // r0.y <- base_x
+
+#line 6
+  mov r0.z, l(0)
+  iadd r4.x, r0.z, r0.y
+  mov r4.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r5.xyzw, r4.xyzw, t3.xyzw  // r5.x <- r0.x; r5.y <- r0.y; r5.z <- r0.z; r5.w <- r0.w
+
+#line 7
+  mov r0.z, l(1)
+  iadd r4.x, r0.z, r0.y
+  mov r4.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r9.xyzw, r4.xyzw, t3.xyzw  // r9.x <- r1.x; r9.y <- r1.y; r9.z <- r1.z; r9.w <- r1.w
+
+#line 8
+  mov r0.z, l(2)
+  iadd r4.x, r0.z, r0.y
+  mov r4.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r13.xyzw, r4.xyzw, t3.xyzw  // r13.x <- r2.x; r13.y <- r2.y; r13.z <- r2.z; r13.w <- r2.w
+
+#line 9
+  mov r0.z, l(3)
+  iadd r4.x, r0.z, r0.y
+  mov r4.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r4.xyzw, r4.xyzw, t3.xyzw  // r4.x <- r3.x; r4.y <- r3.y; r4.z <- r3.z; r4.w <- r3.w
+
+#line 10
+  mov r14.x, r5.x  // r14.x <- <FetchBoneMatrix return value>._m00
+  mov r14.y, r9.x  // r14.y <- <FetchBoneMatrix return value>._m10
+  mov r14.z, r13.x  // r14.z <- <FetchBoneMatrix return value>._m20
+  mov r14.w, r4.x  // r14.w <- <FetchBoneMatrix return value>._m30
+  mov r15.x, r5.y  // r15.x <- <FetchBoneMatrix return value>._m01
+  mov r15.y, r9.y  // r15.y <- <FetchBoneMatrix return value>._m11
+  mov r15.z, r13.y  // r15.z <- <FetchBoneMatrix return value>._m21
+  mov r15.w, r4.y  // r15.w <- <FetchBoneMatrix return value>._m31
+  mov r16.x, r5.z  // r16.x <- <FetchBoneMatrix return value>._m02
+  mov r16.y, r9.z  // r16.y <- <FetchBoneMatrix return value>._m12
+  mov r16.z, r13.z  // r16.z <- <FetchBoneMatrix return value>._m22
+  mov r16.w, r4.z  // r16.w <- <FetchBoneMatrix return value>._m32
+  mov r4.x, r5.w  // r4.x <- <FetchBoneMatrix return value>._m03
+  mov r4.y, r9.w  // r4.y <- <FetchBoneMatrix return value>._m13
+  mov r4.z, r13.w  // r4.z <- <FetchBoneMatrix return value>._m23
+  mov r4.w, r4.w  // r4.w <- <FetchBoneMatrix return value>._m33
+
+#line 23
+  mov r14.xyzw, r14.xyzw  // r14.x <- b2._m00; r14.y <- b2._m10; r14.z <- b2._m20; r14.w <- b2._m30
+  mov r15.xyzw, r15.xyzw  // r15.x <- b2._m01; r15.y <- b2._m11; r15.z <- b2._m21; r15.w <- b2._m31
+  mov r16.xyzw, r16.xyzw  // r16.x <- b2._m02; r16.y <- b2._m12; r16.z <- b2._m22; r16.w <- b2._m32
+  mov r4.xyzw, r4.xyzw  // r4.x <- b2._m03; r4.y <- b2._m13; r4.z <- b2._m23; r4.w <- b2._m33
+
+#line 24
+  nop 
+  mov r0.y, v4.w
+
+#line 5
+  mov r0.z, l(4)
+  imul null, r0.y, r0.z, r0.y  // r0.y <- base_x
+
+#line 6
+  mov r0.z, l(0)
+  iadd r1.x, r0.z, r0.y
+  mov r1.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r5.xyzw, r1.xyzw, t3.xyzw
+
+#line 7
+  mov r0.z, l(1)
+  iadd r1.x, r0.z, r0.y
+  mov r1.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r9.xyzw, r1.xyzw, t3.xyzw
+
+#line 8
+  mov r0.z, l(2)
+  iadd r1.x, r0.z, r0.y
+  mov r1.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r13.xyzw, r1.xyzw, t3.xyzw
+
+#line 9
+  mov r0.z, l(3)
+  iadd r1.x, r0.z, r0.y
+  mov r1.zw, l(0,0,0,0)
+  ld_indexable(texture2d)(float,float,float,float) r1.xyzw, r1.xyzw, t3.xyzw  // r1.x <- r3.x; r1.y <- r3.y; r1.z <- r3.z; r1.w <- r3.w
+
+#line 10
+  mov r17.x, r5.x  // r17.x <- <FetchBoneMatrix return value>._m00
+  mov r17.y, r9.x  // r17.y <- <FetchBoneMatrix return value>._m10
+  mov r17.z, r13.x  // r17.z <- <FetchBoneMatrix return value>._m20
+  mov r17.w, r1.x  // r17.w <- <FetchBoneMatrix return value>._m30
+  mov r18.x, r5.y  // r18.x <- <FetchBoneMatrix return value>._m01
+  mov r18.y, r9.y  // r18.y <- <FetchBoneMatrix return value>._m11
+  mov r18.z, r13.y  // r18.z <- <FetchBoneMatrix return value>._m21
+  mov r18.w, r1.y  // r18.w <- <FetchBoneMatrix return value>._m31
+  mov r19.x, r5.z  // r19.x <- <FetchBoneMatrix return value>._m02
+  mov r19.y, r9.z  // r19.y <- <FetchBoneMatrix return value>._m12
+  mov r19.z, r13.z  // r19.z <- <FetchBoneMatrix return value>._m22
+  mov r19.w, r1.z  // r19.w <- <FetchBoneMatrix return value>._m32
+  mov r1.x, r5.w  // r1.x <- <FetchBoneMatrix return value>._m03
+  mov r1.y, r9.w  // r1.y <- <FetchBoneMatrix return value>._m13
+  mov r1.z, r13.w  // r1.z <- <FetchBoneMatrix return value>._m23
+  mov r1.w, r1.w  // r1.w <- <FetchBoneMatrix return value>._m33
+
+#line 24
+  mov r17.xyzw, r17.xyzw  // r17.x <- b3._m00; r17.y <- b3._m10; r17.z <- b3._m20; r17.w <- b3._m30
+  mov r18.xyzw, r18.xyzw  // r18.x <- b3._m01; r18.y <- b3._m11; r18.z <- b3._m21; r18.w <- b3._m31
+  mov r19.xyzw, r19.xyzw  // r19.x <- b3._m02; r19.y <- b3._m12; r19.z <- b3._m22; r19.w <- b3._m32
+  mov r1.xyzw, r1.xyzw  // r1.x <- b3._m03; r1.y <- b3._m13; r1.z <- b3._m23; r1.w <- b3._m33
+
+#line 26
+  mul r5.xyzw, r6.xyzw, v5.xxxx
+  mul r6.xyzw, r7.xyzw, v5.xxxx
+  mul r7.xyzw, r8.xyzw, v5.xxxx
+  mul r2.xyzw, r2.xyzw, v5.xxxx
+  mul r8.xyzw, r10.xyzw, v5.yyyy
+  mul r9.xyzw, r11.xyzw, v5.yyyy
+  mul r10.xyzw, r12.xyzw, v5.yyyy
+  mul r3.xyzw, r3.xyzw, v5.yyyy
+  add r5.xyzw, r5.xyzw, r8.xyzw
+  add r6.xyzw, r6.xyzw, r9.xyzw
+  add r7.xyzw, r7.xyzw, r10.xyzw
+  add r2.xyzw, r2.xyzw, r3.xyzw
+  mul r3.xyzw, r14.xyzw, v5.zzzz
+  mul r8.xyzw, r15.xyzw, v5.zzzz
+  mul r9.xyzw, r16.xyzw, v5.zzzz
+  mul r4.xyzw, r4.xyzw, v5.zzzz
+  add r3.xyzw, r3.xyzw, r5.xyzw
+  add r5.xyzw, r6.xyzw, r8.xyzw
+  add r6.xyzw, r7.xyzw, r9.xyzw
+  add r2.xyzw, r2.xyzw, r4.xyzw
+  mul r4.xyzw, r17.xyzw, v5.wwww
+  mul r7.xyzw, r18.xyzw, v5.wwww
+  mul r8.xyzw, r19.xyzw, v5.wwww
+  mul r1.xyzw, r1.xyzw, v5.wwww
+  add r3.xyzw, r3.xyzw, r4.xyzw  // r3.x <- skin_matrix._m00; r3.y <- skin_matrix._m10; r3.z <- skin_matrix._m20; r3.w <- skin_matrix._m30
+  add r4.xyzw, r5.xyzw, r7.xyzw  // r4.x <- skin_matrix._m01; r4.y <- skin_matrix._m11; r4.z <- skin_matrix._m21; r4.w <- skin_matrix._m31
+  add r5.xyzw, r6.xyzw, r8.xyzw  // r5.x <- skin_matrix._m02; r5.y <- skin_matrix._m12; r5.z <- skin_matrix._m22; r5.w <- skin_matrix._m32
+  add r1.xyzw, r1.xyzw, r2.xyzw  // r1.x <- skin_matrix._m03; r1.y <- skin_matrix._m13; r1.z <- skin_matrix._m23; r1.w <- skin_matrix._m33
+
+#line 31
+  mov r2.xyz, v0.xyzx
+  mov r2.w, l(1.000000)
+  dp4 r0.y, r2.xyzw, r3.xyzw  // r0.y <- vin.position.x
+  dp4 r0.z, r2.xyzw, r4.xyzw  // r0.z <- vin.position.y
+  dp4 r0.w, r2.xyzw, r5.xyzw  // r0.w <- vin.position.z
+
+#line 32
+  mov r2.xyz, v1.xyzx
+  mov r2.w, l(0)
+  dp4 r6.x, r2.xyzw, r3.xyzw
+  dp4 r6.y, r2.xyzw, r4.xyzw
+  dp4 r6.z, r2.xyzw, r5.xyzw
+  dp4 r6.w, r2.xyzw, r1.xyzw
+  dp4 r2.x, r6.xyzw, r6.xyzw
+  rsq r2.x, r2.x
+  mul r2.xyz, r2.xxxx, r6.xyzx  // r2.x <- vin.normal.x; r2.y <- vin.normal.y; r2.z <- vin.normal.z
+
+#line 33
   mov r6.xyz, v2.xyzx
-  dp4 r1.x, r6.xyzw, r1.xyzw
-  dp4 r1.y, r6.xyzw, r2.xyzw
-  dp4 r1.z, r6.xyzw, r3.xyzw
-  dp4 r1.w, r6.xyzw, r4.xyzw
-  dp4 r1.w, r1.xyzw, r1.xyzw
-  rsq r1.w, r1.w
-  mul r1.xyz, r1.wwww, r1.xyzx  // r1.x <- vin.tangent.x; r1.y <- vin.tangent.y; r1.z <- vin.tangent.z
+  mov r6.w, l(0)
+  dp4 r3.x, r6.xyzw, r3.xyzw
+  dp4 r3.y, r6.xyzw, r4.xyzw
+  dp4 r3.z, r6.xyzw, r5.xyzw
+  dp4 r3.w, r6.xyzw, r1.xyzw
+  dp4 r1.x, r3.xyzw, r3.xyzw
+  rsq r1.x, r1.x
+  mul r1.xyz, r1.xxxx, r3.xyzx  // r1.x <- vin.tangent.x; r1.y <- vin.tangent.y; r1.z <- vin.tangent.z
 
-#line 18
+#line 34
 else 
   mov r0.y, v0.x  // r0.y <- vin.position.x
   mov r0.z, v0.y  // r0.z <- vin.position.y
   mov r0.w, v0.z  // r0.w <- vin.position.z
-  mov r5.x, v1.x  // r5.x <- vin.normal.x
-  mov r5.y, v1.y  // r5.y <- vin.normal.y
-  mov r5.z, v1.z  // r5.z <- vin.normal.z
+  mov r2.x, v1.x  // r2.x <- vin.normal.x
+  mov r2.y, v1.y  // r2.y <- vin.normal.y
+  mov r2.z, v1.z  // r2.z <- vin.normal.z
   mov r1.x, v2.x  // r1.x <- vin.tangent.x
   mov r1.y, v2.y  // r1.y <- vin.tangent.y
   mov r1.z, v2.z  // r1.z <- vin.tangent.z
 endif 
 
-#line 23
-itof r1.w, l(1)  // r1.w <- vin.position.w
+#line 38
+mov r1.w, l(1.000000)  // r1.w <- vin.position.w
 
-#line 24
-mul r2.xyzw, cb0[0].xxxx, cb1[0].xyzw
-mul r3.xyzw, cb0[0].yyyy, cb1[1].xyzw
-add r2.xyzw, r2.xyzw, r3.xyzw
-mul r3.xyzw, cb0[0].zzzz, cb1[2].xyzw
-add r2.xyzw, r2.xyzw, r3.xyzw
-mul r3.xyzw, cb0[0].wwww, cb1[3].xyzw
-add r2.xyzw, r2.xyzw, r3.xyzw
-mul r3.xyzw, cb0[1].xxxx, cb1[0].xyzw
-mul r4.xyzw, cb0[1].yyyy, cb1[1].xyzw
+#line 39
+mul r3.xyzw, r0.yyyy, v6.xyzw
+mul r4.xyzw, r0.zzzz, v7.xyzw
 add r3.xyzw, r3.xyzw, r4.xyzw
-mul r4.xyzw, cb0[1].zzzz, cb1[2].xyzw
+mul r4.xyzw, r0.wwww, v8.xyzw
 add r3.xyzw, r3.xyzw, r4.xyzw
-mul r4.xyzw, cb0[1].wwww, cb1[3].xyzw
-add r3.xyzw, r3.xyzw, r4.xyzw
-mul r4.xyzw, cb0[2].xxxx, cb1[0].xyzw
-mul r6.xyzw, cb0[2].yyyy, cb1[1].xyzw
-add r4.xyzw, r4.xyzw, r6.xyzw
-mul r6.xyzw, cb0[2].zzzz, cb1[2].xyzw
-add r4.xyzw, r4.xyzw, r6.xyzw
-mul r6.xyzw, cb0[2].wwww, cb1[3].xyzw
-add r4.xyzw, r4.xyzw, r6.xyzw
-mul r6.xyzw, cb0[3].xxxx, cb1[0].xyzw
-mul r7.xyzw, cb0[3].yyyy, cb1[1].xyzw
-add r6.xyzw, r6.xyzw, r7.xyzw
-mul r7.xyzw, cb0[3].zzzz, cb1[2].xyzw
-add r6.xyzw, r6.xyzw, r7.xyzw
-mul r7.xyzw, cb0[3].wwww, cb1[3].xyzw
-add r6.xyzw, r6.xyzw, r7.xyzw
-mul r2.xyzw, r0.yyyy, r2.xyzw
-mul r3.xyzw, r0.zzzz, r3.xyzw
-add r2.xyzw, r2.xyzw, r3.xyzw
-mul r3.xyzw, r0.wwww, r4.xyzw
-add r2.xyzw, r2.xyzw, r3.xyzw
-mul r3.xyzw, r1.wwww, r6.xyzw
-add r2.xyzw, r2.xyzw, r3.xyzw  // r2.x <- vout.position.x; r2.y <- vout.position.y; r2.z <- vout.position.z; r2.w <- vout.position.w
-
-#line 25
-mul r3.xyzw, r0.yyyy, cb0[0].xyzw
-mul r4.xyzw, r0.zzzz, cb0[1].xyzw
-add r3.xyzw, r3.xyzw, r4.xyzw
-mul r4.xyzw, r0.wwww, cb0[2].xyzw
-add r3.xyzw, r3.xyzw, r4.xyzw
-mul r4.xyzw, r1.wwww, cb0[3].xyzw
+mul r4.xyzw, r1.wwww, v9.xyzw
 add r3.xyzw, r3.xyzw, r4.xyzw  // r3.x <- vout.w_position.x; r3.y <- vout.w_position.y; r3.z <- vout.w_position.z; r3.w <- vout.w_position.w
 
-#line 28
-itof r0.y, l(0)  // r0.y <- vin.normal.w
-
-#line 29
-mul r4.xyzw, r5.xxxx, cb0[0].xyzw
-mul r6.xyzw, r5.yyyy, cb0[1].xyzw
-add r4.xyzw, r4.xyzw, r6.xyzw
-mul r5.xyzw, r5.zzzz, cb0[2].xyzw
+#line 40
+mul r4.xyzw, r3.xxxx, cb1[0].xyzw
+mul r5.xyzw, r3.yyyy, cb1[1].xyzw
 add r4.xyzw, r4.xyzw, r5.xyzw
-mul r5.xyzw, r0.yyyy, cb0[3].xyzw
+mul r5.xyzw, r3.zzzz, cb1[2].xyzw
 add r4.xyzw, r4.xyzw, r5.xyzw
-dp4 r0.y, r4.xyzw, r4.xyzw
-rsq r0.y, r0.y
-mul r4.xyzw, r0.yyyy, r4.xyzw  // r4.x <- vout.w_normal.x; r4.y <- vout.w_normal.y; r4.z <- vout.w_normal.z; r4.w <- vout.w_normal.w
+mul r5.xyzw, r3.wwww, cb1[3].xyzw
+add r4.xyzw, r4.xyzw, r5.xyzw  // r4.x <- vout.position.x; r4.y <- vout.position.y; r4.z <- vout.position.z; r4.w <- vout.position.w
 
-#line 31
-itof r0.y, l(0)  // r0.y <- vin.tangent.w
+#line 42
+mov r0.y, l(0)  // r0.y <- vin.normal.w
 
-#line 32
-mul r5.xyzw, r1.xxxx, cb0[0].xyzw
-mul r6.xyzw, r1.yyyy, cb0[1].xyzw
+#line 43
+mul r5.xyzw, r2.xxxx, v6.xyzw
+mul r6.xyzw, r2.yyyy, v7.xyzw
 add r5.xyzw, r5.xyzw, r6.xyzw
-mul r1.xyzw, r1.zzzz, cb0[2].xyzw
+mul r2.xyzw, r2.zzzz, v8.xyzw
+add r2.xyzw, r2.xyzw, r5.xyzw
+mul r5.xyzw, r0.yyyy, v9.xyzw
+add r2.xyzw, r2.xyzw, r5.xyzw
+dp4 r0.y, r2.xyzw, r2.xyzw
+rsq r0.y, r0.y
+mul r2.xyzw, r0.yyyy, r2.xyzw  // r2.x <- vout.w_normal.x; r2.y <- vout.w_normal.y; r2.z <- vout.w_normal.z; r2.w <- vout.w_normal.w
+
+#line 45
+mov r0.y, l(0)  // r0.y <- vin.tangent.w
+
+#line 46
+mul r5.xyzw, r1.xxxx, v6.xyzw
+mul r6.xyzw, r1.yyyy, v7.xyzw
+add r5.xyzw, r5.xyzw, r6.xyzw
+mul r1.xyzw, r1.zzzz, v8.xyzw
 add r1.xyzw, r1.xyzw, r5.xyzw
-mul r5.xyzw, r0.yyyy, cb0[3].xyzw
+mul r5.xyzw, r0.yyyy, v9.xyzw
 add r1.xyzw, r1.xyzw, r5.xyzw
 dp4 r0.y, r1.xyzw, r1.xyzw
 rsq r0.y, r0.y
 mul r0.yzw, r0.yyyy, r1.xxyz  // r0.y <- vout.w_tangent.x; r0.z <- vout.w_tangent.y; r0.w <- vout.w_tangent.z
 
-#line 33
+#line 47
 mov r0.x, r0.x  // r0.x <- vout.w_tangent.w
 
-#line 35
+#line 49
 mov r1.xy, v3.xyxx  // r1.x <- vout.texcoord.x; r1.y <- vout.texcoord.y
 
-#line 38
+#line 51
 mul r5.xyzw, r3.xxxx, cb1[8].xyzw
 mul r6.xyzw, r3.yyyy, cb1[9].xyzw
 add r5.xyzw, r5.xyzw, r6.xyzw
@@ -330,16 +489,16 @@ add r5.xyzw, r5.xyzw, r6.xyzw
 mul r6.xyzw, r3.wwww, cb1[11].xyzw
 add r5.xyzw, r5.xyzw, r6.xyzw  // r5.x <- light_space_position.x; r5.y <- light_space_position.y; r5.z <- light_space_position.z; r5.w <- light_space_position.w
 
-#line 39
+#line 52
 div r5.xyz, r5.xyzx, r5.wwww  // r5.x <- vout.shadow_texcoord.x; r5.y <- vout.shadow_texcoord.y; r5.z <- vout.shadow_texcoord.z
 
-#line 41
-mov o0.xyzw, r2.xyzw
+#line 54
+mov o0.xyzw, r4.xyzw
 mov o1.xyzw, r3.xyzw
-mov o2.xyzw, r4.xyzw
+mov o2.xyzw, r2.xyzw
 mov o3.xyz, r0.yzwy
 mov o3.w, r0.x
 mov o5.xyz, r5.xyzx
 mov o4.xy, r1.xyxx
 ret 
-// Approximately 204 instruction slots used
+// Approximately 289 instruction slots used

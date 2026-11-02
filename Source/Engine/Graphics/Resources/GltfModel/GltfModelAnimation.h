@@ -29,6 +29,9 @@ public:
 	//現在のアニメーション経過時間を取得
 	float GetCurrentAnimationTime()const;
 
+	//現在のアニメーションインデックス取得
+	size_t GetCurrentAnimationIndex() const { return current_animation_index; }
+
 	//アニメーションの再生時間を設定
 	void SetCurrentAnimationTime(float time);
 
@@ -42,6 +45,7 @@ public:
 	void AnimationBlend(size_t animation_index_a, float time_a, size_t animation_index_b, float time_b, float blend_factor);
 
 	int ComputeTargetRootNodeIndex(size_t animation_index) const;
+
 
 private:
 

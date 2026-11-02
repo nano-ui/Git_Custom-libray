@@ -13,40 +13,45 @@ GltfModelRenderer::GltfModelRenderer(ID3D11Device* device)
 {
 	BS_PROFILE_FUNCTION();
 
-	//--------------------------------------------------
-	// シェーダーへの入力レイアウトの定義
-	//--------------------------------------------------
 	D3D11_INPUT_ELEMENT_DESC input_element_desc[]
 	{
-		{ "POSITION", OFFSET_ZERO, DXGI_FORMAT_R32G32B32_FLOAT,    SHADER_SLOT_0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },
-		{ "NORMAL"  , OFFSET_ZERO, DXGI_FORMAT_R32G32B32_FLOAT,    SHADER_SLOT_0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },
-		{ "TANGENT" , OFFSET_ZERO, DXGI_FORMAT_R32G32B32A32_FLOAT, SHADER_SLOT_0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },
-		{ "TEXCOORD", OFFSET_ZERO, DXGI_FORMAT_R32G32_FLOAT,       SHADER_SLOT_0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },
-		{ "JOINTS"  , OFFSET_ZERO, DXGI_FORMAT_R16G16B16A16_UINT,  SHADER_SLOT_0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO },
-		{ "WEIGHTS" , OFFSET_ZERO, DXGI_FORMAT_R32G32B32A32_FLOAT, SHADER_SLOT_0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, OFFSET_ZERO }
+		{ "POSITION",     OFFSET_ZERO, DXGI_FORMAT_R32G32B32_FLOAT,    SHADER_SLOT_0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA,   OFFSET_ZERO },
+		{ "NORMAL",       OFFSET_ZERO, DXGI_FORMAT_R32G32B32_FLOAT,    SHADER_SLOT_0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA,   OFFSET_ZERO },
+		{ "TANGENT",      OFFSET_ZERO, DXGI_FORMAT_R32G32B32A32_FLOAT, SHADER_SLOT_0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA,   OFFSET_ZERO },
+		{ "TEXCOORD",     OFFSET_ZERO, DXGI_FORMAT_R32G32_FLOAT,       SHADER_SLOT_0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA,   OFFSET_ZERO },
+		{ "JOINTS",       OFFSET_ZERO, DXGI_FORMAT_R16G16B16A16_UINT,  SHADER_SLOT_0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA,   OFFSET_ZERO },
+		{ "WEIGHTS",      OFFSET_ZERO, DXGI_FORMAT_R32G32B32A32_FLOAT, SHADER_SLOT_0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA,   OFFSET_ZERO },
+
+		{ "INSTANCE_WORLD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, INSTANCE_BUFFER_SLOT, 0,  D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "INSTANCE_WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, INSTANCE_BUFFER_SLOT, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "INSTANCE_WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, INSTANCE_BUFFER_SLOT, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "INSTANCE_WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, INSTANCE_BUFFER_SLOT, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "INSTANCE_ANIM",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, INSTANCE_BUFFER_SLOT, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 	};
 
-	//--------------------------------------------------------
-	//シェーダーオブジェクトの生成と手動入力レイアウトの適用
-	//--------------------------------------------------------
 	custom_shader = std::make_unique<CustomShader>();
 	bool is_success = custom_shader->Initialize("gltf_model_vs.cso", "gltf_model_ps.cso", input_element_desc, _countof(input_element_desc));
 	_ASSERT_EXPR(is_success, L"Failed to initialize custom shader");
 
-	//--------------------------------------------------
-	// GPUへ送るための定数バッファの生成
-	//--------------------------------------------------
-	D3D11_BUFFER_DESC buffer_desc = {};												//バッファ作成用の設定構造体
+	D3D11_BUFFER_DESC buffer_desc = {};
 	HRESULT hr;
 
-	buffer_desc.ByteWidth = sizeof(GltfModelData::primitive_constants);				//プリミティブ用構造体のサイズを設定
-	buffer_desc.Usage = D3D11_USAGE_DEFAULT;										//GPUから読み書き可能なデフォルト設定
-	buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;								//定数バッファとしてGPUにバインドすることを指定
+	buffer_desc.ByteWidth = sizeof(GltfModelData::primitive_constants);
+	buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+	buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	hr = device->CreateBuffer(&buffer_desc, nullptr, primitive_cbuffer.ReleaseAndGetAddressOf());
-	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));										//作成に失敗した場合はプログラムを停止し原因を出力
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-	buffer_desc.ByteWidth = sizeof(GltfModelData::primitive_joint_constants);		//スキニング用の関節行列構造体のサイズを設定
+	buffer_desc.ByteWidth = sizeof(GltfModelData::primitive_joint_constants);
 	hr = device->CreateBuffer(&buffer_desc, nullptr, primitive_joint_cbuffer.ReleaseAndGetAddressOf());
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+	D3D11_BUFFER_DESC inst_desc = {};
+	inst_desc.ByteWidth = static_cast<UINT>(sizeof(ModelInstanceData) * max_instance_count);
+	inst_desc.Usage = D3D11_USAGE_DYNAMIC;
+	inst_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	inst_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	hr = device->CreateBuffer(&inst_desc, nullptr, instance_buffer.ReleaseAndGetAddressOf());
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 }
 
@@ -197,7 +202,8 @@ void GltfModelRenderer::RenderQueue(ID3D11DeviceContext* immediate_context, cons
 		return;
 	}
 
-	if (queue.GetCommands().empty())
+	const auto& commands = queue.GetCommands();
+	if (commands.empty())
 	{
 		return;
 	}
@@ -213,68 +219,104 @@ void GltfModelRenderer::RenderQueue(ID3D11DeviceContext* immediate_context, cons
 	immediate_context->VSSetConstantBuffers(SHADER_SLOT_0, RESOURCE_COUNT_1, primitive_cbuffer.GetAddressOf());
 	immediate_context->PSSetConstantBuffers(SHADER_SLOT_0, RESOURCE_COUNT_1, primitive_cbuffer.GetAddressOf());
 
-	const GltfModelData* last_model_data = nullptr;
-	int last_material_id = -1;
-	const GltfModelData* last_skin_model_data = nullptr;
-	const std::vector<GltfModelData::node>* last_skin_nodes = nullptr;
-	int last_skin_id = -1;
-	int last_skin_node_index = -1;
-	const GltfModelData::mesh::primitive* last_primitive = nullptr;
+	std::vector<ModelInstanceData> batched_instances;
+	batched_instances.reserve(commands.size());
 
-	for (const ModelDrawCommand& cmd : queue.GetCommands())
-	{
-		if (!cmd.data || !cmd.nodes || !cmd.primitive)
-		{
-			OutputDebugStringA("[GltfModelRenderer 警告] RenderQueue: 不正な描画コマンドをスキップしました。\n");
-			continue;
-		}
+	const GltfModelData* current_model_data = nullptr;
+	const GltfModelData::mesh::primitive* current_primitive = nullptr;
+	int current_material_id = -1;
 
-		if (cmd.skin_index > -1)
+	auto FlushBatch = [&]()
 		{
-			if (cmd.data != last_skin_model_data ||
-				cmd.nodes != last_skin_nodes ||
-				cmd.skin_index != last_skin_id ||
-				cmd.node_index != last_skin_node_index)
+			if (batched_instances.empty() || !current_model_data || !current_primitive)
 			{
-				if (cmd.node_index >= 0 && static_cast<size_t>(cmd.node_index) < cmd.nodes->size())
+				batched_instances.clear();
+				return;
+			}
+
+			D3D11_MAPPED_SUBRESOURCE mapped = {};
+			HRESULT hr = immediate_context->Map(instance_buffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+			if (SUCCEEDED(hr))
+			{
+				size_t copy_count = (std::min)(batched_instances.size(), max_instance_count);
+				std::memcpy(mapped.pData, batched_instances.data(), sizeof(ModelInstanceData) * copy_count);
+				immediate_context->Unmap(instance_buffer.Get(), 0);
+
+				ID3D11Buffer* vbs[2] = {
+					current_model_data->buffers.at(current_primitive->vertex_buffer_view.buffer).Get(),
+					instance_buffer.Get()
+				};
+				UINT strides[2] = {
+					static_cast<UINT>(current_primitive->vertex_buffer_view.stride_in_bytes),
+					static_cast<UINT>(sizeof(ModelInstanceData))
+				};
+				UINT offsets[2] = {
+					static_cast<UINT>(current_primitive->vertex_buffer_view.byte_offset),
+					0
+				};
+				immediate_context->IASetVertexBuffers(0, 2, vbs, strides, offsets);
+
+				if (current_model_data->HasBoneTexture())
 				{
-					UpdateSkinMatrices(immediate_context, *cmd.data, *cmd.nodes, cmd.skin_index, cmd.nodes->at(cmd.node_index).global_transform);
-					last_skin_model_data = cmd.data;
-					last_skin_nodes = cmd.nodes;
-					last_skin_id = cmd.skin_index;
-					last_skin_node_index = cmd.node_index;
+					ID3D11ShaderResourceView* bone_srv = current_model_data->GetBoneTextureSRV();
+					immediate_context->VSSetShaderResources(SHADER_SLOT_3, RESOURCE_COUNT_1, &bone_srv);
+				}
+
+				if (current_primitive->index_buffer_view.buffer > -1)
+				{
+					immediate_context->IASetIndexBuffer(
+						current_model_data->buffers.at(current_primitive->index_buffer_view.buffer).Get(),
+						current_primitive->index_buffer_view.format,
+						static_cast<UINT>(current_primitive->index_buffer_view.byte_offset));
+
+					immediate_context->DrawIndexedInstanced(
+						static_cast<UINT>(current_primitive->index_buffer_view.count),
+						static_cast<UINT>(copy_count),
+						0, 0, 0);
 				}
 				else
 				{
-					OutputDebugStringA("[GltfModelRenderer エラー] RenderQueue: cmd.node_index が範囲外です。\n");
+					immediate_context->DrawInstanced(
+						static_cast<UINT>(current_primitive->vertex_buffer_view.count),
+						static_cast<UINT>(copy_count),
+						0, 0);
 				}
 			}
+			batched_instances.clear();
+		};
+
+	for (const ModelDrawCommand& cmd : commands)
+	{
+		if (!cmd.data || !cmd.primitive)
+		{
+			continue;
 		}
 
+		if (cmd.data != current_model_data || cmd.primitive != current_primitive || cmd.material_index != current_material_id)
 		{
+			FlushBatch();
+
+			current_model_data = cmd.data;
+			current_primitive = cmd.primitive;
+			current_material_id = cmd.material_index;
+
 			GltfModelData::primitive_constants primitive_data = {};
 			primitive_data.material = cmd.primitive->material;
 			primitive_data.has_tangent = cmd.primitive->has("TANGENT") ? 1 : 0;
 			primitive_data.skin = cmd.skin_index;
-			primitive_data.world = cmd.world_matrix;
-
+			DirectX::XMStoreFloat4x4(&primitive_data.world, DirectX::XMMatrixIdentity());
 			immediate_context->UpdateSubresource(primitive_cbuffer.Get(), OFFSET_ZERO, nullptr, &primitive_data, OFFSET_ZERO, OFFSET_ZERO);
-		}
 
-		if (cmd.data != last_model_data || cmd.material_index != last_material_id)
-		{
 			if (cmd.data->material_resource_view)
 			{
 				immediate_context->PSSetShaderResources(OFFSET_ZERO, RESOURCE_COUNT_1, cmd.data->material_resource_view.GetAddressOf());
 			}
 
-			ID3D11ShaderResourceView* shader_resource_views[TEXTURE_COUNT_5] = { nullptr };
-
+			ID3D11ShaderResourceView* srvs[TEXTURE_COUNT_5] = { nullptr };
 			if (cmd.material_index >= 0 && static_cast<size_t>(cmd.material_index) < cmd.data->materials.size())
 			{
 				const GltfModelData::material& material = cmd.data->materials.at(cmd.material_index);
-				const int texture_indices[] =
-				{
+				const int tex_indices[] = {
 					material.data.pbr_metallic_roughness.basecolor_texture.index,
 					material.data.pbr_metallic_roughness.metallic_roughness_texture.index,
 					material.data.normal_texture.index,
@@ -282,21 +324,20 @@ void GltfModelRenderer::RenderQueue(ID3D11DeviceContext* immediate_context, cons
 					material.data.occlusion_texture.index
 				};
 
-				for (int texture_index = 0; texture_index < TEXTURE_COUNT_5; texture_index++)
+				for (int t = 0; t < static_cast<int>(TEXTURE_COUNT_5); ++t)
 				{
-					int tex_idx = texture_indices[texture_index];
-					if (tex_idx >= 0 && static_cast<size_t>(tex_idx) < cmd.data->textures.size())
+					int idx = tex_indices[t];
+					if (idx >= 0 && static_cast<size_t>(idx) < cmd.data->textures.size())
 					{
-						int source_idx = cmd.data->textures.at(tex_idx).source;
-						if (source_idx >= 0 && static_cast<size_t>(source_idx) < cmd.data->texture_resource_views.size())
+						int src_idx = cmd.data->textures.at(idx).source;
+						if (src_idx >= 0 && static_cast<size_t>(src_idx) < cmd.data->texture_resource_views.size())
 						{
-							shader_resource_views[texture_index] = cmd.data->texture_resource_views.at(source_idx).Get();
+							srvs[t] = cmd.data->texture_resource_views.at(src_idx).Get();
 						}
 					}
 				}
 			}
-
-			immediate_context->PSSetShaderResources(SHADER_SLOT_1, TEXTURE_COUNT_5, shader_resource_views);
+			immediate_context->PSSetShaderResources(SHADER_SLOT_1, TEXTURE_COUNT_5, srvs);
 
 			auto states = Graphics::Instance().GetPipelineStates();
 			if (states)
@@ -308,41 +349,25 @@ void GltfModelRenderer::RenderQueue(ID3D11DeviceContext* immediate_context, cons
 				};
 				immediate_context->PSSetSamplers(OFFSET_ZERO, SAMPLER_COUNT_3, samplers);
 			}
-
-			last_model_data = cmd.data;
-			last_material_id = cmd.material_index;
 		}
 
-		if (cmd.data != last_model_data || cmd.primitive != last_primitive)
+		ModelInstanceData inst = {};
+		inst.world_matrix = cmd.world_matrix;
+
+		constexpr float BAKE_FRAME_RATE = 30.0f;
+		float current_frame = 0.0f;
+		if (cmd.anim_duration > 0.0f)
 		{
-			if (cmd.primitive->vertex_buffer_view.buffer >= 0 && static_cast<size_t>(cmd.primitive->vertex_buffer_view.buffer) < cmd.data->buffers.size())
-			{
-				ID3D11Buffer* vertex_buffer = cmd.data->buffers.at(cmd.primitive->vertex_buffer_view.buffer).Get();
-				UINT stride = static_cast<UINT>(cmd.primitive->vertex_buffer_view.stride_in_bytes);
-				UINT offset = static_cast<UINT>(cmd.primitive->vertex_buffer_view.byte_offset);
-				immediate_context->IASetVertexBuffers(SHADER_SLOT_0, RESOURCE_COUNT_1, &vertex_buffer, &stride, &offset);
-			}
+			current_frame = std::floor(cmd.current_anim_time * BAKE_FRAME_RATE);
+		}
+		inst.anim_row_offset = static_cast<float>(cmd.anim_row_offset) + current_frame;
+		inst.current_anim_time = cmd.current_anim_time;
+		inst.anim_duration = cmd.anim_duration;
 
-			if (cmd.primitive->index_buffer_view.buffer > -1)
-			{
-				immediate_context->IASetIndexBuffer(cmd.data->buffers.at(cmd.primitive->index_buffer_view.buffer).Get(), cmd.primitive->index_buffer_view.format, static_cast<UINT>(cmd.primitive->index_buffer_view.byte_offset));
-			}
-			last_primitive = cmd.primitive;
-		}
-
-		if (cmd.primitive->index_buffer_view.buffer > -1)
-		{
-			immediate_context->DrawIndexed(static_cast<UINT>(cmd.primitive->index_buffer_view.count), OFFSET_ZERO, OFFSET_ZERO);
-		}
-		else
-		{
-			auto pos_it = cmd.primitive->vertex_buffer_views.find("POSITION");
-			if (pos_it != cmd.primitive->vertex_buffer_views.end())
-			{
-				immediate_context->Draw(static_cast<UINT>(pos_it->second.count), OFFSET_ZERO);
-			}
-		}
+		batched_instances.push_back(inst);
 	}
+
+	FlushBatch(); 
 }
 
 //==================================
