@@ -40,18 +40,12 @@ void RootMotionComponent::Update(float current_animation_time)
 {
 	BS_PROFILE_FUNCTION();
 
-	//有効フラグまたは計算クラスが無効の場合は更新しない
 	if (!is_enabled || !root_motion)
 	{
 		return;
 	}
-	if (is_updated_this_frame)
-	{
-		//printf("[RootMotionComponent 警告] Update: 1フレーム内に複数回の呼び出しを検知したため、重複更新をガードしました。\n");
-		return;
-	}
+
 	root_motion->Update(current_anim_index, current_animation_time);
-	is_updated_this_frame = true;
 }
 
 //位置の差分を取得
@@ -59,12 +53,11 @@ DirectX::XMFLOAT3 RootMotionComponent::GetDeltaPosition() const
 {
 	BS_PROFILE_FUNCTION();
 
-	// 無効な場合は差分ゼロを返す
-	if (!is_enabled)
+	if (!is_enabled || !root_motion)
 	{
 		return { 0.0f, 0.0f, 0.0f };
 	}
-	is_updated_this_frame = false;
+
 	return root_motion->GetDeltaPosition();
 }
 

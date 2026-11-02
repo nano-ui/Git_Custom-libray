@@ -42,6 +42,9 @@ private:
 	//任意の時間のルートノードの位置と回転を計算
 	void ComputeRootPose(size_t animation_index, float time, DirectX::XMFLOAT3& out_position, DirectX::XMFLOAT4& out_rotation)const;
 
+	//指定ノードの任意の時間におけるローカル姿勢（TRS）を抽出
+	void GetNodeLocalPose(size_t animation_index, int node_index, float time, DirectX::XMFLOAT3& out_pos, DirectX::XMFLOAT4& out_rot, DirectX::XMFLOAT3& out_scale) const;
+
 	//階層構造からルートモーションの対象となるノードインデックスを検索
 	int FindRootNodeIndex(const std::string& root_node_name)const;
 

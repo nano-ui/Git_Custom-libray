@@ -154,28 +154,20 @@ void Character::Update(float elapsed_time)
 			{
 				sequencer_component->ChangeAnimation(target_anim_name, belnd_time);
 			}
+
+			if (root_motion_component && model_component && model_component->GetModelData())
+			{
+				int anim_idx = model_component->GetModelData()->GetAnimationIndex(target_anim_name);
+				if (anim_idx >= 0)
+				{
+					root_motion_component->OnAnimationChaanged(static_cast<size_t>(anim_idx));
+				}
+			}
+
 			previous_animation_name = target_anim_name;
 		}
 	}
 
-	// ルートモーション判定
-	bool is_rm_enabled = state_machine_component ? state_machine_component->IsCurrentRootMotionEnbled() : false;
-	debug_root_motion_enabled = is_rm_enabled;
-
-	if (root_motion_component)
-	{
-		root_motion_component->SetEnable(is_rm_enabled);
-		if (is_rm_enabled)
-		{
-			UpdateRootMotion();
-		}
-		else
-		{
-			debug_root_motion_delta = { 0.0f, 0.0f, 0.0f };
-		}
-	}
-
-	// アニメーションシーケンサの更新と再生時間の同期
 	if (sequencer_component)
 	{
 		constexpr bool is_loop = true;
@@ -187,7 +179,24 @@ void Character::Update(float elapsed_time)
 		OutputDebugStringA("[Character 警告] Update: sequencer_component が nullptr です。\n");
 	}
 
-	// アニメーション再生時刻に応じた当たり判定の有効状態を更新
+	bool is_rm_enabled = state_machine_component ? state_machine_component->IsCurrentRootMotionEnbled() : false;
+	debug_root_motion_enabled = is_rm_enabled;
+
+	if (root_motion_component)
+	{
+		root_motion_component->SetEnable(is_rm_enabled);
+		if (is_rm_enabled)
+		{
+			float model_time = sequencer_component ? sequencer_component->GetPlaybackState().current_model_time : current_animation_time;
+			root_motion_component->Update(model_time);
+			UpdateRootMotion();
+		}
+		else
+		{
+			debug_root_motion_delta = { 0.0f, 0.0f, 0.0f };
+		}
+	}
+
 	UpdateColliderSequencer();
 }
 
@@ -416,19 +425,27 @@ void Character::UpdateRootMotion()
 		return;
 	}
 
-	// Model クラスから最新のルートモーション移動差分を取得
 	DirectX::XMFLOAT3 delta_pos = root_motion_component->GetDeltaPosition();
 	debug_root_motion_delta = delta_pos;
 
-	DirectX::XMVECTOR local_translation = DirectX::XMLoadFloat3(&delta_pos);
 	DirectX::XMMATRIX world_transform = transform_component->GetWorldMatrix();
-	DirectX::XMVECTOR world_translation = DirectX::XMVector3TransformNormal(local_translation, world_transform);
-	world_translation = DirectX::XMVectorSetY(world_translation, 0.0f); // Y軸補正
+	DirectX::XMVECTOR axis_x = DirectX::XMVector3Normalize(world_transform.r[0]);
+	DirectX::XMVECTOR axis_y = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR axis_z = DirectX::XMVector3Normalize(world_transform.r[2]);
+
+	DirectX::XMMATRIX rotation_only = DirectX::XMMATRIX(
+		axis_x,
+		axis_y,
+		axis_z,
+		DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f)
+	);
+
+	DirectX::XMVECTOR local_move = DirectX::XMVectorSet(delta_pos.x, 0.0f, delta_pos.z, 0.0f);
+	DirectX::XMVECTOR world_translation = DirectX::XMVector3TransformNormal(local_move, rotation_only);
 
 	DirectX::XMFLOAT3 final_movement = {};
 	DirectX::XMStoreFloat3(&final_movement, world_translation);
 
-	//TransformComponent から現在座標を取得して加算更新
 	DirectX::XMFLOAT3 pos = transform_component->GetPosition();
 	pos.x += final_movement.x;
 	pos.y += final_movement.y;

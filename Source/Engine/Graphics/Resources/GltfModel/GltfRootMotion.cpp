@@ -221,150 +221,125 @@ void GltfRootMotion::AnalyzeAnimations()
 //任意の時間のルートノードの位置と回転を計算
 void GltfRootMotion::ComputeRootPose(size_t animation_index, float time, DirectX::XMFLOAT3& out_position, DirectX::XMFLOAT4& out_rotation) const
 {
-	// 参照するアニメーションインデックスの範囲外チェック
-	if (animation_index >= model_data->animations.size())
+	if (!model_data || animation_index >= model_data->animations.size())
 	{
-		OutputDebugStringA("[GltfRootMotion エラー] ComputeRootPose: 指定されたアニメーションインデックスが範囲外です。\n");
+		OutputDebugStringA("[GltfRootMotion エラー] ComputeRootPose: 不正なアニメーションインデックスです。\n");
+		return;
+	}
+	if (current_target_node_index == INVALID_NODE_INDEX)
+	{
+		out_position = { 0.0f, 0.0f, 0.0f };
+		out_rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
 		return;
 	}
 
-	// 出力パラメータを初期化
-	out_position = { 0.0f, 0.0f, 0.0f };
-	out_rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
-	DirectX::XMVECTOR final_scale = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
+	DirectX::XMMATRIX global_transform = DirectX::XMMatrixIdentity();
+	int eval_node = current_target_node_index;
+
+	while (eval_node != INVALID_NODE_INDEX)
+	{
+		DirectX::XMFLOAT3 local_pos, local_scale;
+		DirectX::XMFLOAT4 local_rot;
+		GetNodeLocalPose(animation_index, eval_node, time, local_pos, local_rot, local_scale);
+
+		DirectX::XMMATRIX s = DirectX::XMMatrixScaling(local_scale.x, local_scale.y, local_scale.z);
+		DirectX::XMMATRIX r = DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&local_rot));
+		DirectX::XMMATRIX t = DirectX::XMMatrixTranslation(local_pos.x, local_pos.y, local_pos.z);
+		DirectX::XMMATRIX local_matrix = s * r * t;
+
+		global_transform = global_transform * local_matrix;
+
+		eval_node = model_data->nodes.at(eval_node).parent_index;
+	}
+
+	DirectX::XMVECTOR scale, rot, trans;
+	DirectX::XMMatrixDecompose(&scale, &rot, &trans, global_transform);
+
+	DirectX::XMStoreFloat3(&out_position, trans);
+	DirectX::XMStoreFloat4(&out_rotation, DirectX::XMQuaternionNormalize(rot));
+}
+
+//指定ノードの任意の時間におけるローカル姿勢（TRS）を抽出
+void GltfRootMotion::GetNodeLocalPose(size_t animation_index, int node_index, float time, DirectX::XMFLOAT3& out_pos, DirectX::XMFLOAT4& out_rot, DirectX::XMFLOAT3& out_scale) const
+{
+	const GltfModelData::node& n = model_data->nodes.at(node_index);
+	out_pos = n.translation;
+	out_rot = n.rotation;
+	out_scale = n.scale;
 
 	const GltfModelData::animation& animation = model_data->animations.at(animation_index);
 
-	// アニメーション内の各チャンネルを走査
 	for (const GltfModelData::animation::channel& channel : animation.channels)
 	{
-		// 対象がルートモーションのターゲットノードではない場合はスキップ
-		if (channel.target_node != current_target_node_index)
+		if (channel.target_node != node_index)
 		{
 			continue;
 		}
 
-		// サンプラーのインデックス範囲外チェック
-		if (channel.sampler < 0 || static_cast<size_t>(channel.sampler) >= animation.samplers.size())
-		{
-			OutputDebugStringA("[GltfRootMotion Error] ComputeRootPose: channel.sampler is out of range!\n");
-			continue;
-		}
+		if (channel.sampler < 0 || static_cast<size_t>(channel.sampler) >= animation.samplers.size()) continue;
 
 		const GltfModelData::animation::sampler& sampler = animation.samplers.at(channel.sampler);
 		auto timeline_it = animation.timelines.find(sampler.input);
-
-		// タイムラインデータの存在チェック
-		if (timeline_it == animation.timelines.end())
-		{
-			OutputDebugStringA("[GltfRootMotion Error] ComputeRootPose: sampler.input key not found!\n");
-			continue;
-		}
+		if (timeline_it == animation.timelines.end() || timeline_it->second.empty()) continue;
 
 		const std::vector<float>& timeline = timeline_it->second;
+		float factor = 0.0f;
+		size_t keyframe_idx = 0;
 
-		// タイムラインが空の場合はスキップ
-		if (timeline.empty())continue;
+		if (timeline.size() >= 2)
+		{
+			if (time >= timeline.back())
+			{
+				keyframe_idx = timeline.size() - 2;
+				factor = 1.0f;
+			}
+			else if (time <= timeline.front())
+			{
+				keyframe_idx = 0;
+				factor = 0.0f;
+			}
+			else
+			{
+				auto it = std::upper_bound(timeline.begin(), timeline.end(), time);
+				keyframe_idx = static_cast<size_t>(std::distance(timeline.begin(), it)) - 1;
+				float t0 = timeline.at(keyframe_idx);
+				float t1 = timeline.at(keyframe_idx + 1);
+				float diff = (std::max)(t1 - t0, 0.00001f);
+				factor = std::clamp((time - t0) / diff, 0.0f, 1.0f);
+			}
+		}
 
-		//時間のクランプ処理
-		float clamped_time = time;
-		if (clamped_time <= timeline.front())clamped_time = timeline.front();
-		else if (clamped_time >= timeline.back())clamped_time = timeline.back();
-
-		// 位置（translation）の補間計算
 		if (channel.target_path == "translation")
 		{
-			auto trans_it = animation.translations.find(sampler.output);
-			if (trans_it != animation.translations.end() && trans_it->second.size() == timeline.size())
+			auto it = animation.translations.find(sampler.output);
+			if (it != animation.translations.end() && (keyframe_idx + 1) < it->second.size())
 			{
-				const std::vector<DirectX::XMFLOAT3>& translations = trans_it->second;
-
-				// タイムラインの配列をループで走査し、現在の時間がどのキーフレームの間にあるか判定する
-				for (size_t index = 0; index < timeline.size() - 1; ++index)
-				{
-					float t0 = timeline.at(index);
-					float t1 = timeline.at(index + 1);
-
-					if (clamped_time >= t0 && clamped_time <= t1)
-					{
-						float time_diff = t1 - t0;
-						// 再生時間とキーフレームの時間から補間率を算出する
-						float rate = (time_diff > 0.00001f) ? ((clamped_time - t0) / time_diff) : 0.0f;
-						// 前のキーフレームと次のキーフレームの姿勢を補間
-						DirectX::XMVECTOR V0 = DirectX::XMLoadFloat3(&translations.at(index));
-						DirectX::XMVECTOR V1 = DirectX::XMLoadFloat3(&translations.at(index + 1));
-						DirectX::XMVECTOR V = DirectX::XMVectorLerp(V0, V1, rate);
-
-						// 計算結果を格納
-						DirectX::XMStoreFloat3(&out_position, V);
-						break;
-					}
-				}
+				DirectX::XMVECTOR t0 = DirectX::XMLoadFloat3(&it->second.at(keyframe_idx));
+				DirectX::XMVECTOR t1 = DirectX::XMLoadFloat3(&it->second.at(keyframe_idx + 1));
+				DirectX::XMStoreFloat3(&out_pos, DirectX::XMVectorLerp(t0, t1, factor));
 			}
 		}
-		//回転（rotation）の補間計算
-		if (channel.target_path == "rotation")
+		else if (channel.target_path == "rotation")
 		{
-			auto rot_it = animation.rotations.find(sampler.output);
-			if (rot_it != animation.rotations.end() && rot_it->second.size() == timeline.size())
+			auto it = animation.rotations.find(sampler.output);
+			if (it != animation.rotations.end() && (keyframe_idx + 1) < it->second.size())
 			{
-				const std::vector<DirectX::XMFLOAT4>& rotations = rot_it->second;
-
-				// タイムラインの配列をループで走査し、現在の時間がどのキーフレームの間にあるか判定する
-				for (size_t index = 0; index < timeline.size() - 1; ++index)
-				{
-					float t0 = timeline.at(index);
-					float t1 = timeline.at(index + 1);
-
-					if (time >= t0 && time <= t1)
-					{
-						// 再生時間とキーフレームの時間から補間率を算出する
-						float rate = (time - t0) / (t1 - t0);
-
-						// 前のキーフレームと次のキーフレームの姿勢を補間
-						DirectX::XMVECTOR Q0 = DirectX::XMLoadFloat4(&rotations.at(index));
-						DirectX::XMVECTOR Q1 = DirectX::XMLoadFloat4(&rotations.at(index + 1));
-						DirectX::XMVECTOR Q = DirectX::XMQuaternionSlerp(Q0, Q1, rate);
-
-						// 計算結果を格納
-						DirectX::XMStoreFloat4(&out_rotation, DirectX::XMQuaternionNormalize(Q));
-						break;
-					}
-				}
+				DirectX::XMVECTOR r0 = DirectX::XMQuaternionNormalize(DirectX::XMLoadFloat4(&it->second.at(keyframe_idx)));
+				DirectX::XMVECTOR r1 = DirectX::XMQuaternionNormalize(DirectX::XMLoadFloat4(&it->second.at(keyframe_idx + 1)));
+				DirectX::XMStoreFloat4(&out_rot, DirectX::XMQuaternionNormalize(DirectX::XMQuaternionSlerp(r0, r1, factor)));
 			}
 		}
-		//スケール（scale）の補間計算
-		if (channel.target_path == "scale")
+		else if (channel.target_path == "scale")
 		{
-			auto scale_it = animation.scales.find(sampler.output);
-			if (scale_it != animation.scales.end() && scale_it->second.size() == timeline.size())
+			auto it = animation.scales.find(sampler.output);
+			if (it != animation.scales.end() && (keyframe_idx + 1) < it->second.size())
 			{
-				const std::vector<DirectX::XMFLOAT3>& scales = scale_it->second;
-
-				// タイムラインの配列をループで走査し、現在の時間がどのキーフレームの間にあるか判定する
-				for (size_t index = 0; index < timeline.size() - 1; ++index)
-				{
-					float t0 = timeline.at(index);
-					float t1 = timeline.at(index + 1);
-
-					if (time >= t0 && time <= t1)
-					{
-						// 再生時間とキーフレームの時間から補間率を算出する
-						float rate = (time - t0) / (t1 - t0);
-
-						// 前のキーフレームと次のキーフレームのスケール姿勢をLerp補間
-						DirectX::XMVECTOR S0 = DirectX::XMLoadFloat3(&scales.at(index));
-						DirectX::XMVECTOR S1 = DirectX::XMLoadFloat3(&scales.at(index + 1));
-						final_scale = DirectX::XMVectorLerp(S0, S1, rate);
-						break;
-					}
-				}
+				DirectX::XMVECTOR s0 = DirectX::XMLoadFloat3(&it->second.at(keyframe_idx));
+				DirectX::XMVECTOR s1 = DirectX::XMLoadFloat3(&it->second.at(keyframe_idx + 1));
+				DirectX::XMStoreFloat3(&out_scale, DirectX::XMVectorLerp(s0, s1, factor));
 			}
 		}
 	}
-	DirectX::XMVECTOR calculated_position = DirectX::XMLoadFloat3(&out_position);
-	calculated_position = DirectX::XMVectorMultiply(calculated_position, final_scale);
-	DirectX::XMStoreFloat3(&out_position, calculated_position);
 }
 
 //階層構造からルートモーションの対象となるノードインデックスを検索

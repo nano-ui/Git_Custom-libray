@@ -318,8 +318,8 @@
                             "Name": "入力"
                         }
                     ],
-                    "IsLoop": true,
-                    "IsRootMotion": false,
+                    "IsLoop": false,
+                    "IsRootMotion": true,
                     "IsSubGraph": true,
                     "LinkColorB": 1.0,
                     "LinkColorG": 1.0,
@@ -1346,7 +1346,7 @@
                         }
                     ],
                     "IsLoop": true,
-                    "IsRootMotion": false,
+                    "IsRootMotion": true,
                     "IsSubGraph": false,
                     "LinkColorB": 1.0,
                     "LinkColorG": 1.0,
