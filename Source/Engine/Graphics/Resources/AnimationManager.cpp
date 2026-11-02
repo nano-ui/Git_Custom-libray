@@ -184,13 +184,14 @@ void AnimationManager::ExecuteAnimationCalculation(const AnimationTarget& target
 	}
 
 	GltfModel* model = model_comp->GetModel();
-	if (!model->IsInFrustum())return;
 
 	if (!model)
 	{
 		LOG_WARNING({ u8"アニメーション", u8"計算" }, u8"GltfModel が存在しません。ID: %u", target.id);
 		return;
 	}
+
+	if (!model->IsInFrustum())return;
 
 	//const参照で取得し、コピーのオーバーヘッドを回避
 	const AnimationPlaybackState& state = sequencer->GetPlaybackState();

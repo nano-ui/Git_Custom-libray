@@ -215,7 +215,7 @@ void GltfModelData::CreateGpuResources(ID3D11Device* device)
 		}
 		image_index++;
 	}
-
+	BakeAnimationTextures(device);
 }
 
 //バイナリキャッシュを利用してモデルを読み込む
@@ -1268,5 +1268,274 @@ void GltfModelData::BuildFlattenedNodesCache()
 		{
 			flattened_node_indices.push_back(static_cast<int>(i));
 		}
+	}
+}
+
+//ロード時に全アニメーションのスキニング行列を事前計算し、GPUテクスチャを構築
+void GltfModelData::BakeAnimationTextures(ID3D11Device* device)
+{
+	BS_PROFILE_FUNCTION();
+
+	if (!device)
+	{
+		OutputDebugStringA("[GltfModelData エラー] BakeAnimationTextures: ID3D11Device が nullptr です。\n");
+		return;
+	}
+
+	if (skins.empty() || animations.empty())
+	{
+		return;
+	}
+
+	constexpr UINT PIXELS_PER_MATRIX = 4;
+	constexpr UINT TEXTURE_WIDTH = static_cast<UINT>(PRIMITIVE_MAX_JOINTS * PIXELS_PER_MATRIX);
+	constexpr float BAKE_FRAME_RATE = 30.0f;
+	constexpr float FRAME_TIME_STEP = 1.0f / BAKE_FRAME_RATE;
+	constexpr size_t SINGLE_INSTANCE = 1;
+	constexpr UINT TEXTURE_MIP_LEVELS = 1;
+	constexpr UINT TEXTURE_ARRAY_SIZE = 1;
+	constexpr UINT SAMPLE_COUNT_DEFAULT = 1;
+	constexpr UINT SAMPLE_QUALITY_DEFAULT = 0;
+
+	animation_bake_infos.clear();
+	animation_bake_infos.resize(animations.size());
+
+	size_t total_frames = 0;
+	for (size_t anim_idx = 0; anim_idx < animations.size(); ++anim_idx)
+	{
+		const animation& anim = animations.at(anim_idx);
+		size_t frames = static_cast<size_t>(std::ceil(anim.duration * BAKE_FRAME_RATE)) + SINGLE_INSTANCE;
+
+		animation_bake_infos[anim_idx].start_frame = total_frames;
+		animation_bake_infos[anim_idx].frame_count = frames;
+		animation_bake_infos[anim_idx].duration = anim.duration;
+		animation_bake_infos[anim_idx].frame_rate = BAKE_FRAME_RATE;
+
+		total_frames += frames;
+	}
+
+	if (total_frames == 0)
+	{
+		OutputDebugStringA("[GltfModelData 警告] BakeAnimationTextures: 総フレーム数が 0 のためベイクをスキップします。\n");
+		return;
+	}
+
+	const UINT texture_height = static_cast<UINT>(total_frames);
+	std::vector<DirectX::XMFLOAT4> texture_pixel_data(static_cast<size_t>(TEXTURE_WIDTH) * texture_height, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f));
+
+	struct WorkingNode
+	{
+		DirectX::XMFLOAT3 scale = { 1.0f, 1.0f, 1.0f };
+		DirectX::XMFLOAT4 rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
+		DirectX::XMFLOAT3 translation = { 0.0f, 0.0f, 0.0f };
+		DirectX::XMFLOAT4X4 global_transform{};
+	};
+
+	std::vector<WorkingNode> current_pose(nodes.size());
+
+	for (size_t anim_idx = 0; anim_idx < animations.size(); ++anim_idx)
+	{
+		const animation& anim = animations.at(anim_idx);
+		const AnimationBakeInfo& bake_info = animation_bake_infos.at(anim_idx);
+
+		for (size_t frame_idx = 0; frame_idx < bake_info.frame_count; ++frame_idx)
+		{
+			float time = static_cast<float>(frame_idx) * FRAME_TIME_STEP;
+			if (time > anim.duration)
+			{
+				time = anim.duration;
+			}
+
+			for (size_t i = 0; i < nodes.size(); ++i)
+			{
+				current_pose[i].scale = nodes[i].scale;
+				current_pose[i].rotation = nodes[i].rotation;
+				current_pose[i].translation = nodes[i].translation;
+			}
+
+			for (const animation::channel& channel : anim.channels)
+			{
+				if (channel.target_node < 0 || static_cast<size_t>(channel.target_node) >= current_pose.size())
+				{
+					continue;
+				}
+
+				if (channel.sampler < 0 || static_cast<size_t>(channel.sampler) >= anim.samplers.size())
+				{
+					continue;
+				}
+
+				const animation::sampler& sampler = anim.samplers.at(channel.sampler);
+				auto timeline_it = anim.timelines.find(sampler.input);
+				if (timeline_it == anim.timelines.end() || timeline_it->second.empty())
+				{
+					continue;
+				}
+
+				const std::vector<float>& timeline = timeline_it->second;
+				float factor = 0.0f;
+				size_t keyframe_idx = 0;
+
+				if (timeline.size() >= 2)
+				{
+					if (time >= timeline.back())
+					{
+						keyframe_idx = timeline.size() - 2;
+						factor = 1.0f;
+					}
+					else if (time <= timeline.front())
+					{
+						keyframe_idx = 0;
+						factor = 0.0f;
+					}
+					else
+					{
+						auto it = std::upper_bound(timeline.begin(), timeline.end(), time);
+						keyframe_idx = static_cast<size_t>(std::distance(timeline.begin(), it)) - 1;
+						float t0 = timeline.at(keyframe_idx);
+						float t1 = timeline.at(keyframe_idx + 1);
+						float diff = (std::max)(t1 - t0, 0.00001f);
+						factor = std::clamp((time - t0) / diff, 0.0f, 1.0f);
+					}
+				}
+
+				if (channel.target_path == "scale")
+				{
+					auto it = anim.scales.find(sampler.output);
+					if (it != anim.scales.end() && (keyframe_idx + 1) < it->second.size())
+					{
+						DirectX::XMVECTOR s0 = DirectX::XMLoadFloat3(&it->second.at(keyframe_idx));
+						DirectX::XMVECTOR s1 = DirectX::XMLoadFloat3(&it->second.at(keyframe_idx + 1));
+						DirectX::XMStoreFloat3(&current_pose[channel.target_node].scale, DirectX::XMVectorLerp(s0, s1, factor));
+					}
+				}
+				else if (channel.target_path == "rotation")
+				{
+					auto it = anim.rotations.find(sampler.output);
+					if (it != anim.rotations.end() && (keyframe_idx + 1) < it->second.size())
+					{
+						DirectX::XMVECTOR r0 = DirectX::XMQuaternionNormalize(DirectX::XMLoadFloat4(&it->second.at(keyframe_idx)));
+						DirectX::XMVECTOR r1 = DirectX::XMQuaternionNormalize(DirectX::XMLoadFloat4(&it->second.at(keyframe_idx + 1)));
+						DirectX::XMVECTOR rot = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionSlerp(r0, r1, factor));
+						DirectX::XMStoreFloat4(&current_pose[channel.target_node].rotation, rot);
+					}
+				}
+				else if (channel.target_path == "translation")
+				{
+					auto it = anim.translations.find(sampler.output);
+					if (it != anim.translations.end() && (keyframe_idx + 1) < it->second.size())
+					{
+						DirectX::XMVECTOR t0 = DirectX::XMLoadFloat3(&it->second.at(keyframe_idx));
+						DirectX::XMVECTOR t1 = DirectX::XMLoadFloat3(&it->second.at(keyframe_idx + 1));
+						DirectX::XMStoreFloat3(&current_pose[channel.target_node].translation, DirectX::XMVectorLerp(t0, t1, factor));
+					}
+				}
+			}
+
+			for (int node_idx : flattened_node_indices)
+			{
+				if (node_idx < 0 || static_cast<size_t>(node_idx) >= current_pose.size())
+				{
+					continue;
+				}
+
+				WorkingNode& node_ref = current_pose[node_idx];
+				DirectX::XMMATRIX s = DirectX::XMMatrixScaling(node_ref.scale.x, node_ref.scale.y, node_ref.scale.z);
+				DirectX::XMMATRIX r = DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&node_ref.rotation));
+				DirectX::XMMATRIX t = DirectX::XMMatrixTranslation(node_ref.translation.x, node_ref.translation.y, node_ref.translation.z);
+				DirectX::XMMATRIX local = s * r * t;
+
+				int parent_idx = nodes[node_idx].parent_index;
+				if (parent_idx >= 0 && static_cast<size_t>(parent_idx) < current_pose.size())
+				{
+					DirectX::XMMATRIX parent_global = DirectX::XMLoadFloat4x4(&current_pose[parent_idx].global_transform);
+					DirectX::XMStoreFloat4x4(&node_ref.global_transform, local * parent_global);
+				}
+				else
+				{
+					DirectX::XMStoreFloat4x4(&node_ref.global_transform, local);
+				}
+			}
+
+			const size_t current_row = bake_info.start_frame + frame_idx;
+			const size_t row_offset = current_row * TEXTURE_WIDTH;
+
+			const skin& target_skin = skins.front();
+			DirectX::XMMATRIX mesh_inv = DirectX::XMMatrixIdentity();
+
+			for (const node& n : nodes)
+			{
+				if (n.skin == 0)
+				{
+					DirectX::XMVECTOR det;
+					mesh_inv = DirectX::XMMatrixInverse(&det, DirectX::XMLoadFloat4x4(&n.global_transform));
+					if (DirectX::XMVector3Less(DirectX::XMVectorAbs(det), DirectX::XMVectorReplicate(0.000001f)))
+					{
+						mesh_inv = DirectX::XMMatrixIdentity();
+					}
+					break;
+				}
+			}
+
+			const size_t joint_count = (std::min)(target_skin.joints.size(), PRIMITIVE_MAX_JOINTS);
+			for (size_t j_idx = 0; j_idx < joint_count; ++j_idx)
+			{
+				int joint_node = target_skin.joints.at(j_idx);
+				DirectX::XMMATRIX inv_bind = DirectX::XMLoadFloat4x4(&target_skin.inverse_bind_matrices.at(j_idx));
+				DirectX::XMMATRIX joint_global = (joint_node >= 0 && static_cast<size_t>(joint_node) < current_pose.size())
+					? DirectX::XMLoadFloat4x4(&current_pose[joint_node].global_transform)
+					: DirectX::XMMatrixIdentity();
+
+				DirectX::XMMATRIX skin_matrix = inv_bind * joint_global * mesh_inv;
+
+				DirectX::XMFLOAT4X4 skin_m;
+				DirectX::XMStoreFloat4x4(&skin_m, skin_matrix);
+
+				const size_t pixel_base = row_offset + (j_idx * PIXELS_PER_MATRIX);
+				texture_pixel_data[pixel_base + 0] = DirectX::XMFLOAT4(skin_m._11, skin_m._12, skin_m._13, skin_m._14);
+				texture_pixel_data[pixel_base + 1] = DirectX::XMFLOAT4(skin_m._21, skin_m._22, skin_m._23, skin_m._24);
+				texture_pixel_data[pixel_base + 2] = DirectX::XMFLOAT4(skin_m._31, skin_m._32, skin_m._33, skin_m._34);
+				texture_pixel_data[pixel_base + 3] = DirectX::XMFLOAT4(skin_m._41, skin_m._42, skin_m._43, skin_m._44);
+			}
+		}
+	}
+
+	D3D11_TEXTURE2D_DESC tex_desc = {};
+	tex_desc.Width = TEXTURE_WIDTH;
+	tex_desc.Height = texture_height;
+	tex_desc.MipLevels = TEXTURE_MIP_LEVELS;
+	tex_desc.ArraySize = TEXTURE_ARRAY_SIZE;
+	tex_desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	tex_desc.SampleDesc.Count = SAMPLE_COUNT_DEFAULT;
+	tex_desc.SampleDesc.Quality = SAMPLE_QUALITY_DEFAULT;
+	tex_desc.Usage = D3D11_USAGE_IMMUTABLE;
+	tex_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+	D3D11_SUBRESOURCE_DATA init_data = {};
+	init_data.pSysMem = texture_pixel_data.data();
+	init_data.SysMemPitch = TEXTURE_WIDTH * sizeof(DirectX::XMFLOAT4);
+
+	HRESULT hr = device->CreateTexture2D(&tex_desc, &init_data, bone_texture.ReleaseAndGetAddressOf());
+	if (FAILED(hr))
+	{
+		char debug_msg[256];
+		sprintf_s(debug_msg, "[GltfModelData エラー] BakeAnimationTextures: CreateTexture2D に失敗しました。 HRESULT: 0x%08X\n", static_cast<unsigned int>(hr));
+		OutputDebugStringA(debug_msg);
+		return;
+	}
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srv_desc = {};
+	srv_desc.Format = tex_desc.Format;
+	srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srv_desc.Texture2D.MostDetailedMip = 0;
+	srv_desc.Texture2D.MipLevels = 1;
+
+	hr = device->CreateShaderResourceView(bone_texture.Get(), &srv_desc, bone_texture_srv.ReleaseAndGetAddressOf());
+	if (FAILED(hr))
+	{
+		char debug_msg[256];
+		sprintf_s(debug_msg, "[GltfModelData エラー] BakeAnimationTextures: CreateShaderResourceView に失敗しました。 HRESULT: 0x%08X\n", static_cast<unsigned int>(hr));
+		OutputDebugStringA(debug_msg);
+		return;
 	}
 }

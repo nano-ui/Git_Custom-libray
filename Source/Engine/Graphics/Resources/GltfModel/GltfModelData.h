@@ -29,6 +29,14 @@ struct GltfVertex
 	DirectX::XMFLOAT4 weights = { 1.0f, 0.0f, 0.0f, 0.0f };
 };
 
+struct AnimationBakeInfo
+{
+	size_t start_frame = 0;
+	size_t frame_count = 0;
+	float duration = 0.0f;
+	float frame_rate = 30.0f;
+};
+
 class GltfModelData
 {
 public:
@@ -266,6 +274,15 @@ public:
 	//アニメーション名からインデックス番号を取得
 	int GetAnimationIndex(const std::string& name)const;
 
+	//レンダラーへボーンテクスチャのSRVを取得
+	ID3D11ShaderResourceView* GetBoneTextureSRV() const { return bone_texture_srv.Get(); }
+
+	//再生時間からテクスチャ上の行番号を計算するために情報を取得
+	const std::vector<AnimationBakeInfo>& GetAnimationBakeInfos() const { return animation_bake_infos; }
+
+	//ボーンテクスチャの確認
+	bool HasBoneTexture() const { return bone_texture_srv != nullptr; }
+
 private:
 	DXGI_FORMAT ConvertFormat(const tinygltf::Accessor& accessor);
 	void FetchMeshes(const tinygltf::Model& gltf_model);
@@ -298,6 +315,9 @@ private:
 	//親から子の順に並んだフラットなノードインデックス配列を構築
 	void BuildFlattenedNodesCache();
 
+	//ロード時に全アニメーションのスキニング行列を事前計算し、GPUテクスチャを構築
+	void BakeAnimationTextures(ID3D11Device* device);
+
 public:
 	std::vector<std::vector<unsigned char>> raw_buffers;	//シリアライズ用の生データ保持配列
 	std::string filename;	//ファイルの名前
@@ -316,6 +336,10 @@ public:
 	std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> texture_resource_views;	//全テクスチャビューのリスト
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> material_resource_view;	//全マテリアル情報を格納したSRV
+
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> bone_texture;				//ベイクされた全ボーン行列を格納
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> bone_texture_srv;	//頂点シェーダーでボーン行列をテクスチャサンプリング
+	std::vector<AnimationBakeInfo> animation_bake_infos;				//アニメーション番号とテクスチャ内のフレーム位置を紐付ける管理配列
 
 	int default_scene = 0;	//開始シーン番号
 
