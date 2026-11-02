@@ -335,12 +335,6 @@ size_t GltfModelAnimation::GetAnimationKeyframeIndex(const std::vector<float>& t
 {
 	BS_PROFILE_FUNCTION();
 
-	if (!std::isfinite(time))
-	{
-		OutputDebugStringA("[GltfModelAnimation エラー] GetAnimationKeyframeIndex: 渡された再生時間(time)が非数(NaN/Inf)です。0.0fに補正します。\n");
-		time = 0.0f;
-	}
-
 	const size_t keyframe_count = timelines.size();
 	const size_t MIN_KEYFRAME_COUNT = 2;
 	const size_t INDEX_OFFSET_NEXT = 1;
@@ -350,9 +344,10 @@ size_t GltfModelAnimation::GetAnimationKeyframeIndex(const std::vector<float>& t
 	const size_t START_INDEX = 0;
 	constexpr float EPSILON_TIME_DELTA = 0.00001f;
 
+	//境界値の早期判定
 	if (keyframe_count < MIN_KEYFRAME_COUNT)
 	{
-		OutputDebugStringA("[GltfModelAnimation 警告] GetAnimationKeyframeIndex: タイムラインのキーフレーム数が2未満です。\n");
+		OutputDebugStringA("[GltfModelAnimation エラー] GetAnimationKeyframeIndex: キーフレーム数が不足しています。\n");
 		interpolation_factor = INTERPOLATION_MIN;
 		return START_INDEX;
 	}
@@ -371,25 +366,19 @@ size_t GltfModelAnimation::GetAnimationKeyframeIndex(const std::vector<float>& t
 		return START_INDEX;
 	}
 
-	size_t keyframe_index = START_INDEX;
-	for (size_t time_index = INDEX_OFFSET_NEXT; time_index < keyframe_count; ++time_index)
-	{
-		if (time < timelines.at(time_index))
-		{
-			keyframe_index = time_index - INDEX_OFFSET_NEXT;
-			break;
-		}
-	}
+	//二分探索による区間特定
+	auto it = std::upper_bound(timelines.begin(), timelines.end(), time);
+	size_t keyframe_index = static_cast<size_t>(std::distance(timelines.begin(), it)) - INDEX_OFFSET_NEXT;
 
 	if (keyframe_index > max_valid_segment_index)
 	{
 		char error_log[256];
-		sprintf_s(error_log, "[GltfModelAnimation エラー] 存在しないキーフレーム区間が検出されました: index=%zu, max=%zu\n",
-			keyframe_index, max_valid_segment_index);
+		sprintf_s(error_log, "[GltfModelAnimation エラー] 不正なキーフレームインデックスを検出: index=%zu, max=%zu\n", keyframe_index, max_valid_segment_index);
 		OutputDebugStringA(error_log);
 		keyframe_index = max_valid_segment_index;
 	}
 
+	//補間係数（Factor）の算出
 	float time_difference = timelines.at(keyframe_index + INDEX_OFFSET_NEXT) - timelines.at(keyframe_index);
 	time_difference = (std::max)(time_difference, EPSILON_TIME_DELTA);
 	float raw_factor = (time - timelines.at(keyframe_index)) / time_difference;
