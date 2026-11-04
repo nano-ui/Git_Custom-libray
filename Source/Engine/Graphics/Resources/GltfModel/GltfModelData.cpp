@@ -1375,7 +1375,9 @@ void GltfModelData::BakeAnimationTextures(ID3D11Device* device)
 		const animation& anim = animations.at(anim_idx);
 		const AnimationBakeInfo& bake_info = animation_bake_infos.at(anim_idx);
 
-		for (size_t frame_idx = 0; frame_idx < bake_info.frame_count; ++frame_idx)
+		const int target_root_idx = ComputeTargetRootNodeIndex(anim_idx);
+
+		for (size_t frame_idx = 0; frame_idx < bake_info.frame_count; ++frame_idx) 
 		{
 			float time = static_cast<float>(frame_idx) * FRAME_TIME_STEP;
 			if (time > anim.duration)
@@ -1465,8 +1467,6 @@ void GltfModelData::BakeAnimationTextures(ID3D11Device* device)
 						DirectX::XMVECTOR t0 = DirectX::XMLoadFloat3(&it->second.at(keyframe_idx));
 						DirectX::XMVECTOR t1 = DirectX::XMLoadFloat3(&it->second.at(keyframe_idx + 1));
 						DirectX::XMVECTOR lerped_trans = DirectX::XMVectorLerp(t0, t1, factor);
-
-						int target_root_idx = ComputeTargetRootNodeIndex(anim_idx);
 
 						if (channel.target_node == target_root_idx && !it->second.empty())
 						{
