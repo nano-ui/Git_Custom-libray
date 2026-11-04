@@ -59,54 +59,55 @@ void AnimationSequencerComponent::Update(float elapsed_time, bool is_loop)
 {
 	BS_PROFILE_FUNCTION();
 
-	if (!is_active || current_animaiton_name.empty())return;
+	if (!is_active || current_animaiton_name.empty()) return;
 
-	//スマートポインタの昇格確認
 	std::shared_ptr<ModelComponent> shared_model_comp = target_model_component.lock();
 	if (!shared_model_comp || !shared_model_comp->GetModel())
 	{
-		LOG_WARNING({ u8"アニメーション",u8"設定" }, u8"target_model_component または GltfModel が無効");
+		LOG_WARNING({ u8"アニメーション", u8"設定" }, u8"target_model_component または GltfModel が無効です");
 		return;
 	}
 	GltfModel* model = shared_model_comp->GetModel();
-	if(animation_blender)animation_blender->Update(elapsed_time);
+	if (animation_blender) animation_blender->Update(elapsed_time);
 
-	//経過時間を加算
 	current_sequence_time += elapsed_time;
 
 	float anim_duration = model->GetAnimationDuration();
 	float effective_duration = GetEffectiveDuration();
 
-	float integrated_time_b = GetIntegratedModelTime(current_animaiton_name, current_sequence_time);
-	constexpr float MIN_DURATION_THRESHOLD = 0.0f;
+	constexpr float MIN_DURATION_THRESHOLD = 0.0001f;
+	float limit_duration = (effective_duration > MIN_DURATION_THRESHOLD) ? effective_duration : anim_duration;
 
-	if (anim_duration > 0.0f)
+	if (limit_duration > MIN_DURATION_THRESHOLD)
 	{
-		//積算モデル時間がモデル長に達したか、またはシーケンサ時間が実効総時間に達したかで判定
-		if (integrated_time_b >= anim_duration || (effective_duration > MIN_DURATION_THRESHOLD && current_sequence_time >= effective_duration))
+		if (current_sequence_time >= limit_duration)
 		{
 			ia_animation_finished = true;
 			if (is_loop)
 			{
-				current_sequence_time = std::fmod(current_sequence_time, anim_duration);
+				current_sequence_time = std::fmod(current_sequence_time, limit_duration);
 			}
 			else
 			{
-				if (effective_duration > MIN_DURATION_THRESHOLD)
-				{
-					current_sequence_time = effective_duration;
-				}
-				else
-				{
-					current_sequence_time = anim_duration;
-				}
+				current_sequence_time = limit_duration;
 			}
 		}
-		else ia_animation_finished = false;
+		else
+		{
+			ia_animation_finished = false;
+		}
 	}
-	else LOG_WARNING({ u8"アニメーション" }, u8"アニメーションの総再生時間が0以下");
+	else
+	{
+		LOG_WARNING({ u8"アニメーション" }, u8"アニメーションの総再生時間が0以下です");
+	}
 
-	// 再生パラメータの構築
+	float integrated_time_b = GetIntegratedModelTime(current_animaiton_name, current_sequence_time);
+	if (!is_loop && anim_duration > MIN_DURATION_THRESHOLD && integrated_time_b > anim_duration)
+	{
+		integrated_time_b = anim_duration;
+	}
+
 	playback_state.current_anim_name = current_animaiton_name;
 	playback_state.current_model_time = integrated_time_b;
 

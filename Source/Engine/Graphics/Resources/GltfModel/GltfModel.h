@@ -37,6 +37,9 @@ public:
 	//視錐台内に存在するか取得
 	bool IsInFrustum() const { return is_in_frustum; }
 
+	void SetCpuAnimationEnabled(bool enable) { is_cpu_animation_enabled = enable; }
+	bool IsCpuAnimationEnabled() const { return is_cpu_animation_enabled; }
+
 	//バウンディングスフィアの手動設定
 	void SetBoundingSphere(const DirectX::XMFLOAT3& center, float radius)
 	{
@@ -64,6 +67,9 @@ public:
 
 	//再生時間を設定
 	void SetAnimationTime(float time);
+
+	//姿勢計算を行わず再生時刻のみを設定
+	void SetPlaybackTimeOnly(float time);
 
 	//アニメーションの総時間を取得
 	float GetAnimationDuration() const;
@@ -96,5 +102,6 @@ private:
 	std::unique_ptr<GltfModelAnimation> animation;	//アニメーション計算クラス
 	BoundingSphere bounding_sphere;					//ローカル空間のバウンディングスフィア
 	bool is_in_frustum = true;						//視錐台内存在フラグ
+	bool is_cpu_animation_enabled = false;
 };
 

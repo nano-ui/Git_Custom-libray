@@ -65,8 +65,6 @@ void Character::Initialize()
 		std::filesystem::path path_obj(model_component->GetModelPath());
 		std::string model_name = path_obj.stem().string();
 
-		model_component->SetAutoAnimationUpdate(false);
-
 		sequencer_component = std::make_shared<AnimationSequencerComponent>(model_component);
 		sequencer_component->Initialize(model_component->GetModelPath());
 
@@ -94,6 +92,9 @@ void Character::Initialize()
 					AddCollider(capsule.get());
 				}
 			}
+
+			model_component->SetAutoAnimationUpdate(false);
+			model_component->SetCpuAnimationEnabled(true);
 		}
 
 		if (state_machine_component)
@@ -163,7 +164,7 @@ void Character::Update(float elapsed_time)
 					root_motion_component->OnAnimationChaanged(static_cast<size_t>(anim_idx));
 				}
 			}
-
+			current_animation_name = target_anim_name;
 			previous_animation_name = target_anim_name;
 		}
 	}

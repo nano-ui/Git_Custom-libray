@@ -29,6 +29,9 @@ public:
 	//現在のアニメーション経過時間を取得
 	float GetCurrentAnimationTime()const;
 
+	//姿勢計算を行わず再生時刻のみを設定
+	void SetPlaybackTimeOnly(float time) { current_animation_time = time; }
+
 	//現在のアニメーションインデックス取得
 	size_t GetCurrentAnimationIndex() const { return current_animation_index; }
 

@@ -356,10 +356,16 @@ void GltfModelRenderer::RenderQueue(ID3D11DeviceContext* immediate_context, cons
 
 		constexpr float BAKE_FRAME_RATE = 30.0f;
 		float current_frame = 0.0f;
+
 		if (cmd.anim_duration > 0.0f)
 		{
-			current_frame = std::floor(cmd.current_anim_time * BAKE_FRAME_RATE);
+			float clamped_time = (std::max)(0.0f, (std::min)(cmd.current_anim_time, cmd.anim_duration));
+			current_frame = std::floor(clamped_time * BAKE_FRAME_RATE);
+
+			float max_frames = std::ceil(cmd.anim_duration * BAKE_FRAME_RATE);
+			current_frame = (std::min)(current_frame, max_frames);
 		}
+
 		inst.anim_row_offset = static_cast<float>(cmd.anim_row_offset) + current_frame;
 		inst.current_anim_time = cmd.current_anim_time;
 		inst.anim_duration = cmd.anim_duration;

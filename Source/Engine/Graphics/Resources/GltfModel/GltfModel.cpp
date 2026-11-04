@@ -222,6 +222,15 @@ void GltfModel::SetAnimationTime(float time)
 	}
 }
 
+//姿勢計算を行わず再生時刻のみを設定
+void GltfModel::SetPlaybackTimeOnly(float time)
+{
+	if (animation)
+	{
+		animation->SetPlaybackTimeOnly(time);
+	}
+}
+
 //アニメーションの総時間を取得
 float GltfModel::GetAnimationDuration() const
 {

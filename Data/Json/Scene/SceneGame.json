@@ -4,14 +4,14 @@
             "detail_json_path": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
             "model_path": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
             "position": {
-                "x": -34.46831130981445,
-                "y": 0.39160290360450745,
-                "z": 10.313370704650879
+                "x": -5.9265289306640625,
+                "y": 0.41756412386894226,
+                "z": 12.957501411437988
             },
             "rotation": {
-                "w": 0.7417908906936646,
+                "w": 0.7593342661857605,
                 "x": -0.0,
-                "y": -0.6706312894821167,
+                "y": -0.6507007479667664,
                 "z": 0.0
             },
             "scale": {
@@ -64,29 +64,249 @@
             "detail_json_path": "Data/Json/Rampage_Elemental/Rampage_Elemental.json",
             "model_path": "Data\\Model\\Character\\Enemy\\Rampage_Elemental.gltf",
             "position": {
-                "x": -8.797967910766602,
-                "y": 0.21810443699359894,
-                "z": -24.907724380493164
+                "x": -25.228124618530273,
+                "y": 0.850365400314331,
+                "z": -15.402387619018555
             },
             "rotation": {
-                "w": 0.8078967928886414,
-                "x": 0.0,
-                "y": 0.5893239974975586,
+                "w": 0.6638617515563965,
+                "x": -0.0,
+                "y": -0.7478552460670471,
                 "z": 0.0
             },
             "scale": {
-                "x": 3.0,
+                "x": 2.9999635219573975,
                 "y": 3.0,
-                "z": 3.0
+                "z": 2.9999635219573975
             }
         },
         {
             "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
             "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
             "position": {
-                "x": -19.991308212280273,
-                "y": 0.2465723603963852,
-                "z": -20.9725341796875
+                "x": 12.525567054748535,
+                "y": 0.2731533944606781,
+                "z": -33.73814010620117
+            },
+            "rotation": {
+                "w": 0.032680630683898926,
+                "x": -0.0,
+                "y": -0.9994659423828125,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462346076965332,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 0.20026206970214844,
+                "x": 0.0,
+                "y": -0.9797423481941223,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462346076965332,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 0.20026206970214844,
+                "x": 0.0,
+                "y": -0.9797423481941223,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462346076965332,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 0.20026206970214844,
+                "x": 0.0,
+                "y": -0.9797423481941223,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462346076965332,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 0.20026206970214844,
+                "x": 0.0,
+                "y": -0.9797423481941223,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462346076965332,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 0.20026206970214844,
+                "x": 0.0,
+                "y": -0.9797423481941223,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462346076965332,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 0.20026206970214844,
+                "x": 0.0,
+                "y": -0.9797423481941223,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462346076965332,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 0.20026206970214844,
+                "x": 0.0,
+                "y": -0.9797423481941223,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462346076965332,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 0.20026206970214844,
+                "x": 0.0,
+                "y": -0.9797423481941223,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462346076965332,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 0.20026206970214844,
+                "x": 0.0,
+                "y": -0.9797423481941223,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 13.03355884552002,
+                "y": 0.27079257369041443,
+                "z": -34.73507308959961
+            },
+            "rotation": {
+                "w": 0.728348970413208,
+                "x": 0.0,
+                "y": -0.685206413269043,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462340354919434,
+                "y": 0.0,
+                "z": -34.70009994506836
             },
             "rotation": {
                 "w": 1.0,
@@ -104,9 +324,9 @@
             "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
             "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
             "position": {
-                "x": -19.8021240234375,
-                "y": 0.24712975323200226,
-                "z": -18.580354690551758
+                "x": 11.940345764160156,
+                "y": 0.27665552496910095,
+                "z": -34.66956329345703
             },
             "rotation": {
                 "w": 1.0,
@@ -124,9 +344,169 @@
             "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
             "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
             "position": {
-                "x": -19.869400024414063,
-                "y": 0.24684558808803558,
-                "z": -19.778953552246094
+                "x": 12.401453018188477,
+                "y": 0.2836526334285736,
+                "z": -35.65884780883789
+            },
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462340354919434,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462340354919434,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462340354919434,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462340354919434,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462340354919434,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462340354919434,
+                "y": 0.0,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462340354919434,
+                "y": -0.9249082207679749,
+                "z": -34.70009994506836
+            },
+            "rotation": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "position": {
+                "x": 12.462340354919434,
+                "y": 0.0,
+                "z": -34.70009994506836
             },
             "rotation": {
                 "w": 1.0,

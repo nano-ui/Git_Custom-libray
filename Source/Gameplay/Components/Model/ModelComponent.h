@@ -74,6 +74,10 @@ public:
 
 	bool IsAutoAnimationUpdate() const { return auto_animation_update; }
 
+	void SetCpuAnimationEnabled(bool enable);
+
+	bool IsCpuAnimationEnabled() const;
+
 private:
 	//ƒ‚ƒfƒ‹‚Ì•`‰æˆ—
 	void RenderInternal(ID3D11DeviceContext* context);

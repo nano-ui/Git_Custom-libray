@@ -221,3 +221,16 @@ bool ModelComponent::GetBoneWorldPosition(const std::string& bone_name, DirectX:
 	out_world_position.z = bone_world._43;
 	return true;
 }
+
+void ModelComponent::SetCpuAnimationEnabled(bool enable)
+{
+	if (model)
+	{
+		model->SetCpuAnimationEnabled(enable);
+	}
+}
+
+bool ModelComponent::IsCpuAnimationEnabled() const
+{
+	return model ? model->IsCpuAnimationEnabled() : false;
+}

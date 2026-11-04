@@ -193,7 +193,6 @@ void AnimationManager::ExecuteAnimationCalculation(const AnimationTarget& target
 
 	if (!model->IsInFrustum())return;
 
-	//const参照で取得し、コピーのオーバーヘッドを回避
 	const AnimationPlaybackState& state = sequencer->GetPlaybackState();
 
 	if (state.current_anim_name.empty())
@@ -201,14 +200,19 @@ void AnimationManager::ExecuteAnimationCalculation(const AnimationTarget& target
 		return;
 	}
 
-	// 非数(NaN)が渡されていないか確認
 	if (!std::isfinite(state.current_model_time))
 	{
 		LOG_WARNING({ u8"アニメーション", u8"計算" }, u8"再生時間(current_model_time)が不正な数値(NaN)です。モデル名: %s", state.current_anim_name.c_str());
 		return;
 	}
 
-	//補間中かどうかに応じて計算関数を呼び分け
+	std::shared_ptr<GltfModelData> data = model->GetData();
+	if (data && data->HasBoneTexture() && !model->IsCpuAnimationEnabled())
+	{
+		model->SetPlaybackTimeOnly(state.current_model_time);
+		return;
+	}
+
 	if (state.is_blending && !state.prev_anim_name.empty())
 	{
 		model->AnimateBlend(
