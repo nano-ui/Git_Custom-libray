@@ -510,6 +510,9 @@
     <ClCompile Include="Source\Engine\Graphics\Resources\AnimationManager.cpp">
       <Filter>Source\Engine\Graphics\Resources\AnimationManager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\CircleFormation.cpp">
+      <Filter>Source\Gameplay\Components\Tactics\Formation\CircleFormation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -997,6 +1000,12 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Device\Frustum.h">
       <Filter>Source\Engine\Graphics\Device\Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\FormationBase.h">
+      <Filter>Source\Gameplay\Components\Tactics\Formation\FormationBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\CircleFormation.h">
+      <Filter>Source\Gameplay\Components\Tactics\Formation\CircleFormation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1613,6 +1622,15 @@
     </Filter>
     <Filter Include="Source\Engine\Graphics\Device\Frustum">
       <UniqueIdentifier>{19db2ea5-0a0c-43c5-a88f-2591e35123f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Tactics\Formation">
+      <UniqueIdentifier>{fe8e2f83-1cf0-4ac5-a013-211804088b52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Tactics\Formation\FormationBase">
+      <UniqueIdentifier>{1b58255c-e337-4bd3-b3b2-32f754bbb92f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Tactics\Formation\CircleFormation">
+      <UniqueIdentifier>{595bdf9f-8ec0-4e31-8399-e8624696d7b2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -12,7 +12,7 @@
                             "CompOp": 2,
                             "HashKey": 4203995948,
                             "ParamSecond": 0.0,
-                            "RefValue": 0.0,
+                            "RefValue": 0.5,
                             "SecondaryHash": 0,
                             "Type": 0,
                             "VectorRefValue": [
@@ -33,7 +33,7 @@
                             "CompOp": 5,
                             "HashKey": 4203995948,
                             "ParamSecond": 0.0,
-                            "RefValue": 0.0,
+                            "RefValue": 0.5,
                             "SecondaryHash": 0,
                             "Type": 0,
                             "VectorRefValue": [

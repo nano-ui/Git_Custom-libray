@@ -28,6 +28,12 @@ public:
 	//目標座標を伝達
 	void CommandMode(const DirectX::XMFLOAT3& target_pos);
 
+	//陣形指定での目標座標を伝達
+	void CommandFormation(const std::vector<DirectX::XMFLOAT3>& target_positions);
+
+	//部隊数を取得
+	size_t GetMenberCount()const { return members.size(); }
+
 private:
 	//コンストラクタ
 	SquadManager() = default;

@@ -10,6 +10,8 @@
 #include "Engine\Core\Log\Log.h"
 #include "Engine\Core\Input.h"
 #include "Gameplay\Scene\SceneManager.h"
+#include "Gameplay\Components\Tactics\Formation\FormationBase.h"
+#include "Gameplay\Components\Tactics\Formation\CircleFormation.h"
 #include "Utility\RayUtility.h"
 
 //コンストラクタ
@@ -25,6 +27,7 @@ TacticalCommandController::~TacticalCommandController() = default;
 //初期化処理
 void TacticalCommandController::Initialize()
 {
+	current_formation = std::make_unique<CircleFormation>();
 	target_position = { 0.0f,0.0f,0.0f };
 	max_ray_distance = 10.0f;
 	has_target = false;
@@ -56,7 +59,9 @@ void TacticalCommandController::Update(float elapsed_time)
 
 	if (is_hit)
 	{
-		SquadManager::Instance().CommandMode(target_position);
+		current_formation->SetTargetPos(target_position);
+		std::vector<DirectX::XMFLOAT3> target_positions = current_formation->CalculatePositions(SquadManager::Instance().GetMenberCount());	
+		SquadManager::Instance().CommandFormation(target_positions);
 		LOG_SUCCESS({ u8"接触" }, u8"レイがヒットしました");
 		has_target = true;
 	}

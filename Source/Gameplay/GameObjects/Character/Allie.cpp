@@ -5,6 +5,7 @@
 #include "Engine\Core\Log\Log.h"
 
 static AutoRegister<Allie> auto_register_class("Allie");
+
 //コンストラクタ
 Allie::Allie()
 {
@@ -85,8 +86,6 @@ void Allie::OnAnimationEnd(uint32_t state_key)
 //目標地点に向けて進む
 void Allie::MoveTarget(float elapsed_time)
 {
-
-
 	if (!has_target)return;
 	auto transform = GetComponent<TransformComponent>();
 	if (!transform)return;

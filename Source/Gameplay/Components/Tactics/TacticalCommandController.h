@@ -2,10 +2,12 @@
 #include "Gameplay\Components\Base\Component.h"
 
 #include <DirectXMath.h>
+#include <memory>
 
 class Camera;
 class CollisionManager;
 class ShapeRenderer;
+class FormationBase;
 
 class TacticalCommandController : public Component
 {
@@ -52,6 +54,9 @@ public:
 
 	//当たり判定マネージャーの設定
 	void SetCollisionManager(CollisionManager* manager);
+
+private:
+	std::unique_ptr<FormationBase> current_formation;	//陣形
 
 private:
 	DirectX::XMFLOAT3 target_position;	//対象の座標

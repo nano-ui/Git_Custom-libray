@@ -69,3 +69,30 @@ void SquadManager::CommandMode(const DirectX::XMFLOAT3& target_pos)
 		member->SetHasTarget(true);
 	}
 }
+
+//陣形指定での目標座標を伝達
+void SquadManager::CommandFormation(const std::vector<DirectX::XMFLOAT3>& target_positions)
+{
+	if (members.empty() || target_positions.empty())
+	{
+		LOG_WARNING({ u8"部隊管理" }, u8"部隊メンバーまたは目標座標リストが空です");
+		return;
+	}
+
+	if (target_positions.size() != members.size())
+	{
+		LOG_WARNING({ u8"部隊管理" }, u8"部隊数と目標座標数が一致しません");
+	}
+	size_t loop_count = (std::min)(members.size(), target_positions.size());
+
+	for (int i = 0; i < loop_count; ++i)
+	{
+		if (!members[i])
+		{
+			LOG_WARNING({ u8"部隊管理" }, u8"対象のメンバーがnullです");
+			continue;
+		}
+		members[i]->SetTargetPosition(target_positions[i]);
+		members[i]->SetHasTarget(true);
+	}
+}
