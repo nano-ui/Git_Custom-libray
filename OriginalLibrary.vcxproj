@@ -308,6 +308,7 @@
     <ClCompile Include="Source\Engine\Graphics\Resources\Light.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Resources\Model.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Resources\ModelManager.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Resources\Model\Loader\GltfLoader.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Resources\texture.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Shaders\BlurShader.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Shaders\CustomShader.cpp" />
@@ -465,8 +466,11 @@
     <ClInclude Include="Source\Engine\Graphics\Resources\Light.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\Model.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\ModelManager.h" />
+    <ClInclude Include="Source\Engine\Graphics\Resources\Model\Loader\GltfLoader.h" />
+    <ClInclude Include="Source\Engine\Graphics\Resources\Model\Resource\GltfAnimationResource.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\Model\Resource\GltfMaterialResource.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\Model\Resource\GltfMeshResource.h" />
+    <ClInclude Include="Source\Engine\Graphics\Resources\Model\Resource\GltfModelResource.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\Model\Resource\GltfSkeletonResource.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\texture.h" />
     <ClInclude Include="Source\Engine\Graphics\Shaders\BlurShader.h" />

@@ -510,6 +510,9 @@
     <ClCompile Include="Source\Engine\Graphics\Resources\AnimationManager.cpp">
       <Filter>Source\Engine\Graphics\Resources\AnimationManager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Resources\Model\Loader\GltfLoader.cpp">
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfLoader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1006,6 +1009,15 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Resources\Model\Resource\GltfSkeletonResource.h">
       <Filter>Source\Engine\Graphics\Resources\Model\Resource\GltfSkeletonResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\Model\Resource\GltfAnimationResource.h">
+      <Filter>Source\Engine\Graphics\Resources\Model\Resource\GltfAnimationResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\Model\Resource\GltfModelResource.h">
+      <Filter>Source\Engine\Graphics\Resources\Model\Resource\GltfModelResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\Model\Loader\GltfLoader.h">
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfLoader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1623,9 +1635,6 @@
     <Filter Include="Source\Engine\Graphics\Device\Frustum">
       <UniqueIdentifier>{19db2ea5-0a0c-43c5-a88f-2591e35123f4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Engine\Graphics\Resources\Model\NewFilter1">
-      <UniqueIdentifier>{7447bb9e-a5c1-4da2-be42-4176a3d263b4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Engine\Graphics\Resources\Model\Resource">
       <UniqueIdentifier>{a73610a9-16c2-4952-88b5-98022b7d004b}</UniqueIdentifier>
     </Filter>
@@ -1637,6 +1646,15 @@
     </Filter>
     <Filter Include="Source\Engine\Graphics\Resources\Model\Resource\GltfSkeletonResource">
       <UniqueIdentifier>{0302fa68-9a55-408a-91a9-b623dd1c46d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\Model\Resource\GltfAnimationResource">
+      <UniqueIdentifier>{cedb1498-77e9-4b17-bc6b-1e68fd49ccc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\Model\Resource\GltfModelResource">
+      <UniqueIdentifier>{8c3b1f3d-3e57-435d-86bf-95272dd6a055}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Graphics\Resources\Model\GltfLoader">
+      <UniqueIdentifier>{7447bb9e-a5c1-4da2-be42-4176a3d263b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
