@@ -64,7 +64,7 @@ public:
 		DirectX::XMFLOAT4 rotation = { 0.0f,0.0f,0.0f,1.0f };	//回転情報
 		DirectX::XMFLOAT3 scale = { 1.0f,1.0f,1.0f };			//スケール情報
 		DirectX::XMFLOAT3 translation = { 0.0f,0.0f,0.0f };		//位置情報
-		DirectX::XMFLOAT4X4 global_transform =					//最終的な行列結果
+		DirectX::XMFLOAT4X4 translation =					//最終的な行列結果
 		{
 			1.0f,0.0f,0.0f,0.0f,
 			0.0f,1.0f,0.0f,0.0f,

@@ -152,6 +152,7 @@ C:.
 Да       Да       DirectXDevice.h
 Да       Да       framebuffer.cpp
 Да       Да       framebuffer.h
+Да       Да       Frustum.h
 Да       Да       GpuResourceUtils.cpp
 Да       Да       GpuResourceUtils.h
 Да       Да       PipelineStates.cpp

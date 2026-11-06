@@ -465,6 +465,9 @@
     <ClInclude Include="Source\Engine\Graphics\Resources\Light.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\Model.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\ModelManager.h" />
+    <ClInclude Include="Source\Engine\Graphics\Resources\Model\Resource\GltfMaterialResource.h" />
+    <ClInclude Include="Source\Engine\Graphics\Resources\Model\Resource\GltfMeshResource.h" />
+    <ClInclude Include="Source\Engine\Graphics\Resources\Model\Resource\GltfSkeletonResource.h" />
     <ClInclude Include="Source\Engine\Graphics\Resources\texture.h" />
     <ClInclude Include="Source\Engine\Graphics\Shaders\BlurShader.h" />
     <ClInclude Include="Source\Engine\Graphics\Shaders\CustomShader.h" />
