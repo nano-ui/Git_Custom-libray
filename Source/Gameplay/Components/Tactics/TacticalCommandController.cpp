@@ -12,6 +12,7 @@
 #include "Gameplay\Scene\SceneManager.h"
 #include "Gameplay\Components\Tactics\Formation\FormationBase.h"
 #include "Gameplay\Components\Tactics\Formation\CircleFormation.h"
+#include "Gameplay\Components\Tactics\Formation\FishScaleFormation.h"
 #include "Utility\RayUtility.h"
 
 //コンストラクタ
@@ -27,7 +28,7 @@ TacticalCommandController::~TacticalCommandController() = default;
 //初期化処理
 void TacticalCommandController::Initialize()
 {
-	current_formation = std::make_unique<CircleFormation>();
+	current_formation = std::make_unique<FishScaleFormation>();
 	target_position = { 0.0f,0.0f,0.0f };
 	max_ray_distance = 10.0f;
 	has_target = false;
@@ -85,6 +86,7 @@ void TacticalCommandController::SetupSerialization(JsonSerializer* serializer)
 {
 	Component::SetupSerialization(serializer);
 	serializer->RegisterVariable(u8"レイの長さ", &max_ray_distance, SerializeTarget::Detail);
+	current_formation->SetupSerialization(serializer);
 }
 
 //GuiInspector専用のインスペクター項目登録
@@ -94,6 +96,7 @@ void TacticalCommandController::SetupInspector(GuiInspector* inspector)
 	inspector->RegisterVariable(u8"レイの長さ", &max_ray_distance, GetComponentName());
 	inspector->RegisterText(u8"対象の位置", &target_position, GetComponentName());
 	inspector->RegisterText(u8"対象の存在フラグ", &has_target, GetComponentName());
+	current_formation->SetupInspector(inspector);
 }
 
 //当たり判定マネージャーの設定

@@ -11,7 +11,7 @@ public:
 	//デストラクタ
 	~CircleFormation()override = default;
 
-	//中心からの相対座標リストを取得
+	//中心からの陣形座標リストを取得
 	std::vector<DirectX::XMFLOAT3> CalculatePositions(size_t unit_count)override;
 
 	//シリアライズ登録

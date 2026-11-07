@@ -8,7 +8,7 @@ CircleFormation::CircleFormation()
 	radius = 5.0f;
 }
 
-//中心からの相対座標リストを取得
+//中心からの陣形座標リストを取得
 std::vector<DirectX::XMFLOAT3> CircleFormation::CalculatePositions(size_t unit_count)
 {
 	if (unit_count <= 0)

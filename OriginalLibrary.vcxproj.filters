@@ -513,6 +513,9 @@
     <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\CircleFormation.cpp">
       <Filter>Source\Gameplay\Components\Tactics\Formation\CircleFormation</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\FishScaleFormation.cpp">
+      <Filter>Source\Gameplay\Components\Tactics\Formation\FishScaleFormation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1006,6 +1009,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\CircleFormation.h">
       <Filter>Source\Gameplay\Components\Tactics\Formation\CircleFormation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\FishScaleFormation.h">
+      <Filter>Source\Gameplay\Components\Tactics\Formation\FishScaleFormation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1631,6 +1637,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Tactics\Formation\CircleFormation">
       <UniqueIdentifier>{595bdf9f-8ec0-4e31-8399-e8624696d7b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Tactics\Formation\FishScaleFormation">
+      <UniqueIdentifier>{896f9e92-2b6c-48b0-8292-d8a5537d06e8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

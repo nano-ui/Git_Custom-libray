@@ -15,7 +15,7 @@ public:
 	//デストラクタ
 	virtual ~FormationBase() = default;
 
-	//中心からの相対座標リストを取得
+	//中心からの陣形座標リストを取得
 	virtual std::vector<DirectX::XMFLOAT3> CalculatePositions(size_t unit_count) = 0;
 
 	//シリアライズ登録

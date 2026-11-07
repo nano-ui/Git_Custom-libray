@@ -353,6 +353,7 @@ void SceneGame::Render(float elapsed_time)
 #ifdef USE_IMGUI
 	RenderGui();
 	editor_manager->RenderGui(current_camera, collision_manager.get());
+	tactical_command->RenderGui();
 #endif
 }
 

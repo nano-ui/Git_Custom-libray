@@ -86,6 +86,8 @@ void Allie::OnAnimationEnd(uint32_t state_key)
 //目標地点に向けて進む
 void Allie::MoveTarget(float elapsed_time)
 {
+	static constexpr float STOP_DISTANCE = 0.01f;
+	static constexpr float STOP_DISTANCE_SQ = STOP_DISTANCE * STOP_DISTANCE;
 	if (!has_target)return;
 	auto transform = GetComponent<TransformComponent>();
 	if (!transform)return;
@@ -93,9 +95,19 @@ void Allie::MoveTarget(float elapsed_time)
 	DirectX::XMVECTOR v_my_pos = DirectX::XMLoadFloat3(&my_pos);
 	DirectX::XMVECTOR v_target_pos = DirectX::XMLoadFloat3(&target_position);
 	DirectX::XMVECTOR v = DirectX::XMVectorSubtract(v_target_pos, v_my_pos);
+	DirectX::XMVECTOR v_distance = v;
 	v = DirectX::XMVector3Normalize(v);
 	float vector_x = DirectX::XMVectorGetX(v);
 	float vector_z = DirectX::XMVectorGetZ(v);
+	float distance_x = DirectX::XMVectorGetX(v_distance);
+	float distance_z = DirectX::XMVectorGetZ(v_distance);
+	float distance_sq = (distance_x * distance_x) + (distance_z * distance_z);
+	if (distance_sq <= STOP_DISTANCE_SQ)
+	{
+		has_target = false;
+		LOG_NORMAL({ u8"移動" }, u8"目標地点に到達しました");
+		return;
+	}
 	Character::Move(elapsed_time, vector_x, vector_z);
 	Character::Tuen(elapsed_time, vector_x, vector_z);
 }

@@ -83,6 +83,7 @@ void SquadManager::CommandFormation(const std::vector<DirectX::XMFLOAT3>& target
 	{
 		LOG_WARNING({ u8"部隊管理" }, u8"部隊数と目標座標数が一致しません");
 	}
+
 	size_t loop_count = (std::min)(members.size(), target_positions.size());
 
 	for (int i = 0; i < loop_count; ++i)
@@ -92,6 +93,7 @@ void SquadManager::CommandFormation(const std::vector<DirectX::XMFLOAT3>& target
 			LOG_WARNING({ u8"部隊管理" }, u8"対象のメンバーがnullです");
 			continue;
 		}
+
 		members[i]->SetTargetPosition(target_positions[i]);
 		members[i]->SetHasTarget(true);
 	}
