@@ -13,6 +13,8 @@
 #include "Gameplay\Components\Tactics\Formation\FormationBase.h"
 #include "Gameplay\Components\Tactics\Formation\CircleFormation.h"
 #include "Gameplay\Components\Tactics\Formation\FishScaleFormation.h"
+#include "Gameplay\Components\Tactics\Formation\VShapedFormation.h"
+#include "Gameplay\Components\Tactics\Formation\CraneWingFormation.h"
 #include "Utility\RayUtility.h"
 
 //コンストラクタ
@@ -28,7 +30,7 @@ TacticalCommandController::~TacticalCommandController() = default;
 //初期化処理
 void TacticalCommandController::Initialize()
 {
-	current_formation = std::make_unique<FishScaleFormation>();
+	current_formation = std::make_unique<CraneWingFormation>();
 	target_position = { 0.0f,0.0f,0.0f };
 	max_ray_distance = 10.0f;
 	has_target = false;

@@ -516,6 +516,12 @@
     <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\FishScaleFormation.cpp">
       <Filter>Source\Gameplay\Components\Tactics\Formation\FishScaleFormation</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\VShapedFormation.cpp">
+      <Filter>Source\Gameplay\Components\Tactics\Formation\VShapedFormation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\CraneWingFormation.cpp">
+      <Filter>Source\Gameplay\Components\Tactics\Formation\CraneWingFormation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1012,6 +1018,12 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\FishScaleFormation.h">
       <Filter>Source\Gameplay\Components\Tactics\Formation\FishScaleFormation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\VShapedFormation.h">
+      <Filter>Source\Gameplay\Components\Tactics\Formation\VShapedFormation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\CraneWingFormation.h">
+      <Filter>Source\Gameplay\Components\Tactics\Formation\CraneWingFormation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1640,6 +1652,12 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Tactics\Formation\FishScaleFormation">
       <UniqueIdentifier>{896f9e92-2b6c-48b0-8292-d8a5537d06e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Tactics\Formation\VShapedFormation">
+      <UniqueIdentifier>{f76fd255-323e-4d3d-ab2d-e6e6e2eb111f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Tactics\Formation\CraneWingFormation">
+      <UniqueIdentifier>{2a48e9da-4497-4838-9350-71938ddc879a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
