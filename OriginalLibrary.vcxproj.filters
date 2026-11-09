@@ -522,6 +522,9 @@
     <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\CraneWingFormation.cpp">
       <Filter>Source\Gameplay\Components\Tactics\Formation\CraneWingFormation</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\RectangleFormation.cpp">
+      <Filter>Source\Gameplay\Components\Tactics\Formation\RectangleFormation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1024,6 +1027,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\CraneWingFormation.h">
       <Filter>Source\Gameplay\Components\Tactics\Formation\CraneWingFormation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\RectangleFormation.h">
+      <Filter>Source\Gameplay\Components\Tactics\Formation\RectangleFormation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1658,6 +1664,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Tactics\Formation\CraneWingFormation">
       <UniqueIdentifier>{2a48e9da-4497-4838-9350-71938ddc879a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Tactics\Formation\RectangleFormation">
+      <UniqueIdentifier>{4c6304ce-4e7d-4628-b10c-995381232eb9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

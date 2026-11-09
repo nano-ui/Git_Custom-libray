@@ -350,6 +350,7 @@
     <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\CircleFormation.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\CraneWingFormation.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\FishScaleFormation.cpp" />
+    <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\RectangleFormation.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\VShapedFormation.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Tactics\SquadManager.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Tactics\TacticalCommandController.cpp" />
@@ -517,6 +518,7 @@
     <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\CraneWingFormation.h" />
     <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\FishScaleFormation.h" />
     <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\FormationBase.h" />
+    <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\RectangleFormation.h" />
     <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\VShapedFormation.h" />
     <ClInclude Include="Source\Gameplay\Components\Tactics\SquadManager.h" />
     <ClInclude Include="Source\Gameplay\Components\Tactics\TacticalCommandController.h" />

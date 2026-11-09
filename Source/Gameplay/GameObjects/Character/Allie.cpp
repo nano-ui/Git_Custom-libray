@@ -86,7 +86,7 @@ void Allie::OnAnimationEnd(uint32_t state_key)
 //目標地点に向けて進む
 void Allie::MoveTarget(float elapsed_time)
 {
-	static constexpr float STOP_DISTANCE = 0.01f;
+	static constexpr float STOP_DISTANCE = 0.001f;
 	static constexpr float STOP_DISTANCE_SQ = STOP_DISTANCE * STOP_DISTANCE;
 	if (!has_target)return;
 	auto transform = GetComponent<TransformComponent>();
