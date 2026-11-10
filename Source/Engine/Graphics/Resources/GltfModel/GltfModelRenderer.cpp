@@ -165,10 +165,53 @@ void GltfModelRenderer::Render
 
 		if (primitive->vertex_buffer_view.buffer >= 0 && static_cast<size_t>(primitive->vertex_buffer_view.buffer) < data.buffers.size())
 		{
-			ID3D11Buffer* vertex_buffer = data.buffers.at(primitive->vertex_buffer_view.buffer).Get();
-			UINT stride = static_cast<UINT>(primitive->vertex_buffer_view.stride_in_bytes);
-			UINT offset = static_cast<UINT>(primitive->vertex_buffer_view.byte_offset);
-			immediate_context->IASetVertexBuffers(SHADER_SLOT_0, RESOURCE_COUNT_1, &vertex_buffer, &stride, &offset);
+			ID3D11Buffer* vbs[2] = {
+				data.buffers.at(primitive->vertex_buffer_view.buffer).Get(),
+				instance_buffer.Get()
+			};
+			UINT strides[2] = {
+				static_cast<UINT>(primitive->vertex_buffer_view.stride_in_bytes),
+				static_cast<UINT>(sizeof(ModelInstanceData))
+			};
+			UINT offsets[2] = {
+				static_cast<UINT>(primitive->vertex_buffer_view.byte_offset),
+				0
+			};
+
+			ModelInstanceData single_instance = {};
+			single_instance.world_matrix = world_matrix;
+			if (data.HasBoneTexture())
+			{
+				const auto& bake_infos = data.GetAnimationBakeInfos();
+				size_t anim_idx = model.GetCurrentAnimationIndex();
+				if (anim_idx < bake_infos.size())
+				{
+					constexpr float BAKE_FRAME_RATE = 30.0f;
+					float anim_time = model.GetAnimationCurrentTime();
+					float duration = bake_infos[anim_idx].duration;
+					float clamped_time = (std::max)(0.0f, (std::min)(anim_time, duration));
+					float current_frame = std::floor(clamped_time * BAKE_FRAME_RATE);
+					single_instance.anim_row_offset = static_cast<float>(bake_infos[anim_idx].start_frame) + current_frame;
+					single_instance.current_anim_time = anim_time;
+					single_instance.anim_duration = duration;
+				}
+			}
+
+			D3D11_MAPPED_SUBRESOURCE mapped = {};
+			HRESULT hr = immediate_context->Map(instance_buffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+			if (SUCCEEDED(hr))
+			{
+				std::memcpy(mapped.pData, &single_instance, sizeof(ModelInstanceData));
+				immediate_context->Unmap(instance_buffer.Get(), 0);
+			}
+
+			immediate_context->IASetVertexBuffers(0, 2, vbs, strides, offsets);
+
+			if (data.HasBoneTexture())
+			{
+				ID3D11ShaderResourceView* bone_srv = data.GetBoneTextureSRV();
+				immediate_context->VSSetShaderResources(SHADER_SLOT_3, RESOURCE_COUNT_1, &bone_srv);
+			}
 		}
 		else
 		{

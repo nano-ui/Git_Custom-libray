@@ -211,6 +211,21 @@ float GltfModel::GetAnimationCurrentTime() const
 	return animation->GetCurrentAnimationTime();
 }
 
+//現在再生対象となっているアニメーションのインデックス番号を取得
+size_t GltfModel::GetCurrentAnimationIndex() const
+{
+	BS_PROFILE_FUNCTION();
+
+	if (!animation)
+	{
+		OutputDebugStringA("[GltfModel エラー] GetCurrentAnimationIndex: animation が nullptr です。\n");
+		constexpr size_t DEFAULT_ANIMATION_INDEX = 0;
+		return DEFAULT_ANIMATION_INDEX;
+	}
+
+	return animation->GetCurrentAnimationIndex();
+}
+
 //再生時間を設定
 void GltfModel::SetAnimationTime(float time)
 {
@@ -328,6 +343,17 @@ bool GltfModel::GetNodeGlobalTransform(int node_index, DirectX::XMFLOAT4X4& out_
 		return false;
 	}
 	
+	if (data && animation && data->HasBoneTexture())
+	{
+		size_t current_anim_index = animation->GetCurrentAnimationIndex();
+		float current_anim_time = animation->GetCurrentAnimationTime();
+
+		if (data->GetBakedNodeTransform(current_anim_index, current_anim_time, node_index, out_transform))
+		{
+			return true;
+		}
+	}
+
 	out_transform = nodes[static_cast<size_t>(node_index)].global_transform;
 	return true;
 }

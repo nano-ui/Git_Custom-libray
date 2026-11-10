@@ -174,6 +174,19 @@ void Character::Update(float elapsed_time)
 		constexpr bool is_loop = true;
 		sequencer_component->Update(elapsed_time, is_loop);
 		current_animation_time = sequencer_component->GetCurrentSequenceTime();
+
+		if (model_component)
+		{
+			GltfModel* gltf_model = model_component->GetModel();
+			if (gltf_model)
+			{
+				gltf_model->SetPlaybackTimeOnly(current_animation_time);
+			}
+			else
+			{
+				OutputDebugStringA("[Character エラー] Update: GltfModel が nullptr のためボーン姿勢を更新できません。\n");
+			}
+		}
 	}
 	else
 	{

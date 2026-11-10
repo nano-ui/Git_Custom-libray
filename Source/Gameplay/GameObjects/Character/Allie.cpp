@@ -105,7 +105,7 @@ void Allie::MoveTarget(float elapsed_time)
 	if (distance_sq <= STOP_DISTANCE_SQ)
 	{
 		has_target = false;
-		LOG_NORMAL({ u8"移動" }, u8"目標地点に到達しました");
+		LOG_NORMAL({ u8"移動" }, u8"目標地点に到達しました", my_pos);
 		return;
 	}
 	Character::Move(elapsed_time, vector_x, vector_z);

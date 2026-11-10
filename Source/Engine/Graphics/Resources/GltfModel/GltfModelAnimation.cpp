@@ -25,8 +25,15 @@ void GltfModelAnimation::Initialize(const std::shared_ptr<const GltfModelData>& 
 			target_root_node_indices[i] = ComputeTargetRootNodeIndex(i);
 		}
 		BuildAnimationCache();
+		is_animation_finished = false;
+
+		if (model_data->flattened_node_indices.empty())
+		{
+			OutputDebugStringA("[GltfModelAnimation エラー] flattened_node_indices が空のため、ボーン階層行列が計算できません。\n");
+		}
+
+		CumulateTransforms();
 	}
-	is_animation_finished = false;
 }
 
 //親子関係をたどって各ノードのグローバル行列を計算
@@ -49,6 +56,7 @@ void GltfModelAnimation::CumulateTransforms()
 		}
 
 		GltfModelData::node& current_node = animated_nodes[node_index];
+		int parent_node = animated_nodes[node_index].parent_index;
 
 		XMMATRIX scale_matrix = XMMatrixScaling(current_node.scale.x, current_node.scale.y, current_node.scale.z);
 		XMMATRIX rotation_matrix = XMMatrixRotationQuaternion(XMVectorSet(current_node.rotation.x, current_node.rotation.y, current_node.rotation.z, current_node.rotation.w));

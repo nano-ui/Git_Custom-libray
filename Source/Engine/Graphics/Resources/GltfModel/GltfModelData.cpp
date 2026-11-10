@@ -346,6 +346,50 @@ int GltfModelData::GetAnimationIndex(const std::string& name) const
 	return ERROR_ANIMATION_NOT_FOUND;
 }
 
+//再生時刻とノードインデックスから、該当する事前計算済み行列を取得
+bool GltfModelData::GetBakedNodeTransform(size_t anim_index, float time, int node_index, DirectX::XMFLOAT4X4& out_transform) const
+{
+	if (anim_index >= animation_bake_infos.size())
+	{
+		OutputDebugStringA("[GltfModelData エラー] GetBakedNodeTransform: 指定されたアニメーション番号が範囲外です。\n");
+		return false;
+	}
+
+	if (node_index < 0 || static_cast<size_t>(node_index) >= nodes.size())
+	{
+		OutputDebugStringA("[GltfModelData エラー] GetBakedNodeTransform: 指定されたノード番号が範囲外です。\n");
+		return false;
+	}
+
+	if (baked_node_matrices.empty())
+	{
+		OutputDebugStringA("[GltfModelData エラー] GetBakedNodeTransform: ベイク済み行列配列が構築されていません。\n");
+		return false;
+	}
+
+	constexpr float MIN_TIME = 0.0f;
+	const AnimationBakeInfo& bake_info = animation_bake_infos[anim_index];
+	float clamped_time = (std::max)(MIN_TIME, (std::min)(time, bake_info.duration));
+	size_t current_frame = static_cast<size_t>(std::floor(clamped_time * bake_info.frame_rate));
+	if (current_frame >= bake_info.frame_count)
+	{
+		constexpr size_t FRAME_OFFSET_END = 1;
+		current_frame = bake_info.frame_count - FRAME_OFFSET_END;
+	}
+
+	const size_t total_node_count = nodes.size();
+	const size_t matrix_index = (bake_info.start_frame + current_frame) * total_node_count + static_cast<size_t>(node_index);
+
+	if (matrix_index >= baked_node_matrices.size())
+	{
+		OutputDebugStringA("[GltfModelData エラー] GetBakedNodeTransform: 算出した行列インデックスが範囲外です。\n");
+		return false;
+	}
+
+	out_transform = baked_node_matrices[matrix_index];
+	return true;
+}
+
 //tinygltfの型情報をDirectXのフォーマットに変換
 DXGI_FORMAT GltfModelData::ConvertFormat(const tinygltf::Accessor& accessor)
 {
@@ -1360,6 +1404,11 @@ void GltfModelData::BakeAnimationTextures(ID3D11Device* device)
 	const UINT texture_height = static_cast<UINT>(total_frames);
 	std::vector<DirectX::XMFLOAT4> texture_pixel_data(static_cast<size_t>(TEXTURE_WIDTH) * texture_height, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f));
 
+	constexpr size_t MATRIX_ALIGNMENT = 1;
+	const size_t total_node_count = nodes.size();
+	baked_node_matrices.clear();
+	baked_node_matrices.resize(total_frames * total_node_count);
+
 	struct WorkingNode
 	{
 		DirectX::XMFLOAT3 scale = { 1.0f, 1.0f, 1.0f };
@@ -1511,6 +1560,12 @@ void GltfModelData::BakeAnimationTextures(ID3D11Device* device)
 			}
 
 			const size_t current_row = bake_info.start_frame + frame_idx;
+
+			const size_t base_node_index = current_row * total_node_count;
+			for (size_t n_idx = 0; n_idx < total_node_count; ++n_idx)
+			{
+				baked_node_matrices[base_node_index + n_idx] = current_pose[n_idx].global_transform;
+			}
 			const size_t row_offset = current_row * TEXTURE_WIDTH;
 
 			const skin& target_skin = skins.front();

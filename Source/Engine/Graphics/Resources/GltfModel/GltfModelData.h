@@ -283,6 +283,9 @@ public:
 	//ボーンテクスチャの確認
 	bool HasBoneTexture() const { return bone_texture_srv != nullptr; }
 
+	//再生時刻とノードインデックスから、該当する事前計算済み行列を取得
+	bool GetBakedNodeTransform(size_t anim_index, float time, int node_index, DirectX::XMFLOAT4X4& out_transform) const;
+
 private:
 	DXGI_FORMAT ConvertFormat(const tinygltf::Accessor& accessor);
 	void FetchMeshes(const tinygltf::Model& gltf_model);
@@ -343,6 +346,7 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> bone_texture;				//ベイクされた全ボーン行列を格納
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> bone_texture_srv;	//頂点シェーダーでボーン行列をテクスチャサンプリング
 	std::vector<AnimationBakeInfo> animation_bake_infos;				//アニメーション番号とテクスチャ内のフレーム位置を紐付ける管理配列
+	std::vector<DirectX::XMFLOAT4X4> baked_node_matrices;				//全アニメーションの全コマにおける、全ノードのローカル累積姿勢行列配列
 
 	int default_scene = 0;	//開始シーン番号
 
