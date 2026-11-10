@@ -73,5 +73,6 @@ private:
 	std::unique_ptr<CollisionExperiment> collision_experiment;	//当たり判定実験クラス
 	std::unique_ptr<EditorManager> editor_manager;				//エディタマネージャー
 	bool is_sequencer_active = false;							//シーケンサ表示フラグ
+	bool is_editor = false;
 };
 

@@ -250,6 +250,7 @@
     <ClCompile Include="Source\Editor\ObjectEditor.cpp" />
     <ClCompile Include="Source\Editor\PathHelper.cpp" />
     <ClCompile Include="Source\Editor\Preview\ModelPreviewWindow.cpp" />
+    <ClCompile Include="Source\Editor\Preview\ScenePreviewWindow.cpp" />
     <ClCompile Include="Source\Editor\Sequence\AnimationSequencerEditor.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateCanvasInteractionHandler.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphCameraController.cpp" />
@@ -406,6 +407,7 @@
     <ClInclude Include="Source\Editor\ObjectEditor.h" />
     <ClInclude Include="Source\Editor\PathHelper.h" />
     <ClInclude Include="Source\Editor\Preview\ModelPreviewWindow.h" />
+    <ClInclude Include="Source\Editor\Preview\ScenePreviewWindow.h" />
     <ClInclude Include="Source\Editor\Sequence\AnimationSequencerEditor.h" />
     <ClInclude Include="Source\Editor\Sequence\SequenceSceneBace.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateCanvasInteractionHandler.h" />

@@ -8,6 +8,7 @@
 #include "Engine\Camera\Camera.h"
 #include "Engine\Collision\CollisionManager.h"
 #include "Preview\ModelPreviewWindow.h"
+#include "Editor\Preview\ScenePreviewWindow.h"
 #include "Attachment\ColliderAttachmentEditor.h"
 #include "EditorMediator.h"
 #include "Gameplay\GameObjects\Character\Character.h"
@@ -41,12 +42,14 @@ void EditorManager::Initialize()
 	tab_bar = std::make_unique<EditorTabBar>();
 	collider_attachment_editor = std::make_unique<ColliderAttachmentEditor>();
 	log_editor = std::make_unique<LogEditor>();
+	scene_preview_window = std::make_unique<ScenePreviewWindow>();
 
 	object_editor->Initialize();
 	animation_sequencer_editor->Initialize();
 	content_browser_editor->Initialize();
 	tab_bar->Initialize();
 	collider_attachment_editor->Initialize();
+	scene_preview_window->Initialize();
 
 	EditorMediator::Instance().RegisterCollisionAttachmentEditor(collider_attachment_editor.get());
 
@@ -139,6 +142,7 @@ void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manage
 	{
 	case EditorSceneType::LevelEditor:
 	{
+		scene_preview_window->RenderGui();
 		object_editor->RenderUi(camera, collision_manager);
 		content_browser_editor->RenderGui();
 		break;
@@ -187,4 +191,16 @@ void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manage
 void EditorManager::RenderPreviews(ID3D11DeviceContext* immediate_context)
 {
 	model_preview_window->Render(immediate_context);
+}
+
+//シーンプレビューの描画先を設定
+void EditorManager::BeginSceneRender(ID3D11DeviceContext* context)
+{
+	scene_preview_window->BeginRender(context);
+}
+
+//シーンプレビューの描画先を解除
+void EditorManager::EndSceneRender(ID3D11DeviceContext* context)
+{
+	scene_preview_window->EndRender(context);
 }

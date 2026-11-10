@@ -210,7 +210,6 @@ void SceneGame::Render(float elapsed_time)
 
 		// ImGui UI ‚Ì•`‰æ‚ğÀs
 		RenderGui();
-		editor_manager->RenderGui(current_camera, collision_manager.get());
 #endif
 		return;
 	}
@@ -277,6 +276,8 @@ void SceneGame::Render(float elapsed_time)
 
 		shadow_fb->deactivate(context);
 	}
+
+	if(!is_editor)editor_manager->BeginSceneRender(context);
 
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
 	context->RSSetState(states->GetRasterizerState(0).Get());
@@ -349,10 +350,15 @@ void SceneGame::Render(float elapsed_time)
 	{
 		skybox->Render(context);
 	}
-
+	if (!is_editor)editor_manager->EndSceneRender(context);
 #ifdef USE_IMGUI
 	RenderGui();
-	editor_manager->RenderGui(current_camera, collision_manager.get());
+	if (Input::Instance().IsKeyTrigger(VK_F1))
+	{
+		if (is_editor)is_editor = false;
+		else is_editor = true;
+	}
+	if(!is_editor)editor_manager->RenderGui(current_camera, collision_manager.get());
 	tactical_command->RenderGui();
 #endif
 }

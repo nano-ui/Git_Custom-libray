@@ -14,6 +14,7 @@ class Camera;
 class CollisionManager;
 class ColliderAttachmentEditor;
 class LogEditor;
+class ScenePreviewWindow;
 
 struct ID3D11DeviceContext;
 
@@ -38,6 +39,12 @@ public:
 	//プレビュー用のフレームバッファに3Dモデルをレンダリング
 	void RenderPreviews(ID3D11DeviceContext* immediate_context);
 
+	//シーンプレビューの描画先を設定
+	void BeginSceneRender(ID3D11DeviceContext* context);
+
+	//シーンプレビューの描画先を解除
+	void EndSceneRender(ID3D11DeviceContext* context);
+
 	//現在ゲーム画面がアクティブかどうかを返す
 	bool IsGameViewportActive() const { return active_scene_type == EditorSceneType::LevelEditor; }
 
@@ -51,6 +58,7 @@ private:
 	std::unique_ptr<ColliderAttachmentEditor> collider_attachment_editor;	//コライダーアタッチメントエディタ
 	std::unique_ptr<EditorTabBar> tab_bar;									//アセットタブバー
 	std::unique_ptr<LogEditor> log_editor;									//ログエディタ
+	std::unique_ptr<ScenePreviewWindow> scene_preview_window;				//シーンプレビューウィンドウ
 	EditorSceneType active_scene_type;										//現在アクティブなエディタ画面の種類
 };
 

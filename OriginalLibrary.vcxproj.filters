@@ -525,6 +525,9 @@
     <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\RectangleFormation.cpp">
       <Filter>Source\Gameplay\Components\Tactics\Formation\RectangleFormation</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\Preview\ScenePreviewWindow.cpp">
+      <Filter>Source\Editor\Preview\ScenePreviewWindow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1030,6 +1033,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\RectangleFormation.h">
       <Filter>Source\Gameplay\Components\Tactics\Formation\RectangleFormation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Preview\ScenePreviewWindow.h">
+      <Filter>Source\Editor\Preview\ScenePreviewWindow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1667,6 +1673,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Tactics\Formation\RectangleFormation">
       <UniqueIdentifier>{4c6304ce-4e7d-4628-b10c-995381232eb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Preview\ScenePreviewWindow">
+      <UniqueIdentifier>{4b14c458-0962-4788-8aaa-74ab7e059f27}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

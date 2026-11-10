@@ -54,6 +54,8 @@ C:.
 „    „¥„Ÿ„Ÿ„ŸPreview
 „    „        ModelPreviewWindow.cpp
 „    „        ModelPreviewWindow.h
+„    „        ScenePreviewWindow.cpp
+„    „        ScenePreviewWindow.h
 „    „        
 „    „¥„Ÿ„Ÿ„ŸSequence
 „    „        AnimationSequencerEditor.cpp
@@ -313,11 +315,24 @@ C:.
 „    „    „        VisionSensorComponent.h
 „    „    „        
 „    „    „¥„Ÿ„Ÿ„ŸTactics
-„    „    „        SquadManager.cpp
-„    „    „        SquadManager.h
-„    „    „        TacticalCommandController.cpp
-„    „    „        TacticalCommandController.h
-„    „    „        
+„    „    „    „    SquadManager.cpp
+„    „    „    „    SquadManager.h
+„    „    „    „    TacticalCommandController.cpp
+„    „    „    „    TacticalCommandController.h
+„    „    „    „    
+„    „    „    „¤„Ÿ„Ÿ„ŸFormation
+„    „    „            CircleFormation.cpp
+„    „    „            CircleFormation.h
+„    „    „            CraneWingFormation.cpp
+„    „    „            CraneWingFormation.h
+„    „    „            FishScaleFormation.cpp
+„    „    „            FishScaleFormation.h
+„    „    „            FormationBase.h
+„    „    „            RectangleFormation.cpp
+„    „    „            RectangleFormation.h
+„    „    „            VShapedFormation.cpp
+„    „    „            VShapedFormation.h
+„    „    „            
 „    „    „¤„Ÿ„Ÿ„ŸTransform
 „    „            TransformComponent.cpp
 „    „            TransformComponent.h
