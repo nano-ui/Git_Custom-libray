@@ -81,7 +81,7 @@ private:
 	GameObject* current_selected_object;	//選択されているゲームオブジェクト
 	std::vector<std::string> cached_class_names;						//クラス名リストを毎フレーム取得しないためのキャッシュ
 	std::unordered_map<std::string, int> frame_class_counters;			//毎フレームのメモリ確保を避けるための連番カウント用マップ
-	bool is_placement_mode = false;										//配置モード切り替えフラグ
+	bool is_placement_mode = true;										//配置モード切り替えフラグ
 	int current_gizmo_operation;										//ギズモの現在の操作モード
 	std::string current_model_path = "";								//ドロップされたモデルのパス
 };

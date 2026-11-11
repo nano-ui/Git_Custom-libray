@@ -11,3 +11,6 @@ bool ScreenToWorldRay(
 	DirectX::XMFLOAT3& out_ray_start,
 	DirectX::XMFLOAT3& out_ray_end
 );
+
+//NDCç¿ïWÇ…ïœä∑
+DirectX::XMFLOAT2 ConvertNDC(float height, float width, DirectX::XMFLOAT2 target_pos);

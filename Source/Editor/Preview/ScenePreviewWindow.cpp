@@ -119,4 +119,11 @@ void ScenePreviewWindow::RenderGui()
 
 	//ウィンドウの終了
 	ImGui::End();
+
+	//画像領域の取得とドロップターゲットの開始
+	ImVec2 left_top = ImGui::GetItemRectMin();
+	ImVec2 screen_size = ImGui::GetItemRectSize();
+
+
+
 }

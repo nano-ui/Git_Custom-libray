@@ -11,6 +11,7 @@
 #include "ThiedParty\json.hpp"
 #include "Editor/EditorMediator.h"
 #include "FileDialogHelper.h"
+#include "Engine\Core\Log\Log.h"
 
 #include <imgui.h>
 #include <ImGuizmo.h>
@@ -143,6 +144,14 @@ void ObjectEditor::Update(Camera* camera, CollisionManager* collision_manager)
 					if (model_comp)
 					{
 						bool success = model_comp->LoadModel(current_model_path);
+						if (success)
+						{
+							LOG_SUCCESS({ u8"生成" }, u8"生成に成功");
+						}
+						else
+						{
+							LOG_WARNING({ u8"配置" }, u8"生成に失敗%s", target_class_name.c_str());
+						}
 						printf("[デバッグログ] クリック配置モデルロード結果: %s (パス: %s)\n", success ? "成功" : "失敗", current_model_path.c_str());
 					}
 				}

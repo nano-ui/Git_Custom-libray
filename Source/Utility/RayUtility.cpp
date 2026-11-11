@@ -12,16 +12,18 @@ bool ScreenToWorldRay(
 	DirectX::XMFLOAT3& out_ray_end)
 {
 	//スクリーン座標から正規化デバイス座標（NDC）への変換
-	DirectX::XMFLOAT2 ndc = { 0.0f,0.0f };
-	DirectX::XMFLOAT2 ratio = { 0.0f,0.0f };
+	//DirectX::XMFLOAT2 ndc = { 0.0f,0.0f };
+	//DirectX::XMFLOAT2 ratio = { 0.0f,0.0f };
 
-	ratio.x = click_pos.x / window_width;	//画面の比率（0.0 ～ 1.0）への正規化
-	ratio.x *= 2.0f;						//範囲を2倍に拡張（0.0 ～ 2.0）
-	ndc.x = ratio.x - 1.0f;					//中央を原点にシフト（-1.0 ～ +1.0）
+	//ratio.x = click_pos.x / window_width;	//画面の比率（0.0 ～ 1.0）への正規化
+	//ratio.x *= 2.0f;						//範囲を2倍に拡張（0.0 ～ 2.0）
+	//ndc.x = ratio.x - 1.0f;					//中央を原点にシフト（-1.0 ～ +1.0）
 
-	ratio.y = click_pos.y / window_height;
-	ratio.y *= 2.0f;
-	ndc.y = 1.0f - ratio.y;
+	//ratio.y = click_pos.y / window_height;
+	//ratio.y *= 2.0f;
+	//ndc.y = 1.0f - ratio.y;
+
+	DirectX::XMFLOAT2 ndc = ConvertNDC(window_height, window_width, click_pos);
 
 	//ビュープロジェクション行列の逆行列化
 	DirectX::XMMATRIX matrix;
@@ -53,4 +55,21 @@ bool ScreenToWorldRay(
 	DirectX::XMStoreFloat3(&out_ray_end, v_warld_far);
 
 	return true;
+}
+
+//NDC座標に変換
+DirectX::XMFLOAT2 ConvertNDC(float height, float width, DirectX::XMFLOAT2 target_pos)
+{
+	DirectX::XMFLOAT2 ndc = { 0.0f,0.0f };
+	DirectX::XMFLOAT2 ratio = { 0.0f,0.0f };
+
+	ratio.x = target_pos.x / width;			//画面の比率（0.0 ～ 1.0）への正規化
+	ratio.x *= 2.0f;						//範囲を2倍に拡張（0.0 ～ 2.0）
+	ndc.x = ratio.x - 1.0f;					//中央を原点にシフト（-1.0 ～ +1.0）
+
+	ratio.y = target_pos.y / height;
+	ratio.y *= 2.0f;
+	ndc.y = 1.0f - ratio.y;
+
+	return ndc;
 }

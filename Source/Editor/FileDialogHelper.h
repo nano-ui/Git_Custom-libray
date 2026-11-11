@@ -14,10 +14,10 @@ class FileDialogHelper
 {
 public:
 
-	//各種パス情報を返す
+	//各種パス情報を返す(基本こっちを使う)
 	static PathResult OpenGenericFileDialog();
 
-	//各種パス情報を返す
+	//各種パス情報を返す(基本こっちを使う)
 	static PathResult SaveGenericFileDialog(
 		const std::string& default_ext = "json",
 		const std::string& filter = ""
