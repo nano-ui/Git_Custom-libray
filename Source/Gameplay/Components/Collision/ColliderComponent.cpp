@@ -3,7 +3,7 @@
 #include "Gameplay\GameObjects\ObjectManager.h"
 #include "Engine\Collision\CollisionManager.h"
 #include "Serialization\JsonSerializer.h"
-#include "Editor\GuiInspector.h"
+#include "Editor\Inspector\GuiInspector.h"
 
 #include <Windows.h>
 

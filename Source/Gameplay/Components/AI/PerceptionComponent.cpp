@@ -5,7 +5,7 @@
 #include "Gameplay\Components\Sensor\VisionSensorComponent.h"
 #include "Gameplay\Components\AI\HateComponent.h"
 #include "Gameplay\Components\Transform\TransformComponent.h"
-#include "Editor\GuiInspector.h"
+#include "Editor\Inspector\GuiInspector.h"
 #include "Serialization\JsonSerializer.h"
 #include "Engine\Core\Log\Log.h"
 

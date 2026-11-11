@@ -2,15 +2,15 @@
 #include "Engine\Graphics\Device\framebuffer.h"
 #include "Engine\Graphics\Renderers\Graphics.h"
 #include "Engine\Core\Log\Log.h"
+#include "Engine\Core\Input.h"
+#include "Utility\ConvertUtillty.h"
+#include "Editor\EditorMediator.h"
 
 #include <imgui.h>
 #include <DirectXMath.h>
 
 //コンストラクタ
-ScenePreviewWindow::ScenePreviewWindow()
-{
-
-}
+ScenePreviewWindow::ScenePreviewWindow() = default;
 
 //デストラクタ
 ScenePreviewWindow::~ScenePreviewWindow() = default;
@@ -117,13 +117,44 @@ void ScenePreviewWindow::RenderGui()
 	//画像の描画命令
 	ImGui::Image(static_cast<ImTextureRef>(srv), avail_size);
 
+	DragAndDropReceipt();
+
 	//ウィンドウの終了
 	ImGui::End();
+}
 
+//ドラッグ&ドロップ受け取り
+void ScenePreviewWindow::DragAndDropReceipt()
+{
 	//画像領域の取得とドロップターゲットの開始
 	ImVec2 left_top = ImGui::GetItemRectMin();
 	ImVec2 screen_size = ImGui::GetItemRectSize();
 
+	//ドロップターゲットの判定
+	if (ImGui::BeginDragDropTarget())
+	{
+		const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MODEL_FILE_PATH");
 
+		if (!payload)
+		{
+			LOG_ERROR({ u8"取得" }, u8"受け取ったpayloadがnullです");
+			ImGui::EndDragDropTarget();
+			return;
+		}
+		std::string model_path = static_cast<const char*>(payload->Data);
 
+		//画像ローカル座標の計算
+		ImVec2 mouse_pos = ImGui::GetIO().MousePos;
+
+		DirectX::XMFLOAT2 target_pos = {
+			mouse_pos.x - left_top.x,
+			mouse_pos.y - left_top.y
+		};
+
+		DirectX::XMFLOAT2 ndc = ConvertUtillty::ConvertNDC(screen_size.x, screen_size.y, target_pos);
+
+		EditorMediator::Instance().OnModelDropped(model_path, ndc);
+
+		ImGui::EndDragDropTarget();
+	}
 }

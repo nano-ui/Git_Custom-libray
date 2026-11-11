@@ -1,7 +1,7 @@
 #include "BoneCapsuleColliderComponent.h"
 #include "Gameplay\Components\Model\ModelComponent.h"
 #include "Engine\Graphics\Renderers\ShapeRenderer.h"
-#include "Editor\GuiInspector.h"
+#include "Editor\Inspector\GuiInspector.h"
 #include "Serialization\JsonSerializer.h"
 
 #include <windows.h>

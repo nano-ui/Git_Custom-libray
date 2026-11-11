@@ -1,6 +1,6 @@
 #include "TacticalCommandController.h"
 #include "SquadManager.h"
-#include "Editor\GuiInspector.h"
+#include "Editor\Inspector\GuiInspector.h"
 #include "Serialization\JsonSerializer.h"
 #include "Engine\Collision\CollisionManager.h"
 #include "Engine\Camera\CameraManager.h"
@@ -50,7 +50,7 @@ void TacticalCommandController::Update(float elapsed_time)
 	DirectX::XMFLOAT3 ray_start = { 0.0f,0.0f,0.0f };
 	DirectX::XMFLOAT3 ray_end = { 0.0f,0.0f,0.0f };
 
-	bool is_ray = ScreenToWorldRay(
+	bool is_ray = RayUtiiilty::ScreenToWorldRay(
 		Graphics::Instance().GetCurrentHeight(),
 		Graphics::Instance().GetCurrentWidth(),
 		{ Input::Instance().GetMousePosX(),Input::Instance().GetMousePosY() },

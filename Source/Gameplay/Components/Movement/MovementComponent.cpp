@@ -1,7 +1,7 @@
 #include "MovementComponent.h"
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Serialization\JsonSerializer.h"
-#include "Editor\GuiInspector.h"
+#include "Editor\Inspector\GuiInspector.h"
 
 #include <Windows.h>
 #include <cmath>

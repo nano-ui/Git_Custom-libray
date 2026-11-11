@@ -34,7 +34,7 @@ public:
 	void Update(float elapsed_time);
 
 	//Gui描画、レイアウト構築
-	void RenderGui(Camera* camera, CollisionManager* collision_manager);
+	void RenderGui();
 
 	//プレビュー用のフレームバッファに3Dモデルをレンダリング
 	void RenderPreviews(ID3D11DeviceContext* immediate_context);
@@ -60,5 +60,7 @@ private:
 	std::unique_ptr<LogEditor> log_editor;									//ログエディタ
 	std::unique_ptr<ScenePreviewWindow> scene_preview_window;				//シーンプレビューウィンドウ
 	EditorSceneType active_scene_type;										//現在アクティブなエディタ画面の種類
+	Camera* active_camera = nullptr;										//アクティブカメラ
+	CollisionManager* collision_manager = nullptr;							//コリジョンマネージャー
 };
 

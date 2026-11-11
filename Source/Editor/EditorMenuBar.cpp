@@ -1,5 +1,5 @@
 #include "EditorMenuBar.h"
-#include "ObjectEditor.h"
+#include "ObjectEditor\ObjectEditor.h"
 #include "Log\LogEditor.h"
 
 #include <imgui.h>

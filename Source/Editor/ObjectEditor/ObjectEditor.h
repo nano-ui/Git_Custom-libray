@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <DirectXMath.h>
 
 class GameObject;
 class Camera;
@@ -20,9 +21,6 @@ public:
 	//初期化
 	void Initialize();
 
-	//更新
-	void Update(Camera* camera, CollisionManager* collision_manager);
-
 	//描画
 	void RenderUi(Camera* camera, CollisionManager* collision_manager);
 
@@ -36,7 +34,7 @@ public:
 	void LoadSceneWithDialog();
 
 	//仮オブジェクト生成
-	void CreateTempModelObject(const std::string& model_path);
+	void CreateTempModelObject(const std::string& model_path, DirectX::XMFLOAT2 ndc);
 
 private:
 	//オブジェクト生成UI描画
@@ -71,9 +69,6 @@ private:
 
 	//エディタ設定ファイルの読み込み
 	std::string LoadEditorConfig();
-
-	//ドラッグターゲットの監視処理
-	void HandleDragDropTarget(Camera* camera, CollisionManager* collision_manager);
 
 private:
 	int selected_class_index;				//選択されているクラスのインデックス

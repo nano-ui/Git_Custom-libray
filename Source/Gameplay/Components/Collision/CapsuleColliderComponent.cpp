@@ -1,6 +1,6 @@
 #include "CapsuleColliderComponent.h"
 #include "Serialization\JsonSerializer.h"
-#include "Editor\GuiInspector.h"
+#include "Editor\Inspector\GuiInspector.h"
 
 //コンストラクタ
 CapsuleColliderComponent::CapsuleColliderComponent()

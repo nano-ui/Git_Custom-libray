@@ -1,5 +1,5 @@
 #include "TransformComponent.h"
-#include "Editor\GuiInspector.h"
+#include "Editor\Inspector\GuiInspector.h"
 #include "Serialization\JsonSerializer.h"
 
 #include <imgui.h>

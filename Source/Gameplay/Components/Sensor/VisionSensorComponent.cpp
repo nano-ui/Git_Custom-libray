@@ -1,5 +1,5 @@
 #include "VisionSensorComponent.h"
-#include "Editor\GuiInspector.h"
+#include "Editor\Inspector\GuiInspector.h"
 #include "Serialization\JsonSerializer.h"
 #include "Engine\Core\Log\Log.h"
 #include "Engine\Graphics\Renderers\ShapeRenderer.h"

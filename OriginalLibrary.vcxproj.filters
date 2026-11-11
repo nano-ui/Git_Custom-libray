@@ -114,9 +114,6 @@
     <ClCompile Include="Source\Editor\FileDialogHelper.cpp">
       <Filter>Source\Editor\FileDialogHelper</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\ObjectEditor.cpp">
-      <Filter>Source\Editor\ObjectEditor</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Camera\FreeCamera.cpp">
       <Filter>Source\Engine\Camera\FreeCamera</Filter>
     </ClCompile>
@@ -384,9 +381,6 @@
     <ClCompile Include="Source\Engine\Graphics\Renderers\ImGuiManager.cpp">
       <Filter>Source\Engine\Graphics\Renderers\ImGuiManager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\GuiInspector.cpp">
-      <Filter>Source\Editor\GuiInspector</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Gameplay\Components\Animation\AnimationBlender.cpp">
       <Filter>Source\Gameplay\Components\Animation\AnimationBlender</Filter>
     </ClCompile>
@@ -528,6 +522,21 @@
     <ClCompile Include="Source\Editor\Preview\ScenePreviewWindow.cpp">
       <Filter>Source\Editor\Preview\ScenePreviewWindow</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Utility\ConvertUtillty.cpp">
+      <Filter>Source\Utility\ConvertUtillity</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\Inspector\GuiInspector.cpp">
+      <Filter>Source\Editor\Inspector\GuiInspector</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ObjectEditor\ObjectEditor.cpp">
+      <Filter>Source\Editor\ObjectEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Serialization\SceneSerializer.cpp">
+      <Filter>Source\Serialization\SceneSerializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utility\JsonFileUtility.cpp">
+      <Filter>Source\Utility\JsonFileUtility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -580,9 +589,6 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\FileDialogHelper.h">
       <Filter>Source\Editor\FileDialogHelper</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\ObjectEditor.h">
-      <Filter>Source\Editor\ObjectEditor</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Camera\FreeCamera.h">
       <Filter>Source\Engine\Camera\FreeCamera</Filter>
@@ -866,9 +872,6 @@
     <ClInclude Include="Source\Engine\Graphics\Renderers\ImGuiManager.h">
       <Filter>Source\Engine\Graphics\Renderers\ImGuiManager</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\GuiInspector.h">
-      <Filter>Source\Editor\GuiInspector</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Animation\AnimationBlender.h">
       <Filter>Source\Gameplay\Components\Animation\AnimationBlender</Filter>
     </ClInclude>
@@ -1036,6 +1039,21 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\Preview\ScenePreviewWindow.h">
       <Filter>Source\Editor\Preview\ScenePreviewWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utility\ConvertUtillty.h">
+      <Filter>Source\Utility\ConvertUtillity</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Inspector\GuiInspector.h">
+      <Filter>Source\Editor\Inspector\GuiInspector</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\ObjectEditor\ObjectEditor.h">
+      <Filter>Source\Editor\ObjectEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Serialization\SceneSerializer.h">
+      <Filter>Source\Serialization\SceneSerializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utility\JsonFileUtility.h">
+      <Filter>Source\Utility\JsonFileUtility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1443,9 +1461,6 @@
     <Filter Include="Source\Engine\Graphics\Renderers\ImGuiManager">
       <UniqueIdentifier>{d2a5495e-54e9-4378-871f-0fdb49124306}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Editor\GuiInspector">
-      <UniqueIdentifier>{a3a69721-7993-4502-a32f-cfe4154a4c4d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Gameplay\Components\Animation\AnimationBlender">
       <UniqueIdentifier>{80a000c9-3282-410b-a08d-6d48568d6ab6}</UniqueIdentifier>
     </Filter>
@@ -1676,6 +1691,21 @@
     </Filter>
     <Filter Include="Source\Editor\Preview\ScenePreviewWindow">
       <UniqueIdentifier>{4b14c458-0962-4788-8aaa-74ab7e059f27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utility\ConvertUtillity">
+      <UniqueIdentifier>{2383078d-0815-478e-bc9e-36618e14abf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Inspector">
+      <UniqueIdentifier>{d2e621ac-bf44-46d7-bf6d-4962b3cc3749}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Inspector\GuiInspector">
+      <UniqueIdentifier>{a3a69721-7993-4502-a32f-cfe4154a4c4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Serialization\SceneSerializer">
+      <UniqueIdentifier>{213ec979-5591-4fd3-913d-6aaddd426ce6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utility\JsonFileUtility">
+      <UniqueIdentifier>{5f80377d-5207-4c0b-b8a1-3145835f947b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

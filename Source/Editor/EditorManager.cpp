@@ -1,5 +1,5 @@
 #include "EditorManager.h"
-#include "ObjectEditor.h"
+#include "ObjectEditor\ObjectEditor.h"
 #include "Log\LogEditor.h"
 #include "StateMachineEditor\StateMachineGraphEditor.h"
 #include "Sequence\AnimationSequencerEditor.h"
@@ -83,9 +83,13 @@ void EditorManager::Update(float elapsed_time)
 }
 
 //Gui描画、レイアウト構築
-void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manager)
+void EditorManager::RenderGui()
 {
 	BS_PROFILE_FUNCTION();
+
+	Camera* active_camera = EditorMediator::Instance().GetActiveCamera();
+	CollisionManager* collision = EditorMediator::Instance().GetCollisionManager();
+
 	menu_bar->RenderGui(object_editor.get(),log_editor.get());
 	active_scene_type = tab_bar->Draw();
 
@@ -143,7 +147,7 @@ void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manage
 	case EditorSceneType::LevelEditor:
 	{
 		scene_preview_window->RenderGui();
-		object_editor->RenderUi(camera, collision_manager);
+		object_editor->RenderUi(active_camera, collision);
 		content_browser_editor->RenderGui();
 		break;
 	}
@@ -160,7 +164,7 @@ void EditorManager::RenderGui(Camera* camera, CollisionManager* collision_manage
 				target_blackboard = selected_character->GetBlackboard();
 			}
 		}
-		object_editor->RenderUi(camera, collision_manager);
+		object_editor->RenderUi(active_camera, collision);
 		state_graph_editor->DrawEditor(target_blackboard);
 		model_preview_window->RenderGui();
 		content_browser_editor->RenderGui();

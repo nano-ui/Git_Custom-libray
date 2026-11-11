@@ -1,5 +1,5 @@
 #include "RectangleFormation.h"
-#include "Editor\GuiInspector.h"
+#include "Editor\Inspector\GuiInspector.h"
 #include "Serialization\JsonSerializer.h"
 
 //コンストラクタ

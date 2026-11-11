@@ -1,6 +1,6 @@
 #include "FishScaleFormation.h"
 #include "Serialization\JsonSerializer.h"
-#include "Editor\GuiInspector.h"
+#include "Editor\Inspector\GuiInspector.h"
 
 //コンストラクタ
 FishScaleFormation::FishScaleFormation()

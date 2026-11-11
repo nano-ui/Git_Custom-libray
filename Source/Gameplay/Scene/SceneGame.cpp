@@ -8,6 +8,7 @@
 #include "Engine\Graphics\Resources\Light.h"
 #include "Engine\Graphics\Renderers\ShapeRenderer.h"
 #include "Editor\EditorManager.h"
+#include "Editor\EditorMediator.h"
 #include "Engine/Collision/CollisionManager.h"
 #include "Engine/Collision/CollisionExperiment.h"
 #include "Engine\Graphics\Resources\AnimationManager.h"
@@ -43,6 +44,8 @@ SceneGame::SceneGame()
 	);
 	tactical_command = std::make_unique<TacticalCommandController>();
 	tactical_command->SetCollisionManager(collision_manager.get());
+
+	EditorMediator::Instance().RegisterCollisionManager(collision_manager.get());
 }
 
 //デストラクタ
@@ -118,18 +121,10 @@ void SceneGame::Update(float elapsed_time)
 	BS_PROFILE_FUNCTION();
 #ifdef USE_IMGUI
 	const ImGuiIO& io = ImGui::GetIO();
-	/*if (camera_controller && !io.WantCaptureMouse)*/camera_controller->Update(elapsed_time);
-#else
-	if (camera_controller)camera_controller->Update(elapsed_time);
 #endif
-	{
-		BS_PROFILE_SCOPE("EditorManager::Update");
-		if (editor_manager)editor_manager->Update(elapsed_time);
-	}
-	{
-		BS_PROFILE_SCOPE("IsGameViewportActive");
-		if (editor_manager && !editor_manager->IsGameViewportActive())return;
-	}
+	camera_controller->Update(elapsed_time);
+	if (editor_manager)editor_manager->Update(elapsed_time);
+	if (editor_manager && !editor_manager->IsGameViewportActive())return;
 	if (Input::Instance().IsKeyTrigger(key_pause))
 	{
 		bool next_pause_state = !SceneManager::Instance().IsPaused();
@@ -151,27 +146,17 @@ void SceneGame::Update(float elapsed_time)
 			OutputDebugStringA("[SceneGame 警告] ポーズ切り替え時に camera_controller が nullptr です。\n");
 		}
 	}
+	if (SceneManager::Instance().IsPaused())
 	{
-		BS_PROFILE_SCOPE("IsGameViewportActive");
-		if (SceneManager::Instance().IsPaused())
-		{
-			tactical_command->Update(elapsed_time);
-			return;
-		}
+		tactical_command->Update(elapsed_time);
+		return;
 	}
+	if (object_manager)
 	{
-		BS_PROFILE_SCOPE("OubectManager::Update");
-		if (object_manager)
-		{
-			object_manager->Update(elapsed_time);
-			AnimationManager::Instance().Update();
-		}
+		object_manager->Update(elapsed_time);
+		AnimationManager::Instance().Update();
 	}
-	//if (collision_experiment)collision_experiment->Update(elapsed_time);
-	{
-		BS_PROFILE_SCOPE("CollisionManager::Update");
-		if (collision_manager)collision_manager->ExecuteCollision();
-	}
+	if (collision_manager)collision_manager->ExecuteCollision();
 }
 
 //描画処理
@@ -187,7 +172,6 @@ void SceneGame::Render(float elapsed_time)
 	// エディタ画面（レベル以外）がアクティブな場合の描画処理
 	if (editor_manager && !editor_manager->IsGameViewportActive())
 	{
-#ifdef USE_IMGUI
 		// カメラとライトの定数バッファを更新してプレビューモデルを正しく描画できるようにする
 		if (current_camera && light)
 		{
@@ -210,7 +194,6 @@ void SceneGame::Render(float elapsed_time)
 
 		// ImGui UI の描画を実行
 		RenderGui();
-#endif
 		return;
 	}
 
@@ -358,7 +341,7 @@ void SceneGame::Render(float elapsed_time)
 		if (is_editor)is_editor = false;
 		else is_editor = true;
 	}
-	if(!is_editor)editor_manager->RenderGui(current_camera, collision_manager.get());
+	if(!is_editor)editor_manager->RenderGui();
 	tactical_command->RenderGui();
 #endif
 }

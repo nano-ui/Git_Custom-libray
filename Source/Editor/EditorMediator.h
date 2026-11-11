@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <DirectXMath.h>
 
 class GameObject;
 class ObjectEditor;
@@ -10,6 +11,8 @@ class StateMachineGraphEditor;
 class ColliderAttachmentEditor;
 class ColliderAttachmentItem; 
 class ModelPreviewWindow;
+class Camera;
+class CollisionManager;
 
 class EditorMediator
 {
@@ -29,6 +32,18 @@ public:
 	//アタッチメントエディタの登録
 	void RegisterCollisionAttachmentEditor(ColliderAttachmentEditor* editor);
 
+	//カメラの登録
+	void RegisterActiveCamera(Camera* camera);
+
+	//カメラの取得
+	Camera* GetActiveCamera()const;
+
+	//当たり判定マネージャーの登録
+	void RegisterCollisionManager(CollisionManager* collision);
+
+	//当たり判定マネージャーの取得
+	CollisionManager* GetCollisionManager()const;
+
 	//アタッチメントエディタコライダー一覧の参照取得
 	const std::vector<std::unique_ptr<ColliderAttachmentItem>>* GetAttachmentColliderItems()const;
 
@@ -36,7 +51,7 @@ public:
 	void SetColliderActiveByName(const std::string& collider_name, bool is_active);
 
 	//モデルファイルがドロップした際のイベント
-	void OnModelDropped(const std::string& file_path);
+	void OnModelDropped(const std::string& file_path, DirectX::XMFLOAT2 ndc);
 
 	//中継通知イベント
 	void OnObjectSelected(GameObject* object);
@@ -82,6 +97,8 @@ private:
 	~EditorMediator();
 
 private:
+	Camera* active_camera = nullptr;								//カメラのポインタ
+	CollisionManager* collision_manager = nullptr;					//コリジョンマネージャーのポインタ
 	StateMachineGraphEditor* state_machine_graph_editor = nullptr;	//対象エディタのポインタ
 	GameObject* last_selected_object = nullptr;						//前回選択オブジェクト
 	ModelPreviewWindow* model_preview_window = nullptr;				//モデルプレビュー

@@ -1,6 +1,6 @@
 #include "HateComponent.h"
 #include "Serialization\JsonSerializer.h"
-#include "Editor\GuiInspector.h"
+#include "Editor\Inspector\GuiInspector.h"
 
 #include <Windows.h>
 #include <imgui.h>

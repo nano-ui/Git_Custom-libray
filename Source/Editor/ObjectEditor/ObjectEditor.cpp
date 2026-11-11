@@ -10,8 +10,11 @@
 #include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
 #include "ThiedParty\json.hpp"
 #include "Editor/EditorMediator.h"
-#include "FileDialogHelper.h"
+#include "Editor\FileDialogHelper.h"
+#include "Editor\StateMachineEditor\StateGraphConfigManager.h"
 #include "Engine\Core\Log\Log.h"
+#include "Utility\RayUtility.h"
+#include "Utility\ConvertUtillty.h"
 
 #include <imgui.h>
 #include <ImGuizmo.h>
@@ -21,7 +24,6 @@
 #include <filesystem>
 #include <windows.h>
 #include <commdlg.h>
-#include "StateMachineEditor\StateGraphConfigManager.h"
 #include <Engine\Core\MacroTracy.h>
 
 static const std::string editor_config_path = "Data/Json/System/EditorConfig.json";
@@ -68,114 +70,10 @@ void ObjectEditor::Initialize()
 	}
 }
 
-//更新
-void ObjectEditor::Update(Camera* camera, CollisionManager* collision_manager)
-{
-	BS_PROFILE_FUNCTION();
-
-	//実行前チェック
-	if (!is_placement_mode)return;
-	if (selected_class_index < 0 || selected_class_index >= static_cast<int>(cached_class_names.size()))return;
-
-	ImGuiIO io = ImGui::GetIO();	//ImGuiの入出力状態
-	
-	if (io.WantCaptureMouse)return;
-
-	constexpr int left_click_button = 0;	//左クリックインデックス
-
-	//左クリックが押された瞬間のみレイキャスト処理を実行
-	if (Input::Instance().IsKeyTrigger(VK_LBUTTON))
-	{
-		//画面座標からNDCへの変換
-		const float screen_width = io.DisplaySize.x;	//画面横幅
-		const float screen_height = io.DisplaySize.y;	//画面縦幅
-		const float mouse_x = io.MousePos.x;			//マウスのX座標
-		const float mouse_y = io.MousePos.y;			//マウスのY座標
-		constexpr float ndc_multiplier = 2.0f;			//座標変換用の定数倍率
-		constexpr float ndc_offset = 1.0f;				//座標変換用の定数オフセット
-
-		const float ndc_x = (ndc_multiplier * mouse_x) / screen_width - ndc_offset;		//NDC上のX座標
-		const float ndc_y = ndc_offset - (ndc_multiplier * mouse_y) / screen_height;	//NDC上のY座標
-
-		//逆行列を用いた光線の生成
-		DirectX::XMFLOAT4X4 vp_float4x4 = camera->GetViewProjectionMatrix();		//ビュープロジェクション行列		
-		DirectX::XMMATRIX view_proj_matrix = DirectX::XMLoadFloat4x4(&vp_float4x4);	//変換後のビュープロジェクション行列
-		DirectX::XMMATRIX inv_view_proj = DirectX::XMMatrixInverse(nullptr, view_proj_matrix);	//逆行列
-
-		constexpr float depth_near = 0.0f;	//手前の深度値
-		constexpr float depth_far = 1.0f;	//奥の深度値
-		constexpr float w_value = 1.0f;		//同座標におけるW値
-
-		DirectX::XMVECTOR near_point = DirectX::XMVectorSet(ndc_x, ndc_y, depth_near, w_value);	//手前の点
-		DirectX::XMVECTOR far_point = DirectX::XMVectorSet(ndc_x, ndc_y, depth_far, w_value);	//奥の点
-
-		near_point = DirectX::XMVector3TransformCoord(near_point, inv_view_proj);
-		far_point = DirectX::XMVector3TransformCoord(far_point, inv_view_proj);
-
-		DirectX::XMFLOAT3 ray_start = {};		//レイの開始座標
-		DirectX::XMFLOAT3 ray_end = {};			//レイの終点座標
-		DirectX::XMStoreFloat3(&ray_start, near_point);
-		DirectX::XMStoreFloat3(&ray_end, far_point);
-
-		//空間分割コリジョンへのレイキャストとオブジェクトの生成
-		DirectX::XMFLOAT3 hit_position = {};	//衝突した座標
-		
-		if (collision_manager->RayCastSpace(ray_start, ray_end, hit_position))
-		{
-			const std::string& target_class_name = cached_class_names[selected_class_index];
-			printf("[デバッグログ] クリック配置実行: 選択クラス = %s\n", target_class_name.c_str());
-
-			GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
-
-			if (new_object)
-			{
-				new_object->Initialize();
-
-				auto transform_component = new_object->GetComponent<TransformComponent>();
-				if (transform_component)
-				{
-					transform_component->SetPosition(hit_position);
-				}
-
-				// 配置モードでモデルパスが保持されている場合は読み込む
-				if (!current_model_path.empty())
-				{
-					auto model_comp = new_object->GetComponent<ModelComponent>();
-					if (model_comp)
-					{
-						bool success = model_comp->LoadModel(current_model_path);
-						if (success)
-						{
-							LOG_SUCCESS({ u8"生成" }, u8"生成に成功");
-						}
-						else
-						{
-							LOG_WARNING({ u8"配置" }, u8"生成に失敗%s", target_class_name.c_str());
-						}
-						printf("[デバッグログ] クリック配置モデルロード結果: %s (パス: %s)\n", success ? "成功" : "失敗", current_model_path.c_str());
-					}
-				}
-
-				current_selected_object = new_object;
-			}
-			else
-			{
-				printf("[デバッグ エラー] クリック配置での ObjectFactory 生成失敗 (クラス: %s)\n", target_class_name.c_str());
-			}
-		}
-		else
-		{
-			printf("[デバッグ 警告] レイキャストがヒットしなかったため生成をキャンセルしました。\n");
-		}
-	}
-}
-
 //描画
 void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 {
 	BS_PROFILE_FUNCTION();
-
-	HandleDragDropTarget(camera, collision_manager);
 
 	//画面解像度に基づいた初期配置位置の計算
 	ImGuiIO io = ImGui::GetIO();
@@ -250,18 +148,12 @@ void ObjectEditor::LoadSceneWithDialog()
 }
 
 //仮オブジェクト生成
-void ObjectEditor::CreateTempModelObject(const std::string& model_path)
+void ObjectEditor::CreateTempModelObject(const std::string& model_path, DirectX::XMFLOAT2 ndc)
 {
 	BS_PROFILE_FUNCTION();
 
-	printf("\n==========================================\n");
-	printf("[デバッグログ] CreateTempModelObject 開始\n");
-	printf("[デバッグログ] ドロップされたモデルパス: %s\n", model_path.c_str());
-
 	if (model_path.empty() || cached_class_names.empty())
 	{
-		printf("[デバッグ エラー] model_path または cached_class_names が空です。\n");
-		printf("==========================================\n\n");
 		return;
 	}
 
@@ -274,7 +166,6 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 	// 1. 個別JSONファイルの存在チェック
 	if (std::filesystem::exists(detail_file_path))
 	{
-		printf("[デバッグログ] 既存の個別JSONを発見しました: %s\n", detail_file_path.c_str());
 		std::ifstream detail_file(detail_file_path);
 		if (detail_file.is_open())
 		{
@@ -285,7 +176,6 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 			if (detail_json.contains("class_name"))
 			{
 				std::string target_class_name = detail_json["class_name"].get<std::string>();
-				printf("[デバッグログ] JSON記録クラス名: %s\n", target_class_name.c_str());
 
 				// クラスの生成
 				GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
@@ -296,20 +186,11 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 					if (model_component != nullptr)
 					{
 						bool success = model_component->LoadModel(current_model_path);
-						printf("[デバッグログ] ModelComponent::LoadModel (%s): %s\n", current_model_path.c_str(), success ? "成功" : "失敗");
-					}
-					else
-					{
-						printf("[デバッグ 警告] 生成されたオブジェクト (%s) に ModelComponent がアタッチされていません。\n", target_class_name.c_str());
 					}
 
 					new_object->LoadFromJObject(detail_json, SerializeTarget::Detail);
 					current_selected_object = new_object;
 					is_json_loaded = true;
-				}
-				else
-				{
-					printf("[デバッグ エラー] ObjectFactory でクラス (%s) のインスタンス生成に失敗しました。\n", target_class_name.c_str());
 				}
 			}
 		}
@@ -329,34 +210,52 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path)
 			}
 		}
 
-		printf("[デバッグログ] JSON未検出のため適用予定クラス: %s\n", target_class_name.c_str());
-
 		// オブジェクトの生成
 		GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
 		if (new_object != nullptr)
 		{
-			printf("[デバッグログ] ObjectFactory 生成成功: %s\n", target_class_name.c_str());
 			new_object->Initialize();
 
 			auto model_component = new_object->GetComponent<ModelComponent>();
 			if (model_component != nullptr)
 			{
 				bool success = model_component->LoadModel(current_model_path);
-				printf("[デバッグログ] ModelComponent::LoadModel (%s): %s\n", current_model_path.c_str(), success ? "成功" : "失敗");
 			}
-			else
-			{
-				printf("[デバッグ 警告] 生成されたオブジェクト (%s) に ModelComponent がアタッチされていません。\n", target_class_name.c_str());
-			}
-
 			current_selected_object = new_object;
+		}
+	}
+
+	if (!current_selected_object)return;
+
+	Camera* active_camera = EditorMediator::Instance().GetActiveCamera();
+	CollisionManager* collison_manager = EditorMediator::Instance().GetCollisionManager();
+
+	if (!active_camera || !collison_manager)
+	{
+		LOG_ERROR({ u8"取得" }, u8"仲介クラスから取得したポインタがnullでした");
+		return;
+	}
+	std::shared_ptr<TransformComponent> transform = current_selected_object->GetComponent<TransformComponent>();
+	if (!transform)
+	{
+		LOG_WARNING({ u8"取得" }, u8"モデルに行列情報がないため配置できません");
+		return;
+	}
+
+	DirectX::XMFLOAT3 ray_start = { 0.0f,0.0f,0.0f };
+	DirectX::XMFLOAT3 ray_end = { 0.0f,0.0f,0.0f };
+	if (RayUtiiilty::NdcToWorldRay(ndc, active_camera->GetView(), active_camera->GetProjection(), ray_start, ray_end))
+	{
+		DirectX::XMFLOAT3 hit_position = { 0.0f,0.0f,0.0f };
+		if (collison_manager->RayCastSpace(ray_start, ray_end, hit_position))
+		{
+			transform->SetPosition(hit_position);
 		}
 		else
 		{
-			printf("[デバッグ エラー] ObjectFactory でクラス (%s) のインスタンス生成に失敗しました。\n", target_class_name.c_str());
+			transform->SetPosition({ 0.0f,0.0f,0.0f });
 		}
 	}
-	printf("==========================================\n\n");
 }
 
 //オブジェクト生成UI描画
@@ -406,8 +305,6 @@ void ObjectEditor::DrawLeftPane(Camera* camera, CollisionManager* collision_mana
 		}
 		ImGui::EndListBox();
 	}
-
-	Update(camera, collision_manager);
 }
 
 //クラス適用UI描画
@@ -888,93 +785,4 @@ std::string ObjectEditor::LoadEditorConfig()
 	}
 
 	return std::string();
-}
-
-//ドラッグターゲットの監視処理
-void ObjectEditor::HandleDragDropTarget(Camera* camera, CollisionManager* collision_manager)
-{
-	if (ImGui::GetDragDropPayload() != nullptr)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
-		ImGui::SetNextWindowSize(io.DisplaySize);
-		ImGui::SetNextWindowBgAlpha(0.0f);
-
-		constexpr ImGuiWindowFlags viewport_flags =
-			ImGuiWindowFlags_NoTitleBar |
-			ImGuiWindowFlags_NoResize |
-			ImGuiWindowFlags_NoMove |
-			ImGuiWindowFlags_NoScrollbar |
-			ImGuiWindowFlags_NoSavedSettings |
-			ImGuiWindowFlags_NoBringToFrontOnFocus;
-
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-
-		if (ImGui::Begin("##ViewportDropTarget", nullptr, viewport_flags))
-		{
-			ImGui::InvisibleButton("##ViewportDropArea", io.DisplaySize);
-
-			if (ImGui::BeginDragDropTarget())
-			{
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MODEL_FILE_PATH"))
-				{
-					if (payload->Data != nullptr)
-					{
-						std::string model_path(static_cast<const char*>(payload->Data));
-
-						// Mediator 経由で単一のモデル配置を実行 (CreateTempModelObject)
-						EditorMediator::Instance().OnModelDropped(model_path);
-
-						// ドロップ位置のレイキャスト計算と座標反映
-						if (current_selected_object != nullptr && camera != nullptr && collision_manager != nullptr)
-						{
-							const float screen_width = io.DisplaySize.x;
-							const float screen_height = io.DisplaySize.y;
-							const float mouse_x = io.MousePos.x;
-							const float mouse_y = io.MousePos.y;
-							constexpr float ndc_multiplier = 2.0f;
-							constexpr float ndc_offset = 1.0f;
-
-							const float ndc_x = (ndc_multiplier * mouse_x) / screen_width - ndc_offset;
-							const float ndc_y = ndc_offset - (ndc_multiplier * mouse_y) / screen_height;
-
-							DirectX::XMFLOAT4X4 vp_float4x4 = camera->GetViewProjectionMatrix();
-							DirectX::XMMATRIX view_proj_matrix = DirectX::XMLoadFloat4x4(&vp_float4x4);
-							DirectX::XMMATRIX inv_view_proj = DirectX::XMMatrixInverse(nullptr, view_proj_matrix);
-
-							constexpr float depth_near = 0.0f;
-							constexpr float depth_far = 1.0f;
-							constexpr float w_value = 1.0f;
-
-							DirectX::XMVECTOR near_point = DirectX::XMVectorSet(ndc_x, ndc_y, depth_near, w_value);
-							DirectX::XMVECTOR far_point = DirectX::XMVectorSet(ndc_x, ndc_y, depth_far, w_value);
-
-							near_point = DirectX::XMVector3TransformCoord(near_point, inv_view_proj);
-							far_point = DirectX::XMVector3TransformCoord(far_point, inv_view_proj);
-
-							DirectX::XMFLOAT3 ray_start = {};
-							DirectX::XMFLOAT3 ray_end = {};
-							DirectX::XMStoreFloat3(&ray_start, near_point);
-							DirectX::XMStoreFloat3(&ray_end, far_point);
-
-							DirectX::XMFLOAT3 hit_position = { 0.0f, 0.0f, 0.0f };
-							bool is_hit = collision_manager->RayCastSpace(ray_start, ray_end, hit_position);
-
-							// 配置したオブジェクトの TransformComponent に位置を反映
-							auto transform = current_selected_object->GetComponent<TransformComponent>();
-							if (transform)
-							{
-								transform->SetPosition(hit_position);
-							}
-						}
-					}
-					else OutputDebugStringA("[Error] ObjectEditor: HandleDragDropTarget - payload data is nullptr!\n");
-				}
-				ImGui::EndDragDropTarget();
-			}
-		}
-		ImGui::End();
-		ImGui::PopStyleVar(2);
-	}
 }

@@ -1,11 +1,15 @@
 #include "EditorMediator.h"
-#include "ObjectEditor.h"
+#include "ObjectEditor\ObjectEditor.h"
 #include "Gameplay/GameObjects/GameObject.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Gameplay/GameObjects/Character/Character.h"
 #include "StateMachineEditor\StateMachineGraphEditor.h"
 #include "Preview\ModelPreviewWindow.h"
 #include "Attachment\ColliderAttachmentEditor.h"
+#include "Engine\Camera\Camera.h"
+#include "Engine\Collision\CollisionManager.h"
+
+#include "Engine\Core\Log\Log.h"
 
 #include <Windows.h>
 #include <iostream>
@@ -59,6 +63,50 @@ void EditorMediator::RegisterCollisionAttachmentEditor(ColliderAttachmentEditor*
 	}
 }
 
+//カメラの登録
+void EditorMediator::RegisterActiveCamera(Camera* camera)
+{
+	if (!camera)
+	{
+		LOG_ERROR({ u8"設定" }, u8"カメラのポインタがnullです");
+		return;
+	}
+	active_camera = camera;
+}
+
+//カメラの取得
+Camera* EditorMediator::GetActiveCamera()const
+{
+	if (!active_camera)
+	{
+		LOG_WARNING({ u8"取得" }, u8"取得先のポインタがnullです");
+		return nullptr;
+	}
+	return active_camera;
+}
+
+//当たり判定マネージャーの登録
+void EditorMediator::RegisterCollisionManager(CollisionManager* collision)
+{
+	if (!collision)
+	{
+		LOG_ERROR({ u8"設定" }, u8"当たり判定マネージャーのポインタがnullです");
+		return;
+	}
+	collision_manager = collision;
+}
+
+//当たり判定マネージャーの取得
+CollisionManager* EditorMediator::GetCollisionManager()const
+{
+	if (!collision_manager)
+	{
+		LOG_WARNING({ u8"取得" }, u8"取得先のポインタがnullです");
+		return nullptr;
+	}
+	return collision_manager;
+}
+
 //アタッチメントエディタコライダー一覧の参照取得
 const std::vector<std::unique_ptr<ColliderAttachmentItem>>* EditorMediator::GetAttachmentColliderItems() const
 {
@@ -85,10 +133,9 @@ void EditorMediator::SetColliderActiveByName(const std::string& collider_name, b
 }
 
 //モデルファイルがドロップした際のイベント
-void EditorMediator::OnModelDropped(const std::string& file_path)
+void EditorMediator::OnModelDropped(const std::string& file_path, DirectX::XMFLOAT2 ndc)
 {
-	if (object_editor)object_editor->CreateTempModelObject(file_path);
-	else OutputDebugStringA("[Error] EditorMediator: ObjectEditor is not registered!\n");
+	if (object_editor)object_editor->CreateTempModelObject(file_path, ndc);
 }
 
 //中継通知イベント

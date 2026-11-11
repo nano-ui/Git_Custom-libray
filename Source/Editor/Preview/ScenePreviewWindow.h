@@ -27,6 +27,10 @@ public:
 	void RenderGui();
 
 private:
+	//ドラッグ&ドロップ受け取り
+	void DragAndDropReceipt();
+
+private:
 	std::unique_ptr<framebuffer> frame_buffer;	//フレームバッファ
 };
 

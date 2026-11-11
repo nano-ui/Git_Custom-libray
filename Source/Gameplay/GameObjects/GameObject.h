@@ -8,7 +8,7 @@
 #include "Engine\Graphics\Renderers\ShapeRenderer.h"
 #include "Engine\Graphics\Resources\Model.h"
 #include "Serialization\JsonSerializer.h"
-#include "Editor\GuiInspector.h"
+#include "Editor\Inspector\GuiInspector.h"
 #include "Gameplay\Components\Base\Component.h"
 
 struct Collider;

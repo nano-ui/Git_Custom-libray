@@ -1,6 +1,6 @@
 #include "CraneWingFormation.h"
 #include "Serialization\JsonSerializer.h"
-#include "Editor\GuiInspector.h"
+#include "Editor\Inspector\GuiInspector.h"
 
 //コンストラクタ
 CraneWingFormation::CraneWingFormation()
