@@ -32,6 +32,9 @@ void TransformComponent::Initialize()
 	rotation = { 0.0f,0.0f,0.0f };
 	quaternion = { 0.0f,0.0f,0.0f,1.0f };
 	scale = { 1.0f,1.0f,1.0f };
+	prev_position = position;
+	prev_rotation = rotation;
+	prev_scale = scale;
 	world_matrix = DirectX::XMMatrixIdentity();
 	is_dirty = true;
 
@@ -42,6 +45,7 @@ void TransformComponent::Initialize()
 void TransformComponent::Update(float elapsed_time)
 {
 	if (!is_active)return;
+	SyncInspectorChanges();
 	if (is_dirty)UpdateWorldMatrix();
 }
 
@@ -49,28 +53,6 @@ void TransformComponent::Update(float elapsed_time)
 void TransformComponent::RenderGui()
 {
 	if (!is_active)return;
-
-	//if (ImGui::TreeNode(GetComponentName().c_str()))
-	//{
-	//	if (ImGui::DragFloat3(u8"à íu", &position.x, 0.1f))is_dirty = true;
-
-	//	DirectX::XMFLOAT3 euler_dug = {
-	//		DirectX::XMConvertToDegrees(rotation.x),
-	//		DirectX::XMConvertToDegrees(rotation.y),
-	//		DirectX::XMConvertToDegrees(rotation.z)
-	//	};
-
-	//	if (ImGui::DragFloat3(u8"âÒì]", &euler_dug.x, 1.0f))
-	//	{
-	//		rotation.x = DirectX::XMConvertToRadians(euler_dug.x);
-	//		rotation.y = DirectX::XMConvertToRadians(euler_dug.y);
-	//		rotation.z = DirectX::XMConvertToRadians(euler_dug.z);
-	//		is_dirty = true;
-	//	}
-
-	//	if (ImGui::DragFloat3(u8"ägëÂó¶", &scale.x, 0.1f))is_dirty = true;
-	//	ImGui::TreePop();
-	//}
 }
 
 //JSONï€ë∂ópïœêîìoò^
@@ -187,5 +169,27 @@ void TransformComponent::UpdateEulerFromQuaternion()
 		rotation.x = std::asin(sin_pitch);
 		rotation.y = std::atan2(m._31, m._33);
 		rotation.z = std::atan2(m._12, m._22);
+	}
+}
+
+//ílïœçXìØä˙
+void TransformComponent::SyncInspectorChanges()
+{
+	if (rotation.x != prev_rotation.x || rotation.y != prev_rotation.y || rotation.z != prev_rotation.z)
+	{
+		SetRotation(rotation);
+		prev_rotation = rotation;
+	}
+
+	if (position.x != prev_position.x || position.y != prev_position.y || position.z != prev_position.z)
+	{
+		prev_position = position;
+		is_dirty = true;
+	}
+
+	if (scale.x != prev_scale.x || scale.y != prev_scale.y || scale.z != prev_scale.z)
+	{
+		prev_scale = scale;
+		is_dirty = true;
 	}
 }

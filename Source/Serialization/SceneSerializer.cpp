@@ -67,7 +67,7 @@ bool SceneSerializer::LoadScene(const std::string& file_path)
 	}
 
 	//ルートキー(objects)の存在＆配列チェック
-	if (!json_data.contains(json_root_key_objects) || !json_data.is_array())return false;
+	if (!json_data.contains(json_root_key_objects) || !json_data[json_root_key_objects].is_array())return false;
 	ObjectManager::Instance().Clear();
 
 	//オブジェクト配列のループ復元

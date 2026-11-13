@@ -4,10 +4,12 @@
 #include <string>
 #include <unordered_map>
 #include <DirectXMath.h>
+#include <memory>
 
 class GameObject;
 class Camera;
 class CollisionManager;
+class SceneSerializer;
 
 class ObjectEditor
 {
@@ -69,6 +71,9 @@ private:
 
 	//エディタ設定ファイルの読み込み
 	std::string LoadEditorConfig();
+
+private:
+	std::unique_ptr<SceneSerializer> scene_serializer;	//シーンシリアル
 
 private:
 	int selected_class_index;				//選択されているクラスのインデックス

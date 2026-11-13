@@ -12,17 +12,6 @@ static AutoRegister<Stage> auto_register_stage("Stage");
 // コンストラクタ
 Stage::Stage()
 {
-	transform_component = AddComponent<TransformComponent>();
-	model_component = AddComponent<ModelComponent>();
-
-	if (model_component && transform_component)
-	{
-		model_component->SetTransformComponent(transform_component);
-	}
-	else
-	{
-		OutputDebugStringA("[Stage エラー] コンストラクタ: 基本コンポーネントの生成に失敗しました。\n");
-	}
 }
 
 // デストラクタ
@@ -34,6 +23,8 @@ Stage::~Stage()
 void Stage::Initialize()
 {
 	is_active = true;
+
+	SetupComponent();
 
 	auto device = Graphics::Instance().GetDevice();
 
@@ -51,6 +42,7 @@ void Stage::Initialize()
 
 	// JsonSerializer および GuiInspector への登録
 	SetupSerialization();
+	SetupInspector();
 }
 
 // 専用シリアライザおよび GuiInspector への登録
@@ -58,17 +50,16 @@ void Stage::SetupSerialization()
 {
 	GameObject::SetupSerialization();
 
-	// 専用クラス JsonSerializer への登録
 	if (serializer)
 	{
-		serializer->RegisterVariable(u8"空間分割エリア描画", &is_draw_areas);
+		serializer->RegisterVariable(u8"空間分割エリア描画", &is_draw_areas, SerializeTarget::Detail);
 	}
+}
 
-	// 専用クラス GuiInspector への登録（詳細パネルに自動表示）
-	if (inspector)
-	{
-		inspector->RegisterVariable(u8"空間分割エリア描画", &is_draw_areas, u8"空間分割デバッグ");
-	}
+//インスペクター登録
+void Stage::SetupInspector()
+{
+	GameObject::SetupInspector();
 }
 
 // 更新処理（後付けされたモデルデータの変更を自動検知して当たり判定を構築）
@@ -125,6 +116,19 @@ void Stage::RenderDebug(ShapeRenderer* renderer)
 	DirectX::XMFLOAT4X4 view = Graphics::Instance().GetViewMatrix();
 	DirectX::XMFLOAT4X4 projection = Graphics::Instance().GetProjectionMatrix();
 	renderer->Render(context, view, projection);
+}
+
+//コンポーネントの設定
+void Stage::SetupComponent()
+{
+	//TransformComponent の取得・生成
+	transform_component = GetComponent<TransformComponent>();
+	if (!transform_component) transform_component = AddComponent<TransformComponent>();
+
+	//ModelComponent の取得・生成
+	model_component = GetComponent<ModelComponent>();
+	if (!model_component) model_component = AddComponent<ModelComponent>();
+	model_component->SetTransformComponent(transform_component);
 }
 
 // 当たり判定用の空間分割キャストオブジェクトを取得

@@ -65,11 +65,17 @@ private:
 	//クォータニオンからオイラー角を算出して同期
 	void UpdateEulerFromQuaternion();
 
+	//値変更同期
+	void SyncInspectorChanges();
+
 private:
 	DirectX::XMFLOAT3 position;		//位置座標
 	DirectX::XMFLOAT3 rotation;		//オイラー角
 	DirectX::XMFLOAT4 quaternion;	//クォータニオン
 	DirectX::XMFLOAT3 scale;		//拡大率
+	DirectX::XMFLOAT3 prev_position;//前回の位置座標
+	DirectX::XMFLOAT3 prev_rotation;//前回のオイラー角
+	DirectX::XMFLOAT3 prev_scale;	//前回の拡大率
 	DirectX::XMMATRIX world_matrix;	//ワールド座標
 	bool is_dirty;					//行列計算フラグ
 };

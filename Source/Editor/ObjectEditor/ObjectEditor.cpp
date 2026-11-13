@@ -15,6 +15,7 @@
 #include "Engine\Core\Log\Log.h"
 #include "Utility\RayUtility.h"
 #include "Utility\ConvertUtillty.h"
+#include "Serialization\SceneSerializer.h"
 
 #include <imgui.h>
 #include <ImGuizmo.h>
@@ -44,6 +45,7 @@ ObjectEditor::ObjectEditor()
 	selected_class_index = 0;
 	current_selected_object = nullptr;
 	current_gizmo_operation = static_cast<int>(ImGuizmo::TRANSLATE);
+	scene_serializer = std::make_unique<SceneSerializer>();
 }
 
 //デストラクタ
@@ -63,10 +65,11 @@ void ObjectEditor::Initialize()
 	EditorMediator::Instance().RegisterObjectEditor(this);
 
 	//起動時のシーン復元処理
-	std::string auto_load_path = LoadEditorConfig();
+	std::string auto_load_path = scene_serializer->LoadEditorConfig();
 	if (!auto_load_path.empty() && std::filesystem::exists(auto_load_path))
 	{
-		LoadScene(auto_load_path);
+		//LoadScene(auto_load_path);
+		scene_serializer->LoadScene(auto_load_path);
 	}
 }
 
@@ -97,7 +100,7 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 		std::string dynamic_save_path = SelectSavePath();
 		if (!dynamic_save_path.empty())
 		{
-			SaveScene(dynamic_save_path);
+			scene_serializer->SaveScene(dynamic_save_path);
 		}
 	}
 
@@ -106,7 +109,7 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 		std::string dynamic_load_path = SelectOpenPath();
 		if (!dynamic_load_path.empty())
 		{
-			LoadScene(dynamic_load_path);
+			scene_serializer->LoadScene(dynamic_load_path);
 		}
 	}
 
@@ -130,7 +133,7 @@ void ObjectEditor::SaveSceneWithDialog()
 	std::string dynamic_save_path = SelectSavePath();
 	if (!dynamic_save_path.empty())
 	{
-		SaveScene(dynamic_save_path);
+		scene_serializer->SaveScene(dynamic_save_path);
 	}
 }
 
@@ -143,7 +146,7 @@ void ObjectEditor::LoadSceneWithDialog()
 
 	if (!dynamic_load_path.empty())
 	{
-		LoadScene(dynamic_load_path);
+		scene_serializer->LoadScene(dynamic_load_path);
 	}
 }
 
@@ -569,78 +572,6 @@ void ObjectEditor::DrawGizmo(Camera* camera)
 			transform->SetScale(new_scale);
 		}
 	}
-}
-
-//配置されているすべてのオブジェクト状態を保存
-void ObjectEditor::SaveScene(const std::string& file_path)
-{
-	BS_PROFILE_FUNCTION();
-
-	//指定された保存先フォルダの動的自動生成
-	std::filesystem::path system_path(file_path);
-	if (system_path.has_parent_path())
-	{
-		std::filesystem::create_directories(system_path.parent_path());
-	}
-
-	nlohmann::json scene_json;                                               // シーン全体のルートJSON
-	nlohmann::json objects_array = nlohmann::json::array();					//各オブジェクトデータを並べるためのJSON配列
-	const auto& active_object = ObjectManager::Instance().GetGameObjects();	//現在マネージャーが管理している全オブジェクト
-
-	std::unordered_map<std::string, int> save_counters;	//モデル名ごとの連番管理用マップ
-
-	//現在アクティブなオブジェクトを1つずつ走査して情報をパッケージング
-	for (size_t i = 0; i < active_object.size(); i++)
-	{
-		if (active_object[i] != nullptr && active_object[i]->IsActive())
-		{
-			GameObject* obj = active_object[i].get();
-			auto model_component = obj->GetComponent<ModelComponent>();
-			auto transform_component = obj->GetComponent<TransformComponent>();
-
-			//モデル名(ファイル名)の取得
-			std::string model_name = "";
-			std::string model_path = "";
-			if (model_component != nullptr && !model_component->GetModelPath().empty())
-			{
-				model_path = model_component->GetModelPath();
-				model_name = std::filesystem::path(model_path).stem().string();
-			}
-			else model_name = obj->GetClassNameW();
-
-			//個別Jsonファイル用パスの設定
-			std::string detail_dir = "Data/Json/" + model_name;
-			std::string detail_file_path = detail_dir + "/" + model_name + ".json";
-
-			//ディレクトリの生成
-			if (!obj->SaveToDetailFile(detail_file_path))
-			{
-				OutputDebugStringA("[ObjectEditor 警告] SaveScene: 個別JSONファイルの保存に失敗しました。\n");
-			}
-
-			//個別情報Jsonの書き出し
-			nlohmann::json node;
-			node["model_path"] = model_path;
-			node["position"] = transform_component ? transform_component->GetPosition() : DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-			node["rotation"] = transform_component ? transform_component->GetQuaternion() : DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-			node["scale"] = transform_component ? transform_component->GetScale() : DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
-			node["detail_json_path"] = detail_file_path;
-			objects_array.push_back(node);
-		}
-	}
-
-	scene_json["object"] = objects_array;
-
-	//構築したJSON構造をファイルへ書き出す
-	std::ofstream output_file(file_path); 
-	if(output_file.is_open())
-	{
-		output_file << scene_json.dump(json_indent_space_count);
-		output_file.close();
-		SaveEditorConfig(file_path);
-		OutputDebugStringA("[情報] SaveScene: シーンデータと個別データの分離保存が完了しました。\n");
-	}
-	else OutputDebugStringA("[エラー] SaveScene: シーンJSONファイルのオープンに失敗しました。\n");
 }
 
 //ファイルからオブジェクト群を自動生成して状態を復元

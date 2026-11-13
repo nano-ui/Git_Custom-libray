@@ -1,520 +1,524 @@
 {
-    "object": [
+    "objects": [
         {
-            "detail_json_path": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
-            "model_path": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
-            "position": {
-                "x": -29.091073989868164,
-                "y": 0.346239298582077,
-                "z": -28.923168182373047
-            },
-            "rotation": {
-                "w": 0.21268552541732788,
-                "x": 0.0,
-                "y": 0.9771207571029663,
+            "StateMachinePath": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger_StateMachine.json",
+            "クラス名": "Player",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": -0.0,
+                "y": 2.7129476070404053,
                 "z": 0.0
             },
-            "scale": {
+            "座標": {
+                "x": -29.091073989868164,
+                "y": 0.3462345004081726,
+                "z": -28.923168182373047
+            },
+            "拡大": {
                 "x": 0.9999995827674866,
                 "y": 1.0,
                 "z": 0.9999995827674866
             }
         },
         {
-            "detail_json_path": "Data/Json/MossyForgotten_SquareStone_Small/MossyForgotten_SquareStone_Small.json",
-            "model_path": "Data\\Model\\Stage\\MossyForgotten_SquareStone_Small.glb",
-            "position": {
+            "クラス名": "Stage",
+            "モデルパス": "Data\\Model\\Stage\\MossyForgotten_SquareStone_Small.glb",
+            "個別ファイルの参照先パス": "Data/Json/MossyForgotten_SquareStone_Small/MossyForgotten_SquareStone_Small.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "座標": {
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
-            "rotation": {
-                "w": 1.0,
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 20.0,
                 "y": 1.0,
                 "z": 20.0
-            }
+            },
+            "空間分割エリア描画": false
         },
         {
-            "detail_json_path": "Data/Json/MossyForgotten_SquareStone_Large/MossyForgotten_SquareStone_Large.json",
-            "model_path": "Data\\Model\\Stage\\MossyForgotten_SquareStone_Large.glb",
-            "position": {
+            "クラス名": "Stage",
+            "モデルパス": "Data\\Model\\Stage\\MossyForgotten_SquareStone_Large.glb",
+            "個別ファイルの参照先パス": "Data/Json/MossyForgotten_SquareStone_Large/MossyForgotten_SquareStone_Large.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "座標": {
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
-            "rotation": {
-                "w": 1.0,
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 15.0,
                 "y": 25.0,
                 "z": 15.0
-            }
+            },
+            "空間分割エリア描画": false
         },
         {
-            "detail_json_path": "Data/Json/Rampage_Elemental/Rampage_Elemental.json",
-            "model_path": "Data\\Model\\Character\\Enemy\\Rampage_Elemental.gltf",
-            "position": {
-                "x": -0.188670352101326,
-                "y": 0.24835878610610962,
-                "z": 0.0
-            },
-            "rotation": {
-                "w": 0.9974883198738098,
+            "StateMachinePath": "Data/Json/Rampage_Elemental/Rampage_Elemental_StateMachine.json",
+            "クラス名": "Enemy",
+            "モデルパス": "Data\\Model\\Character\\Enemy\\Rampage_Elemental.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Rampage_Elemental/Rampage_Elemental.json",
+            "回転": {
                 "x": -0.0,
-                "y": -0.07083114236593246,
+                "y": -0.5283655524253845,
                 "z": 0.0
             },
-            "scale": {
+            "座標": {
+                "x": -10.492541313171387,
+                "y": 0.2296946495771408,
+                "z": 17.6519832611084
+            },
+            "拡大": {
                 "x": 2.9999635219573975,
                 "y": 3.0,
                 "z": 2.9999635219573975
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 2.108275890350342,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -36.464439392089844,
-                "y": 0.26561203598976135,
+                "y": 0.2656800150871277,
                 "z": -19.62488555908203
             },
-            "rotation": {
-                "w": 0.493977427482605,
-                "x": 0.0,
-                "y": 0.8694747090339661,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 2.4461538791656494,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -34.97096252441406,
-                "y": 0.2636409103870392,
+                "y": 0.2635841369628906,
                 "z": -19.629545211791992
             },
-            "rotation": {
-                "w": 0.34075456857681274,
-                "x": 0.0,
-                "y": 0.9401522874832153,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 2.4461538791656494,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -33.46549987792969,
-                "y": 0.26155373454093933,
+                "y": 0.2615540623664856,
                 "z": -19.62595558166504
             },
-            "rotation": {
-                "w": 0.34075456857681274,
-                "x": 0.0,
-                "y": 0.9401522874832153,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 2.4461538791656494,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -31.972028732299805,
-                "y": 0.2610566318035126,
+                "y": 0.2610568404197693,
                 "z": -19.630157470703125
             },
-            "rotation": {
-                "w": 0.34075456857681274,
-                "x": 0.0,
-                "y": 0.9401522874832153,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 2.4461538791656494,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -36.18236541748047,
-                "y": 0.26383718848228455,
+                "y": 0.26373958587646484,
                 "z": -21.111370086669922
             },
-            "rotation": {
-                "w": 0.34075456857681274,
-                "x": 0.0,
-                "y": 0.9401522874832153,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 2.4461538791656494,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -34.965694427490234,
-                "y": 0.26094695925712585,
+                "y": 0.2609472870826721,
                 "z": -21.124826431274414
             },
-            "rotation": {
-                "w": 0.34075456857681274,
-                "x": 0.0,
-                "y": 0.9401522874832153,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 2.4461538791656494,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -33.46452331542969,
-                "y": 0.260386198759079,
+                "y": 0.26038938760757446,
                 "z": -21.124006271362305
             },
-            "rotation": {
-                "w": 0.34075456857681274,
-                "x": 0.0,
-                "y": 0.9401522874832153,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 2.4461538791656494,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -31.965408325195313,
-                "y": 0.2590002119541168,
+                "y": 0.2590034604072571,
                 "z": -21.126129150390625
             },
-            "rotation": {
-                "w": 0.34075456857681274,
-                "x": 0.0,
-                "y": 0.9401522874832153,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 2.4461538791656494,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -36.53261184692383,
-                "y": 0.2603659927845001,
+                "y": 0.2603446841239929,
                 "z": -22.648088455200195
             },
-            "rotation": {
-                "w": 0.34075456857681274,
-                "x": 0.0,
-                "y": 0.9401522874832153,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 2.4461538791656494,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -34.9650993347168,
-                "y": 0.2591606676578522,
+                "y": 0.25916391611099243,
                 "z": -22.62518882751465
             },
-            "rotation": {
-                "w": 0.34075456857681274,
-                "x": 0.0,
-                "y": 0.9401522874832153,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": 0.0,
+                "y": -0.4110848605632782,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -33.46538543701172,
-                "y": 0.2577780783176422,
+                "y": 0.2577809691429138,
                 "z": -22.625244140625
             },
-            "rotation": {
-                "w": 0.9789504408836365,
-                "x": 0.0,
-                "y": -0.20409820973873138,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.9671832919120789,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -31.963407516479492,
-                "y": 0.25639602541923523,
+                "y": 0.2563992142677307,
                 "z": -22.62350845336914
             },
-            "rotation": {
-                "w": 0.8853306770324707,
-                "x": 0.0,
-                "y": 0.4649619460105896,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.9671656489372253,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -36.46794509887695,
-                "y": 0.25969746708869934,
+                "y": 0.2596370577812195,
                 "z": -24.12751579284668
             },
-            "rotation": {
-                "w": 0.8853347897529602,
-                "x": 0.0,
-                "y": 0.464954137802124,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.9678823351860046,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -35.02599334716797,
-                "y": 0.2569992244243622,
+                "y": 0.2569388747215271,
                 "z": -24.131906509399414
             },
-            "rotation": {
-                "w": 0.8851680755615234,
-                "x": 0.0,
-                "y": 0.46527138352394104,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.9675302505493164,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -33.5247917175293,
-                "y": 0.2551853358745575,
+                "y": 0.25518834590911865,
                 "z": -24.148578643798828
             },
-            "rotation": {
-                "w": 0.8852499723434448,
-                "x": 0.0,
-                "y": 0.4651155471801758,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.9671541452407837,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -31.96623992919922,
-                "y": 0.2537858188152313,
+                "y": 0.2537890076637268,
                 "z": -24.12690544128418
             },
-            "rotation": {
-                "w": 0.8853374123573303,
-                "x": 0.0,
-                "y": 0.4649490714073181,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.9671712517738342,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -36.46729278564453,
-                "y": 0.25982221961021423,
+                "y": 0.25976186990737915,
                 "z": -25.626781463623047
             },
-            "rotation": {
-                "w": 0.8853334188461304,
-                "x": 0.0,
-                "y": 0.4649566411972046,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.967461109161377,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -35.02320861816406,
-                "y": 0.2571217119693756,
+                "y": 0.25706130266189575,
                 "z": -25.650920867919922
             },
-            "rotation": {
-                "w": 0.8852660655975342,
-                "x": 0.0,
-                "y": 0.4650849401950836,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.9671702980995178,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -33.46574783325195,
-                "y": 0.2542048394680023,
+                "y": 0.25414443016052246,
                 "z": -25.625768661499023
             },
-            "rotation": {
-                "w": 0.8853336572647095,
-                "x": 0.0,
-                "y": 0.46495622396469116,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.9671704173088074,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -31.965608596801758,
-                "y": 0.25139740109443665,
+                "y": 0.2513369917869568,
                 "z": -25.62566375732422
             },
-            "rotation": {
-                "w": 0.8853336572647095,
-                "x": 0.0,
-                "y": 0.46495625376701355,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.9674771428108215,
+                "z": 0.0
+            },
+            "座標": {
                 "x": -36.52589797973633,
-                "y": 0.26006004214286804,
+                "y": 0.25999969244003296,
                 "z": -27.151981353759766
             },
-            "rotation": {
-                "w": 0.8852623105049133,
-                "x": 0.0,
-                "y": 0.4650920331478119,
-                "z": 0.0
-            },
-            "scale": {
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "detail_json_path": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
-            "model_path": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
-            "position": {
-                "x": -34.96443557739258,
-                "y": 0.2571355998516083,
-                "z": -27.124887466430664
-            },
-            "rotation": {
-                "w": 0.885333776473999,
-                "x": 0.0,
-                "y": 0.46495598554611206,
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\StoneGolem\\SKM_StoneGolem.gltf",
+            "個別ファイルの参照先パス": "Data/Json/SKM_StoneGolem/SKM_StoneGolem.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.9671698212623596,
                 "z": 0.0
             },
-            "scale": {
+            "座標": {
+                "x": -34.96443557739258,
+                "y": 0.25707513093948364,
+                "z": -27.124887466430664
+            },
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0

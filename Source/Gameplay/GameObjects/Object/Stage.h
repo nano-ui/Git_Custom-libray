@@ -32,11 +32,14 @@ public:
 	//デバッグ描画
 	void RenderDebug(ShapeRenderer* renderer)override;
 
-	//シリアライザおよび GuiInspector への変数登録
-	void SetupSerialization() override;
+	//コンポーネントの設定
+	void SetupComponent()override;
 
-	//任意のモデル読み込みと空間分割当たり判定の自動再構築
-	bool LoadStageModel(const std::string& file_path);
+	// シリアライズ登録
+	void SetupSerialization()override;
+
+	//インスペクター登録
+	void SetupInspector() override;
 
 	//当たり判定用の空間分割キャストオブジェクトを取得
 	SpaceDivisionCast* GetSpaceDivisionCast();
