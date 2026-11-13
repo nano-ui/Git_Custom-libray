@@ -7,6 +7,8 @@
 #include "Engine/Graphics/Renderers/Graphics.h"
 #include "Gameplay/GameObjects/ObjectManager.h"
 #include "Engine/Camera/CameraManager.h"
+#include "Serialization\JsonSerializer.h"
+#include "Editor\Inspector\GuiInspector.h"
 
 #include <Windows.h>
 #include <vector>
@@ -108,6 +110,20 @@ void ModelComponent::RenderGui()
 		if (model_data)ImGui::Text(u8"リソース共有参照数: %ld", model_data.use_count());
 		ImGui::TreePop();
 	}
+}
+
+//JSON保存用変数登録
+void ModelComponent::SetupSerialization(JsonSerializer* serializer)
+{
+	Component::SetupSerialization(serializer);
+	serializer->RegisterVariable(u8"モデルパス", &model_path, SerializeTarget::Base);
+}
+
+//Gui登録
+void ModelComponent::SetupInspector(GuiInspector* inspector)
+{
+	Component::SetupInspector(inspector);
+	inspector->RegisterText(u8"モデルパス", &model_path, GetComponentName());
 }
 
 //トランスフォームコンポーネントの登録

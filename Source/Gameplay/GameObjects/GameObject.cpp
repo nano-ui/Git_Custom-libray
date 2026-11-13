@@ -92,6 +92,8 @@ void GameObject::SetupSerialization()
 	if (!serializer) return;
 	serializer->Clear();
 
+	serializer->RegisterVariable(u8"クラス名", &class_name, SerializeTarget::Base);
+
 	// アタッチされた全コンポーネントのシリアライズ登録を一括実行
 	for (auto& component : components)
 	{
@@ -197,7 +199,7 @@ bool GameObject::LoadFromDetailFile(const std::string& file_path)
 	//開けるか確認
 	if (!detail_file.is_open())
 	{
-		OutputDebugStringA("[GameObject エラー] LoadFromDetailFile: 個別JSONファイルが開けませんでした。\n");
+		LOG_ERROR({ u8"復元" }, u8"個別JSONファイルが開けませんでした(ファイルパス:%s)", file_path.c_str());
 		return false;
 	}
 

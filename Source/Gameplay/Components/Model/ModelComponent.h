@@ -11,6 +11,8 @@ class GltfModel;
 class GltfModelData;
 class GltfModelRenderer;
 class TransformComponent;
+class JsonSerializer;
+class GuiInspector;
 
 // ModelManager を介して GLTF モデルを保持・更新・描画するコンポーネント
 class ModelComponent : public Component
@@ -36,6 +38,12 @@ public:
 
 	//ImGuiデバッグ描画
 	void RenderGui() override;
+
+	//JSON保存用変数登録
+	void SetupSerialization(JsonSerializer* serializer);
+
+	//Gui登録
+	void SetupInspector(GuiInspector* inspector);
 
 	//トランスフォームコンポーネントの登録
 	void SetTransformComponent(const std::shared_ptr<TransformComponent>& transform);
