@@ -546,6 +546,9 @@
     <ClCompile Include="Source\Gameplay\GameObjects\ObjectSpawner.cpp">
       <Filter>Source\Gameplay\GameObjects\ObjectSpawner</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\Gizumo\ObjectGizmo.cpp">
+      <Filter>Source\Editor\Gizumo\ObjectGizmo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1072,6 +1075,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\GameObjects\ObjectSpawner.h">
       <Filter>Source\Gameplay\GameObjects\ObjectSpawner</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Gizumo\ObjectGizmo.h">
+      <Filter>Source\Editor\Gizumo\ObjectGizmo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1733,6 +1739,12 @@
     </Filter>
     <Filter Include="Source\Gameplay\GameObjects\ObjectSpawner">
       <UniqueIdentifier>{ab02a318-8825-440f-9676-c8eba18b5da8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Gizumo">
+      <UniqueIdentifier>{4236031b-f28a-4618-a910-d4b9497476c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Gizumo\ObjectGizmo">
+      <UniqueIdentifier>{11b11746-0ed3-4916-9cec-639b2339a675}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

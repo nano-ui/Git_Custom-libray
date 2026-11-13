@@ -10,6 +10,7 @@ class GameObject;
 class Camera;
 class CollisionManager;
 class SceneSerializer;
+class ObjectGizmo;
 
 class ObjectEditor
 {
@@ -51,9 +52,6 @@ private:
 	//オブジェクトパラメータ編集UI描画
 	void DrawRightPane();
 
-	//ギズモ描画
-	void DrawGizmo(Camera* camera);
-
 	//保存先のファイルパスをダイアログから選択取得
 	std::string SelectSavePath();
 
@@ -62,7 +60,7 @@ private:
 
 private:
 	std::unique_ptr<SceneSerializer> scene_serializer;	//シーンシリアル
-
+	std::unique_ptr<ObjectGizmo> object_gizmo;			//ギズモ
 private:
 	int inspector_selected_class_index = 0;	//選択されている変更用クラスのインデックス
 	GameObject* current_selected_object;	//選択されているゲームオブジェクト

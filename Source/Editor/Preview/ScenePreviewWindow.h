@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <DirectXMath.h>
 
 class framebuffer;
 struct ID3D11DeviceContext;

@@ -92,7 +92,7 @@ void GameObject::SetupSerialization()
 	if (!serializer) return;
 	serializer->Clear();
 
-	serializer->RegisterVariable(u8"クラス名", &class_name, SerializeTarget::Base);
+	serializer->RegisterVariable(u8"クラス名", &class_name, SerializeTarget::All);
 
 	// アタッチされた全コンポーネントのシリアライズ登録を一括実行
 	for (auto& component : components)

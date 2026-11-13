@@ -25,7 +25,7 @@ GameObject* ObjectSpawner::ObjectSpawn(const std::string& model_path, const Dire
     std::string detail_file_path = "Data/Json/" + model_name + "/" + model_name + ".json";
     if (!std::filesystem::exists(model_path))
     {
-        LOG_ERROR({ u8"存在" }, u8"モデルファイルが存在しません(ファイルパス: %s)", model_name.c_str());
+        LOG_ERROR({ u8"存在" }, u8"モデルファイルが存在しません(ファイルパス: %s)", model_path.c_str());
         return nullptr;
     }
     if (!std::filesystem::exists(detail_file_path))
@@ -38,7 +38,11 @@ GameObject* ObjectSpawner::ObjectSpawn(const std::string& model_path, const Dire
     nlohmann::json json_data;
     std::string class_name = "";
     if (!JsonFileUtility::Load(detail_file_path, json_data))return nullptr;
-    if (!JsonFileUtility::TryGetValue(json_data, u8"クラス名", class_name))return nullptr;
+    if (!JsonFileUtility::TryGetValue(json_data, u8"クラス名", class_name))
+    {
+        LOG_ERROR({ u8"設定" }, u8"JSONファイル名:%s", detail_file_path.c_str());
+        return nullptr;
+    }
     GameObject* new_object = ObjectFactory::CreateAndRegister(class_name);
     if (!new_object)return nullptr;
     new_object->Initialize();

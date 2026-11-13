@@ -10,6 +10,7 @@
 #include "Serialization\JsonSerializer.h"
 #include "Editor\Inspector\GuiInspector.h"
 #include "Gameplay\Components\Base\Component.h"
+#include "Engine\Core\Log\Log.h"
 
 struct Collider;
 enum class GameObjectTag : uint32_t;

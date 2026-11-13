@@ -244,6 +244,7 @@
     <ClCompile Include="Source\Editor\EditorMenuBar.cpp" />
     <ClCompile Include="Source\Editor\EditorTabBar.cpp" />
     <ClCompile Include="Source\Editor\FileDialogHelper.cpp" />
+    <ClCompile Include="Source\Editor\Gizumo\ObjectGizmo.cpp" />
     <ClCompile Include="Source\Editor\Inspector\GuiInspector.cpp" />
     <ClCompile Include="Source\Editor\Log\LogEditor.cpp" />
     <ClCompile Include="Source\Editor\Log\LogFilterWindow.cpp" />
@@ -407,6 +408,7 @@
     <ClInclude Include="Source\Editor\EditorMenuBar.h" />
     <ClInclude Include="Source\Editor\EditorTabBar.h" />
     <ClInclude Include="Source\Editor\FileDialogHelper.h" />
+    <ClInclude Include="Source\Editor\Gizumo\ObjectGizmo.h" />
     <ClInclude Include="Source\Editor\Inspector\GuiInspector.h" />
     <ClInclude Include="Source\Editor\Log\LogEditor.h" />
     <ClInclude Include="Source\Editor\Log\LogFilterWindow.h" />

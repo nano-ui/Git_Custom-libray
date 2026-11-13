@@ -7,7 +7,6 @@
 #include "Editor\EditorMediator.h"
 
 #include <imgui.h>
-#include <DirectXMath.h>
 
 //コンストラクタ
 ScenePreviewWindow::ScenePreviewWindow() = default;
@@ -18,6 +17,8 @@ ScenePreviewWindow::~ScenePreviewWindow() = default;
 //初期化
 void ScenePreviewWindow::Initialize()
 {
+	EditorMediator::Instance().RegisterScenePreviewWindow(this);
+
 	//デバイスの取得
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	if (!device)
@@ -116,6 +117,11 @@ void ScenePreviewWindow::RenderGui()
 
 	//画像の描画命令
 	ImGui::Image(static_cast<ImTextureRef>(srv), avail_size);
+	DirectX::XMFLOAT2 window_size = { static_cast<float>(avail_size.x),static_cast<float>(avail_size.y) };
+	EditorMediator::Instance().SetWindowSize(window_size);
+	DirectX::XMFLOAT2 window_pos = { static_cast<float>(ImGui::GetItemRectMin().x),static_cast<float>(ImGui::GetItemRectMin().y) };
+	EditorMediator::Instance().SetWindowPos(window_pos);
+
 
 	DragAndDropReceipt();
 

@@ -43,6 +43,13 @@ void EditorMediator::RegisterModelPreviewWindow(ModelPreviewWindow* window)
 	}
 }
 
+//シーンプレビューウィンドウのポインタを仲介用に登録
+void EditorMediator::RegisterScenePreviewWindow(ScenePreviewWindow* window)
+{
+	if (!window)LOG_ERROR({ u8"設定" }, u8"渡されたポインタがnullです");
+	scene_preview_window = window;
+}
+
 //オブジェクトエディタのポインタを仲介用に登録
 void EditorMediator::RegisterObjectEditor(ObjectEditor* editor)
 {

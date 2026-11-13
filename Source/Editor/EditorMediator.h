@@ -11,6 +11,7 @@ class StateMachineGraphEditor;
 class ColliderAttachmentEditor;
 class ColliderAttachmentItem; 
 class ModelPreviewWindow;
+class ScenePreviewWindow;
 class Camera;
 class CollisionManager;
 
@@ -25,6 +26,9 @@ public:
 
 	//モデルプレビューウィンドウのポインタを中継用に登録
 	void RegisterModelPreviewWindow(ModelPreviewWindow* window);
+
+	//シーンプレビューウィンドウのポインタを仲介用に登録
+	void RegisterScenePreviewWindow(ScenePreviewWindow* window);
 
 	//オブジェクトエディタのポインタを仲介用に登録
 	void RegisterObjectEditor(ObjectEditor* editor);
@@ -89,6 +93,18 @@ public:
 	//対象コンポーネントへリロード命令を仲介
 	void NotifyGraphChanged(const std::string& file_path);
 
+	//ウィンドウサイズの設定
+	void SetWindowSize(const DirectX::XMFLOAT2& size){ window_size = size; }
+
+	//ウィンドウサイズの取得
+	DirectX::XMFLOAT2 GetWindowSize()const { return window_size; }
+
+	//ウィンドウ座標の設定
+	void SetWindowPos(const DirectX::XMFLOAT2 pos) { window_pos = pos; }
+
+	//ウィンドウ座標の取得
+	DirectX::XMFLOAT2 GetWindowPos()const { return window_pos; }
+
 private:
 	//外部での生成を禁止
 	EditorMediator();
@@ -102,7 +118,12 @@ private:
 	StateMachineGraphEditor* state_machine_graph_editor = nullptr;	//対象エディタのポインタ
 	GameObject* last_selected_object = nullptr;						//前回選択オブジェクト
 	ModelPreviewWindow* model_preview_window = nullptr;				//モデルプレビュー
+	ScenePreviewWindow* scene_preview_window = nullptr;				//シーンプレビュー
 	ObjectEditor* object_editor = nullptr;							//オブジェクトエディタのポインタ
 	ColliderAttachmentEditor* collider_attachment_editor = nullptr;	//コライダーアタッチメントエディタのポインタ
+
+private:
+	DirectX::XMFLOAT2 window_size = { 0.0f,0.0f };					//ウィンドウサイズ
+	DirectX::XMFLOAT2 window_pos = { 0.0f,0.0f };					//ウィンドウ座標
 };
 

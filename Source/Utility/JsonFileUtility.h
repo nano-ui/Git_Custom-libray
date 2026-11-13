@@ -17,7 +17,11 @@ public:
 	template<typename T>
 	static bool TryGetValue(const nlohmann::json& json_data, const std::string& key, T& out_value)
 	{
-		if (!json_data.contains(key))return false;
+		if (!json_data.contains(key))
+		{
+			LOG_ERROR({ u8"設定" }, u8"JSONファイル内に指定した文字列が存在しません(キー: %s)", key.c_str());
+			return false;
+		}
 		try
 		{
 			out_value = json_data[key].get<T>();
@@ -25,7 +29,7 @@ public:
 		}
 		catch (const nlohmann::json::type_error& error)
 		{
-			LOG_WARNING({ u8"復元" }, u8"型が一致しません(詳細:%s)", error.what());
+			LOG_ERROR({ u8"復元" }, u8"型が一致しません(詳細:%s)", error.what());
 			return false;
 		}
 	}

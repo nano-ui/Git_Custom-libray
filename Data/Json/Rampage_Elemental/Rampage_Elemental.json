@@ -1,6 +1,7 @@
 {
     "StateMachinePath": "Data/Json/Rampage_Elemental/Rampage_Elemental_StateMachine.json",
     "class_name": "Enemy",
+    "クラス名": "Enemy",
     "ヘイト増加量": 0.5,
     "体力": 90.0,
     "停止距離": 1.5,
