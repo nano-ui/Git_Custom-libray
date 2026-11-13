@@ -14,7 +14,7 @@
 #include "Editor\StateMachineEditor\StateGraphConfigManager.h"
 #include "Engine\Core\Log\Log.h"
 #include "Utility\RayUtility.h"
-#include "Utility\ConvertUtillty.h"
+#include "Utility\ConvertUtility.h"
 #include "Serialization\SceneSerializer.h"
 
 #include <imgui.h>
@@ -26,10 +26,6 @@
 #include <windows.h>
 #include <commdlg.h>
 #include <Engine\Core\MacroTracy.h>
-
-static const std::string editor_config_path = "Data/Json/System/EditorConfig.json";
-static const std::string config_key_scene_path = "last_opened_scene";
-static const std::string json_root_key_objects = "objects";
 
 constexpr float dummy_height_value = 10.0f;
 constexpr float class_list_height_ratio = 0.3f;
@@ -68,7 +64,6 @@ void ObjectEditor::Initialize()
 	std::string auto_load_path = scene_serializer->LoadEditorConfig();
 	if (!auto_load_path.empty() && std::filesystem::exists(auto_load_path))
 	{
-		//LoadScene(auto_load_path);
 		scene_serializer->LoadScene(auto_load_path);
 	}
 }
@@ -94,24 +89,6 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 	ImGui::Dummy(ImVec2(0.0f, dummy_height_value));
 	ImGui::Separator();
 	ImGui::Text("Global Scene Operations");
-
-	if (ImGui::Button(u8"シーン保存", ImVec2(-1, 0)))
-	{
-		std::string dynamic_save_path = SelectSavePath();
-		if (!dynamic_save_path.empty())
-		{
-			scene_serializer->SaveScene(dynamic_save_path);
-		}
-	}
-
-	if (ImGui::Button(u8"シーン読み込み", ImVec2(-1, 0)))
-	{
-		std::string dynamic_load_path = SelectOpenPath();
-		if (!dynamic_load_path.empty())
-		{
-			scene_serializer->LoadScene(dynamic_load_path);
-		}
-	}
 
 	ImGui::End();
 
@@ -247,7 +224,7 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path, DirectX:
 
 	DirectX::XMFLOAT3 ray_start = { 0.0f,0.0f,0.0f };
 	DirectX::XMFLOAT3 ray_end = { 0.0f,0.0f,0.0f };
-	if (RayUtiiilty::NdcToWorldRay(ndc, active_camera->GetView(), active_camera->GetProjection(), ray_start, ray_end))
+	if (RayUtility::NdcToWorldRay(ndc, active_camera->GetView(), active_camera->GetProjection(), ray_start, ray_end))
 	{
 		DirectX::XMFLOAT3 hit_position = { 0.0f,0.0f,0.0f };
 		if (collison_manager->RayCastSpace(ray_start, ray_end, hit_position))
@@ -356,13 +333,9 @@ void ObjectEditor::ApplySelectedClassToObject()
 {
 	BS_PROFILE_FUNCTION();
 
-	printf("\n==========================================\n");
-	printf("[デバッグログ] ApplySelectedClassToObject (クラス置換) 開始\n");
-
 	if (current_selected_object == nullptr)
 	{
 		OutputDebugStringA("[ObjectEditor 警告] ApplySelectedClassToObject: 置換対象の current_selected_object が nullptr です。\n");
-		printf("==========================================\n\n");
 		return;
 	}
 
@@ -385,8 +358,6 @@ void ObjectEditor::ApplySelectedClassToObject()
 	}
 
 	const std::string& target_class_name = cached_class_names[inspector_selected_class_index];
-	printf("[デバッグログ] 変更前クラス: %s -> 変更後クラス: %s\n", current_selected_object->GetClassName().c_str(), target_class_name.c_str());
-	printf("[デバッグログ] 引き継ぐモデルパス: %s\n", kept_model_path.c_str());
 
 	// 適用したいクラスの新規インスタンスを生成
 	GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
@@ -433,13 +404,11 @@ void ObjectEditor::ApplySelectedClassToObject()
 		current_selected_object->Destory();
 		current_selected_object = new_object;
 
-		printf("[デバッグログ] クラス置換処理が完了しました。\n");
 	}
 	else
 	{
 		OutputDebugStringA("[ObjectEditor エラー] ObjectFactory による新クラスの生成に失敗しました。\n");
 	}
-	printf("==========================================\n\n");
 }
 
 //オブジェクトパラメータ編集UI描画
@@ -476,13 +445,13 @@ void ObjectEditor::DrawRightPane()
 		}
 		else
 		{
-			ImGui::Text("The selected object has been destroyed.");
+			ImGui::Text(u8"選択したオブジェクトは破壊されました");
 			current_selected_object = nullptr;
 		}
 	}
 	else
 	{
-		ImGui::Text("Please select or create an object from the left pane.");
+		ImGui::Text(u8"ヒストリーからオブジェクトを選んでください");
 	}
 }
 
@@ -574,92 +543,6 @@ void ObjectEditor::DrawGizmo(Camera* camera)
 	}
 }
 
-//ファイルからオブジェクト群を自動生成して状態を復元
-void ObjectEditor::LoadScene(const std::string& file_path)
-{
-	std::ifstream input_file(file_path);
-	if (!input_file.is_open())
-	{
-		OutputDebugStringA("[エラー] LoadScene: 指定されたシーンファイルが開けませんでした。\n");
-		return;
-	}
-
-	nlohmann::json scene_json;	//解析結果を受け取るためのJSONオブジェクト
-	input_file >> scene_json;
-	input_file.close();
-
-	if (!scene_json.contains("object"))return;
-
-	current_selected_object = nullptr;
-
-	//古いオブジェクトを全削除
-	const auto& active_objects = ObjectManager::Instance().GetGameObjects();
-	for (size_t i = 0; i < active_objects.size(); i++)
-	{
-		if (active_objects[i] && active_objects[i]->IsActive())
-		{
-			active_objects[i]->Destory();
-		}
-	}
-
-	const nlohmann::json& objects_array = scene_json["object"];	//オブジェクト配列ノードへの参照
-
-	//配列に記録されているデータからオブジェクトを全自動動的生成
-	for (size_t i = 0; i < objects_array.size(); ++i)
-	{
-		const nlohmann::json& object_node = objects_array[i];	//現在のインデックスの配列要素
-
-		if (object_node.contains("detail_json_path"))
-		{
-			std::string detail_path = object_node["detail_json_path"].get<std::string>();
-			std::ifstream detail_file(detail_path);
-
-			if (detail_file)
-			{
-				nlohmann::json detail_json;
-				detail_file >> detail_json;
-				detail_file.close();
-
-				//個別JSON内に記録されている class_name を取得して生成
-				if (detail_json.contains("class_name"))
-				{
-					std::string class_name = detail_json["class_name"].get<std::string>();
-					GameObject* new_object = ObjectFactory::CreateAndRegister(class_name);
-
-					if (new_object != nullptr)
-					{
-						auto transform_component = new_object->GetComponent<TransformComponent>();
-						auto model_component = new_object->GetComponent<ModelComponent>();
-
-						//Transform 情報の復元
-						if (transform_component)
-						{
-							if (object_node.contains("position")) transform_component->SetPosition(object_node["position"].get<DirectX::XMFLOAT3>());
-							if (object_node.contains("rotation")) transform_component->SetRotationQuaternion(object_node["rotation"].get<DirectX::XMFLOAT4>());
-							if (object_node.contains("scale"))    transform_component->SetScale(object_node["scale"].get<DirectX::XMFLOAT3>());
-						}
-
-						//モデルパスの適用
-						if (object_node.contains("model_path"))
-						{
-							std::string model_path = object_node["model_path"].get<std::string>();
-							if (!model_path.empty() && model_component != nullptr)
-							{
-								model_component->LoadModel(model_path);
-							}
-						}
-
-						//個別JSONからステータス等の復元
-						new_object->LoadFromJObject(detail_json, SerializeTarget::Detail);
-					}
-				}
-			}
-			else OutputDebugStringA("[エラー] LoadScene: 個別JSONファイルが開けませんでした。\n");
-		}
-	}
-	SaveEditorConfig(file_path);
-}
-
 //保存先のファイルパスをダイアログから選択取得
 std::string ObjectEditor::SelectSavePath()
 {
@@ -674,46 +557,4 @@ std::string ObjectEditor::SelectOpenPath()
 	PathResult path_result = FileDialogHelper::OpenGenericFileDialog();
 	if (!path_result.relative_path.empty())return path_result.relative_path;
 	return path_result.absolute_path;
-}
-
-//エディタ設定ファイルの保存
-void ObjectEditor::SaveEditorConfig(const std::string& last_scene_path)
-{
-	//設定JSONのデータアロケーション
-	nlohmann::json config_json;	//設定をパッキングするためのJSONノード
-	config_json[config_key_scene_path] = last_scene_path;
-	
-	std::filesystem::path system_path(editor_config_path);
-	if (system_path.has_parent_path())
-	{
-		std::filesystem::create_directories(system_path.parent_path());
-	}
-
-	std::ofstream output_file(editor_config_path);
-	if (output_file.is_open())
-	{
-		output_file << config_json.dump(json_indent_space_count);
-		output_file.close();
-	}
-}
-
-//エディタ設定ファイルの読み込み
-std::string ObjectEditor::LoadEditorConfig()
-{
-	std::ifstream input_file(editor_config_path);	//設定ファイルを読み込みモード
-	if (!input_file)
-	{
-		return std::string();
-	}
-
-	nlohmann::json config_json;	//データをパースするためのオブジェクト
-	input_file >> config_json;
-	input_file.close();
-
-	if (config_json.contains(config_key_scene_path))
-	{
-		return config_json[config_key_scene_path].get<std::string>();
-	}
-
-	return std::string();
 }

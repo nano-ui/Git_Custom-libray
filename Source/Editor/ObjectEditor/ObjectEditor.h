@@ -54,23 +54,11 @@ private:
 	//ギズモ描画
 	void DrawGizmo(Camera* camera);
 
-	//配置されているすべてのオブジェクト状態を保存
-	void SaveScene(const std::string& file_path);
-
-	//ファイルからオブジェクト群を自動生成して状態を復元
-	void LoadScene(const std::string& file_path);
-
 	//保存先のファイルパスをダイアログから選択取得
 	std::string SelectSavePath();
 
 	//読み込み元のファイルパスをダイアログから選択取得
 	std::string SelectOpenPath();
-
-	//エディタ設定ファイルの保存
-	void SaveEditorConfig(const std::string& last_scene_path);
-
-	//エディタ設定ファイルの読み込み
-	std::string LoadEditorConfig();
 
 private:
 	std::unique_ptr<SceneSerializer> scene_serializer;	//シーンシリアル

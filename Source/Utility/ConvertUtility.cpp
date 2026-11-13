@@ -1,8 +1,8 @@
-#include "ConvertUtillty.h"
+#include "ConvertUtility.h"
 #include "Engine\Core\Log\Log.h"
 
 //NDCç¿ïWÇ…ïœä∑
-DirectX::XMFLOAT2 ConvertUtillty::ConvertNDC(float width, float height, DirectX::XMFLOAT2 target_pos)
+DirectX::XMFLOAT2 ConvertUtility::ConvertNDC(float width, float height, DirectX::XMFLOAT2 target_pos)
 {
 	if (height <= 0.0f || width <= 0.0f)
 	{

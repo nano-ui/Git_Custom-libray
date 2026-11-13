@@ -522,8 +522,8 @@
     <ClCompile Include="Source\Editor\Preview\ScenePreviewWindow.cpp">
       <Filter>Source\Editor\Preview\ScenePreviewWindow</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utility\ConvertUtillty.cpp">
-      <Filter>Source\Utility\ConvertUtillity</Filter>
+    <ClCompile Include="Source\Utility\ConvertUtility.cpp">
+      <Filter>Source\Utility\ConvertUtility</Filter>
     </ClCompile>
     <ClCompile Include="Source\Editor\Inspector\GuiInspector.cpp">
       <Filter>Source\Editor\Inspector\GuiInspector</Filter>
@@ -1040,8 +1040,8 @@
     <ClInclude Include="Source\Editor\Preview\ScenePreviewWindow.h">
       <Filter>Source\Editor\Preview\ScenePreviewWindow</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Utility\ConvertUtillty.h">
-      <Filter>Source\Utility\ConvertUtillity</Filter>
+    <ClInclude Include="Source\Utility\ConvertUtility.h">
+      <Filter>Source\Utility\ConvertUtility</Filter>
     </ClInclude>
     <ClInclude Include="Source\Editor\Inspector\GuiInspector.h">
       <Filter>Source\Editor\Inspector\GuiInspector</Filter>
@@ -1692,9 +1692,6 @@
     <Filter Include="Source\Editor\Preview\ScenePreviewWindow">
       <UniqueIdentifier>{4b14c458-0962-4788-8aaa-74ab7e059f27}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Utility\ConvertUtillity">
-      <UniqueIdentifier>{2383078d-0815-478e-bc9e-36618e14abf4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Editor\Inspector">
       <UniqueIdentifier>{d2e621ac-bf44-46d7-bf6d-4962b3cc3749}</UniqueIdentifier>
     </Filter>
@@ -1706,6 +1703,9 @@
     </Filter>
     <Filter Include="Source\Utility\JsonFileUtility">
       <UniqueIdentifier>{5f80377d-5207-4c0b-b8a1-3145835f947b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utility\ConvertUtility">
+      <UniqueIdentifier>{2383078d-0815-478e-bc9e-36618e14abf4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

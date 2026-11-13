@@ -3,7 +3,7 @@
 #include "Engine\Graphics\Renderers\Graphics.h"
 #include "Engine\Core\Log\Log.h"
 #include "Engine\Core\Input.h"
-#include "Utility\ConvertUtillty.h"
+#include "Utility\ConvertUtility.h"
 #include "Editor\EditorMediator.h"
 
 #include <imgui.h>
@@ -151,7 +151,7 @@ void ScenePreviewWindow::DragAndDropReceipt()
 			mouse_pos.y - left_top.y
 		};
 
-		DirectX::XMFLOAT2 ndc = ConvertUtillty::ConvertNDC(screen_size.x, screen_size.y, target_pos);
+		DirectX::XMFLOAT2 ndc = ConvertUtility::ConvertNDC(screen_size.x, screen_size.y, target_pos);
 
 		EditorMediator::Instance().OnModelDropped(model_path, ndc);
 

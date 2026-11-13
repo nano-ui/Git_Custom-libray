@@ -1,7 +1,7 @@
 #pragma once
 #include "DirectXMath.h"
 
-class RayUtiiilty
+class RayUtility
 {
 public:
 	//クリック座標を算出

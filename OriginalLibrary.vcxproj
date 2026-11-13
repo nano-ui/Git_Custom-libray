@@ -377,7 +377,7 @@
     <ClCompile Include="Source\Serialization\GltfModelSerializer.cpp" />
     <ClCompile Include="Source\Serialization\JsonSerializer.cpp" />
     <ClCompile Include="Source\Serialization\SceneSerializer.cpp" />
-    <ClCompile Include="Source\Utility\ConvertUtillty.cpp" />
+    <ClCompile Include="Source\Utility\ConvertUtility.cpp" />
     <ClCompile Include="Source\Utility\JsonFileUtility.cpp" />
     <ClCompile Include="Source\Utility\RayUtility.cpp" />
   </ItemGroup>
@@ -551,7 +551,7 @@
     <ClInclude Include="Source\Serialization\JsonSerializer.h" />
     <ClInclude Include="Source\Serialization\SceneSerializer.h" />
     <ClInclude Include="Source\Utility\BitmaskOperators.h" />
-    <ClInclude Include="Source\Utility\ConvertUtillty.h" />
+    <ClInclude Include="Source\Utility\ConvertUtility.h" />
     <ClInclude Include="Source\Utility\JsonFileUtility.h" />
     <ClInclude Include="Source\Utility\RayUtility.h" />
   </ItemGroup>

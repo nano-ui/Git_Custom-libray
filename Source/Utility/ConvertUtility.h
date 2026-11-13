@@ -2,7 +2,7 @@
 
 #include <DirectXMath.h>
 
-class ConvertUtillty
+class ConvertUtility
 {
 public:
 	//NDCÀ•W‚É•ÏŠ·

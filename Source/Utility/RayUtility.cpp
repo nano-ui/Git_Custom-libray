@@ -1,10 +1,10 @@
 #include "RayUtility.h"
-#include "ConvertUtillty.h"
+#include "ConvertUtility.h"
 
 #include "Windows.h"
 
 //クリック座標を算出
-bool RayUtiiilty::ScreenToWorldRay(
+bool RayUtility::ScreenToWorldRay(
 	float window_height,
 	float window_width,
 	DirectX::XMFLOAT2 click_pos,
@@ -13,12 +13,12 @@ bool RayUtiiilty::ScreenToWorldRay(
 	DirectX::XMFLOAT3& out_ray_start,
 	DirectX::XMFLOAT3& out_ray_end)
 {
-	DirectX::XMFLOAT2 ndc = ConvertUtillty::ConvertNDC(window_width, window_height, click_pos);
+	DirectX::XMFLOAT2 ndc = ConvertUtility::ConvertNDC(window_width, window_height, click_pos);
 	return 	NdcToWorldRay(ndc, view, projection, out_ray_start, out_ray_end);
 }
 
 //NDC座標からレイを算出
-bool RayUtiiilty::NdcToWorldRay(
+bool RayUtility::NdcToWorldRay(
 	DirectX::XMFLOAT2 ndc,
 	DirectX::XMFLOAT4X4 view,
 	DirectX::XMFLOAT4X4 projection,

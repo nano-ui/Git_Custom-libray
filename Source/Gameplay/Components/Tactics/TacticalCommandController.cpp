@@ -50,7 +50,7 @@ void TacticalCommandController::Update(float elapsed_time)
 	DirectX::XMFLOAT3 ray_start = { 0.0f,0.0f,0.0f };
 	DirectX::XMFLOAT3 ray_end = { 0.0f,0.0f,0.0f };
 
-	bool is_ray = RayUtiiilty::ScreenToWorldRay(
+	bool is_ray = RayUtility::ScreenToWorldRay(
 		Graphics::Instance().GetCurrentHeight(),
 		Graphics::Instance().GetCurrentWidth(),
 		{ Input::Instance().GetMousePosX(),Input::Instance().GetMousePosY() },
