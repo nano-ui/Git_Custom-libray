@@ -247,6 +247,7 @@
     <ClCompile Include="Source\Editor\Inspector\GuiInspector.cpp" />
     <ClCompile Include="Source\Editor\Log\LogEditor.cpp" />
     <ClCompile Include="Source\Editor\Log\LogFilterWindow.cpp" />
+    <ClCompile Include="Source\Editor\ObjectEditor\EditorObjectBuilder.cpp" />
     <ClCompile Include="Source\Editor\ObjectEditor\ObjectEditor.cpp" />
     <ClCompile Include="Source\Editor\PathHelper.cpp" />
     <ClCompile Include="Source\Editor\Preview\ModelPreviewWindow.cpp" />
@@ -363,6 +364,7 @@
     <ClCompile Include="Source\Gameplay\GameObjects\GameObject.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\ObjectFactory.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\ObjectManager.cpp" />
+    <ClCompile Include="Source\Gameplay\GameObjects\ObjectSpawner.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\Object\Stage.cpp" />
     <ClCompile Include="Source\Gameplay\Scene\Scene.cpp" />
     <ClCompile Include="Source\Gameplay\Scene\SceneGame.cpp" />
@@ -408,6 +410,7 @@
     <ClInclude Include="Source\Editor\Inspector\GuiInspector.h" />
     <ClInclude Include="Source\Editor\Log\LogEditor.h" />
     <ClInclude Include="Source\Editor\Log\LogFilterWindow.h" />
+    <ClInclude Include="Source\Editor\ObjectEditor\EditorObjectBuilder.h" />
     <ClInclude Include="Source\Editor\ObjectEditor\ObjectEditor.h" />
     <ClInclude Include="Source\Editor\PathHelper.h" />
     <ClInclude Include="Source\Editor\Preview\ModelPreviewWindow.h" />
@@ -537,6 +540,7 @@
     <ClInclude Include="Source\Gameplay\GameObjects\GameObjectTag.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\ObjectFactory.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\ObjectManager.h" />
+    <ClInclude Include="Source\Gameplay\GameObjects\ObjectSpawner.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Object\Stage.h" />
     <ClInclude Include="Source\Gameplay\Scene\Scene.h" />
     <ClInclude Include="Source\Gameplay\Scene\SceneGame.h" />

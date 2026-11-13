@@ -71,6 +71,7 @@ public:
 			std::shared_ptr<T> casted_component = std::dynamic_pointer_cast<T>(component);
 			if (casted_component)return casted_component;
 		}
+		LOG_ERROR({ u8"取得" }, u8"コンポーネントが取得できませんでした");
 		return nullptr;
 	}
 

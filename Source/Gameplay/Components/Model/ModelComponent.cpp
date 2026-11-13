@@ -9,6 +9,7 @@
 #include "Engine/Camera/CameraManager.h"
 #include "Serialization\JsonSerializer.h"
 #include "Editor\Inspector\GuiInspector.h"
+#include "Engine\Core\Log\Log.h"
 
 #include <Windows.h>
 #include <vector>
@@ -45,21 +46,21 @@ bool ModelComponent::LoadModel(const std::string& file_path)
 	model_data = ModelManager::Instance().LoadModelData(file_path);
 	if (!model_data)
 	{
-		OutputDebugStringA("[ModelComponent エラー] LoadModel: ModelManagerからのモデルデータ取得に失敗しました。\n");
+		LOG_ERROR({ u8"取得" }, u8"モデル情報が取得できませんでした(ファイルパス: %s)", file_path.c_str());
 		return false;
 	}
 
 	renderer = ModelManager::Instance().GetRenderer();
 	if (!renderer)
 	{
-		OutputDebugStringA("[ModelComponent エラー] LoadModel: ModelManager から GltfModelRenderer の取得に失敗しました。\n");
+		LOG_ERROR({ u8"取得" }, u8"GltfModelRendererを取得できませんでした");
 		return false;
 	}
 
 	model = std::make_unique<GltfModel>(model_data, renderer);
 	if (!model)
 	{
-		OutputDebugStringA("[ModelComponent エラー] LoadModel: GltfModel の生成に失敗しました。\n");
+		LOG_ERROR({ u8"生成" }, u8"モデルの生成ができませんでした");
 		return false;
 	}
 	return true;

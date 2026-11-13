@@ -6,6 +6,6 @@ class GameObject;
 class EditorObjectBuilder
 {
 public:
-	GameObject* CreateObject()
+	GameObject* CreateObject();
 };
 

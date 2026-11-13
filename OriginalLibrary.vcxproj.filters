@@ -540,6 +540,12 @@
     <ClCompile Include="Source\Utility\PlacementUtility.cpp">
       <Filter>Source\Utility\PlacementUtility</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\ObjectEditor\EditorObjectBuilder.cpp">
+      <Filter>Source\Editor\ObjectEditor\EditorObjectBuilder</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\GameObjects\ObjectSpawner.cpp">
+      <Filter>Source\Gameplay\GameObjects\ObjectSpawner</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1060,6 +1066,12 @@
     </ClInclude>
     <ClInclude Include="Source\Utility\PlacementUtility.h">
       <Filter>Source\Utility\PlacementUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\ObjectEditor\EditorObjectBuilder.h">
+      <Filter>Source\Editor\ObjectEditor\EditorObjectBuilder</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\GameObjects\ObjectSpawner.h">
+      <Filter>Source\Gameplay\GameObjects\ObjectSpawner</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1715,6 +1727,12 @@
     </Filter>
     <Filter Include="Source\Utility\PlacementUtility">
       <UniqueIdentifier>{9e6ba524-eb6e-48f8-89f5-77bff6a126ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\ObjectEditor\EditorObjectBuilder">
+      <UniqueIdentifier>{559a0259-49aa-4c39-ad99-2140eff56af3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\GameObjects\ObjectSpawner">
+      <UniqueIdentifier>{ab02a318-8825-440f-9676-c8eba18b5da8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

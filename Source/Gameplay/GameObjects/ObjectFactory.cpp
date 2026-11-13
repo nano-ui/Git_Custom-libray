@@ -1,4 +1,5 @@
 #include "ObjectFactory.h"
+#include "Engine\Core\Log\Log.h"
 
 //«‘‚Ö‚Ì“o˜^ˆ—
 void ObjectFactory::RegisterClass(const std::string& class_name, CreateFunc func)
@@ -15,6 +16,7 @@ GameObject* ObjectFactory::CreateAndRegister(const std::string& class_name)
 
 	if (manager_ptr == nullptr)
 	{
+		LOG_ERROR({ u8"æ“¾" }, u8"ObjectManager‚ªæ“¾‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½");
 		return nullptr;
 	}
 
@@ -26,6 +28,7 @@ GameObject* ObjectFactory::CreateAndRegister(const std::string& class_name)
 		ObjectManager::Instance().Register(std::move(new_object));
 		return raw_pointer;
 	}
+	LOG_ERROR({ u8"¶¬" }, u8"ƒNƒ‰ƒX‚Ì¶¬‚ª‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½");
 	return nullptr;
 }
 
