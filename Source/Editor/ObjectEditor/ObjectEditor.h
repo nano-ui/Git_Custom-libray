@@ -39,6 +39,9 @@ public:
 	//仮オブジェクト生成
 	void CreateTempModelObject(const std::string& model_path, DirectX::XMFLOAT2 ndc);
 
+	//ギズモ表示
+	void RenderGizmoInPreview();
+
 private:
 	//オブジェクト生成UI描画
 	void DrawLeftPane(Camera* camera, CollisionManager* collision_manager);
@@ -66,7 +69,6 @@ private:
 	GameObject* current_selected_object;	//選択されているゲームオブジェクト
 	std::vector<std::string> cached_class_names;						//クラス名リストを毎フレーム取得しないためのキャッシュ
 	std::unordered_map<std::string, int> frame_class_counters;			//毎フレームのメモリ確保を避けるための連番カウント用マップ
-	int current_gizmo_operation;										//ギズモの現在の操作モード
 	std::string current_model_path = "";								//ドロップされたモデルのパス
 };
 

@@ -35,9 +35,10 @@ void ObjectGizmo::Draw3dGizumo(
 	//‘€ì‚Æ•ª‰ð
 	const DirectX::XMFLOAT4X4& view = camera->GetView();
 	const DirectX::XMFLOAT4X4& projection = camera->GetProjection();
-	ImGuiIO& io = ImGui::GetIO();
 	ImGuizmo::SetOrthographic(false);
+	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetRect(window_pos.x, window_pos.y, window_size.x, window_size.y);
+	ImGuizmo::Enable(true);
 	ImGuizmo::Manipulate(
 		&view._11,
 		&projection._11,

@@ -284,6 +284,15 @@ void EditorMediator::NotifyGraphChanged(const std::string& file_path)
 	}
 }
 
+//ギズモ表示
+void EditorMediator::RenderScenePreviewOverlay()
+{
+	if (object_editor)
+	{
+		object_editor->RenderGizmoInPreview();
+	}
+}
+
 //コンストラクタ
 EditorMediator::EditorMediator()
 {

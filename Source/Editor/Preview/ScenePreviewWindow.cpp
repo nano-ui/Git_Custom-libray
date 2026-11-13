@@ -124,6 +124,7 @@ void ScenePreviewWindow::RenderGui()
 
 
 	DragAndDropReceipt();
+	EditorMediator::Instance().RenderScenePreviewOverlay();
 
 	//ウィンドウの終了
 	ImGui::End();

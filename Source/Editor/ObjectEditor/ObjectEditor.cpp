@@ -21,7 +21,6 @@
 #include "Serialization\SceneSerializer.h"
 
 #include <imgui.h>
-#include <ImGuizmo.h>
 #include <string>
 #include <unordered_map>
 #include <fstream>
@@ -39,7 +38,6 @@ constexpr float panel_width_ratio = 0.2f;
 ObjectEditor::ObjectEditor()
 {
 	current_selected_object = nullptr;
-	current_gizmo_operation = static_cast<int>(ImGuizmo::TRANSLATE);
 	scene_serializer = std::make_unique<SceneSerializer>();
 	object_gizmo = std::make_unique<ObjectGizmo>();
 }
@@ -96,11 +94,6 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 
 	EditorMediator::Instance().OnObjectSelected(current_selected_object);
 	EditorMediator::Instance().UpdateViewerSynchronization(current_selected_object);
-
-	if (!current_selected_object)return;
-	std::shared_ptr<TransformComponent> transform = current_selected_object->GetComponent<TransformComponent>();
-	if (!transform)return;
-	object_gizmo->Draw3dGizumo(transform.get(), camera, EditorMediator::Instance().GetWindowSize(), EditorMediator::Instance().GetWindowPos());
 }
 
 //シーン保存
@@ -147,6 +140,16 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path, DirectX:
 	if (!new_object)return;
 	current_selected_object = new_object;
 	current_model_path = model_path;
+}
+
+//ギズモ表示
+void ObjectEditor::RenderGizmoInPreview()
+{
+	if (!current_selected_object)return;
+	std::shared_ptr<TransformComponent> transform = current_selected_object->GetComponent<TransformComponent>();
+	if (!transform)return;
+	Camera* active_camera = EditorMediator::Instance().GetActiveCamera();
+	object_gizmo->Draw3dGizumo(transform.get(), active_camera, EditorMediator::Instance().GetWindowSize(), EditorMediator::Instance().GetWindowPos());
 }
 
 //オブジェクト生成UI描画

@@ -105,6 +105,9 @@ public:
 	//ウィンドウ座標の取得
 	DirectX::XMFLOAT2 GetWindowPos()const { return window_pos; }
 
+	//ギズモ表示
+	void RenderScenePreviewOverlay();
+
 private:
 	//外部での生成を禁止
 	EditorMediator();
