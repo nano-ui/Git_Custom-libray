@@ -379,6 +379,7 @@
     <ClCompile Include="Source\Serialization\SceneSerializer.cpp" />
     <ClCompile Include="Source\Utility\ConvertUtility.cpp" />
     <ClCompile Include="Source\Utility\JsonFileUtility.cpp" />
+    <ClCompile Include="Source\Utility\PlacementUtility.cpp" />
     <ClCompile Include="Source\Utility\RayUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -553,6 +554,7 @@
     <ClInclude Include="Source\Utility\BitmaskOperators.h" />
     <ClInclude Include="Source\Utility\ConvertUtility.h" />
     <ClInclude Include="Source\Utility\JsonFileUtility.h" />
+    <ClInclude Include="Source\Utility\PlacementUtility.h" />
     <ClInclude Include="Source\Utility\RayUtility.h" />
   </ItemGroup>
   <ItemGroup>

@@ -19,10 +19,6 @@ C:.
 „    „    EditorTabBar.h
 „    „    FileDialogHelper.cpp
 „    „    FileDialogHelper.h
-„    „    GuiInspector.cpp
-„    „    GuiInspector.h
-„    „    ObjectEditor.cpp
-„    „    ObjectEditor.h
 „    „    PathHelper.cpp
 „    „    PathHelper.h
 „    „    
@@ -45,11 +41,22 @@ C:.
 „    „        ContentBrowserEditor.cpp
 „    „        ContentBrowserEditor.h
 „    „        
+„    „¥„Ÿ„Ÿ„ŸGizumo
+„    „¥„Ÿ„Ÿ„ŸInspector
+„    „        GuiInspector.cpp
+„    „        GuiInspector.h
+„    „        
 „    „¥„Ÿ„Ÿ„ŸLog
 „    „        LogEditor.cpp
 „    „        LogEditor.h
 „    „        LogFilterWindow.cpp
 „    „        LogFilterWindow.h
+„    „        
+„    „¥„Ÿ„Ÿ„ŸObjectEditor
+„    „        EditorObjectBuilder.cpp
+„    „        EditorObjectBuilder.h
+„    „        ObjectEditor.cpp
+„    „        ObjectEditor.h
 „    „        
 „    „¥„Ÿ„Ÿ„ŸPreview
 „    „        ModelPreviewWindow.cpp
@@ -57,6 +64,7 @@ C:.
 „    „        ScenePreviewWindow.cpp
 „    „        ScenePreviewWindow.h
 „    „        
+„    „¥„Ÿ„Ÿ„ŸScene
 „    „¥„Ÿ„Ÿ„ŸSequence
 „    „        AnimationSequencerEditor.cpp
 „    „        AnimationSequencerEditor.h
@@ -389,6 +397,8 @@ C:.
 „        GltfModelSerializer.h
 „        JsonSerializer.cpp
 „        JsonSerializer.h
+„        SceneSerializer.cpp
+„        SceneSerializer.h
 „        
 „¥„Ÿ„Ÿ„ŸThiedParty
 „    „    json.hpp
@@ -466,8 +476,12 @@ C:.
 „                
 „¤„Ÿ„Ÿ„ŸUtility
         BitmaskOperators.h
-        ConvertUtillty.cpp
-        ConvertUtillty.h
+        ConvertUtility.cpp
+        ConvertUtility.h
+        JsonFileUtility.cpp
+        JsonFileUtility.h
+        PlacementUtility.cpp
+        PlacementUtility.h
         RayUtility.cpp
         RayUtility.h
         

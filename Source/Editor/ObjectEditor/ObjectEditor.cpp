@@ -15,6 +15,7 @@
 #include "Engine\Core\Log\Log.h"
 #include "Utility\RayUtility.h"
 #include "Utility\ConvertUtility.h"
+#include "Utility\PlacementUtility.h"
 #include "Serialization\SceneSerializer.h"
 
 #include <imgui.h>
@@ -28,17 +29,13 @@
 #include <Engine\Core\MacroTracy.h>
 
 constexpr float dummy_height_value = 10.0f;
-constexpr float class_list_height_ratio = 0.3f;
 constexpr float active_list_height_offset = 60.0f;
 constexpr size_t label_buffer_size = 128;
 constexpr float panel_width_ratio = 0.2f;
-constexpr int json_indent_space_count = 4;
-constexpr size_t file_path_buffer_size = 260;
 
 //コンストラクタ
 ObjectEditor::ObjectEditor()
 {
-	selected_class_index = 0;
 	current_selected_object = nullptr;
 	current_gizmo_operation = static_cast<int>(ImGuizmo::TRANSLATE);
 	scene_serializer = std::make_unique<SceneSerializer>();
@@ -55,7 +52,6 @@ void ObjectEditor::Initialize()
 {
 	BS_PROFILE_FUNCTION();
 
-	selected_class_index = 0;
 	current_selected_object = nullptr;
 	cached_class_names = ObjectFactory::GetClassNames();
 	EditorMediator::Instance().RegisterObjectEditor(this);
@@ -88,7 +84,6 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 
 	ImGui::Dummy(ImVec2(0.0f, dummy_height_value));
 	ImGui::Separator();
-	ImGui::Text("Global Scene Operations");
 
 	ImGui::End();
 
@@ -153,9 +148,9 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path, DirectX:
 			detail_file >> detail_json;
 			detail_file.close();
 
-			if (detail_json.contains("class_name"))
+			if (detail_json.contains(u8"クラス名"))
 			{
-				std::string target_class_name = detail_json["class_name"].get<std::string>();
+				std::string target_class_name = detail_json[u8"クラス名"].get<std::string>();
 
 				// クラスの生成
 				GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
@@ -224,18 +219,13 @@ void ObjectEditor::CreateTempModelObject(const std::string& model_path, DirectX:
 
 	DirectX::XMFLOAT3 ray_start = { 0.0f,0.0f,0.0f };
 	DirectX::XMFLOAT3 ray_end = { 0.0f,0.0f,0.0f };
-	if (RayUtility::NdcToWorldRay(ndc, active_camera->GetView(), active_camera->GetProjection(), ray_start, ray_end))
+	DirectX::XMFLOAT3 hit_position = { 0.0f,0.0f,0.0f };
+
+	if (PlacementUtility::GetPlacementPositionFromNdc(ndc, active_camera, collison_manager, hit_position))
 	{
-		DirectX::XMFLOAT3 hit_position = { 0.0f,0.0f,0.0f };
-		if (collison_manager->RayCastSpace(ray_start, ray_end, hit_position))
-		{
-			transform->SetPosition(hit_position);
-		}
-		else
-		{
-			transform->SetPosition({ 0.0f,0.0f,0.0f });
-		}
+		transform->SetPosition(hit_position);
 	}
+	else transform->SetPosition(hit_position);
 }
 
 //オブジェクト生成UI描画

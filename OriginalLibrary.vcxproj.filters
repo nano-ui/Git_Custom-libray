@@ -537,6 +537,9 @@
     <ClCompile Include="Source\Utility\JsonFileUtility.cpp">
       <Filter>Source\Utility\JsonFileUtility</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Utility\PlacementUtility.cpp">
+      <Filter>Source\Utility\PlacementUtility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1054,6 +1057,9 @@
     </ClInclude>
     <ClInclude Include="Source\Utility\JsonFileUtility.h">
       <Filter>Source\Utility\JsonFileUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utility\PlacementUtility.h">
+      <Filter>Source\Utility\PlacementUtility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1706,6 +1712,9 @@
     </Filter>
     <Filter Include="Source\Utility\ConvertUtility">
       <UniqueIdentifier>{2383078d-0815-478e-bc9e-36618e14abf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utility\PlacementUtility">
+      <UniqueIdentifier>{9e6ba524-eb6e-48f8-89f5-77bff6a126ea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
