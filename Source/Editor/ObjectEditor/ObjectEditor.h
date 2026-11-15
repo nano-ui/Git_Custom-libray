@@ -11,6 +11,8 @@ class Camera;
 class CollisionManager;
 class SceneSerializer;
 class ObjectGizmo;
+class ObjectPicker;
+class ObjectClassConverter;
 
 class ObjectEditor
 {
@@ -62,8 +64,10 @@ private:
 	std::string SelectOpenPath();
 
 private:
-	std::unique_ptr<SceneSerializer> scene_serializer;	//シーンシリアル
-	std::unique_ptr<ObjectGizmo> object_gizmo;			//ギズモ
+	std::unique_ptr<SceneSerializer> scene_serializer;				//シーンシリアル
+	std::unique_ptr<ObjectGizmo> object_gizmo;						//ギズモ
+	std::unique_ptr<ObjectPicker> object_picker;					//オブジェクト選択
+	std::unique_ptr<ObjectClassConverter> object_class_converter;	//クラス変換
 private:
 	int inspector_selected_class_index = 0;	//選択されている変更用クラスのインデックス
 	GameObject* current_selected_object;	//選択されているゲームオブジェクト

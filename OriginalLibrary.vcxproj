@@ -239,6 +239,7 @@
     <ClCompile Include="Source\Editor\Behavior\BehaviorTreeSimulator.cpp" />
     <ClCompile Include="Source\Editor\Behavior\EditorActionNode.cpp" />
     <ClCompile Include="Source\Editor\ConstentBrowser\ContentBrowserEditor.cpp" />
+    <ClCompile Include="Source\Editor\Converter\ObjectClassConverter.cpp" />
     <ClCompile Include="Source\Editor\EditorManager.cpp" />
     <ClCompile Include="Source\Editor\EditorMediator.cpp" />
     <ClCompile Include="Source\Editor\EditorMenuBar.cpp" />
@@ -248,9 +249,9 @@
     <ClCompile Include="Source\Editor\Inspector\GuiInspector.cpp" />
     <ClCompile Include="Source\Editor\Log\LogEditor.cpp" />
     <ClCompile Include="Source\Editor\Log\LogFilterWindow.cpp" />
-    <ClCompile Include="Source\Editor\ObjectEditor\EditorObjectBuilder.cpp" />
     <ClCompile Include="Source\Editor\ObjectEditor\ObjectEditor.cpp" />
     <ClCompile Include="Source\Editor\PathHelper.cpp" />
+    <ClCompile Include="Source\Editor\Picker\ObjectPicker.cpp" />
     <ClCompile Include="Source\Editor\Preview\ModelPreviewWindow.cpp" />
     <ClCompile Include="Source\Editor\Preview\ScenePreviewWindow.cpp" />
     <ClCompile Include="Source\Editor\Sequence\AnimationSequencerEditor.cpp" />
@@ -403,6 +404,7 @@
     <ClInclude Include="Source\Editor\Behavior\BehaviorTreeSimulator.h" />
     <ClInclude Include="Source\Editor\Behavior\EditorActionNode.h" />
     <ClInclude Include="Source\Editor\ConstentBrowser\ContentBrowserEditor.h" />
+    <ClInclude Include="Source\Editor\Converter\ObjectClassConverter.h" />
     <ClInclude Include="Source\Editor\EditorManager.h" />
     <ClInclude Include="Source\Editor\EditorMediator.h" />
     <ClInclude Include="Source\Editor\EditorMenuBar.h" />
@@ -412,9 +414,9 @@
     <ClInclude Include="Source\Editor\Inspector\GuiInspector.h" />
     <ClInclude Include="Source\Editor\Log\LogEditor.h" />
     <ClInclude Include="Source\Editor\Log\LogFilterWindow.h" />
-    <ClInclude Include="Source\Editor\ObjectEditor\EditorObjectBuilder.h" />
     <ClInclude Include="Source\Editor\ObjectEditor\ObjectEditor.h" />
     <ClInclude Include="Source\Editor\PathHelper.h" />
+    <ClInclude Include="Source\Editor\Picker\ObjectPicker.h" />
     <ClInclude Include="Source\Editor\Preview\ModelPreviewWindow.h" />
     <ClInclude Include="Source\Editor\Preview\ScenePreviewWindow.h" />
     <ClInclude Include="Source\Editor\Sequence\AnimationSequencerEditor.h" />

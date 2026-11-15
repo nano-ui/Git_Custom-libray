@@ -6,6 +6,8 @@
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Gameplay\Components\Model\ModelComponent.h"
 #include "Editor\Gizumo\ObjectGizmo.h"
+#include "Editor\Picker\ObjectPicker.h"
+#include "Editor\Converter\ObjectClassConverter.h"
 #include "Engine/Collision/CollisionManager.h"
 #include "Engine/Camera/Camera.h"
 #include "Engine\Core\Input.h"
@@ -40,6 +42,8 @@ ObjectEditor::ObjectEditor()
 	current_selected_object = nullptr;
 	scene_serializer = std::make_unique<SceneSerializer>();
 	object_gizmo = std::make_unique<ObjectGizmo>();
+	object_picker = std::make_unique<ObjectPicker>();
+	object_class_converter = std::make_unique<ObjectClassConverter>();
 }
 
 //デストラクタ
@@ -92,6 +96,9 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 	DrawRightPane();
 	ImGui::End();
 
+	DirectX::XMFLOAT2 preview_pos = EditorMediator::Instance().GetWindowPos();
+	DirectX::XMFLOAT2 preview_size = EditorMediator::Instance().GetWindowSize();
+	current_selected_object = object_picker->PickObject(current_selected_object, camera, collision_manager, preview_pos, preview_size);
 	EditorMediator::Instance().OnObjectSelected(current_selected_object);
 	EditorMediator::Instance().UpdateViewerSynchronization(current_selected_object);
 }
@@ -238,90 +245,7 @@ void ObjectEditor::DrawClassApplySection()
 	//ボタンが押された瞬間のみ置換処理を1回だけ呼び出す
 	if (ImGui::Button(u8"選択クラスを適用", ImVec2(-1, 0)))
 	{
-		ApplySelectedClassToObject();
-	}
-}
-
-//選択されたクラスへの置き換え処理
-void ObjectEditor::ApplySelectedClassToObject()
-{
-	BS_PROFILE_FUNCTION();
-
-	if (current_selected_object == nullptr)
-	{
-		OutputDebugStringA("[ObjectEditor 警告] ApplySelectedClassToObject: 置換対象の current_selected_object が nullptr です。\n");
-		return;
-	}
-
-	// 旧オブジェクトから姿勢情報（Transform）を取得
-	auto old_transform = current_selected_object->GetComponent<TransformComponent>();
-	DirectX::XMFLOAT3 pos = old_transform ? old_transform->GetPosition() : DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-	DirectX::XMFLOAT4 rot = old_transform ? old_transform->GetQuaternion() : DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-	DirectX::XMFLOAT3 scale = old_transform ? old_transform->GetScale() : DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
-
-	// 旧オブジェクトからモデルパスを取得
-	std::string kept_model_path = "";
-	auto old_model_comp = current_selected_object->GetComponent<ModelComponent>();
-	if (old_model_comp)
-	{
-		kept_model_path = old_model_comp->GetModelPath();
-	}
-	if (kept_model_path.empty())
-	{
-		kept_model_path = current_model_path; // ドロップ時のキャッシュパスを使用
-	}
-
-	const std::string& target_class_name = cached_class_names[inspector_selected_class_index];
-
-	// 適用したいクラスの新規インスタンスを生成
-	GameObject* new_object = ObjectFactory::CreateAndRegister(target_class_name);
-
-	if (new_object != nullptr)
-	{
-		// 姿勢コンポーネントの確保と引き継ぎ
-		auto new_transform = new_object->GetComponent<TransformComponent>();
-		if (!new_transform)
-		{
-			new_transform = new_object->AddComponent<TransformComponent>();
-		}
-		if (new_transform)
-		{
-			new_transform->SetPosition(pos);
-			new_transform->SetRotationQuaternion(rot);
-			new_transform->SetScale(scale);
-		}
-
-		// モデルコンポーネントの確保とモデル読み込み
-		auto new_model_comp = new_object->GetComponent<ModelComponent>();
-		if (!new_model_comp)
-		{
-			new_model_comp = new_object->AddComponent<ModelComponent>();
-		}
-
-		if (new_model_comp && new_transform)
-		{
-			new_model_comp->SetTransformComponent(new_transform);
-			if (!kept_model_path.empty())
-			{
-				bool success = new_model_comp->LoadModel(kept_model_path);
-				if (!success)
-				{
-					OutputDebugStringA("[ObjectEditor エラー] 新オブジェクトへのモデルロードに失敗しました。\n");
-				}
-			}
-		}
-
-		// 全コンポーネントが揃った状態で初期化
-		new_object->Initialize();
-
-		// 旧オブジェクトの破棄と選択ポインタの切り替え
-		current_selected_object->Destory();
-		current_selected_object = new_object;
-
-	}
-	else
-	{
-		OutputDebugStringA("[ObjectEditor エラー] ObjectFactory による新クラスの生成に失敗しました。\n");
+		object_class_converter->ConvertClass(current_selected_object, cached_class_names[inspector_selected_class_index]);
 	}
 }
 
@@ -335,7 +259,6 @@ void ObjectEditor::DrawRightPane()
 	ImGui::Separator();
 
 	//カメラ追従対象への設定ボタン
-
 
 	if (current_selected_object != nullptr)
 	{
