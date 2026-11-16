@@ -4,6 +4,12 @@
 #include <DirectXMath.h>
 #include "memory.h"
 
+class HateComponent;
+class VisionSensorComponent;
+class PerceptionComponent;
+class TargetSelectorComponent;
+class LinearMove;
+
 //味方クラス
 class Allie : public Character
 {
@@ -61,6 +67,9 @@ private:
 	//目標地点に向けて進む
 	void MoveTarget(float elapsed_time);
 
+	//ヘイト対象に向かって移動
+	void UpdateChase(float elapsed_time);
+
 protected:
 	//デフォルトパスの取得
 	std::string GetDefaultModelPath()const override;
@@ -74,9 +83,15 @@ protected:
 	//死亡時イベント
 	void OnDead()override;
 
+private:
+	std::weak_ptr<TransformComponent> target_transform;			//対象の座標
+	std::shared_ptr<VisionSensorComponent> vision_sensor;		//視界
+	std::shared_ptr<PerceptionComponent> perception;			//知覚管理
+	std::shared_ptr<TargetSelectorComponent> target_selector;	//対象選択
+	std::unique_ptr<LinearMove> linear_move;					//直線移動
 
 private:
 	DirectX::XMFLOAT3 target_position;	//目標座標
 	bool has_target;					//目標フラグ
+	float stop_distance;				//停止距離
 };
-

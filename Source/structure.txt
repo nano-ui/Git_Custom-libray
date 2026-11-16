@@ -41,7 +41,14 @@ C:.
 „    „        ContentBrowserEditor.cpp
 „    „        ContentBrowserEditor.h
 „    „        
+„    „¥„Ÿ„Ÿ„ŸConverter
+„    „        ObjectClassConverter.cpp
+„    „        ObjectClassConverter.h
+„    „        
 „    „¥„Ÿ„Ÿ„ŸGizumo
+„    „        ObjectGizmo.cpp
+„    „        ObjectGizmo.h
+„    „        
 „    „¥„Ÿ„Ÿ„ŸInspector
 „    „        GuiInspector.cpp
 „    „        GuiInspector.h
@@ -57,6 +64,10 @@ C:.
 „    „        EditorObjectBuilder.h
 „    „        ObjectEditor.cpp
 „    „        ObjectEditor.h
+„    „        
+„    „¥„Ÿ„Ÿ„ŸPicker
+„    „        ObjectPicker.cpp
+„    „        ObjectPicker.h
 „    „        
 „    „¥„Ÿ„Ÿ„ŸPreview
 „    „        ModelPreviewWindow.cpp
@@ -261,6 +272,8 @@ C:.
 „    „    „        HateComponent.h
 „    „    „        PerceptionComponent.cpp
 „    „    „        PerceptionComponent.h
+„    „    „        TargetSelectorComponent.cpp
+„    „    „        TargetSelectorComponent.h
 „    „    „        
 „    „    „¥„Ÿ„Ÿ„ŸAnimation
 „    „    „        AnimationBlender.cpp
@@ -353,6 +366,8 @@ C:.
 „    „    „    ObjectFactory.h
 „    „    „    ObjectManager.cpp
 „    „    „    ObjectManager.h
+„    „    „    ObjectSpawner.cpp
+„    „    „    ObjectSpawner.h
 „    „    „    
 „    „    „¥„Ÿ„Ÿ„ŸCharacter
 „    „    „        Allie.cpp

@@ -1,45 +1,484 @@
 {
-    "object": [
+    "objects": [
         {
-            "class_name": "Stage",
-            "detail_json_path": "Data/Json/ExampleStage/ExampleStage_0.json",
-            "model_path": "Data/Model/Stage/ExampleStage.glb",
-            "position": {
+            "クラス名": "Stage",
+            "モデルパス": "Data\\Model\\Stage\\MossyForgotten_SquareStone_Small.glb",
+            "個別ファイルの参照先パス": "Data/Json/MossyForgotten_SquareStone_Small/MossyForgotten_SquareStone_Small.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "座標": {
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
-            "rotation": {
-                "w": 1.0,
+            "拡大": {
+                "x": 20.0,
+                "y": 1.0,
+                "z": 20.0
+            }
+        },
+        {
+            "クラス名": "Stage",
+            "モデルパス": "Data\\Model\\Stage\\MossyForgotten_SquareStone_Large.glb",
+            "個別ファイルの参照先パス": "Data/Json/MossyForgotten_SquareStone_Large/MossyForgotten_SquareStone_Large.json",
+            "回転": {
+                "x": -0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "座標": {
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
-            "scale": {
+            "拡大": {
+                "x": 15.0,
+                "y": 25.0,
+                "z": 15.0
+            }
+        },
+        {
+            "StateMachinePath": "Data/Json/Rampage_Elemental/Rampage_Elemental_StateMachine.json",
+            "クラス名": "Enemy",
+            "モデルパス": "Data\\Model\\Character\\Enemy\\Rampage_Elemental.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Rampage_Elemental/Rampage_Elemental.json",
+            "回転": {
+                "x": -0.0,
+                "y": -0.6115090847015381,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -27.97535514831543,
+                "y": 0.23463846743106842,
+                "z": 17.290544509887695
+            },
+            "拡大": {
+                "x": 2.9999635219573975,
+                "y": 3.0,
+                "z": 2.9999635219573975
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": 3.0399129390716553,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -20.474721908569336,
+                "y": 0.2703169882297516,
+                "z": 10.446290016174316
+            },
+            "拡大": {
                 "x": 1.0,
                 "y": 1.0,
                 "z": 1.0
             }
         },
         {
-            "class_name": "Player",
-            "detail_json_path": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger_0.json",
-            "model_path": "Data/Model/Character/Player/Greystone_WhiteTiger.gltf",
-            "position": {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": -0.5215634703636169,
                 "z": 0.0
             },
-            "rotation": {
-                "w": 1.0,
+            "座標": {
+                "x": -18.439992904663086,
+                "y": 0.2622353136539459,
+                "z": 10.364831924438477
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": 2.829558849334717,
                 "z": 0.0
             },
-            "scale": {
-                "x": 0.9999996423721313,
-                "y": 0.9999998807907104,
-                "z": 0.9999998807907104
+            "座標": {
+                "x": -17.036277770996094,
+                "y": 0.2559487521648407,
+                "z": 10.505899429321289
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -0.3642828166484833,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -15.912800788879395,
+                "y": 0.25374749302864075,
+                "z": 10.07773208618164
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -2.44437313079834,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -20.852134704589844,
+                "y": 0.27241697907447815,
+                "z": 8.228320121765137
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -0.7906217575073242,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -18.279218673706055,
+                "y": 0.2615680992603302,
+                "z": 7.98916482925415
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": 2.8028464317321777,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -17.122926712036133,
+                "y": 0.2566961944103241,
+                "z": 8.310077667236328
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -1.6579443216323853,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -16.071399688720703,
+                "y": 0.2541879117488861,
+                "z": 8.888259887695313
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -2.5180957317352295,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -20.264802932739258,
+                "y": 0.2689047157764435,
+                "z": 7.1340436935424805
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -0.40332600474357605,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -19.065889358520508,
+                "y": 0.26502618193626404,
+                "z": 7.0829925537109375
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -1.3389908075332642,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -17.555662155151367,
+                "y": 0.258942574262619,
+                "z": 6.928619384765625
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -1.859379529953003,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -16.370567321777344,
+                "y": 0.254945307970047,
+                "z": 6.74008321762085
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -1.0438661575317383,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -20.602087020874023,
+                "y": 0.2715514004230499,
+                "z": 5.547927379608154
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": 3.0890121459960938,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -18.715621948242188,
+                "y": 0.2643623650074005,
+                "z": 5.935250282287598
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -0.4149710536003113,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -17.10494041442871,
+                "y": 0.257175475358963,
+                "z": 5.787172794342041
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -0.33221590518951416,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -15.913771629333496,
+                "y": 0.2572422921657562,
+                "z": 5.534224987030029
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -0.8027851581573486,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -20.529491424560547,
+                "y": 0.27273496985435486,
+                "z": 4.085618019104004
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": 2.8559980392456055,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -18.531288146972656,
+                "y": 0.26411882042884827,
+                "z": 3.3099472522735596
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -0.6483649611473083,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -17.352951049804688,
+                "y": 0.2587145268917084,
+                "z": 3.8617165088653564
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -1.9598275423049927,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -16.23202133178711,
+                "y": 0.2572464644908905,
+                "z": 4.290108680725098
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "クラス名": "Allie",
+            "モデルパス": "Data\\Model\\Character\\Player\\Greystone_WhiteTiger.gltf",
+            "個別ファイルの参照先パス": "Data/Json/Greystone_WhiteTiger/Greystone_WhiteTiger.json",
+            "回転": {
+                "x": 0.0,
+                "y": -0.696300208568573,
+                "z": 0.0
+            },
+            "座標": {
+                "x": -20.352420806884766,
+                "y": 0.27249035239219666,
+                "z": 2.3700602054595947
+            },
+            "拡大": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             }
         }
     ]

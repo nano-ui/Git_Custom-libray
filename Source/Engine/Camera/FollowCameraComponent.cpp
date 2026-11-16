@@ -35,7 +35,7 @@ void FollowCameraComponent::Update(float elapsed_time)
 	std::shared_ptr<Camera> camera = target_camera.lock();
 	if (!camera)
 	{
-		OutputDebugStringA("[FollowCameraComponent] エラー: 制御対象のカメラ(target_camera)が設定されていないか破棄されています。\n");
+		//OutputDebugStringA("[FollowCameraComponent] エラー: 制御対象のカメラ(target_camera)が設定されていないか破棄されています。\n");
 		return;
 	}
 
@@ -43,14 +43,14 @@ void FollowCameraComponent::Update(float elapsed_time)
 	DirectX::XMFLOAT3 target_pos = {};
 	if (!target_position_getter || !target_position_getter(target_pos))
 	{
-		OutputDebugStringA("[FollowCameraComponent エラー] 追従対象の位置座標(target_position_getter)が未設定か、対象が破棄されています。\n");
+		//OutputDebugStringA("[FollowCameraComponent エラー] 追従対象の位置座標(target_position_getter)が未設定か、対象が破棄されています。\n");
 		return;
 	}
 
 	//座標の非数(NaN)チェック
 	if (std::isnan(target_pos.x) || std::isnan(target_pos.y) || std::isnan(target_pos.z)) 
 	{
-		OutputDebugStringA("[FollowCameraComponent エラー] 追従対象の座標に NaN が検出されました。\n");
+		//OutputDebugStringA("[FollowCameraComponent エラー] 追従対象の座標に NaN が検出されました。\n");
 		return;
 	}
 
@@ -74,7 +74,7 @@ void FollowCameraComponent::Update(float elapsed_time)
 		smoothed_eye = ideal_eye;
 		smoothed_focus = ideal_focus;
 		is_first_frame = false; // フラグを下ろす
-		OutputDebugStringA("[FollowCameraComponent] カメラを理想位置へ即時ワープ配置しました。\n");
+		//OutputDebugStringA("[FollowCameraComponent] カメラを理想位置へ即時ワープ配置しました。\n");
 	}
 	else
 	{

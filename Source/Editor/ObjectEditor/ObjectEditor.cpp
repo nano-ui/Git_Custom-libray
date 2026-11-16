@@ -47,10 +47,7 @@ ObjectEditor::ObjectEditor()
 }
 
 //デストラクタ
-ObjectEditor::~ObjectEditor()
-{
-
-}
+ObjectEditor::~ObjectEditor() = default;
 
 //初期化
 void ObjectEditor::Initialize()
@@ -245,7 +242,10 @@ void ObjectEditor::DrawClassApplySection()
 	//ボタンが押された瞬間のみ置換処理を1回だけ呼び出す
 	if (ImGui::Button(u8"選択クラスを適用", ImVec2(-1, 0)))
 	{
-		object_class_converter->ConvertClass(current_selected_object, cached_class_names[inspector_selected_class_index]);
+		GameObject* new_object = nullptr;
+		new_object = object_class_converter->ConvertClass(current_selected_object, cached_class_names[inspector_selected_class_index]);
+		if (!new_object)return;
+		current_selected_object = new_object;
 	}
 }
 

@@ -6,6 +6,7 @@
 #include <DirectXMath.h>
 #include <type_traits>
 #include <imgui.h>
+#include <cstdint>
 
 //UI描画用インターフェース
 class IGuiProperty
@@ -103,6 +104,7 @@ public:
 		else if constexpr (std::is_same_v<T, DirectX::XMFLOAT4>)ImGui::Text("%s: (%.2f, %.2f, %.2f, %.2f)", property_name.c_str(), data_pointer->x, data_pointer->y, data_pointer->z, data_pointer->w);
 		else if constexpr (std::is_same_v<T, bool>)				ImGui::Text("%s: %s", property_name.c_str(), *data_pointer ? "true" : "false");
 		else if constexpr (std::is_same_v<T, std::string>)		ImGui::Text("%s: %s", property_name.c_str(), data_pointer->c_str());
+		else if constexpr (std::is_same_v<T, uint32_t>)			ImGui::Text("%s: %u", property_name.c_str(), *data_pointer);
 		else													ImGui::Text("%s: [Text Display Unsupported]", property_name.c_str());
 	}
 

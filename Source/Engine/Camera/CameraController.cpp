@@ -8,6 +8,7 @@
 #include "Editor\EditorMediator.h"
 
 #include <Windows.h>
+#include <Engine\Core\MacroTracy.h>
 
 //コンストラクタ
 CameraController::CameraController()
@@ -37,21 +38,9 @@ void CameraController::Initialize()
 //更新処理
 void CameraController::Update(float elapsed_time)
 {
-	if (current_mode == CameraMode::Free)
-	{
-		if (main_camera)
-		{
-			main_camera->Update(elapsed_time);
-		}
-	}
-	else if (current_mode == CameraMode::Follow)
-	{
-		if (follow_camera_component) 
-		{
-			follow_camera_component->Update(elapsed_time);
-		}
-		else OutputDebugStringA("[CameraController エラー] follow_camera_component が nullptr です。\n");
-	}
+	BS_PROFILE_FUNCTION();
+
+	if(main_camera)main_camera->Update(elapsed_time);
 	CameraManager::Instance().UpdateFrustum();
 }
 

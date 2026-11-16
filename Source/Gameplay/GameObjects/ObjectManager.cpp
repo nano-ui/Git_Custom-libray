@@ -1,6 +1,7 @@
 #include "ObjectManager.h"
 #include "GameObject.h"
 #include "Character/Character.h"
+#include "Gameplay\Components\Tactics\SquadManager.h"
 #include "Engine/Graphics/Resources/GltfModel/ModelRenderQueue.h"
 #include "Engine/Graphics/Resources/GltfModel/GltfModelRenderer.h"
 #include "Gameplay\Components\Animation\AnimationComponent.h"
@@ -65,6 +66,9 @@ void ObjectManager::Register(std::unique_ptr<GameObject> object)
 void ObjectManager::Update(float elapsed_time)
 {
 	BS_PROFILE_FUNCTION();
+	
+	SquadManager::Instance().Update(elapsed_time);
+	SquadManager::Instance().DistributeInitialHate(10.0f);
 
 	//生存している全オブジェクトの更新処理
 	for (auto& object : game_objects)

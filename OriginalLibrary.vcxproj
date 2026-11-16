@@ -331,6 +331,7 @@
     <ClCompile Include="Source\Gameplay\AI\WeightedNode.cpp" />
     <ClCompile Include="Source\Gameplay\Components\AI\HateComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\AI\PerceptionComponent.cpp" />
+    <ClCompile Include="Source\Gameplay\Components\AI\TargetSelectorComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Animation\AnimationBlender.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Animation\AnimationComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.cpp" />
@@ -357,6 +358,7 @@
     <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\RectangleFormation.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\VShapedFormation.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Tactics\SquadManager.cpp" />
+    <ClCompile Include="Source\Gameplay\Components\Tactics\SquadPatrolComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Tactics\TacticalCommandController.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Transform\TransformComponent.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\Character\Allie.cpp" />
@@ -505,6 +507,7 @@
     <ClInclude Include="Source\Gameplay\AI\WeightedNode.h" />
     <ClInclude Include="Source\Gameplay\Components\AI\HateComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\AI\PerceptionComponent.h" />
+    <ClInclude Include="Source\Gameplay\Components\AI\TargetSelectorComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Animation\AnimationBlender.h" />
     <ClInclude Include="Source\Gameplay\Components\Animation\AnimationComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.h" />
@@ -534,6 +537,7 @@
     <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\RectangleFormation.h" />
     <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\VShapedFormation.h" />
     <ClInclude Include="Source\Gameplay\Components\Tactics\SquadManager.h" />
+    <ClInclude Include="Source\Gameplay\Components\Tactics\SquadPatrolComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Tactics\TacticalCommandController.h" />
     <ClInclude Include="Source\Gameplay\Components\Transform\TransformComponent.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Allie.h" />

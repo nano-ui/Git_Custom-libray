@@ -552,6 +552,12 @@
     <ClCompile Include="Source\Editor\Converter\ObjectClassConverter.cpp">
       <Filter>Source\Editor\Converter\ObjectClassConverter</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\AI\TargetSelectorComponent.cpp">
+      <Filter>Source\Gameplay\Components\AI\TargetSelectorComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Tactics\SquadPatrolComponent.cpp">
+      <Filter>Source\Gameplay\Components\Tactics\SquadPatrolComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1084,6 +1090,12 @@
     </ClInclude>
     <ClInclude Include="Source\Editor\Converter\ObjectClassConverter.h">
       <Filter>Source\Editor\Converter\ObjectClassConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\AI\TargetSelectorComponent.h">
+      <Filter>Source\Gameplay\Components\AI\TargetSelectorComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Tactics\SquadPatrolComponent.h">
+      <Filter>Source\Gameplay\Components\Tactics\SquadPatrolComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1760,6 +1772,12 @@
     </Filter>
     <Filter Include="Source\Editor\Converter\ObjectClassConverter">
       <UniqueIdentifier>{5f8f636e-16e3-46e8-9425-b9e39b99fa5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\AI\TargetSelectorComponent">
+      <UniqueIdentifier>{a7aba6aa-49bf-4041-b042-739b051c2efa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Tactics\SquadPatrolComponent">
+      <UniqueIdentifier>{58eb7e8a-874c-4e8e-9aa3-86700697847e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

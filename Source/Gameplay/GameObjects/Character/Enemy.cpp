@@ -6,10 +6,12 @@
 #include "Gameplay\Components\Editor\AttachmentColliderComponent.h"
 #include "Gameplay\Components\Movement\Move\LinearMove.h"
 #include "Gameplay\Components\Movement\Move\WanderMove.h"
-#include "Gameplay\Components\AI\HateComponent.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Gameplay\Components\Sensor\VisionSensorComponent.h"
 #include "Gameplay\Components\AI\PerceptionComponent.h"
+#include "Gameplay\Components\AI\TargetSelectorComponent.h"
+#include "Gameplay\Components\Tactics\SquadManager.h"
+#include "Gameplay\Components\AI\HateComponent.h"
 
 #include "Gameplay\GameObjects\GameObjectTag.h"
 
@@ -60,7 +62,8 @@ void Enemy::Update(float elapsed_time)
 	BS_PROFILE_FUNCTION();
 	if (is_play)
 	{
-		UpdateTargetFromHate();
+		//UpdateTargetFromHate();
+		target_selector->Update(elapsed_time);
 		UpdateChase(elapsed_time);
 	}
 	Character::Update(elapsed_time);
@@ -123,7 +126,15 @@ std::string Enemy::GetDefaultModelPath() const
 void Enemy::OnDamage(uint32_t attacker_id, float hate)
 {
 	BS_PROFILE_FUNCTION();
-	hate_component->AddHate(attacker_id, hate);
+
+	if (auto allies_hate = SquadManager::Instance().GetAlliesHate())
+	{
+		allies_hate->AddHate(attacker_id, hate);
+	}
+	else
+	{
+		LOG_WARNING({ u8"ヘイト" }, u8"味方の共有ヘイトコンポーネントが取得できませんでした");
+	}
 }
 
 //コンポーネント群のセットアップ
@@ -133,24 +144,27 @@ void Enemy::SetupComponent()
 
 	Character::SetupComponent();
 
-	hate_component = GetComponent<HateComponent>();
-	if (!hate_component) hate_component = AddComponent<HateComponent>();
-
 	vision_sensor = GetComponent<VisionSensorComponent>();
 	if (!vision_sensor) vision_sensor = AddComponent<VisionSensorComponent>();
 	vision_sensor->SetTransformComponent(transform_component);
 
 	perception = GetComponent<PerceptionComponent>();
 	if (!perception)perception = AddComponent<PerceptionComponent>();
-	perception->SetHate(hate_component);
+	perception->SetHate(SquadManager::Instance().GetEnemysHate());
 	perception->SetVisionSensor(vision_sensor);
+
+	target_selector = GetComponent<TargetSelectorComponent>();
+	if (!target_selector)target_selector = AddComponent<TargetSelectorComponent>();
+	target_selector->Initialize();
+	target_selector->SetTargetTransform(target_transform.lock());
+	target_selector->SetHateComponent(SquadManager::Instance().GetEnemysHate());
 }
 
 //座標計算・移動入力の更新処理
 void Enemy::UpdateChase(float elapsed_time)
 {
 	BS_PROFILE_FUNCTION();
-	auto target = target_transform.lock();
+	auto target = target_selector->GetTransformComponent();
 	DirectX::XMFLOAT3 move_velocity = { 0.0f,0.0f,0.0f };
 	if (!target)
 	{
@@ -201,16 +215,11 @@ void Enemy::UpdateChase(float elapsed_time)
 void Enemy::UpdateTargetFromHate()
 {
 	BS_PROFILE_FUNCTION();
-	if (!hate_component)
-	{
-		LOG_WARNING({ "Enemy","Target" }, u8"hate_componentがnullです");
-		return;
-	}
 
 	//対象IDの取得
 	bool is_found = false;
-	uint32_t target_id = hate_component->GetTopHateTargetId();
-	if (!hate_component->HasTarget())
+	uint32_t target_id = SquadManager::Instance().GetAlliesHate().get()->GetTopHateTargetId();
+	if (!SquadManager::Instance().GetAlliesHate().get()->HasTarget())
 	{
 		target_transform.reset();
 		return;

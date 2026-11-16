@@ -17,6 +17,7 @@
 #include "Gameplay\Components\Tactics\Formation\CraneWingFormation.h"
 #include "Gameplay\Components\Tactics\Formation\RectangleFormation.h"
 #include "Utility\RayUtility.h"
+#include <Engine\Core\MacroTracy.h>
 
 //コンストラクタ
 TacticalCommandController::TacticalCommandController()
@@ -41,6 +42,8 @@ void TacticalCommandController::Initialize()
 //更新処理
 void TacticalCommandController::Update(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
+
 	if (!SceneManager::Instance().IsPaused() || !Input::Instance().IsMouseTrigger(Input::mouse_left))return;
 	if (!collision_manager)return;
 

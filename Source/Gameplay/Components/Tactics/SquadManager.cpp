@@ -1,11 +1,32 @@
 #include "SquadManager.h"
+#include "Gameplay\GameObjects\ObjectManager.h"
+#include "Gameplay\GameObjects\GameObjectTag.h"
 #include "Gameplay\GameObjects\Character\Allie.h"
+#include "Gameplay\Components\AI\HateComponent.h"
 #include <Engine\Core\Log\Log.h>
+
+//コンストラクタ
+SquadManager::SquadManager()
+{
+	allies_hate = std::make_shared<HateComponent>();
+	enemys_hate = std::make_shared<HateComponent>();
+	is_initial = false;
+}
+
+//更新処理
+void SquadManager::Update(float elapsed_time)
+{
+	allies_hate->Update(elapsed_time);
+	enemys_hate->Update(elapsed_time);
+}
 
 //クリア
 void SquadManager::Clear()
 {
 	members.clear();
+	allies_hate->Initialize();
+	enemys_hate->Initialize();
+	is_initial = false;
 }
 
 //部隊リストへ登録
@@ -97,4 +118,39 @@ void SquadManager::CommandFormation(const std::vector<DirectX::XMFLOAT3>& target
 		members[i]->SetTargetPosition(target_positions[i]);
 		members[i]->SetHasTarget(true);
 	}
+}
+
+//シーン開始時に初期ヘイト値を登録
+void SquadManager::DistributeInitialHate(float initial_hate)
+{
+	if (is_initial)return;
+	std::vector<uint32_t> allies_list = {};
+	std::vector<uint32_t> enamys_list = {};
+	//陣営ごとのID収集
+	for (const auto& obj : ObjectManager::Instance().GetGameObjects())
+	{
+		if (!obj || !obj->IsActive())continue;
+		GameObjectTag tag = obj->GetTag();
+		switch (tag)
+		{
+		case GameObjectTag::Allies:
+			allies_list.push_back(obj->GetObjectId());
+			break;
+		case GameObjectTag::Enemys:
+			enamys_list.push_back(obj->GetObjectId());
+			break;
+		}
+	}
+
+	//共有ヘイトへの一斉登録
+	if (allies_list.empty() || enamys_list.empty())return;
+	for (int allie = 0; allie < allies_list.size(); ++allie)
+	{
+		enemys_hate->AddHate(allies_list[allie], initial_hate);
+	}
+	for (int enemy = 0; enemy < enamys_list.size();++enemy)
+	{
+		allies_hate->AddHate(enamys_list[enemy], initial_hate);
+	}
+	is_initial = true;
 }

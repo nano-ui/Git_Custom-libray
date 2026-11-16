@@ -1,15 +1,25 @@
 #include "Allie.h"
 #include "Gameplay\GameObjects\ObjectFactory.h"
+#include "Gameplay\GameObjects\GameObjectTag.h"
 #include "Gameplay\Components\Tactics\SquadManager.h"
 #include "Gameplay\Components\Transform\TransformComponent.h"
+#include "Gameplay\Components\AI\HateComponent.h"
+#include "Gameplay\Components\AI\PerceptionComponent.h"
+#include "Gameplay\Components\AI\TargetSelectorComponent.h"
+#include "Gameplay\Components\Sensor\VisionSensorComponent.h"
+#include "Gameplay\Components\Movement\Move\LinearMove.h"
+#include "Gameplay\Components\Movement\MovementComponent.h"
 #include "Engine\Core\Log\Log.h"
 
 static AutoRegister<Allie> auto_register_class("Allie");
+static constexpr uint32_t DUMMY_BLACKBOARD_KEY = 0;
 
 //コンストラクタ
 Allie::Allie()
 {
 	SetClassName("Allie");
+	SetTag(GameObjectTag::Allies);
+	linear_move = std::make_unique<LinearMove>(DUMMY_BLACKBOARD_KEY);
 }
 
 //デストラクタ
@@ -26,13 +36,19 @@ void Allie::Initialize()
 	SquadManager::Instance().RegisterMember(this);
 	target_position = { 0.0f,0.0f,0.0f };
 	has_target = false;
+	perception->SetTargetTag(GameObjectTag::Enemys);
 }
 
 //更新処理
 void Allie::Update(float elapsed_time)
 {
 	Character::Update(elapsed_time);
-	MoveTarget(elapsed_time);
+	target_transform = target_selector->GetTransformComponent();
+	if (!target_transform.lock())
+	{
+		MoveTarget(elapsed_time);
+	}
+	UpdateChase(elapsed_time);
 }
 
 //衝突処理
@@ -51,6 +67,8 @@ void Allie::Render(ID3D11DeviceContext* context)
 void Allie::RenderDebug(ShapeRenderer* renderer)
 {
 	Character::RenderDebug(renderer);
+	vision_sensor->RenderDebug(renderer);
+
 }
 
 // シリアライズ登録
@@ -69,6 +87,21 @@ void Allie::SetupInspector()
 void Allie::SetupComponent()
 {
 	Character::SetupComponent();
+
+	vision_sensor = GetComponent<VisionSensorComponent>();
+	if (!vision_sensor) vision_sensor = AddComponent<VisionSensorComponent>();
+	vision_sensor->SetTransformComponent(transform_component);
+
+	perception = GetComponent<PerceptionComponent>();
+	if (!perception)perception = AddComponent<PerceptionComponent>();
+	perception->SetHate(SquadManager::Instance().GetAlliesHate());
+	perception->SetVisionSensor(vision_sensor);
+
+	target_selector = GetComponent<TargetSelectorComponent>();
+	if (!target_selector)target_selector = AddComponent<TargetSelectorComponent>();
+	target_selector->Initialize();
+	target_selector->SetTargetTransform(target_transform.lock());
+	target_selector->SetHateComponent(SquadManager::Instance().GetAlliesHate());
 }
 
 //ブラックボードに登録・初期化
@@ -112,6 +145,54 @@ void Allie::MoveTarget(float elapsed_time)
 	Character::Tuen(elapsed_time, vector_x, vector_z);
 }
 
+//ヘイト対象に向かって移動
+void Allie::UpdateChase(float elapsed_time)
+{
+	constexpr float EPSILON_DISTANCE_SQ = 0.0001f;
+	auto target = target_selector->GetTransformComponent();
+	DirectX::XMFLOAT3 move_velocity = { 0.0f,0.0f,0.0f };
+	if (!target)return;
+	else
+	{
+		//座標の取得
+		DirectX::XMFLOAT3 current_pos = transform_component->GetPosition();
+		DirectX::XMFLOAT3 target_pos = target->GetPosition();
+		target_pos.y = current_pos.y;
+
+		//距離を算出
+		DirectX::XMVECTOR current_v = DirectX::XMLoadFloat3(&current_pos);
+		DirectX::XMVECTOR target_v = DirectX::XMLoadFloat3(&target_pos);
+		DirectX::XMVECTOR diff_v = DirectX::XMVectorSubtract(target_v, current_v);
+		DirectX::XMVECTOR dist_sq_v = DirectX::XMVector3LengthSq(diff_v);
+
+		float distance_sq = 0.0f;
+		DirectX::XMStoreFloat(&distance_sq, dist_sq_v);
+		float stop_distance_sq = stop_distance * stop_distance;
+		if (distance_sq <= stop_distance_sq || distance_sq < EPSILON_DISTANCE_SQ)
+		{
+			Character::Move(elapsed_time, 0.0f, 0.0f);
+			return;
+		}
+
+		//移動速度を算出
+		move_velocity = linear_move->UpdateLiner(current_pos, target_pos, movement_component->GetMaxSpeed());
+	}
+	float length = std::sqrtf((move_velocity.x * move_velocity.x) + (move_velocity.z * move_velocity.z));
+	if (length < EPSILON_DISTANCE_SQ)
+	{
+		Character::Move(elapsed_time, 0.0f, 0.0f);
+		return;
+	}
+
+	float dir_x = move_velocity.x / length;
+	float dir_z = move_velocity.z / length;
+
+	//実際に移動
+	Character::Move(elapsed_time, dir_x, dir_z);
+	Character::Tuen(elapsed_time, dir_x, dir_z);
+
+}
+
 //デフォルトパスの取得
 std::string Allie::GetDefaultModelPath() const
 {
@@ -128,7 +209,14 @@ void Allie::OnLanding()
 //被弾時イベント
 void Allie::OnDamage(uint32_t attacker_id, float hate)
 {
-
+	if (auto enemys_hate = SquadManager::Instance().GetEnemysHate())
+	{
+		enemys_hate->AddHate(attacker_id, hate);
+	}
+	else
+	{
+		LOG_WARNING({ u8"ヘイト" }, u8"敵の共有ヘイトコンポーネントが取得できませんでした");
+	}
 }
 
 //死亡時イベント
