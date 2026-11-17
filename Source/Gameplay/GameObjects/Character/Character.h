@@ -51,7 +51,7 @@ public:
 	bool ApplyDamage(float damage, float invincible_time, uint32_t attacker_id);
 
 	//ブラックボードに同期
-	void SyncBlackboard();
+	virtual void SyncBlackboard();
 
 	//ブラックボードを取得
 	StateBlackboard* GetBlackboard()const { return blackboard.get(); }

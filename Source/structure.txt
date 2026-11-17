@@ -270,6 +270,8 @@ C:.
 Да   Да   ДеДЯДЯДЯAI
 Да   Да   Да       HateComponent.cpp
 Да   Да   Да       HateComponent.h
+Да   Да   Да       HateDistributorComponent.cpp
+Да   Да   Да       HateDistributorComponent.h
 Да   Да   Да       PerceptionComponent.cpp
 Да   Да   Да       PerceptionComponent.h
 Да   Да   Да       TargetSelectorComponent.cpp
@@ -338,6 +340,8 @@ C:.
 Да   Да   ДеДЯДЯДЯTactics
 Да   Да   Да   Да   SquadManager.cpp
 Да   Да   Да   Да   SquadManager.h
+Да   Да   Да   Да   SquadPatrolComponent.cpp
+Да   Да   Да   Да   SquadPatrolComponent.h
 Да   Да   Да   Да   TacticalCommandController.cpp
 Да   Да   Да   Да   TacticalCommandController.h
 Да   Да   Да   Да   

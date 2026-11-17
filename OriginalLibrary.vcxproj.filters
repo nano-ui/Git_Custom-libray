@@ -558,6 +558,9 @@
     <ClCompile Include="Source\Gameplay\Components\Tactics\SquadPatrolComponent.cpp">
       <Filter>Source\Gameplay\Components\Tactics\SquadPatrolComponent</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Common\Blackboard.cpp">
+      <Filter>Source\Gameplay\Common\Blackboard</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1096,6 +1099,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Tactics\SquadPatrolComponent.h">
       <Filter>Source\Gameplay\Components\Tactics\SquadPatrolComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Common\Blackboard.h">
+      <Filter>Source\Gameplay\Common\Blackboard</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1778,6 +1784,12 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Tactics\SquadPatrolComponent">
       <UniqueIdentifier>{58eb7e8a-874c-4e8e-9aa3-86700697847e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Common">
+      <UniqueIdentifier>{a0cc8dc6-6c68-4c6c-ab61-99f7a2cee9cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Common\Blackboard">
+      <UniqueIdentifier>{9738fa4a-3243-4f56-935f-d94e499d3f2f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

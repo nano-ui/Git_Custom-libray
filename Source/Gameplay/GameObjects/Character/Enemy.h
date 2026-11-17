@@ -43,6 +43,12 @@ public:
 	// アニメーション終了イベント
 	void OnAnimationEnd(uint32_t state_key) override;
 
+	//ブラックボードに同期
+	void SyncBlackboard();
+
+	//ブラックボードに登録・初期化
+	void SetupBlackboard()override;
+
 	//対象を設定
 	void SetTarget(const std::shared_ptr<TransformComponent>& target);
 

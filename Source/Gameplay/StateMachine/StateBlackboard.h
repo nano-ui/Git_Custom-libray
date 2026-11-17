@@ -77,6 +77,9 @@ public:
 		name_map[hash_key] = variable_name;
 	}
 
+	//’l‚Ì•R‚Ã‚¯
+
+
 	//’l‚ÌŽæ“¾
 	template<typename T>
 	T GetValue(const std::string& variable_name, const T& default_value)const

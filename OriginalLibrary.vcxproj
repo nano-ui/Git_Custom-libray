@@ -329,6 +329,7 @@
     <ClCompile Include="Source\Gameplay\AI\RatioJudgment.cpp" />
     <ClCompile Include="Source\Gameplay\AI\SelectorNode.cpp" />
     <ClCompile Include="Source\Gameplay\AI\WeightedNode.cpp" />
+    <ClCompile Include="Source\Gameplay\Common\Blackboard.cpp" />
     <ClCompile Include="Source\Gameplay\Components\AI\HateComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\AI\PerceptionComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\AI\TargetSelectorComponent.cpp" />
@@ -505,6 +506,7 @@
     <ClInclude Include="Source\Gameplay\AI\SelectorNode.h" />
     <ClInclude Include="Source\Gameplay\AI\StateActionNode.h" />
     <ClInclude Include="Source\Gameplay\AI\WeightedNode.h" />
+    <ClInclude Include="Source\Gameplay\Common\Blackboard.h" />
     <ClInclude Include="Source\Gameplay\Components\AI\HateComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\AI\PerceptionComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\AI\TargetSelectorComponent.h" />

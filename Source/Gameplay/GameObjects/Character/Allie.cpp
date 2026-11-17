@@ -104,10 +104,17 @@ void Allie::SetupComponent()
 	target_selector->SetHateComponent(SquadManager::Instance().GetAlliesHate());
 }
 
+//ブラックボードに同期
+void Allie::SyncBlackboard()
+{
+	Character::SyncBlackboard();
+}
+
 //ブラックボードに登録・初期化
 void Allie::SetupBlackboard()
 {
 	Character::SetupBlackboard();
+
 }
 
 //アニメーション終了イベント

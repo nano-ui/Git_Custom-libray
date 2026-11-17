@@ -109,6 +109,20 @@ void Enemy::OnAnimationEnd(uint32_t state_key)
 
 }
 
+//ブラックボードに同期
+void Enemy::SyncBlackboard()
+{
+	Character::SyncBlackboard();
+
+}
+
+//ブラックボードに登録・初期化
+void Enemy::SetupBlackboard()
+{
+	Character::SetupBlackboard();
+
+}
+
 //対象を設定
 void Enemy::SetTarget(const std::shared_ptr<TransformComponent>& target)
 {

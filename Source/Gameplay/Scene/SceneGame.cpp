@@ -124,7 +124,11 @@ void SceneGame::Update(float elapsed_time)
 #endif
 	camera_controller->Update(elapsed_time);
 	if (editor_manager)editor_manager->Update(elapsed_time);
-	if (editor_manager && !editor_manager->IsGameViewportActive())return;
+	if (editor_manager && !editor_manager->IsGameViewportActive())
+	{
+		editor_manager->RenderGui();
+		return;
+	}
 	if (Input::Instance().IsKeyTrigger(key_pause))
 	{
 		bool next_pause_state = !SceneManager::Instance().IsPaused();
