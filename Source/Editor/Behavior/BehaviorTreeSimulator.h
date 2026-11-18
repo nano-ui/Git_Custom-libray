@@ -7,7 +7,7 @@
 
 #include "Editor\StateMachineEditor\StateGraphSimulator.h"
 
-class StateBlackboard;
+class Blackboard;
 class BehaviorNode;
 class BehaviorTreeBuilder;
 
@@ -26,7 +26,7 @@ public:
 		const std::vector<SimulatorRuntimeLink>& links);
 
 	//シミュレーション更新処理
-	bool UpdateSimulation(float elapsed_time, StateBlackboard* blackboard);
+	bool UpdateSimulation(float elapsed_time, Blackboard* blackboard);
 
 	//ツリーの再構築
 	void InvalidataTree() { return runtime_root_node.reset(); }

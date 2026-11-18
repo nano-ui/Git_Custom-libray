@@ -270,7 +270,6 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphPaletteWindow.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphPropertyWindow.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.cpp" />
-    <ClCompile Include="Source\Editor\StateMachineEditor\TransitionCondition.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.cpp" />
     <ClCompile Include="Source\Engine\Camera\Camera.cpp" />
     <ClCompile Include="Source\Engine\Camera\CameraController.cpp" />
@@ -378,9 +377,9 @@
     <ClCompile Include="Source\Gameplay\Scene\SceneTitle.cpp" />
     <ClCompile Include="Source\Gameplay\StateMachine\ActionState.cpp" />
     <ClCompile Include="Source\Gameplay\StateMachine\State.cpp" />
-    <ClCompile Include="Source\Gameplay\StateMachine\StateBlackboard.cpp" />
     <ClCompile Include="Source\Gameplay\StateMachine\StateMachine.cpp" />
     <ClCompile Include="Source\Gameplay\StateMachine\StateTransition.cpp" />
+    <ClCompile Include="Source\Gameplay\StateMachine\TransitionCondition.cpp" />
     <ClCompile Include="Source\Serialization\AnimationSequenceSerializer.cpp" />
     <ClCompile Include="Source\Serialization\GltfModelSerializer.cpp" />
     <ClCompile Include="Source\Serialization\JsonSerializer.cpp" />
@@ -440,7 +439,6 @@
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphPaletteWindow.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphPropertyWindow.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.h" />
-    <ClInclude Include="Source\Editor\StateMachineEditor\TransitionCondition.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.h" />
     <ClInclude Include="Source\Engine\Camera\Camera.h" />
     <ClInclude Include="Source\Engine\Camera\CameraController.h" />
@@ -560,9 +558,9 @@
     <ClInclude Include="Source\Gameplay\Scene\SceneTitle.h" />
     <ClInclude Include="Source\Gameplay\StateMachine\ActionState.h" />
     <ClInclude Include="Source\Gameplay\StateMachine\State.h" />
-    <ClInclude Include="Source\Gameplay\StateMachine\StateBlackboard.h" />
     <ClInclude Include="Source\Gameplay\StateMachine\StateMachine.h" />
     <ClInclude Include="Source\Gameplay\StateMachine\StateTransition.h" />
+    <ClInclude Include="Source\Gameplay\StateMachine\TransitionCondition.h" />
     <ClInclude Include="Source\Serialization\AnimationSequenceSerializer.h" />
     <ClInclude Include="Source\Serialization\GltfModelSerializer.h" />
     <ClInclude Include="Source\Serialization\JsonSerializer.h" />

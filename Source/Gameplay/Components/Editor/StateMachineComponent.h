@@ -4,13 +4,12 @@
 #include <cstdint>
 #include <unordered_map>
 
-#include "Gameplay\StateMachine\StateBlackboard.h"
 #include "Editor\StateMachineEditor\StateGraphSimulator.h"
 #include "Editor\StateMachineEditor\StateMachineDataLoader.h"
 #include "Editor\Behavior\BehaviorTreeSimulator.h"
-#include "Editor\StateMachineEditor\StateGraphSimulator.h"
+#include "Editor\StateMachineEditor\StateGraphDataManager.h"
 
-class StateBlackboard;
+class Blackboard;
 class JsonSerializer;
 class AnimationComponent;
 
@@ -27,10 +26,10 @@ public:
 	~StateMachineComponent();
 
 	//初期化
-	void Initialize(StateBlackboard* blackboard);
+	void Initialize(Blackboard* blackboard);
 
 	//更新
-	void Update(float elapsed_time, StateBlackboard* blackboard, bool is_anim_finished = false);
+	void Update(float elapsed_time, Blackboard* blackboard, bool is_anim_finished = false);
 
 	//モデル名設定
 	void SetModelName(const std::string& model_name);
@@ -77,10 +76,10 @@ public:
 private:
 
 	//単一の遷移条件が成立しているか判定
-	bool EvaluateCondition(const TransitionCondition& cond, StateBlackboard* blackboard, bool is_anim_finished)const;
+	bool EvaluateCondition(const TransitionCondition& cond, Blackboard* blackboard, bool is_anim_finished)const;
 
 	//ステートマシンJSONからアニメーション対応表を抽出
-	void LoadAnimationMap(StateBlackboard* blackboard);
+	void LoadAnimationMap();
 
 	//ピンIDから所属するノードIDを逆引き検索
 	uint32_t GetNodeIdFromPinId(uint32_t pin_id)const;
@@ -107,7 +106,7 @@ private:
 	std::vector<SimulatorRuntimeLink> runtime_links;			//リンク配列
 
 	std::unordered_map<uint32_t, uint32_t> layer_entry_nodes;	//各階層ごとの先頭エントリーIDマップ
-	std::unordered_map<uint32_t, RuntimeLayerType> layer_types;
+	std::unordered_map<uint32_t, LayerType> layer_types;
 
 	std::unordered_map<uint32_t, std::vector<SimulatorRuntimeNode>> bt_nodes_map;
 	std::unordered_map<uint32_t, std::vector<SimulatorRuntimeLink>> bt_links_map;

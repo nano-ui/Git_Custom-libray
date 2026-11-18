@@ -22,7 +22,7 @@ WanderMove::~WanderMove() = default;
 DirectX::XMFLOAT3 WanderMove::Update(
 	const DirectX::XMFLOAT3& current_pos,
 	const DirectX::XMFLOAT3& target_pos,
-	const StateBlackboard* blackboard)
+	const Blackboard* blackboard)
 {
 	return DirectX::XMFLOAT3();
 }

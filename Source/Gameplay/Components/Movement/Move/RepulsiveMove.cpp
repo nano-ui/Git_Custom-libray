@@ -1,5 +1,5 @@
 #include "RepulsiveMove.h"
-#include "Gameplay\StateMachine\StateBlackboard.h"
+#include "Gameplay\Common\Blackboard.h"
 
 //コンストラクタ
 RepulsiveMove::RepulsiveMove(uint32_t power_k, uint32_t radius_k)

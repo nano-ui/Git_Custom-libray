@@ -1,7 +1,21 @@
 #pragma once
-#include "StateGraphDataManager.h"
+
+#include <DirectXMath.h>
+#include <string>
+#include <cstdint>
 
 class Blackboard;
+
+//判定ノードの種類
+enum class ConditionNodeType
+{
+	NormalCompare,	//通常の比較
+	Random,			//ランダム判定
+	Distance,		//距離判定
+	Ratio,			//割合判定
+	InputCheck,		//入力判定
+	AnimationEnd,	//アニメーション終了判定
+};
 
 //比較演算子
 enum class CompareOperator

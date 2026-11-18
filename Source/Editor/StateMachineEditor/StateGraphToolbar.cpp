@@ -5,7 +5,7 @@
 #include "Editor\FileDialogHelper.h"
 #include "Editor\EditorMediator.h"
 #include "Editor\PathHelper.h"
-#include "Gameplay\StateMachine\StateBlackboard.h"
+#include "Gameplay\Common\Blackboard.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 
 #include <imgui.h>

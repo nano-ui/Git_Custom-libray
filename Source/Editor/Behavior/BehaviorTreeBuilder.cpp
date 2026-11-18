@@ -2,7 +2,7 @@
 #include "Editor\Behavior\EditorActionNode.h"
 #include "Gameplay\AI\SelectorNode.h"
 #include "Gameplay\AI\WeightedNode.h"
-#include "Gameplay\StateMachine\StateBlackboard.h"
+#include "Gameplay\Common\Blackboard.h"
 
 //ƒcƒŠ[‚ğ\’z
 std::shared_ptr<BehaviorNode> BehaviorTreeBuilder::BuildTree(
@@ -159,7 +159,7 @@ const SimulatorRuntimeLink* BehaviorTreeBuilder::FindLinkBetweenNodes(
 }
 
 //•]‰¿ğŒˆ—
-bool BehaviorTreeBuilder::EvaluateConditions(const std::vector<TransitionCondition>& conditions, StateBlackboard* blackboard) 
+bool BehaviorTreeBuilder::EvaluateConditions(const std::vector<TransitionCondition>& conditions, Blackboard* blackboard) 
 {
 	if (!blackboard)
 	{

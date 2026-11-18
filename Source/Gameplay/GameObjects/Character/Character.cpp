@@ -1,5 +1,5 @@
 #include "Character.h"
-#include "Gameplay\StateMachine\StateBlackboard.h"
+#include "Gameplay\Common\Blackboard.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Gameplay\Components\Editor\AttachmentColliderComponent.h"
 #include "Gameplay\Components\Transform\TransformComponent.h"

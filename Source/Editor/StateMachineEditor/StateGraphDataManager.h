@@ -8,6 +8,7 @@
 #include <unordered_set>
 #include "ThiedParty\json.hpp"
 #include "Editor\Behavior\BehaviorNodeData.h"
+#include "Gameplay\StateMachine\TransitionCondition.h"
 
 constexpr float DEFAULT_BLEND_TIME = 0.2f;	//初期時のブレンド時間
 
@@ -60,37 +61,14 @@ struct GraphNode
 	BehaviorNodeData behavior_data;			//ビヘイビアツリーノード情報
 };
 
-//判定ノードの種類
-enum class ConditionNodeType
-{
-	NormalCompare,	//通常の比較
-	Random,			//ランダム判定
-	Distance,		//距離判定
-	Ratio,			//割合判定
-	InputCheck,		//入力判定
-	AnimationEnd,	//アニメーション終了判定
-};
-
-//遷移条件の編集・保持
-struct GraphTransitionCondition
-{
-	ConditionNodeType type = ConditionNodeType::NormalCompare;	//判定の種類
-	float reference_value = 0.0f;			//基準値
-	int compare_operator = 0;				//比較演算子識別番号
-	float param_second = 0.0f;				//第2引数パラメータ
-	std::string variable_name;				//変数名
-	std::string secondary_variable_name;	//第二引数変数
-	DirectX::XMFLOAT3 vector_reference_value = { 0.0f, 0.0f, 0.0f }; // XMFLOAT3用の比較基準値
-};
-
 //ノードを繋ぐ線の情報
 struct GraphLink
 {
-	uint32_t id;			//線の固有ID
-	uint32_t start_pin_id;	//接続元の出力ピンID
-	uint32_t end_pin_id;	//接続先の入力ピンID
-	float blend_time = DEFAULT_BLEND_TIME;		//ブレンド時間
-	std::vector<GraphTransitionCondition> conditions;	//遷移条件リスト
+	uint32_t id;											//線の固有ID
+	uint32_t start_pin_id;									//接続元の出力ピンID
+	uint32_t end_pin_id;									//接続先の入力ピンID
+	float blend_time = DEFAULT_BLEND_TIME;					//ブレンド時間
+	std::vector<TransitionCondition> conditions;			//遷移条件リスト
 };
 
 //階層属性

@@ -1,8 +1,9 @@
 #include "StateMachineComponent.h"
 #include "Serialization/JsonSerializer.h"
-#include "Gameplay\StateMachine\StateBlackboard.h"
+#include "Gameplay\Common\Blackboard.h"
 #include "ThiedParty/json.hpp"
 #include "Gameplay\Components\Animation\AnimationComponent.h"
+#include "Gameplay\Common\Blackboard.h"
 #include "Engine/Core/Input.h"
 #include "Editor\PathHelper.h"
 
@@ -26,21 +27,21 @@ StateMachineComponent::StateMachineComponent()
 StateMachineComponent::~StateMachineComponent() = default;
 
 //初期化
-void StateMachineComponent::Initialize(StateBlackboard* blackboard)
+void StateMachineComponent::Initialize(Blackboard* blackboard)
 {
 	BS_PROFILE_FUNCTION();
 
 	//プレハブJSONからパスが正しく読み込まれているか判定
 	if (!state_machine_path.empty())
 	{
-		LoadAnimationMap(blackboard);
+		LoadAnimationMap();
 	}
 	else
 	{
 		const std::string default_model_name = "Default";
 		const std::string suffix_name = "_StateMachine";
 		state_machine_path = PathHelper::GenerateJsonFilePath(default_model_name, suffix_name);
-		LoadAnimationMap(blackboard);
+		LoadAnimationMap();
 	}
 
 	if (!runtime_nodes.empty())
@@ -70,7 +71,7 @@ void StateMachineComponent::Initialize(StateBlackboard* blackboard)
 }
 
 //更新
-void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboard, bool is_anim_finished) 
+void StateMachineComponent::Update(float elapsed_time, Blackboard* blackboard, bool is_anim_finished) 
 {
 	BS_PROFILE_FUNCTION();
 
@@ -91,7 +92,7 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 			state_machine_path = PathHelper::GenerateJsonFilePath(default_model_name, suffix_name);
 		}
 
-		LoadAnimationMap(blackboard);
+		LoadAnimationMap();
 
 		if (runtime_nodes.empty())
 		{
@@ -107,14 +108,14 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 	}
 
 	uint32_t current_graph_id = GetGraphIdFromNodeId(current_node_id);
-	RuntimeLayerType current_layer_type = RuntimeLayerType::StateMachine;
+	LayerType current_layer_type = LayerType::StateMachine;
 	auto layer_it = layer_types.find(current_graph_id);
 	if (layer_it != layer_types.end())
 	{
 		current_layer_type = layer_it->second;
 	}
 
-	if (current_layer_type == RuntimeLayerType::BehaviorTree)
+	if (current_layer_type == LayerType::BehaviorTree)
 	{
 		if (last_bt_graph_id != current_graph_id)
 		{
@@ -203,7 +204,7 @@ void StateMachineComponent::Update(float elapsed_time, StateBlackboard* blackboa
 		if (is_transitioned)
 		{
 			uint32_t next_graph_id = GetGraphIdFromNodeId(current_node_id);
-			if (layer_types[next_graph_id] == RuntimeLayerType::BehaviorTree)
+			if (layer_types[next_graph_id] == LayerType::BehaviorTree)
 			{
 				behavior_simulator->SetupGraph(bt_nodes_map[next_graph_id], bt_links_map[next_graph_id]);
 				last_bt_graph_id = next_graph_id;
@@ -276,9 +277,10 @@ bool StateMachineComponent::IsCurrentRootMotionEnbled() const
 }
 
 //単一の遷移条件が成立しているか判定
-bool StateMachineComponent::EvaluateCondition(const TransitionCondition& cond, StateBlackboard* blackboard, bool is_anim_finished) const
+bool StateMachineComponent::EvaluateCondition(const TransitionCondition& cond, Blackboard* blackboard, bool is_anim_finished) const
 {
 	BS_PROFILE_FUNCTION();
+	if (!blackboard)return false;
 
 	//アニメーション終了判定
 	if (cond.type == ConditionNodeType::AnimationEnd)return is_anim_finished;
@@ -288,7 +290,7 @@ bool StateMachineComponent::EvaluateCondition(const TransitionCondition& cond, S
 }
 
 //ステートマシンJSONからアニメーション対応表を抽出
-void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
+void StateMachineComponent::LoadAnimationMap()
 {
 	BS_PROFILE_FUNCTION();
 
@@ -303,34 +305,6 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 	if (!load_success)
 	{
 		return;
-	}
-
-	if (blackboard)
-	{
-		for (size_t l = 0; l < runtime_links.size(); l++)
-		{
-			for (size_t c = 0; c < runtime_links[l].conditions.size(); c++)
-			{
-				TransitionCondition& cond = runtime_links[l].conditions[c];
-
-				if (cond.type == ConditionNodeType::NormalCompare && cond.hash_key != 0)
-				{
-					const BlackboardData& raw_data = blackboard->GetAttributeValue(cond.hash_key);
-
-					const float* parsed_float_ptr = std::get_if<float>(&cond.reference_value);
-					float parsed_float = parsed_float_ptr ? *parsed_float_ptr : 0.0f;
-
-					if (std::holds_alternative<bool>(raw_data))
-					{
-						cond.reference_value = (parsed_float != 0.0f);
-					}
-					else if (std::holds_alternative<int>(raw_data))
-					{
-						cond.reference_value = static_cast<int>(parsed_float);
-					}
-				}
-			}
-		}
 	}
 
 	if (runtime_nodes.empty())
@@ -380,7 +354,7 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 	bt_links_map.clear();
 	for (const auto& node : runtime_nodes)
 	{
-		if (layer_types[node.graph_id] == RuntimeLayerType::BehaviorTree)
+		if (layer_types[node.graph_id] == LayerType::BehaviorTree)
 		{
 			bt_nodes_map[node.graph_id].push_back(node);
 		}
@@ -391,7 +365,7 @@ void StateMachineComponent::LoadAnimationMap(StateBlackboard* blackboard)
 		if (src_node_id != UINT32_MAX)
 		{
 			uint32_t graph_id = GetGraphIdFromNodeId(src_node_id);
-			if (graph_id != UINT32_MAX && layer_types[graph_id] == RuntimeLayerType::BehaviorTree)
+			if (graph_id != UINT32_MAX && layer_types[graph_id] == LayerType::BehaviorTree)
 			{
 				bt_links_map[graph_id].push_back(link);
 			}

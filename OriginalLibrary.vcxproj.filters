@@ -189,9 +189,6 @@
     <ClCompile Include="Source\Gameplay\StateMachine\State.cpp">
       <Filter>Source\Gameplay\StateMachine\State</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Gameplay\StateMachine\StateBlackboard.cpp">
-      <Filter>Source\Gameplay\StateMachine\StateBlackboard</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Gameplay\StateMachine\StateTransition.cpp">
       <Filter>Source\Gameplay\StateMachine\StateTransition</Filter>
     </ClCompile>
@@ -561,8 +558,8 @@
     <ClCompile Include="Source\Gameplay\Common\Blackboard.cpp">
       <Filter>Source\Gameplay\Common\Blackboard</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\StateMachineEditor\TransitionCondition.cpp">
-      <Filter>Source\Editor\StateMachineGraphEditor\TransitionCondition</Filter>
+    <ClCompile Include="Source\Gameplay\StateMachine\TransitionCondition.cpp">
+      <Filter>Source\Gameplay\StateMachine\TransitionCondition</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -703,9 +700,6 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\StateMachine\State.h">
       <Filter>Source\Gameplay\StateMachine\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Gameplay\StateMachine\StateBlackboard.h">
-      <Filter>Source\Gameplay\StateMachine\StateBlackboard</Filter>
     </ClInclude>
     <ClInclude Include="Source\Gameplay\StateMachine\StateTransition.h">
       <Filter>Source\Gameplay\StateMachine\StateTransition</Filter>
@@ -1106,8 +1100,8 @@
     <ClInclude Include="Source\Gameplay\Common\Blackboard.h">
       <Filter>Source\Gameplay\Common\Blackboard</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\StateMachineEditor\TransitionCondition.h">
-      <Filter>Source\Editor\StateMachineGraphEditor\TransitionCondition</Filter>
+    <ClInclude Include="Source\Gameplay\StateMachine\TransitionCondition.h">
+      <Filter>Source\Gameplay\StateMachine\TransitionCondition</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1274,9 +1268,6 @@
     </Filter>
     <Filter Include="Source\Gameplay\StateMachine\State">
       <UniqueIdentifier>{82807ffa-1850-47e8-b78b-eeff76d18b83}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Gameplay\StateMachine\StateBlackboard">
-      <UniqueIdentifier>{27b87f48-8ff4-4664-ae85-5b350a248a74}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Gameplay\StateMachine\StateTransition">
       <UniqueIdentifier>{676c54d2-9bbe-421c-80ad-cf3730c02814}</UniqueIdentifier>
@@ -1797,7 +1788,7 @@
     <Filter Include="Source\Gameplay\Common\Blackboard">
       <UniqueIdentifier>{9738fa4a-3243-4f56-935f-d94e499d3f2f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Editor\StateMachineGraphEditor\TransitionCondition">
+    <Filter Include="Source\Gameplay\StateMachine\TransitionCondition">
       <UniqueIdentifier>{03e3f130-90ec-4509-a43a-ced9776b598f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

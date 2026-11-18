@@ -4,7 +4,7 @@
 #include "Engine\Graphics\Renderers\Graphics.h"
 #include "Engine\Camera\CameraManager.h"
 #include "Gameplay/GameObjects/ObjectFactory.h"
-#include "Gameplay\StateMachine\StateBlackboard.h"
+#include "Gameplay\Common\Blackboard.h"
 #include "Gameplay\Components\Editor\StateMachineComponent.h"
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Gameplay\Components\Model\ModelComponent.h"

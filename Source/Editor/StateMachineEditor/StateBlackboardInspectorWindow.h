@@ -3,9 +3,10 @@
 #include <memory>
 #include <string>
 
-class StateBlackboard;
+class Blackboard;
 struct GraphData;
 
+//ステートマシンのブラックボード変数を監視・編集するインスペクターウィンドウ
 class StateBlackboardInspectorWindow
 {
 public:
@@ -15,14 +16,13 @@ public:
 	//デストラクタ
 	~StateBlackboardInspectorWindow() = default;
 
-	//遷移条件変数を登録
-	void SyncBlackboardVariablesFromGraph(const GraphData* current_graph, StateBlackboard* blackboard);
+	//グラフ内の遷移条件変数がブラックボードに登録済みか検証
+	void SyncBlackboardVariablesFromGraph(const GraphData* current_graph, Blackboard* blackboard);
 
-	//ImGui描画
-	void DrawInspector(StateBlackboard* blackboard);
+	//インスペクターウィンドウのImGui描画
+	void DrawInspector(Blackboard* blackboard);
 
 private:
-	//変数の型に応じたImGui描画
-	void DrawVariableControl(StateBlackboard* blackboard, const std::string& var_name, uint32_t hash_key);
+	//変数の型に応じたImGui操作UIの描画
+	void DrawVariableControl(Blackboard* blackboard, const std::string& var_name);
 };
-

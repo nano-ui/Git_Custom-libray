@@ -38,7 +38,7 @@ void BehaviorTreeSimulator::SetupGraph(
 }
 
 //シミュレーション更新処理
-bool BehaviorTreeSimulator::UpdateSimulation(float elapsed_time, StateBlackboard* blackboard)
+bool BehaviorTreeSimulator::UpdateSimulation(float elapsed_time, Blackboard* blackboard)
 {
 	if (!tree_builder)
 	{

@@ -17,43 +17,42 @@ StateGraphDataManager::StateGraphDataManager()
 //ファイルに保存
 void StateGraphDataManager::SaveToFile(const std::string& file_path)
 {
-	nlohmann::json root_json;	//JSONのルートオブジェクト
-	root_json["NextID"] = next_id; // IDカウンターの保存
-	root_json["TargetModelPath"] = target_model_path;	//モデルパスを保存
-	nlohmann::json layers_array = nlohmann::json::array();	//全階層情報を格納する配列オブジェクト
+	//ルート情報および全階層のノード・リンクデータをJSONオブジェクトへパッキング
+	nlohmann::json root_json;
+	root_json["NextID"] = next_id;
+	root_json["TargetModelPath"] = target_model_path;
+	nlohmann::json layers_array = nlohmann::json::array();
 
-	//全階層情報を走査してパッキング
 	for (size_t g = 0; g < layer_datas.size(); g++)
 	{
-		const GraphData& graph = layer_datas[g];	//現在の階層データ
-		nlohmann::json graph_json;	//一つの階層情報を格納するJSONオブジェクト
-		graph_json["GraphID"] = graph.id; // 階層IDの保存
-		graph_json["GraphName"] = graph.name; // 階層名の保存
-		graph_json["LayerType"] = graph.layer_type;	//階層(レイヤー)属性保存
+		const GraphData& graph = layer_datas[g];
+		nlohmann::json graph_json;
+		graph_json["GraphID"] = graph.id;
+		graph_json["GraphName"] = graph.name;
+		graph_json["LayerType"] = graph.layer_type;
 
-		nlohmann::json nodes_array = nlohmann::json::array();	//ノードデータを格納する一時配列
+		nlohmann::json nodes_array = nlohmann::json::array();
 
-		//現在の階層のすべてのノードを走査
 		for (size_t n = 0; n < graph.nodes.size(); n++)
 		{
-			const GraphNode& node = graph.nodes[n];	//ループ対象のノードデータ
-			nlohmann::json node_json;	//単一ノード格納用のJSON
+			const GraphNode& node = graph.nodes[n];
+			nlohmann::json node_json;
 
-			node_json["ID"] = node.id; // ノードID
-			node_json["Name"] = node.name; // ステート名
-			node_json["PosX"] = node.position_x; // 座標X
-			node_json["PosY"] = node.position_y; // 座標Y
-			node_json["IsSubGraph"] = node.is_sub_graph; // サブグラフフラグ
-			node_json["SubGraphID"] = node.sub_graph_id; // 紐付く下位階層ID
-			node_json["ActionCategory"] = node.action_category;	// アクション値
-			node_json["AnimationName"] = node.animation_name;	// アニメ名
-			node_json["IsLoop"] = node.is_loop;					// 再生フラグ
+			node_json["ID"] = node.id;
+			node_json["Name"] = node.name;
+			node_json["PosX"] = node.position_x;
+			node_json["PosY"] = node.position_y;
+			node_json["IsSubGraph"] = node.is_sub_graph;
+			node_json["SubGraphID"] = node.sub_graph_id;
+			node_json["ActionCategory"] = node.action_category;
+			node_json["AnimationName"] = node.animation_name;
+			node_json["IsLoop"] = node.is_loop;
 			node_json["IsRootMotion"] = node.is_root_motion;
 			node_json["LinkColorR"] = node.link_color_r;
 			node_json["LinkColorG"] = node.link_color_g;
 			node_json["LinkColorB"] = node.link_color_b;
 
-			nlohmann::json bt_json;	//ビヘイビアツリーノード情報格納配列
+			nlohmann::json bt_json;
 			bt_json["Category"] = static_cast<int>(node.behavior_data.category);
 			bt_json["CompositeType"] = static_cast<int>(node.behavior_data.composite_node_type);
 			bt_json["FinishResult"] = static_cast<int>(node.behavior_data.result_type);
@@ -63,71 +62,66 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 			bt_json["CooldownRandomRange"] = node.behavior_data.cooldown_random_range;
 			node_json["BehaviorData"] = bt_json;
 
-			//入力ピンのシリアライズ
-			nlohmann::json inputs_array = nlohmann::json::array(); // 入力ピン用の一時配列
+			nlohmann::json inputs_array = nlohmann::json::array();
 			for (const auto& pin : node.inputs)
 			{
 				inputs_array.push_back({ {"ID", pin.id}, {"Name", pin.name}, {"Kind", static_cast<int>(pin.kind)} });
 			}
-			node_json["Input"] = inputs_array; // ノードデータにバインド
+			node_json["Input"] = inputs_array;
 
-			//出力ピンのシリアライズ
-			nlohmann::json output_array = nlohmann::json::array(); // 出力ピン用の一時配列
+			nlohmann::json output_array = nlohmann::json::array();
 			for (const auto& pin : node.outputs)
 			{
 				output_array.push_back({ {"ID", pin.id}, {"Name", pin.name}, {"Kind", static_cast<int>(pin.kind)} });
 			}
-			node_json["Output"] = output_array; // ノードデータにバインド
+			node_json["Output"] = output_array;
 
-			nodes_array.push_back(node_json); // 階層用ノード配列へプッシュ
+			nodes_array.push_back(node_json);
 		}
 		graph_json["Nodes"] = nodes_array;
-		nlohmann::json links_array = nlohmann::json::array();	//接続線を格納する一時配列
+		nlohmann::json links_array = nlohmann::json::array();
 
-		//現在の階層の全てのリンクを走査
 		for (size_t l = 0; l < graph.links.size(); l++)
 		{
-			const GraphLink& link = graph.links[l];	//ループ対象のリンクデータ
-			nlohmann::json link_json;	//単一リンク格納用のJSON
+			const GraphLink& link = graph.links[l];
+			nlohmann::json link_json;
 
-			link_json["ID"] = link.id; // リンク固有ID
-			link_json["StartPinID"] = link.start_pin_id; // 開始ピンID
-			link_json["EndPinID"] = link.end_pin_id;	// 終了ピンID
-			link_json["BlendTime"] = link.blend_time;	//ブレンド時間
+			link_json["ID"] = link.id;
+			link_json["StartPinID"] = link.start_pin_id;
+			link_json["EndPinID"] = link.end_pin_id;
+			link_json["BlendTime"] = link.blend_time;
 
-			//リンクが抱える全ての遷移条件をパッキング
-			nlohmann::json conds_array = nlohmann::json::array();	//条件式格納用の配列
+			nlohmann::json conds_array = nlohmann::json::array();
 			for (const auto& cond : link.conditions)
 			{
-				nlohmann::json cond_json;	//単一条件格納用のJSON
-				cond_json["Type"] = static_cast<int>(cond.type); // 判定ノードの種類
-				cond_json["VariableName"] = cond.variable_name; // 主ハッシュキー
-				cond_json["RefValue"] = cond.reference_value; // 基準値
-				cond_json["CompOp"] = cond.compare_operator; // 演算子
-				cond_json["ParamSecond"] = cond.param_second; // 第2数値引数
-				cond_json["SecondaryVariableName"] = cond.secondary_variable_name; //副ハッシュキーを保存
+				nlohmann::json cond_json;
+				cond_json["Type"] = static_cast<int>(cond.type);
+				cond_json["VariableName"] = cond.variable_name;
+				cond_json["RefValue"] = cond.reference_value;
+				cond_json["CompOp"] = static_cast<int>(cond.compart_op);
+				cond_json["ParamSecond"] = cond.param_second;
+				cond_json["SecondaryVariableName"] = cond.secondary_variable_name;
 				cond_json["VectorRefValue"] = { cond.vector_reference_value.x, cond.vector_reference_value.y, cond.vector_reference_value.z };
-				conds_array.push_back(cond_json); // 配列へ追加
+				conds_array.push_back(cond_json);
 			}
-			link_json["Conditions"] = conds_array; // リンクにバインド
-			links_array.push_back(link_json); // 階層用リンク配列へプッシュ
+			link_json["Conditions"] = conds_array;
+			links_array.push_back(link_json);
 		}
 		graph_json["Links"] = links_array;
 		layers_array.push_back(graph_json);
 	}
-	root_json["Layers"] = layers_array; // 大元に階層リストを格納
+	root_json["Layers"] = layers_array;
 
-	//物理ファイルへの書き出し処理
-	std::ofstream file_stream(file_path); // 保存用ファイルストリーム
-	if (file_stream.is_open()) // オープン成功判定
+	//構築したJSONを指定ファイルパスへ書き出し
+	std::ofstream file_stream(file_path);
+	if (file_stream.is_open())
 	{
-		const int indent_space_count = 4; // インデント用のスペース幅定数
-		file_stream << std::setw(indent_space_count) << root_json << std::endl; 
+		const int indent_space_count = 4;
+		file_stream << std::setw(indent_space_count) << root_json << std::endl;
 		printf("StateGraphDataManager: グラフデータをファイル「%s」へ正常に保存しました。\n", file_path.c_str());
 	}
 	else
 	{
-		// 意図しない挙動（ファイルが開けない）が発生した場合のエラーログ
 		printf("Error: SaveToFile - ファイル「%s」を開けませんでした。\n", file_path.c_str());
 	}
 }
@@ -306,26 +300,27 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 			//各条件式の復元
 			for (const auto& cond_json : link_json["Conditions"])
 			{
-				GraphTransitionCondition cond; // 条件式構造体 
+				TransitionCondition cond;
 				cond.type = static_cast<ConditionNodeType>(cond_json["Type"].get<int>());
-				cond.variable_name = cond_json["VariableName"];
-				cond.reference_value = cond_json["RefValue"];
-				cond.compare_operator = cond_json["CompOp"];
-				cond.param_second = cond_json["ParamSecond"];
+				cond.variable_name = cond_json.contains("VariableName") ? cond_json["VariableName"].get<std::string>() : "";
+				cond.reference_value = cond_json["RefValue"].get<float>();
+				cond.compart_op = static_cast<CompareOperator>(cond_json["CompOp"].get<int>());
+				cond.param_second = cond_json["ParamSecond"].get<float>();
 
-				if (cond_json.find("SecondaryVariableName") != cond_json.end())
+				if (cond_json.contains("SecondaryVariableName"))
 				{
-					cond.secondary_variable_name = cond_json["SecondaryVariableName"];
+					cond.secondary_variable_name = cond_json["SecondaryVariableName"].get<std::string>();
 				}
 
-				if (cond_json.contains("VectorRefValue") && cond_json["VectorRefValue"].is_array() && cond_json["VectorRefValue"].size() == 3)
+				constexpr size_t required_vector_elements = 3;
+				if (cond_json.contains("VectorRefValue") && cond_json["VectorRefValue"].is_array() && cond_json["VectorRefValue"].size() == required_vector_elements)
 				{
 					cond.vector_reference_value.x = cond_json["VectorRefValue"][0].get<float>();
 					cond.vector_reference_value.y = cond_json["VectorRefValue"][1].get<float>();
 					cond.vector_reference_value.z = cond_json["VectorRefValue"][2].get<float>();
 				}
 
-				link.conditions.push_back(cond); // リンクに条件を追加
+				link.conditions.push_back(cond);
 			}
 			graph.links.push_back(link); // 階層データにリンクを追加
 		}
@@ -648,22 +643,19 @@ void StateGraphDataManager::DeleteLink(uint32_t graph_id, uint32_t target_link_i
 //遷移条件を追加
 void StateGraphDataManager::AddConditionToLink(uint32_t graph_id, uint32_t link_id)
 {
-	//全ての階層情報を巡回して指定の階層を特定
+	//指定された階層とリンクを検索し、初期化した遷移条件を追加
 	for (size_t g = 0; g < layer_datas.size(); g++)
 	{
-		//階層IDが一致しているか確認
 		if (layer_datas[g].id == graph_id)
 		{
-			//階層内の全ての接続線を走査
 			for (size_t l = 0; l < layer_datas[g].links.size(); l++)
 			{
-				//リンクIDが対象と一致したか判定
 				if (layer_datas[g].links[l].id == link_id)
 				{
-					GraphTransitionCondition new_condition;	//新しい条件情報
+					TransitionCondition new_condition;
 					new_condition.variable_name = "";
 					new_condition.reference_value = 0.0f;
-					new_condition.compare_operator = 0;
+					new_condition.compart_op = CompareOperator::Equal;
 
 					layer_datas[g].links[l].conditions.push_back(new_condition);
 					return;

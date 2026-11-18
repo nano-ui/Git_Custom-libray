@@ -3,12 +3,10 @@
 #include <cstdint>
 
 class StateGraphDataManager;
-class StateBlackboard;
 class Blackboard;
-class TransitionCondition;
 struct GraphData;
 struct GraphLink;
-struct GraphTransitionCondition;
+struct TransitionCondition;
 
 class TransitionConditionEditor
 {
@@ -24,21 +22,21 @@ public:
 
 private:
 	//通常比較用のImGui入力UI描画
-	bool DrawNormalCompareUI(Blackboard* blackboard, GraphTransitionCondition& condition);
+	bool DrawNormalCompareUI(Blackboard* blackboard, TransitionCondition& condition);
 
 	//確率判定用のImGui入力UI描画
-	void DrawRandomUI(GraphTransitionCondition& condition);
+	void DrawRandomUI(TransitionCondition& condition);
 
 	//距離判定用のImGui入力UI描画
-	void DrawDistanceUI(Blackboard* blackboard, GraphTransitionCondition& condition);
+	void DrawDistanceUI(Blackboard* blackboard, TransitionCondition& condition);
 
 	//割合判定用のImGui入力UI描画
-	void DrawRatioUI(Blackboard* blackboard, GraphTransitionCondition& condition);
+	void DrawRatioUI(Blackboard* blackboard, TransitionCondition& condition);
 
 	//キーボードの入力を設定するUI描画
-	void DrawInputCheckUI(GraphTransitionCondition& condition);
+	void DrawInputCheckUI(TransitionCondition& condition);
 
 private:
-	GraphTransitionCondition* waiting_for_key_condition = nullptr;	//現在キーボードの入力を待機している条件のポインタ
+	TransitionCondition* waiting_for_key_condition = nullptr;	//現在キーボードの入力を待機している条件のポインタ
 };
 

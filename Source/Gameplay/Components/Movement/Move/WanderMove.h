@@ -21,7 +21,7 @@ public:
 	DirectX::XMFLOAT3 Update(
 		const DirectX::XMFLOAT3& current_pos,
 		const DirectX::XMFLOAT3& target_pos,
-		const StateBlackboard* blackboard)override;
+		const Blackboard* blackboard)override;
 
 	//úpújèàóù
 	DirectX::XMFLOAT3 UpdateWander(

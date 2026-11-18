@@ -7,13 +7,13 @@
 #include <string>
 
 #include "Editor\StateMachineEditor\StateGraphSimulator.h"
-#include "Gameplay\StateMachine\StateBlackboard.h"
+#include "Gameplay\Common\Blackboard.h"
 
 class BehaviorNode;
 class SelectorNode;
 class WeightedNode;
 class EditorActionNode;
-class StateBlackboard;
+class Blackboard;
 
 struct TransitionCondition;
 
@@ -34,7 +34,7 @@ public:
 	);
 
 	//ブラックボードの設定
-	void SetActiveBlackboard(StateBlackboard* blackboard) { active_blackboard = blackboard; }
+	void SetActiveBlackboard(Blackboard* blackboard) { active_blackboard = blackboard; }
 
 private:
 	//優先順位ノード作成
@@ -63,7 +63,7 @@ private:
 		uint32_t node_id);
 
 	//評価条件処理
-	bool EvaluateConditions(const std::vector<TransitionCondition>& conditions, StateBlackboard* blackboard);
+	bool EvaluateConditions(const std::vector<TransitionCondition>& conditions, Blackboard* blackboard);
 
 	//ルートノードを検索
 	uint32_t FindRootNodeId(const std::vector<SimulatorRuntimeNode>& runtime_nodes);
@@ -72,6 +72,6 @@ private:
 	const SimulatorRuntimeNode* FindGraphNode(const std::vector<SimulatorRuntimeNode>& runtime_nodes, uint32_t node_id);
 
 private:
-	StateBlackboard* active_blackboard = nullptr;	//有効なブラックボード
+	Blackboard* active_blackboard = nullptr;	//有効なブラックボード
 };
 

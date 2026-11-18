@@ -1,12 +1,13 @@
 #include "StateMachineDataLoader.h"
 #include "StateGraphDataManager.h"
 #include "Gameplay\Common\Blackboard.h"
-#include "TransitionCondition.h"
+#include "Gameplay\StateMachine\TransitionCondition.h"
 #include "Engine\Core\Log\Log.h"
 
 #include <fstream>
 #include <cstdio>
 
+//ランタイム用のステートグラフデータをJSONファイルから読み込む
 bool StateMachineDataLoader::LoadForRuntime(
     const std::string& file_path,
     std::vector<SimulatorRuntimeNode>& out_nodes,
@@ -15,6 +16,7 @@ bool StateMachineDataLoader::LoadForRuntime(
     std::unordered_map<uint32_t, std::string>& out_animation_map,
     std::unordered_map<uint32_t, LayerType>& out_layer_types)
 {
+    //出力先コンテナの初期化とJSONファイルの読み込み・構造検証
     out_nodes.clear();
     out_links.clear();
     out_layer_entry_nodes.clear();
@@ -38,6 +40,7 @@ bool StateMachineDataLoader::LoadForRuntime(
         return false;
     }
 
+    //全階層を事前走査してサブグラフIDと親ノードIDの対応表を構築
     std::unordered_map<uint32_t, uint32_t> sub_graph_to_parent_map;
 
     for (size_t i = 0; i < root_json["Layers"].size(); i++)
@@ -56,6 +59,7 @@ bool StateMachineDataLoader::LoadForRuntime(
         }
     }
 
+    //各階層のノード群・リンク群・エントリー情報を解析してランタイムデータへ格納
     for (size_t i = 0; i < root_json["Layers"].size(); i++)
     {
         const auto& layer = root_json["Layers"][i];
@@ -115,12 +119,14 @@ bool StateMachineDataLoader::LoadForRuntime(
     return true;
 }
 
+//単一ノードのJSONデータを解析してランタイムノード構造体へ変換
 void StateMachineDataLoader::ParseRuntimeNode(
     const nlohmann::json& node_json,
     uint32_t parent_id,
     uint32_t graph_id,
     SimulatorRuntimeNode& out_node)
 {
+    //基本パラメータとアクションカテゴリの復元
     out_node.id = node_json["ID"].get<uint32_t>();
     out_node.name = node_json["Name"].get<std::string>();
     out_node.animation_name = node_json.contains("AnimationName") ? node_json["AnimationName"].get<std::string>() : "";
@@ -141,6 +147,7 @@ void StateMachineDataLoader::ParseRuntimeNode(
         LOG_WARNING({ u8"エディタ",u8"ステートマシン",u8"読み込み" }, u8"ノード [ID:%u] に ActionCategory が存在しないため、Idle として扱います", out_node.id);
     }
 
+    //ビヘイビアツリー用パラメータの復元
     if (node_json.contains("BehaviorData") && node_json["BehaviorData"].is_object())
     {
         const auto& bt_json = node_json["BehaviorData"];
@@ -174,6 +181,7 @@ void StateMachineDataLoader::ParseRuntimeNode(
         }
     }
 
+    //入出力ピンIDリストの復元
     if (node_json.contains("Input") && node_json["Input"].is_array())
     {
         for (size_t p = 0; p < node_json["Input"].size(); p++)
@@ -191,10 +199,12 @@ void StateMachineDataLoader::ParseRuntimeNode(
     }
 }
 
+//単一リンクのJSONデータを解析してランタイムリンク構造体へ変換
 void StateMachineDataLoader::ParseRuntimeLink(
     const nlohmann::json& link_json,
     SimulatorRuntimeLink& out_link)
 {
+    //接続ピンIDとブレンド時間の復元
     out_link.id = link_json["ID"].get<uint32_t>();
     out_link.start_pin_id = link_json["StartPinID"].get<uint32_t>();
     out_link.end_pin_id = link_json["EndPinID"].get<uint32_t>();
@@ -214,6 +224,7 @@ void StateMachineDataLoader::ParseRuntimeLink(
         out_link.blend_time = DEFAULT_RUNTIME_BLEND_TIME;
     }
 
+    //リンクに紐づく遷移条件リストの復元
     if (link_json.contains("Conditions") && link_json["Conditions"].is_array())
     {
         constexpr size_t required_vector_elements = 3;
@@ -223,10 +234,14 @@ void StateMachineDataLoader::ParseRuntimeLink(
             TransitionCondition cond;
 
             cond.type = static_cast<ConditionNodeType>(cond_json["Type"].get<int>());
-            cond.variable_name = cond_json["VariableName"].get<std::string>();
+            cond.variable_name = cond_json.contains("VariableName") ? cond_json["VariableName"].get<std::string>() : "";
             cond.compart_op = static_cast<CompareOperator>(cond_json["CompOp"].get<int>());
             cond.param_second = cond_json["ParamSecond"].get<float>();
-            cond.secondary_variable_name = cond_json["SecondaryVariableName"].get<std::string>();
+
+            if (cond_json.contains("SecondaryVariableName"))
+            {
+                cond.secondary_variable_name = cond_json["SecondaryVariableName"].get<std::string>();
+            }
 
             float raw_ref_value = cond_json["RefValue"].get<float>();
             cond.reference_value = raw_ref_value;
