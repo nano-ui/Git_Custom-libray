@@ -106,7 +106,7 @@ public:
 		const T* result_value = std::get_if<T>(&target_value);
 		if (!result_value)
 		{
-			LOG_WARNING({ u8"æ“¾" }, u8"“o˜^‚µ‚½‚ÌŒ^‚Ææ“¾‚µ‚æ‚¤‚Æ‚µ‚½•Ï”‚ÌŒ^‚ªˆÙ‚È‚Á‚Ä‚¢‚Ü‚·");
+			LOG_WARNING({ u8"æ“¾" }, u8"“o˜^‚µ‚½‚ÌŒ^‚Ææ“¾‚µ‚æ‚¤‚Æ‚µ‚½•Ï”‚ÌŒ^‚ªˆÙ‚È‚Á‚Ä‚¢‚Ü‚·(•Ï”–¼:%s)", variable_name.c_str());
 			return value;
 		}
 		return *result_value;;

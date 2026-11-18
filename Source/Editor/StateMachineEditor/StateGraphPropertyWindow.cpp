@@ -1,6 +1,6 @@
 #include "StateGraphPropertyWindow.h"
 #include "Editor\StateMachineEditor\StateGraphDataManager.h"
-#include "Gameplay\StateMachine\StateBlackboard.h"
+#include "Gameplay\Common\Blackboard.h"
 #include "Engine\Core\Input.h"
 #include "TransitionConditionEditor.h"
 
@@ -25,7 +25,7 @@ StateGraphPropertyWindow::~StateGraphPropertyWindow() = default;
 bool StateGraphPropertyWindow::DrawProperty(
 	StateGraphDataManager* data_manager,
 	GraphData* current_graph, 
-	StateBlackboard* blackboard,
+	Blackboard* blackboard,
 	const std::vector<std::string>& anim_names)
 {
 	//グラフデータが渡されているか確認
@@ -71,7 +71,7 @@ bool StateGraphPropertyWindow::DrawNodeProperty(
 	StateGraphDataManager* data_manager,
 	GraphData* current_graph,
 	uint32_t node_id,
-	StateBlackboard* blackboard,
+	Blackboard* blackboard,
 	const std::vector<std::string>& anim_names)
 {
 	GraphNode* target_node = nullptr;	//編集対象ノード
@@ -272,7 +272,11 @@ bool StateGraphPropertyWindow::DeawNodeActionSettings(GraphNode* target_node, co
 }
 
 //ノードから出発する遷移線とその条件に関するUI描画
-bool StateGraphPropertyWindow::DrawNodeTransitionSettings(StateGraphDataManager* data_manager, GraphData* current_graph, GraphNode* target_node, StateBlackboard* blackboard)
+bool StateGraphPropertyWindow::DrawNodeTransitionSettings(
+	StateGraphDataManager* data_manager,
+	GraphData* current_graph,
+	GraphNode* target_node,
+	Blackboard* blackboard)
 {
 	bool is_changed = false;	//値変更フラグ
 
@@ -363,7 +367,11 @@ bool StateGraphPropertyWindow::DrawNodeTransitionSettings(StateGraphDataManager*
 }
 
 //リンク選択時の詳細プロパティ
-bool StateGraphPropertyWindow::DrawLinkProperty(StateGraphDataManager* data_manager, GraphData* current_graph, uint32_t link_id, StateBlackboard* blackboard)
+bool StateGraphPropertyWindow::DrawLinkProperty(
+	StateGraphDataManager* data_manager,
+	GraphData* current_graph,
+	uint32_t link_id,
+	Blackboard* blackboard)
 {
 	GraphLink* target_link = nullptr;	//編集対象リンク
 

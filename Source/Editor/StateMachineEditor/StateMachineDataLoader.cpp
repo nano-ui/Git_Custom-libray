@@ -1,6 +1,7 @@
 #include "StateMachineDataLoader.h"
 #include "StateGraphDataManager.h"
-#include <Gameplay\StateMachine\StateBlackboard.h>
+#include "Gameplay\Common\Blackboard.h"
+#include "TransitionCondition.h"
 #include "Engine\Core\Log\Log.h"
 
 #include <fstream>
@@ -12,7 +13,7 @@ bool StateMachineDataLoader::LoadForRuntime(
     std::vector<SimulatorRuntimeLink>& out_links,
     std::unordered_map<uint32_t, uint32_t>& out_layer_entry_nodes,
     std::unordered_map<uint32_t, std::string>& out_animation_map,
-    std::unordered_map<uint32_t, RuntimeLayerType>& out_layer_types)
+    std::unordered_map<uint32_t, LayerType>& out_layer_types)
 {
     out_nodes.clear();
     out_links.clear();
@@ -61,10 +62,10 @@ bool StateMachineDataLoader::LoadForRuntime(
         uint32_t layer_graph_id = layer["GraphID"].get<uint32_t>();
         uint32_t parent_id = UINT32_MAX;
 
-        RuntimeLayerType layer_type = RuntimeLayerType::StateMachine;
+        LayerType layer_type = LayerType::StateMachine;
         if (layer.contains("LayerType"))
         {
-            layer_type = static_cast<RuntimeLayerType>(layer["LayerType"].get<int>());
+            layer_type = static_cast<LayerType>(layer["LayerType"].get<int>());
         }
         out_layer_types[layer_graph_id] = layer_type;
 
@@ -222,10 +223,10 @@ void StateMachineDataLoader::ParseRuntimeLink(
             TransitionCondition cond;
 
             cond.type = static_cast<ConditionNodeType>(cond_json["Type"].get<int>());
-            cond.hash_key = cond_json["HashKey"].get<uint32_t>();
+            cond.variable_name = cond_json["VariableName"].get<std::string>();
             cond.compart_op = static_cast<CompareOperator>(cond_json["CompOp"].get<int>());
             cond.param_second = cond_json["ParamSecond"].get<float>();
-            cond.secondary_hash = cond_json["SecondaryHash"].get<uint32_t>();
+            cond.secondary_variable_name = cond_json["SecondaryVariableName"].get<std::string>();
 
             float raw_ref_value = cond_json["RefValue"].get<float>();
             cond.reference_value = raw_ref_value;

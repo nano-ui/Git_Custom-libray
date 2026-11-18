@@ -1,6 +1,7 @@
 #include "TransitionConditionEditor.h"
 
 #include "Gameplay\StateMachine\StateBlackboard.h"
+#include "Gameplay\Common\Blackboard.h"
 #include "Editor\StateMachineEditor\StateGraphDataManager.h"
 #include "Engine\Core\Input.h"
 
@@ -18,7 +19,11 @@ TransitionConditionEditor::TransitionConditionEditor()
 TransitionConditionEditor::~TransitionConditionEditor() = default;
 
 //リンクの遷移条件設定を描画
-bool TransitionConditionEditor::DrawConditonSettings(StateGraphDataManager* data_manager, StateBlackboard* blackboard, uint32_t grap_id, GraphLink* target_link)
+bool TransitionConditionEditor::DrawConditonSettings(
+	StateGraphDataManager* data_manager,
+	Blackboard* blackboard,
+	uint32_t grap_id, 
+	GraphLink* target_link)
 {
 	//ポインタの安全チェック
 	if (!data_manager || !target_link)
@@ -107,7 +112,7 @@ bool TransitionConditionEditor::DrawConditonSettings(StateGraphDataManager* data
 }
 
 //通常比較用のImGui入力UI描画
-bool TransitionConditionEditor::DrawNormalCompareUI(StateBlackboard* blackboard, GraphTransitionCondition& condition)
+bool TransitionConditionEditor::DrawNormalCompareUI(Blackboard* blackboard, GraphTransitionCondition& condition)
 {
 	bool is_ui_changed = false; // UI上の変更を検知するフラグ
 
@@ -218,7 +223,7 @@ void TransitionConditionEditor::DrawRandomUI(GraphTransitionCondition& condition
 }
 
 //距離判定用のImGui入力UI描画
-void TransitionConditionEditor::DrawDistanceUI(StateBlackboard* blackboard, GraphTransitionCondition& condition)
+void TransitionConditionEditor::DrawDistanceUI(Blackboard* blackboard, GraphTransitionCondition& condition)
 {
 	if (blackboard)
 	{
@@ -265,7 +270,7 @@ void TransitionConditionEditor::DrawDistanceUI(StateBlackboard* blackboard, Grap
 }
 
 //割合判定用のImGui入力UI描画
-void TransitionConditionEditor::DrawRatioUI(StateBlackboard* blackboard, GraphTransitionCondition& condition)
+void TransitionConditionEditor::DrawRatioUI(Blackboard* blackboard, GraphTransitionCondition& condition)
 {
 	const char* all_operators[] = { "==","!=",">","<",">=","<=" };
 	const int op_total_count = 6;

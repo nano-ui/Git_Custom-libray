@@ -11,6 +11,17 @@
 
 constexpr float DEFAULT_BLEND_TIME = 0.2f;	//初期時のブレンド時間
 
+//キャラクターのアクションカテゴリー
+enum class ActionCategory
+{
+	Idle,			//待機状態
+	Locomotion,		//移動状態
+	Airborne,		//空中状態
+	Attack,			//攻撃状態
+	Avoid,			//回避状態
+	Skile,			//固有アビリティ状態
+};
+
 //ピンの種類
 enum class PinKind
 {
@@ -64,11 +75,11 @@ enum class ConditionNodeType
 struct GraphTransitionCondition
 {
 	ConditionNodeType type = ConditionNodeType::NormalCompare;	//判定の種類
-	uint32_t hash_key = 0;			//対象のキー
-	float reference_value = 0.0f;	//基準値
-	int compare_operator = 0;		//比較演算子識別番号
-	float param_second = 0.0f;		//第2引数パラメータ
-	uint32_t secondary_hash = 0;	//比較対象のハッシュキー
+	float reference_value = 0.0f;			//基準値
+	int compare_operator = 0;				//比較演算子識別番号
+	float param_second = 0.0f;				//第2引数パラメータ
+	std::string variable_name;				//変数名
+	std::string secondary_variable_name;	//第二引数変数
 	DirectX::XMFLOAT3 vector_reference_value = { 0.0f, 0.0f, 0.0f }; // XMFLOAT3用の比較基準値
 };
 

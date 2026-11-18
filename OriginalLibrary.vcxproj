@@ -270,6 +270,7 @@
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphPaletteWindow.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateGraphPropertyWindow.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.cpp" />
+    <ClCompile Include="Source\Editor\StateMachineEditor\TransitionCondition.cpp" />
     <ClCompile Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.cpp" />
     <ClCompile Include="Source\Engine\Camera\Camera.cpp" />
     <ClCompile Include="Source\Engine\Camera\CameraController.cpp" />
@@ -439,6 +440,7 @@
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphPaletteWindow.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateGraphPropertyWindow.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\StateMachineGraphEditor.h" />
+    <ClInclude Include="Source\Editor\StateMachineEditor\TransitionCondition.h" />
     <ClInclude Include="Source\Editor\StateMachineEditor\TransitionConditionEditor.h" />
     <ClInclude Include="Source\Engine\Camera\Camera.h" />
     <ClInclude Include="Source\Engine\Camera\CameraController.h" />

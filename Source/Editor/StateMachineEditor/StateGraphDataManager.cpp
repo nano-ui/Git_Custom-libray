@@ -101,11 +101,11 @@ void StateGraphDataManager::SaveToFile(const std::string& file_path)
 			{
 				nlohmann::json cond_json;	//単一条件格納用のJSON
 				cond_json["Type"] = static_cast<int>(cond.type); // 判定ノードの種類
-				cond_json["HashKey"] = cond.hash_key; // 主ハッシュキー
+				cond_json["VariableName"] = cond.variable_name; // 主ハッシュキー
 				cond_json["RefValue"] = cond.reference_value; // 基準値
 				cond_json["CompOp"] = cond.compare_operator; // 演算子
 				cond_json["ParamSecond"] = cond.param_second; // 第2数値引数
-				cond_json["SecondaryHash"] = cond.secondary_hash; //副ハッシュキーを保存
+				cond_json["SecondaryVariableName"] = cond.secondary_variable_name; //副ハッシュキーを保存
 				cond_json["VectorRefValue"] = { cond.vector_reference_value.x, cond.vector_reference_value.y, cond.vector_reference_value.z };
 				conds_array.push_back(cond_json); // 配列へ追加
 			}
@@ -308,14 +308,14 @@ bool StateGraphDataManager::LoadFromFile(const std::string& file_path)
 			{
 				GraphTransitionCondition cond; // 条件式構造体 
 				cond.type = static_cast<ConditionNodeType>(cond_json["Type"].get<int>());
-				cond.hash_key = cond_json["HashKey"];
+				cond.variable_name = cond_json["VariableName"];
 				cond.reference_value = cond_json["RefValue"];
 				cond.compare_operator = cond_json["CompOp"];
 				cond.param_second = cond_json["ParamSecond"];
 
-				if (cond_json.find("SecondaryHash") != cond_json.end())
+				if (cond_json.find("SecondaryVariableName") != cond_json.end())
 				{
-					cond.secondary_hash = cond_json["SecondaryHash"];
+					cond.secondary_variable_name = cond_json["SecondaryVariableName"];
 				}
 
 				if (cond_json.contains("VectorRefValue") && cond_json["VectorRefValue"].is_array() && cond_json["VectorRefValue"].size() == 3)
@@ -661,7 +661,7 @@ void StateGraphDataManager::AddConditionToLink(uint32_t graph_id, uint32_t link_
 				if (layer_datas[g].links[l].id == link_id)
 				{
 					GraphTransitionCondition new_condition;	//新しい条件情報
-					new_condition.hash_key = 0;
+					new_condition.variable_name = "";
 					new_condition.reference_value = 0.0f;
 					new_condition.compare_operator = 0;
 

@@ -1,7 +1,8 @@
 #include "StateGraphSimulator.h"
-#include "Gameplay\StateMachine\StateBlackboard.h"
+#include "TransitionCondition.h"
 #include "Engine\Core\Input.h"
 #include "Engine\Core\Log\Log.h"
+#include "Gameplay\Common\Blackboard.h"
 
 #include <cstdio>
 
@@ -51,7 +52,7 @@ void StateGraphSimulator::SetupRuntimeGraph(
 }
 
 //更新処理
-bool StateGraphSimulator::UpdateSimulation(float elapsed_time, StateBlackboard* blackboard, bool is_anim_finished)
+bool StateGraphSimulator::UpdateSimulation(float elapsed_time, Blackboard* blackboard, bool is_anim_finished)
 {
 	//--------------------------------------
 	//事前検証と初期アクティブノードの確定
@@ -291,7 +292,7 @@ bool StateGraphSimulator::GetRootMotionEnabled() const
 //単一の遷移条件の評価
 bool StateGraphSimulator::EvaluateCondition(
 	const TransitionCondition& cond,
-	StateBlackboard* blackboard,
+	Blackboard* blackboard,
 	bool is_anim_finished)const
 {
 	if (cond.type == ConditionNodeType::AnimationEnd)

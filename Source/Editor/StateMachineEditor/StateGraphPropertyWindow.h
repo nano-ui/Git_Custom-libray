@@ -6,7 +6,7 @@
 #include <string>
 
 class StateGraphDataManager;
-class StateBlackboard;
+class Blackboard;
 class TransitionConditionEditor;
 
 struct GraphData;
@@ -26,7 +26,7 @@ public:
 	bool DrawProperty(
 		StateGraphDataManager* data_manager,
 		GraphData* current_graph,
-		StateBlackboard* blackboard,
+		Blackboard* blackboard,
 		const std::vector<std::string>& anim_names);
 
 private:
@@ -35,17 +35,17 @@ private:
 		StateGraphDataManager* data_manager,
 		GraphData* current_graph,
 		uint32_t node_id,
-		StateBlackboard* blackboard,
+		Blackboard* blackboard,
 		const std::vector<std::string>& anim_names);
 
 	//ノードのアクションとアニメーション設定に関するUI描画
 	bool DeawNodeActionSettings(GraphNode* target_node, const std::vector<std::string>& anim_names);
 
 	//ノードから出発する遷移線とその条件に関するUI描画
-	bool DrawNodeTransitionSettings(StateGraphDataManager* data_manager, GraphData* current_graph, GraphNode* target_node, StateBlackboard* blackboard);
+	bool DrawNodeTransitionSettings(StateGraphDataManager* data_manager, GraphData* current_graph, GraphNode* target_node, Blackboard* blackboard);
 
 	//リンク選択時の詳細プロパティ
-	bool DrawLinkProperty(StateGraphDataManager* data_manager, GraphData* current_graph, uint32_t node_id, StateBlackboard* blackboard);
+	bool DrawLinkProperty(StateGraphDataManager* data_manager, GraphData* current_graph, uint32_t node_id, Blackboard* blackboard);
 
 	//入力チェック条件専用のImGui入力UI描画
 	void DrawInputCompareUI(GraphTransitionCondition& conditon);

@@ -8,8 +8,9 @@
 #include <memory>
 
 #include "Editor\Behavior\BehaviorNodeData.h"
-#include "Gameplay\StateMachine\StateBlackboard.h"
+#include "StateGraphDataManager.h"
 
+class Blackboard;
 struct TransitionCondition;
 
 static constexpr float DEFAULT_RUNTIME_BLEND_TIME = 0.2f;
@@ -62,7 +63,7 @@ public:
 	//XVˆ—
 	bool UpdateSimulation(
 		float elapsed_time,
-		StateBlackboard* blackboard,
+		Blackboard* blackboard,
 		bool is_anim_finished = false
 	);
 
@@ -97,7 +98,7 @@ private:
 	//’Pˆê‚Ì‘JˆÚğŒ‚Ì•]‰¿
 	bool EvaluateCondition(
 		const TransitionCondition& cond,
-		StateBlackboard* blackboard,
+		Blackboard* blackboard,
 		bool is_anim_finished
 	)const;
 

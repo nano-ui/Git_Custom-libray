@@ -561,6 +561,9 @@
     <ClCompile Include="Source\Gameplay\Common\Blackboard.cpp">
       <Filter>Source\Gameplay\Common\Blackboard</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\StateMachineEditor\TransitionCondition.cpp">
+      <Filter>Source\Editor\StateMachineGraphEditor\TransitionCondition</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1102,6 +1105,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Common\Blackboard.h">
       <Filter>Source\Gameplay\Common\Blackboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\StateMachineEditor\TransitionCondition.h">
+      <Filter>Source\Editor\StateMachineGraphEditor\TransitionCondition</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1790,6 +1796,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Common\Blackboard">
       <UniqueIdentifier>{9738fa4a-3243-4f56-935f-d94e499d3f2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\StateMachineGraphEditor\TransitionCondition">
+      <UniqueIdentifier>{03e3f130-90ec-4509-a43a-ced9776b598f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

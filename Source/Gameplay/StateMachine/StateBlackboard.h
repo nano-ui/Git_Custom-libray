@@ -21,17 +21,6 @@ enum class RuntimeLayerType
 	BehaviorTree
 };
 
-//キャラクターのアクションカテゴリー
-enum class ActionCategory
-{
-	Idle,			//待機状態
-	Locomotion,		//移動状態
-	Airborne,		//空中状態
-	Attack,			//攻撃状態
-	Avoid,			//回避状態
-	Skile,			//固有アビリティ状態
-};
-
 //比較演算子
 enum class CompareOperator
 {
@@ -373,21 +362,21 @@ struct CompareVisitor
 
 };
 
-//遷移条件
-struct TransitionCondition
-{
-	ConditionNodeType type = ConditionNodeType::NormalCompare;	//判定タイプ
-	uint32_t hash_key;				//対象のハッシュ値
-	BlackboardData reference_value;	//基準値
-	CompareOperator compart_op = CompareOperator::Equal;	//比較演算子
-	float param_second = 0.0f;		//第２引数パラメータ
-	uint32_t secondary_hash = 0;	//比較対象のハッシュキー
-	DirectX::XMFLOAT3 vector_reference_value = { 0.0f, 0.0f, 0.0f }; // XMFLOAT3用の比較基準値
-
-	//条件を満たしているか判定
-	bool IsJudgment(const StateBlackboard& blackboard)const;
-
-private:
-	//入力判定
-	bool CheckInputConditon()const;
-};
+////遷移条件
+//struct TransitionCondition
+//{
+//	ConditionNodeType type = ConditionNodeType::NormalCompare;	//判定タイプ
+//	uint32_t hash_key;				//対象のハッシュ値
+//	BlackboardData reference_value;	//基準値
+//	CompareOperator compart_op = CompareOperator::Equal;	//比較演算子
+//	float param_second = 0.0f;		//第２引数パラメータ
+//	uint32_t secondary_hash = 0;	//比較対象のハッシュキー
+//	DirectX::XMFLOAT3 vector_reference_value = { 0.0f, 0.0f, 0.0f }; // XMFLOAT3用の比較基準値
+//
+//	//条件を満たしているか判定
+//	bool IsJudgment(const StateBlackboard& blackboard)const;
+//
+//private:
+//	//入力判定
+//	bool CheckInputConditon()const;
+//};

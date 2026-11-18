@@ -4,6 +4,8 @@
 
 class StateGraphDataManager;
 class StateBlackboard;
+class Blackboard;
+class TransitionCondition;
 struct GraphData;
 struct GraphLink;
 struct GraphTransitionCondition;
@@ -18,20 +20,20 @@ public:
 	~TransitionConditionEditor();
 
 	//ƒŠƒ“ƒN‚Ì‘JˆÚğŒİ’è‚ğ•`‰æ
-	bool DrawConditonSettings(StateGraphDataManager* data_manager, StateBlackboard* blackboard, uint32_t grap_id, GraphLink* target_link);
+	bool DrawConditonSettings(StateGraphDataManager* data_manager, Blackboard* blackboard, uint32_t grap_id, GraphLink* target_link);
 
 private:
 	//’Êí”äŠr—p‚ÌImGui“ü—ÍUI•`‰æ
-	bool DrawNormalCompareUI(StateBlackboard* blackboard, GraphTransitionCondition& condition);
+	bool DrawNormalCompareUI(Blackboard* blackboard, GraphTransitionCondition& condition);
 
 	//Šm—¦”»’è—p‚ÌImGui“ü—ÍUI•`‰æ
 	void DrawRandomUI(GraphTransitionCondition& condition);
 
 	//‹——£”»’è—p‚ÌImGui“ü—ÍUI•`‰æ
-	void DrawDistanceUI(StateBlackboard* blackboard, GraphTransitionCondition& condition);
+	void DrawDistanceUI(Blackboard* blackboard, GraphTransitionCondition& condition);
 
 	//Š„‡”»’è—p‚ÌImGui“ü—ÍUI•`‰æ
-	void DrawRatioUI(StateBlackboard* blackboard, GraphTransitionCondition& condition);
+	void DrawRatioUI(Blackboard* blackboard, GraphTransitionCondition& condition);
 
 	//ƒL[ƒ{[ƒh‚Ì“ü—Í‚ğİ’è‚·‚éUI•`‰æ
 	void DrawInputCheckUI(GraphTransitionCondition& condition);

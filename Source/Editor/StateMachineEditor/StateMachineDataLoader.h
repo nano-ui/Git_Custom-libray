@@ -1,4 +1,3 @@
-// StateMachineDataLoader.h
 #pragma once
 
 #include <string>
@@ -17,7 +16,7 @@ public:
         std::vector<SimulatorRuntimeLink>& out_links,
         std::unordered_map<uint32_t, uint32_t>& out_layer_entry_nodes,
         std::unordered_map<uint32_t, std::string>& out_animation_map,
-        std::unordered_map<uint32_t, RuntimeLayerType>& out_layer_types);
+        std::unordered_map<uint32_t, LayerType>& out_layer_types);
 
 private:
     static void ParseRuntimeNode(
