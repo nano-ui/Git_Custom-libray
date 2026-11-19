@@ -22,9 +22,9 @@ ShapeRenderer::ShapeRenderer(ID3D11Device* device)
 
 	//各基本メッシュを生成
 	CreateBoxMesh(device);
-	CreateSphereMesh(device, 16);
-	CreateCylinderMesh(device, 16);
-	CreateRingMesh(device, 16);
+	CreateSphereMesh(device, SUBDIVISIONS);
+	CreateCylinderMesh(device, SUBDIVISIONS);
+	CreateRingMesh(device, SUBDIVISIONS);
 }
 
 //デストラクタ
@@ -220,16 +220,18 @@ void ShapeRenderer::DrawFan(
 
 //ドーナツ型の描画登録
 void ShapeRenderer::DrawRing(
-	const DirectX::XMFLOAT3& center,
-	float radius,
+	const DirectX::XMFLOAT3& center, 
+	float inner_radius,
+	float outer_radius,
 	const DirectX::XMFLOAT4& rotation,
 	const DirectX::XMFLOAT4& color,
 	ShapeDrawMode mode)
 {
-	if (radius <= 0.0f)return;
+	if (inner_radius <= 0.0f || outer_radius <= 0.0f)return;
+	if (inner_radius >= outer_radius)return;
 
 	//拡大縮小（スケール）行列を作成
-	DirectX::XMMATRIX matrix_scale = DirectX::XMMatrixScaling(radius, 1.0f, radius);
+	DirectX::XMMATRIX matrix_scale = DirectX::XMMatrixScaling(1.0f, 1.0f, 1.0f);
 
 	//回転行列と移動行列を作成
 	DirectX::XMVECTOR v_rotation = DirectX::XMLoadFloat4(&rotation);
@@ -245,6 +247,8 @@ void ShapeRenderer::DrawRing(
 	DirectX::XMStoreFloat4x4(&new_instance.world_matrix, matrix_world);
 	new_instance.color = color;
 	new_instance.mode = mode;
+	new_instance.inner_radius = inner_radius;
+	new_instance.outer_radius = outer_radius;
 	instances.push_back(new_instance);
 }
 
@@ -293,6 +297,18 @@ void ShapeRenderer::Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4
 	for (const instance& inst : instances)
 	{
 		if (!inst.target_mesh->vertex_buffer)continue;
+		if (inst.target_mesh == &ring_mesh)
+		{
+			std::vector<DirectX::XMFLOAT3> vertices = UpdateRingMesh(SUBDIVISIONS, inst.outer_radius, inst.inner_radius);
+			D3D11_MAPPED_SUBRESOURCE mapped = {};
+			if (!SUCCEEDED(context->Map(ring_mesh.vertex_buffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped)))
+			{
+				LOG_ERROR({ u8"設定" }, u8"バッファ容量が指定値を超えています");
+				continue;
+			}
+			memcpy(mapped.pData, vertices.data(), sizeof(DirectX::XMFLOAT3) * vertices.size());
+			context->Unmap(ring_mesh.vertex_buffer.Get(), 0);
+		}
 
 		UINT stride = sizeof(DirectX::XMFLOAT3);
 		UINT offset = 0;
@@ -434,17 +450,35 @@ void ShapeRenderer::CreateRingMesh(ID3D11Device* device, int subdivisions)
 {
 	//ガード処理
 	if (subdivisions < 3)return;
-
-	//定数と頂点リストの準備
 	static constexpr float outer_diameter = 1.0f;
 	static constexpr float inner_diameter = 0.8f;
+	std::vector<DirectX::XMFLOAT3> vertices = UpdateRingMesh(subdivisions, outer_diameter, inner_diameter);
+
+	//頂点バッファを生成
+	D3D11_BUFFER_DESC buffer_desc{};
+	buffer_desc.ByteWidth = static_cast<UINT>(sizeof(DirectX::XMFLOAT3) * vertices.size());
+	buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
+	buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	D3D11_SUBRESOURCE_DATA init_data{};
+	init_data.pSysMem = vertices.data();
+	device->CreateBuffer(&buffer_desc, &init_data, ring_mesh.vertex_buffer.GetAddressOf());
+	ring_mesh.vertex_count = static_cast<UINT>(vertices.size());
+
+	//CreateMesh(device, vertices, ring_mesh);
+}
+
+//リングメッシュの更新
+std::vector<DirectX::XMFLOAT3> ShapeRenderer::UpdateRingMesh(int subdivisions, float outer_diameter, float inner_diameter)
+{
+	//定数と頂点リストの準備
 	float step = DirectX::XM_2PI / subdivisions;
 	std::vector<DirectX::XMFLOAT3> vertices;
 	float current_angle = 0.0f;
 	float next_angle = 0.0f;
 
 	//ループで各分割の4頂点を計算
-	for (int i = 0;i < subdivisions; ++i)
+	for (int i = 0; i < subdivisions; ++i)
 	{
 		current_angle = i * step;
 		next_angle = (i + 1) * step;
@@ -469,7 +503,6 @@ void ShapeRenderer::CreateRingMesh(ID3D11Device* device, int subdivisions)
 		vertices.push_back(out2);
 		vertices.push_back(out1);
 	}
-	//頂点バッファを生成
-	CreateMesh(device, vertices, ring_mesh);
+	return vertices;
 }
 

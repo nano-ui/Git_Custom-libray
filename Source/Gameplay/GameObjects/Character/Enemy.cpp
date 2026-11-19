@@ -76,6 +76,9 @@ void Enemy::RenderDebug(ShapeRenderer* renderer)
 	Character::RenderDebug(renderer);
 	wander_move->RenderDebug(renderer);
 	vision_sensor->RenderDebug(renderer);
+	DirectX::XMFLOAT3 position = transform_component->GetPosition();
+	position.y += 0.3f;
+	renderer->DrawRing(position, radius,outer_diameter, transform_component->GetQuaternion(), { 0.2f,0.8f,0.5f,1.0f }, ShapeDrawMode::Solid);
 }
 
 //シリアライズ登録
@@ -101,6 +104,8 @@ void Enemy::SetupInspector()
 	inspector->RegisterVariable(u8"開始", &is_play);
 	inspector->RegisterVariable(u8"速度", &chase_speed);
 	inspector->RegisterVariable(u8"停止距離", &stop_distance);
+	inspector->RegisterVariable(u8"ドーナツ半径", &radius);
+	inspector->RegisterVariable(u8"ドーナツ半径2", &outer_diameter);
 }
 
 // アニメーション終了イベント

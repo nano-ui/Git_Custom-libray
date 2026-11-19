@@ -76,4 +76,6 @@ private:
 	std::unique_ptr<WanderMove> wander_move;					//œpœjˆÚ“®
 	float chase_speed;											//ˆÚ“®‘¬“x
 	float stop_distance;										//’âŽ~‹——£
+	float radius = 3.0f;
+	float outer_diameter = 3.0f;
 };

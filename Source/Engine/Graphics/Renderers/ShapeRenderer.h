@@ -41,7 +41,7 @@ public:
 	void DrawFan(const DirectX::XMFLOAT3& center, float rotation_y, float radius, float angle, const DirectX::XMFLOAT4 color, ShapeDrawMode mode = ShapeDrawMode::Wireframe);
 
 	//ドーナツ型の描画登録
-	void DrawRing(const DirectX::XMFLOAT3& center, float radius, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& color, ShapeDrawMode mode = ShapeDrawMode::Wireframe);
+	void DrawRing(const DirectX::XMFLOAT3& center, float inner_radius, float outer_radius, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& color, ShapeDrawMode mode = ShapeDrawMode::Wireframe);
 
 	//グリッド線を描画登録
 	void DrawGrid(const DirectX::XMFLOAT3& center, float size, int divisions, const DirectX::XMFLOAT4& color);
@@ -64,6 +64,8 @@ private:
 		DirectX::XMFLOAT4X4 world_matrix;	//ワールド行列
 		DirectX::XMFLOAT4 color;			//描画色
 		ShapeDrawMode mode;					//描画モード
+		float inner_radius;					//内径
+		float outer_radius;					//外径
 	};
 
 	//シェーダーへ送る定数バッファ
@@ -87,6 +89,10 @@ private:
 
 	//ドーナツ型メッシュ生成
 	void CreateRingMesh(ID3D11Device* device, int subdivisions);
+	
+private:
+	//リングメッシュの更新
+	std::vector<DirectX::XMFLOAT3> UpdateRingMesh(int subdivisions, float outer_diameter, float inner_diameter);
 
 private:
 	std::unique_ptr<CustomShader> custom_shader;			//シェーダー管理クラス
@@ -98,5 +104,6 @@ private:
 	mesh ring_mesh;		//ドーナツ型メッシュ
 
 	std::vector<instance> instances;	//描画リクエストされた図形の蓄積リスト
+	static constexpr int SUBDIVISIONS  = 16;
 };
 
