@@ -266,6 +266,10 @@ C:.
 „    „        WeightedNode.cpp
 „    „        WeightedNode.h
 „    „        
+„    „¥„Ÿ„Ÿ„ŸCommon
+„    „        Blackboard.cpp
+„    „        Blackboard.h
+„    „        
 „    „¥„Ÿ„Ÿ„ŸComponents
 „    „    „¥„Ÿ„Ÿ„ŸAI
 „    „    „        HateComponent.cpp
@@ -402,12 +406,12 @@ C:.
 „            ActionState.h
 „            State.cpp
 „            State.h
-„            StateBlackboard.cpp
-„            StateBlackboard.h
 „            StateMachine.cpp
 „            StateMachine.h
 „            StateTransition.cpp
 „            StateTransition.h
+„            TransitionCondition.cpp
+„            TransitionCondition.h
 „            
 „¥„Ÿ„Ÿ„ŸSerialization
 „        AnimationSequenceSerializer.cpp

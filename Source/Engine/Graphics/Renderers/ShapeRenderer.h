@@ -40,6 +40,9 @@ public:
 	//扇形の描画登録
 	void DrawFan(const DirectX::XMFLOAT3& center, float rotation_y, float radius, float angle, const DirectX::XMFLOAT4 color, ShapeDrawMode mode = ShapeDrawMode::Wireframe);
 
+	//ドーナツ型の描画登録
+	void DrawRing(const DirectX::XMFLOAT3& center, float radius, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& color, ShapeDrawMode mode = ShapeDrawMode::Wireframe);
+
 	//グリッド線を描画登録
 	void DrawGrid(const DirectX::XMFLOAT3& center, float size, int divisions, const DirectX::XMFLOAT4& color);
 
@@ -82,6 +85,9 @@ private:
 	//円柱メッシュ生成
 	void CreateCylinderMesh(ID3D11Device* device, int subdivisions);
 
+	//ドーナツ型メッシュ生成
+	void CreateRingMesh(ID3D11Device* device, int subdivisions);
+
 private:
 	std::unique_ptr<CustomShader> custom_shader;			//シェーダー管理クラス
 	Microsoft::WRL::ComPtr<ID3D11Buffer> constant_buffer;	//定数バッファ
@@ -89,6 +95,7 @@ private:
 	mesh box_mesh;		//箱用メッシュ
 	mesh sphere_mesh;	//球用メッシュ
 	mesh cylinder_mesh;	//円柱用メッシュ
+	mesh ring_mesh;		//ドーナツ型メッシュ
 
 	std::vector<instance> instances;	//描画リクエストされた図形の蓄積リスト
 };

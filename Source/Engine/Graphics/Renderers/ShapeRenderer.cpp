@@ -24,6 +24,7 @@ ShapeRenderer::ShapeRenderer(ID3D11Device* device)
 	CreateBoxMesh(device);
 	CreateSphereMesh(device, 16);
 	CreateCylinderMesh(device, 16);
+	CreateRingMesh(device, 16);
 }
 
 //デストラクタ
@@ -38,6 +39,7 @@ ShapeRenderer::~ShapeRenderer()
 	box_mesh.vertex_buffer.Reset();
 	sphere_mesh.vertex_buffer.Reset();
 	cylinder_mesh.vertex_buffer.Reset();
+	ring_mesh.vertex_buffer.Reset();
 }
 
 //箱の描画登録
@@ -120,7 +122,13 @@ void ShapeRenderer::DrawCapsule(const DirectX::XMFLOAT3& position, const DirectX
 }
 
 //扇形の描画登録
-void ShapeRenderer::DrawFan(const DirectX::XMFLOAT3& center, float rotation_y, float radius, float angle, const DirectX::XMFLOAT4 color, ShapeDrawMode mode)
+void ShapeRenderer::DrawFan(
+	const DirectX::XMFLOAT3& center,
+	float rotation_y, 
+	float radius, 
+	float angle,
+	const DirectX::XMFLOAT4 color,
+	ShapeDrawMode mode)
 {
 	if (radius <= 0.0f || angle <= 0.0f)
 	{
@@ -208,6 +216,36 @@ void ShapeRenderer::DrawFan(const DirectX::XMFLOAT3& center, float rotation_y, f
 		DirectX::XMStoreFloat4(&quaternion, v_quaternion);
 		DrawCylinder(arc_mid_pos, quaternion, LINE_RADIUS, arc_height, color, mode);
 	}
+}
+
+//ドーナツ型の描画登録
+void ShapeRenderer::DrawRing(
+	const DirectX::XMFLOAT3& center,
+	float radius,
+	const DirectX::XMFLOAT4& rotation,
+	const DirectX::XMFLOAT4& color,
+	ShapeDrawMode mode)
+{
+	if (radius <= 0.0f)return;
+
+	//拡大縮小（スケール）行列を作成
+	DirectX::XMMATRIX matrix_scale = DirectX::XMMatrixScaling(radius, 1.0f, radius);
+
+	//回転行列と移動行列を作成
+	DirectX::XMVECTOR v_rotation = DirectX::XMLoadFloat4(&rotation);
+	DirectX::XMMATRIX matrix_rotation = DirectX::XMMatrixRotationQuaternion(v_rotation);
+	DirectX::XMMATRIX matrix_translation = DirectX::XMMatrixTranslation(center.x, center.y, center.z);
+
+	//ワールド行列を合成
+	DirectX::XMMATRIX matrix_world = matrix_scale * matrix_rotation * matrix_translation;
+
+	//描画リストに登録
+	instance new_instance = {};
+	new_instance.target_mesh = &ring_mesh;
+	DirectX::XMStoreFloat4x4(&new_instance.world_matrix, matrix_world);
+	new_instance.color = color;
+	new_instance.mode = mode;
+	instances.push_back(new_instance);
 }
 
 //グリッド線を描画登録
@@ -389,5 +427,49 @@ void ShapeRenderer::CreateCylinderMesh(ID3D11Device* device, int subdivisions)
 		vertices.push_back(t1); vertices.push_back(b2); vertices.push_back(t2);
 	}
 	CreateMesh(device, vertices, cylinder_mesh);
+}
+
+//ドーナツ型メッシュ生成
+void ShapeRenderer::CreateRingMesh(ID3D11Device* device, int subdivisions)
+{
+	//ガード処理
+	if (subdivisions < 3)return;
+
+	//定数と頂点リストの準備
+	static constexpr float outer_diameter = 1.0f;
+	static constexpr float inner_diameter = 0.8f;
+	float step = DirectX::XM_2PI / subdivisions;
+	std::vector<DirectX::XMFLOAT3> vertices;
+	float current_angle = 0.0f;
+	float next_angle = 0.0f;
+
+	//ループで各分割の4頂点を計算
+	for (int i = 0;i < subdivisions; ++i)
+	{
+		current_angle = i * step;
+		next_angle = (i + 1) * step;
+		DirectX::XMFLOAT3 out1 = { 0.0f,0.0f,0.0f };
+		out1.x = outer_diameter * cosf(current_angle);
+		out1.z = outer_diameter * sinf(current_angle);
+		DirectX::XMFLOAT3 out2 = { 0.0f,0.0f,0.0f };
+		out2.x = outer_diameter * cosf(next_angle);
+		out2.z = outer_diameter * sinf(next_angle);
+		DirectX::XMFLOAT3 in1 = { 0.0f,0.0f,0.0f };
+		in1.x = inner_diameter * cosf(current_angle);
+		in1.z = inner_diameter * sinf(current_angle);
+		DirectX::XMFLOAT3 in2 = { 0.0f,0.0f,0.0f };
+		in2.x = inner_diameter * cosf(next_angle);
+		in2.z = inner_diameter * sinf(next_angle);
+
+		//2つの三角形として頂点を登録
+		vertices.push_back(out1);
+		vertices.push_back(in1);
+		vertices.push_back(in2);
+		vertices.push_back(in2);
+		vertices.push_back(out2);
+		vertices.push_back(out1);
+	}
+	//頂点バッファを生成
+	CreateMesh(device, vertices, ring_mesh);
 }
 

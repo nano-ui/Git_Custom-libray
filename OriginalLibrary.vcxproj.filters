@@ -821,9 +821,6 @@
     <ClInclude Include="Source\Engine\Graphics\Renderers\Graphics.h">
       <Filter>Source\Engine\Graphics\Renderers\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Renderers\ShapeRenderer.h">
-      <Filter>Source\Engine\Graphics\Renderers\ShapeRenderer</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Renderers\sprite.h">
       <Filter>Source\Engine\Graphics\Renderers\sprite</Filter>
     </ClInclude>
@@ -1102,6 +1099,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\StateMachine\TransitionCondition.h">
       <Filter>Source\Gameplay\StateMachine\TransitionCondition</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Renderers\ShapeRenderer.h">
+      <Filter>Source\Engine\Graphics\Renderers\ShapeRenderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
