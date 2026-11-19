@@ -110,6 +110,13 @@ void Allie::SetupComponent()
 void Allie::SetupBlackboard()
 {
 	Character::SetupBlackboard();
+	blackboard->BindVariable(u8"対象との座標", [this]()
+		{
+			static constexpr DirectX::XMFLOAT3 dummy_pos = { FLT_MAX,FLT_MAX,FLT_MAX };
+			std::shared_ptr<TransformComponent>transform = target_selector->GetTransformComponent();
+			return (transform) ? transform->GetPosition() : dummy_pos;
+		}
+	);
 }
 
 //アニメーション終了イベント

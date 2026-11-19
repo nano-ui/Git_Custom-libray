@@ -88,6 +88,124 @@
                     "EndPinID": 527,
                     "ID": 530,
                     "StartPinID": 502
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 0.30000001192092896,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "対象との座標",
+                            "Type": 2,
+                            "VariableName": "座標",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 539,
+                    "ID": 550,
+                    "StartPinID": 502
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 3.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "対象との座標",
+                            "Type": 2,
+                            "VariableName": "座標",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 539,
+                    "ID": 551,
+                    "StartPinID": 498
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "",
+                            "Type": 5,
+                            "VariableName": "",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 497,
+                    "ID": 552,
+                    "StartPinID": 540
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "",
+                            "Type": 5,
+                            "VariableName": "",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "CompOp": 2,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "",
+                            "Type": 0,
+                            "VariableName": "移動速度",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 501,
+                    "ID": 553,
+                    "StartPinID": 540
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 5,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "",
+                            "Type": 0,
+                            "VariableName": "体力",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 527,
+                    "ID": 554,
+                    "StartPinID": 540
                 }
             ],
             "Nodes": [
@@ -152,9 +270,9 @@
                     "IsLoop": true,
                     "IsRootMotion": false,
                     "IsSubGraph": true,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
+                    "LinkColorB": 0.09427409619092941,
+                    "LinkColorG": 0.7876448035240173,
+                    "LinkColorR": 0.24419209361076355,
                     "Name": "移動",
                     "Output": [
                         {
@@ -187,7 +305,7 @@
                             "Name": "入力"
                         }
                     ],
-                    "IsLoop": true,
+                    "IsLoop": false,
                     "IsRootMotion": false,
                     "IsSubGraph": false,
                     "LinkColorB": 1.0,
@@ -204,6 +322,44 @@
                     "PosX": 185.16668701171875,
                     "PosY": 30.07647705078125,
                     "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 538,
+                    "Input": [
+                        {
+                            "ID": 539,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": true,
+                    "LinkColorB": 0.18857797980308533,
+                    "LinkColorG": 0.18857797980308533,
+                    "LinkColorR": 0.8880308866500854,
+                    "Name": "攻撃",
+                    "Output": [
+                        {
+                            "ID": 540,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -105.33331298828125,
+                    "PosY": 54.0899658203125,
+                    "SubGraphID": 537
                 }
             ]
         },
@@ -1195,8 +1351,133 @@
                     "SubGraphID": 0
                 }
             ]
+        },
+        {
+            "GraphID": 537,
+            "GraphName": "攻撃",
+            "LayerType": 1,
+            "Links": [
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 544,
+                    "ID": 546,
+                    "StartPinID": 542
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 548,
+                    "ID": 549,
+                    "StartPinID": 545
+                }
+            ],
+            "Nodes": [
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 541,
+                    "Input": [],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Root",
+                    "Output": [
+                        {
+                            "ID": 542,
+                            "Kind": 1,
+                            "Name": ""
+                        }
+                    ],
+                    "PosX": -65.33331298828125,
+                    "PosY": 27.0899658203125,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 1,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 543,
+                    "Input": [
+                        {
+                            "ID": 544,
+                            "Kind": 0,
+                            "Name": ""
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Selector",
+                    "Output": [
+                        {
+                            "ID": 545,
+                            "Kind": 1,
+                            "Name": ""
+                        }
+                    ],
+                    "PosX": 124.66668701171875,
+                    "PosY": -0.9100341796875,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "Attack_A_Slow",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 2,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.30000001192092896,
+                        "CooldownTime": 1.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 547,
+                    "Input": [
+                        {
+                            "ID": 548,
+                            "Kind": 0,
+                            "Name": ""
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Action",
+                    "Output": [],
+                    "PosX": 246.66668701171875,
+                    "PosY": -20.9100341796875,
+                    "SubGraphID": 0
+                }
+            ]
         }
     ],
-    "NextID": 537,
+    "NextID": 555,
     "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }

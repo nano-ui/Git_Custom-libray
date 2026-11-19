@@ -344,6 +344,7 @@ void Character::SetupComponent()
 bool Character::ApplyDamage(float damage, float invincible_time, uint32_t attacker_id)
 {
 	BS_PROFILE_FUNCTION();
+	LOG_NORMAL({ u8"攻撃" }, u8"攻撃が当たりました(ダメージ:%f)", damage);
 
 	//ダメージの適用条件判定
 	if (damage <= 0)return false;

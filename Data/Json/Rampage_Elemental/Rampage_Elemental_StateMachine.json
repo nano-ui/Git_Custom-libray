@@ -254,7 +254,7 @@
                             "Name": "入力"
                         }
                     ],
-                    "IsLoop": true,
+                    "IsLoop": false,
                     "IsRootMotion": false,
                     "IsSubGraph": true,
                     "LinkColorB": 0.4434340298175812,
@@ -295,9 +295,9 @@
                     "IsLoop": false,
                     "IsRootMotion": false,
                     "IsSubGraph": false,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
+                    "LinkColorB": 0.7374517321586609,
+                    "LinkColorG": 0.162296324968338,
+                    "LinkColorR": 0.5797836184501648,
                     "Name": "死亡状態",
                     "Output": [
                         {
@@ -875,6 +875,6 @@
             "Nodes": []
         }
     ],
-    "NextID": 166,
+    "NextID": 167,
     "TargetModelPath": ""
 }
