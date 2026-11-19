@@ -7,7 +7,7 @@ class StateGraphDataManager;
 class StateGraphConfigManager;
 class AssetLoader;
 class StateMachineComponent;
-class StateBlackboard;
+class Blackboard;
 class StateGraphNavigator;
 
 //ツールバー描画パラメータ
@@ -17,11 +17,10 @@ struct ToolbarContext
 	StateGraphConfigManager* config_manager;		//環境設定管理クラス
 	AssetLoader* asset_loader;						//アセット読み込みクラス
 	StateMachineComponent* state_machine_component;	//シミュレーションコンポーネントクラス
-	StateBlackboard* blackboard;					//ブラックボード
+	Blackboard* blackboard;							//ブラックボード
 	StateGraphNavigator* navigator;					//階層ナビゲーションクラス
 	std::string& current_loaded_file_path;			//読み込まれているファイルパス
 	uint32_t& current_graph_id;						//現在の階層ID
-	uint32_t& target_model_hash;					//対象モデルのハッシュ値
 	bool& is_tracking_active_node;					//追尾フラグ
 	bool& is_simulation_active;						//シミュレーションフラグ
 	uint32_t& last_synced_node_id;					//同期したノードID

@@ -60,6 +60,7 @@ public:
 		data_map[hash_key].getter = value;
 		data_map[hash_key].value = value();
 		name_map[hash_key] = variable_name;
+		LOG_SUCCESS({ u8"設定" }, u8"値の登録に成功しました(変数名:%s)", variable_name.c_str());
 	}
 
 	//値の設定
@@ -191,7 +192,7 @@ public:
 	std::vector<std::string> GetRegisteredNames()const;
 
 	//変数名のIDを取得
-	uint32_t GetKeyId(const std::string& variable_name)const { return CalculateHash(variable_name); }
+	static uint32_t GetKeyId(const std::string& variable_name) { return CalculateHash(variable_name); }
 
 private:
 	//文字列をビットに変換

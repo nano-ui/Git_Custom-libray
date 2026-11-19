@@ -1,13 +1,13 @@
 #include "StateMachine.h"
 
 #include "State.h"
-#include "StateBlackboard.h"
+#include "Gameplay\Common\Blackboard.h"
 
 //コンストラクタ
 StateMachine::StateMachine()
 	:current_state(nullptr)
 {
-	blackboard = std::make_unique<StateBlackboard>();
+	blackboard = std::make_unique<Blackboard>();
 }
 
 //デストラクタ
@@ -41,7 +41,7 @@ void StateMachine::AddState(std::unique_ptr<State> state)
 {
 	if (!state)return;
 
-	uint32_t state_hash = StateBlackboard::CalculateHash(state->GetName());
+	uint32_t state_hash = Blackboard::GetKeyId(state->GetName());
 	state_map[state_hash] = std::move(state);
 
 	if (!current_state)

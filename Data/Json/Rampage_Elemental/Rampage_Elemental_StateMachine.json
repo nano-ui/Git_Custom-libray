@@ -10,11 +10,11 @@
                     "Conditions": [
                         {
                             "CompOp": 2,
-                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 0,
+                            "VariableName": "移動速度",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -31,11 +31,11 @@
                     "Conditions": [
                         {
                             "CompOp": 5,
-                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 0,
+                            "VariableName": "移動速度",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -52,11 +52,11 @@
                     "Conditions": [
                         {
                             "CompOp": 5,
-                            "HashKey": 1572818033,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 0,
+                            "VariableName": "体力",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -73,11 +73,11 @@
                     "Conditions": [
                         {
                             "CompOp": 5,
-                            "HashKey": 1572818033,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 0,
+                            "VariableName": "体力",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -224,11 +224,11 @@
                     "Conditions": [
                         {
                             "CompOp": 3,
-                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
                             "RefValue": 1.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 0,
+                            "VariableName": "移動速度",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -245,11 +245,11 @@
                     "Conditions": [
                         {
                             "CompOp": 4,
-                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
                             "RefValue": 1.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 0,
+                            "VariableName": "移動速度",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,

@@ -7,7 +7,7 @@ public:
 	LinearMove(uint32_t key);
 
 	//更新処理
-	DirectX::XMFLOAT3 Update(const DirectX::XMFLOAT3& current_pos, const DirectX::XMFLOAT3& target_pos, const StateBlackboard* blackboard)override;
+	DirectX::XMFLOAT3 Update(const DirectX::XMFLOAT3& current_pos, const DirectX::XMFLOAT3& target_pos, const Blackboard* blackboard)override;
 
 	//直線移動更新処理
 	DirectX::XMFLOAT3 UpdateLiner(const DirectX::XMFLOAT3& current_pos, const DirectX::XMFLOAT3& target_pos, const float speed);

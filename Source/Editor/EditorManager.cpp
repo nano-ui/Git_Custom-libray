@@ -153,7 +153,7 @@ void EditorManager::RenderGui()
 	}
 	case EditorSceneType::StateMachineEditor:
 	{
-		StateBlackboard* target_blackboard = nullptr;
+		Blackboard* target_blackboard = nullptr;
 		GameObject* selected_obj = object_editor->GetCurrentSelectObject();
 		if (selected_obj)
 		{

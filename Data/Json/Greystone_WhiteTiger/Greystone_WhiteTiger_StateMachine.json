@@ -10,11 +10,11 @@
                     "Conditions": [
                         {
                             "CompOp": 5,
-                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "RefValue": 0.5,
+                            "SecondaryVariableName": "",
                             "Type": 0,
+                            "VariableName": "移動速度",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -31,11 +31,11 @@
                     "Conditions": [
                         {
                             "CompOp": 2,
-                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "RefValue": 0.5,
+                            "SecondaryVariableName": "",
                             "Type": 0,
+                            "VariableName": "移動速度",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -51,54 +51,12 @@
                     "BlendTime": 0.20000000298023224,
                     "Conditions": [
                         {
-                            "CompOp": 0,
-                            "HashKey": 2,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 4,
-                            "VectorRefValue": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        }
-                    ],
-                    "EndPinID": 522,
-                    "ID": 524,
-                    "StartPinID": 498
-                },
-                {
-                    "BlendTime": 0.20000000298023224,
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
-                            "HashKey": 2,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 4,
-                            "VectorRefValue": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        }
-                    ],
-                    "EndPinID": 522,
-                    "ID": 525,
-                    "StartPinID": 502
-                },
-                {
-                    "BlendTime": 0.20000000298023224,
-                    "Conditions": [
-                        {
                             "CompOp": 5,
-                            "HashKey": 1572818033,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 0,
+                            "VariableName": "体力",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -115,11 +73,11 @@
                     "Conditions": [
                         {
                             "CompOp": 5,
-                            "HashKey": 1572818033,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 0,
+                            "VariableName": "体力",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -130,95 +88,6 @@
                     "EndPinID": 527,
                     "ID": 530,
                     "StartPinID": 502
-                },
-                {
-                    "BlendTime": 0.20000000298023224,
-                    "Conditions": [
-                        {
-                            "CompOp": 5,
-                            "HashKey": 1572818033,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 0,
-                            "VectorRefValue": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        }
-                    ],
-                    "EndPinID": 527,
-                    "ID": 531,
-                    "StartPinID": 523
-                },
-                {
-                    "BlendTime": 0.20000000298023224,
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
-                            "HashKey": 0,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 5,
-                            "VectorRefValue": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        },
-                        {
-                            "CompOp": 5,
-                            "HashKey": 4203995948,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 0,
-                            "VectorRefValue": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        }
-                    ],
-                    "EndPinID": 497,
-                    "ID": 535,
-                    "StartPinID": 523
-                },
-                {
-                    "BlendTime": 0.20000000298023224,
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
-                            "HashKey": 0,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 5,
-                            "VectorRefValue": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        },
-                        {
-                            "CompOp": 2,
-                            "HashKey": 4203995948,
-                            "ParamSecond": 0.0,
-                            "RefValue": 0.0,
-                            "SecondaryHash": 0,
-                            "Type": 0,
-                            "VectorRefValue": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        }
-                    ],
-                    "EndPinID": 501,
-                    "ID": 536,
-                    "StartPinID": 523
                 }
             ],
             "Nodes": [
@@ -297,44 +166,6 @@
                     "PosX": -115.33333587646484,
                     "PosY": -140.6666717529297,
                     "SubGraphID": 499
-                },
-                {
-                    "ActionCategory": 4,
-                    "AnimationName": "",
-                    "BehaviorData": {
-                        "ActionDuration": -1.0,
-                        "Category": 0,
-                        "CompositeType": 0,
-                        "CooldownRandomRange": 0.0,
-                        "CooldownTime": 0.0,
-                        "FinishResult": 0,
-                        "Weight": 1
-                    },
-                    "ID": 521,
-                    "Input": [
-                        {
-                            "ID": 522,
-                            "Kind": 0,
-                            "Name": "入力"
-                        }
-                    ],
-                    "IsLoop": false,
-                    "IsRootMotion": true,
-                    "IsSubGraph": true,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
-                    "Name": "回避",
-                    "Output": [
-                        {
-                            "ID": 523,
-                            "Kind": 1,
-                            "Name": "出力"
-                        }
-                    ],
-                    "PosX": -302.83331298828125,
-                    "PosY": -41.92352294921875,
-                    "SubGraphID": 520
                 },
                 {
                     "ActionCategory": 0,
@@ -432,11 +263,11 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 1,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 4,
+                            "VariableName": "",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -445,11 +276,11 @@
                         },
                         {
                             "CompOp": 0,
-                            "HashKey": 0,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 5,
+                            "VariableName": "",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -466,11 +297,11 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 1,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 4,
+                            "VariableName": "",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -479,11 +310,11 @@
                         },
                         {
                             "CompOp": 0,
-                            "HashKey": 0,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 5,
+                            "VariableName": "",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -500,11 +331,11 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 1,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 4,
+                            "VariableName": "",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -513,11 +344,11 @@
                         },
                         {
                             "CompOp": 0,
-                            "HashKey": 0,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 5,
+                            "VariableName": "",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,

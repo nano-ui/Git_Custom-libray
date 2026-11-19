@@ -95,8 +95,13 @@ void ObjectEditor::RenderUi(Camera* camera, CollisionManager* collision_manager)
 
 	DirectX::XMFLOAT2 preview_pos = EditorMediator::Instance().GetWindowPos();
 	DirectX::XMFLOAT2 preview_size = EditorMediator::Instance().GetWindowSize();
+	GameObject* last_time_object = current_selected_object;
+	if (!last_time_object)return;
 	current_selected_object = object_picker->PickObject(current_selected_object, camera, collision_manager, preview_pos, preview_size);
-	EditorMediator::Instance().OnObjectSelected(current_selected_object);
+	if (last_time_object->GetObjectId() != current_selected_object->GetObjectId())
+	{
+		EditorMediator::Instance().OnObjectSelected(current_selected_object);
+	}
 	EditorMediator::Instance().UpdateViewerSynchronization(current_selected_object);
 }
 

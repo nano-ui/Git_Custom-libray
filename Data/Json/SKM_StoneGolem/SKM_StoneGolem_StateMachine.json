@@ -10,11 +10,11 @@
                     "Conditions": [
                         {
                             "CompOp": 2,
-                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
                             "RefValue": 0.5,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 0,
+                            "VariableName": "移動速度",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -31,11 +31,11 @@
                     "Conditions": [
                         {
                             "CompOp": 5,
-                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
                             "RefValue": 0.5,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 0,
+                            "VariableName": "移動速度",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -183,11 +183,11 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 1,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 4,
+                            "VariableName": "",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -196,11 +196,11 @@
                         },
                         {
                             "CompOp": 0,
-                            "HashKey": 0,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 5,
+                            "VariableName": "",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -217,11 +217,11 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 1,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 4,
+                            "VariableName": "",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -230,11 +230,11 @@
                         },
                         {
                             "CompOp": 0,
-                            "HashKey": 0,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 5,
+                            "VariableName": "",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -251,11 +251,11 @@
                     "Conditions": [
                         {
                             "CompOp": 0,
-                            "HashKey": 1,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 4,
+                            "VariableName": "",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -264,11 +264,11 @@
                         },
                         {
                             "CompOp": 0,
-                            "HashKey": 0,
                             "ParamSecond": 0.0,
                             "RefValue": 0.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 5,
+                            "VariableName": "",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -1133,11 +1133,11 @@
                     "Conditions": [
                         {
                             "CompOp": 3,
-                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
                             "RefValue": 1.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 0,
+                            "VariableName": "",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -1154,11 +1154,11 @@
                     "Conditions": [
                         {
                             "CompOp": 4,
-                            "HashKey": 4203995948,
                             "ParamSecond": 0.0,
                             "RefValue": 1.0,
-                            "SecondaryHash": 0,
+                            "SecondaryVariableName": "",
                             "Type": 0,
+                            "VariableName": "",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,

@@ -50,8 +50,8 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 	config_manager = std::make_unique<StateGraphConfigManager>();
 	asset_loader = std::make_unique<AssetLoader>();
 	state_machine_component = std::make_unique<StateMachineComponent>();
-	editor_dummy_blackboard = std::make_unique<StateBlackboard>();
-	blackboard_inspector = std::make_unique<StateBlackboardInspectorWindow>();
+	editor_dummy_blackboard = std::make_unique<Blackboard>();
+	blackboard_inspector = std::make_unique<BlackboardInspectorWindow>();
 	state_node_renderer = std::make_unique<StateNodeRenderer>();
 	state_link_renderer = std::make_unique<StateLinkRenderer>();
 	state_graph_navigator = std::make_unique<StateGraphNavigator>();
@@ -97,7 +97,7 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 			std::filesystem::path path_obj(data_manager->GetTargetModelPath());
 			std::string model_name = path_obj.stem().string(); //拡張子を除いたファイル名を抽出
 
-			target_model_hash = StateBlackboard::CalculateHash(model_name);
+			target_model_hash = Blackboard::GetKeyId(model_name);
 			EditorMediator::Instance().OnModelDubleClied(target_path);
 		}
 	}
@@ -111,13 +111,13 @@ StateMachineGraphEditor::StateMachineGraphEditor()
 StateMachineGraphEditor::~StateMachineGraphEditor() = default;
 
 //エディタ描画
-void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
+void StateMachineGraphEditor::DrawEditor(Blackboard* blackboard)
 {
 	BS_PROFILE_FUNCTION();
 
 	UpdateRuntimeTracking();
 
-	StateBlackboard* active_blackboard = blackboard ? blackboard : editor_dummy_blackboard.get();
+	Blackboard* active_blackboard = blackboard ? blackboard : editor_dummy_blackboard.get();
 
 	GraphData* current_graph = nullptr; // 現在の階層情報
 
@@ -170,7 +170,6 @@ void StateMachineGraphEditor::DrawEditor(StateBlackboard* blackboard)
 			state_graph_navigator.get(),
 			current_loaded_file_path,
 			current_graph_id,
-			target_model_hash,
 			is_tracking_active_node,
 			is_simulation_active,
 			last_synced_node_id
@@ -275,7 +274,7 @@ bool StateMachineGraphEditor::LoadGraphFromFile(const std::string& file_path)
 			{
 				std::filesystem::path path_obj(data_manager->GetTargetModelPath());
 				std::string model_name = path_obj.stem().string();	//拡張子を除いたファイル名
-				target_model_hash = StateBlackboard::CalculateHash(model_name);
+				target_model_hash = Blackboard::GetKeyId(model_name);
 			}
 		}
 		else
@@ -335,13 +334,13 @@ void StateMachineGraphEditor::UpdateRuntimeTracking()
 }
 
 //擬似シミュレーション更新
-void StateMachineGraphEditor::UpdateSimulationMode(StateBlackboard* blackboard, GraphData* current_graph, uint32_t& current_active_node_id)
+void StateMachineGraphEditor::UpdateSimulationMode(Blackboard* blackboard, GraphData* current_graph, uint32_t& current_active_node_id)
 {
 	BS_PROFILE_FUNCTION();
 
 	if (!blackboard)
 	{
-		printf("Error: StateMachineGraphEditor::UpdateSimulationMode - 有効な StateBlackboard が割り当てられていません。\n");
+		printf("Error: StateMachineGraphEditor::UpdateSimulationMode - 有効な Blackboard が割り当てられていません。\n");
 		return;
 	}
 
@@ -638,7 +637,7 @@ void StateMachineGraphEditor::DrawCenterCanvas(GraphData* current_graph, float w
 }
 
 //右プロパティウインドウ
-void StateMachineGraphEditor::DrawRightSidebar(GraphData* current_graph, StateBlackboard* blackboard, float width, float height)
+void StateMachineGraphEditor::DrawRightSidebar(GraphData* current_graph, Blackboard* blackboard, float width, float height)
 {
 	BS_PROFILE_FUNCTION();
 

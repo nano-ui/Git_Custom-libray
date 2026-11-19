@@ -6,7 +6,7 @@
 #include <cstdint>
 
 class Model;
-class StateBlackboard;
+class Blackboard;
 
 class IAnimationListener
 {

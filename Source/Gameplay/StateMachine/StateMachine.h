@@ -5,7 +5,7 @@
 #include <string>
 
 class State;
-class StateBlackboard;
+class Blackboard;
 
 class StateMachine
 {
@@ -26,7 +26,7 @@ public:
 	void ChangeState(const uint32_t hash);
 
 	//ブラックボードへのアクセス
-	StateBlackboard* GetBlackboard()const { return blackboard.get(); }
+	Blackboard* GetBlackboard()const { return blackboard.get(); }
 
 private:
 	//実際の遷移処理
@@ -35,6 +35,6 @@ private:
 private:
 	std::unordered_map<uint32_t, std::unique_ptr<State>> state_map;	//状態名で検索できる辞書
 	State* current_state;							//現在のアクティブな状態
-	std::unique_ptr<StateBlackboard> blackboard;	//データ箱
+	std::unique_ptr<Blackboard> blackboard;	//データ箱
 };
 

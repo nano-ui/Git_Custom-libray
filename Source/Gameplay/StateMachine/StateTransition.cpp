@@ -2,7 +2,7 @@
 
 
 //ğŒ‚ª–‚½‚³‚ê‚Ä‚¢‚é‚©”»’è
-bool StateTransition::CanTransition(const StateBlackboard& blackboard) const
+bool StateTransition::CanTransition(const Blackboard& blackboard) const
 {
     //“o˜^‚³‚ê‚Ä‚¢‚é‚·‚×‚Ä‚Ì‘JˆÚğŒ‚ğ‡”Ô‚ÉŠm”F
     for (const auto& condition : conditions)

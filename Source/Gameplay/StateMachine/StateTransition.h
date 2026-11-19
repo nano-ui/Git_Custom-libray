@@ -2,13 +2,14 @@
 #include <cstdint>
 #include <vector>
 
-#include "StateBlackboard.h"
+#include "Gameplay\Common\Blackboard.h"
+#include "Gameplay\StateMachine\TransitionCondition.h"
 
 class StateTransition
 {
 public:
 	//ğŒ‚ª–‚½‚³‚ê‚Ä‚¢‚é‚©”»’è
-	bool CanTransition(const StateBlackboard& blackboard)const;
+	bool CanTransition(const Blackboard& blackboard)const;
 
 	//‘JˆÚğŒ‚Ì’Ç‰Á
 	void AddCondition(TransitionCondition& cond) { conditions.push_back(cond); }

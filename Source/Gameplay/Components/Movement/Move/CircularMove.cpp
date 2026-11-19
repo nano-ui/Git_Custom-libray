@@ -4,17 +4,17 @@
 //コンストラクタ
 CircularMove::CircularMove(uint32_t speed_k, uint32_t dir_k, uint32_t dist_k, uint32_t weight_k)
 {
-	speed_key = speed_k;
-	direction_key = dir_k;
-	base_distance_key = dist_k;
-	correction_weight_key = weight_k;
+	//speed_key = speed_k;
+	//direction_key = dir_k;
+	//base_distance_key = dist_k;
+	//correction_weight_key = weight_k;
 }
 
 //更新
 DirectX::XMFLOAT3 CircularMove::Update(
 	const DirectX::XMFLOAT3& current_pos,
 	const DirectX::XMFLOAT3& target_pos,
-	const StateBlackboard* blackboard)
+	const Blackboard* blackboard)
 {
 	if (!blackboard)
 	{
@@ -23,12 +23,12 @@ DirectX::XMFLOAT3 CircularMove::Update(
 	}
 
 	//パラメータ取得
-	float speed = std::get<float>(blackboard->GetAttributeValue(speed_key));
-	float direction = std::get<float>(blackboard->GetAttributeValue(direction_key));
-	float base_dist = std::get<float>(blackboard->GetAttributeValue(base_distance_key));
-	float weight = std::get<float>(blackboard->GetAttributeValue(correction_weight_key));
+	//float speed = std::get<float>(blackboard->GetValue(speed_key));
+	//float direction = std::get<float>(blackboard->GetAttributeValue(direction_key));
+	//float base_dist = std::get<float>(blackboard->GetAttributeValue(base_distance_key));
+	//float weight = std::get<float>(blackboard->GetAttributeValue(correction_weight_key));
 
-	return UpdateCircular(current_pos, target_pos, speed, direction, base_dist, weight);
+	return { 0.0f,0.0f,0.0f };//UpdateCircular(current_pos, target_pos, speed, direction, base_dist, weight);
 }
 
 //======================

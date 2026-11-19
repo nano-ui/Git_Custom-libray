@@ -1,5 +1,6 @@
 #include "TransitionCondition.h"
 
+#include <Windows.h>
 #include <cmath>
 #include <functional>
 #include <winuser.h>

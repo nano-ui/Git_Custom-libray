@@ -23,7 +23,7 @@ public:
 	virtual ~ActionState() = default;
 
 	//更新
-	virtual void Update(float elapsed_time, StateBlackboard* blackboard)override;
+	virtual void Update(float elapsed_time, Blackboard* blackboard)override;
 
 private:
 	std::unique_ptr<MoveBase> move_component;		//移動制御コンポーネント

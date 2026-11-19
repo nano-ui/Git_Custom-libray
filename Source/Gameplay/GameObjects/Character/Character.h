@@ -9,7 +9,7 @@
 #include <memory>
 #include <unordered_map>
 
-class StateBlackboard;
+class Blackboard;
 class StateMachineComponent;
 class TransformComponent;
 class ModelComponent;
@@ -54,7 +54,7 @@ public:
 	virtual void SyncBlackboard();
 
 	//ブラックボードを取得
-	StateBlackboard* GetBlackboard()const { return blackboard.get(); }
+	Blackboard* GetBlackboard()const { return blackboard.get(); }
 
 	//ブラックボードに登録・初期化
 	virtual void SetupBlackboard();
@@ -94,8 +94,8 @@ protected:
 	virtual void OnDead() {}
 
 protected:
-	std::unique_ptr<StateBlackboard> blackboard;
-	std::unique_ptr<StateMachineComponent> state_machine_component;	//ステートマシン制御
+	std::unique_ptr<Blackboard> blackboard;
+	std::unique_ptr<StateMachineComponent> state_machine_component;		//ステートマシン制御
 	std::shared_ptr<AnimationSequencerComponent> sequencer_component;	//アニメーションシーケンサ
 	std::unique_ptr<RootMotionComponent> root_motion_component;        //ルートモーション計算コンポーネント
 

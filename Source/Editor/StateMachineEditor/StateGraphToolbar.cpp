@@ -231,7 +231,6 @@ bool StateGraphToolbar::ExecuteLoadModel(ToolbarContext& context)
 		printf("Error: StateGraphToolbar - PathHelperでのパス生成に失敗しました。\n");
 	}
 
-	context.target_model_hash = StateBlackboard::CalculateHash(model_name);
 	EditorMediator::Instance().OnModelDubleClied(path_result.relative_path);
 	printf("StateGraphToolbar: モデル読み込み完了: %s\n", path_result.relative_path.c_str());
 

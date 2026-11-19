@@ -70,7 +70,7 @@ GameObject* ObjectPicker::PickObject(
 						}
 					}
 				}
-				if (!hit_object)return nullptr;
+				if (!hit_object)return selected_object;
 				return hit_object;
 			}
 			return selected_object;

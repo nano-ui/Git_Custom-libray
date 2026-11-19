@@ -2,17 +2,15 @@
 #include "Gameplay\Common\Blackboard.h"
 
 //コンストラクタ
-RepulsiveMove::RepulsiveMove(uint32_t power_k, uint32_t radius_k)
+RepulsiveMove::RepulsiveMove()
 {
-    repulsion_power_key = power_k;
-    effect_radius_key = radius_k;
 }
 
 //更新処理
 DirectX::XMFLOAT3 RepulsiveMove::Update(
     const DirectX::XMFLOAT3& current_pos,
     const DirectX::XMFLOAT3& target_pos,
-    const StateBlackboard* blackboard)
+    const Blackboard* blackboard)
 {
     if (!blackboard)
     {
@@ -21,10 +19,10 @@ DirectX::XMFLOAT3 RepulsiveMove::Update(
     }
 
     //パラメータ取得
-    float power = std::get<float>(blackboard->GetAttributeValue(repulsion_power_key));
-    float radius = std::get<float>(blackboard->GetAttributeValue(effect_radius_key));
+    //float power = std::get<float>(blackboard->GetAttributeValue(repulsion_power_key));
+    //float radius = std::get<float>(blackboard->GetAttributeValue(effect_radius_key));
 
-    return UpdateRepulsion(current_pos, target_pos, power, radius);
+    return { 0.0f,0.0f,0.0f };//UpdateRepulsion(current_pos, target_pos, power, radius);
 }
 
 //斥力更新処理

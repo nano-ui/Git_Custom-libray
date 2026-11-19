@@ -1,5 +1,5 @@
 #include "StateGraphSimulator.h"
-#include "TransitionCondition.h"
+#include "Gameplay\StateMachine\TransitionCondition.h"
 #include "Engine\Core\Input.h"
 #include "Engine\Core\Log\Log.h"
 #include "Gameplay\Common\Blackboard.h"

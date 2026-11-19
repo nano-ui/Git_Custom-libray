@@ -20,7 +20,7 @@ Character::Character()
 	, attack_power(10.0f)
 	, invincible_timer(1.0f)
 {
-	blackboard = std::make_unique<StateBlackboard>();
+	blackboard = std::make_unique<Blackboard>();
 	state_machine_component = std::make_unique<StateMachineComponent>();
 	root_motion_component = std::make_unique<RootMotionComponent>();
 }
@@ -125,14 +125,6 @@ void Character::Update(float elapsed_time)
 
 	// GameObject::Update で MovementComponent などの全コンポーネントが更新される
 	GameObject::Update(elapsed_time);
-
-	float current_move_speed = movement_component ? movement_component->GetMoveSpeed() : 0.0f;
-	bool current_is_ground = movement_component ? movement_component->IsGround() : false;
-
-	// ブラックボードへ最新情報を同期
-	blackboard->SetValue(u8"体力", health);
-	blackboard->SetValue(u8"接地フラグ", current_is_ground);
-	blackboard->SetValue("move_speed", current_move_speed);
 
 	bool is_anim_finished = sequencer_component ? sequencer_component->IsAnimationFinished() : false;
 
@@ -302,6 +294,7 @@ void Character::SetupInspector()
 
 	if (inspector)
 	{
+		inspector->RegisterText(u8"ステートツリーエディタパス", &state_machine_component->GetStateMachinePath());
 		inspector->RegisterVariable(u8"体力", &health, u8"基本ステータス");
 		inspector->RegisterVariable(u8"攻撃力", &attack_power, u8"基本ステータス");
 		inspector->RegisterText(u8"無敵時間タイマー", &invincible_timer, u8"ステータスモニター");
@@ -380,9 +373,9 @@ void Character::SetupBlackboard()
 {
 	BS_PROFILE_FUNCTION();
 
-	blackboard->RegisterVariable(u8"体力");
-	blackboard->RegisterVariable(u8"接地フラグ");
-	blackboard->RegisterVariable(u8"move_speed");
+	blackboard->BindVariable(u8"体力", [this]() {return health; });
+	blackboard->BindVariable(u8"接地フラグ", [this]() {return movement_component->IsGround(); });
+	blackboard->BindVariable(u8"移動速度", [this]() {return movement_component->GetMoveSpeed(); });
 
 	SyncBlackboard();
 }

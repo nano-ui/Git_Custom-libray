@@ -7,14 +7,14 @@ class Blackboard;
 struct GraphData;
 
 //ステートマシンのブラックボード変数を監視・編集するインスペクターウィンドウ
-class StateBlackboardInspectorWindow
+class BlackboardInspectorWindow
 {
 public:
 	//コンストラクタ
-	StateBlackboardInspectorWindow() = default;
+	BlackboardInspectorWindow() = default;
 
 	//デストラクタ
-	~StateBlackboardInspectorWindow() = default;
+	~BlackboardInspectorWindow() = default;
 
 	//グラフ内の遷移条件変数がブラックボードに登録済みか検証
 	void SyncBlackboardVariablesFromGraph(const GraphData* current_graph, Blackboard* blackboard);

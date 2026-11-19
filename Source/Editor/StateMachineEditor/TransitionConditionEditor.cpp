@@ -8,6 +8,7 @@
 
 #include <imgui.h>
 #include <cstdio>
+#include <Windows.h>
 #include <winuser.h>
 
 //コンストラクタ

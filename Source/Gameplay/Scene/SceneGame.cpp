@@ -124,11 +124,6 @@ void SceneGame::Update(float elapsed_time)
 #endif
 	camera_controller->Update(elapsed_time);
 	if (editor_manager)editor_manager->Update(elapsed_time);
-	if (editor_manager && !editor_manager->IsGameViewportActive())
-	{
-		editor_manager->RenderGui();
-		return;
-	}
 	if (Input::Instance().IsKeyTrigger(key_pause))
 	{
 		bool next_pause_state = !SceneManager::Instance().IsPaused();
@@ -168,15 +163,22 @@ void SceneGame::Render(float elapsed_time)
 {
 	BS_PROFILE_FUNCTION();
 
+	//描画に必要なコンテキストとリソースの取得およびF1キーによるエディタ表示切り替え
 	Camera* current_camera = camera_controller ? camera_controller->GetCamera().get() : nullptr;
 	ID3D11DeviceContext* context = Graphics::Instance().GetContext();
 	auto states = Graphics::Instance().GetPipelineStates();
 	framebuffer* shadow_fb = Graphics::Instance().GetShadowFramebuffer();
 
-	// エディタ画面（レベル以外）がアクティブな場合の描画処理
-	if (editor_manager && !editor_manager->IsGameViewportActive())
+#ifdef USE_IMGUI
+	if (Input::Instance().IsKeyTrigger(VK_F1))
 	{
-		// カメラとライトの定数バッファを更新してプレビューモデルを正しく描画できるようにする
+		is_editor = !is_editor;
+	}
+#endif
+
+	//エディタ表示中かつレベル以外のタブがアクティブな場合のプレビュー・UI描画
+	if (!is_editor && editor_manager && !editor_manager->IsGameViewportActive())
+	{
 		if (current_camera && light)
 		{
 			scene_constants constants{};
@@ -189,24 +191,24 @@ void SceneGame::Render(float elapsed_time)
 		}
 		else
 		{
-			// 意図しない挙動（カメラまたはライトが nullptr）が発生した場合のデバッグ出力
 			OutputDebugStringA("[SceneGame エラー] エディタ描画時に current_camera または light が nullptr です。\n");
 		}
 
-		// プレビュー用フレームバッファへ描画
 		editor_manager->RenderPreviews(context);
 
-		// ImGui UI の描画を実行
+#ifdef USE_IMGUI
 		RenderGui();
+		editor_manager->RenderGui();
+		tactical_command->RenderGui();
+#endif
 		return;
 	}
 
-	// パス間で共有するライト空間変換行列の計算
+	//ライト空間変換行列の計算とシャドウマップの生成
 	DirectX::XMFLOAT4X4 light_view_projection_matrix{};
 	DirectX::XMFLOAT4 light_dir_vector{};
 
-	// ライトが有効か判定
-	if (light)
+	if (light && current_camera)
 	{
 		const float k_light_camera_distance = 100.0f;
 		const float k_light_near_clip = 0.1f;
@@ -231,7 +233,6 @@ void SceneGame::Render(float elapsed_time)
 		DirectX::XMStoreFloat4x4(&light_view_projection_matrix, light_view * light_projection);
 	}
 
-	// パイプラインのハザードを解消するためのテクスチャ解除処理
 	if (shadow_fb)
 	{
 		ID3D11ShaderResourceView* null_srv_list[] = { nullptr };
@@ -239,7 +240,6 @@ void SceneGame::Render(float elapsed_time)
 		context->PSSetShaderResources(k_shader_shadow_srv_slot, 1, null_srv_list);
 	}
 
-	// シャドウマップ（深度バッファ）生成パス
 	if (shadow_fb && current_camera && light && object_manager)
 	{
 		shadow_fb->clear(context, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f);
@@ -264,8 +264,13 @@ void SceneGame::Render(float elapsed_time)
 		shadow_fb->deactivate(context);
 	}
 
-	if(!is_editor)editor_manager->BeginSceneRender(context);
+	//エディタ表示時はシーンプレビュー用バッファへ描画先を切り替え
+	if (!is_editor && editor_manager)
+	{
+		editor_manager->BeginSceneRender(context);
+	}
 
+	//描画ステート・定数バッファの設定および3Dオブジェクト・スカイボックスの描画
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(1).Get(), 1);
 	context->RSSetState(states->GetRasterizerState(0).Get());
 
@@ -288,15 +293,13 @@ void SceneGame::Render(float elapsed_time)
 	}
 
 	scene_constants constants{};
-
-	// カメラとライトが有効か判定
 	if (current_camera && light)
 	{
 		constants.view_projection = current_camera->GetViewProjectionMatrix();
 		constants.light_direction = light->GetDirection();
 		constants.camera_position = current_camera->GetPosition();
-		constants.light_color = { 1.0f,1.0f,1.0f,1.0f };
-		constants.ambient_color = { 1.0f,1.0f,1.0f,1.0f };
+		constants.light_color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		constants.ambient_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		constants.light_view_projection = light_view_projection_matrix;
 		Graphics::Instance().UpdateSceneConstantBuffer(constants);
 	}
@@ -337,15 +340,19 @@ void SceneGame::Render(float elapsed_time)
 	{
 		skybox->Render(context);
 	}
-	if (!is_editor)editor_manager->EndSceneRender(context);
+
+	//オフスクリーン描画の解除およびImGuiの描画実行
+	if (!is_editor && editor_manager)
+	{
+		editor_manager->EndSceneRender(context);
+	}
+
 #ifdef USE_IMGUI
 	RenderGui();
-	if (Input::Instance().IsKeyTrigger(VK_F1))
+	if (!is_editor && editor_manager)
 	{
-		if (is_editor)is_editor = false;
-		else is_editor = true;
+		editor_manager->RenderGui();
 	}
-	if(!is_editor)editor_manager->RenderGui();
 	tactical_command->RenderGui();
 #endif
 }
@@ -353,11 +360,9 @@ void SceneGame::Render(float elapsed_time)
 //ImGuiデバッグ描画
 void SceneGame::RenderGui()
 {
-//#ifdef USE_IMGUI
-	if (object_manager)
+	//ゲームオブジェクトのデバッグ描画を実行
+	if (object_manager && shape_renderer)
 	{
-		//object_manager->RenderGui();
 		object_manager->RenderDebug(shape_renderer.get());
 	}
-//#endif // USE_IMGUI
 }

@@ -8,14 +8,14 @@
 #include <unordered_map>
 
 class StateMachine;
-class StateBlackboard;
+class Blackboard;
 class StateGraphDataManager;
 class StateGraphPaletteWindow;
 class StateGraphPropertyWindow;
 class StateGraphConfigManager;
 class StateMachineComponent;
 class AssetLoader;
-class StateBlackboardInspectorWindow;
+class BlackboardInspectorWindow;
 class StateNodeRenderer;
 class StateLinkRenderer;
 class StateGraphNavigator;
@@ -41,7 +41,7 @@ public:
 	~StateMachineGraphEditor();
 
 	//エディタ描画
-	void DrawEditor(StateBlackboard* blackboard);
+	void DrawEditor(Blackboard* blackboard);
 
 	//ファイルパスのグラフ情報をリロード
 	bool LoadGraphFromFile(const std::string& file_path);
@@ -54,7 +54,7 @@ private:
 	void UpdateRuntimeTracking();
 
 	//擬似シミュレーション更新
-	void UpdateSimulationMode(StateBlackboard* blackboard, GraphData* current_graph, uint32_t& current_active_node_id);
+	void UpdateSimulationMode(Blackboard* blackboard, GraphData* current_graph, uint32_t& current_active_node_id);
 
 	//アクティブノードのアニメーション同期
 	void SyncActiveNodeAnimation(GraphData* current_graph, uint32_t active_node_id); 
@@ -66,7 +66,7 @@ private:
 	void DrawCenterCanvas(GraphData* current_graph, float width, float height);
 
 	//右プロパティウインドウ
-	void DrawRightSidebar(GraphData* current_graph, StateBlackboard* blackboard, float width, float height);
+	void DrawRightSidebar(GraphData* current_graph, Blackboard* blackboard, float width, float height);
 
 	//アニメーションマップを構築して送信
 	void TriggerHotReload();
@@ -96,8 +96,8 @@ private:
 	std::unique_ptr<ax::NodeEditor::EditorContext, EditorContexDeleter> editor_context;	//エディタのライフサイクルを管理
 	std::unique_ptr<StateGraphConfigManager> config_manager;
 	std::unique_ptr<AssetLoader> asset_loader;								//モデル読み込みクラス
-	std::unique_ptr<StateBlackboard> editor_dummy_blackboard;				//未選択時に使用するエディタ専用のダミーブラックボード
-	std::unique_ptr<StateBlackboardInspectorWindow> blackboard_inspector;	//シミュレーション用パラメータ表示ウィンドウ
+	std::unique_ptr<Blackboard> editor_dummy_blackboard;				//未選択時に使用するエディタ専用のダミーブラックボード
+	std::unique_ptr<BlackboardInspectorWindow> blackboard_inspector;	//シミュレーション用パラメータ表示ウィンドウ
 	std::unique_ptr<StateMachineComponent> state_machine_component;			//実機互換のシミュレーション実行コンポーネント
 	std::unique_ptr<BehaviorTreeSimulator> behavior_simulator;				//ビヘイビアツリーシミュレータ
 

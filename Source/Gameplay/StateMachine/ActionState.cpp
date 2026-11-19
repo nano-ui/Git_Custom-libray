@@ -1,6 +1,7 @@
 #include "ActionState.h"
 #include "Gameplay\Components\Movement\Move\MoveBase.h"
 #include "Gameplay\Components\Movement\Rotation\RotationBase.h"
+#include "Gameplay\Common\Blackboard.h"
 
 //コンストラクタ
 ActionState::ActionState(
@@ -14,18 +15,18 @@ ActionState::ActionState(
 	,move_component(std::move(move))
 	,rot_compinent(std::move(rot))
 {
-	speed_key = StateBlackboard::CalculateHash(speed_name);
-	my_pos_key = StateBlackboard::CalculateHash(my_pos_name);
-	target_pos_key = StateBlackboard::CalculateHash(target_pos_name);
+	speed_key = Blackboard::GetKeyId(speed_name);
+	my_pos_key = Blackboard::GetKeyId(my_pos_name);
+	target_pos_key = Blackboard::GetKeyId(target_pos_name);
 }
 
 //更新
-void ActionState::Update(float elapsed_time, StateBlackboard* blackboard)
+void ActionState::Update(float elapsed_time, Blackboard* blackboard)
 {
 	//パラメータ取得
-	float speed = std::get<float>(blackboard->GetAttributeValue(speed_key));
-	DirectX::XMFLOAT3 my_pos = std::get<DirectX::XMFLOAT3>(blackboard->GetAttributeValue(my_pos_key));
-	DirectX::XMFLOAT3 target_pos = std::get<DirectX::XMFLOAT3>(blackboard->GetAttributeValue(target_pos_key));
+	float speed = blackboard->GetValue(speed_key, speed);
+	DirectX::XMFLOAT3 my_pos = blackboard->GetValue(my_pos_key, my_pos);
+	DirectX::XMFLOAT3 target_pos = blackboard->GetValue(target_pos_key, target_pos);
 
 	if (move_component)
 	{

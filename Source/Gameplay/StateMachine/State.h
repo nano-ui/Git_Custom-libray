@@ -7,7 +7,7 @@
 #include "StateTransition.h"
 
 class State;
-class StateBlackboard;
+class Blackboard;
 
 class State
 {
@@ -22,7 +22,7 @@ public:
 	virtual void Enter() {}
 
 	//çXêV
-	virtual void Update(float elapsed_time, StateBlackboard* blackboard) = 0;
+	virtual void Update(float elapsed_time, Blackboard* blackboard) = 0;
 
 	//èIóπ
 	virtual void Exit() {}

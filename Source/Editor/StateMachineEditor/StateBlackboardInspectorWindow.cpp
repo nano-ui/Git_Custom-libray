@@ -9,7 +9,7 @@
 #include <cstdio>
 
 //グラフ内の遷移条件変数がブラックボードに登録済みか検証
-void StateBlackboardInspectorWindow::SyncBlackboardVariablesFromGraph(const GraphData* current_graph, Blackboard* blackboard)
+void BlackboardInspectorWindow::SyncBlackboardVariablesFromGraph(const GraphData* current_graph, Blackboard* blackboard)
 {
 	//ポインタの有効性チェックと登録済み変数リストの取得
 	if (!current_graph || !blackboard)
@@ -61,7 +61,7 @@ void StateBlackboardInspectorWindow::SyncBlackboardVariablesFromGraph(const Grap
 }
 
 //インスペクターウィンドウのImGui描画
-void StateBlackboardInspectorWindow::DrawInspector(Blackboard* blackboard)
+void BlackboardInspectorWindow::DrawInspector(Blackboard* blackboard)
 {
 	//ウィンドウサイズの初期設定と描画開始判定
 	constexpr float default_window_width = 300.0f;
@@ -105,7 +105,7 @@ void StateBlackboardInspectorWindow::DrawInspector(Blackboard* blackboard)
 }
 
 //変数の型に応じたImGui操作UIの描画
-void StateBlackboardInspectorWindow::DrawVariableControl(Blackboard* blackboard, const std::string& var_name)
+void BlackboardInspectorWindow::DrawVariableControl(Blackboard* blackboard, const std::string& var_name)
 {
 	constexpr float int_drag_speed = 1.0f;
 	constexpr float float_drag_speed = 0.1f;

@@ -204,7 +204,7 @@ void Allie::UpdateChase(float elapsed_time)
 std::string Allie::GetDefaultModelPath() const
 {
 	LOG_NORMAL({ u8"設定" }, u8"デフォルトパスが設定されました");
-	return "Data/Model/Character/StoneGolem/SKM_StoneGolem.gltf";
+	return "Data/Model/Character/Player/Greystone_WhiteTiger.gltf";
 }
 
 //接地時イベント
