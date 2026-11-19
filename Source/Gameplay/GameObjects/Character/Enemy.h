@@ -43,9 +43,6 @@ public:
 	// アニメーション終了イベント
 	void OnAnimationEnd(uint32_t state_key) override;
 
-	//ブラックボードに同期
-	void SyncBlackboard();
-
 	//ブラックボードに登録・初期化
 	void SetupBlackboard()override;
 
@@ -67,7 +64,7 @@ private:
 	void UpdateTargetFromHate();
 
 private:
-	bool is_play = true;	//playフラグ
+	bool is_play = true;										//playフラグ
 	std::weak_ptr<TransformComponent> target_transform;			//対象の座標
 	std::shared_ptr<VisionSensorComponent> vision_sensor;		//視界
 	std::shared_ptr<PerceptionComponent> perception;			//知覚管理
@@ -76,6 +73,4 @@ private:
 	std::unique_ptr<WanderMove> wander_move;					//徘徊移動
 	float chase_speed;											//移動速度
 	float stop_distance;										//停止距離
-	float radius = 3.0f;
-	float outer_diameter = 3.0f;
 };

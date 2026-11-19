@@ -9,6 +9,7 @@
 #include "Gameplay\Components\Sensor\VisionSensorComponent.h"
 #include "Gameplay\Components\Movement\Move\LinearMove.h"
 #include "Gameplay\Components\Movement\MovementComponent.h"
+#include "Gameplay\Common\Blackboard.h"
 #include "Engine\Core\Log\Log.h"
 
 static AutoRegister<Allie> auto_register_class("Allie");
@@ -104,17 +105,11 @@ void Allie::SetupComponent()
 	target_selector->SetHateComponent(SquadManager::Instance().GetAlliesHate());
 }
 
-//ブラックボードに同期
-void Allie::SyncBlackboard()
-{
-	Character::SyncBlackboard();
-}
 
 //ブラックボードに登録・初期化
 void Allie::SetupBlackboard()
 {
 	Character::SetupBlackboard();
-
 }
 
 //アニメーション終了イベント
@@ -156,14 +151,14 @@ void Allie::MoveTarget(float elapsed_time)
 void Allie::UpdateChase(float elapsed_time)
 {
 	constexpr float EPSILON_DISTANCE_SQ = 0.0001f;
-	auto target = target_selector->GetTransformComponent();
+	target_transform = target_selector->GetTransformComponent();
 	DirectX::XMFLOAT3 move_velocity = { 0.0f,0.0f,0.0f };
-	if (!target)return;
+	if (!target_transform.lock())return;
 	else
 	{
 		//座標の取得
 		DirectX::XMFLOAT3 current_pos = transform_component->GetPosition();
-		DirectX::XMFLOAT3 target_pos = target->GetPosition();
+		DirectX::XMFLOAT3 target_pos = target_transform.lock()->GetPosition();
 		target_pos.y = current_pos.y;
 
 		//距離を算出

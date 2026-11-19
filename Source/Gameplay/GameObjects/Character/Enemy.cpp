@@ -12,6 +12,7 @@
 #include "Gameplay\Components\AI\TargetSelectorComponent.h"
 #include "Gameplay\Components\Tactics\SquadManager.h"
 #include "Gameplay\Components\AI\HateComponent.h"
+#include "Gameplay\Common\Blackboard.h"
 
 #include "Gameplay\GameObjects\GameObjectTag.h"
 
@@ -19,6 +20,7 @@
 #include "Engine\Core\Log\Log.h"
 
 #include <Windows.h>
+#include <cfloat>
 #include <Engine\Core\MacroTracy.h>
 
 static AutoRegister<Enemy> auto_register_enemy("Enemy");
@@ -78,7 +80,6 @@ void Enemy::RenderDebug(ShapeRenderer* renderer)
 	vision_sensor->RenderDebug(renderer);
 	DirectX::XMFLOAT3 position = transform_component->GetPosition();
 	position.y += 0.3f;
-	renderer->DrawRing(position, radius,outer_diameter, transform_component->GetQuaternion(), { 0.2f,0.8f,0.5f,1.0f }, ShapeDrawMode::Solid);
 }
 
 //シリアライズ登録
@@ -104,8 +105,6 @@ void Enemy::SetupInspector()
 	inspector->RegisterVariable(u8"開始", &is_play);
 	inspector->RegisterVariable(u8"速度", &chase_speed);
 	inspector->RegisterVariable(u8"停止距離", &stop_distance);
-	inspector->RegisterVariable(u8"ドーナツ半径", &radius);
-	inspector->RegisterVariable(u8"ドーナツ半径2", &outer_diameter);
 }
 
 // アニメーション終了イベント
@@ -114,18 +113,16 @@ void Enemy::OnAnimationEnd(uint32_t state_key)
 
 }
 
-//ブラックボードに同期
-void Enemy::SyncBlackboard()
-{
-	Character::SyncBlackboard();
-
-}
-
 //ブラックボードに登録・初期化
 void Enemy::SetupBlackboard()
 {
 	Character::SetupBlackboard();
-
+	blackboard->BindVariable(u8"対象との座標", [this]()
+		{
+			static constexpr DirectX::XMFLOAT3 dummy_pos = { FLT_MAX,FLT_MAX,FLT_MAX };
+			std::shared_ptr<TransformComponent>transform = target_selector->GetTransformComponent();
+			return (transform) ? transform->GetPosition() : dummy_pos;
+		});
 }
 
 //対象を設定

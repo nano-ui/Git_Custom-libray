@@ -23,6 +23,8 @@ Character::Character()
 	blackboard = std::make_unique<Blackboard>();
 	state_machine_component = std::make_unique<StateMachineComponent>();
 	root_motion_component = std::make_unique<RootMotionComponent>();
+	inner_radius = 0.0f;
+	outer_radius = 0.0f;
 }
 
 //デストラクタ
@@ -266,6 +268,10 @@ void Character::RenderDebug(ShapeRenderer* renderer)
 	{
 		attachment_collider_component->RenderDebug(renderer);
 	}
+	DirectX::XMFLOAT4 ring_color = { 0.2f,0.7f,0.1f,1.0f };
+	DirectX::XMFLOAT3 pos = transform_component->GetPosition();
+	pos.y += 0.3f;
+	renderer->DrawRing(pos, inner_radius, outer_radius, transform_component->GetQuaternion(), ring_color, ShapeDrawMode::Solid);
 }
 
 //シリアライザに登録
@@ -279,6 +285,8 @@ void Character::SetupSerialization()
 	{
 		serializer->RegisterVariable(u8"体力", &health, SerializeTarget::Detail);
 		serializer->RegisterVariable(u8"攻撃力", &attack_power, SerializeTarget::Detail);
+		serializer->RegisterVariable(u8"内径", &inner_radius, SerializeTarget::Detail);
+		serializer->RegisterVariable(u8"外径", &outer_radius, SerializeTarget::Detail);
 	}
 	else
 	{
@@ -297,6 +305,8 @@ void Character::SetupInspector()
 		inspector->RegisterText(u8"ステートツリーエディタパス", &state_machine_component->GetStateMachinePath());
 		inspector->RegisterVariable(u8"体力", &health, u8"基本ステータス");
 		inspector->RegisterVariable(u8"攻撃力", &attack_power, u8"基本ステータス");
+		inspector->RegisterVariable(u8"内径", &inner_radius, u8"リングデバッグ");
+		inspector->RegisterVariable(u8"外径", &outer_radius, u8"リングデバッグ");
 		inspector->RegisterText(u8"無敵時間タイマー", &invincible_timer, u8"ステータスモニター");
 		inspector->RegisterText(u8"現在のアニメーション", &current_animation_name, u8"アニメーションモニター");
 		inspector->RegisterText(u8"アニメーション再生時間", &current_animation_time, u8"アニメーションモニター");
@@ -355,29 +365,15 @@ bool Character::ApplyDamage(float damage, float invincible_time, uint32_t attack
 	return true;
 }
 
-//ブラックボードに同期
-void Character::SyncBlackboard()
-{
-	BS_PROFILE_FUNCTION();
-
-	float current_move_speed = movement_component ? movement_component->GetMoveSpeed() : 0.0f;
-	bool current_is_ground = movement_component ? movement_component->IsGround() : false;
-
-	blackboard->SetValue(u8"体力", health);
-	blackboard->SetValue(u8"接地フラグ", current_is_ground);
-	blackboard->SetValue(u8"move_speed", current_move_speed);
-}
-
 //ブラックボードに登録・初期化
 void Character::SetupBlackboard()
 {
 	BS_PROFILE_FUNCTION();
 
 	blackboard->BindVariable(u8"体力", [this]() {return health; });
+	blackboard->BindVariable(u8"座標", [this]() {return transform_component->GetPosition(); });
 	blackboard->BindVariable(u8"接地フラグ", [this]() {return movement_component->IsGround(); });
 	blackboard->BindVariable(u8"移動速度", [this]() {return movement_component->GetMoveSpeed(); });
-
-	SyncBlackboard();
 }
 
 //移動方向の設定
@@ -475,6 +471,7 @@ void Character::UpdateColliderSequencer()
 	const auto* sequence_data = sequencer_component->GetCurrentSequenceData();
 	if (!sequence_data || sequence_data->collider_tracks.empty())
 	{
+		LOG_WARNING({ u8"取得" }, u8"シーケンサ情報が取得できませんでした(パス:%s)", sequencer_component->GetSequenceFilePath().c_str());
 		return;
 	}
 

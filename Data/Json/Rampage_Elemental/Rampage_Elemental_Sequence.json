@@ -4,9 +4,9 @@
             "animation_duration": 1.0,
             "collider_tracks": [
                 {
-                    "collider_name": "攻撃判定右腕",
-                    "end_time": 0.30000001192092896,
-                    "start_time": 0.15000000596046448
+                    "collider_name": "攻撃判定_右腕",
+                    "end_time": 0.5,
+                    "start_time": 0.30000001192092896
                 }
             ],
             "effective_duration": 1.0,
@@ -26,7 +26,7 @@
             "collider_tracks": [
                 {
                     "collider_name": "攻撃判定_左腕",
-                    "end_time": 0.6000000238418579,
+                    "end_time": 0.5,
                     "start_time": 0.30000001192092896
                 }
             ],
@@ -47,8 +47,8 @@
             "collider_tracks": [
                 {
                     "collider_name": "攻撃判定_右腕",
-                    "end_time": 0.550000011920929,
-                    "start_time": 0.25
+                    "end_time": 0.5,
+                    "start_time": 0.30000001192092896
                 }
             ],
             "effective_duration": 1.0,
@@ -110,7 +110,7 @@
                 {
                     "collider_name": "攻撃判定_左腕",
                     "end_time": 0.5,
-                    "start_time": 0.25
+                    "start_time": 0.33000001311302185
                 }
             ],
             "effective_duration": 0.966666579246521,
@@ -130,8 +130,8 @@
             "collider_tracks": [
                 {
                     "collider_name": "攻撃判定_右腕",
-                    "end_time": 0.4000000059604645,
-                    "start_time": 0.10000000149011612
+                    "end_time": 0.44999998807907104,
+                    "start_time": 0.30000001192092896
                 }
             ],
             "effective_duration": 0.966666579246521,
@@ -151,8 +151,8 @@
             "collider_tracks": [
                 {
                     "collider_name": "攻撃判定_右腕",
-                    "end_time": 0.4000000059604645,
-                    "start_time": 0.10000000149011612
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
                 }
             ],
             "effective_duration": 0.966666579246521,
@@ -171,12 +171,12 @@
             "animation_duration": 1.1666666269302368,
             "collider_tracks": [
                 {
-                    "collider_name": "攻撃判定右腕",
+                    "collider_name": "攻撃判定_右腕",
                     "end_time": 0.30000001192092896,
                     "start_time": 0.15000000596046448
                 },
                 {
-                    "collider_name": "攻撃判定左腕",
+                    "collider_name": "攻撃判定_左腕",
                     "end_time": 0.550000011920929,
                     "start_time": 0.4000000059604645
                 }
@@ -195,7 +195,18 @@
         },
         "Attack_RipNToss_Rip": {
             "animation_duration": 1.1333332061767578,
-            "collider_tracks": [],
+            "collider_tracks": [
+                {
+                    "collider_name": "攻撃判定_右腕",
+                    "end_time": 0.30000001192092896,
+                    "start_time": 0.15000000596046448
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.550000011920929,
+                    "start_time": 0.4000000059604645
+                }
+            ],
             "effective_duration": 1.1333332061767578,
             "keyframes": [
                 {
@@ -210,7 +221,18 @@
         },
         "Attack_RipNToss_Toss": {
             "animation_duration": 0.8666666746139526,
-            "collider_tracks": [],
+            "collider_tracks": [
+                {
+                    "collider_name": "攻撃判定_右腕",
+                    "end_time": 0.30000001192092896,
+                    "start_time": 0.15000000596046448
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.550000011920929,
+                    "start_time": 0.4000000059604645
+                }
+            ],
             "effective_duration": 0.8666666746139526,
             "keyframes": [
                 {
@@ -226,6 +248,11 @@
         "Attack_SelectScreenSkeleton_Sequence": {
             "animation_duration": 14.300000190734863,
             "collider_tracks": [
+                {
+                    "collider_name": "攻撃判定_右腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
                 {
                     "collider_name": "攻撃判定_右腕",
                     "end_time": 0.4000000059604645,

@@ -191,7 +191,7 @@ void AttachmentColliderComponent::SetColliderActive(const std::string& target_na
 
 	if (!is_found)
 	{
-		OutputDebugStringA("[AttachmentColliderComponent 警告] SetColliderActive: 指定されたコライダー名が見つかりません。\n");
+		LOG_WARNING({ u8"取得" }, u8"指定されたコライダー名が取得できませんでした(コライダー名:%s)", target_name.c_str());
 	}
 }
 

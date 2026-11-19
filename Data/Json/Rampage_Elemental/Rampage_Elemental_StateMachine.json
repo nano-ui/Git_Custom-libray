@@ -88,6 +88,111 @@
                     "EndPinID": 110,
                     "ID": 113,
                     "StartPinID": 106
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 5,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "",
+                            "Type": 0,
+                            "VariableName": "体力",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 110,
+                    "ID": 161,
+                    "StartPinID": 130
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 7.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "対象との座標",
+                            "Type": 2,
+                            "VariableName": "座標",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 129,
+                    "ID": 162,
+                    "StartPinID": 102
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "",
+                            "Type": 5,
+                            "VariableName": "",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 101,
+                    "ID": 163,
+                    "StartPinID": 130
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "",
+                            "Type": 5,
+                            "VariableName": "",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 105,
+                    "ID": 164,
+                    "StartPinID": 130
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 7.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "対象との座標",
+                            "Type": 2,
+                            "VariableName": "座標",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 129,
+                    "ID": 165,
+                    "StartPinID": 106
                 }
             ],
             "Nodes": [
@@ -130,7 +235,7 @@
                     "SubGraphID": 0
                 },
                 {
-                    "ActionCategory": 0,
+                    "ActionCategory": 1,
                     "AnimationName": "",
                     "BehaviorData": {
                         "ActionDuration": -1.0,
@@ -204,6 +309,44 @@
                     "PosX": 345.0,
                     "PosY": 172.0,
                     "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 128,
+                    "Input": [
+                        {
+                            "ID": 129,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": true,
+                    "LinkColorB": 0.29987627267837524,
+                    "LinkColorG": 0.29987627267837524,
+                    "LinkColorR": 0.7258687019348145,
+                    "Name": "攻撃",
+                    "Output": [
+                        {
+                            "ID": 130,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -152.00001525878906,
+                    "PosY": 66.18970489501953,
+                    "SubGraphID": 127
                 }
             ]
         },
@@ -398,8 +541,340 @@
                     "SubGraphID": 0
                 }
             ]
+        },
+        {
+            "GraphID": 127,
+            "GraphName": "攻撃",
+            "LayerType": 0,
+            "Links": [
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 144,
+                    "ID": 146,
+                    "StartPinID": 134
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 7.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "対象との座標",
+                            "Type": 2,
+                            "VariableName": "座標",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 133,
+                    "ID": 147,
+                    "StartPinID": 145
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 136,
+                    "ID": 148,
+                    "StartPinID": 134
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 7.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "対象との座標",
+                            "Type": 2,
+                            "VariableName": "座標",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 133,
+                    "ID": 149,
+                    "StartPinID": 137
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 144,
+                    "ID": 150,
+                    "StartPinID": 137
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 136,
+                    "ID": 151,
+                    "StartPinID": 145
+                }
+            ],
+            "Nodes": [
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 132,
+                    "Input": [
+                        {
+                            "ID": 133,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": true,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "近距離攻撃",
+                    "Output": [
+                        {
+                            "ID": 134,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -91.3333740234375,
+                    "PosY": -19.14361572265625,
+                    "SubGraphID": 131
+                },
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 135,
+                    "Input": [
+                        {
+                            "ID": 136,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": true,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "中距離攻撃",
+                    "Output": [
+                        {
+                            "ID": 137,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 183.6666259765625,
+                    "PosY": 64.85638427734375,
+                    "SubGraphID": 141
+                },
+                {
+                    "ActionCategory": 3,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 143,
+                    "Input": [
+                        {
+                            "ID": 144,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": true,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "遠距離攻撃",
+                    "Output": [
+                        {
+                            "ID": 145,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": -198.3333740234375,
+                    "PosY": 97.85638427734375,
+                    "SubGraphID": 142
+                }
+            ]
+        },
+        {
+            "GraphID": 131,
+            "GraphName": "近距離攻撃",
+            "LayerType": 1,
+            "Links": [
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 155,
+                    "ID": 157,
+                    "StartPinID": 153
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 159,
+                    "ID": 160,
+                    "StartPinID": 156
+                }
+            ],
+            "Nodes": [
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 152,
+                    "Input": [],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Root",
+                    "Output": [
+                        {
+                            "ID": 153,
+                            "Kind": 1,
+                            "Name": ""
+                        }
+                    ],
+                    "PosX": -189.0,
+                    "PosY": 81.25634765625,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 1,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 154,
+                    "Input": [
+                        {
+                            "ID": 155,
+                            "Kind": 0,
+                            "Name": ""
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Selector",
+                    "Output": [
+                        {
+                            "ID": 156,
+                            "Kind": 1,
+                            "Name": ""
+                        }
+                    ],
+                    "PosX": 65.0,
+                    "PosY": 57.25634765625,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "Attack_Melee_A",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 2,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.5,
+                        "CooldownTime": 2.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 158,
+                    "Input": [
+                        {
+                            "ID": 159,
+                            "Kind": 0,
+                            "Name": ""
+                        }
+                    ],
+                    "IsLoop": false,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Action",
+                    "Output": [],
+                    "PosX": 269.0,
+                    "PosY": -5.74365234375,
+                    "SubGraphID": 0
+                }
+            ]
+        },
+        {
+            "GraphID": 141,
+            "GraphName": "中距離攻撃",
+            "LayerType": 0,
+            "Links": [],
+            "Nodes": []
+        },
+        {
+            "GraphID": 142,
+            "GraphName": "遠距離攻撃",
+            "LayerType": 0,
+            "Links": [],
+            "Nodes": []
         }
     ],
-    "NextID": 127,
+    "NextID": 166,
     "TargetModelPath": ""
 }

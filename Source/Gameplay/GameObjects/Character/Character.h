@@ -50,9 +50,6 @@ public:
 	//ダメージ処理
 	bool ApplyDamage(float damage, float invincible_time, uint32_t attacker_id);
 
-	//ブラックボードに同期
-	virtual void SyncBlackboard();
-
 	//ブラックボードを取得
 	Blackboard* GetBlackboard()const { return blackboard.get(); }
 
@@ -116,5 +113,7 @@ protected:
 	float attack_power;			//攻撃力
 	float health;				//生命力
 	float belnd_time = 0.2f;
+	float inner_radius;			//内径
+	float outer_radius;			//外径
 };
 
