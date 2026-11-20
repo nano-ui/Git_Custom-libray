@@ -561,6 +561,9 @@
     <ClCompile Include="Source\Gameplay\StateMachine\TransitionCondition.cpp">
       <Filter>Source\Gameplay\StateMachine\TransitionCondition</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Scene\SceneLoading.cpp">
+      <Filter>Source\Gameplay\Scene\SceneLoading</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -833,9 +836,6 @@
     <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelAnimation.h">
       <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\GltfModelAnimation</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelData.h">
-      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\GltfModelData</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelRenderer.h">
       <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\GltfModelRenderer</Filter>
     </ClInclude>
@@ -1102,6 +1102,12 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Renderers\ShapeRenderer.h">
       <Filter>Source\Engine\Graphics\Renderers\ShapeRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Scene\SceneLoading.h">
+      <Filter>Source\Gameplay\Scene\SceneLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelData.h">
+      <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\GltfModelData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1790,6 +1796,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\StateMachine\TransitionCondition">
       <UniqueIdentifier>{03e3f130-90ec-4509-a43a-ced9776b598f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Scene\SceneLoading">
+      <UniqueIdentifier>{261af35c-cc28-4b00-92af-6706c3e99381}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

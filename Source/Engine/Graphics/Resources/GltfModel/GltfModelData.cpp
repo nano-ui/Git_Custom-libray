@@ -97,6 +97,7 @@ GltfModelData::GltfModelData(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 
 	BuildRenderCommandsCache();
 	BuildFlattenedNodesCache();
+	ComputeDefaultBoundingSphere();
 
 	if (device)
 	{
@@ -229,6 +230,7 @@ std::shared_ptr<GltfModelData> GltfModelData::Load(ID3D11Device* device, const s
 	if (GltfModelSerializer::Load(binary_filename, data))
 	{
 		data->BuildFlattenedNodesCache();
+		data->ComputeDefaultBoundingSphere();
 		data->CreateGpuResources(device);
 		return data;
 	}
@@ -1645,5 +1647,70 @@ void GltfModelData::BakeAnimationTextures(ID3D11Device* device)
 		sprintf_s(debug_msg, "[GltfModelData エラー] BakeAnimationTextures: CreateShaderResourceView に失敗しました。 HRESULT: 0x%08X\n", static_cast<unsigned int>(hr));
 		OutputDebugStringA(debug_msg);
 		return;
+	}
+}
+
+//全頂点からデフォルトのバウンディングスフィアを1回だけ算出
+void GltfModelData::ComputeDefaultBoundingSphere()
+{
+	BS_PROFILE_FUNCTION();
+
+	constexpr float default_sphere_radius = 1.0f;
+	default_bounding_sphere.center = { 0.0f, 0.0f, 0.0f };
+	default_bounding_sphere.radius = default_sphere_radius;
+
+	// 1. 全メッシュから頂点座標リストを取得
+	std::vector<DirectX::XMFLOAT3> vertices = GetVertices();
+	if (vertices.empty())
+	{
+		OutputDebugStringA("[GltfModelData 警告] ComputeDefaultBoundingSphere: 頂点配列が空のためデフォルト境界球を設定します。\n");
+		return;
+	}
+
+	// 2. 全頂点の最小座標と最大座標から中心点（AABBの中心）を算出
+	DirectX::XMFLOAT3 min_point = vertices.front();
+	DirectX::XMFLOAT3 max_point = vertices.front();
+
+	for (const auto& v : vertices)
+	{
+		min_point.x = (std::min)(min_point.x, v.x);
+		min_point.y = (std::min)(min_point.y, v.y);
+		min_point.z = (std::min)(min_point.z, v.z);
+
+		max_point.x = (std::max)(max_point.x, v.x);
+		max_point.y = (std::max)(max_point.y, v.y);
+		max_point.z = (std::max)(max_point.z, v.z);
+	}
+
+	constexpr float half_factor = 0.5f;
+	default_bounding_sphere.center = {
+		(min_point.x + max_point.x) * half_factor,
+		(min_point.y + max_point.y) * half_factor,
+		(min_point.z + max_point.z) * half_factor
+	};
+
+	// 3. 中心点から最も遠い頂点までの距離を半径として算出
+	DirectX::XMVECTOR center_vec = DirectX::XMLoadFloat3(&default_bounding_sphere.center);
+	float max_dist_sq = 0.0f;
+
+	for (const auto& v : vertices)
+	{
+		DirectX::XMVECTOR vert_vec = DirectX::XMLoadFloat3(&v);
+		DirectX::XMVECTOR diff = DirectX::XMVectorSubtract(vert_vec, center_vec);
+		float dist_sq = DirectX::XMVectorGetX(DirectX::XMVector3LengthSq(diff));
+
+		if (dist_sq > max_dist_sq)
+		{
+			max_dist_sq = dist_sq;
+		}
+	}
+
+	default_bounding_sphere.radius = std::sqrt(max_dist_sq);
+
+	constexpr float min_valid_radius = 0.001f;
+	if (default_bounding_sphere.radius < min_valid_radius)
+	{
+		OutputDebugStringA("[GltfModelData 警告] ComputeDefaultBoundingSphere: 算出された境界球半径が極小です。デフォルト半径を設定します。\n");
+		default_bounding_sphere.radius = default_sphere_radius;
 	}
 }

@@ -11,6 +11,8 @@
 #include <filesystem>
 #include <unordered_map>
 
+#include "Engine\Graphics\Device\Frustum.h"
+
 #define TINYGLTF_NO_EXTERNAL_IMAGE
 #define TINYGLTF_NO_STB_IMAGE
 #define TINYGLTF_NO_STB_IMAGE_WRITE
@@ -286,6 +288,9 @@ public:
 	//再生時刻とノードインデックスから、該当する事前計算済み行列を取得
 	bool GetBakedNodeTransform(size_t anim_index, float time, int node_index, DirectX::XMFLOAT4X4& out_transform) const;
 
+	//事前計算済みのデフォルトバウンディングスフィアを取得
+	const BoundingSphere& GetDefaultBoundingSphere() const { return default_bounding_sphere; }
+
 private:
 	DXGI_FORMAT ConvertFormat(const tinygltf::Accessor& accessor);
 	void FetchMeshes(const tinygltf::Model& gltf_model);
@@ -324,6 +329,9 @@ private:
 	//ロード時に全アニメーションのスキニング行列を事前計算し、GPUテクスチャを構築
 	void BakeAnimationTextures(ID3D11Device* device);
 
+	//全頂点からデフォルトのバウンディングスフィアを1回だけ算出
+	void ComputeDefaultBoundingSphere();
+
 public:
 	std::vector<std::vector<unsigned char>> raw_buffers;	//シリアライズ用の生データ保持配列
 	std::string filename;	//ファイルの名前
@@ -352,5 +360,6 @@ public:
 
 	std::unordered_map<std::string, size_t> animation_index_map;	//アニメーション名からインデックスを検索するためのマップ
 	std::vector<cached_command> cached_render_commands;	//マテリアル順にソート済みの事前構築描画コマンドキャッシュ配列
+	BoundingSphere default_bounding_sphere{};			//全頂点から事前計算されたデフォルトの境界球
 };
 

@@ -21,6 +21,7 @@ Camera::Camera()
 //デストラクタ
 Camera::~Camera()
 {
+
 }
 
 // 指定方向を向く

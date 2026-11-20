@@ -373,6 +373,7 @@
     <ClCompile Include="Source\Gameplay\GameObjects\Object\Stage.cpp" />
     <ClCompile Include="Source\Gameplay\Scene\Scene.cpp" />
     <ClCompile Include="Source\Gameplay\Scene\SceneGame.cpp" />
+    <ClCompile Include="Source\Gameplay\Scene\SceneLoading.cpp" />
     <ClCompile Include="Source\Gameplay\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Gameplay\Scene\SceneTitle.cpp" />
     <ClCompile Include="Source\Gameplay\StateMachine\ActionState.cpp" />
@@ -554,6 +555,7 @@
     <ClInclude Include="Source\Gameplay\GameObjects\Object\Stage.h" />
     <ClInclude Include="Source\Gameplay\Scene\Scene.h" />
     <ClInclude Include="Source\Gameplay\Scene\SceneGame.h" />
+    <ClInclude Include="Source\Gameplay\Scene\SceneLoading.h" />
     <ClInclude Include="Source\Gameplay\Scene\SceneManager.h" />
     <ClInclude Include="Source\Gameplay\Scene\SceneTitle.h" />
     <ClInclude Include="Source\Gameplay\StateMachine\ActionState.h" />

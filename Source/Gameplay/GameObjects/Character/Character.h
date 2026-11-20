@@ -112,6 +112,7 @@ protected:
 	float invincible_timer;		//経過無敵時間
 	float invinceble_time;		//設定無敵時間
 	float attack_power;			//攻撃力
+	bool is_damage;				//ダメージフラグ
 	float health;				//生命力
 	float weight;				//重さ
 	float belnd_time = 0.2f;

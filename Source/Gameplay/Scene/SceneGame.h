@@ -14,6 +14,7 @@ class SkyBox;
 class CollisionExperiment;
 class EditorManager;
 class TacticalCommandController;
+class GltfModelData;
 
 class SceneGame : public Scene
 {
@@ -23,6 +24,9 @@ public:
 
 	//デストラクタ
 	~SceneGame();
+
+	//非同期読み込み処理
+	void Load()override;
 
 	//初期化
 	void Initialize()override;

@@ -57,13 +57,6 @@ void ObjectEditor::Initialize()
 	current_selected_object = nullptr;
 	cached_class_names = ObjectFactory::GetClassNames();
 	EditorMediator::Instance().RegisterObjectEditor(this);
-
-	//‹N“®Žž‚ÌƒV[ƒ“•œŒ³ˆ—
-	std::string auto_load_path = scene_serializer->LoadEditorConfig();
-	if (!auto_load_path.empty() && std::filesystem::exists(auto_load_path))
-	{
-		scene_serializer->LoadScene(auto_load_path);
-	}
 }
 
 //•`‰æ

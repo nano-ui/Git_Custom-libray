@@ -3,6 +3,7 @@
 #include "SceneGame.h"
 #include "Engine\Graphics\Renderers\sprite_batch.h"
 #include "Engine\Graphics\Renderers\Graphics.h"
+#include "SceneLoading.h"
 #include "Engine\Core\misc.h"
 #include "Engine/Camera/StandCamera.h"
 #include <Engine\Core\MacroTracy.h>
@@ -58,8 +59,9 @@ void SceneTitle::Update(float elapsed_time)
 
 	if (GetAsyncKeyState('Z') & 0x8000)
 	{
-		std::unique_ptr<SceneGame> next_scene = std::make_unique<SceneGame>();
-		SceneManager::Instance().ChangeScene(std::move(next_scene));
+		std::unique_ptr<SceneGame> game_scene = std::make_unique<SceneGame>();
+		std::unique_ptr<SceneLoading> loading_scene = std::make_unique<SceneLoading>(std::move(game_scene));
+		SceneManager::Instance().ChangeScene(std::move(loading_scene));
 	}
 }
 
@@ -86,6 +88,16 @@ void SceneTitle::Render(float elapsed_time)
 		});
 
 	context->RSSetState(states->GetRasterizerState(0).Get());
+
+	// 現在のビューポート（ウィンドウ／フルスクリーン）サイズを取得して描画サイズに反映
+	D3D11_VIEWPORT viewport{};
+	UINT num_viewports = 1;
+	context->RSGetViewports(&num_viewports, &viewport);
+	if (viewport.Width > 0.0f && viewport.Height > 0.0f)
+	{
+		screen_size.x = viewport.Width;
+		screen_size.y = viewport.Height;
+	}
 
 	if (title_sprite)
 	{

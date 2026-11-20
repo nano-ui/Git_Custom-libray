@@ -76,9 +76,9 @@ void Enemy::Update(float elapsed_time)
 void Enemy::RenderDebug(ShapeRenderer* renderer)
 {
 	BS_PROFILE_FUNCTION();
-	Character::RenderDebug(renderer);
-	wander_move->RenderDebug(renderer);
-	vision_sensor->RenderDebug(renderer);
+	//Character::RenderDebug(renderer);
+	//wander_move->RenderDebug(renderer);
+	//vision_sensor->RenderDebug(renderer);
 	DirectX::XMFLOAT3 position = transform_component->GetPosition();
 	position.y += 0.3f;
 }

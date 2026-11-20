@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 class JsonSeializer;
 
@@ -12,6 +13,9 @@ public:
 
 	//シーン読み込み
 	bool LoadScene(const std::string& file_path);
+
+	//指定されたシーンJSONから使用されているモデルパス一覧を重複なしで抽出
+	std::vector<std::string> ExtractModelPaths(const std::string& file_path) const;
 
 	//設定ファイルへ保存
 	bool SaveEditorConfig(const std::string& last_scene_path);

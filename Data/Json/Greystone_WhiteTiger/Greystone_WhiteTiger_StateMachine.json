@@ -206,6 +206,116 @@
                     "EndPinID": 527,
                     "ID": 554,
                     "StartPinID": 540
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 1.0,
+                            "SecondaryVariableName": "",
+                            "Type": 0,
+                            "VariableName": "ダメージフラグ",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 527,
+                    "ID": 555,
+                    "StartPinID": 498
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 1.0,
+                            "SecondaryVariableName": "",
+                            "Type": 0,
+                            "VariableName": "ダメージフラグ",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 527,
+                    "ID": 556,
+                    "StartPinID": 502
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 1.0,
+                            "SecondaryVariableName": "",
+                            "Type": 0,
+                            "VariableName": "ダメージフラグ",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 527,
+                    "ID": 557,
+                    "StartPinID": 540
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 2,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "",
+                            "Type": 0,
+                            "VariableName": "体力",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "",
+                            "Type": 5,
+                            "VariableName": "",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "CompOp": 0,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "",
+                            "Type": 0,
+                            "VariableName": "ダメージフラグ",
+                            "VectorRefValue": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 497,
+                    "ID": 558,
+                    "StartPinID": 528
                 }
             ],
             "Nodes": [
@@ -308,9 +418,9 @@
                     "IsLoop": false,
                     "IsRootMotion": false,
                     "IsSubGraph": false,
-                    "LinkColorB": 1.0,
-                    "LinkColorG": 1.0,
-                    "LinkColorR": 1.0,
+                    "LinkColorB": 0.5135135054588318,
+                    "LinkColorG": 0.14077012240886688,
+                    "LinkColorR": 0.48904770612716675,
                     "Name": "死亡",
                     "Output": [
                         {
@@ -1478,6 +1588,6 @@
             ]
         }
     ],
-    "NextID": 555,
+    "NextID": 559,
     "TargetModelPath": "Data\\Model\\Character\\RPG-Character.glb"
 }

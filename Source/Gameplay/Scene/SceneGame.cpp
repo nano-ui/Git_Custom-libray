@@ -19,6 +19,10 @@
 #include "Gameplay\GameObjects\Character\Player.h"
 #include "Gameplay\GameObjects\Character\Enemy.h"
 #include "Gameplay\Components\Tactics\TacticalCommandController.h"
+#include "Engine\Graphics\Resources\ModelManager.h"
+#include "Serialization\SceneSerializer.h"
+
+#include <filesystem>
 #include <Engine\Core\MacroTracy.h>
 #include <Engine\Core\Input.h>
 
@@ -30,10 +34,40 @@ SceneGame::SceneGame()
 	,collision_manager(std::make_unique<CollisionManager>())
 {
 	ObjectManager::Instance().SetCollisionManager(collision_manager.get());
+	EditorMediator::Instance().RegisterCollisionManager(collision_manager.get());
+}
 
+//デストラクタ
+SceneGame::~SceneGame()
+{
+	collision_experiment.reset();
+}
+
+//非同期読み込み処理
+void SceneGame::Load()
+{
+	// 1. モデル描画用レンダラーの事前生成
+	ModelManager::Instance().GetRenderer();
+
+	// 2. エディタ設定から前回開いたシーンJSONを取得し、全オブジェクト・モデルを非同期構築
+	SceneSerializer serializer;
+	std::string auto_load_path = serializer.LoadEditorConfig();
+	if (!auto_load_path.empty() && std::filesystem::exists(auto_load_path))
+	{
+		if (!serializer.LoadScene(auto_load_path))
+		{
+			OutputDebugStringA("[SceneGame エラー] Load: シーンJSONからのオブジェクト読み込みに失敗しました。\n");
+		}
+	}
+	else
+	{
+		OutputDebugStringA("[SceneGame 情報] Load: 読み込み対象のシーンJSONが見つからないためスキップします。\n");
+	}
+
+	// 3. その他の重いリソース（SkyBox・各種マネージャー）の生成と読み込み
 	collision_experiment = std::make_unique<CollisionExperiment>(collision_manager.get());
 	camera_controller = std::make_unique<CameraController>();
-	light = std::make_unique <Light>();
+	light = std::make_unique<Light>();
 	skybox = std::make_unique<SkyBox>();
 	skybox->Initialize(
 		Graphics::Instance().GetDevice(),
@@ -44,14 +78,6 @@ SceneGame::SceneGame()
 	);
 	tactical_command = std::make_unique<TacticalCommandController>();
 	tactical_command->SetCollisionManager(collision_manager.get());
-
-	EditorMediator::Instance().RegisterCollisionManager(collision_manager.get());
-}
-
-//デストラクタ
-SceneGame::~SceneGame()
-{
-	collision_experiment.reset();
 }
 
 //初期化
@@ -113,6 +139,7 @@ void SceneGame::Finalize()
 	{
 		light.reset();
 	}
+	ModelManager::Instance().UnloadUnusedModels();
 }
 
 //更新処理

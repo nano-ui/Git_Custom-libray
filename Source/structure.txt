@@ -396,6 +396,8 @@ C:.
 Да   Да       Scene.h
 Да   Да       SceneGame.cpp
 Да   Да       SceneGame.h
+Да   Да       SceneLoading.cpp
+Да   Да       SceneLoading.h
 Да   Да       SceneManager.cpp
 Да   Да       SceneManager.h
 Да   Да       SceneTitle.cpp

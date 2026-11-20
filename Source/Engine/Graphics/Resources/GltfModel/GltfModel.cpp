@@ -363,66 +363,15 @@ void GltfModel::ComputeBoundingSphere()
 {
 	BS_PROFILE_FUNCTION();
 
-	constexpr float DEFAULT_SPHERE_RADIUS = 1.0f;
-	bounding_sphere.center = { 0.0f, 0.0f, 0.0f };
-	bounding_sphere.radius = DEFAULT_SPHERE_RADIUS;
-
 	if (!data)
 	{
-		OutputDebugStringA("[GltfModel 警告] ComputeBoundingSphere: data が nullptr のためデフォルトスフィアを設定します。\n");
+		constexpr float default_sphere_radius = 1.0f;
+		bounding_sphere.center = { 0.0f, 0.0f, 0.0f };
+		bounding_sphere.radius = default_sphere_radius;
+		OutputDebugStringA("[GltfModel 警告] ComputeBoundingSphere: data が nullptr のためデフォルト境界球を設定します。\n");
 		return;
 	}
 
-	std::vector<DirectX::XMFLOAT3> vertices = data->GetVertices();
-	if (vertices.empty())
-	{
-		OutputDebugStringA("[GltfModel 警告] ComputeBoundingSphere: 頂点配列が空のためデフォルトスフィアを設定します。\n");
-		return;
-	}
-
-	DirectX::XMFLOAT3 min_point = vertices.front();
-	DirectX::XMFLOAT3 max_point = vertices.front();
-
-	for (const auto& v : vertices)
-	{
-		min_point.x = (std::min)(min_point.x, v.x);
-		min_point.y = (std::min)(min_point.y, v.y);
-		min_point.z = (std::min)(min_point.z, v.z);
-
-		max_point.x = (std::max)(max_point.x, v.x);
-		max_point.y = (std::max)(max_point.y, v.y);
-		max_point.z = (std::max)(max_point.z, v.z);
-	}
-
-	constexpr float HALF_FACTOR = 0.5f;
-	bounding_sphere.center = {
-		(min_point.x + max_point.x) * HALF_FACTOR,
-		(min_point.y + max_point.y) * HALF_FACTOR,
-		(min_point.z + max_point.z) * HALF_FACTOR
-	};
-
-	DirectX::XMVECTOR center_vec = DirectX::XMLoadFloat3(&bounding_sphere.center);
-	float max_dist_sq = 0.0f;
-
-	for (const auto& v : vertices)
-	{
-		DirectX::XMVECTOR vert_vec = DirectX::XMLoadFloat3(&v);
-		DirectX::XMVECTOR diff = DirectX::XMVectorSubtract(vert_vec, center_vec);
-		DirectX::XMVECTOR length_sq = DirectX::XMVector3LengthSq(diff);
-		float dist_sq = DirectX::XMVectorGetX(length_sq);
-
-		if (dist_sq > max_dist_sq)
-		{
-			max_dist_sq = dist_sq;
-		}
-	}
-
-	bounding_sphere.radius = std::sqrt(max_dist_sq);
-
-	constexpr float MIN_VALID_RADIUS = 0.001f;
-	if (bounding_sphere.radius < MIN_VALID_RADIUS)
-	{
-		OutputDebugStringA("[GltfModel 警告] ComputeBoundingSphere: 算出されたスフィア半径が極小です。デフォルト半径を設定します。\n");
-		bounding_sphere.radius = DEFAULT_SPHERE_RADIUS;
-	}
+	// GltfModelData 側で事前計算済みの境界球をそのままコピーして再利用
+	bounding_sphere = data->GetDefaultBoundingSphere();
 }

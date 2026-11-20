@@ -28,6 +28,7 @@ Character::Character()
 	inner_radius = 0.0f;
 	outer_radius = 0.0f;
 	weight = 10.0f;
+	is_damage = false;
 }
 
 //デストラクタ
@@ -364,7 +365,11 @@ bool Character::ApplyDamage(float damage, float invincible_time, uint32_t attack
 	//ダメージの適用条件判定
 	if (damage <= 0)return false;
 	if (health <= 0)return false;
-	if (invincible_time > 0.0f)return false;
+	if (invincible_time > 0.0f)
+	{
+		is_damage = false;
+		return false;
+	}
 
 	//ダメージ適用とイベント実行
 	invincible_timer = invincible_time;
@@ -378,6 +383,7 @@ bool Character::ApplyDamage(float damage, float invincible_time, uint32_t attack
 		OnDamage(attacker_id, damage);
 	}
 
+	is_damage = true;
 	return true;
 }
 
@@ -390,6 +396,7 @@ void Character::SetupBlackboard()
 	blackboard->BindVariable(u8"座標", [this]() {return transform_component->GetPosition(); });
 	blackboard->BindVariable(u8"接地フラグ", [this]() {return movement_component->IsGround(); });
 	blackboard->BindVariable(u8"移動速度", [this]() {return movement_component->GetMoveSpeed(); });
+	blackboard->BindVariable(u8"ダメージフラグ", [this]() {return is_damage; });
 }
 
 //移動方向の設定

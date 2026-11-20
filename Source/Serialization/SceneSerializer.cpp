@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <memory>
+#include <unordered_set>
 
 const std::string SceneSerializer::editor_config_path = "Data/Json/System/EditorConfig.json";
 const std::string SceneSerializer::config_key_scene_path = "last_opened_scene";
@@ -104,6 +105,45 @@ bool SceneSerializer::LoadScene(const std::string& file_path)
 		}
 	}
 	return true;
+}
+
+//指定されたシーンJSONから使用されているモデルパス一覧を重複なしで抽出
+std::vector<std::string> SceneSerializer::ExtractModelPaths(const std::string& file_path) const
+{
+	std::vector<std::string> extracted_paths;
+
+	// 1. シーンJSONファイルの読み込み
+	nlohmann::json json_data;
+	if (!JsonFileUtility::Load(file_path, json_data))
+	{
+		LOG_WARNING({ u8"読み込み" }, u8"事前ロード用のシーンJSONが読み込めませんでした(ファイルパス:%s)", file_path.c_str());
+		return extracted_paths;
+	}
+
+	// 2. ルートキー(objects)の存在および配列形式のチェック
+	if (!json_data.contains(json_root_key_objects) || !json_data[json_root_key_objects].is_array())
+	{
+		LOG_WARNING({ u8"読み込み" }, u8"シーンJSON内に有効な 'objects' 配列が存在しません(ファイルパス:%s)", file_path.c_str());
+		return extracted_paths;
+	}
+
+	// 3. 全オブジェクト要素を走査し、重複を除いてモデルパスを収集
+	std::unordered_set<std::string> unique_paths;
+	const nlohmann::json& objects_array = json_data[json_root_key_objects];
+	for (size_t i = 0; i < objects_array.size(); ++i)
+	{
+		const nlohmann::json& object_node = objects_array[i];
+		std::string model_path = "";
+		if (JsonFileUtility::TryGetValue(object_node, u8"モデルパス", model_path))
+		{
+			if (!model_path.empty() && unique_paths.insert(model_path).second)
+			{
+				extracted_paths.push_back(model_path);
+			}
+		}
+	}
+
+	return extracted_paths;
 }
 
 //設定ファイルへ保存

@@ -68,8 +68,8 @@ void Allie::Render(ID3D11DeviceContext* context)
 //デバッグ描画
 void Allie::RenderDebug(ShapeRenderer* renderer)
 {
-	Character::RenderDebug(renderer);
-	vision_sensor->RenderDebug(renderer);
+	//Character::RenderDebug(renderer);
+	//vision_sensor->RenderDebug(renderer);
 
 }
 
