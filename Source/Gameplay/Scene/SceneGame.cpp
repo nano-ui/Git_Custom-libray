@@ -78,6 +78,10 @@ void SceneGame::Load()
 	);
 	tactical_command = std::make_unique<TacticalCommandController>();
 	tactical_command->SetCollisionManager(collision_manager.get());
+	ID3D11Device* device = Graphics::Instance().GetDevice();
+	shape_renderer = std::make_unique<ShapeRenderer>(device);
+	editor_manager = std::make_unique<EditorManager>();
+	editor_manager->Initialize();
 }
 
 //èâä˙âª
@@ -116,11 +120,6 @@ void SceneGame::Initialize()
 	{
 		light->SetDirection(init_light_dir);
 	}
-
-	ID3D11Device* device = Graphics::Instance().GetDevice();
-	shape_renderer = std::make_unique<ShapeRenderer>(device);
-	editor_manager = std::make_unique<EditorManager>();
-	editor_manager->Initialize();
 }
 
 //èIóπâª
