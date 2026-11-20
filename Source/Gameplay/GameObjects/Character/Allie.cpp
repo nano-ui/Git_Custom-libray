@@ -21,6 +21,7 @@ Allie::Allie()
 	SetClassName("Allie");
 	SetTag(GameObjectTag::Allies);
 	linear_move = std::make_unique<LinearMove>(DUMMY_BLACKBOARD_KEY);
+	weight = 10.0f;
 }
 
 //デストラクタ

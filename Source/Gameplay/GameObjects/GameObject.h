@@ -50,7 +50,7 @@ public:
 		std::shared_ptr<T> new_component = std::make_shared<T>(std::forward<Args>(args)...);
 		if (!new_component)
 		{
-			OutputDebugStringA("[GameObject エラー] AddComponent: コンポーネントの生成に失敗しました。\n");
+			LOG_ERROR({ u8"生成" }, u8"コンポーネントが生成できませんでした");
 			return nullptr;
 		}
 		components.push_back(new_component);
@@ -92,6 +92,7 @@ public:
 				return true;
 			}
 		}
+		LOG_ERROR({ u8"削除" }, u8"コンポーネントを削除できませんでした");
 		OutputDebugStringA("[GameObject 警告] RemoveComponent: 削除対象のコンポーネントが見つかりませんでした。\n");
 		return false;
 	}

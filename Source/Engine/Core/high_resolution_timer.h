@@ -54,6 +54,19 @@ public:
 		}
 	}
 
+	//呼び出し瞬間の経過時間を秒単位でリアルタイムに返す
+	double current_time_stamp() const
+	{
+		if (stopped)
+		{
+			return ((stop_time - paused_time) - base_time) * seconds_per_count;
+		}
+
+		LONGLONG now_time{ 0LL };
+		QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&now_time));
+		return ((now_time - paused_time) - base_time) * seconds_per_count;
+	}
+
 	float time_interval() const  // in seconds
 	{
 		return static_cast<float>(delta_time);

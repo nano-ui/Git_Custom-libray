@@ -40,6 +40,7 @@ Enemy::Enemy()
 	chase_speed = DEFAULT_CHASE_SPEED;
 	linear_move = std::make_unique<LinearMove>(DUMMY_BLACKBOARD_KEY);
 	wander_move = std::make_unique<WanderMove>();
+	weight = 100.0f;
 	Initialize();
 }
 

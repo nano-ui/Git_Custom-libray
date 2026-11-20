@@ -109,9 +109,11 @@ protected:
 	bool debug_root_motion_enabled = false;		//ルートモーションの有効状態監視用
 	DirectX::XMFLOAT3 debug_root_motion_delta = { 0.0f, 0.0f, 0.0f }; //ルートモーション移動差分監視用
 
-	float invincible_timer;		//無敵時間
+	float invincible_timer;		//経過無敵時間
+	float invinceble_time;		//設定無敵時間
 	float attack_power;			//攻撃力
 	float health;				//生命力
+	float weight;				//重さ
 	float belnd_time = 0.2f;
 	float inner_radius;			//内径
 	float outer_radius;			//外径

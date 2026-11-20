@@ -5,6 +5,7 @@
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Gameplay\Components\Model\ModelComponent.h"
 #include "Gameplay\Components\Movement\MovementComponent.h"
+#include "Gameplay\GameObjects\ObjectManager.h"
 #include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
 #include "Engine\Graphics\Resources\AnimationManager.h"
 
@@ -19,12 +20,14 @@ Character::Character()
 	: health(100.0f)
 	, attack_power(10.0f)
 	, invincible_timer(1.0f)
+	, invinceble_time(1.0f)
 {
 	blackboard = std::make_unique<Blackboard>();
 	state_machine_component = std::make_unique<StateMachineComponent>();
 	root_motion_component = std::make_unique<RootMotionComponent>();
 	inner_radius = 0.0f;
 	outer_radius = 0.0f;
+	weight = 10.0f;
 }
 
 //デストラクタ
@@ -91,6 +94,7 @@ void Character::Initialize()
 				{
 					capsule->listener = this;
 					capsule->owner_id = object_id;
+					capsule->weight = weight;
 					AddCollider(capsule.get());
 				}
 			}
@@ -242,8 +246,18 @@ void Character::OnCollisionHit(const CollisionResult& result)
 	{
 		if (result.hit_collider)
 		{
-			ApplyDamage(attack_power, invincible_timer, result.hit_collider->owner_id);
-			LOG_NORMAL({ "Character", "Combat" }, u8"攻撃判定がヒットしました。攻撃者ID: %u", result.hit_collider->owner_id);
+			GameObject* attack_obj = nullptr;
+			for (const auto& obj : ObjectManager::Instance().GetGameObjects())
+			{
+				if (!obj || !obj->IsActive())continue;
+				if (result.hit_collider->owner_id == obj->GetObjectId())
+				{
+					attack_obj = obj.get();
+				}
+			}
+			if (!attack_obj || this->GetTag() == attack_obj->GetTag())return;
+			ApplyDamage(attack_power, invinceble_time, result.hit_collider->owner_id);
+			LOG_NORMAL({ "Character", "Combat" }, u8"攻撃判定がヒットしました。(攻撃者: %s 被弾者: %s)", attack_obj->GetClassNameW().c_str(), GetClassNameW().c_str());
 		}
 		else
 		{
@@ -344,12 +358,13 @@ void Character::SetupComponent()
 bool Character::ApplyDamage(float damage, float invincible_time, uint32_t attacker_id)
 {
 	BS_PROFILE_FUNCTION();
+
 	LOG_NORMAL({ u8"攻撃" }, u8"攻撃が当たりました(ダメージ:%f)", damage);
 
 	//ダメージの適用条件判定
 	if (damage <= 0)return false;
 	if (health <= 0)return false;
-	if (invincible_timer > 0.0f)return false;
+	if (invincible_time > 0.0f)return false;
 
 	//ダメージ適用とイベント実行
 	invincible_timer = invincible_time;
@@ -416,6 +431,7 @@ void Character::UpdateInvincibleTimer(float elapsed_time)
 	{
 		invincible_timer -= elapsed_time;
 	}
+	invincible_timer = 0.0f;
 }
 
 //ルートモーション更新
@@ -472,7 +488,7 @@ void Character::UpdateColliderSequencer()
 	const auto* sequence_data = sequencer_component->GetCurrentSequenceData();
 	if (!sequence_data || sequence_data->collider_tracks.empty())
 	{
-		LOG_WARNING({ u8"取得" }, u8"シーケンサ情報が取得できませんでした(パス:%s)", sequencer_component->GetSequenceFilePath().c_str());
+		//LOG_WARNING({ u8"取得" }, u8"シーケンサ情報が取得できませんでした(パス:%s)", sequencer_component->GetSequenceFilePath().c_str());
 		return;
 	}
 
