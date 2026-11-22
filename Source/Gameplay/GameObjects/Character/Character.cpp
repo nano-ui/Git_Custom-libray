@@ -258,7 +258,7 @@ void Character::OnCollisionHit(const CollisionResult& result)
 			}
 			if (!attack_obj || this->GetTag() == attack_obj->GetTag())return;
 			ApplyDamage(attack_power, invinceble_time, result.hit_collider->owner_id);
-			LOG_NORMAL({ "Character", "Combat" }, u8"攻撃判定がヒットしました。(攻撃者: %s 被弾者: %s)", attack_obj->GetClassNameW().c_str(), GetClassNameW().c_str());
+			//LOG_NORMAL({ "Character", "Combat" }, u8"攻撃判定がヒットしました。(攻撃者: %s 被弾者: %s)", attack_obj->GetClassNameW().c_str(), GetClassNameW().c_str());
 		}
 		else
 		{
@@ -360,7 +360,7 @@ bool Character::ApplyDamage(float damage, float invincible_time, uint32_t attack
 {
 	BS_PROFILE_FUNCTION();
 
-	LOG_NORMAL({ u8"攻撃" }, u8"攻撃が当たりました(ダメージ:%f)", damage);
+	//LOG_NORMAL({ u8"攻撃" }, u8"攻撃が当たりました(ダメージ:%f)", damage);
 
 	//ダメージの適用条件判定
 	if (damage <= 0)return false;

@@ -69,12 +69,12 @@ void TacticalCommandController::Update(float elapsed_time)
 		current_formation->SetTargetPos(target_position);
 		std::vector<DirectX::XMFLOAT3> target_positions = current_formation->CalculatePositions(SquadManager::Instance().GetMenberCount());	
 		SquadManager::Instance().CommandFormation(target_positions);
-		LOG_SUCCESS({ u8"接触" }, u8"レイがヒットしました");
+		//LOG_SUCCESS({ u8"接触" }, u8"レイがヒットしました");
 		has_target = true;
 	}
 	else
 	{
-		LOG_ERROR({ u8"接触" }, u8"レイがヒットしませんでした");
+		//LOG_ERROR({ u8"接触" }, u8"レイがヒットしませんでした");
 		has_target = false;
 	}
 }

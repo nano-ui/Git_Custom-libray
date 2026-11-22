@@ -31,6 +31,8 @@ EditorManager::~EditorManager()
 //各種エディタの初期化
 void EditorManager::Initialize()
 {
+	BS_PROFILE_FUNCTION();
+
 	//各エディタインスタンスの生成
 	model_preview_window = std::make_unique<ModelPreviewWindow>();
 	model_preview_window->Initialize();

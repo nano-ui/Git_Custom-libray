@@ -564,6 +564,9 @@
     <ClCompile Include="Source\Gameplay\Scene\SceneLoading.cpp">
       <Filter>Source\Gameplay\Scene\SceneLoading</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\Log\FilteredLogList.cpp">
+      <Filter>Source\Editor\Log\FilteredLogList</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1108,6 +1111,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Resources\GltfModel\GltfModelData.h">
       <Filter>Source\Engine\Graphics\Resources\Model\GltfModel\GltfModelData</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Log\FilteredLogList.h">
+      <Filter>Source\Editor\Log\FilteredLogList</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1799,6 +1805,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Scene\SceneLoading">
       <UniqueIdentifier>{261af35c-cc28-4b00-92af-6706c3e99381}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Log\FilteredLogList">
+      <UniqueIdentifier>{ceb8e761-2598-4b41-b944-653238cd2a4e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

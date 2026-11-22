@@ -193,6 +193,20 @@
                     "EndPinID": 129,
                     "ID": 165,
                     "StartPinID": 106
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 172,
+                    "ID": 174,
+                    "StartPinID": 169
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 168,
+                    "ID": 175,
+                    "StartPinID": 173
                 }
             ],
             "Nodes": [
@@ -347,6 +361,82 @@
                     "PosX": -152.00001525878906,
                     "PosY": 66.18970489501953,
                     "SubGraphID": 127
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 167,
+                    "Input": [
+                        {
+                            "ID": 168,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "新規ステート",
+                    "Output": [
+                        {
+                            "ID": 169,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 775.3334350585938,
+                    "PosY": -52.66666793823242,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 171,
+                    "Input": [
+                        {
+                            "ID": 172,
+                            "Kind": 0,
+                            "Name": "入力"
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": true,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "新規サブグラフ",
+                    "Output": [
+                        {
+                            "ID": 173,
+                            "Kind": 1,
+                            "Name": "出力"
+                        }
+                    ],
+                    "PosX": 882.0001220703125,
+                    "PosY": 24.666667938232422,
+                    "SubGraphID": 170
                 }
             ]
         },
@@ -873,8 +963,172 @@
             "LayerType": 0,
             "Links": [],
             "Nodes": []
+        },
+        {
+            "GraphID": 170,
+            "GraphName": "新規サブグラフ",
+            "LayerType": 1,
+            "Links": [
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 179,
+                    "ID": 181,
+                    "StartPinID": 177
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 183,
+                    "ID": 184,
+                    "StartPinID": 180
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 186,
+                    "ID": 187,
+                    "StartPinID": 180
+                }
+            ],
+            "Nodes": [
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 176,
+                    "Input": [],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Root",
+                    "Output": [
+                        {
+                            "ID": 177,
+                            "Kind": 1,
+                            "Name": ""
+                        }
+                    ],
+                    "PosX": 351.33343505859375,
+                    "PosY": 46.0,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 1,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 178,
+                    "Input": [
+                        {
+                            "ID": 179,
+                            "Kind": 0,
+                            "Name": ""
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Selector",
+                    "Output": [
+                        {
+                            "ID": 180,
+                            "Kind": 1,
+                            "Name": ""
+                        }
+                    ],
+                    "PosX": 527.3334350585938,
+                    "PosY": 58.0,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 2,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 182,
+                    "Input": [
+                        {
+                            "ID": 183,
+                            "Kind": 0,
+                            "Name": ""
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Action",
+                    "Output": [],
+                    "PosX": 867.3333740234375,
+                    "PosY": -16.666667938232422,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 2,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 185,
+                    "Input": [
+                        {
+                            "ID": 186,
+                            "Kind": 0,
+                            "Name": ""
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Action",
+                    "Output": [],
+                    "PosX": 771.3333740234375,
+                    "PosY": 12.666666984558105,
+                    "SubGraphID": 0
+                }
+            ]
         }
     ],
-    "NextID": 167,
+    "NextID": 188,
     "TargetModelPath": ""
 }

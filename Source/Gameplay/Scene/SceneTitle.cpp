@@ -112,7 +112,7 @@ void SceneTitle::Render(float elapsed_time)
 		title_sprite->end(context);
 	}
 #ifdef USE_IMGUI
-	RenderGui();
+	//RenderGui();
 #endif // USE_IMGUI
 }
 

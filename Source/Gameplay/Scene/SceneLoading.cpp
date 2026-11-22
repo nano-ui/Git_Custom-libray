@@ -21,6 +21,8 @@ SceneLoading::SceneLoading(std::unique_ptr<Scene> next_scene)
 	, angle(0.0f)
 	, rotation_speed(default_rotation_speed)
 {
+	BS_PROFILE_FUNCTION();
+
 	// 画面右下に余白を持たせた初期位置を計算
 	icon_pos.x = logical_screen_width - icon_size.x - icon_margin;
 	icon_pos.y = logical_screen_height - icon_size.y - icon_margin;
@@ -34,6 +36,8 @@ SceneLoading::~SceneLoading()
 
 void SceneLoading::Initialize()
 {
+	BS_PROFILE_FUNCTION();
+
 	// 1. 描画用リソース（スプライトとカメラ）の初期化
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	loading_sprite = std::make_unique<sprite_batch>(device, loading_icon_path, 1);
@@ -65,6 +69,8 @@ void SceneLoading::Finalize()
 
 void SceneLoading::Update(float elapsed_time)
 {
+	BS_PROFILE_FUNCTION();
+
 	// 1. ImGuiの画面スケール補正とカメラ更新
 	Scene::ImGuiScaleCorrection();
 	if (camera)
@@ -148,7 +154,7 @@ void SceneLoading::Render(float elapsed_time)
 		loading_sprite->end(context);
 	}
 #ifdef USE_IMGUI
-	RenderGui();
+	//RenderGui();
 #endif
 }
 
@@ -177,6 +183,8 @@ void SceneLoading::RenderGui()
 
 void SceneLoading::LoadingThread()
 {
+	BS_PROFILE_FUNCTION();
+
 	// 1. スレッド固有のCOMライブラリ初期化
 	HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	if (FAILED(hr))
@@ -200,6 +208,8 @@ void SceneLoading::LoadingThread()
 
 void SceneLoading::JoinLoadingThread()
 {
+	BS_PROFILE_FUNCTION();
+
 	// 1. スレッドが存在し合流可能であれば完了まで待機
 	if (loading_thread)
 	{

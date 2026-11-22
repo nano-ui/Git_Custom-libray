@@ -46,10 +46,12 @@ SceneGame::~SceneGame()
 //非同期読み込み処理
 void SceneGame::Load()
 {
-	// 1. モデル描画用レンダラーの事前生成
+	BS_PROFILE_FUNCTION();
+
+	//モデル描画用レンダラーの事前生成
 	ModelManager::Instance().GetRenderer();
 
-	// 2. エディタ設定から前回開いたシーンJSONを取得し、全オブジェクト・モデルを非同期構築
+	//エディタ設定から前回開いたシーンJSONを取得し、全オブジェクト・モデルを非同期構築
 	SceneSerializer serializer;
 	std::string auto_load_path = serializer.LoadEditorConfig();
 	if (!auto_load_path.empty() && std::filesystem::exists(auto_load_path))
@@ -64,7 +66,7 @@ void SceneGame::Load()
 		OutputDebugStringA("[SceneGame 情報] Load: 読み込み対象のシーンJSONが見つからないためスキップします。\n");
 	}
 
-	// 3. その他の重いリソース（SkyBox・各種マネージャー）の生成と読み込み
+	//その他の重いリソース（SkyBox・各種マネージャー）の生成と読み込み
 	collision_experiment = std::make_unique<CollisionExperiment>(collision_manager.get());
 	camera_controller = std::make_unique<CameraController>();
 	light = std::make_unique<Light>();
@@ -87,6 +89,8 @@ void SceneGame::Load()
 //初期化
 void SceneGame::Initialize()
 {
+	BS_PROFILE_FUNCTION();
+
 	if (camera_controller)
 	{
 		camera_controller->Initialize();
