@@ -2,6 +2,7 @@
 #include "Gameplay\GameObjects\ObjectFactory.h"
 #include "Gameplay\GameObjects\GameObjectTag.h"
 #include "Gameplay\Components\Tactics\SquadManager.h"
+#include "Gameplay\Components\Tactics\TacticalTypes.h"
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Gameplay\Components\AI\HateComponent.h"
 #include "Gameplay\Components\AI\PerceptionComponent.h"
@@ -46,11 +47,34 @@ void Allie::Update(float elapsed_time)
 {
 	Character::Update(elapsed_time);
 	target_transform = target_selector->GetTransformComponent();
-	if (!target_transform.lock())
+	int int_action = static_cast<int>(TacticalAction::None);
+	int_action = blackboard->GetValue(current_tactical_action, int_action);
+	TacticalAction tactical_action = static_cast<TacticalAction>(int_action);
+	switch (tactical_action)
+	{
+	case TacticalAction::None:
+	{
+		has_target = false;
+		Character::Move(elapsed_time, 0.0f, 0.0f);
+		break;
+	}
+	case TacticalAction::Formation:
 	{
 		MoveTarget(elapsed_time);
+		break;
 	}
-	UpdateChase(elapsed_time);
+	case TacticalAction::TargetPoint:
+	{
+		MoveTarget(elapsed_time);
+		break;
+	}
+	case TacticalAction::Automous:
+	{
+		has_target = false;
+		UpdateChase(elapsed_time);
+		break;
+	}
+	}
 }
 
 //衝突処理
@@ -148,7 +172,7 @@ void Allie::MoveTarget(float elapsed_time)
 	if (distance_sq <= STOP_DISTANCE_SQ)
 	{
 		has_target = false;
-		LOG_NORMAL({ u8"移動" }, u8"目標地点に到達しました(X座標: %f2 Y座標: %f2 Z座標: %f2)", my_pos.x, my_pos.y, my_pos.z);
+		Character::Move(elapsed_time, 0.0f, 0.0f);
 		return;
 	}
 	Character::Move(elapsed_time, vector_x, vector_z);

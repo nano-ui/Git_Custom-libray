@@ -199,12 +199,12 @@ void SceneGame::Render(float elapsed_time)
 	auto states = Graphics::Instance().GetPipelineStates();
 	framebuffer* shadow_fb = Graphics::Instance().GetShadowFramebuffer();
 
-#ifdef USE_IMGUI
+//#ifdef USE_IMGUI
 	if (Input::Instance().IsKeyTrigger(VK_F1))
 	{
 		is_editor = !is_editor;
 	}
-#endif
+//#endif
 
 	//エディタ表示中かつレベル以外のタブがアクティブな場合のプレビュー・UI描画
 	if (!is_editor && editor_manager && !editor_manager->IsGameViewportActive())
@@ -226,11 +226,11 @@ void SceneGame::Render(float elapsed_time)
 
 		editor_manager->RenderPreviews(context);
 
-#ifdef USE_IMGUI
+//#ifdef USE_IMGUI
 		RenderGui();
 		editor_manager->RenderGui();
 		tactical_command->RenderGui();
-#endif
+//#endif
 		return;
 	}
 
@@ -377,14 +377,14 @@ void SceneGame::Render(float elapsed_time)
 		editor_manager->EndSceneRender(context);
 	}
 
-#ifdef USE_IMGUI
+//#ifdef USE_IMGUI
 	RenderGui();
 	if (!is_editor && editor_manager)
 	{
 		editor_manager->RenderGui();
 	}
 	tactical_command->RenderGui();
-#endif
+//#endif
 }
 
 //ImGuiデバッグ描画

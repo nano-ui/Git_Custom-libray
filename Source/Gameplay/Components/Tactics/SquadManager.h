@@ -6,6 +6,8 @@
 
 class Allie;
 class HateComponent;
+class Blackboard;
+enum class TacticalAction;
 
 class SquadManager
 {
@@ -41,9 +43,6 @@ public:
 	//シーン開始時に初期ヘイト値を登録
 	void DistributeInitialHate(float initial_hate);
 
-	//部隊数を取得
-	size_t GetMenberCount()const { return members.size(); }
-
 public:
 	//味方の共有ヘイトコンポーネントを取得
 	std::shared_ptr<HateComponent> GetAlliesHate()const { return allies_hate; }
@@ -51,15 +50,31 @@ public:
 	//敵の共通ヘイトコンポーネントを取得
 	std::shared_ptr<HateComponent> GetEnemysHate()const { return enemys_hate; }
 
+	//ブラックボードの取得
+	std::shared_ptr<Blackboard> GetSquadBlackboard()const { return squad_blackboard; }
+
+	//部隊数を取得
+	size_t GetMenberCount()const { return members.size(); }
+
+	//部隊指示を設定
+	void SetTacticalAction(TacticalAction action);
+
+	//部隊指示の取得
+	TacticalAction GetTacticalAction()const;
+
 private:
 
 	//デストラクタ
 	~SquadManager() = default;
 
 private:
+	std::shared_ptr<HateComponent> allies_hate;		//味方のヘイト
+	std::shared_ptr<HateComponent> enemys_hate;		//敵のヘイト
+	std::shared_ptr<Blackboard> squad_blackboard;	//部隊全体のブラックボード
+
+private:
 	std::vector<Allie*> members;	//部隊リスト
-	std::shared_ptr<HateComponent> allies_hate;	//味方のヘイト
-	std::shared_ptr<HateComponent> enemys_hate;	//敵のヘイト
 	bool is_initial;
+	TacticalAction tactical_action;	//部隊指示
 };
 

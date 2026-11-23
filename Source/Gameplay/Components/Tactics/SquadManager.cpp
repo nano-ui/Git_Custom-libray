@@ -3,14 +3,19 @@
 #include "Gameplay\GameObjects\GameObjectTag.h"
 #include "Gameplay\GameObjects\Character\Allie.h"
 #include "Gameplay\Components\AI\HateComponent.h"
+#include "Gameplay\Common\Blackboard.h"
+#include "Gameplay\Components\Tactics\TacticalTypes.h"
 #include <Engine\Core\Log\Log.h>
 
 //コンストラクタ
 SquadManager::SquadManager()
 {
+	squad_blackboard = std::make_shared<Blackboard>();
 	allies_hate = std::make_shared<HateComponent>();
 	enemys_hate = std::make_shared<HateComponent>();
 	is_initial = false;
+	tactical_action = TacticalAction::None;
+	squad_blackboard->BindVariable(current_tactical_action, [this]() {return static_cast<int>(tactical_action); });
 }
 
 //更新処理
@@ -47,6 +52,9 @@ void SquadManager::RegisterMember(Allie* member)
 		}
 	}
 
+	Blackboard* member_blackboard = member->GetBlackboard();
+	if (member_blackboard)member_blackboard->SetParent(squad_blackboard);
+	else LOG_WARNING({ u8"取得" }, u8"部隊のブラックボードが取得できませんでした");
 	members.push_back(member);
 }
 
@@ -153,4 +161,16 @@ void SquadManager::DistributeInitialHate(float initial_hate)
 		allies_hate->AddHate(enamys_list[enemy], initial_hate);
 	}
 	is_initial = true;
+}
+
+//部隊指示を設定
+void SquadManager::SetTacticalAction(TacticalAction action)
+{
+	tactical_action = action;
+}
+
+//部隊指示の取得
+TacticalAction SquadManager::GetTacticalAction() const
+{
+	return tactical_action;
 }

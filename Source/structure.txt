@@ -54,6 +54,8 @@ C:.
 „    „        GuiInspector.h
 „    „        
 „    „¥„Ÿ„Ÿ„ŸLog
+„    „        FilteredLogList.cpp
+„    „        FilteredLogList.h
 „    „        LogEditor.cpp
 „    „        LogEditor.h
 „    „        LogFilterWindow.cpp
@@ -348,6 +350,7 @@ C:.
 „    „    „    „    SquadPatrolComponent.h
 „    „    „    „    TacticalCommandController.cpp
 „    „    „    „    TacticalCommandController.h
+„    „    „    „    TacticalTypes.h
 „    „    „    „    
 „    „    „    „¤„Ÿ„Ÿ„ŸFormation
 „    „    „            CircleFormation.cpp

@@ -10,6 +10,11 @@
 #include "Engine\Core\Log\Log.h"
 #include "Engine\Core\Input.h"
 #include "Gameplay\Scene\SceneManager.h"
+#include "Gameplay\Common\Blackboard.h"
+#include "Gameplay\Components\Transform\TransformComponent.h"
+#include "Gameplay\Components\AI\TargetSelectorComponent.h"
+#include "Gameplay\Components\Tactics\TacticalTypes.h"
+#include "Gameplay\Components\Tactics\SquadManager.h"
 #include "Gameplay\Components\Tactics\Formation\FormationBase.h"
 #include "Gameplay\Components\Tactics\Formation\CircleFormation.h"
 #include "Gameplay\Components\Tactics\Formation\FishScaleFormation.h"
@@ -32,11 +37,16 @@ TacticalCommandController::~TacticalCommandController() = default;
 //初期化処理
 void TacticalCommandController::Initialize()
 {
-	current_formation = std::make_unique<RectangleFormation>();
 	target_position = { 0.0f,0.0f,0.0f };
 	max_ray_distance = 10.0f;
 	has_target = false;
 	collision_manager = nullptr;
+	formation_map[TacticalType::Circle] = std::make_shared<CircleFormation>();
+	formation_map[TacticalType::FishScale] = std::make_shared<FishScaleFormation>();
+	formation_map[TacticalType::CraneWing] = std::make_shared<CraneWingFormation>();
+	formation_map[TacticalType::VShaped] = std::make_shared<VShapedFormation>();
+	formation_map[TacticalType::Rectangle] = std::make_shared<RectangleFormation>();
+	current_formation = formation_map[TacticalType::Rectangle];
 }
 
 //更新処理
@@ -44,38 +54,49 @@ void TacticalCommandController::Update(float elapsed_time)
 {
 	BS_PROFILE_FUNCTION();
 
-	if (!SceneManager::Instance().IsPaused() || !Input::Instance().IsMouseTrigger(Input::mouse_left))return;
-	if (!collision_manager)return;
+	std::shared_ptr<Blackboard> blackboard = SquadManager::Instance().GetSquadBlackboard();
+	if (!blackboard)return;
+	int tactical = blackboard->GetValue(current_tactical_type, static_cast<int>(TacticalType::None));
+	TacticalType tactical_type = static_cast<TacticalType>(tactical);
 
-	auto camera = CameraManager::Instance().GetActiveCamera();
-	if (!camera)return;
-
-	DirectX::XMFLOAT3 ray_start = { 0.0f,0.0f,0.0f };
-	DirectX::XMFLOAT3 ray_end = { 0.0f,0.0f,0.0f };
-
-	bool is_ray = RayUtility::ScreenToWorldRay(
-		Graphics::Instance().GetCurrentHeight(),
-		Graphics::Instance().GetCurrentWidth(),
-		{ Input::Instance().GetMousePosX(),Input::Instance().GetMousePosY() },
-		camera->GetView(), camera->GetProjection(),
-		ray_start, ray_end
-	);
-
-	if (!is_ray)return;
-	bool is_hit = collision_manager->RayCastSpace(ray_start, ray_end, target_position);
-
-	if (is_hit)
+	switch (tactical_type)
 	{
-		current_formation->SetTargetPos(target_position);
-		std::vector<DirectX::XMFLOAT3> target_positions = current_formation->CalculatePositions(SquadManager::Instance().GetMenberCount());	
+	case TacticalType::None:
+		SquadManager::Instance().SetTacticalAction(TacticalAction::None);
+		break;
+	case TacticalType::Retreat:
+		SquadManager::Instance().SetTacticalAction(TacticalAction::TargetPoint);
+		break;
+	case TacticalType::Autonomous:
+		SquadManager::Instance().SetTacticalAction(TacticalAction::Automous);
+		break;
+	case TacticalType::Circle:
+	case TacticalType::FishScale:
+	case TacticalType::CraneWing:
+	case TacticalType::VShaped:
+	case TacticalType::Rectangle:
+	{
+		SquadManager::Instance().SetTacticalAction(TacticalAction::Formation);
+		current_formation = formation_map[tactical_type];
+		std::shared_ptr<TargetSelectorComponent> selector = target_selector.lock();
+		if (!selector)
+		{
+			LOG_WARNING({ u8"取得" }, u8"TargetSelectorComponentが取得できませんでした");
+			return;
+		}
+		std::shared_ptr<TransformComponent> transform = selector->GetTransformComponent();
+		if (!transform)
+		{
+			LOG_WARNING({ u8"取得" }, u8"TransformComponentが取得できませんでした");
+			return;
+		};
+		current_formation->SetTargetPos(transform->GetPosition());
+		std::vector<DirectX::XMFLOAT3> target_positions = current_formation->CalculatePositions(SquadManager::Instance().GetMenberCount());
 		SquadManager::Instance().CommandFormation(target_positions);
-		//LOG_SUCCESS({ u8"接触" }, u8"レイがヒットしました");
-		has_target = true;
+		break;
 	}
-	else
-	{
-		//LOG_ERROR({ u8"接触" }, u8"レイがヒットしませんでした");
-		has_target = false;
+	default:
+		break;
 	}
 }
 
@@ -92,7 +113,11 @@ void TacticalCommandController::SetupSerialization(JsonSerializer* serializer)
 {
 	Component::SetupSerialization(serializer);
 	serializer->RegisterVariable(u8"レイの長さ", &max_ray_distance, SerializeTarget::Detail);
-	current_formation->SetupSerialization(serializer);
+	formation_map[TacticalType::Circle]->SetupSerialization(serializer);
+	formation_map[TacticalType::FishScale]->SetupSerialization(serializer);
+	formation_map[TacticalType::CraneWing]->SetupSerialization(serializer);
+	formation_map[TacticalType::VShaped]->SetupSerialization(serializer);
+	formation_map[TacticalType::Rectangle]->SetupSerialization(serializer);
 }
 
 //GuiInspector専用のインスペクター項目登録
@@ -102,7 +127,11 @@ void TacticalCommandController::SetupInspector(GuiInspector* inspector)
 	inspector->RegisterVariable(u8"レイの長さ", &max_ray_distance, GetComponentName());
 	inspector->RegisterText(u8"対象の位置", &target_position, GetComponentName());
 	inspector->RegisterText(u8"対象の存在フラグ", &has_target, GetComponentName());
-	current_formation->SetupInspector(inspector);
+	formation_map[TacticalType::Circle]->SetupInspector(inspector);
+	formation_map[TacticalType::FishScale]->SetupInspector(inspector);
+	formation_map[TacticalType::CraneWing]->SetupInspector(inspector);
+	formation_map[TacticalType::VShaped]->SetupInspector(inspector);
+	formation_map[TacticalType::Rectangle]->SetupInspector(inspector);
 }
 
 //当たり判定マネージャーの設定
@@ -114,4 +143,10 @@ void TacticalCommandController::SetCollisionManager(CollisionManager* manager)
 		return;
 	}
 	collision_manager = manager;
+}
+
+//対象検索コンポーネントの設定
+void TacticalCommandController::SetTargetSelector(std::shared_ptr<TargetSelectorComponent> selector)
+{
+	target_selector = selector;
 }

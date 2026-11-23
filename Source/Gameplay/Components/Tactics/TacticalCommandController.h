@@ -3,11 +3,14 @@
 
 #include <DirectXMath.h>
 #include <memory>
+#include <unordered_map>
 
 class Camera;
 class CollisionManager;
 class ShapeRenderer;
 class FormationBase;
+class TargetSelectorComponent;
+enum class TacticalType;
 
 class TacticalCommandController : public Component
 {
@@ -55,8 +58,13 @@ public:
 	//当たり判定マネージャーの設定
 	void SetCollisionManager(CollisionManager* manager);
 
+	//対象検索コンポーネントの設定
+	void SetTargetSelector(std::shared_ptr<TargetSelectorComponent> selector);
+
 private:
-	std::unique_ptr<FormationBase> current_formation;	//陣形
+	std::weak_ptr<TargetSelectorComponent> target_selector;	//対象検索
+	std::shared_ptr<FormationBase> current_formation;		//陣形
+	std::unordered_map<TacticalType, std::shared_ptr<FormationBase>> formation_map;	//陣形の辞書
 
 private:
 	DirectX::XMFLOAT3 target_position;	//対象の座標
