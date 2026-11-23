@@ -13,11 +13,13 @@
 //コンストラクタ
 CameraController::CameraController()
 {
+
 }
 
 //デストラクタ
 CameraController::~CameraController()
 {
+
 }
 
 //初期化処理

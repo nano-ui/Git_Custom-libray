@@ -71,5 +71,6 @@ private:
 	bool has_target;					//座標指定フラグ
 	float max_ray_distance;				//レイの最大距離
 	CollisionManager* collision_manager;//参照先ポインタ
+	DirectX::XMFLOAT3 safe_position;	//仮の安全な座標
 };
 
