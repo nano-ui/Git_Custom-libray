@@ -1115,6 +1115,9 @@
     <ClInclude Include="Source\Editor\Log\FilteredLogList.h">
       <Filter>Source\Editor\Log\FilteredLogList</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\AI\Utility\UtilityTypes.h">
+      <Filter>Source\Gameplay\Components\AI\Utility\UtilityTypes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SoureCode\fullscreen_quad.hlsli">
@@ -1808,6 +1811,12 @@
     </Filter>
     <Filter Include="Source\Editor\Log\FilteredLogList">
       <UniqueIdentifier>{ceb8e761-2598-4b41-b944-653238cd2a4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\AI\Utility">
+      <UniqueIdentifier>{2641362b-76f8-4f0a-b7eb-55dd5c42d883}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\AI\Utility\UtilityTypes">
+      <UniqueIdentifier>{a6088314-13c8-463e-b9cc-0797e90a42bd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -513,6 +513,7 @@
     <ClInclude Include="Source\Gameplay\Components\AI\HateComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\AI\PerceptionComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\AI\TargetSelectorComponent.h" />
+    <ClInclude Include="Source\Gameplay\Components\AI\Utility\UtilityTypes.h" />
     <ClInclude Include="Source\Gameplay\Components\Animation\AnimationBlender.h" />
     <ClInclude Include="Source\Gameplay\Components\Animation\AnimationComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Animation\AnimationSequencerComponent.h" />
