@@ -7,6 +7,7 @@
 struct UtilityAction
 {
 	std::string action_name;									//行動名
+	size_t action_id;											//行動ID
 	std::vector<std::function<float()>> required_conditions;	//必須条件群
 	std::vector<std::function<float()>> bonus_conditions;		//ボーナス条件群
 	float weight;												//重み
@@ -16,6 +17,7 @@ struct UtilityAction
 	UtilityAction()
 	{
 		action_name = "";
+		action_id = 0;
 		required_conditions = {};
 		bonus_conditions = {};
 		weight = 1.0f;

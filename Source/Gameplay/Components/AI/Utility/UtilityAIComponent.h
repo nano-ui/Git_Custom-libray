@@ -18,28 +18,28 @@ public:
 	UtilityAIComponent();
 
 	//デストラクタ
-	~UtilityAIComponent();
+	~UtilityAIComponent()override;
 
 	//初期化処理
-	void Initialize();
+	void Initialize()override;
 
 	//更新処理
-	void Update(float elapsed_time) = 0;
+	void Update(float elapsed_time)override;
 
 	//描画処理
-	void Render(ID3D11DeviceContext* context) {}
+	void Render(ID3D11DeviceContext* context)override {}
 
 	//デバッグ描画
-	void RenderDebug(ShapeRenderer* renderer) {}
+	void RenderDebug(ShapeRenderer* renderer)override {}
 
 	//Gui処理
-	void RenderGui();
+	void RenderGui()override;
 
 	//JSON保存用変数登録
-	void SetupSerialization(JsonSerializer* serializer);
+	void SetupSerialization(JsonSerializer* serializer)override;
 
 	//インスペクター項目登録
-	void SetupInspector(GuiInspector* inspector);
+	void SetupInspector(GuiInspector* inspector)override;
 
 public:
 	//行動の登録

@@ -567,6 +567,9 @@
     <ClCompile Include="Source\Editor\Log\FilteredLogList.cpp">
       <Filter>Source\Editor\Log\FilteredLogList</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\AI\Utility\UtilityAIComponent.cpp">
+      <Filter>Source\Gameplay\Components\AI\Utility\UtilityAIComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1117,6 +1120,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\AI\Utility\UtilityTypes.h">
       <Filter>Source\Gameplay\Components\AI\Utility\UtilityTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\AI\Utility\UtilityAIComponent.h">
+      <Filter>Source\Gameplay\Components\AI\Utility\UtilityAIComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1817,6 +1823,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\AI\Utility\UtilityTypes">
       <UniqueIdentifier>{a6088314-13c8-463e-b9cc-0797e90a42bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\AI\Utility\UtilityAIComponent">
+      <UniqueIdentifier>{84cf15b9-28a6-4182-9582-5ff99802cbbe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
