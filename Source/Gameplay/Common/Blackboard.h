@@ -17,7 +17,7 @@ class Blackboard
 {
 private:
 	//使用できる型
-	using BlackboardValue = std::variant<int, float, bool, uint32_t, std::string, DirectX::XMFLOAT2, DirectX::XMFLOAT3, DirectX::XMFLOAT4, std::vector<uint32_t>, std::vector<std::string>>;
+	using BlackboardValue = std::variant<int, float, bool, size_t, uint32_t, std::string, DirectX::XMFLOAT2, DirectX::XMFLOAT3, DirectX::XMFLOAT4, std::vector<uint32_t>, std::vector<std::string>>;
 	
 	//ブラックボード登録情報
 	struct BlackboardEntry

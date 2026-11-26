@@ -570,6 +570,9 @@
     <ClCompile Include="Source\Gameplay\Components\AI\Utility\UtilityAIComponent.cpp">
       <Filter>Source\Gameplay\Components\AI\Utility\UtilityAIComponent</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\GameObjects\System\Commander.cpp">
+      <Filter>Source\Gameplay\GameObjects\System\Commander</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1123,6 +1126,12 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\AI\Utility\UtilityAIComponent.h">
       <Filter>Source\Gameplay\Components\AI\Utility\UtilityAIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\GameObjects\System\Commander.h">
+      <Filter>Source\Gameplay\GameObjects\System\Commander</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Tactics\TacticalTypes.h">
+      <Filter>Source\Gameplay\Components\Tactics\TacticalTypes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1826,6 +1835,15 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\AI\Utility\UtilityAIComponent">
       <UniqueIdentifier>{84cf15b9-28a6-4182-9582-5ff99802cbbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\GameObjects\System">
+      <UniqueIdentifier>{fbac1174-cf75-4205-a96f-bf2cc63cba5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\GameObjects\System\Commander">
+      <UniqueIdentifier>{6ddf9677-a08c-4396-85f1-f07b64223e32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Tactics\TacticalTypes">
+      <UniqueIdentifier>{c2b1d61f-f23a-4b84-8f6d-613d612045ec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

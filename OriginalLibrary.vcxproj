@@ -373,6 +373,7 @@
     <ClCompile Include="Source\Gameplay\GameObjects\ObjectManager.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\ObjectSpawner.cpp" />
     <ClCompile Include="Source\Gameplay\GameObjects\Object\Stage.cpp" />
+    <ClCompile Include="Source\Gameplay\GameObjects\System\Commander.cpp" />
     <ClCompile Include="Source\Gameplay\Scene\Scene.cpp" />
     <ClCompile Include="Source\Gameplay\Scene\SceneGame.cpp" />
     <ClCompile Include="Source\Gameplay\Scene\SceneLoading.cpp" />
@@ -547,6 +548,7 @@
     <ClInclude Include="Source\Gameplay\Components\Tactics\SquadManager.h" />
     <ClInclude Include="Source\Gameplay\Components\Tactics\SquadPatrolComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Tactics\TacticalCommandController.h" />
+    <ClInclude Include="Source\Gameplay\Components\Tactics\TacticalTypes.h" />
     <ClInclude Include="Source\Gameplay\Components\Transform\TransformComponent.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Allie.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Character\Character.h" />
@@ -558,6 +560,7 @@
     <ClInclude Include="Source\Gameplay\GameObjects\ObjectManager.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\ObjectSpawner.h" />
     <ClInclude Include="Source\Gameplay\GameObjects\Object\Stage.h" />
+    <ClInclude Include="Source\Gameplay\GameObjects\System\Commander.h" />
     <ClInclude Include="Source\Gameplay\Scene\Scene.h" />
     <ClInclude Include="Source\Gameplay\Scene\SceneGame.h" />
     <ClInclude Include="Source\Gameplay\Scene\SceneLoading.h" />
