@@ -111,7 +111,7 @@ void UtilityAIComponent::RenderGui()
 			ImGui::SameLine();
 			ImGui::ProgressBar((std::max)(0.0f, found->second.latest_score), ImVec2(150.0f, 0.0f));
 			ImGui::SameLine();
-			ImGui::Text("", found->second.latest_score);
+			ImGui::Text("%.2f", found->second.latest_score);
 			ImGui::PopID();
 		}
 		ImGui::Unindent();

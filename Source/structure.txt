@@ -274,15 +274,20 @@ C:.
 „    „        
 „    „¥„Ÿ„Ÿ„ŸComponents
 „    „    „¥„Ÿ„Ÿ„ŸAI
-„    „    „        HateComponent.cpp
-„    „    „        HateComponent.h
-„    „    „        HateDistributorComponent.cpp
-„    „    „        HateDistributorComponent.h
-„    „    „        PerceptionComponent.cpp
-„    „    „        PerceptionComponent.h
-„    „    „        TargetSelectorComponent.cpp
-„    „    „        TargetSelectorComponent.h
-„    „    „        
+„    „    „    „    HateComponent.cpp
+„    „    „    „    HateComponent.h
+„    „    „    „    HateDistributorComponent.cpp
+„    „    „    „    HateDistributorComponent.h
+„    „    „    „    PerceptionComponent.cpp
+„    „    „    „    PerceptionComponent.h
+„    „    „    „    TargetSelectorComponent.cpp
+„    „    „    „    TargetSelectorComponent.h
+„    „    „    „    
+„    „    „    „¤„Ÿ„Ÿ„ŸUtility
+„    „    „            UtilityAIComponent.cpp
+„    „    „            UtilityAIComponent.h
+„    „    „            UtilityTypes.h
+„    „    „            
 „    „    „¥„Ÿ„Ÿ„ŸAnimation
 „    „    „        AnimationBlender.cpp
 „    „    „        AnimationBlender.h
@@ -390,9 +395,13 @@ C:.
 „    „    „        Player.cpp
 „    „    „        Player.h
 „    „    „        
-„    „    „¤„Ÿ„Ÿ„ŸObject
-„    „            Stage.cpp
-„    „            Stage.h
+„    „    „¥„Ÿ„Ÿ„ŸObject
+„    „    „        Stage.cpp
+„    „    „        Stage.h
+„    „    „        
+„    „    „¤„Ÿ„Ÿ„ŸSystem
+„    „            Commander.cpp
+„    „            Commander.h
 „    „            
 „    „¥„Ÿ„Ÿ„ŸScene
 „    „        Scene.cpp
