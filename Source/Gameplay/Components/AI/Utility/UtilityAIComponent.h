@@ -1,5 +1,6 @@
 #pragma once
 #include "Gameplay\Components\Base\Component.h"
+#include "UtilityTypes.h"
 #include <unordered_map>
 #include <functional>
 #include <string>
@@ -8,8 +9,6 @@ class JsonSerializer;
 class GuiInspector;
 class ShapeRenderer;
 struct ID3D11DeviceContext;
-struct UtilityAction;
-struct UtilitySettings;
 
 class UtilityAIComponent : public Component
 {
