@@ -1,5 +1,4 @@
 #include "TacticalCommandController.h"
-#include "SquadManager.h"
 #include "Editor\Inspector\GuiInspector.h"
 #include "Serialization\JsonSerializer.h"
 #include "Engine\Collision\CollisionManager.h"
