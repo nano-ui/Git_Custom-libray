@@ -43,6 +43,9 @@ public:
 	//シーン開始時に初期ヘイト値を登録
 	void DistributeInitialHate(float initial_hate);
 
+	//移動目標を持つメンバーが存在するか確認
+	bool HasActiveTarget()const;
+
 public:
 	//味方の共有ヘイトコンポーネントを取得
 	std::shared_ptr<HateComponent> GetAlliesHate()const { return allies_hate; }

@@ -41,6 +41,7 @@ void TacticalCommandController::Initialize()
 	target_position = { 0.0f,0.0f,0.0f };
 	max_ray_distance = 10.0f;
 	has_target = false;
+	needs_command_dispatch = false;
 	collision_manager = nullptr;
 	formation_map[TacticalType::Circle] = std::make_shared<CircleFormation>();
 	formation_map[TacticalType::FishScale] = std::make_shared<FishScaleFormation>();
@@ -82,8 +83,17 @@ void TacticalCommandController::Update(float elapsed_time)
 			{
 				current_formation->SetTargetPos(target_position);
 				has_target = true;
+				needs_command_dispatch = true;
+				LOG_NORMAL({ u8"戦術" }, u8"クリック座標へ移動指示を出しました (X:%.1f, Y:%.1f, Z:%.1f)", target_position.x, target_position.y, target_position.z);
 			}
 		}
+	}
+
+	//指定地点への移動指示中に全員が到着したかを確認
+	if (has_target && !needs_command_dispatch && !SquadManager::Instance().HasActiveTarget())
+	{
+		has_target = false;
+		LOG_NORMAL({ u8"戦術" }, u8"部隊全員が目標座標に到着したため通常戦術へ戻ります");
 	}
 
 	//部隊ブラックボードから現在の戦術を取得
@@ -97,33 +107,33 @@ void TacticalCommandController::Update(float elapsed_time)
 	{
 	case TacticalType::None:
 		SquadManager::Instance().SetTacticalAction(TacticalAction::None);
-		SquadManager::Instance().CommandMode(target_position);
+		if (needs_command_dispatch)
+		{
+			SquadManager::Instance().CommandMode(target_position);
+			needs_command_dispatch = false;
+		}
 		break;
 	case TacticalType::Retreat:
 	{
 		SquadManager::Instance().SetTacticalAction(TacticalAction::TargetPoint);
-		std::shared_ptr<TargetSelectorComponent> selector = target_selector.lock();
-		if (!selector)
+		if (needs_command_dispatch)
 		{
-			LOG_WARNING({ u8"取得" }, u8"TargetSelectorComponentが取得できませんでした");
-			return;
-		}
-		std::shared_ptr<TransformComponent> transform = selector->GetTransformComponent();
-		if (!transform)
-		{
-			LOG_WARNING({ u8"取得" }, u8"TransformComponentが取得できませんでした");
-			return;
-		};
-		if (has_target)
-		{
-			target_position = transform->GetPosition();
 			SquadManager::Instance().CommandMode(target_position);
+			needs_command_dispatch = false;
 		}
-		else SquadManager::Instance().CommandMode(safe_position);
+		else if (!has_target)
+		{
+			SquadManager::Instance().CommandMode(safe_position);
+		}
 		break;
 	}
 	case TacticalType::Autonomous:
 		SquadManager::Instance().SetTacticalAction(TacticalAction::Automous);
+		if (needs_command_dispatch)
+		{
+			SquadManager::Instance().CommandMode(target_position);
+			needs_command_dispatch = false;
+		}
 		break;
 	case TacticalType::Circle:
 	case TacticalType::FishScale:
@@ -133,29 +143,40 @@ void TacticalCommandController::Update(float elapsed_time)
 	{
 		SquadManager::Instance().SetTacticalAction(TacticalAction::Formation);
 		current_formation = formation_map[tactical_type];
-		std::shared_ptr<TargetSelectorComponent> selector = target_selector.lock();
-		if (!selector)
+		if (needs_command_dispatch)
 		{
-			LOG_WARNING({ u8"取得" }, u8"TargetSelectorComponentが取得できませんでした");
-			return;
+			current_formation->SetTargetPos(target_position);
+			std::vector<DirectX::XMFLOAT3> target_positions = current_formation->CalculatePositions(SquadManager::Instance().GetMenberCount());
+			SquadManager::Instance().CommandFormation(target_positions);
+			needs_command_dispatch = false;
 		}
-		std::shared_ptr<TransformComponent> transform = selector->GetTransformComponent();
-		if (!transform)
+		else if (!has_target)
 		{
-			LOG_WARNING({ u8"取得" }, u8"TransformComponentが取得できませんでした");
-			return;
-		};
-		if (!has_target)
-		{
+			std::shared_ptr<TargetSelectorComponent> selector = target_selector.lock();
+			if (!selector)
+			{
+				LOG_WARNING({ u8"取得" }, u8"TargetSelectorComponentが取得できませんでした");
+				return;
+			}
+			std::shared_ptr<TransformComponent> transform = selector->GetTransformComponent();
+			if (!transform)
+			{
+				LOG_WARNING({ u8"取得" }, u8"TransformComponentが取得できませんでした");
+				return;
+			}
 			target_position = transform->GetPosition();
+			current_formation->SetTargetPos(target_position);
+			std::vector<DirectX::XMFLOAT3> target_positions = current_formation->CalculatePositions(SquadManager::Instance().GetMenberCount());
+			SquadManager::Instance().CommandFormation(target_positions);
 		}
-		current_formation->SetTargetPos(target_position);
-		std::vector<DirectX::XMFLOAT3> target_positions = current_formation->CalculatePositions(SquadManager::Instance().GetMenberCount());
-		SquadManager::Instance().CommandFormation(target_positions);
 		break;
 	}
 	default:
-		SquadManager::Instance().CommandMode(target_position);
+		if (needs_command_dispatch)
+		{
+			SquadManager::Instance().CommandMode(target_position);
+			needs_command_dispatch = false;
+		}
 		break;
 	}
 }

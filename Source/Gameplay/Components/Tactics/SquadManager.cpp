@@ -163,6 +163,21 @@ void SquadManager::DistributeInitialHate(float initial_hate)
 	is_initial = true;
 }
 
+//移動目標を持つメンバーが存在するか確認
+bool SquadManager::HasActiveTarget() const
+{
+	//部隊リストを走査して移動中のメンバーを検索
+	for (const auto* member : members)
+	{
+		if (!member)continue;
+		if (member->GetHasTarget())
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 //部隊指示を設定
 void SquadManager::SetTacticalAction(TacticalAction action)
 {

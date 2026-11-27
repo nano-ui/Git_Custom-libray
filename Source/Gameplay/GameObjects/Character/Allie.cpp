@@ -64,34 +64,33 @@ void Allie::Update(float elapsed_time)
 	int_action = blackboard->GetValue(current_tactical_action, int_action);
 	TacticalAction tactical_action = static_cast<TacticalAction>(int_action);
 
+	//–Ú•WÀ•W‚ªİ’è‚³‚ê‚Ä‚¢‚éê‡‚Ííp‚ÉŠÖ‚í‚ç‚¸ˆÚ“®‚ğÅ—Dæ‚·‚é
+	if (has_target)
+	{
+		MoveTarget(elapsed_time);
+		return;
+	}
+
 	//íps“®‚É‰‚¶‚½ˆÚ“®ˆ—‚Ì•ªŠò
 	switch (tactical_action)
 	{
 	case TacticalAction::None:
 	{
-		if (has_target)
-		{
-			MoveTarget(elapsed_time);
-		}
-		else
-		{
-			Character::Move(elapsed_time, 0.0f, 0.0f);
-		}
+		Character::Move(elapsed_time, 0.0f, 0.0f);
 		break;
 	}
 	case TacticalAction::Formation:
 	{
-		MoveTarget(elapsed_time);
+		Character::Move(elapsed_time, 0.0f, 0.0f);
 		break;
 	}
 	case TacticalAction::TargetPoint:
 	{
-		MoveTarget(elapsed_time);
+		Character::Move(elapsed_time, 0.0f, 0.0f);
 		break;
 	}
 	case TacticalAction::Automous:
 	{
-		has_target = false;
 		UpdateChase(elapsed_time);
 		break;
 	}
