@@ -4,12 +4,17 @@
 #include "Engine\Graphics\Renderers\Graphics.h"
 #include "Engine\Camera\StandCamera.h"
 #include "Engine\Core\MacroTracy.h"
+#include <wrl.h>
 #include <objbase.h>
 #include <Windows.h>
 
 namespace
 {
 	constexpr float full_circle_degrees = 360.0f;
+	constexpr float background_clear_color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	constexpr float blend_factor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	constexpr UINT default_sample_mask = 0xFFFFFFFF;
+	constexpr int blend_state_alpha = 0;
 	constexpr wchar_t loading_icon_path[] = L"Data/Sprite/UI/LoadingIcon.png";
 }
 
@@ -98,15 +103,23 @@ void SceneLoading::Render(float elapsed_time)
 	BS_PROFILE_FUNCTION();
 
 	// 1. パイプラインステートと定数バッファの更新
-	ID3D11DeviceContext* context = Graphics::Instance().GetContext();
+	ID3D11DeviceContext * context = Graphics::Instance().GetContext();
 	auto states = Graphics::Instance().GetPipelineStates();
+
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> render_target_view;
+	context->OMGetRenderTargets(1, render_target_view.GetAddressOf(), nullptr);
+	if (render_target_view)
+	{
+		context->ClearRenderTargetView(render_target_view.Get(), background_clear_color);
+	}
+	else
+	{
+		OutputDebugStringA("[警告] SceneLoading::Render - RenderTargetViewの取得に失敗しました。\n");
+	}
+
 	context->OMSetDepthStencilState(states->GetDepthStenceilState(0).Get(), 1);
+	context->OMSetBlendState(states->GetBlendState(blend_state_alpha).Get(), blend_factor, default_sample_mask);
 	context->RSSetState(states->GetRasterizerState(2).Get());
-
-	context->PSSetSamplers(0, 1, states->GetSamplerState(0).GetAddressOf());
-	context->PSSetSamplers(1, 1, states->GetSamplerState(1).GetAddressOf());
-	context->PSSetSamplers(2, 1, states->GetSamplerState(2).GetAddressOf());
-
 	if (camera)
 	{
 		Graphics::Instance().UpdateSceneConstantBuffer({

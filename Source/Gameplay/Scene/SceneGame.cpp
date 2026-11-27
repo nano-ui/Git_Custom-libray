@@ -14,6 +14,7 @@
 #include "Engine\Graphics\Resources\AnimationManager.h"
 #include "Gameplay/GameObjects/Character/Character.h"
 #include "Gameplay\Components\Transform\TransformComponent.h"
+#include "Gameplay\GameObjects\System\Commander.h"
 #include "Engine/Graphics/Shaders/SkyBox.h"
 #include "SceneManager.h"
 #include "Gameplay\GameObjects\Character\Player.h"
@@ -78,8 +79,8 @@ void SceneGame::Load()
 		L"Data/Sprite/SkyTexture/specular_pmrem.dds",	//IBL用の鏡面反射テクスチャ
 		L"Data/Sprite/SkyTexture/lut_ggx.dds"			//IBL用のルックアップテーブル
 	);
-	tactical_command = std::make_unique<TacticalCommandController>();
-	tactical_command->SetCollisionManager(collision_manager.get());
+	commander = std::make_unique<Commander>();
+	commander->Initialize();
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	shape_renderer = std::make_unique<ShapeRenderer>(device);
 	editor_manager = std::make_unique<EditorManager>();
@@ -175,9 +176,9 @@ void SceneGame::Update(float elapsed_time)
 			OutputDebugStringA("[SceneGame 警告] ポーズ切り替え時に camera_controller が nullptr です。\n");
 		}
 	}
+	commander->Update(elapsed_time);
 	if (SceneManager::Instance().IsPaused())
 	{
-		tactical_command->Update(elapsed_time);
 		return;
 	}
 	if (object_manager)
@@ -229,7 +230,6 @@ void SceneGame::Render(float elapsed_time)
 //#ifdef USE_IMGUI
 		RenderGui();
 		editor_manager->RenderGui();
-		tactical_command->RenderGui();
 //#endif
 		return;
 	}
@@ -352,7 +352,7 @@ void SceneGame::Render(float elapsed_time)
 	if (object_manager && shape_renderer)
 	{
 		object_manager->RenderDebug(shape_renderer.get());
-		tactical_command->RenderDebug(shape_renderer.get());
+		commander->RenderDebug(shape_renderer.get());
 	}
 
 	if (shape_renderer && current_camera)
@@ -383,7 +383,7 @@ void SceneGame::Render(float elapsed_time)
 	{
 		editor_manager->RenderGui();
 	}
-	tactical_command->RenderGui();
+	commander->RenderGui();
 //#endif
 }
 

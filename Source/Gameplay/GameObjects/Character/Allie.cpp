@@ -15,6 +15,7 @@
 
 static AutoRegister<Allie> auto_register_class("Allie");
 static constexpr uint32_t DUMMY_BLACKBOARD_KEY = 0;
+static constexpr float DEFAULT_STOP_DISTANCE = 1.5f;
 
 //コンストラクタ
 Allie::Allie()
@@ -34,28 +35,48 @@ Allie::~Allie()
 //初期化処理
 void Allie::Initialize()
 {
+	//基底クラスとコンポーネントの初期化
 	Character::Initialize();
 	SetupComponent();
+
+	//部隊への登録と移動関連パラメータの初期化
 	SquadManager::Instance().RegisterMember(this);
 	target_position = { 0.0f,0.0f,0.0f };
 	has_target = false;
+	stop_distance = DEFAULT_STOP_DISTANCE;
 	perception->SetTargetTag(GameObjectTag::Enemys);
 }
 
 //更新処理
 void Allie::Update(float elapsed_time)
 {
+	//基底クラスの更新と目標情報の取得
 	Character::Update(elapsed_time);
+	if (!target_selector || !blackboard)
+	{
+		LOG_WARNING({ u8"取得" }, u8"Allieの更新に必要なコンポーネントまたはブラックボードがnullです");
+		return;
+	}
 	target_transform = target_selector->GetTransformComponent();
+
+	//ブラックボードから現在の戦術行動を取得
 	int int_action = static_cast<int>(TacticalAction::None);
 	int_action = blackboard->GetValue(current_tactical_action, int_action);
 	TacticalAction tactical_action = static_cast<TacticalAction>(int_action);
+
+	//戦術行動に応じた移動処理の分岐
 	switch (tactical_action)
 	{
 	case TacticalAction::None:
 	{
-		has_target = false;
-		Character::Move(elapsed_time, 0.0f, 0.0f);
+		if (has_target)
+		{
+			MoveTarget(elapsed_time);
+		}
+		else
+		{
+			Character::Move(elapsed_time, 0.0f, 0.0f);
+		}
 		break;
 	}
 	case TacticalAction::Formation:

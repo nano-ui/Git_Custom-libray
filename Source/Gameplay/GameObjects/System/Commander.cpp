@@ -49,7 +49,9 @@ void Commander::RenderDebug(ShapeRenderer* renderer)
 //ImGuiデバッグ描画
 void Commander::RenderGui()
 {
+	ImGui::Begin(u8"指揮官");
 	GameObject::RenderGui();
+	ImGui::End();
 }
 
 //コンポーネントの設定

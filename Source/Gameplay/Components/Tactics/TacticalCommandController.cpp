@@ -97,7 +97,7 @@ void TacticalCommandController::Update(float elapsed_time)
 	{
 	case TacticalType::None:
 		SquadManager::Instance().SetTacticalAction(TacticalAction::None);
-		//SquadManager::Instance().CommandMode(target_position);
+		SquadManager::Instance().CommandMode(target_position);
 		break;
 	case TacticalType::Retreat:
 	{

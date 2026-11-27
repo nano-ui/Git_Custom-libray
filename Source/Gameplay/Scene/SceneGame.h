@@ -15,6 +15,7 @@ class CollisionExperiment;
 class EditorManager;
 class TacticalCommandController;
 class GltfModelData;
+class Commander;
 
 class SceneGame : public Scene
 {
@@ -66,8 +67,8 @@ private:
 	std::unique_ptr<Light> light;	//ライト管理
 	std::unique_ptr<CollisionManager> collision_manager;	//当たり判定管理マネージャー
 	std::unique_ptr<SkyBox> skybox;							//スカイボックスクラス
+	std::unique_ptr<Commander> commander;					//指揮官
 
-	std::unique_ptr<TacticalCommandController> tactical_command;
 	std::unique_ptr<ShapeRenderer> shape_renderer;
 	std::vector<debug_shape> debug_shapes;
 	int current_debug_draw_mode = 0;
