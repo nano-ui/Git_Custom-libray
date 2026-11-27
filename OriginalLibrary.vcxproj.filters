@@ -573,6 +573,9 @@
     <ClCompile Include="Source\Gameplay\GameObjects\System\Commander.cpp">
       <Filter>Source\Gameplay\GameObjects\System\Commander</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Tactics\SituationEvaluator.cpp">
+      <Filter>Source\Gameplay\Components\Tactics\SituationEvaluator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1132,6 +1135,9 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Tactics\TacticalTypes.h">
       <Filter>Source\Gameplay\Components\Tactics\TacticalTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Tactics\SituationEvaluator.h">
+      <Filter>Source\Gameplay\Components\Tactics\SituationEvaluator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1844,6 +1850,9 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Tactics\TacticalTypes">
       <UniqueIdentifier>{c2b1d61f-f23a-4b84-8f6d-613d612045ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Tactics\SituationEvaluator">
+      <UniqueIdentifier>{cdbf037f-707d-436f-af81-fd833211b02f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

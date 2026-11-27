@@ -18,6 +18,7 @@
 //コンストラクタ
 Character::Character()
 	: health(100.0f)
+	, max_health(health)
 	, attack_power(10.0f)
 	, invincible_timer(1.0f)
 	, invinceble_time(1.0f)
@@ -508,4 +509,10 @@ void Character::UpdateColliderSequencer()
 			attachment_collider_component->SetColliderActive(track.collider_name, true);
 		}
 	}
+}
+
+//ブラックボードを取得
+Blackboard* Character::GetBlackboard()const
+{
+	return blackboard.get();
 }

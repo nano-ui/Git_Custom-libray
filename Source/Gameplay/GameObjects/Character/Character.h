@@ -50,9 +50,6 @@ public:
 	//ダメージ処理
 	bool ApplyDamage(float damage, float invincible_time, uint32_t attacker_id);
 
-	//ブラックボードを取得
-	Blackboard* GetBlackboard()const { return blackboard.get(); }
-
 	//ブラックボードに登録・初期化
 	virtual void SetupBlackboard();
 
@@ -90,17 +87,33 @@ protected:
 	//死亡時イベント
 	virtual void OnDead() {}
 
+public:
+	//体力の取得
+	float GetHealth()const { return health; }
+
+	//体力の設定
+	void SetHealth(const float hp) { health = hp; }
+
+	//最大体力の取得
+	float GetMaxHealth()const { return max_health; }
+
+	//最大体力の設定
+	void SetMaxHealth(float hp) { max_health = hp; }
+
+	//ブラックボードを取得
+	Blackboard* GetBlackboard()const;
+
 protected:
 	std::unique_ptr<Blackboard> blackboard;
 	std::unique_ptr<StateMachineComponent> state_machine_component;		//ステートマシン制御
 	std::shared_ptr<AnimationSequencerComponent> sequencer_component;	//アニメーションシーケンサ
 	std::unique_ptr<RootMotionComponent> root_motion_component;        //ルートモーション計算コンポーネント
-
 	std::shared_ptr<TransformComponent> transform_component;//行列コンポーネント
 	std::shared_ptr<ModelComponent> model_component;		//モデルコンポーネント
 	std::shared_ptr<MovementComponent> movement_component;	//移動コンポーネント
 	std::shared_ptr<AttachmentColliderComponent> attachment_collider_component;	//当たり判定コンポーネント
 
+protected:
 	std::string current_animation_name = "";	//現在のアニメーション名
 	float current_animation_time = 0.0f;		//現在のアニメーション再生時間
 	std::string previous_animation_name = "";	//前回のアニメーション名
@@ -114,6 +127,7 @@ protected:
 	float attack_power;			//攻撃力
 	bool is_damage;				//ダメージフラグ
 	float health;				//生命力
+	float max_health;			//最大体力
 	float weight;				//重さ
 	float belnd_time = 0.2f;
 	float inner_radius;			//内径

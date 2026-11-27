@@ -42,12 +42,12 @@ void UtilityAIComponent::Update(float elapsed_time)
 	//ó‹µ‚Ì”’l‰»
 	float highest_score = -1.0f;
 	size_t highest_action_id = 0;
-	std::string highest_action_name = "";
 	for (auto& [id, action] : utility_action_map)
 	{
 		float required_score = 1.0f;
 		for (int i = 0; i < action.required_conditions.size(); ++i)
 		{
+			if (required_score <= 0.0f)continue;
 			float score = action.required_conditions[i]();
 			score = std::clamp(score, 0.0f, 1.0f);
 			required_score *= score;
@@ -66,7 +66,6 @@ void UtilityAIComponent::Update(float elapsed_time)
 		{
 			highest_score = action.latest_score;
 			highest_action_id = action.action_id;
-			highest_action_name = action.action_name;
 		}
 	}
 
@@ -212,6 +211,7 @@ UtilitySettings UtilityAIComponent::GetUtilitySettings() const
 //Œ»İ‚Ìs“®–¼‚Ìæ“¾
 std::string UtilityAIComponent::GetCurrentActionName() const
 {
+	if (current_action_id == 0)return u8"–¢‘I‘ğ";
 	auto found = utility_action_map.find(current_action_id);
 	if (found == utility_action_map.end())
 	{
