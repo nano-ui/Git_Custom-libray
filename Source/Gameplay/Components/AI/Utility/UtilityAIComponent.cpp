@@ -196,6 +196,21 @@ void UtilityAIComponent::RegisterCallback(const std::function<void(size_t)>& cal
 	select_action_function = callback_function;
 }
 
+//行動の重み設定
+void UtilityAIComponent::SetWeight(size_t action_id, float weight)
+{
+	//対象の行動IDを検索
+	auto found = utility_action_map.find(action_id);
+	if (found == utility_action_map.end())
+	{
+		LOG_WARNING({ u8"検索" }, u8"重み設定対象のハッシュ値が存在しません(ハッシュ値:%zu)", action_id);
+		return;
+	}
+
+	//重みの反映
+	found->second.weight = weight;
+}
+
 //設計情報の設定
 void UtilityAIComponent::SetUtilitySettings(const UtilitySettings& settings)
 {

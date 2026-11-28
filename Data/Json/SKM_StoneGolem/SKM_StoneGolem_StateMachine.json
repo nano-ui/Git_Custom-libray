@@ -1132,12 +1132,12 @@
                     "BlendTime": 0.20000000298023224,
                     "Conditions": [
                         {
-                            "CompOp": 3,
+                            "CompOp": 2,
                             "ParamSecond": 0.0,
                             "RefValue": 1.0,
                             "SecondaryVariableName": "",
                             "Type": 0,
-                            "VariableName": "",
+                            "VariableName": "移動速度",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,
@@ -1155,10 +1155,10 @@
                         {
                             "CompOp": 4,
                             "ParamSecond": 0.0,
-                            "RefValue": 1.0,
+                            "RefValue": 2.0,
                             "SecondaryVariableName": "",
                             "Type": 0,
-                            "VariableName": "",
+                            "VariableName": "移動速度",
                             "VectorRefValue": [
                                 0.0,
                                 0.0,

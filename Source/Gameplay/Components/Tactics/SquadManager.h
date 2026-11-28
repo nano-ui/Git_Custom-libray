@@ -59,11 +59,17 @@ public:
 	//部隊数を取得
 	size_t GetMenberCount()const { return members.size(); }
 
+	//部隊リストを取得
+	const std::vector<Allie*>& GetMenbers()const { return members; }
+
 	//部隊指示を設定
 	void SetTacticalAction(TacticalAction action);
 
 	//部隊指示の取得
 	TacticalAction GetTacticalAction()const;
+
+	//最大部隊人数を取得
+	size_t GetMaxMemberCount()const { return max_member_count; }
 
 private:
 
@@ -79,5 +85,6 @@ private:
 	std::vector<Allie*> members;	//部隊リスト
 	bool is_initial;
 	TacticalAction tactical_action;	//部隊指示
+	size_t max_member_count;		//最大部隊人数
 };
 

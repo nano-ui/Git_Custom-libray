@@ -576,6 +576,12 @@
     <ClCompile Include="Source\Gameplay\Components\Tactics\SituationEvaluator.cpp">
       <Filter>Source\Gameplay\Components\Tactics\SituationEvaluator</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Status\HealthComponent.cpp">
+      <Filter>Source\Gameplay\Components\Status\HealthComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gameplay\Components\Combat\CombatComponent.cpp">
+      <Filter>Source\Gameplay\Components\Combat</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui-docking\imgui-docking\imconfig.h">
@@ -1138,6 +1144,12 @@
     </ClInclude>
     <ClInclude Include="Source\Gameplay\Components\Tactics\SituationEvaluator.h">
       <Filter>Source\Gameplay\Components\Tactics\SituationEvaluator</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Status\HealthComponent.h">
+      <Filter>Source\Gameplay\Components\Status\HealthComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gameplay\Components\Combat\CombatComponent.h">
+      <Filter>Source\Gameplay\Components\Combat</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1853,6 +1865,15 @@
     </Filter>
     <Filter Include="Source\Gameplay\Components\Tactics\SituationEvaluator">
       <UniqueIdentifier>{cdbf037f-707d-436f-af81-fd833211b02f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Status">
+      <UniqueIdentifier>{4af68052-ee80-40f5-a251-c1dfebdca4f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Status\HealthComponent">
+      <UniqueIdentifier>{bc404f6c-36e0-4c66-b2e6-0d141bc7b0cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameplay\Components\Combat">
+      <UniqueIdentifier>{0a72c8e2-d247-453e-829a-cbefd7c7a93e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

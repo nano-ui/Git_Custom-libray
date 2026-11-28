@@ -112,21 +112,7 @@
                 },
                 {
                     "BlendTime": 0.20000000298023224,
-                    "Conditions": [
-                        {
-                            "CompOp": 0,
-                            "ParamSecond": 7.0,
-                            "RefValue": 0.0,
-                            "SecondaryVariableName": "対象との座標",
-                            "Type": 2,
-                            "VariableName": "座標",
-                            "VectorRefValue": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        }
-                    ],
+                    "Conditions": [],
                     "EndPinID": 129,
                     "ID": 162,
                     "StartPinID": 102
@@ -843,6 +829,27 @@
                     "EndPinID": 159,
                     "ID": 160,
                     "StartPinID": 156
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [
+                        {
+                            "CompOp": 4,
+                            "ParamSecond": 0.0,
+                            "RefValue": 0.0,
+                            "SecondaryVariableName": "",
+                            "Type": 0,
+                            "VariableName": "対象との座標",
+                            "VectorRefValue": [
+                                3.0,
+                                3.0,
+                                3.0
+                            ]
+                        }
+                    ],
+                    "EndPinID": 202,
+                    "ID": 203,
+                    "StartPinID": 156
                 }
             ],
             "Nodes": [
@@ -946,6 +953,38 @@
                     "Output": [],
                     "PosX": 269.0,
                     "PosY": -5.74365234375,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "Attack_Melee_B",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 2,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 201,
+                    "Input": [
+                        {
+                            "ID": 202,
+                            "Kind": 0,
+                            "Name": ""
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Action",
+                    "Output": [],
+                    "PosX": 322.3333435058594,
+                    "PosY": 55.66666793823242,
                     "SubGraphID": 0
                 }
             ]
@@ -1127,8 +1166,133 @@
                     "SubGraphID": 0
                 }
             ]
+        },
+        {
+            "GraphID": 188,
+            "GraphName": "近距離攻撃",
+            "LayerType": 1,
+            "Links": [
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 192,
+                    "ID": 196,
+                    "StartPinID": 190
+                },
+                {
+                    "BlendTime": 0.20000000298023224,
+                    "Conditions": [],
+                    "EndPinID": 195,
+                    "ID": 197,
+                    "StartPinID": 193
+                }
+            ],
+            "Nodes": [
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 0,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 189,
+                    "Input": [],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Root",
+                    "Output": [
+                        {
+                            "ID": 190,
+                            "Kind": 1,
+                            "Name": ""
+                        }
+                    ],
+                    "PosX": -189.0,
+                    "PosY": 81.25634765625,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 1,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.0,
+                        "CooldownTime": 0.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 191,
+                    "Input": [
+                        {
+                            "ID": 192,
+                            "Kind": 0,
+                            "Name": ""
+                        }
+                    ],
+                    "IsLoop": true,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Selector",
+                    "Output": [
+                        {
+                            "ID": 193,
+                            "Kind": 1,
+                            "Name": ""
+                        }
+                    ],
+                    "PosX": 65.0,
+                    "PosY": 57.25634765625,
+                    "SubGraphID": 0
+                },
+                {
+                    "ActionCategory": 0,
+                    "AnimationName": "Attack_Melee_A",
+                    "BehaviorData": {
+                        "ActionDuration": -1.0,
+                        "Category": 2,
+                        "CompositeType": 0,
+                        "CooldownRandomRange": 0.5,
+                        "CooldownTime": 2.0,
+                        "FinishResult": 0,
+                        "Weight": 1
+                    },
+                    "ID": 194,
+                    "Input": [
+                        {
+                            "ID": 195,
+                            "Kind": 0,
+                            "Name": ""
+                        }
+                    ],
+                    "IsLoop": false,
+                    "IsRootMotion": false,
+                    "IsSubGraph": false,
+                    "LinkColorB": 1.0,
+                    "LinkColorG": 1.0,
+                    "LinkColorR": 1.0,
+                    "Name": "Action",
+                    "Output": [],
+                    "PosX": 269.0,
+                    "PosY": -5.74365234375,
+                    "SubGraphID": 0
+                }
+            ]
         }
     ],
-    "NextID": 188,
+    "NextID": 204,
     "TargetModelPath": ""
 }

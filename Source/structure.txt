@@ -348,7 +348,13 @@ C:.
 „    „    „        VisionSensorComponent.cpp
 „    „    „        VisionSensorComponent.h
 „    „    „        
+„    „    „¥„Ÿ„Ÿ„ŸStatus
+„    „    „        HealthComponent.cpp
+„    „    „        HealthComponent.h
+„    „    „        
 „    „    „¥„Ÿ„Ÿ„ŸTactics
+„    „    „    „    SituationEvaluator.cpp
+„    „    „    „    SituationEvaluator.h
 „    „    „    „    SquadManager.cpp
 „    „    „    „    SquadManager.h
 „    „    „    „    SquadPatrolComponent.cpp

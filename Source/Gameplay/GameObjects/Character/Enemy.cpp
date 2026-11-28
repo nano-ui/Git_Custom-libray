@@ -12,6 +12,7 @@
 #include "Gameplay\Components\AI\TargetSelectorComponent.h"
 #include "Gameplay\Components\Tactics\SquadManager.h"
 #include "Gameplay\Components\AI\HateComponent.h"
+#include "Gameplay\Components\Combat\CombatComponent.h"
 #include "Gameplay\Common\Blackboard.h"
 
 #include "Gameplay\GameObjects\GameObjectTag.h"
@@ -54,9 +55,9 @@ void Enemy::Initialize()
 	//基底クラスの初期化
 	Character::Initialize();
 	SetupComponent();
-	health = 100.0f;
 	SetTag(GameObjectTag::Enemys);
 	perception->SetTargetTag(GameObjectTag::Player | GameObjectTag::Allies);
+	combat_component->SetAttackPower(50.0f);
 }
 
 //更新処理
@@ -65,7 +66,7 @@ void Enemy::Update(float elapsed_time)
 	BS_PROFILE_FUNCTION();
 	if (is_play)
 	{
-		//UpdateTargetFromHate();
+		UpdateTargetFromHate();
 		target_selector->Update(elapsed_time);
 		UpdateChase(elapsed_time);
 	}
@@ -76,9 +77,9 @@ void Enemy::Update(float elapsed_time)
 void Enemy::RenderDebug(ShapeRenderer* renderer)
 {
 	BS_PROFILE_FUNCTION();
-	//Character::RenderDebug(renderer);
-	//wander_move->RenderDebug(renderer);
-	//vision_sensor->RenderDebug(renderer);
+	Character::RenderDebug(renderer);
+	wander_move->RenderDebug(renderer);
+	vision_sensor->RenderDebug(renderer);
 	DirectX::XMFLOAT3 position = transform_component->GetPosition();
 	position.y += 0.3f;
 }

@@ -323,7 +323,648 @@
         },
         "Idle": {
             "animation_duration": 7.666666030883789,
-            "collider_tracks": [],
+            "collider_tracks": [
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                },
+                {
+                    "collider_name": "攻撃判定_左腕",
+                    "end_time": 0.5,
+                    "start_time": 0.33000001311302185
+                }
+            ],
             "effective_duration": 7.666666030883789,
             "keyframes": [
                 {

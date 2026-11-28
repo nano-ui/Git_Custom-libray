@@ -56,6 +56,9 @@ public:
 	//コールバック関数の登録
 	void RegisterCallback(const std::function<void(size_t)>& callback_function);
 
+	//行動の重み設定
+	void SetWeight(size_t action_id, float weight);
+
 public:
 	//設計情報の設定
 	void SetUtilitySettings(const UtilitySettings& settings);

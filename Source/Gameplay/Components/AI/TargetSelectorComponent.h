@@ -3,6 +3,7 @@
 
 #include <memory>
 
+class Character;
 class HateComponent;
 class TransformComponent;
 class JsonSerializer;
@@ -41,6 +42,9 @@ public:
 	//行列コンポーネントの取得
 	std::shared_ptr<TransformComponent> GetTransformComponent()const;
 
+	//対象のキャラクターを取得
+	Character* GetTargetCharacter()const;
+
 private:
 	//ヘイト対象を検索して座標コンポーネントを取得
 	std::shared_ptr<TransformComponent> SearchHateTarget(uint32_t search_id);
@@ -48,6 +52,7 @@ private:
 private:
 	std::weak_ptr<HateComponent> hate_component;			//ヘイトコンポーネント
 	std::weak_ptr<TransformComponent> target_transform;		//対象の座標
+	Character* target_character = nullptr;					//対象のキャラクター
 	uint32_t target_id;										//対象のID
 };
 

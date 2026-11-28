@@ -14,6 +14,7 @@ SquadManager::SquadManager()
 	allies_hate = std::make_shared<HateComponent>();
 	enemys_hate = std::make_shared<HateComponent>();
 	is_initial = false;
+	max_member_count = 0;
 	tactical_action = TacticalAction::None;
 	squad_blackboard->BindVariable(current_tactical_action, [this]() {return static_cast<int>(tactical_action); });
 }
@@ -32,6 +33,7 @@ void SquadManager::Clear()
 	allies_hate->Initialize();
 	enemys_hate->Initialize();
 	is_initial = false;
+	max_member_count = 0;
 }
 
 //部隊リストへ登録
@@ -56,6 +58,7 @@ void SquadManager::RegisterMember(Allie* member)
 	if (member_blackboard)member_blackboard->SetParent(squad_blackboard);
 	else LOG_WARNING({ u8"取得" }, u8"部隊のブラックボードが取得できませんでした");
 	members.push_back(member);
+	if (max_member_count < members.size())max_member_count = members.size();
 }
 
 //部隊リストから破棄

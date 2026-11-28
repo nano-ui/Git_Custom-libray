@@ -1,5 +1,6 @@
 #include "TargetSelectorComponent.h"
 #include "Gameplay\GameObjects\GameObject.h"
+#include "Gameplay\GameObjects\Character\Character.h"
 #include "Gameplay\GameObjects\ObjectManager.h"
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Gameplay\Components\AI\HateComponent.h"
@@ -21,6 +22,7 @@ TargetSelectorComponent::~TargetSelectorComponent() = default;
 void TargetSelectorComponent::Initialize()
 {
 	target_transform.reset();
+	target_character = nullptr;
 	target_id = UINT32_MAX;
 }
 
@@ -32,17 +34,21 @@ void TargetSelectorComponent::Update(float elapsed_time)
 	std::shared_ptr<HateComponent> hate = hate_component.lock();
 	if (!hate)return;
 
-	//ヘイト情報の取得
+	//ヘイト対象が存在しない場合のリセット処理
 	if (!hate->HasTarget())
 	{
 		target_transform.reset();
+		target_character = nullptr;
 		target_id = UINT32_MAX;
 		return;
 	}
+
+	//ヘイト対象の検索と座標・キャラクターの更新
 	transform = SearchHateTarget(hate->GetTopHateTargetId());
 	if (!transform)
 	{
 		target_transform.reset();
+		target_character = nullptr;
 		target_id = UINT32_MAX;
 		return;
 	}
@@ -95,6 +101,13 @@ std::shared_ptr<TransformComponent> TargetSelectorComponent::GetTransformCompone
 	return target_transform.lock();
 }
 
+//対象のキャラを取得
+Character* TargetSelectorComponent::GetTargetCharacter() const
+{
+	//保持している対象キャラクターのポインタを返却
+	return target_character;
+}
+
 //ヘイト対象を検索して座標コンポーネントを取得
 std::shared_ptr<TransformComponent> TargetSelectorComponent::SearchHateTarget(uint32_t search_id)
 {
@@ -104,6 +117,18 @@ std::shared_ptr<TransformComponent> TargetSelectorComponent::SearchHateTarget(ui
 		//有効性とIDの一致判定
 		if (!obj || !obj->IsActive())continue;
 		if (obj->GetObjectId() != search_id)continue;
+
+		//Character型への安全なダウンキャストと保持
+		Character* character = dynamic_cast<Character*>(obj.get());
+		if (!character)
+		{
+			LOG_WARNING({ "TargetSelector" }, u8"ヘイト対象をCharacter型へ変換できませんでした");
+			target_character = nullptr;
+		}
+		else
+		{
+			target_character = character;
+		}
 
 		//座標コンポーネントの取得
 		std::shared_ptr<TransformComponent> transform = obj->GetComponent<TransformComponent>();

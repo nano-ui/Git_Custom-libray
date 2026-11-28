@@ -10,6 +10,7 @@
 #include "Gameplay\Components\Sensor\VisionSensorComponent.h"
 #include "Gameplay\Components\Movement\Move\LinearMove.h"
 #include "Gameplay\Components\Movement\MovementComponent.h"
+#include "Gameplay\Components\Combat\CombatComponent.h"
 #include "Gameplay\Common\Blackboard.h"
 #include "Engine\Core\Log\Log.h"
 
@@ -45,6 +46,7 @@ void Allie::Initialize()
 	has_target = false;
 	stop_distance = DEFAULT_STOP_DISTANCE;
 	perception->SetTargetTag(GameObjectTag::Enemys);
+	combat_component->SetAttackPower(10.0f);
 }
 
 //更新処理
@@ -81,7 +83,8 @@ void Allie::Update(float elapsed_time)
 	}
 	case TacticalAction::Formation:
 	{
-		Character::Move(elapsed_time, 0.0f, 0.0f);
+		UpdateChase(elapsed_time);
+		//Character::Move(elapsed_time, 0.0f, 0.0f);
 		break;
 	}
 	case TacticalAction::TargetPoint:
@@ -112,8 +115,8 @@ void Allie::Render(ID3D11DeviceContext* context)
 //デバッグ描画
 void Allie::RenderDebug(ShapeRenderer* renderer)
 {
-	//Character::RenderDebug(renderer);
-	//vision_sensor->RenderDebug(renderer);
+	Character::RenderDebug(renderer);
+	vision_sensor->RenderDebug(renderer);
 
 }
 

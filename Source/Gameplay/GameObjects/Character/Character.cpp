@@ -5,6 +5,8 @@
 #include "Gameplay\Components\Transform\TransformComponent.h"
 #include "Gameplay\Components\Model\ModelComponent.h"
 #include "Gameplay\Components\Movement\MovementComponent.h"
+#include "Gameplay\Components\Status\HealthComponent.h"
+#include "Gameplay\Components\Combat\CombatComponent.h"
 #include "Gameplay\GameObjects\ObjectManager.h"
 #include "Engine\Graphics\Resources\GltfModel\GltfModel.h"
 #include "Engine\Graphics\Resources\AnimationManager.h"
@@ -17,11 +19,6 @@
 
 //コンストラクタ
 Character::Character()
-	: health(100.0f)
-	, max_health(health)
-	, attack_power(10.0f)
-	, invincible_timer(1.0f)
-	, invinceble_time(1.0f)
 {
 	blackboard = std::make_unique<Blackboard>();
 	state_machine_component = std::make_unique<StateMachineComponent>();
@@ -29,7 +26,6 @@ Character::Character()
 	inner_radius = 0.0f;
 	outer_radius = 0.0f;
 	weight = 10.0f;
-	is_damage = false;
 }
 
 //デストラクタ
@@ -129,7 +125,6 @@ void Character::Initialize()
 void Character::Update(float elapsed_time)
 {
 	BS_PROFILE_FUNCTION();
-	UpdateInvincibleTimer(elapsed_time);
 
 	// GameObject::Update で MovementComponent などの全コンポーネントが更新される
 	GameObject::Update(elapsed_time);
@@ -258,8 +253,17 @@ void Character::OnCollisionHit(const CollisionResult& result)
 				}
 			}
 			if (!attack_obj || this->GetTag() == attack_obj->GetTag())return;
-			ApplyDamage(attack_power, invinceble_time, result.hit_collider->owner_id);
-			//LOG_NORMAL({ "Character", "Combat" }, u8"攻撃判定がヒットしました。(攻撃者: %s 被弾者: %s)", attack_obj->GetClassNameW().c_str(), GetClassNameW().c_str());
+			if (combat_component->TryRegisterHit(attack_obj->GetObjectId()))
+			{
+				std::shared_ptr<CombatComponent> attack = attack_obj->GetComponent<CombatComponent>();
+				if (!attack)return;
+				bool is_damage = health_component->ApplyDamage(attack->GetAttackPower());
+				if (is_damage)
+				{
+					if (health_component->GetHealth() > 0.0f)OnDamage(attack_obj->GetObjectId(), attack->GetAttackPower());
+					else OnDead();
+				}
+			}
 		}
 		else
 		{
@@ -299,8 +303,6 @@ void Character::SetupSerialization()
 
 	if (serializer)
 	{
-		serializer->RegisterVariable(u8"体力", &health, SerializeTarget::Detail);
-		serializer->RegisterVariable(u8"攻撃力", &attack_power, SerializeTarget::Detail);
 		serializer->RegisterVariable(u8"内径", &inner_radius, SerializeTarget::Detail);
 		serializer->RegisterVariable(u8"外径", &outer_radius, SerializeTarget::Detail);
 	}
@@ -319,11 +321,8 @@ void Character::SetupInspector()
 	if (inspector)
 	{
 		inspector->RegisterText(u8"ステートツリーエディタパス", &state_machine_component->GetStateMachinePath());
-		inspector->RegisterVariable(u8"体力", &health, u8"基本ステータス");
-		inspector->RegisterVariable(u8"攻撃力", &attack_power, u8"基本ステータス");
 		inspector->RegisterVariable(u8"内径", &inner_radius, u8"リングデバッグ");
 		inspector->RegisterVariable(u8"外径", &outer_radius, u8"リングデバッグ");
-		inspector->RegisterText(u8"無敵時間タイマー", &invincible_timer, u8"ステータスモニター");
 		inspector->RegisterText(u8"現在のアニメーション", &current_animation_name, u8"アニメーションモニター");
 		inspector->RegisterText(u8"アニメーション再生時間", &current_animation_time, u8"アニメーションモニター");
 		inspector->RegisterText(u8"ルートモーション有効", &debug_root_motion_enabled, u8"ルートモーション");
@@ -338,54 +337,30 @@ void Character::SetupInspector()
 void Character::SetupComponent()
 {
 	//TransformComponent の取得・生成
-	transform_component = GetComponent<TransformComponent>();
-	if (!transform_component) transform_component = AddComponent<TransformComponent>();
+	if (transform_component) transform_component = GetComponent<TransformComponent>();
+	else transform_component = AddComponent<TransformComponent>();
 
 	//ModelComponent の取得・生成
-	model_component = GetComponent<ModelComponent>();
-	if (!model_component) model_component = AddComponent<ModelComponent>();
+	if (model_component) model_component = GetComponent<ModelComponent>();
+	else model_component = AddComponent<ModelComponent>();
 	model_component->SetTransformComponent(transform_component);
 
 	//MovementComponent の取得・生成
-	movement_component = GetComponent<MovementComponent>();
-	if (!movement_component) movement_component = AddComponent<MovementComponent>();
+	if (movement_component) movement_component = GetComponent<MovementComponent>();
+	else movement_component = AddComponent<MovementComponent>();
 	movement_component->SetTransformComponent(transform_component);
 
-	//AttachmentColliderComponentt の取得・生成
-	attachment_collider_component = GetComponent<AttachmentColliderComponent>();
-	if (!attachment_collider_component) attachment_collider_component = AddComponent<AttachmentColliderComponent>();
-}
+	//AttachmentColliderComponent の取得・生成
+	if (attachment_collider_component) attachment_collider_component = GetComponent<AttachmentColliderComponent>();
+	else attachment_collider_component = AddComponent<AttachmentColliderComponent>();
 
-//ダメージ処理
-bool Character::ApplyDamage(float damage, float invincible_time, uint32_t attacker_id)
-{
-	BS_PROFILE_FUNCTION();
+	//HealthComponentの取得・生成
+	if (health_component)health_component = GetComponent<HealthComponent>();
+	else health_component = AddComponent<HealthComponent>();
 
-	//LOG_NORMAL({ u8"攻撃" }, u8"攻撃が当たりました(ダメージ:%f)", damage);
-
-	//ダメージの適用条件判定
-	if (damage <= 0)return false;
-	if (health <= 0)return false;
-	if (invincible_time > 0.0f)
-	{
-		is_damage = false;
-		return false;
-	}
-
-	//ダメージ適用とイベント実行
-	invincible_timer = invincible_time;
-	health -= damage;
-	if (health <= 0)
-	{
-		OnDead();
-	}
-	else
-	{
-		OnDamage(attacker_id, damage);
-	}
-
-	is_damage = true;
-	return true;
+	//CombatComponentの取得・生成
+	if (combat_component) combat_component = GetComponent<CombatComponent>();
+	else combat_component = AddComponent<CombatComponent>();
 }
 
 //ブラックボードに登録・初期化
@@ -393,11 +368,11 @@ void Character::SetupBlackboard()
 {
 	BS_PROFILE_FUNCTION();
 
-	blackboard->BindVariable(u8"体力", [this]() {return health; });
+	blackboard->BindVariable(u8"体力", [this]() {return health_component->GetHealth(); });
+	blackboard->BindVariable(u8"ダメージフラグ", [this]() {return health_component->GetIsDamage(); });
 	blackboard->BindVariable(u8"座標", [this]() {return transform_component->GetPosition(); });
 	blackboard->BindVariable(u8"接地フラグ", [this]() {return movement_component->IsGround(); });
 	blackboard->BindVariable(u8"移動速度", [this]() {return movement_component->GetMoveSpeed(); });
-	blackboard->BindVariable(u8"ダメージフラグ", [this]() {return is_damage; });
 }
 
 //移動方向の設定
@@ -428,18 +403,6 @@ void Character::Jump(float speed)
 	BS_PROFILE_FUNCTION();
 
 	if (movement_component) movement_component->Jump(speed);
-}
-
-//無敵時間更新処理
-void Character::UpdateInvincibleTimer(float elapsed_time)
-{
-	BS_PROFILE_FUNCTION();
-
-	if (invincible_timer > 0.0f)
-	{
-		invincible_timer -= elapsed_time;
-	}
-	invincible_timer = 0.0f;
 }
 
 //ルートモーション更新

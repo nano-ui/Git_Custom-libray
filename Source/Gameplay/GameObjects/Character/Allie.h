@@ -44,9 +44,6 @@ public:
 	//コンポーネントの設定
 	void SetupComponent()override;
 
-	//ブラックボードに同期
-	void SyncBlackboard();
-
 	//ブラックボードに登録・初期化
 	void SetupBlackboard()override;
 

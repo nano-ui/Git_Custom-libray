@@ -343,6 +343,7 @@
     <ClCompile Include="Source\Gameplay\Components\Collision\BoneCapsuleColliderComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Collision\CapsuleColliderComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Collision\ColliderComponent.cpp" />
+    <ClCompile Include="Source\Gameplay\Components\Combat\CombatComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Editor\AttachmentColliderComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Editor\StateMachineComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Model\ModelComponent.cpp" />
@@ -355,6 +356,7 @@
     <ClCompile Include="Source\Gameplay\Components\Movement\Rotation\LockAtRotation.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Movement\Rotation\RotationFactory.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Sensor\VisionSensorComponent.cpp" />
+    <ClCompile Include="Source\Gameplay\Components\Status\HealthComponent.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\CircleFormation.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\CraneWingFormation.cpp" />
     <ClCompile Include="Source\Gameplay\Components\Tactics\Formation\FishScaleFormation.cpp" />
@@ -526,6 +528,7 @@
     <ClInclude Include="Source\Gameplay\Components\Collision\BoneCapsuleColliderComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Collision\CapsuleColliderComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Collision\ColliderComponent.h" />
+    <ClInclude Include="Source\Gameplay\Components\Combat\CombatComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Editor\AttachmentColliderComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Editor\StateMachineComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Model\ModelComponent.h" />
@@ -540,6 +543,7 @@
     <ClInclude Include="Source\Gameplay\Components\Movement\Rotation\RotationBase.h" />
     <ClInclude Include="Source\Gameplay\Components\Movement\Rotation\RotationFactory.h" />
     <ClInclude Include="Source\Gameplay\Components\Sensor\VisionSensorComponent.h" />
+    <ClInclude Include="Source\Gameplay\Components\Status\HealthComponent.h" />
     <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\CircleFormation.h" />
     <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\CraneWingFormation.h" />
     <ClInclude Include="Source\Gameplay\Components\Tactics\Formation\FishScaleFormation.h" />

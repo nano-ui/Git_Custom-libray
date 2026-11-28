@@ -8,6 +8,7 @@
 class TargetSelectorComponent;
 class TacticalCommandController;
 class UtilityAIComponent;
+class SituationEvaluator;
 
 //wŠöŠ¯
 class Commander : public GameObject
@@ -51,7 +52,7 @@ private:
 	std::shared_ptr<TacticalCommandController> tactical_command_controller;	//íp
 	std::shared_ptr<TargetSelectorComponent> target_selector;				//‘ÎÛ‘I‘ğ
 	std::shared_ptr<UtilityAIComponent> utility_ai;							//UtilityAI
-
+	std::shared_ptr<SituationEvaluator> situaltion_evaluator;				//ó‹µ”»’f
 private:
 	std::unordered_map<size_t, TacticalType> tactical_map;	//íp‚Ì«‘
 
